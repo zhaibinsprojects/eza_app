@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/ezsm.js?v=1"></script>
+    <script>
+		$(function(){
+			$(".ezsm-orderlist-top-left div,.ezsm-orderlist-top-right div").click(function(){
+				$(".ezsm-orderlist-top-left ul").hide();
+				$(".ezsm-orderlist-top-right ul").hide();
+				$(this).parent().find("ul").show();
+			});
+			$(".ezsm-orderlist-top-left li,.ezsm-orderlist-top-right li").click(function(){
+				$(".ezsm-orderlist-top-left ul").hide();
+				$(".ezsm-orderlist-top-right ul").hide();
+				$(this).parent().parent().find("div").html($(this).html());
+				$(this).parent().parent().find("div").attr("data-value",$(this).attr("data-value"));
+			});
+			$(".ezsm-orderlist").click(function(){
+				$(".ezsm-orderlist-top-left ul").hide();
+				$(".ezsm-orderlist-top-right ul").hide();
+			});
+
+			//签订合同按钮事件
+			$(".btn_agreement").click(function(){
+				$(".msg-bg").css("display","block");
+				$(".msg-box").css({"display":"block","height":"130px","margin-top":"100px"});
+				var con_str = "<div style='width:100%;height:30px;line-height:50px;text-align:center;padding-top:30px;font-size:15px;color:#333333;'>纸质合同线下签订中，请您耐心等待！</div>"+
+							  "<div style='width:100%;height:20px;line-height:40px;text-align:center;padding-bottom:15px;font-size:12px;color:#999999;'>了解纸质合同签订流程如有疑问，咨询400-6666-890"+
+							  "</div>";
+				$(".msg-box").html(con_str);
+				$(".msg-bg").click(function(){
+					$(".msg-bg").css("display","none");
+					$(".msg-box").css("display","none");
+				});
+			});
+		});
+		//订单关闭
+		function EZSM_Order_Close_G(){
+			$(".msg-bg").css("display","block");
+				$(".msg-box").css({"display":"block","height":"204px","margin-top":"100px"});
+				var con_str = "<div style='width:100%;height:50px;line-height:60px;text-align:center;padding-top:30px;font-size:18px;color:#333333;'>您的发货信息已提交</div>"+
+							  "<div style='width:100%;height:50px;line-height:20px;text-align:center;padding-bottom:30px;font-size:15px;color:#999999;'>"+
+							  "<p>易再生采购部会尽快</p><p>安排物流上门取货！</p></div>"+
+							  "<div class='me-alert-box-btn'>发货单打印</div>"+
+							  "</div>";
+				$(".msg-box").html(con_str);
+				$(".msg-bg,#alertbtn_cancel").click(function(){
+					$(".msg-bg").css("display","none");
+					$(".msg-box").css("display","none");
+				});
+				$("#alertbtn_submit").click(function(){
+					$(".msg-bg").css("display","none");
+					$(".msg-box").css("display","none");
+				});
+		}
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-index">
+		<div class="ezsm-normal-top">
+			<div onclick="javascript:history.go(-1);"></div>
+			<div>订单管理</div>
+			<div class="ezsm-index-msg"><img src="img/micon_018.png"/><br>消息</div>
+		</div>
+		<div class="ezsm-orderlist-top">
+			<div class="ezsm-orderlist-top-left">
+				<div>订单类型筛选</div>
+				<ul>
+					<li data-value="1">订单类型筛选</li>
+				</ul>
+			</div>
+			<div class="ezsm-orderlist-top-right">
+				<div>退货订单</div>
+				<ul>
+					<li data-value="1">待发货订单</li>
+					<li data-value="1">待签约订单</li>
+					<li data-value="2">待收款订单</li>
+					<li data-value="3">待确认订单</li>
+					<li data-value="4">交易完成订单</li>
+					<li data-value="5">退货订单</li>
+					<li data-value="5">已发货订单</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="ezsm-mem-box-tit1">退货订单</div>
+		<div class="ezsm-orderlist">
+			<ul>
+				<li>
+					<a href="#">
+						<div class="ezsm-orderlist-box">
+							<div class="ezsm-orderlist-box-tit">2018-1-5<span>退货中</span></div>
+							<div class="ezsm-orderlist-box-main">
+								<div class="ezsm-orderlist-box-img"><img src="images/shop_001.jpg" /></div>
+								<div class="ezsm-orderlist-box-info">
+									<div class="ezsm-orderlist-box-name">黑色废塑料颗粒</div>
+									<div class="ezsm-orderlist-box-price">数量<span>10000吨</span></div>
+									<div class="ezsm-orderlist-box-price">总价<span class="colororange">￥2000</span></div>
+								</div>
+								<div class="blank0c"></div>
+							</div>
+						</div>
+					</a>
+					<div class="ezsm-orderlist-box-bottom">货品订单<div>退货申请查看</div></div>
+				</li>
+				<li>
+					<a href="#">
+						<div class="ezsm-orderlist-box">
+							<div class="ezsm-orderlist-box-tit">2018-1-5<span>退货完成</span></div>
+							<div class="ezsm-orderlist-box-main">
+								<div class="ezsm-orderlist-box-img"><img src="images/shop_001.jpg" /></div>
+								<div class="ezsm-orderlist-box-info">
+									<div class="ezsm-orderlist-box-name">黑色废塑料颗粒</div>
+									<div class="ezsm-orderlist-box-price">数量<span>10000吨</span></div>
+									<div class="ezsm-orderlist-box-price">总价<span class="colororange">￥2000</span></div>
+								</div>
+								<div class="blank0c"></div>
+							</div>
+						</div>
+					</a>
+					<div class="ezsm-orderlist-box-bottom">货品订单</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="blank50"></div>
+	</div>
+</body>
+</html>

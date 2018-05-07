@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_adv_posMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_adv_pos" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="ap_acc_url" property="ap_acc_url" jdbcType="VARCHAR" />
+    <result column="ap_height" property="ap_height" jdbcType="INTEGER" />
+    <result column="ap_price" property="ap_price" jdbcType="INTEGER" />
+    <result column="ap_sale_type" property="ap_sale_type" jdbcType="INTEGER" />
+    <result column="ap_show_type" property="ap_show_type" jdbcType="INTEGER" />
+    <result column="ap_status" property="ap_status" jdbcType="INTEGER" />
+    <result column="ap_sys_type" property="ap_sys_type" jdbcType="INTEGER" />
+    <result column="ap_text" property="ap_text" jdbcType="VARCHAR" />
+    <result column="ap_title" property="ap_title" jdbcType="VARCHAR" />
+    <result column="ap_type" property="ap_type" jdbcType="VARCHAR" />
+    <result column="ap_use_status" property="ap_use_status" jdbcType="INTEGER" />
+    <result column="ap_width" property="ap_width" jdbcType="INTEGER" />
+    <result column="ap_acc_id" property="ap_acc_id" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_adv_posWithBLOBs" extends="BaseResultMap" >
+    <result column="ap_code" property="ap_code" jdbcType="LONGVARCHAR" />
+    <result column="ap_content" property="ap_content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, ap_acc_url, ap_height, ap_price, ap_sale_type, ap_show_type, 
+    ap_status, ap_sys_type, ap_text, ap_title, ap_type, ap_use_status, ap_width, ap_acc_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    ap_code, ap_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ezs_adv_pos
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_adv_pos
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+    insert into ezs_adv_pos (id, addTime, deleteStatus, 
+      ap_acc_url, ap_height, ap_price, 
+      ap_sale_type, ap_show_type, ap_status, 
+      ap_sys_type, ap_text, ap_title, 
+      ap_type, ap_use_status, ap_width, 
+      ap_acc_id, ap_code, ap_content
+      )
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{ap_acc_url,jdbcType=VARCHAR}, #{ap_height,jdbcType=INTEGER}, #{ap_price,jdbcType=INTEGER}, 
+      #{ap_sale_type,jdbcType=INTEGER}, #{ap_show_type,jdbcType=INTEGER}, #{ap_status,jdbcType=INTEGER}, 
+      #{ap_sys_type,jdbcType=INTEGER}, #{ap_text,jdbcType=VARCHAR}, #{ap_title,jdbcType=VARCHAR}, 
+      #{ap_type,jdbcType=VARCHAR}, #{ap_use_status,jdbcType=INTEGER}, #{ap_width,jdbcType=INTEGER}, 
+      #{ap_acc_id,jdbcType=BIGINT}, #{ap_code,jdbcType=LONGVARCHAR}, #{ap_content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+    insert into ezs_adv_pos
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="ap_acc_url != null" >
+        ap_acc_url,
+      </if>
+      <if test="ap_height != null" >
+        ap_height,
+      </if>
+      <if test="ap_price != null" >
+        ap_price,
+      </if>
+      <if test="ap_sale_type != null" >
+        ap_sale_type,
+      </if>
+      <if test="ap_show_type != null" >
+        ap_show_type,
+      </if>
+      <if test="ap_status != null" >
+        ap_status,
+      </if>
+      <if test="ap_sys_type != null" >
+        ap_sys_type,
+      </if>
+      <if test="ap_text != null" >
+        ap_text,
+      </if>
+      <if test="ap_title != null" >
+        ap_title,
+      </if>
+      <if test="ap_type != null" >
+        ap_type,
+      </if>
+      <if test="ap_use_status != null" >
+        ap_use_status,
+      </if>
+      <if test="ap_width != null" >
+        ap_width,
+      </if>
+      <if test="ap_acc_id != null" >
+        ap_acc_id,
+      </if>
+      <if test="ap_code != null" >
+        ap_code,
+      </if>
+      <if test="ap_content != null" >
+        ap_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="ap_acc_url != null" >
+        #{ap_acc_url,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_height != null" >
+        #{ap_height,jdbcType=INTEGER},
+      </if>
+      <if test="ap_price != null" >
+        #{ap_price,jdbcType=INTEGER},
+      </if>
+      <if test="ap_sale_type != null" >
+        #{ap_sale_type,jdbcType=INTEGER},
+      </if>
+      <if test="ap_show_type != null" >
+        #{ap_show_type,jdbcType=INTEGER},
+      </if>
+      <if test="ap_status != null" >
+        #{ap_status,jdbcType=INTEGER},
+      </if>
+      <if test="ap_sys_type != null" >
+        #{ap_sys_type,jdbcType=INTEGER},
+      </if>
+      <if test="ap_text != null" >
+        #{ap_text,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_title != null" >
+        #{ap_title,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_type != null" >
+        #{ap_type,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_use_status != null" >
+        #{ap_use_status,jdbcType=INTEGER},
+      </if>
+      <if test="ap_width != null" >
+        #{ap_width,jdbcType=INTEGER},
+      </if>
+      <if test="ap_acc_id != null" >
+        #{ap_acc_id,jdbcType=BIGINT},
+      </if>
+      <if test="ap_code != null" >
+        #{ap_code,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ap_content != null" >
+        #{ap_content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+    update ezs_adv_pos
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="ap_acc_url != null" >
+        ap_acc_url = #{ap_acc_url,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_height != null" >
+        ap_height = #{ap_height,jdbcType=INTEGER},
+      </if>
+      <if test="ap_price != null" >
+        ap_price = #{ap_price,jdbcType=INTEGER},
+      </if>
+      <if test="ap_sale_type != null" >
+        ap_sale_type = #{ap_sale_type,jdbcType=INTEGER},
+      </if>
+      <if test="ap_show_type != null" >
+        ap_show_type = #{ap_show_type,jdbcType=INTEGER},
+      </if>
+      <if test="ap_status != null" >
+        ap_status = #{ap_status,jdbcType=INTEGER},
+      </if>
+      <if test="ap_sys_type != null" >
+        ap_sys_type = #{ap_sys_type,jdbcType=INTEGER},
+      </if>
+      <if test="ap_text != null" >
+        ap_text = #{ap_text,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_title != null" >
+        ap_title = #{ap_title,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_type != null" >
+        ap_type = #{ap_type,jdbcType=VARCHAR},
+      </if>
+      <if test="ap_use_status != null" >
+        ap_use_status = #{ap_use_status,jdbcType=INTEGER},
+      </if>
+      <if test="ap_width != null" >
+        ap_width = #{ap_width,jdbcType=INTEGER},
+      </if>
+      <if test="ap_acc_id != null" >
+        ap_acc_id = #{ap_acc_id,jdbcType=BIGINT},
+      </if>
+      <if test="ap_code != null" >
+        ap_code = #{ap_code,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ap_content != null" >
+        ap_content = #{ap_content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+    update ezs_adv_pos
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      ap_acc_url = #{ap_acc_url,jdbcType=VARCHAR},
+      ap_height = #{ap_height,jdbcType=INTEGER},
+      ap_price = #{ap_price,jdbcType=INTEGER},
+      ap_sale_type = #{ap_sale_type,jdbcType=INTEGER},
+      ap_show_type = #{ap_show_type,jdbcType=INTEGER},
+      ap_status = #{ap_status,jdbcType=INTEGER},
+      ap_sys_type = #{ap_sys_type,jdbcType=INTEGER},
+      ap_text = #{ap_text,jdbcType=VARCHAR},
+      ap_title = #{ap_title,jdbcType=VARCHAR},
+      ap_type = #{ap_type,jdbcType=VARCHAR},
+      ap_use_status = #{ap_use_status,jdbcType=INTEGER},
+      ap_width = #{ap_width,jdbcType=INTEGER},
+      ap_acc_id = #{ap_acc_id,jdbcType=BIGINT},
+      ap_code = #{ap_code,jdbcType=LONGVARCHAR},
+      ap_content = #{ap_content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_adv_pos" >
+    update ezs_adv_pos
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      ap_acc_url = #{ap_acc_url,jdbcType=VARCHAR},
+      ap_height = #{ap_height,jdbcType=INTEGER},
+      ap_price = #{ap_price,jdbcType=INTEGER},
+      ap_sale_type = #{ap_sale_type,jdbcType=INTEGER},
+      ap_show_type = #{ap_show_type,jdbcType=INTEGER},
+      ap_status = #{ap_status,jdbcType=INTEGER},
+      ap_sys_type = #{ap_sys_type,jdbcType=INTEGER},
+      ap_text = #{ap_text,jdbcType=VARCHAR},
+      ap_title = #{ap_title,jdbcType=VARCHAR},
+      ap_type = #{ap_type,jdbcType=VARCHAR},
+      ap_use_status = #{ap_use_status,jdbcType=INTEGER},
+      ap_width = #{ap_width,jdbcType=INTEGER},
+      ap_acc_id = #{ap_acc_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

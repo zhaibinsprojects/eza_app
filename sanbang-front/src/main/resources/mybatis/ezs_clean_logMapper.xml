@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_clean_logMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_clean_log" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="clean_condition" property="clean_condition" jdbcType="VARCHAR" />
+    <result column="clean_sample" property="clean_sample" jdbcType="INTEGER" />
+    <result column="clean_type" property="clean_type" jdbcType="VARCHAR" />
+    <result column="init_sample" property="init_sample" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, clean_condition, clean_sample, clean_type, init_sample, 
+    user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_clean_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_clean_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_clean_log" >
+    insert into ezs_clean_log (id, addTime, deleteStatus, 
+      clean_condition, clean_sample, clean_type, 
+      init_sample, user_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{clean_condition,jdbcType=VARCHAR}, #{clean_sample,jdbcType=INTEGER}, #{clean_type,jdbcType=VARCHAR}, 
+      #{init_sample,jdbcType=INTEGER}, #{user_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_clean_log" >
+    insert into ezs_clean_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="clean_condition != null" >
+        clean_condition,
+      </if>
+      <if test="clean_sample != null" >
+        clean_sample,
+      </if>
+      <if test="clean_type != null" >
+        clean_type,
+      </if>
+      <if test="init_sample != null" >
+        init_sample,
+      </if>
+      <if test="user_id != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="clean_condition != null" >
+        #{clean_condition,jdbcType=VARCHAR},
+      </if>
+      <if test="clean_sample != null" >
+        #{clean_sample,jdbcType=INTEGER},
+      </if>
+      <if test="clean_type != null" >
+        #{clean_type,jdbcType=VARCHAR},
+      </if>
+      <if test="init_sample != null" >
+        #{init_sample,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_clean_log" >
+    update ezs_clean_log
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="clean_condition != null" >
+        clean_condition = #{clean_condition,jdbcType=VARCHAR},
+      </if>
+      <if test="clean_sample != null" >
+        clean_sample = #{clean_sample,jdbcType=INTEGER},
+      </if>
+      <if test="clean_type != null" >
+        clean_type = #{clean_type,jdbcType=VARCHAR},
+      </if>
+      <if test="init_sample != null" >
+        init_sample = #{init_sample,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_clean_log" >
+    update ezs_clean_log
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      clean_condition = #{clean_condition,jdbcType=VARCHAR},
+      clean_sample = #{clean_sample,jdbcType=INTEGER},
+      clean_type = #{clean_type,jdbcType=VARCHAR},
+      init_sample = #{init_sample,jdbcType=INTEGER},
+      user_id = #{user_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

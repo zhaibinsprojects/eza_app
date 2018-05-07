@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_activity_goodsMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_activity_goods" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="ag_price" property="ag_price" jdbcType="DECIMAL" />
+    <result column="ag_status" property="ag_status" jdbcType="INTEGER" />
+    <result column="saleAmount" property="saleAmount" jdbcType="DOUBLE" />
+    <result column="totalAmount" property="totalAmount" jdbcType="DOUBLE" />
+    <result column="act_id" property="act_id" jdbcType="BIGINT" />
+    <result column="ag_admin_id" property="ag_admin_id" jdbcType="BIGINT" />
+    <result column="ag_goods_id" property="ag_goods_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, ag_price, ag_status, saleAmount, totalAmount, act_id, 
+    ag_admin_id, ag_goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_activity_goods
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_activity_goods
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_activity_goods" >
+    insert into ezs_activity_goods (id, addTime, deleteStatus, 
+      ag_price, ag_status, saleAmount, 
+      totalAmount, act_id, ag_admin_id, 
+      ag_goods_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{ag_price,jdbcType=DECIMAL}, #{ag_status,jdbcType=INTEGER}, #{saleAmount,jdbcType=DOUBLE}, 
+      #{totalAmount,jdbcType=DOUBLE}, #{act_id,jdbcType=BIGINT}, #{ag_admin_id,jdbcType=BIGINT}, 
+      #{ag_goods_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_activity_goods" >
+    insert into ezs_activity_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="ag_price != null" >
+        ag_price,
+      </if>
+      <if test="ag_status != null" >
+        ag_status,
+      </if>
+      <if test="saleAmount != null" >
+        saleAmount,
+      </if>
+      <if test="totalAmount != null" >
+        totalAmount,
+      </if>
+      <if test="act_id != null" >
+        act_id,
+      </if>
+      <if test="ag_admin_id != null" >
+        ag_admin_id,
+      </if>
+      <if test="ag_goods_id != null" >
+        ag_goods_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="ag_price != null" >
+        #{ag_price,jdbcType=DECIMAL},
+      </if>
+      <if test="ag_status != null" >
+        #{ag_status,jdbcType=INTEGER},
+      </if>
+      <if test="saleAmount != null" >
+        #{saleAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="act_id != null" >
+        #{act_id,jdbcType=BIGINT},
+      </if>
+      <if test="ag_admin_id != null" >
+        #{ag_admin_id,jdbcType=BIGINT},
+      </if>
+      <if test="ag_goods_id != null" >
+        #{ag_goods_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_activity_goods" >
+    update ezs_activity_goods
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="ag_price != null" >
+        ag_price = #{ag_price,jdbcType=DECIMAL},
+      </if>
+      <if test="ag_status != null" >
+        ag_status = #{ag_status,jdbcType=INTEGER},
+      </if>
+      <if test="saleAmount != null" >
+        saleAmount = #{saleAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="totalAmount != null" >
+        totalAmount = #{totalAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="act_id != null" >
+        act_id = #{act_id,jdbcType=BIGINT},
+      </if>
+      <if test="ag_admin_id != null" >
+        ag_admin_id = #{ag_admin_id,jdbcType=BIGINT},
+      </if>
+      <if test="ag_goods_id != null" >
+        ag_goods_id = #{ag_goods_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_activity_goods" >
+    update ezs_activity_goods
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      ag_price = #{ag_price,jdbcType=DECIMAL},
+      ag_status = #{ag_status,jdbcType=INTEGER},
+      saleAmount = #{saleAmount,jdbcType=DOUBLE},
+      totalAmount = #{totalAmount,jdbcType=DOUBLE},
+      act_id = #{act_id,jdbcType=BIGINT},
+      ag_admin_id = #{ag_admin_id,jdbcType=BIGINT},
+      ag_goods_id = #{ag_goods_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

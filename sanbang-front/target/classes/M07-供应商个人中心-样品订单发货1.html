@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/ezsm.js?v=1"></script>
+	<script type="text/javascript" src="js/highcharts.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("#sel_way div").click(function(){
+				$("#sel_way div").removeClass("ezsm-purchase-type-seled");
+				$(this).addClass("ezsm-purchase-type-seled");
+			});
+			$("#sel_num .ezsm-purchase-param-sub").click(function(){
+				var num = parseInt($("#sel_num .ezsm-purchase-param-num input").val());
+				if(num>0){
+					$("#sel_num .ezsm-purchase-param-num input").val(num-1);
+				}
+			});
+		});
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-normal-top">
+		<div onclick="javascript:history.go(-1);"></div>
+		<div>发货信息上传</div>
+		<div></div>
+	</div>
+	<div class="ezsm-purchase-param-box">
+		<table cellspacing="0">
+			<tr><td>物流方式</td>
+				<td>
+					<div id="sel_way">
+						<div class="ezsm-purchase-type-selno ezsm-purchase-type-seled" style="margin-left:0px;"></div><span style="float:left;display:block;font-size:15px;">快递公司</span> 
+						<div class="ezsm-purchase-type-selno"></div><span style="float:left;display:block;font-size:15px;">物流公司</span>
+					</div>
+				</td>
+			</tr>
+			<tr><td>运输方式</td><td><input type="text" placeholder="请输入运输公司名称"/><span></span></td></tr>
+			<tr><td>运单号</td><td><input type="text" placeholder="请输入运单号码"/><span></span></td></tr>
+		</table>
+	</div>
+	<div class="blank50"></div>
+	<div class="ezsm-normal-centerbtn" id="btn_sure">确定</div>
+	<div class="blank50"></div>
+</body>
+</html>

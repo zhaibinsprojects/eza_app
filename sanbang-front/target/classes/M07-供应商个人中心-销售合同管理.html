@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/ezsm.js?v=1"></script>
+    <script>
+		$(function(){
+			//Select select
+			$("#sel_select").click(function(){
+				if($(".msg-select").css("display")=="none"){
+					$(".msg-select").show();
+					$(".msg-bg").show();
+					var height = window.screen.height;
+					console.log(height);
+					$(".msg-select").css({"height":height+"px","overflow-y":"scroll"});
+				}else{
+					$(".msg-select").hide();
+					$(".msg-bg").hide();
+				}
+			});
+			$(".msg-select-con li").click(function(){
+				$(this).parent().find("li").removeClass("msg-select-con-li-sel");
+				$(this).addClass("msg-select-con-li-sel");
+			});
+			$(".msg-select-btnA").click(function(){  //筛选 重置按钮
+				$(".msg-select-con li").removeClass("msg-select-con-li-sel");
+				$(".msg-select-con input").val("");
+				$(".msg-select-con select").val("");
+			});
+			$(".msg-select-btnB").click(function(){  //筛选 确定按钮
+				$(".msg-select").hide();
+				$(".msg-bg").hide();
+			});
+		});
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-index">
+		<div class="ezsm-normal-top">
+			<div onclick="javascript:history.go(-1);"></div>
+			<div>销售合同管理</div>
+			<div style="font-size:15px;line-height:40px;" id="sel_select">搜索</div>
+		</div>
+		<div class="ezsm-mem-agreement-list">
+			<ul>
+				<li>
+					<div class="ezsm-mem-agreement-box">
+						<div class="ezsm-mem-agreement-box-info"><span>合同编号</span>20180108 <a>查看</a></div>
+						<div class="ezsm-mem-agreement-box-info"><span>签订时间</span>1月8日</div>
+						<div class="ezsm-mem-agreement-box-info"><span>订单编号</span>1011010100101</div>
+					</div>
+				</li>
+				<li>
+					<div class="ezsm-mem-agreement-box">
+						<div class="ezsm-mem-agreement-box-info"><span>合同编号</span>20180108 <a>查看</a></div>
+						<div class="ezsm-mem-agreement-box-info"><span>签订时间</span>1月8日</div>
+						<div class="ezsm-mem-agreement-box-info"><span>订单编号</span>1011010100101</div>
+					</div>
+				</li>
+				<li>
+					<div class="ezsm-mem-agreement-box">
+						<div class="ezsm-mem-agreement-box-info"><span>合同编号</span>20180108 <a>查看</a></div>
+						<div class="ezsm-mem-agreement-box-info"><span>签订时间</span>1月8日</div>
+						<div class="ezsm-mem-agreement-box-info"><span>订单编号</span>1011010100101</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+		<!--筛选其他-->
+		<div class="msg-select">
+			<div class="msg-select-tit">合同搜索</div>
+			<div class="msg-select-con">
+				<input type="text" placeholder="根据合同编号进行搜索"/>
+			</div>
+			<div class="msg-select-tit">签订时间</div>
+			<div class="msg-select-con">
+				<input type="text" style="width:41%;" placeholder="2018-2-26"/> 至 <input type="text" style="width:41%;" placeholder="2018-2-28"/>
+			</div>
+			<div class="blank70"></div>
+			<div class="msg-select-btnbox">
+				<div class="msg-select-btnA">重置</div>
+				<div class="msg-select-btnB">确定</div>
+			</div>
+		</div>
+</body>
+</html>

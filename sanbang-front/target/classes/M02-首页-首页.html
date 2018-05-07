@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/ezsm.js?v=1"></script>
+    <script>
+		$(function(){
+			//Select location
+			$("#sel_city").click(function(){
+				if($(".msg-local").css("display")=="none"){
+					$(".msg-local").show();
+					var height = window.screen.height;
+					$(".msg-local").css({"height":(height-80)+"px","overflow-y":"scroll"});
+				}else{
+					$(".msg-local").hide();
+				}
+			});
+			$(".msg-local-con li").click(function(){
+				$(".msg-local-con li").removeClass("msg-local-con-li-sel");
+				$(this).addClass("msg-local-con-li-sel");
+				$("#sel_city span").html($(this).html());
+				$("#sel_city span").attr("data-value",$(this).attr("data-value"));
+				$(".msg-local").hide();
+			});
+			//search
+			$("#in_search").click(function(){
+				if($(".msg-search").css("display")=="none"){
+					$(".msg-search").show();
+					var height = window.screen.height;
+					$(".msg-search").css({"height":(height-80)+"px","overflow-y":"scroll"});
+				}else{
+					$(".msg-search").hide();
+				}
+			});
+			$("#btn_search_clean").click(function(){
+				$(".msg-bg").css("display","block");
+				$(".msg-box").css({"display":"block","height":"113px","margin-top":"100px"});
+				var con_str = "<div style='width:100%;height:70px;line-height:70px;text-align:center;;font-size:15px;color:#333333;'>确认清空搜索记录吗？</div>"+
+								"<div class='me-alert-box-btnC'><div class='me-alert-box-btnC1' id='alertbtn_cancel'>保留</div> <div class='me-alert-box-btnC2'>清空</div></div>";
+				$(".msg-box").html(con_str);
+				
+				$("#alertbtn_cancel,.msg-bg").click(function(){
+					$(".msg-bg").css("display","none");
+					$(".msg-box").css("display","none");
+				});
+			});
+		});
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-index">
+		<div class="ezsm-index-top">
+			<div class="ezsm-index-local" id="sel_city"><span data-value="hebei">河北</span><img src="img/micon_017.png"/></div>
+			<div class="ezsm-index-search"><input type="text" id="in_search" placeholder="请输入您要找的关键字..."/></div>
+			<div class="ezsm-index-msg"><img src="img/micon_018.png"/><br>消息</div>
+		</div>
+		<div class="ezsm-index-banner">
+			<img src="img/banner_001.png"/>
+		</div>
+		<div class="ezsm-index-new">
+			<div onclick="window.location.href='M01-移动工具-更多-行情分析.html'">行情分析</div>
+			<div><span>周评</span>再生通用塑料PE本周价格本周本周价本周价本周价价格</div>
+		</div>
+		<div class="ezsm-index-type">
+			<ul>
+				<li><img src="img/tpic_001.png"/>再生通用塑料</li>
+				<li><img src="img/tpic_002.png"/>再生工程塑料</li>
+				<li><img src="img/tpic_003.png"/>再生特种塑料</li>
+				<a href="M03-首页-采购定制.html"><li><img src="img/tpic_004.png"/>采购定制</li></a>
+			</ul>
+			<div class="blank0c"></div>
+		</div>
+		<div class="ezsm-index-banner2">
+			<a href="M03-首页-我订阅的价格行情.html"><img src="img/banner_002.png"/></a>
+		</div>
+		<div class="ezsm-index-menu">
+			<ul>
+				<a href="M06-品类-自营商城-加筛选.html"><li><img src="img/micon_001.png"/><br>自营商城</li></a>
+				<a href="M01-移动工具-价格.html"><li><img src="img/micon_002.png"/><br>价格行情</li></a>
+				<a href="M03-首页-金融服务.html"><li><img src="img/micon_003.png"/><br>金融服务</li></a>
+				<a href="M03-首页-行业资讯.html"><li><img src="img/micon_004.png"/><br>行业资讯</li></a>
+				<a href="M02-首页-供货合作.html"><li><img src="img/micon_005.png"/><br>供货合作</li></a>
+			</ul>
+			<div class="blank0c"></div>
+		</div>
+		<div class="ezsm-index-tit">
+			<img src="img/tit_001.png"/>
+		</div>
+		<div class="ezsm-index-list">
+			<ul>
+				<a href="M04-品类-货品详情.html">
+				<li>
+					<div class="ezsm-index-list-name">复合料复合料复合料复合料复合料料复合料复合料</div>
+					<div class="ezsm-index-list-price"><span>7800</span>元/吨</div>
+					<div class="ezsm-index-list-num">库存：10000吨</div>
+					<div class="ezsm-index-list-addr">河北-保定-蠡县</div>
+				</li>
+				</a>
+				<a href="M04-品类-货品详情.html">
+				<li>
+					<div class="ezsm-index-list-name">复合料复合料复合料复合料复合料料复合料复合料</div>
+					<div class="ezsm-index-list-price"><span>7800</span>元/吨</div>
+					<div class="ezsm-index-list-num">库存：10000吨</div>
+					<div class="ezsm-index-list-addr">河北-保定-蠡县</div>
+				</li>
+				</a>
+				<a href="M04-品类-货品详情.html">
+				<li>
+					<div class="ezsm-index-list-name">复合料复合料复合料复合料复合料料复合料复合料</div>
+					<div class="ezsm-index-list-price"><span>7800</span>元/吨</div>
+					<div class="ezsm-index-list-num">库存：10000吨</div>
+					<div class="ezsm-index-list-addr">河北-保定-蠡县</div>
+				</li>
+				</a>
+				<a href="M04-品类-货品详情.html">
+				<li>
+					<div class="ezsm-index-list-name">复合料复合料复合料复合料复合料料复合料复合料</div>
+					<div class="ezsm-index-list-price"><span>7800</span>元/吨</div>
+					<div class="ezsm-index-list-num">库存：10000吨</div>
+					<div class="ezsm-index-list-addr">河北-保定-蠡县</div>
+				</li>
+				</a>
+				<a href="M04-品类-货品详情.html">
+				<li>
+					<div class="ezsm-index-list-name">复合料复合料复合料复合料复合料料复合料复合料</div>
+					<div class="ezsm-index-list-price"><span>7800</span>元/吨</div>
+					<div class="ezsm-index-list-num">库存：10000吨</div>
+					<div class="ezsm-index-list-addr">河北-保定-蠡县</div>
+				</li>
+				</a>
+				<a href="M04-品类-货品详情.html">
+				<li>
+					<div class="ezsm-index-list-name">复合料复合料复合料复合料复合料料复合料复合料</div>
+					<div class="ezsm-index-list-price"><span>7800</span>元/吨</div>
+					<div class="ezsm-index-list-num">库存：10000吨</div>
+					<div class="ezsm-index-list-addr">河北-保定-蠡县</div>
+				</li>
+				</a>
+			</ul>
+		</div>
+		<div class="ezsm-index-more">正在加载</div>
+		<div class="blank10"></div>
+		<div class="blank70"></div>
+		<div class="ezsm-index-bottom">
+			<ul>
+				<a href="M02-首页-首页.html"><li class="ezsm-index-bottom-sel"><img src="img/micon_007.png"/><br>首页</li></a>
+				<a href="M04-品类.html"><li><img src="img/micon_008.png"/><br>品类</li></a>
+				<a href="M01-移动工具-价格.html"><li class="ezsm-index-bottom-big"><img src="img/micon_010.png"/><br>价格</li></a>
+				<a href="M06-采购单.html"><li><img src="img/micon_012.png"/><br>采购单</li></a>
+				<a href="M07-会员中心-首页-已认证.html"><li><img src="img/micon_014.png"/><br>我的</li></a>
+			</ul>
+		</div>
+	</div>
+	<!-- 选择城市 -->
+		<div class="msg-local" style="top:40px;">
+			<div class="msg-local-tit">全部地区</div>
+			<div class="msg-local-now"><img src="img/micon_026.png"/><span>河北</span></div>
+			<div class="msg-local-tit">热门省市</div>
+			<div class="msg-local-con">
+				<ul><li data-value="beijing">北京</li><li data-value="shanghai">上海</li><li data-value="guangzhou">广州</li></ul>
+				<div class="blank0c"></div>
+			</div>
+			<div class="msg-local-tit">A</div>
+			<div class="msg-local-con">
+				<ul>
+					<li data-value="beijing">北京</li><li data-value="shanghai">上海</li><li data-value="guangzhou">广州</li>
+					<li data-value="guangzhou">广州</li><li data-value="guangzhou">广州</li><li data-value="guangzhou">广州</li>
+					<li data-value="guangzhou">广州</li><li>广州</li>
+				</ul>
+				<div class="blank0c"></div>
+			</div>
+			<div class="msg-local-tit">B</div>
+			<div class="msg-local-con">
+				<ul>
+					<li data-value="beijing">北京</li><li data-value="shanghai">上海</li><li data-value="guangzhou">广州</li>
+					<li data-value="guangzhou">广州</li><li data-value="guangzhou">广州</li><li data-value="guangzhou">广州</li>
+					<li data-value="guangzhou">广州</li><li data-value="guangzhou">广州</li>
+				</ul>
+				<div class="blank0c"></div>
+			</div>
+			<div class="blank0c"></div>
+		</div>
+		<!-- 搜索记录 -->
+		<div class="msg-search" style="top:40px;">
+			<div class="msg-search-tit">搜索记录</div>
+			<div class="msg-search-con">
+				<ul>
+					<li>PP <div></div></li>
+					<li>LDPE<div></div></li>
+					<li>HDPE<div></div></li>
+					<li>LLDPE<div></div></li>
+				</ul>
+				<div class="blank0c"></div>
+			</div>
+			<div class="msg-search-btn" id="btn_search_clean"><img src="img/micon_055.png">清除搜索记录</div>
+			<div class="blank0c"></div>
+		</div>
+</body>
+</html>

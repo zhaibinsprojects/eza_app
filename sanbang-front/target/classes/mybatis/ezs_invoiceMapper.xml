@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_invoiceMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_invoice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
+    <result column="express_no" property="express_no" jdbcType="VARCHAR" />
+    <result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
+    <result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
+    <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, express_name, express_no, express_time, invoice_status, 
+    receipt_id, user_id, order_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_invoice
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_invoice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_invoice" >
+    insert into ezs_invoice (id, addTime, deleteStatus, 
+      express_name, express_no, express_time, 
+      invoice_status, receipt_id, user_id, 
+      order_no)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{express_name,jdbcType=VARCHAR}, #{express_no,jdbcType=VARCHAR}, #{express_time,jdbcType=TIMESTAMP}, 
+      #{invoice_status,jdbcType=INTEGER}, #{receipt_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
+      #{order_no,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" >
+    insert into ezs_invoice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="express_name != null" >
+        express_name,
+      </if>
+      <if test="express_no != null" >
+        express_no,
+      </if>
+      <if test="express_time != null" >
+        express_time,
+      </if>
+      <if test="invoice_status != null" >
+        invoice_status,
+      </if>
+      <if test="receipt_id != null" >
+        receipt_id,
+      </if>
+      <if test="user_id != null" >
+        user_id,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="express_name != null" >
+        #{express_name,jdbcType=VARCHAR},
+      </if>
+      <if test="express_no != null" >
+        #{express_no,jdbcType=VARCHAR},
+      </if>
+      <if test="express_time != null" >
+        #{express_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invoice_status != null" >
+        #{invoice_status,jdbcType=INTEGER},
+      </if>
+      <if test="receipt_id != null" >
+        #{receipt_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_invoice" >
+    update ezs_invoice
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="express_name != null" >
+        express_name = #{express_name,jdbcType=VARCHAR},
+      </if>
+      <if test="express_no != null" >
+        express_no = #{express_no,jdbcType=VARCHAR},
+      </if>
+      <if test="express_time != null" >
+        express_time = #{express_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invoice_status != null" >
+        invoice_status = #{invoice_status,jdbcType=INTEGER},
+      </if>
+      <if test="receipt_id != null" >
+        receipt_id = #{receipt_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_invoice" >
+    update ezs_invoice
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      express_name = #{express_name,jdbcType=VARCHAR},
+      express_no = #{express_no,jdbcType=VARCHAR},
+      express_time = #{express_time,jdbcType=TIMESTAMP},
+      invoice_status = #{invoice_status,jdbcType=INTEGER},
+      receipt_id = #{receipt_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT},
+      order_no = #{order_no,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

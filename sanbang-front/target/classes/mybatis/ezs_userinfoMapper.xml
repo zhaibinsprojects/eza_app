@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_userinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_userinfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="enable" property="enable" jdbcType="BIT" />
+    <result column="entryTime" property="entryTime" jdbcType="TIMESTAMP" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="depart_id" property="depart_id" jdbcType="BIGINT" />
+    <result column="position_id" property="position_id" jdbcType="BIGINT" />
+    <result column="sex_id" property="sex_id" jdbcType="BIGINT" />
+    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
+    <result column="updateStatus" property="updateStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, email, enable, entryTime, phone, status, depart_id, position_id, 
+    sex_id, QQ, updateStatus
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_userinfo
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_userinfo
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_userinfo" >
+    insert into ezs_userinfo (id, addTime, deleteStatus, 
+      email, enable, entryTime, 
+      phone, status, depart_id, 
+      position_id, sex_id, QQ, 
+      updateStatus)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{email,jdbcType=VARCHAR}, #{enable,jdbcType=BIT}, #{entryTime,jdbcType=TIMESTAMP}, 
+      #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{depart_id,jdbcType=BIGINT}, 
+      #{position_id,jdbcType=BIGINT}, #{sex_id,jdbcType=BIGINT}, #{QQ,jdbcType=VARCHAR}, 
+      #{updateStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_userinfo" >
+    insert into ezs_userinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="entryTime != null" >
+        entryTime,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="depart_id != null" >
+        depart_id,
+      </if>
+      <if test="position_id != null" >
+        position_id,
+      </if>
+      <if test="sex_id != null" >
+        sex_id,
+      </if>
+      <if test="QQ != null" >
+        QQ,
+      </if>
+      <if test="updateStatus != null" >
+        updateStatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=BIT},
+      </if>
+      <if test="entryTime != null" >
+        #{entryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="depart_id != null" >
+        #{depart_id,jdbcType=BIGINT},
+      </if>
+      <if test="position_id != null" >
+        #{position_id,jdbcType=BIGINT},
+      </if>
+      <if test="sex_id != null" >
+        #{sex_id,jdbcType=BIGINT},
+      </if>
+      <if test="QQ != null" >
+        #{QQ,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStatus != null" >
+        #{updateStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_userinfo" >
+    update ezs_userinfo
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=BIT},
+      </if>
+      <if test="entryTime != null" >
+        entryTime = #{entryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="depart_id != null" >
+        depart_id = #{depart_id,jdbcType=BIGINT},
+      </if>
+      <if test="position_id != null" >
+        position_id = #{position_id,jdbcType=BIGINT},
+      </if>
+      <if test="sex_id != null" >
+        sex_id = #{sex_id,jdbcType=BIGINT},
+      </if>
+      <if test="QQ != null" >
+        QQ = #{QQ,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStatus != null" >
+        updateStatus = #{updateStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_userinfo" >
+    update ezs_userinfo
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      email = #{email,jdbcType=VARCHAR},
+      enable = #{enable,jdbcType=BIT},
+      entryTime = #{entryTime,jdbcType=TIMESTAMP},
+      phone = #{phone,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      depart_id = #{depart_id,jdbcType=BIGINT},
+      position_id = #{position_id,jdbcType=BIGINT},
+      sex_id = #{sex_id,jdbcType=BIGINT},
+      QQ = #{QQ,jdbcType=VARCHAR},
+      updateStatus = #{updateStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

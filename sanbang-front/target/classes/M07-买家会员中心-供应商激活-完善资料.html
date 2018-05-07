@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/ezsm.js?v=1"></script>
+    <script>
+		$(function(){
+			$("#sel_changdi div").click(function(){
+				$("#sel_changdi div").removeClass("ezsm-purchase-type-seled");
+				$(this).addClass("ezsm-purchase-type-seled");
+			});
+			$("#btn_submit").click(function(){
+				$(".msg-bg").css("display","block");
+				$(".msg-box").css({"display":"block","height":"160px","margin-top":"100px"});
+				var con_str = "<div style='width:100%;height:60px;line-height:60px;text-align:center;font-size:20px;color:#333333;'>提示</div>"+
+							  "<div style='width:100%;height:30px;line-height:40px;text-align:center;font-size:15px;color:#333333;margin-bottom:26px;'>"+
+							  	"供应商激活信息已提交，等待管理员审核"+
+							  "</div>"+
+							  "<div style='width:100%;height:44px;line-height:44px;text-align:center;font-size:15px;color:#fff;background:#00897c;border-bottom-left-radius:5px;border-bottom-right-radius:5px;' id='alertbtn_close'>关闭</div>";
+				$(".msg-box").html(con_str);
+				$(".msg-bg,#alertbtn_close").click(function(){
+					$(".msg-bg").css("display","none");
+					$(".msg-box").css("display","none");
+				});
+			});
+		});
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-index">
+		<div class="ezsm-normal-top">
+			<div onclick="javascript:history.go(-1);"></div>
+			<div>供应商激活</div>
+			<div></div>
+		</div>
+		<div class="ezsm-g-active-top-stepbox">
+			<ul>
+				<li><div>1</div><p>签订协议</p></li>
+				<li class="ezsm-g-active-top-stepbox-li-sel"><div>2</div><p>完善信息</p></li>
+				<li><div>3</div><p>激活成功</p></li>
+			</ul>
+		</div>
+		<div class="ezsm-subscribe-tit">基本信息</div>
+		<div class="ezsm-g-active-table2">
+			<table cellspacing="0">
+				<tr> <td>企业名称</td> <td><input type="text" value="北京新易资源科技有限公司" style="width:95%;"></td> </tr>
+				<tr> <td>经营年限</td> <td><select style="width:95%;"><option>小于等于3年</option></select></td> </tr>
+				<tr> <td>年营业额</td> <td><input type="text" value="360" placeholder="请输入年营业额">万元</td> </tr>
+				<tr> <td>场地面积</td> <td><input type="text" value="1000" placeholder="请输入支行联号">m²</td> </tr>
+				<tr> <td>是否租用</td> 
+					<td>
+						<div id="sel_changdi" style="line-height:40px;">
+							<div class="ezsm-purchase-type-selno ezsm-purchase-type-seled" style="margin:5px 3px 0px 0px;"></div><span style="float:left;display:block;font-size:15px;">是</span> 
+							<div class="ezsm-purchase-type-selno" style="margin:5px 3px 0px 20px;"></div><span style="float:left;display:block;font-size:15px;">否</span>
+						</div>
+					</td>
+				</tr>
+				<tr> <td>设备数量</td> <td><input type="text" value="80" placeholder="请输入设备数量">台</td> </tr>
+				<tr> <td>工人人数</td> <td><input type="text" value="200" placeholder="请输入工人人数">人</td> </tr>
+				<tr> <td>总 资 产</td> <td><input type="text" value="121" placeholder="请输入总资产">万元</td> </tr>
+				<tr> <td>固定产值</td> <td><input type="text" value="64" placeholder="请输入固定产值">万元/年</td> </tr>
+				<tr> <td>实际控制人从业年限</td> <td><input type="text" value="3" placeholder="请输入实际控制人从业年限">年</td> </tr>
+			</table>
+		</div>
+
+		<div class="ezsm-subscribe-tit">结算账号信息</div>
+		<div class="ezsm-g-active-table2">
+			<table cellspacing="0">
+				<tr> <td>银行开户名</td> <td><input type="text" value="北京新易资源科技有限公司" style="width:95%;"></td> </tr>
+				<tr> <td>银行账号</td> <td><input type="text" value="" placeholder="请输入银行账号" style="width:95%;"></td> </tr>
+				<tr> <td>开户银行支行名称</td> <td><input type="text" value="" placeholder="请输入开户行名称" style="width:95%;"></td> </tr>
+				<tr> <td>支行联行号</td> <td><input type="text" value="" placeholder="请输入支行联号" style="width:95%;"></td> </tr>
+				<tr> <td>开户银行所在地</td> <td><select style="width:95%;"><option>北京</option></select></td> </tr>
+			</table>
+		</div>
+		<div class="ezsm-normal-msg"><span>温馨提示：</span>资料一经审核，不能修改，请您填写准确的资料。</div>
+
+		<div class="blank70"></div>
+		<div class="ezsm-normal-bottombtnB-box">
+			<div class="ezsm-normal-bottombtnB1" style="color:#00897c;">保存</div>
+			<div class="ezsm-normal-bottombtnB2" id="btn_submit">提交</div>
+		</div>
+	</div>
+</body>
+</html>

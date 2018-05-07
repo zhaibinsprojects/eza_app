@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_logisticsMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_logistics" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="add_cart_time" property="add_cart_time" jdbcType="TIMESTAMP" />
+    <result column="car_no" property="car_no" jdbcType="VARCHAR" />
+    <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+    <result column="logistics_name" property="logistics_name" jdbcType="VARCHAR" />
+    <result column="logistics_no" property="logistics_no" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="proples" property="proples" jdbcType="VARCHAR" />
+    <result column="sendAddess" property="sendAddess" jdbcType="VARCHAR" />
+    <result column="service_time" property="service_time" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="total_price" property="total_price" jdbcType="DECIMAL" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, add_cart_time, car_no, end_time, logistics_name, logistics_no, 
+    msg, phone, proples, sendAddess, service_time, status, total_price, order_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_logistics
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_logistics
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_logistics" >
+    insert into ezs_logistics (id, addTime, deleteStatus, 
+      add_cart_time, car_no, end_time, 
+      logistics_name, logistics_no, msg, 
+      phone, proples, sendAddess, 
+      service_time, status, total_price, 
+      order_no)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{add_cart_time,jdbcType=TIMESTAMP}, #{car_no,jdbcType=VARCHAR}, #{end_time,jdbcType=TIMESTAMP}, 
+      #{logistics_name,jdbcType=VARCHAR}, #{logistics_no,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{proples,jdbcType=VARCHAR}, #{sendAddess,jdbcType=VARCHAR}, 
+      #{service_time,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, 
+      #{order_no,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_logistics" >
+    insert into ezs_logistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="add_cart_time != null" >
+        add_cart_time,
+      </if>
+      <if test="car_no != null" >
+        car_no,
+      </if>
+      <if test="end_time != null" >
+        end_time,
+      </if>
+      <if test="logistics_name != null" >
+        logistics_name,
+      </if>
+      <if test="logistics_no != null" >
+        logistics_no,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="proples != null" >
+        proples,
+      </if>
+      <if test="sendAddess != null" >
+        sendAddess,
+      </if>
+      <if test="service_time != null" >
+        service_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="total_price != null" >
+        total_price,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="add_cart_time != null" >
+        #{add_cart_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="car_no != null" >
+        #{car_no,jdbcType=VARCHAR},
+      </if>
+      <if test="end_time != null" >
+        #{end_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logistics_name != null" >
+        #{logistics_name,jdbcType=VARCHAR},
+      </if>
+      <if test="logistics_no != null" >
+        #{logistics_no,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="proples != null" >
+        #{proples,jdbcType=VARCHAR},
+      </if>
+      <if test="sendAddess != null" >
+        #{sendAddess,jdbcType=VARCHAR},
+      </if>
+      <if test="service_time != null" >
+        #{service_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="total_price != null" >
+        #{total_price,jdbcType=DECIMAL},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_logistics" >
+    update ezs_logistics
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="add_cart_time != null" >
+        add_cart_time = #{add_cart_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="car_no != null" >
+        car_no = #{car_no,jdbcType=VARCHAR},
+      </if>
+      <if test="end_time != null" >
+        end_time = #{end_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logistics_name != null" >
+        logistics_name = #{logistics_name,jdbcType=VARCHAR},
+      </if>
+      <if test="logistics_no != null" >
+        logistics_no = #{logistics_no,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="proples != null" >
+        proples = #{proples,jdbcType=VARCHAR},
+      </if>
+      <if test="sendAddess != null" >
+        sendAddess = #{sendAddess,jdbcType=VARCHAR},
+      </if>
+      <if test="service_time != null" >
+        service_time = #{service_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="total_price != null" >
+        total_price = #{total_price,jdbcType=DECIMAL},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_logistics" >
+    update ezs_logistics
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      add_cart_time = #{add_cart_time,jdbcType=TIMESTAMP},
+      car_no = #{car_no,jdbcType=VARCHAR},
+      end_time = #{end_time,jdbcType=TIMESTAMP},
+      logistics_name = #{logistics_name,jdbcType=VARCHAR},
+      logistics_no = #{logistics_no,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      proples = #{proples,jdbcType=VARCHAR},
+      sendAddess = #{sendAddess,jdbcType=VARCHAR},
+      service_time = #{service_time,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      total_price = #{total_price,jdbcType=DECIMAL},
+      order_no = #{order_no,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

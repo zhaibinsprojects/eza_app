@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/PCASClass.js"></script>
+    <script src="js/ezsm.js?v=1"></script>
+    <script>
+		$(function(){
+			$(".ezsm-normal-tab2 ul li").click(function(){
+				$(".ezsm-normal-tab2 ul li").removeClass("ezsm-normal-tab2-sel");
+				$(this).addClass("ezsm-normal-tab2-sel");
+				$(".ezsm-normal-content").css("display","none");
+				$("#box_"+($(this).attr("data-value"))).css("display","block");
+			});
+			
+			$("#btn_appley").click(function(){
+				$(".msg-bg").css("display","block");
+				$(".msg-box").css({"display":"block","height":"459px","margin-top":"40px"});
+				var con_str = "<div class='me-alert-close'><span>×</span></div>"+
+							  "<div class='me-alert-box-tit'>申请贷款</div>"+
+							  "<table class='me-alert-box-table1'>"+
+								"<tr><td><span>*</span>服务类型</td><td><select><option>请选择</option><option>货押融资服务</option><option>账期融资服务</option></select></td></tr>"+
+								"<tr><td><span>*</span>经营类型</td><td><select><option>请选择</option><option>塑料行业</option><option>其他</option></select></td></tr>"+
+								"<tr><td><span>*</span>企业名称</td><td><input type='text' placeholder='请填写企业名称'/></td></tr>"+
+								"<tr><td><span>*</span>联系人</td><td><input type='text' placeholder='请填写联系人'/></td></tr>"+
+								"<tr><td><span>*</span>联系方式</td><td><input type='text' placeholder='请填写联系电话'/></td></tr>"+
+								"<tr><td>所在地</td><td>"+
+								'<select name="province" style="width:80px;">'+
+								'<option value="">--请选择--</option>'+
+								'<option value="北京市">北京市</option>'+
+								'<option value="天津市">天津市</option>'+
+								'<option value="河北省">河北省</option>'+
+								'<option value="山西省">山西省</option>'+
+								'<option value="内蒙古自治区">内蒙古自治区</option>'+
+								'<option value="辽宁省">辽宁省</option>'+
+								'<option value="吉林省" selected="selected">吉林省</option>'+
+								'<option value="黑龙江省">黑龙江省</option>'+
+								'<option value="上海市">上海市</option>'+
+								'<option value="江苏省">江苏省</option>'+
+								'<option value="浙江省">浙江省</option>'+
+								'<option value="安徽省">安徽省</option>'+
+								'<option value="福建省">福建省</option>'+
+								'<option value="江西省">江西省</option>'+
+								'<option value="山东省">山东省</option>'+
+								'<option value="河南省">河南省</option>'+
+								'<option value="湖北省">湖北省</option>'+
+								'<option value="湖南省">湖南省</option>'+
+								'<option value="广东省">广东省</option>'+
+								'<option value="广西壮族自治区">广西壮族自治区</option>'+
+								'<option value="海南省">海南省</option>'+
+								'<option value="重庆市">重庆市</option>'+
+								'<option value="四川省">四川省</option>'+
+								'<option value="贵州省">贵州省</option>'+
+								'<option value="云南省">云南省</option>'+
+								'<option value="西藏自治区">西藏自治区</option>'+
+								'<option value="陕西省">陕西省</option>'+
+								'<option value="甘肃省">甘肃省</option>'+
+								'<option value="青海省">青海省</option>'+
+								'<option value="宁夏回族自治区">宁夏回族自治区</option>'+
+								'<option value="新疆维吾尔自治区">新疆维吾尔自治区</option>'+
+								'<option value="香港特别行政区">香港特别行政区</option>'+
+								'<option value="澳门特别行政区">澳门特别行政区</option>'+
+								'<option value="台湾省">台湾省</option>'+
+								'<option value="其它">其它</option>'+
+							'</select>'+
+							'<select name="city" style="width:80px;">'+
+								'<option value="长春市">长春市</option>'+
+								'<option value="吉林市">吉林市</option>'+
+								'<option value="四平市">四平市</option>'+
+								'<option value="辽源市">辽源市</option>'+
+								'<option value="通化市">通化市</option>'+
+								'<option value="白山市">白山市</option>'+
+								'<option value="松原市">松原市</option>'+
+								'<option value="白城市" selected="selected">白城市</option>'+
+								'<option value="延边朝鲜族自治州">延边朝鲜族自治州</option>'+
+							'</select>'+
+								"</td></tr>"+
+								"<tr><td>详细地址</td><td><input type='text' placeholder='请填写详细地址'/></td></tr>"+
+								"<tr><td><span>*</span>贷款金额</td><td><input type='text' placeholder='请填写贷款金额'/></td></tr>"+
+							  "</table>"+
+							  "<div class='me-alert-box-btn' id='btn_save'>提交资料</div>";
+				$(".msg-box").html(con_str);
+				new PCAS("province","city","北京市","市辖区");
+				$(".msg-bg,.me-alert-close,#btn_cancel").click(function(){
+					$(".msg-bg").css("display","none");
+					$(".msg-box").css("display","none");
+				});
+			});
+		});
+		
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-normal-top">
+		<div onclick="javascript:history.go(-1);"></div>
+		<div>金融服务</div>
+		<div></div>
+	</div>
+	
+	<div class="ezsm-normal-tab2">
+		<ul>
+			<li data-value="1" class="ezsm-normal-tab2-sel"><div>货押融资</div></li>
+			<li data-value="2"><div>账期融资</div></li>
+		</ul>
+	</div>
+	<div class="ezsm-normal-content" id="box_1">
+		<img src="images/file_001.jpg">
+	</div>
+	<div class="ezsm-normal-content" id="box_2" style="display:none;">
+		<img src="images/file_002.jpg">
+	</div>
+	<div class="blank50"></div>
+	<div class="ezsm-normal-bottombtn" id="btn_appley">申请贷款</div>
+</body>
+</html>

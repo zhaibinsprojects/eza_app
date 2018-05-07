@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop       
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+    default-autowire="no" default-lazy-init="false" >
+    
+    <!-- 扫描包 -->
+	<context:component-scan base-package="com.sanbang.**.controller"/>
+	<context:property-placeholder location="classpath:/**/*.properties"  file-encoding="UTF-8"/>
+	<!-- 支持异步方法执行 -->
+    <task:annotation-driven /> 
+	<mvc:resources mapping="/resource/**" location="/resource/" />    
+	<!-- 注解开发模式 -->
+	<mvc:annotation-driven/>
+	
+	
+	<mvc:annotation-driven>    
+		<mvc:message-converters register-defaults="true">      <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->     
+			<bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">        
+				<property name="supportedMediaTypes">          
+					<list>            
+						<value>text/html;charset=UTF-8</value>
+						<value>text/json;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>       
+					</list>        
+				</property>      
+			</bean>    
+		</mvc:message-converters>  
+	</mvc:annotation-driven> 
+
+	
+	
+	<!-- 视图解析器: 内部资源视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 相关JSP页面路径配置 -->
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1"/>
+	</bean>
+	 
+    <!-- 使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求 -->  
+	<!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的  -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/app/**" />
+			<bean class="com.sanbang.interceptors.BasePathInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/userPro/**" />
+			<mvc:exclude-mapping path="/home/**" />
+			<mvc:exclude-mapping path="/store/**" />
+			<bean class="com.sanbang.interceptors.LoginInterceptor" />
+		</mvc:interceptor>
+	
+	</mvc:interceptors>
+	
+</beans>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>易再生-中国再生资源交易平台</title>
+    <link rel="stylesheet" href="css/ezsm.css?v=1" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.touchSlider.js"></script>
+    <script type="text/javascript" src="js/ezsm.js?v=1"></script>
+    <script type="text/javascript">
+		$(function(){
+			$("#sel_huanbao div").click(function(){
+				$("#sel_huanbao div").removeClass("ezsm-purchase-type-seled");
+				$(this).addClass("ezsm-purchase-type-seled");
+			});
+			$("#btn_reset").click(function(){
+				$(".ezsm-shopadd-param input").val("");
+				$(".ezsm-shopadd-param select").val("");
+				$(".ezsm-shopadd-param textarea").val("");
+			});
+		});
+	</script>
+</head>
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	
+	<div class="ezsm-normal-top">
+		<div onclick="javascript:history.go(-1);"></div>
+		<div>个体工商户认证</div>
+		<div></div>
+	</div>
+
+	<div class="ezsm-shopadd-param">
+		<table cellspacing="0">
+			<tr> <td><span>*</span>企业名称</td> <td><input type="text" value="北京新易资源有限公司" placeholder="请输入企业名称"></td> </tr>
+			<tr> <td><span>*</span>联系人</td> <td><input type="text" value="张三" placeholder="请输入联系人"></td> </tr>
+			<tr> <td><span>*</span>经营地址</td> <td><input type="text" placeholder="请选择省市"></td> </tr>
+			<tr> <td><span></span></td> <td><input type="text" placeholder="详细地址"></td> </tr>
+			<tr> <td><span>*</span>注册号</td> <td><input type="text" value="100" placeholder="营业执照上的注册号	"></td> </tr>
+			<tr> <td><span>*</span>营业期限至</td> <td><input type="text" value="3" placeholder="请选择时间"</td> </tr>
+		</table>
+	</div>
+
+	<div class="blank10"></div>
+	<div class="ezsm-shopadd-param">
+		<table cellspacing="0">
+			<tr> <td valign="top" style="line-height:40px;"><span>*</span>上传证件</td> 
+				<td>
+					<div class="ezsm-shopadd-param-info-con">
+						<div class="ezsm-shopadd-param-imgup-box">
+							<div class="ezsm-shopadd-param-imgup-img"></div>
+						</div>
+						<div class="ezsm-shopadd-param-imgup-box">
+							<div class="ezsm-shopadd-param-imgup-img"></div>
+						</div>
+						<div class="blank0c"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="blank10"></div>
+	<div class="ezsm-shopadd-param">
+		<table cellspacing="0">
+			<tr> <td valign="top" style="line-height:20px;padding:10px 0px;"><span>*</span>经营者身份证照片</td> 
+				<td>
+					<div class="ezsm-shopadd-param-info-con">
+						<div class="ezsm-shopadd-param-imgup-box">
+							<div class="ezsm-shopadd-param-imgup-img"></div>
+						</div>
+						<div style="height:100px;line-height:100px;text-align:left;font-size:14px;color:#333333;">上传正反面照片</div>
+						<div class="blank0c"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="blank10"></div>
+	<div class="ezsm-shopadd-param">
+		<table cellspacing="0">
+			<tr> <td valign="top" style="line-height:40px;"><span>*</span>授权文件</td> 
+				<td>
+					<div class="ezsm-shopadd-param-info-con">
+						<div class="ezsm-shopadd-param-imgup-box">
+							<div class="ezsm-shopadd-param-imgup-img"></div>
+						</div>
+						<div style="height:30px;line-height:15px;text-align:left;padding-top:30px;font-size:14px;color:#333333;" >
+							<img src="img/micon_093.png" style="float:left;width:24px;height:25px;margin-top:0px;margin-right:5px;">
+							<div style="float:left;color:#00897c; ">点击下载<br>文件模板</div>
+						</div>
+						<div class="blank0c"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="blank50"></div>
+	<div class="ezsm-normal-centerbtn">提交</div>
+	<div class="blank50"></div>
+</body>
+</html>

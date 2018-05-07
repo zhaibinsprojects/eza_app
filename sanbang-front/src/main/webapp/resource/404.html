@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>交易大厅-易再生</title>
+<script type="text/javascript" src="resource/script/jquery-1.7.1.min.js"></script>    
+  </head>    
+  <body>
+    <div style="margin: 50px auto 20px;text-align: center">   
+      <a href="http://www.ezaisheng.com">
+        <img src="resource/images/404_3.png"/></a>     
+      <div style="text-align: left;font-size: 24px; color: #1f6fa7;margin: 30px auto;width: 340px">对不起，您访问的页面不存在！
+      </div>   
+      <div style="text-align: left;margin: 30px auto;width: 340px;font-size: 14px;">       <strong>可能因为：</strong>       
+        <p>网址有错误> 请检查地址是否完整或存在多余字符
+        </p>       
+        <p>网址已失效> 可能页面已删除，活动已下线等
+        </p>   
+      </div>        
+      <div style="margin: 30px 10px;">              
+        <span style="font-size: 24px;color: #373737;margin-right: 30px;">
+          <strong style="color: #1f6fa7;font-size: 40px;font-weight: normal;padding: 0 8px;" id="doUpdate">5</strong>秒钟后自动跳转
+        </span>            
+        <a href="http://www.ezaisheng.com"  style="display: inline-block;background:transparent url(http://www.ezaisheng.com/cmj/image/404_2.png) center center no-repeat; height:46px;width:159px;text-align:center;line-height:46px;font-size: 24px;color: #1f6fa7;text-decoration:none">返回首页</a>        
+      </div>     
+    </div>
+<script language="javascript" type="text/javascript">
+    var secs =5; //倒计时的秒数
+    var URL ;
+    function Load(url){
+        URL =url;
+        for(var i=secs;i>=0;i--)
+        {     
+            window.setTimeout('doUpdate(' + i + ')', (secs-i) * 1000);   
+        }
+    }
+    function doUpdate(num)
+    {
+        document.getElementById("doUpdate").innerHTML = num;
+        if(num == 0) { window.location=URL;  }
+    }
+    $(function(){
+		Load('http://www.ezaisheng.com');
+    })
+  </script>  
+  </body>
+</html>

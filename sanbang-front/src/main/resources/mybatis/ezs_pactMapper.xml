@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanbang.dao.ezs_pactMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_pact" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="pact" property="pact" jdbcType="VARCHAR" />
+    <result column="pact_mold" property="pact_mold" jdbcType="INTEGER" />
+    <result column="pact_type" property="pact_type" jdbcType="INTEGER" />
+    <result column="sign_time" property="sign_time" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="buyUser_id" property="buyUser_id" jdbcType="BIGINT" />
+    <result column="sellerUser_id" property="sellerUser_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, order_no, pact, pact_mold, pact_type, sign_time, status, 
+    buyUser_id, sellerUser_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_pact
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_pact
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_pact" >
+    insert into ezs_pact (id, addTime, deleteStatus, 
+      order_no, pact, pact_mold, 
+      pact_type, sign_time, status, 
+      buyUser_id, sellerUser_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{order_no,jdbcType=VARCHAR}, #{pact,jdbcType=VARCHAR}, #{pact_mold,jdbcType=INTEGER}, 
+      #{pact_type,jdbcType=INTEGER}, #{sign_time,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{buyUser_id,jdbcType=BIGINT}, #{sellerUser_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_pact" >
+    insert into ezs_pact
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+      <if test="pact != null" >
+        pact,
+      </if>
+      <if test="pact_mold != null" >
+        pact_mold,
+      </if>
+      <if test="pact_type != null" >
+        pact_type,
+      </if>
+      <if test="sign_time != null" >
+        sign_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="buyUser_id != null" >
+        buyUser_id,
+      </if>
+      <if test="sellerUser_id != null" >
+        sellerUser_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="pact != null" >
+        #{pact,jdbcType=VARCHAR},
+      </if>
+      <if test="pact_mold != null" >
+        #{pact_mold,jdbcType=INTEGER},
+      </if>
+      <if test="pact_type != null" >
+        #{pact_type,jdbcType=INTEGER},
+      </if>
+      <if test="sign_time != null" >
+        #{sign_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="buyUser_id != null" >
+        #{buyUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="sellerUser_id != null" >
+        #{sellerUser_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_pact" >
+    update ezs_pact
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="pact != null" >
+        pact = #{pact,jdbcType=VARCHAR},
+      </if>
+      <if test="pact_mold != null" >
+        pact_mold = #{pact_mold,jdbcType=INTEGER},
+      </if>
+      <if test="pact_type != null" >
+        pact_type = #{pact_type,jdbcType=INTEGER},
+      </if>
+      <if test="sign_time != null" >
+        sign_time = #{sign_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="buyUser_id != null" >
+        buyUser_id = #{buyUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="sellerUser_id != null" >
+        sellerUser_id = #{sellerUser_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_pact" >
+    update ezs_pact
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      order_no = #{order_no,jdbcType=VARCHAR},
+      pact = #{pact,jdbcType=VARCHAR},
+      pact_mold = #{pact_mold,jdbcType=INTEGER},
+      pact_type = #{pact_type,jdbcType=INTEGER},
+      sign_time = #{sign_time,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      buyUser_id = #{buyUser_id,jdbcType=BIGINT},
+      sellerUser_id = #{sellerUser_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shanbang.dao.ezs_customerlogMapper">
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customerlog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
+    <result column="actionId" jdbcType="INTEGER" property="actionId" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="customer_id" jdbcType="BIGINT" property="customer_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, addTime, deleteStatus, actionId, remarks, customer_id, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_customerlog
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ezs_customerlog
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_customerlog">
+    insert into ezs_customerlog (id, addTime, deleteStatus, 
+      actionId, remarks, customer_id, 
+      user_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{actionId,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{customer_id,jdbcType=BIGINT}, 
+      #{user_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customerlog">
+    insert into ezs_customerlog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="addTime != null">
+        addTime,
+      </if>
+      <if test="deleteStatus != null">
+        deleteStatus,
+      </if>
+      <if test="actionId != null">
+        actionId,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="customer_id != null">
+        customer_id,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null">
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="actionId != null">
+        #{actionId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="customer_id != null">
+        #{customer_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customerlog">
+    update ezs_customerlog
+    <set>
+      <if test="addTime != null">
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null">
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="actionId != null">
+        actionId = #{actionId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="customer_id != null">
+        customer_id = #{customer_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customerlog">
+    update ezs_customerlog
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      actionId = #{actionId,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      customer_id = #{customer_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customerLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
+    <result column="actionId" jdbcType="INTEGER" property="actionId" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="customer_id" jdbcType="BIGINT" property="customer_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, addTime, deleteStatus, actionId, remarks, customer_id, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_customerlog
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ezs_customerlog
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_customerLog">
+    insert into ezs_customerlog (id, addTime, deleteStatus, 
+      actionId, remarks, customer_id, 
+      user_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{actionId,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{customer_id,jdbcType=BIGINT}, 
+      #{user_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customerLog">
+    insert into ezs_customerlog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="addTime != null">
+        addTime,
+      </if>
+      <if test="deleteStatus != null">
+        deleteStatus,
+      </if>
+      <if test="actionId != null">
+        actionId,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="customer_id != null">
+        customer_id,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null">
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="actionId != null">
+        #{actionId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="customer_id != null">
+        #{customer_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customerLog">
+    update ezs_customerlog
+    <set>
+      <if test="addTime != null">
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null">
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="actionId != null">
+        actionId = #{actionId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="customer_id != null">
+        customer_id = #{customer_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customerLog">
+    update ezs_customerlog
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      actionId = #{actionId,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      customer_id = #{customer_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
