@@ -1,6 +1,6 @@
 package com.sanbang.vo;
 
-public class PublicResultCode {
+public class DictionaryCode {
 	/**
      * 用户名不合法
      */
