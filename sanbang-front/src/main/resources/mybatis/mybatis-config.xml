@@ -17,11 +17,16 @@
         <setting name="jdbcTypeForNull" value="OTHER" />
         <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
     </settings>
+    
+    <typeAliases>
+	        <package name="com.sanbang.bean"></package>
+	</typeAliases>
+	
      <plugins>
         <plugin interceptor="com.github.pagehelper.PageHelper">
             <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->        
             <property name="dialect" value="mysql"/>
         </plugin>
     </plugins>
-
+	
 </configuration>

@@ -13,35 +13,22 @@
     http://www.springframework.org/schema/context/spring-context-3.0.xsd"
 	default-autowire="no" default-lazy-init="false">
 
-	<!-- sqlSessionFactory
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
-	 -->
-	<bean id="sqlSessionFactory" class="com.sanbang.exception.MybatisException">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
-		<property name="mapperLocations">
-			<list>
-				<value>classpath:mybatis/mapping-*.xml</value>
-			</list>
-		</property>
+	<!-- 配置Mapper工厂 -->
+	<bean id="baseMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		abstract="true" lazy-init="true">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 
-	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-	  <constructor-arg index="0" ref="sqlSessionFactory" />
+	<!--用户登陆信息-->
+	<bean id="ezs_userMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_userMapper" />
 	</bean>
-
-	<!-- 事务管理器 transactionManager -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-
-	<tx:annotation-driven transaction-manager="transactionManager" />
-
-    <!-- 这里的dao都是接口, 让spring根据xml生成接口的具体实现 -->
-    <bean name="mapperScannerConfigurer"
-             class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.sanbang.dao" />
+	
+	<!--用户明细-->
+	<bean id="ezs_userinfoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_userinfoMapper" />
 	</bean>
 </beans>
 

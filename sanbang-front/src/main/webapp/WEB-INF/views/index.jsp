@@ -124,7 +124,7 @@
 				<a href="cata/init.htm"><li><img src="resource/img/micon_008.png"/><br>品类</li></a>
 				<a href="data/init.htm"><li class="ezsm-index-bottom-big"><img src="resource/img/micon_010.png"/><br>价格</li></a>
 				<a href="buyer/order.htm"><li><img src="resource/img/micon_012.png"/><br>采购单</li></a>
-				<a href="M05-会员中心-会员登录-密码登录.html"><li><img src="resource/img/micon_014.png"/><br>我的</li></a>
+				<a href="user/index.htm"><li><img src="resource/img/micon_014.png"/><br>我的</li></a>
 			</ul>
 		</div>
 	</div>

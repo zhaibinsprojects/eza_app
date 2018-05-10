@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_qualityMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_quality" >
+<mapper namespace="com.sanbang.dao.ezs_qualityMapper" >
+  <resultMap id="BaseResultMap" type="ezs_quality" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -23,7 +23,7 @@
     delete from ezs_quality
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_quality" >
+  <insert id="insert" parameterType="ezs_quality" >
     insert into ezs_quality (id, addTime, deleteStatus, 
       content, quality_no, report, 
       status)
@@ -31,7 +31,7 @@
       #{content,jdbcType=VARCHAR}, #{quality_no,jdbcType=VARCHAR}, #{report,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_quality" >
+  <insert id="insertSelective" parameterType="ezs_quality" >
     insert into ezs_quality
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_quality" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_quality" >
     update ezs_quality
     <set >
       <if test="addTime != null" >
@@ -104,7 +104,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_quality" >
+  <update id="updateByPrimaryKey" parameterType="ezs_quality" >
     update ezs_quality
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_addressMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_address" >
+<mapper namespace="com.sanbang.dao.ezs_addressMapper" >
+  <resultMap id="BaseResultMap" type="ezs_address" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -28,7 +28,7 @@
     delete from ezs_address
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_address" >
+  <insert id="insert" parameterType="ezs_address" >
     insert into ezs_address (id, addTime, deleteStatus, 
       area_info, bestow, mobile, 
       telephone, trueName, zip, 
@@ -38,7 +38,7 @@
       #{telephone,jdbcType=VARCHAR}, #{trueName,jdbcType=VARCHAR}, #{zip,jdbcType=VARCHAR}, 
       #{area_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_address" >
+  <insert id="insertSelective" parameterType="ezs_address" >
     insert into ezs_address
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -111,7 +111,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_address" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_address" >
     update ezs_address
     <set >
       <if test="addTime != null" >
@@ -147,7 +147,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_address" >
+  <update id="updateByPrimaryKey" parameterType="ezs_address" >
     update ezs_address
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

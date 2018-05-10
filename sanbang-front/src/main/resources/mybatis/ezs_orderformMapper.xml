@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_orderformMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_orderform" >
+<mapper namespace="com.sanbang.dao.ezs_orderformMapper" >
+  <resultMap id="BaseResultMap" type="ezs_orderform" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -28,7 +28,7 @@
     <result column="invoice_id" property="invoice_id" jdbcType="BIGINT" />
     <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_orderform" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_orderform" extends="BaseResultMap" >
     <result column="msg" property="msg" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -52,7 +52,7 @@
     delete from ezs_orderform
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_orderform" >
+  <insert id="insert" parameterType="ezs_orderform" >
     insert into ezs_orderform (id, addTime, deleteStatus, 
       all_price, cart_session_id, end_price, 
       finishtime, first_price, goods_amount, 
@@ -72,7 +72,7 @@
       #{bill_id,jdbcType=BIGINT}, #{buyBiil_id,jdbcType=BIGINT}, #{invoice_id,jdbcType=BIGINT}, 
       #{logistics_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_orderform" >
+  <insert id="insertSelective" parameterType="ezs_orderform" >
     insert into ezs_orderform
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -235,7 +235,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_orderform" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_orderform" >
     update ezs_orderform
     <set >
       <if test="addTime != null" >
@@ -316,7 +316,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_orderform" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_orderform" >
     update ezs_orderform
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -345,7 +345,7 @@
       msg = #{msg,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_orderform" >
+  <update id="updateByPrimaryKey" parameterType="ezs_orderform" >
     update ezs_orderform
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

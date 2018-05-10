@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_userinfoMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_userinfo" >
+<mapper namespace="com.sanbang.dao.ezs_userinfoMapper" >
+  <resultMap id="BaseResultMap" type="ezs_userinfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -20,7 +20,7 @@
     id, addTime, deleteStatus, email, enable, entryTime, phone, status, depart_id, position_id, 
     sex_id, QQ, updateStatus
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="userinfomap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_userinfo
@@ -30,7 +30,7 @@
     delete from ezs_userinfo
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_userinfo" >
+  <insert id="insert" parameterType="ezs_userinfo" >
     insert into ezs_userinfo (id, addTime, deleteStatus, 
       email, enable, entryTime, 
       phone, status, depart_id, 
@@ -42,7 +42,7 @@
       #{position_id,jdbcType=BIGINT}, #{sex_id,jdbcType=BIGINT}, #{QQ,jdbcType=VARCHAR}, 
       #{updateStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_userinfo" >
+  <insert id="insertSelective" parameterType="ezs_userinfo" >
     insert into ezs_userinfo
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -127,7 +127,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_userinfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_userinfo" >
     update ezs_userinfo
     <set >
       <if test="addTime != null" >
@@ -169,7 +169,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_userinfo" >
+  <update id="updateByPrimaryKey" parameterType="ezs_userinfo" >
     update ezs_userinfo
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -185,4 +185,60 @@
       updateStatus = #{updateStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!--得到用户信息通过用户名称-->
+  <select id="selectUserinfoByuserName" resultMap="BaseResultMap" parameterType="ezs_userinfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_userinfo
+    where name=${ezsuser.name} 
+  </select>
+  
+  
+  
+  <!--用户登陆信息-->
+  <resultMap id="userinfomap" type="User_Proinfo">
+	  	<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+	    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+	    <result column="lastLoginDate" property="lastLoginDate" jdbcType="TIMESTAMP" />
+	    <result column="lastLoginIp" property="lastLoginIp" jdbcType="VARCHAR" />
+	    <result column="loginCount" property="loginCount" jdbcType="INTEGER" />
+	    <result column="loginDate" property="loginDate" jdbcType="TIMESTAMP" />
+	    <result column="loginIp" property="loginIp" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="VARCHAR" />
+	    <result column="trueName" property="trueName" jdbcType="VARCHAR" />
+	    <result column="userRole" property="userRole" jdbcType="VARCHAR" />
+	    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+	    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+	    <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
+         
+         <!--用户详情-->
+         <association property="userInfo" column="userInfo_id" select="selectByPrimaryKey">
+         </association>
+         
+         <!--商城-->
+         <association property="store" column="store_id" select="com.sanbang.dao.ezs_storeMapper.selectByPrimaryKey">
+         </association>
+         
+         
+         <!--角色-->
+         <association property="roles" column="user_id" select="com.sanbang.dao.ezs_user_roleMappe.selectByPrimaryKey">
+         </association>
+         
+         <!--配置-->
+          <association property="config" column="user_id" select="com.sanbang.dao.ezs_userconfigMapper.selectByPrimaryKey">
+         </association>
+         
+  </resultMap>
+  
+	<!--查询用户手机号-->
+	<select  id="checkMobile" resultType="long">
+  	 select 
+     count(phone)
+    from ezs_userinfo
+    where phone = #{phone}
+	</select>
+  
 </mapper>

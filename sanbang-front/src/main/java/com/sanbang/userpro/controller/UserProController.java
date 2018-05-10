@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.redis.RedisConstants;
@@ -255,7 +256,7 @@ public class UserProController {
 	 */
 	@RequestMapping(value = "/userLogot")
 	public String userLogot(HttpServletRequest request) throws Exception {
-		ezs_user upi=RedisUserSession.getUserInfo(request);
+		User_Proinfo upi=RedisUserSession.getUserInfo(request);
 //	    UserProInfo upi=new UserProInfo();
 //	    upi.setUsername("t000003");
 		Map<String, Object> map = null;
@@ -312,24 +313,7 @@ public class UserProController {
 		}
 	}
 	
-	/**
-	 * 用户注册发送修改手机号码的验证码
-	 * @param phone
-	 * @param request
-	 * @throws Exception
-	 */
-	@RequestMapping(value="userInfo/sendUpMoCode")
-	@ResponseBody
-	public Map<String,Object> sendUpMoCode(@RequestParam(value="mobile",required=false) String mobile, HttpServletRequest request) throws Exception {  
-		StringBuilder code = new StringBuilder();  
-		Random random = new Random();  
-		// 6位验证码  
-		for (int i = 0; i < 6; i++) {  
-			code.append(String.valueOf(random.nextInt(10)));  
-		}  
-		Map<String,Object> map=userProService.sendUpMoCode(mobile,code.toString());
-		return map;
-	}  
+	
 	
 	/**
 	 * 修改手机号码  并 检验 验证码
@@ -342,7 +326,7 @@ public class UserProController {
 	public Map<String,Object> checkUpMoCode(@RequestParam(value="mobile",required=false) String mobile,
 			@RequestParam(value="code",required=false) String code,
 			HttpServletRequest request,HttpServletResponse response) throws Exception{
-		ezs_user upi=RedisUserSession.getUserInfo(request);
+		User_Proinfo upi=RedisUserSession.getUserInfo(request);
 //		   UserProInfo upi=new UserProInfo();
 //		   upi.setUsername("tttttt");
 		Map<String,Object> map=userProService.checkUpMoCode(mobile, code,upi,request);
@@ -449,7 +433,7 @@ public class UserProController {
 		}
 		int mallnum=0;
 		String username="";
-		ezs_user upi=RedisUserSession.getUserInfo(request);
+		User_Proinfo upi=RedisUserSession.getUserInfo(request);
 
 		if(null!=upi){
 			username=upi.getName();

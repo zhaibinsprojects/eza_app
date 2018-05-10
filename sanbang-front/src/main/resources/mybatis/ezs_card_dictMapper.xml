@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_card_dictMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_card_dict" >
+<mapper namespace="com.sanbang.dao.ezs_card_dictMapper" >
+  <resultMap id="BaseResultMap" type="ezs_card_dict" >
     <result column="store_id" property="store_id" jdbcType="BIGINT" />
     <result column="accessory_id" property="accessory_id" jdbcType="BIGINT" />
   </resultMap>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_card_dict" >
+  <insert id="insert" parameterType="ezs_card_dict" >
     insert into ezs_card_dict (store_id, accessory_id)
     values (#{store_id,jdbcType=BIGINT}, #{accessory_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_card_dict" >
+  <insert id="insertSelective" parameterType="ezs_card_dict" >
     insert into ezs_card_dict
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="store_id != null" >

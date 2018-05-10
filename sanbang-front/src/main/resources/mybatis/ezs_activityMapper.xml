@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_activityMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_activity" >
+<mapper namespace="com.sanbang.dao.ezs_activityMapper" >
+  <resultMap id="BaseResultMap" type="ezs_activity" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -29,7 +29,7 @@
     <result column="ac_banner_id" property="ac_banner_id" jdbcType="BIGINT" />
     <result column="ac_template_id" property="ac_template_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_activityWithBLOBs" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_activityWithBLOBs" extends="BaseResultMap" >
     <result column="ac_describe" property="ac_describe" jdbcType="LONGVARCHAR" />
     <result column="ac_rule" property="ac_rule" jdbcType="LONGVARCHAR" />
     <result column="ac_seo_describe" property="ac_seo_describe" jdbcType="LONGVARCHAR" />
@@ -55,7 +55,7 @@
     delete from ezs_activity
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_activityWithBLOBs" >
+  <insert id="insert" parameterType="ezs_activityWithBLOBs" >
     insert into ezs_activity (id, addTime, deleteStatus, 
       ac_begin_time, ac_bonus_auth, ac_bonus_market, 
       ac_bonus_sale, ac_bonusable, ac_end_time, 
@@ -77,7 +77,7 @@
       #{ac_banner_id,jdbcType=BIGINT}, #{ac_template_id,jdbcType=BIGINT}, #{ac_describe,jdbcType=LONGVARCHAR}, 
       #{ac_rule,jdbcType=LONGVARCHAR}, #{ac_seo_describe,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_activityWithBLOBs" >
+  <insert id="insertSelective" parameterType="ezs_activityWithBLOBs" >
     insert into ezs_activity
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -258,7 +258,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_activityWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_activityWithBLOBs" >
     update ezs_activity
     <set >
       <if test="addTime != null" >
@@ -348,7 +348,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_activityWithBLOBs" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_activityWithBLOBs" >
     update ezs_activity
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -380,7 +380,7 @@
       ac_seo_describe = #{ac_seo_describe,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_activity" >
+  <update id="updateByPrimaryKey" parameterType="ezs_activity" >
     update ezs_activity
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

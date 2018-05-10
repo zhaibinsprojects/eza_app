@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_billMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_bill" >
+<mapper namespace="com.sanbang.dao.ezs_billMapper" >
+  <resultMap id="BaseResultMap" type="ezs_bill" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -26,7 +26,7 @@
     delete from ezs_bill
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_bill" >
+  <insert id="insert" parameterType="ezs_bill" >
     insert into ezs_bill (id, addTime, deleteStatus, 
       address, bank, companyName, 
       dutyNo, number, phone, 
@@ -36,7 +36,7 @@
       #{dutyNo,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_bill" >
+  <insert id="insertSelective" parameterType="ezs_bill" >
     insert into ezs_bill
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -103,7 +103,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_bill" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_bill" >
     update ezs_bill
     <set >
       <if test="addTime != null" >
@@ -136,7 +136,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_bill" >
+  <update id="updateByPrimaryKey" parameterType="ezs_bill" >
     update ezs_bill
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

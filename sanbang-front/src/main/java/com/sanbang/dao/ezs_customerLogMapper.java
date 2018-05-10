@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_customerlog;
 
-@Repository
+@Repository("ezs_customerLogMapper")
 public interface ezs_customerLogMapper {
     int deleteByPrimaryKey(Long id);
 

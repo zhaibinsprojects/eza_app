@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.dao.ezs_userMapper;
@@ -51,8 +52,8 @@ public class UserServiceImpl implements UserProService{
 	//日志
 	private static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 	
-	@Resource(name="ezsuserMapper")
-	private ezs_userMapper ezsuserMapper;
+	@Resource(name="ezs_userinfoMapper")
+	private com.sanbang.dao.ezs_userinfoMapper ezs_userinfoMapper;
 
 
 	@Value("${consparam.cookie.useridcard}")
@@ -111,7 +112,7 @@ public class UserServiceImpl implements UserProService{
 			Set<String> newsets=new HashSet<String>();
 			for(String tempstr:sets){
 				if(tempstr.length()>43){
-					ezs_userinfo userProInfo =null ;//ezsuserMapper.getUserInfoByUserName(username.trim());
+					ezs_userinfo userProInfo =null ;//ezs_userinfoMapper.getUserInfoByUserName(username.trim());
 					if(userProInfo!=null){
 						RedisUtils.set(tempstr,userProInfo, Long.parseLong(redisuserkeyexpir));
 					}
@@ -225,9 +226,9 @@ public class UserServiceImpl implements UserProService{
 	
 	public void loginuser(String userName,HttpServletRequest request,HttpServletResponse response,Map<String,Object> result,
 			String userAgent, String pd,String ip,Date date,Integer flag){
-		ezs_user upi=RedisUserSession.getUserInfo(request);
+		User_Proinfo upi=RedisUserSession.getUserInfo(request);
 	    if(upi!=null&&upi.getName().equals(userName.trim())){
-	    	int tempStatus=upi.getStatus();
+	    	/*int tempStatus=upi.getStatus();
 	    	if(tempStatus==0){
 				//首次登陆 应该跳转到 注册联系人资料
 				result.put("code", "111");
@@ -235,14 +236,14 @@ public class UserServiceImpl implements UserProService{
 			}else{
 				result.put("code", "000");
 				result.put("message", "登陆成功");
-			}
+			}*/
 	    }else{
 	    	if(StringUtils.isEmpty(userAgent)){
 				userAgent="unknownUserAgent";
 			}
 			// 根据用户名查询用户的信息
 	    	ezs_user userProInfo=null;
-			userProInfo = ezsuserMapper.getUserInfoByUserName(userName.trim());
+			userProInfo = ezs_userinfoMapper.getUserInfoByUserName(userName.trim());
 			if(userProInfo == null){
 				 result.put("code", "888");
 				 result.put("message", "参数错误");
@@ -262,7 +263,7 @@ public class UserServiceImpl implements UserProService{
 						userProInfo.setAvatar(true);
 					}else{
 						// 非主账户,是否有关联的主账户
-						List<ezs_user> connectUser = ezsuserMapper.getConnectUserInfo(userProInfo.getId());
+						List<ezs_user> connectUser = ezs_userinfoMapper.getConnectUserInfo(userProInfo.getId());
 						if(connectUser != null){
 							if(connectUser.getAuthtime() == 3){
 								connectUser.setAvatar(false);
@@ -284,7 +285,7 @@ public class UserServiceImpl implements UserProService{
 						uppi.setUserkey(userKey);
 						uppi.setUsername(userProInfo.getUsername());
 						uppi.setStatus(userProInfo.getStatus());
-						ezsuserMapper.updateUserProInfo(uppi);
+						ezs_userinfoMapper.updateUserProInfo(uppi);
 					}
 					userProInfo.setUserkey(userKey);
 					response.addCookie(cookie);
@@ -543,21 +544,21 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	public Map<String,Object> regself(String mobile,String username,String myip,String passwd){
 		//用户自注册
 		Map<String,Object> map=new HashMap<>();
-		ezs_user upii=	ezsuserMapper.getUserInfoByUserName(username);
+		ezs_user upii=	ezs_userinfoMapper.getUserInfoByUserName(username);
 			if(upii!=null){
 				//已存在，不能注册
 				map.put("code", "999");
 				map.put("message", "注册失败,会员名称已存在");
 				return map;
 			}
-			ezs_user upii2=	ezsuserMapper.getUserInfoByUserName(mobile);
+			ezs_user upii2=	ezs_userinfoMapper.getUserInfoByUserName(mobile);
 			if(upii2!=null){
 				//已存在，不能注册
 				map.put("code", "999");
 				map.put("message", "注册失败,手机号码已存在");
 				return map;
 			}
-			List<ezs_user> upis=ezsuserMapper.getUserInfoByUserNameFromBack(username);
+			List<ezs_user> upis=ezs_userinfoMapper.getUserInfoByUserNameFromBack(username);
 			if(upis!=null&&upis.size()!=0){
 				//已存在，不能注册
 				map.put("code", "999");
@@ -571,7 +572,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					upi.setName(username);
 					upi.setPassword(passwd);
 					int a = 0;
-						a=ezsuserMapper.insert(upi);
+						a=ezs_userinfoMapper.insert(upi);
 					if(a==1){
 						map.put("code", "000");
 						map.put("message", "注册成功");
@@ -593,14 +594,14 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	}
 	public Map<String,Object> regbyauto(String username,String mobile,String passwd,String myip,Integer flag){
 		Map<String,Object> map=new HashMap<>();
-		ezs_user upii=	ezsuserMapper.getUserInfoByUserName(username);
+		ezs_user upii=	ezs_userinfoMapper.getUserInfoByUserName(username);
 			if(upii!=null){
 				//已存在，不能注册
 				map.put("code", "999");
 				map.put("message", "注册失败,会员名称已存在");
 				return map;
 			}
-			List<ezs_user> upis=ezsuserMapper.getUserInfoByUserNameFromBack(username);
+			List<ezs_user> upis=ezs_userinfoMapper.getUserInfoByUserNameFromBack(username);
 			if(upis!=null&&upis.size()!=0){
 				//已存在，不能注册
 				map.put("code", "999");
@@ -611,7 +612,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			upi.setName(username);
 			upi.setPassword(passwd);
 				int a = 0;
-					a=ezsuserMapper.insert(upi);
+					a=ezs_userinfoMapper.insert(upi);
 					if(flag!=null){
 						/*if(flag==3){
 							//qq登陆
@@ -626,7 +627,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					map.put("message", "注册成功");
 					
 					//自动开通商铺
-					ezs_user userInfo = ezsuserMapper.getUserInfoByUserName(username);
+					ezs_user userInfo = ezs_userinfoMapper.getUserInfoByUserName(username);
 					/*ShopInfo shopInfo =new ShopInfo();
 					shopInfo.setIsopenshop("0");
 					shopInfo.setUsername(username);
@@ -861,7 +862,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 						RedisUtils.del(doFtCodde);
 						int a=0;
 						try {
-							a=ezsuserMapper.updateUserPwdByMobile(mp);
+							a=ezs_userinfoMapper.updateUserPwdByMobile(mp);
 						} catch (Exception e) {
 							log.error("修改密码失败",e);
 						}
@@ -915,7 +916,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		}else{
 			List<ezs_user>  count=null;
 				try {
-					count=ezsuserMapper.getUserInfoByUserNameFromBack(userName);
+					count=ezs_userinfoMapper.getUserInfoByUserNameFromBack(userName);
 					if(count!=null&&count.size()>0){
 						//可以注册
 						map.put("code", "000");
@@ -947,7 +948,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		}else{
 			int count=0;
 				try {
-					count=ezsuserMapper.checkMobile(mobile);
+					count=ezs_userinfoMapper.checkMobile(mobile);
 					if(count==0){
 						//可以注册
 						map.put("code", "000");
@@ -1031,7 +1032,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	 * 修改手机号码
 	 */
 	@Override
-	public Map<String, Object> checkUpMoCode(String mobile, String code,ezs_user upi,HttpServletRequest request) throws Exception{
+	public Map<String, Object> checkUpMoCode(String mobile, String code,User_Proinfo upi,HttpServletRequest request) throws Exception{
 		if(upi==null){
 			throw new EzaishengUCException("系统异常");
 		}
@@ -1048,10 +1049,10 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					ezs_user uupi=new ezs_user();
 						uupi.setName(upi.getName());
 						uupi.setPhone(mobile);
-						int temaa=ezsuserMapper.updateByPrimaryKeySelective(uupi);
+						int temaa=ezs_userinfoMapper.updateByPrimaryKeySelective(uupi);
 						if(temaa==1){
 							//更新缓存
-							upi.setPhone(mobile);
+							upi.getUserInfo().setPhone(mobile);
 							RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
 							map.put("code", "000");
 							map.put("message", "操作成功");
@@ -1175,7 +1176,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	@Override
 	public ezs_user getUserInfoByUserName(String userName) {
 		
-		return ezsuserMapper.getUserInfoByUserName(userName);
+		return ezs_userinfoMapper.getUserInfoByUserName(userName);
 	}
 	@Override
 	public boolean userLogot(ezs_user upi,String cookieuserkey) throws Exception {
@@ -1188,7 +1189,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 
 	@Override
 	public String getUserMessage(String username) {
-		return ezsuserMapper.getUserMessage(username);
+		return ezs_userinfoMapper.getUserMessage(username);
 	}
 
 

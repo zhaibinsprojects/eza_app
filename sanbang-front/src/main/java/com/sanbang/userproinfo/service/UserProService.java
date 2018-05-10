@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 
 
@@ -120,7 +121,7 @@ public interface UserProService {
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String, Object> checkUpMoCode(String mobile, String code,ezs_user upi, HttpServletRequest request)  throws Exception;
+	Map<String, Object> checkUpMoCode(String mobile, String code,User_Proinfo upi, HttpServletRequest request)  throws Exception;
 
 
 	/**

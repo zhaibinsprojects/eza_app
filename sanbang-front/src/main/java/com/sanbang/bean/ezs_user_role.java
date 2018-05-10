@@ -1,11 +1,30 @@
 package com.sanbang.bean;
 
-public class ezs_user_role {
-    private Long user_id;
+import java.io.Serializable;
+
+public class ezs_user_role  implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6549187649134542792L;
+
+	
+	private Long user_id;
 
     private Long role_id;
+    
+    private ezs_role role;
+    
+    
 
-    public Long getUser_id() {
+    public ezs_role getRole() {
+		return role;
+	}
+	public void setRole(ezs_role role) {
+		this.role = role;
+	}
+
+	public Long getUser_id() {
         return user_id;
     }
 

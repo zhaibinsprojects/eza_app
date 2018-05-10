@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_adv_posMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_adv_pos" >
+<mapper namespace="com.sanbang.dao.ezs_adv_posMapper" >
+  <resultMap id="BaseResultMap" type="ezs_adv_pos" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -19,7 +19,7 @@
     <result column="ap_width" property="ap_width" jdbcType="INTEGER" />
     <result column="ap_acc_id" property="ap_acc_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_adv_posWithBLOBs" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_adv_posWithBLOBs" extends="BaseResultMap" >
     <result column="ap_code" property="ap_code" jdbcType="LONGVARCHAR" />
     <result column="ap_content" property="ap_content" jdbcType="LONGVARCHAR" />
   </resultMap>
@@ -42,7 +42,7 @@
     delete from ezs_adv_pos
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+  <insert id="insert" parameterType="ezs_adv_posWithBLOBs" >
     insert into ezs_adv_pos (id, addTime, deleteStatus, 
       ap_acc_url, ap_height, ap_price, 
       ap_sale_type, ap_show_type, ap_status, 
@@ -58,7 +58,7 @@
       #{ap_acc_id,jdbcType=BIGINT}, #{ap_code,jdbcType=LONGVARCHAR}, #{ap_content,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+  <insert id="insertSelective" parameterType="ezs_adv_posWithBLOBs" >
     insert into ezs_adv_pos
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -173,7 +173,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_adv_posWithBLOBs" >
     update ezs_adv_pos
     <set >
       <if test="addTime != null" >
@@ -230,7 +230,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_adv_posWithBLOBs" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_adv_posWithBLOBs" >
     update ezs_adv_pos
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -251,7 +251,7 @@
       ap_content = #{ap_content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_adv_pos" >
+  <update id="updateByPrimaryKey" parameterType="ezs_adv_pos" >
     update ezs_adv_pos
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

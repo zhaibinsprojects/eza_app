@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
@@ -31,7 +32,7 @@ public class DataInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object arg2) throws Exception {
 		
-		ezs_user upi = RedisUserSession.getUserInfo(request);
+		User_Proinfo upi = RedisUserSession.getUserInfo(request);
 		if(upi != null){
 			String saveLinkInfoUrl=request.getRequestURI();
 			JSONObject param = new JSONObject();

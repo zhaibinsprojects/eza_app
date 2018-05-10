@@ -1,9 +1,15 @@
 package com.sanbang.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ezs_userconfig {
-    private Long id;
+public class ezs_userconfig implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5578758002842032649L;
+
+	private Long id;
 
     private Date addTime;
 
@@ -42,4 +48,11 @@ public class ezs_userconfig {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+	@Override
+	public String toString() {
+		return "ezs_userconfig [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", user_id="
+				+ user_id + "]";
+	}
+    
 }

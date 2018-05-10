@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_storeMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_store" >
+<mapper namespace="com.sanbang.dao.ezs_storeMapper" >
+  <resultMap id="BaseResultMap" type="ezs_store" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -30,7 +30,7 @@
     <result column="auditingusertype_id" property="auditingusertype_id" jdbcType="BIGINT" />
     <result column="tel" property="tel" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_store" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_store" extends="BaseResultMap" >
     <result column="location" property="location" jdbcType="BINARY" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -54,7 +54,7 @@
     delete from ezs_store
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_store" >
+  <insert id="insert" parameterType="ezs_store" >
     insert into ezs_store (id, addTime, deleteStatus, 
       address, assets, companyName, 
       covered, device_num, employee_num, 
@@ -76,7 +76,7 @@
       #{mianIndustry_id,jdbcType=BIGINT}, #{auditingusertype_id,jdbcType=BIGINT}, #{tel,jdbcType=VARCHAR}, 
       #{location,jdbcType=BINARY})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_store" >
+  <insert id="insertSelective" parameterType="ezs_store" >
     insert into ezs_store
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -251,7 +251,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_store" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_store" >
     update ezs_store
     <set >
       <if test="addTime != null" >
@@ -338,7 +338,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_store" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_store" >
     update ezs_store
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -369,7 +369,7 @@
       location = #{location,jdbcType=BINARY}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_store" >
+  <update id="updateByPrimaryKey" parameterType="ezs_store" >
     update ezs_store
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_columnMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_column" >
+<mapper namespace="com.sanbang.dao.ezs_columnMapper" >
+  <resultMap id="BaseResultMap" type="ezs_column" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -42,7 +42,7 @@
     delete from ezs_column
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_column" >
+  <insert id="insert" parameterType="ezs_column" >
     insert into ezs_column (id, addTime, deleteStatus, 
       accessPath, attribute, browsePower, 
       colTemplate, description, examine, 
@@ -60,7 +60,7 @@
       #{columnLevel,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{prepareColumn,jdbcType=VARCHAR}, 
       #{parentEzsColumn_id,jdbcType=BIGINT}, #{finalSection,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_column" >
+  <insert id="insertSelective" parameterType="ezs_column" >
     insert into ezs_column
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -211,7 +211,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_column" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_column" >
     update ezs_column
     <set >
       <if test="addTime != null" >
@@ -286,7 +286,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_column" >
+  <update id="updateByPrimaryKey" parameterType="ezs_column" >
     update ezs_column
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_multimediaMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_multimedia" >
+<mapper namespace="com.sanbang.dao.ezs_multimediaMapper" >
+  <resultMap id="BaseResultMap" type="ezs_multimedia" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="DTYPE" property="DTYPE" jdbcType="VARCHAR" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
@@ -31,7 +31,7 @@
     delete from ezs_multimedia
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_multimedia" >
+  <insert id="insert" parameterType="ezs_multimedia" >
     insert into ezs_multimedia (id, DTYPE, addTime, 
       deleteStatus, ext, info, 
       name, path, size, height, 
@@ -43,7 +43,7 @@
       #{type,jdbcType=VARCHAR}, #{width,jdbcType=INTEGER}, #{config_id,jdbcType=BIGINT}, 
       #{activity_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_multimedia" >
+  <insert id="insertSelective" parameterType="ezs_multimedia" >
     insert into ezs_multimedia
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -134,7 +134,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_multimedia" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_multimedia" >
     update ezs_multimedia
     <set >
       <if test="DTYPE != null" >
@@ -179,7 +179,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_multimedia" >
+  <update id="updateByPrimaryKey" parameterType="ezs_multimedia" >
     update ezs_multimedia
     set DTYPE = #{DTYPE,jdbcType=VARCHAR},
       addTime = #{addTime,jdbcType=TIMESTAMP},

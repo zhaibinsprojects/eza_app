@@ -10,14 +10,16 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.sanbang.dao.ezs_userMapper;
+
 
 @Service("systemMessageService")
 public class SystemMessageService {
 	
 	private static Logger log = Logger.getLogger(SystemMessageService.class.getName());
 	
-	@Resource(name="ezsuserMapper")
-	private com.sanbang.dao.ezs_userMapper ezsuserMapper;
+	@Resource(name="ezs_userMapper")
+	private ezs_userMapper ezs_userMapper;
 	
 	public void countOrderInfo(){
 

@@ -1,9 +1,16 @@
 package com.sanbang.bean;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
-public class ezs_store {
-    private Long id;
+public class ezs_store  implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private Date addTime;
 
@@ -282,4 +289,24 @@ public class ezs_store {
     public void setLocation(byte[] location) {
         this.location = location;
     }
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "ezs_store [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", address="
+				+ address + ", assets=" + assets + ", companyName=" + companyName + ", covered=" + covered
+				+ ", device_num=" + device_num + ", employee_num=" + employee_num + ", fixed_assets=" + fixed_assets
+				+ ", location_detail=" + location_detail + ", obtainYear=" + obtainYear + ", openBankNo=" + openBankNo
+				+ ", open_bank_name=" + open_bank_name + ", open_branch_name=" + open_branch_name + ", open_branch_no="
+				+ open_branch_no + ", registerDate=" + registerDate + ", rent=" + rent + ", status=" + status
+				+ ", userType=" + userType + ", yTurnover=" + yTurnover + ", area_id=" + area_id + ", cardType_id="
+				+ cardType_id + ", companyType_id=" + companyType_id + ", mianIndustry_id=" + mianIndustry_id
+				+ ", auditingusertype_id=" + auditingusertype_id + ", tel=" + tel + ", location="
+				+ Arrays.toString(location) + "]";
+	}
+    
+    
 }

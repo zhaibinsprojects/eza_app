@@ -117,7 +117,7 @@
         <li> <a class="proty_yzs" href="cata/init.htm">品类</a> </li>
         <li> <a class="nowPage" href="data/init.htm">价格</a> </li>
         <li> <a class="shopList_yzs" href="buyer/order.htm">采购单</a> </li>
-        <li> <a class="giveMe_yzs" href="M05-会员中心-会员登录-密码登录.html">我的</a> </li>
+        <li> <a class="giveMe_yzs" href="user/index.htm">我的</a> </li>
       </ul>
     </div>
   </footer>
