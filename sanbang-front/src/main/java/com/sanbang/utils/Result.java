@@ -1,20 +1,50 @@
 package com.sanbang.utils;
 
-public class Result {
+import java.io.Serializable;
+
+public class Result implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5559674683734298678L;
+	
 	private Boolean success;
 	private String msg;// 信息
 	private Object obj;
-	private String value;
+	private String errorcode;
+	private Page meta;//存放分页数据
 	
 	public Result() {
 	}
-
-	public Result(Boolean success, String msg, Object obj) {
+	
+	public Result(Boolean success, String msg, Object obj, String errorcode, Page meta) {
 		super();
 		this.success = success;
 		this.msg = msg;
 		this.obj = obj;
+		this.errorcode = errorcode;
+		this.meta = meta;
 	}
+
+
+
+	public static Result success() {
+		Result result = new Result();
+		result.setErrorcode("000");
+		result.setSuccess(true);
+		result.setMsg("请求成功");
+		return result;
+	}
+
+	public static Result failure() {
+		Result result = new Result();
+		result.setErrorcode("888");
+		result.setSuccess(false);
+		result.setMsg("请求失败");
+		return result;
+	}
+	
+	
 	
 	public Result(Boolean success, String msg) {
 		super();
@@ -46,12 +76,20 @@ public class Result {
 		this.obj = obj;
 	}
 
-	public String getValue() {
-		return value;
+	public String getErrorcode() {
+		return errorcode;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setErrorcode(String errorcode) {
+		this.errorcode = errorcode;
 	}
-	
+
+	public Page getMeta() {
+		return meta;
+	}
+
+	public void setMeta(Page meta) {
+		this.meta = meta;
+	}
+
 }

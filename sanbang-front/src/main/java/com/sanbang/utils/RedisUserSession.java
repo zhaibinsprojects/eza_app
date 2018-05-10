@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.redis.RedisConstants;
@@ -21,7 +22,7 @@ public class RedisUserSession {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ezs_user getUserInfo(HttpServletRequest request){
+	public static User_Proinfo getUserInfo(HttpServletRequest request){
 		if(null==request){
 			return null;
 		}
@@ -33,10 +34,10 @@ public class RedisUserSession {
 					userKey=ck.getValue();
 					// String tempCached=(String)arg0.getSession().getAttribute("USERKEY");
 					@SuppressWarnings("unchecked")
-					RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get(userKey,ezs_user.class);
+					RedisResult<User_Proinfo> tempCached=(RedisResult<User_Proinfo>) RedisUtils.get(userKey,ezs_user.class);
 					if(tempCached!=null&&tempCached.getCode()==RedisConstants.SUCCESS){
 						//缓存中已经存在了  说明该用户已经登陆了
-						ezs_user result = tempCached.getResult();
+						User_Proinfo result = tempCached.getResult();
 						result.setUserkey(userKey);;
 						return result;
 					}else{
@@ -97,7 +98,7 @@ public class RedisUserSession {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static boolean updateUserInfo(String userKey,ezs_user upi,Long timeOut){
+	public static boolean updateUserInfo(String userKey,User_Proinfo upi,Long timeOut){
 		RedisResult<String> rrt;
 		rrt=(RedisResult<String>) RedisUtils.set(userKey,upi, timeOut);
 		if(rrt.getCode()==RedisConstants.SUCCESS){

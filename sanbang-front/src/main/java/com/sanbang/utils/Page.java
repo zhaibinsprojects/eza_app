@@ -7,9 +7,13 @@ import java.io.Serializable;
  */  
 public class Page implements Serializable {  
   
-    private static final long serialVersionUID = -3198048449643774660L;  
   
-    private int pageNow = 1; // 当前页数  
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8743766133293277042L;
+
+	private int pageNow = 1; // 当前页数  
   
     private int pageSize = 10; // 每页显示记录的条数  
   
@@ -32,7 +36,35 @@ public class Page implements Serializable {
     @SuppressWarnings("unused")  
     private boolean hasLast;// 是否有最后一页  
       
-    /** 
+    
+    
+    /**
+     * 
+     * @param pageNow 当前页数  
+     * @param pageSize 每页显示记录的条数  
+     * @param totalCount 总的记录条数  
+     * @param totalPageCount  总的页数  
+     * @param startPos 开始位置，从0开始  
+     * @param hasFirst 是否有首页  
+     * @param hasPre  是否有前一页  
+     * @param hasNext  是否有下一页  
+     * @param hasLast 是否有最后一页  
+     */
+    public Page(int pageNow, int pageSize, int totalCount, int totalPageCount, int startPos, boolean hasFirst,
+			boolean hasPre, boolean hasNext, boolean hasLast) {
+		super();
+		this.pageNow = pageNow;
+		this.pageSize = pageSize;
+		this.totalCount = totalCount;
+		this.totalPageCount = totalPageCount;
+		this.startPos = startPos;
+		this.hasFirst = hasFirst;
+		this.hasPre = hasPre;
+		this.hasNext = hasNext;
+		this.hasLast = hasLast;
+	}
+
+	/** 
      * 通过构造函数 传入  总记录数  和  当前页 
      * @param totalCount 
      * @param pageNow 
