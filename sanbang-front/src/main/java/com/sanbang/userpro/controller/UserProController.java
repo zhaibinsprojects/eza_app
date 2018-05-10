@@ -189,7 +189,7 @@ public class UserProController {
         		return map;
         	}
         	content = "【易再生网】您的短信验证码:"+code.toString()+",请勿告诉他人,有效时间为10分钟!";
-        	map=userProService.sendCode(mobile,code.toString(),mobilerecode, mobilesendcodeexpir,mobileinterval,mobilesendtimes,flag,content);
+        	//map=userProService.sendCode(mobile,code.toString(),mobilerecode, mobilesendcodeexpir,mobileinterval,mobilesendtimes,flag,content);
         }else{
         	if(flag==1){
         		//无密登录
@@ -198,7 +198,7 @@ public class UserProController {
             		return map;
             	}
         		content = "【易再生网】尊敬的用户您好，您本次的动态登录码为"+code.toString()+"。温馨提示：您的动态登录码30分钟内有效，请安全保管。";
-        		map=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60","3",flag,content);
+        		//map=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60","3",flag,content);
         	}
         }
         return map;
@@ -287,8 +287,8 @@ public class UserProController {
 //		passwd="14e1b600b1fd579f47433b88e8d85291";
 //		mobile="13717706563";
 		String myip=IpUtils.getIpAddr(request);
-		Map<String, Object> map = userProService.userAdd(username, passwd,passwdA, mobile,code,myip,flag,session,request,imgcode);
-		return map;
+		//Map<String, Object> map = userProService.userAdd(username, passwd,passwdA, mobile,code,myip,flag,session,request,imgcode);
+		return null;
 	}
 	
 	

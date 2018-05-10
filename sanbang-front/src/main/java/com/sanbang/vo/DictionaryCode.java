@@ -20,13 +20,18 @@ public class DictionaryCode {
      */
     public static final int ERROR_WEB_PASSWORD_NOT_LEGAL = 101003;
     /**
-     * 密码不能为同一字符
+     * 确认密码不能为空
      */
     public static final int ERROR_WEB_PASSWORD_SAME_CHARACTER = 101004;
     /**
      * 手机号码已经被注册
      */
     public static final int ERROR_WEB_PHONE_TYPE_REGISTERED = 101007;
+    
+    /**
+     * 手机号码已经被注册
+     */
+    public static final int ERROR_WEB_PASSWORD_NEQ_CHARACTER  = 101007;
     /**
      * 手机号码格式
      */
@@ -36,6 +41,10 @@ public class DictionaryCode {
      */
     public static final int ERROR_WEB_CODE_ERROR = 101011;
     /**
+     * 验证码不能为空
+     */
+    public static final int ERROR_WEB_CODE_NULL = 101012;
+    /**
      * 用户不存在
      */
     public static final int ERROR_WEB_USER_NOT_EXIST = 101013;
@@ -43,6 +52,14 @@ public class DictionaryCode {
      * 密码不正确
      */
     public static final int ERROR_WEB_PASSWORD_ERROR = 101014;
+    /**
+     * 注册成功
+     */
+    public static final int ERROR_WEB_REGIST_SUCCESS = 101015;
+    /**
+     * 注册失败
+     */
+    public static final int ERROR_WEB_REGIST_FAIL = 101016;
     /**
      * 存在的用户是子用户
      */
@@ -56,7 +73,7 @@ public class DictionaryCode {
      */
     public static final int ERROR_WEB_SERVER_ERROR = 199999;
     /**
-     * 获取验证码失败
+     * 请等待0-60s后再次点击
      */
     public static final int ERROR_WEB_GET_VEIFY_CODE_ERROR = 101010;
     /**

@@ -44,7 +44,7 @@ public interface UserProService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Map<String, Object> userAdd(String username,String passwd,String passwdA,String mobile,String code,String myip,Integer flag,HttpSession session, HttpServletRequest request, String imgcode) throws Exception;
+	public Result userAdd(String username,String passwd,String passwdA,String mobile,String code,String myip,Integer flag,HttpSession session, HttpServletRequest request) throws Exception;
 	
 	/**
 	 * 注册发送验证码
@@ -53,7 +53,7 @@ public interface UserProService {
 	 * @return
 	 */
 
-	Map<String, Object> sendCode(String phone, String code,
+	Result sendCode(String phone, String code,
 			String mobilerecodestr, String mobilesendcodeexpirstr,
 			String mobileintervalstr, String mobilesendtimesstr,Integer flag,String content);
 	
@@ -151,6 +151,10 @@ public interface UserProService {
 	String getUserMessage(String username);
 
 	Object updateUserSessionInfo(String username, String mobile);
-
+	
+	/**
+	 * 分享码业务
+	 */
+    Result sharCodeTodo(String sharcode,String phone);
 
 }

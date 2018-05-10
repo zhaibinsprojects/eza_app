@@ -442,12 +442,16 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
-	public Map<String, Object> userAdd(String username, String passwd,String passwdA, String mobile,String code,String myip,Integer flag,HttpSession session,HttpServletRequest request,String imgcode) throws Exception{
+	public Result userAdd(String username, String passwd,String passwdA, String mobile,String code,String myip,Integer flag,HttpSession session,HttpServletRequest request) throws Exception{
 		log.info("新用户注册 参数：username="+username+" &passwd="+passwd+" &mobile="+mobile+" &code="+code);
-		Map<String, Object> map=null;
+		Result result=Result.failure();
+		
+		//用户名为手机号
+		username=mobile;
+		
 		if(flag==null){
 			//用户自己注册
-			map=userAddParam(username, passwd,passwdA, mobile, code,imgcode,request);
+			result=userAddParam(result,username, passwd,passwdA, mobile, code,request);
 		}else{
 			//其他注册方式  flag 为4qq注册 5微信注册
 			//生成用户名密码
@@ -456,42 +460,55 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			}else if(flag==5){
 				username="wx_"+RandomStr32.getStrDefined(7);
 			}
-			passwd=MD5Util.md5Encode(MD5Util.md5Encode(randpasswd));
+			passwd=MD5Util.md5Encode(randpasswd);
 		}
-		if(map.size()==0){
+		if(result.getSuccess()){
 			if(flag==null){
-				map=regself(mobile, username, myip, passwd);
+				result=regself(result,mobile, username, myip, passwd);
 			}else{
-				map=regbyauto(username, mobile, passwd , myip,flag);
+				//result=regbyauto(username, mobile, passwd , myip,flag);
 			}
 		}else{
-			 map.put("code", "888");
-			 map.put("message", "参数错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("参数错误");
 		}
-		log.info("注册结果：code="+map.get("code")+" &message="+map.get("message") );
-		return map;
+		log.info("注册结果：code="+result.getErrorcode()+" &message="+result.getMsg() );
+		return result;
 	}
 
-	Map<String, Object> userAddParam(String username, String passwd,String passwdA, String mobile,String code,String randImgCode,HttpServletRequest request){
-		Map<String, Object> map = new HashMap<String, Object>();
-			if(StringUtils.isEmpty(username)||!Tools.paramValidate(username, 0)||username.trim().length()>20){
-				map.put("username", "请输入6-20位以内数字或字母！");
-			}
+	Result userAddParam(Result result,String username, String passwd,String passwdA, String mobile,String code,HttpServletRequest request){
+			
 			if(StringUtils.isEmpty(passwd)||passwd.trim().length()!=32){
-				map.put("passwd", "密码格式错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_NOT_LEGAL);
+				result.setSuccess(false);
+				result.setMsg("密码格式错误");
+				return result;
 			}
 			if(StringUtils.isEmpty(passwdA)){
-				map.put("passwdA", "确认密码不能为空");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_SAME_CHARACTER);
+				result.setSuccess(false);
+				result.setMsg("确认密码不能为空");
+				return result;
 			}else{
 				if(StringUtils.isNotEmpty(passwd)&&!passwd.equals(passwdA)){
-					map.put("passwdA", "两次密码输入不一致！");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_NEQ_CHARACTER);
+					result.setSuccess(false);
+					result.setMsg("两次密码输入不一致");
+					return result;
 				}
 			}
 			if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
-				map.put("mobile", "格式有误，请输入正确的手机号码！");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+				result.setSuccess(false);
+				result.setMsg("格式有误，请输入正确的手机号码");
+				return result;
 			}
 			if(StringUtils.isEmpty(code)){
-				map.put("recode", "验证码不能为空");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_NULL);
+				result.setSuccess(false);
+				result.setMsg("验证码不能为空");
+				return result;
 			}else{
 				RedisResult<String> recode = null;
 				recode = (RedisResult<String>) RedisUtils.get(mobile+mobilerecode,String.class);
@@ -499,18 +516,18 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					String mCode=null;
 					mCode=recode.getResult();
 				if((mCode!=null&&mCode.equals(code.trim()))){
-							//验证码正确而且没有超时
-							//手机号可以注册
-							//此时可以保存数据
+					result.setSuccess(true);
 					}else{
-						map.put("code", "888");
-						map.put("message", "验证码错误");
-						map.put("recode", "验证码错误");
+						result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_ERROR);
+						result.setSuccess(false);
+						result.setMsg("验证码不能为空");
+						return result;
 					}
 				}else{
-					map.put("code", "888");
-					map.put("message", "验证码错误");
-					map.put("recode", "验证码错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_ERROR);
+					result.setSuccess(false);
+					result.setMsg("验证码不能为空");
+					return result;
 				}
 				try {
 						RedisUtils.del(mobile+"RECODE");
@@ -519,72 +536,48 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					log.info("删除redis数据失败",e1);
 				}
 			}
-			if(StringUtils.isEmpty(randImgCode)){
-				map.put("imgcode", "验证码不能为空");
-			}else{
-				//检验验证码
-				String useridcard=RedisUserSession.getUserKey(USERIDCARD, request);
-				if(StringUtils.isEmpty(useridcard)){
-					map.put("imgcode", "请重新输入验证码");
-				}else{
-					RedisResult<String> vacode=null;
-					vacode=(RedisResult<String>) RedisUtils.get(useridcard+"validatecode",String.class);
-					if(vacode!=null&&vacode.getCode()==RedisConstants.SUCCESS){
-						String valicode=vacode.getResult();
-						if(valicode.equalsIgnoreCase(randImgCode)){
-						}else{
-							map.put("imgcode", "验证码错误，请重新获取");
-						}
-						RedisUtils.del(useridcard+"validatecode");
-					}else{
-						map.put("imgcode", "验证码失效");
-					}
-				}
-			}
-		return map;
+		
+		return result;
 	}
-	public Map<String,Object> regself(String mobile,String username,String myip,String passwd){
+	public Result regself(Result result,String mobile,String username,String myip,String passwd){
 		//用户自注册
 		Map<String,Object> map=new HashMap<>();
-		ezs_user upii=	ezs_userinfoMapper.getUserInfoByUserName(username);
-			if(upii!=null){
-				//已存在，不能注册
-				map.put("code", "999");
-				map.put("message", "注册失败,会员名称已存在");
-				return map;
-			}
-			ezs_user upii2=	ezs_userinfoMapper.getUserInfoByUserName(mobile);
-			if(upii2!=null){
-				//已存在，不能注册
-				map.put("code", "999");
-				map.put("message", "注册失败,手机号码已存在");
-				return map;
-			}
-			List<ezs_user> upis=ezs_userinfoMapper.getUserInfoByUserNameFromBack(username);
+		List<ezs_user> upis=ezs_userinfoMapper.getUserInfoByUserNameFromBack(username);
 			if(upis!=null&&upis.size()!=0){
 				//已存在，不能注册
-				map.put("code", "999");
-				map.put("message", "注册失败,会员名称已存在");
-				return map;
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+				result.setSuccess(false);
+				result.setMsg("手机号码已经被注册");
+				return result;
 			}
 			
-	
-
 					ezs_user upi=new ezs_user();
 					upi.setName(username);
 					upi.setPassword(passwd);
+					upi.setAddTime(new Date());
+					upi.setLastLoginDate(new Date());
+					upi.setLastLoginIp(myip);
+					upi.setLoginCount(1);
+					upi.setLoginDate(new Date());
+					upi.setLoginIp(myip);
+					upi.setName(username);
+					upi.setPassword(passwd);
+					upi.setUserRole("BUYER");
 					int a = 0;
 						a=ezs_userinfoMapper.insert(upi);
 					if(a==1){
-						map.put("code", "000");
-						map.put("message", "注册成功");
-						
-						//开通环信
-						//hunXinService.regHuanxinSingle(username, HunXinServiceImpl.passwordefault, userInfo.getUserid());
+						result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
+						result.setSuccess(true);
+						result.setMsg("注册成功");
+					//TODO
+					//开通环信
+					//hunXinService.regHuanxinSingle(username, HunXinServiceImpl.passwordefault, userInfo.getUserid());
 						
 					}else{
-						map.put("code", "999");
-						map.put("message", "注册失败");
+						result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
+						result.setSuccess(false);
+						result.setMsg("注册失败");
+						
 					}
 		try {
 				RedisUtils.del(mobile+"RECODE");
@@ -592,59 +585,9 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		} catch (Exception e1) {
 			log.info("删除redis数据失败",e1);
 		}
-		return map;
+		return result;
 	}
-	public Map<String,Object> regbyauto(String username,String mobile,String passwd,String myip,Integer flag){
-		Map<String,Object> map=new HashMap<>();
-		ezs_user upii=	ezs_userinfoMapper.getUserInfoByUserName(username);
-			if(upii!=null){
-				//已存在，不能注册
-				map.put("code", "999");
-				map.put("message", "注册失败,会员名称已存在");
-				return map;
-			}
-			List<ezs_user> upis=ezs_userinfoMapper.getUserInfoByUserNameFromBack(username);
-			if(upis!=null&&upis.size()!=0){
-				//已存在，不能注册
-				map.put("code", "999");
-				map.put("message", "注册失败,会员名称已存在");
-				return map;
-			}
-			ezs_user upi=new ezs_user();
-			upi.setName(username);
-			upi.setPassword(passwd);
-				int a = 0;
-					a=ezs_userinfoMapper.insert(upi);
-					if(flag!=null){
-						/*if(flag==3){
-							//qq登陆
-							upi.setGuser("3");
-						}else if(flag==4){
-							//微信登陆
-							upi.setGuser("4");
-						}*/
-					}
-				if(a==1){
-					map.put("code", "000");
-					map.put("message", "注册成功");
-					
-					//自动开通商铺
-					ezs_user userInfo = ezs_userinfoMapper.getUserInfoByUserName(username);
-					/*ShopInfo shopInfo =new ShopInfo();
-					shopInfo.setIsopenshop("0");
-					shopInfo.setUsername(username);
-					shopInfo.setShopname(username);
-					shopInfo.setUserid(userInfo.getUserid()+"");
-					
-					shopService.addShopInfo(shopInfo);*/
-					
-					
-				}else{
-					map.put("code", "999");
-					map.put("message", "注册失败");
-				}
-		return map;
-	}
+	
 	/**
 	 * 发送注册，登陆短信验证码
 	 * @param phone
@@ -656,12 +599,14 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	 * @return
 	 */
 	@Override
-	public  Map<String, Object>  sendCode(String phone,String code,String mobilerecodestr,String mobilesendcodeexpirstr,String mobileintervalstr,String mobilesendtimesstr,Integer flag,String content) {
-		 Map<String, Object> map=new HashMap<String,Object>();
+	public  Result  sendCode(String phone,String code,String mobilerecodestr,String mobilesendcodeexpirstr,String mobileintervalstr,String mobilesendtimesstr,Integer flag,String content) {
+		 Result result=Result.failure();
+		Map<String, Object> map=new HashMap<String,Object>();
 		 if(StringUtils.isEmpty(phone)||!Tools.paramValidate(phone, 1)){
-			 map.put("code", "888");
-			 map.put("message", "格式有误，请输入正确的手机号码");
-			 map.put("phone", "格式有误，请输入正确的手机号码");
+			 	result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+				result.setSuccess(false);
+				result.setMsg("格式有误，请输入正确的手机号码");
+				return result;
 		 }else{
 			 //先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimesstr);
@@ -686,31 +631,34 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			 			log.info("短信验证码,发送内容:"+content);
 			 			try {
 			 				SendMobileMessage.sendMsg(phone, content);
-			 				map.put("code", "000");
-			 				map.put("message", "验证码发送成功");
+			 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							result.setSuccess(true);
+							result.setObj(new HashMap<>().put("mobile", phone));
+							result.setMsg("验证码发送成功");
 			 				RedisUtils.set(phone+mobilerecodestr, code, Long.parseLong(mobilesendcodeexpirstr));
 			 				RedisUtils.set(phone+mobilerecodestr+"times", ++codetimes, DateUtils.getTimeValue());
 			 			} catch (Exception e) {
 			 				log.error("短信验证码功能失败");
 			 				log.error(e.toString());
-			 				map.put("code", "666");
-			 				map.put("message", "验证码发送失败");
+			 				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+							result.setSuccess(false);
+							result.setMsg("服务器异常");
 			 			}
 				 }else{
-					 map.put("code", "888");
-					 map.put("message", "请等待"+mobileintervalstr+"s后再次点击");
-					 map.put("phone", "请等待"+mobileintervalstr+"s后再次点击");
+					 result.setErrorcode(DictionaryCode.ERROR_WEB_GET_VEIFY_CODE_ERROR);
+					 result.setSuccess(false);
+					 result.setMsg("请等待"+mobileintervalstr+"s后再次点击");
 				 }
 			}else{
-				 map.put("code", "888");
-				 map.put("message", "验证码已发送多次，请查收短信");
-				 map.put("phone", "验证码已发送多次，请查收短信");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_GET_CODE_LIMIT);
+				 result.setSuccess(false);
+				 result.setMsg("验证码已发送多次，请查收短信");
 			}
 			
 			
 		 }
 	    	
-	 	return map;
+	 	return result;
 	}
 	/**
 	 * 发送修改手机号码验证码
@@ -1198,6 +1146,13 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 
 	@Override
 	public Map<String, Object> checkCompany(HttpServletRequest request, String company) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Result sharCodeTodo(String sharcode, String phone) {
 		// TODO Auto-generated method stub
 		return null;
 	}
