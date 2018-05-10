@@ -2,35 +2,28 @@ package com.sanbang.utils;
 
 import java.io.Serializable;
 
+import com.sanbang.vo.DictionaryCode;
+
 public class Result implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5559674683734298678L;
+	private static final long serialVersionUID = 2578337283900400848L;
+
 	
 	private Boolean success;
 	private String msg;// 信息
 	private Object obj;
-	private String errorcode;
+	private int errorcode;
 	private Page meta;//存放分页数据
 	
 	public Result() {
 	}
+
 	
-	public Result(Boolean success, String msg, Object obj, String errorcode, Page meta) {
-		super();
-		this.success = success;
-		this.msg = msg;
-		this.obj = obj;
-		this.errorcode = errorcode;
-		this.meta = meta;
-	}
-
-
-
 	public static Result success() {
 		Result result = new Result();
-		result.setErrorcode("000");
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("请求成功");
 		return result;
@@ -38,20 +31,10 @@ public class Result implements Serializable{
 
 	public static Result failure() {
 		Result result = new Result();
-		result.setErrorcode("888");
 		result.setSuccess(false);
-		result.setMsg("请求失败");
 		return result;
 	}
 	
-	
-	
-	public Result(Boolean success, String msg) {
-		super();
-		this.success = success;
-		this.msg = msg;
-	}
-
 	public Boolean getSuccess() {
 		return success;
 	}
@@ -76,11 +59,11 @@ public class Result implements Serializable{
 		this.obj = obj;
 	}
 
-	public String getErrorcode() {
+	public int getErrorcode() {
 		return errorcode;
 	}
 
-	public void setErrorcode(String errorcode) {
+	public void setErrorcode(int errorcode) {
 		this.errorcode = errorcode;
 	}
 
@@ -92,4 +75,14 @@ public class Result implements Serializable{
 		this.meta = meta;
 	}
 
+
+	public Result(Boolean success, String msg, Object obj, int errorcode, Page meta) {
+		super();
+		this.success = success;
+		this.msg = msg;
+		this.obj = obj;
+		this.errorcode = errorcode;
+		this.meta = meta;
+	}
+	
 }

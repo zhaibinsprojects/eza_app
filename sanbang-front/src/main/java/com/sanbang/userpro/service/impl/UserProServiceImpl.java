@@ -35,8 +35,11 @@ import com.sanbang.utils.MD5Util;
 import com.sanbang.utils.RandomStr32;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
+import com.sanbang.utils.Result;
 import com.sanbang.utils.SendMobileMessage;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.Dictionary;
+import com.sanbang.vo.DictionaryCode;
 
 
 /**
@@ -938,29 +941,33 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	 * 检查手机号码是否存在
 	 */
 	@Override
-	public Map<String,Object> checkMobile(String mobile) {
-		Map<String,Object> map=new HashMap<String, Object>();
+	public Result checkMobile(String mobile) {
+		Result result=Result.failure();
 		if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
-			map.put("code", "888");
-			map.put("message", "格式有误，请输入正确的手机号码");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+			result.setSuccess(false);
+			result.setMsg("格式有误，请输入正确的手机号码");
 		}else{
 			int count=0;
 				try {
 					count=ezs_userinfoMapper.checkMobile(mobile);
 					if(count==0){
+						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						result.setSuccess(true);
+						result.setMsg("该手机号可用");
 						//可以注册
-						map.put("code", "000");
-						map.put("message", "该手机号可用");
 					}else{
-						map.put("code", "888");
-						map.put("message", "手机号已经被注册");
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+						result.setSuccess(false);
+						result.setMsg("手机号码已经被注册");
 					}
 				} catch (Exception e) {
-					map.put("code", "999");
-					map.put("message", "操作异常");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setSuccess(false);
+					result.setMsg("服务器异常");
 				}
 		}
-		return map;
+		return result;
 	}
 
 	/**

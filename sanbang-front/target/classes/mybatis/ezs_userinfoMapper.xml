@@ -234,7 +234,7 @@
   </resultMap>
   
 	<!--查询用户手机号-->
-	<select  id="checkMobile" resultType="long">
+	<select  id="checkMobile" resultType="int">
   	 select 
      count(phone)
     from ezs_userinfo

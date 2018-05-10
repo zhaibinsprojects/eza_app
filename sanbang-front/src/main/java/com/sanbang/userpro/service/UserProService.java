@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.utils.Result;
 
 
 /**
@@ -95,7 +96,7 @@ public interface UserProService {
 	 * @param userName
 	 * @return
 	 */
-	Map<String, Object> checkMobile(String mobile)throws Exception;
+	Result checkMobile(String mobile)throws Exception;
 	
 	/**
 	 * 根据用户名查询用户信息

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.userpro.service.UserProService;
+import com.sanbang.utils.Result;
 
 @Controller
 @RequestMapping("/userRegist")
@@ -42,9 +43,9 @@ public class RegistController {
 	 */
 	@RequestMapping(value="/checkMobile")
 	@ResponseBody
-	public Map<String,Object> checkMobile(@RequestParam(value="mobile",required=false)String mobile) throws Exception{
-		Map<String,Object> map=userProService.checkMobile(mobile);
-		return map;
+	public Object checkMobile(@RequestParam(value="mobile",required=false)String mobile) throws Exception{
+		Result  res=userProService.checkMobile(mobile);
+		return res;
 	}
 	
 	

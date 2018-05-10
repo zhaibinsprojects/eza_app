@@ -26,6 +26,7 @@ import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.IpUtils;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
+import com.sanbang.utils.Result;
 
 
 
@@ -398,6 +399,7 @@ public class UserProController {
 			Map<String,Object> map=userProService.checkUserName(userName);
 		return map;
 	}
+	
 	/**
 	 * 检查手机号码是否存在
 	 * @param userName
@@ -406,9 +408,9 @@ public class UserProController {
 	 */
 	@RequestMapping(value="/checkMobile")
 	@ResponseBody
-	public Map<String,Object> checkMobile(@RequestParam(value="mobile",required=false)String mobile) throws Exception{
-		Map<String,Object> map=userProService.checkMobile(mobile);
-		return map;
+	public Result checkMobile(@RequestParam(value="mobile",required=false)String mobile) throws Exception{
+		Result result=userProService.checkMobile(mobile);
+		return result;
 	}
 	
 	/**

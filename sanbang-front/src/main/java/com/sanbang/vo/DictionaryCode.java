@@ -1,6 +1,12 @@
 package com.sanbang.vo;
 
 public class DictionaryCode {
+	
+	/**
+     * 用户名不合法
+     */
+    public static final int ERROR_WEB_REQ_SUCCESS = 101000;
+	
 	/**
      * 用户名不合法
      */
@@ -19,6 +25,10 @@ public class DictionaryCode {
     public static final int ERROR_WEB_PASSWORD_SAME_CHARACTER = 101004;
     /**
      * 手机号码已经被注册
+     */
+    public static final int ERROR_WEB_PHONE_TYPE_REGISTERED = 101007;
+    /**
+     * 手机号码格式
      */
     public static final int ERROR_WEB_PHONE_NUMBER_REGISTERED = 101006;
     /**
