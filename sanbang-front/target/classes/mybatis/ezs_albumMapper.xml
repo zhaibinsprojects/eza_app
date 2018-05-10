@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_albumMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_album" >
+<mapper namespace="com.sanbang.dao.ezs_albumMapper" >
+  <resultMap id="BaseResultMap" type="ezs_album" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -11,7 +11,7 @@
     <result column="album_cover_id" property="album_cover_id" jdbcType="BIGINT" />
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_album" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_album" extends="BaseResultMap" >
     <result column="alblum_info" property="alblum_info" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -33,7 +33,7 @@
     delete from ezs_album
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_album" >
+  <insert id="insert" parameterType="ezs_album" >
     insert into ezs_album (id, addTime, deleteStatus, 
       album_default, album_name, album_sequence, 
       album_cover_id, user_id, alblum_info
@@ -43,7 +43,7 @@
       #{album_cover_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, #{alblum_info,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_album" >
+  <insert id="insertSelective" parameterType="ezs_album" >
     insert into ezs_album
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -104,7 +104,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_album" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_album" >
     update ezs_album
     <set >
       <if test="addTime != null" >
@@ -134,7 +134,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_album" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_album" >
     update ezs_album
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -146,7 +146,7 @@
       alblum_info = #{alblum_info,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_album" >
+  <update id="updateByPrimaryKey" parameterType="ezs_album" >
     update ezs_album
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

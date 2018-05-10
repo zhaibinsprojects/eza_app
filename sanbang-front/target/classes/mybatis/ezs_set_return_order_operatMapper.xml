@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_set_return_order_operatMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_set_return_order_operat" >
+<mapper namespace="com.sanbang.dao.ezs_set_return_order_operatMapper" >
+  <resultMap id="BaseResultMap" type="ezs_set_return_order_operat" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -22,7 +22,7 @@
     delete from ezs_set_return_order_operat
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_set_return_order_operat" >
+  <insert id="insert" parameterType="ezs_set_return_order_operat" >
     insert into ezs_set_return_order_operat (id, addTime, deleteStatus, 
       operat, setReturnOrder_id, user_id
       )
@@ -30,7 +30,7 @@
       #{operat,jdbcType=VARCHAR}, #{setReturnOrder_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_set_return_order_operat" >
+  <insert id="insertSelective" parameterType="ezs_set_return_order_operat" >
     insert into ezs_set_return_order_operat
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_set_return_order_operat" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_set_return_order_operat" >
     update ezs_set_return_order_operat
     <set >
       <if test="addTime != null" >
@@ -94,7 +94,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_set_return_order_operat" >
+  <update id="updateByPrimaryKey" parameterType="ezs_set_return_order_operat" >
     update ezs_set_return_order_operat
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

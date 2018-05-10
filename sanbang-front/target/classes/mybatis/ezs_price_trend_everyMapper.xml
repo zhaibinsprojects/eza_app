@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_price_trend_everyMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_price_trend_every" >
+<mapper namespace="com.sanbang.dao.ezs_price_trend_everyMapper" >
+  <resultMap id="BaseResultMap" type="ezs_price_trend_every" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="price_trend_id" property="price_trend_id" jdbcType="BIGINT" />
     <result column="price" property="price" jdbcType="VARCHAR" />
@@ -20,13 +20,13 @@
     delete from ezs_price_trend_every
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_price_trend_every" >
+  <insert id="insert" parameterType="ezs_price_trend_every" >
     insert into ezs_price_trend_every (id, price_trend_id, price, 
       addTime)
     values (#{id,jdbcType=BIGINT}, #{price_trend_id,jdbcType=BIGINT}, #{price,jdbcType=VARCHAR}, 
       #{addTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_price_trend_every" >
+  <insert id="insertSelective" parameterType="ezs_price_trend_every" >
     insert into ezs_price_trend_every
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -57,7 +57,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_price_trend_every" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_price_trend_every" >
     update ezs_price_trend_every
     <set >
       <if test="price_trend_id != null" >
@@ -72,7 +72,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_price_trend_every" >
+  <update id="updateByPrimaryKey" parameterType="ezs_price_trend_every" >
     update ezs_price_trend_every
     set price_trend_id = #{price_trend_id,jdbcType=BIGINT},
       price = #{price,jdbcType=VARCHAR},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_financial_service_loansMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_financial_service_loans" >
+<mapper namespace="com.sanbang.dao.ezs_financial_service_loansMapper" >
+  <resultMap id="BaseResultMap" type="ezs_financial_service_loans" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -28,7 +28,7 @@
     delete from ezs_financial_service_loans
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
+  <insert id="insert" parameterType="ezs_financial_service_loans" >
     insert into ezs_financial_service_loans (id, addTime, deleteStatus, 
       address, applyType, companyName, 
       contacts, loanAmount, mainBusiness, 
@@ -38,7 +38,7 @@
       #{contacts,jdbcType=VARCHAR}, #{loanAmount,jdbcType=DECIMAL}, #{mainBusiness,jdbcType=VARCHAR}, 
       #{telNum,jdbcType=VARCHAR}, #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
+  <insert id="insertSelective" parameterType="ezs_financial_service_loans" >
     insert into ezs_financial_service_loans
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -111,7 +111,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_financial_service_loans" >
     update ezs_financial_service_loans
     <set >
       <if test="addTime != null" >
@@ -147,7 +147,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
+  <update id="updateByPrimaryKey" parameterType="ezs_financial_service_loans" >
     update ezs_financial_service_loans
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

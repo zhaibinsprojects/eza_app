@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_customerMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customer" >
+<mapper namespace="com.sanbang.dao.ezs_customerMapper" >
+  <resultMap id="BaseResultMap" type="ezs_customer" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -101,7 +101,7 @@
     delete from ezs_customer
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_customer" >
+  <insert id="insert" parameterType="ezs_customer" >
     insert into ezs_customer (id, addTime, deleteStatus, 
       XRF, address, admin_status, 
       baler, bill, clean, clean_ability, 
@@ -155,7 +155,7 @@
       #{group_id,jdbcType=BIGINT}, #{level_id,jdbcType=BIGINT}, #{paper_id,jdbcType=BIGINT}, 
       #{source_id,jdbcType=BIGINT}, #{store_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customer" >
+  <insert id="insertSelective" parameterType="ezs_customer" >
     insert into ezs_customer
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -618,7 +618,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customer" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_customer" >
     update ezs_customer
     <set >
       <if test="addTime != null" >
@@ -849,7 +849,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customer" >
+  <update id="updateByPrimaryKey" parameterType="ezs_customer" >
     update ezs_customer
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

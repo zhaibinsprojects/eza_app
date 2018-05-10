@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_role_groupMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_role_group" >
+<mapper namespace="com.sanbang.dao.ezs_role_groupMapper" >
+  <resultMap id="BaseResultMap" type="ezs_role_group" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -22,7 +22,7 @@
     delete from ezs_role_group
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_role_group" >
+  <insert id="insert" parameterType="ezs_role_group" >
     insert into ezs_role_group (id, addTime, deleteStatus, 
       name, sequence, type
       )
@@ -30,7 +30,7 @@
       #{name,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_role_group" >
+  <insert id="insertSelective" parameterType="ezs_role_group" >
     insert into ezs_role_group
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_role_group" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_role_group" >
     update ezs_role_group
     <set >
       <if test="addTime != null" >
@@ -94,7 +94,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_role_group" >
+  <update id="updateByPrimaryKey" parameterType="ezs_role_group" >
     update ezs_role_group
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

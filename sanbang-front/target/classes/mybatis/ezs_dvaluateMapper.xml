@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_dvaluateMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_dvaluate" >
+<mapper namespace="com.sanbang.dao.ezs_dvaluateMapper" >
+  <resultMap id="BaseResultMap" type="ezs_dvaluate" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -12,7 +12,7 @@
     <result column="serviceQuality" property="serviceQuality" jdbcType="DOUBLE" />
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_dvaluate" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_dvaluate" extends="BaseResultMap" >
     <result column="user" property="user" jdbcType="BINARY" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -34,7 +34,7 @@
     delete from ezs_dvaluate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_dvaluate" >
+  <insert id="insert" parameterType="ezs_dvaluate" >
     insert into ezs_dvaluate (id, addTime, deleteStatus, 
       conttent, goodQuality, logistics, 
       order_no, serviceQuality, goods_id, 
@@ -44,7 +44,7 @@
       #{order_no,jdbcType=VARCHAR}, #{serviceQuality,jdbcType=DOUBLE}, #{goods_id,jdbcType=BIGINT}, 
       #{user,jdbcType=BINARY})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_dvaluate" >
+  <insert id="insertSelective" parameterType="ezs_dvaluate" >
     insert into ezs_dvaluate
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -111,7 +111,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_dvaluate" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_dvaluate" >
     update ezs_dvaluate
     <set >
       <if test="addTime != null" >
@@ -144,7 +144,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_dvaluate" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_dvaluate" >
     update ezs_dvaluate
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -157,7 +157,7 @@
       user = #{user,jdbcType=BINARY}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_dvaluate" >
+  <update id="updateByPrimaryKey" parameterType="ezs_dvaluate" >
     update ezs_dvaluate
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

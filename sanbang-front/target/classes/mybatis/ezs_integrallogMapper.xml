@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_integrallogMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_integrallog" >
+<mapper namespace="com.sanbang.dao.ezs_integrallogMapper" >
+  <resultMap id="BaseResultMap" type="ezs_integrallog" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -10,7 +10,7 @@
     <result column="integral_user_id" property="integral_user_id" jdbcType="BIGINT" />
     <result column="operate_user_id" property="operate_user_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_integrallog" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_integrallog" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -31,7 +31,7 @@
     delete from ezs_integrallog
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_integrallog" >
+  <insert id="insert" parameterType="ezs_integrallog" >
     insert into ezs_integrallog (id, addTime, deleteStatus, 
       integral, type, integral_user_id, 
       operate_user_id, content)
@@ -39,7 +39,7 @@
       #{integral,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{integral_user_id,jdbcType=BIGINT}, 
       #{operate_user_id,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_integrallog" >
+  <insert id="insertSelective" parameterType="ezs_integrallog" >
     insert into ezs_integrallog
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -94,7 +94,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_integrallog" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_integrallog" >
     update ezs_integrallog
     <set >
       <if test="addTime != null" >
@@ -121,7 +121,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_integrallog" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_integrallog" >
     update ezs_integrallog
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -132,7 +132,7 @@
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_integrallog" >
+  <update id="updateByPrimaryKey" parameterType="ezs_integrallog" >
     update ezs_integrallog
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

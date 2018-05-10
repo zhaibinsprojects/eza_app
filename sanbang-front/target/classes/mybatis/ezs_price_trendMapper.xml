@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_price_trendMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_price_trend" >
+<mapper namespace="com.sanbang.dao.ezs_price_trendMapper" >
+  <resultMap id="BaseResultMap" type="ezs_price_trend" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -57,7 +57,7 @@
     delete from ezs_price_trend
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_price_trend" >
+  <insert id="insert" parameterType="ezs_price_trend" >
     insert into ezs_price_trend (id, addTime, deleteStatus, 
       ash, bending, burning, 
       cantilever, content, crack, 
@@ -85,7 +85,7 @@
       #{goodClass_sources,jdbcType=VARCHAR}, #{data_sources_new,jdbcType=VARCHAR}, #{price_type,jdbcType=INTEGER}, 
       #{purchasing_standard,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_price_trend" >
+  <insert id="insertSelective" parameterType="ezs_price_trend" >
     insert into ezs_price_trend
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -314,7 +314,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_price_trend" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_price_trend" >
     update ezs_price_trend
     <set >
       <if test="addTime != null" >
@@ -428,7 +428,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_price_trend" >
+  <update id="updateByPrimaryKey" parameterType="ezs_price_trend" >
     update ezs_price_trend
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_sysconfigMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_sysconfig" >
+<mapper namespace="com.sanbang.dao.ezs_sysconfigMapper" >
+  <resultMap id="BaseResultMap" type="ezs_sysconfig" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -113,7 +113,7 @@
     <result column="websiteLogo_id" property="websiteLogo_id" jdbcType="BIGINT" />
     <result column="weixin_qr_img_id" property="weixin_qr_img_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_sysconfigWithBLOBs" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="ezs_sysconfigWithBLOBs" extends="BaseResultMap" >
     <result column="bargain_state" property="bargain_state" jdbcType="LONGVARCHAR" />
     <result column="closeReason" property="closeReason" jdbcType="LONGVARCHAR" />
     <result column="codeStat" property="codeStat" jdbcType="LONGVARCHAR" />
@@ -167,7 +167,7 @@
     delete from ezs_sysconfig
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_sysconfigWithBLOBs" >
+  <insert id="insert" parameterType="ezs_sysconfigWithBLOBs" >
     insert into ezs_sysconfig (id, addTime, deleteStatus, 
       address, alipay_fenrun, auto_order_confirm, 
       auto_order_evaluate, auto_order_notice, 
@@ -257,7 +257,7 @@
       #{sys_domain,jdbcType=LONGVARCHAR}, #{templates,jdbcType=LONGVARCHAR}, #{user_creditrule,jdbcType=LONGVARCHAR}, 
       #{weixin_welecome_content,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_sysconfigWithBLOBs" >
+  <insert id="insertSelective" parameterType="ezs_sysconfigWithBLOBs" >
     insert into ezs_sysconfig
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1014,7 +1014,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_sysconfigWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_sysconfigWithBLOBs" >
     update ezs_sysconfig
     <set >
       <if test="addTime != null" >
@@ -1392,7 +1392,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_sysconfigWithBLOBs" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_sysconfigWithBLOBs" >
     update ezs_sysconfig
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -1520,7 +1520,7 @@
       weixin_welecome_content = #{weixin_welecome_content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_sysconfig" >
+  <update id="updateByPrimaryKey" parameterType="ezs_sysconfig" >
     update ezs_sysconfig
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

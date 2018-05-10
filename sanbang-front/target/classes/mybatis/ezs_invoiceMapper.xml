@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_invoiceMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_invoice" >
+<mapper namespace="com.sanbang.dao.ezs_invoiceMapper" >
+  <resultMap id="BaseResultMap" type="ezs_invoice" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -27,7 +27,7 @@
     delete from ezs_invoice
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_invoice" >
+  <insert id="insert" parameterType="ezs_invoice" >
     insert into ezs_invoice (id, addTime, deleteStatus, 
       express_name, express_no, express_time, 
       invoice_status, receipt_id, user_id, 
@@ -37,7 +37,7 @@
       #{invoice_status,jdbcType=INTEGER}, #{receipt_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
       #{order_no,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" >
+  <insert id="insertSelective" parameterType="ezs_invoice" >
     insert into ezs_invoice
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -104,7 +104,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_invoice" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_invoice" >
     update ezs_invoice
     <set >
       <if test="addTime != null" >
@@ -137,7 +137,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_invoice" >
+  <update id="updateByPrimaryKey" parameterType="ezs_invoice" >
     update ezs_invoice
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

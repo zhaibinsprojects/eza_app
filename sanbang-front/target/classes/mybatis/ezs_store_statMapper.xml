@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_store_statMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_store_stat" >
+<mapper namespace="com.sanbang.dao.ezs_store_statMapper" >
+  <resultMap id="BaseResultMap" type="ezs_store_stat" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -32,7 +32,7 @@
     delete from ezs_store_stat
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_store_stat" >
+  <insert id="insert" parameterType="ezs_store_stat" >
     insert into ezs_store_stat (id, addTime, deleteStatus, 
       all_goods, all_store, all_user, 
       next_time, order_amount, store_update, 
@@ -46,7 +46,7 @@
       #{week_report,jdbcType=INTEGER}, #{week_store,jdbcType=INTEGER}, #{week_user,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_store_stat" >
+  <insert id="insertSelective" parameterType="ezs_store_stat" >
     insert into ezs_store_stat
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -143,7 +143,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_store_stat" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_store_stat" >
     update ezs_store_stat
     <set >
       <if test="addTime != null" >
@@ -191,7 +191,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_store_stat" >
+  <update id="updateByPrimaryKey" parameterType="ezs_store_stat" >
     update ezs_store_stat
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},

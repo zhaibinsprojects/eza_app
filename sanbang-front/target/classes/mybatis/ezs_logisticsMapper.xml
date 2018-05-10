@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.shanbang.dao.ezs_logisticsMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_logistics" >
+<mapper namespace="com.sanbang.dao.ezs_logisticsMapper" >
+  <resultMap id="BaseResultMap" type="ezs_logistics" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -33,7 +33,7 @@
     delete from ezs_logistics
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_logistics" >
+  <insert id="insert" parameterType="ezs_logistics" >
     insert into ezs_logistics (id, addTime, deleteStatus, 
       add_cart_time, car_no, end_time, 
       logistics_name, logistics_no, msg, 
@@ -47,7 +47,7 @@
       #{service_time,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, 
       #{order_no,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_logistics" >
+  <insert id="insertSelective" parameterType="ezs_logistics" >
     insert into ezs_logistics
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -150,7 +150,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_logistics" >
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_logistics" >
     update ezs_logistics
     <set >
       <if test="addTime != null" >
@@ -201,7 +201,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_logistics" >
+  <update id="updateByPrimaryKey" parameterType="ezs_logistics" >
     update ezs_logistics
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
