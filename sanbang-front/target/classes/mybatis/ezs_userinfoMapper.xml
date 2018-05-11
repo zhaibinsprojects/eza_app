@@ -20,7 +20,7 @@
     id, addTime, deleteStatus, email, enable, entryTime, phone, status, depart_id, position_id, 
     sex_id, QQ, updateStatus
   </sql>
-  <select id="selectByPrimaryKey" resultMap="userinfomap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_userinfo
