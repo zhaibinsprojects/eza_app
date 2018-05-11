@@ -257,11 +257,11 @@ public class UserProController {
 	 */
 	@RequestMapping(value = "/userLogot")
 	public String userLogot(HttpServletRequest request) throws Exception {
-		User_Proinfo upi=RedisUserSession.getUserInfo(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 //	    UserProInfo upi=new UserProInfo();
 //	    upi.setUsername("t000003");
 		Map<String, Object> map = null;
-		userProService.userLogot(upi,RedisUserSession.getUserKey(cookieuserkey, request));
+		//userProService.userLogot(upi,RedisUserSession.getUserKey(cookieuserkey, request));
 		return "redirect:"+serbaseurl;
 	}
 	/**
@@ -327,11 +327,11 @@ public class UserProController {
 	public Map<String,Object> checkUpMoCode(@RequestParam(value="mobile",required=false) String mobile,
 			@RequestParam(value="code",required=false) String code,
 			HttpServletRequest request,HttpServletResponse response) throws Exception{
-		User_Proinfo upi=RedisUserSession.getUserInfo(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 //		   UserProInfo upi=new UserProInfo();
 //		   upi.setUsername("tttttt");
-		Map<String,Object> map=userProService.checkUpMoCode(mobile, code,upi,request);
-		return map;
+	//	Map<String,Object> map=userProService.checkUpMoCode(mobile, code,upi,request);
+		return null;
 	}
 	/**
 	 * 用户忘记密码发送短信验证码  (修改密码)
@@ -435,7 +435,7 @@ public class UserProController {
 		}
 		int mallnum=0;
 		String username="";
-		User_Proinfo upi=RedisUserSession.getUserInfo(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 
 		if(null!=upi){
 			username=upi.getName();

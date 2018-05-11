@@ -18,10 +18,7 @@ public class UserIndexController {
 	@RequestMapping("/index")
 	public String UserIndexInit(HttpServletRequest request,Model model){
 		
-		User_Proinfo upi=RedisUserSession.getUserInfo(request);
-		if(null!=upi){
-			model.addAttribute("username", upi.getName());
-		}
+		
 		return view+"userindex";
 		
 	}
