@@ -32,7 +32,7 @@ public class DataInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object arg2) throws Exception {
 		
-		User_Proinfo upi = RedisUserSession.getUserInfo(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if(upi != null){
 			String saveLinkInfoUrl=request.getRequestURI();
 			JSONObject param = new JSONObject();
