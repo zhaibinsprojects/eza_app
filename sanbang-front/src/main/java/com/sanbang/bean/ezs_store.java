@@ -6,65 +6,65 @@ import java.util.Date;
 
 public class ezs_store  implements Serializable{
     /**
-	 * 
+	 * 商城表
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 
-    private Date addTime;
+    private Date addTime;//添加时间
 
-    private Boolean deleteStatus;
+    private Boolean deleteStatus;//是否启用（0启用1不启用
 
-    private String address;
+    private String address;//经营地址
 
-    private Double assets;
+    private Double assets;//总资产
 
-    private String companyName;
+    private String companyName;//企业名称
 
-    private Double covered;
+    private Double covered;//占地面积
 
-    private Integer device_num;
+    private Integer device_num;//设备数量
 
-    private Integer employee_num;
+    private Integer employee_num;//员工数量
 
-    private Double fixed_assets;
+    private Double fixed_assets;//固定资产
 
-    private String location_detail;
+    private String location_detail;//开户银行所在地
 
-    private Integer obtainYear;
+    private Integer obtainYear;//实际控制人从业年限
 
-    private String openBankNo;
+    private String openBankNo;//开户行账号
 
-    private String open_bank_name;
+    private String open_bank_name;//开户行名称
 
-    private String open_branch_name;
+    private String open_branch_name;//开户银行支行名称
 
-    private String open_branch_no;
+    private String open_branch_no;//开户支行账号
 
-    private Date registerDate;
+    private Date registerDate;//注册时间
 
-    private Boolean rent;
+    private Boolean rent;//租用
 
-    private Integer status;
+    private Integer status;//0:初始数据无业务 审核状态 1:需要审核 2.审核通过,3审核未通过
 
-    private String userType;
+    private String userType;//1.SELLER卖家，2.BUYER:买家
 
-    private Double yTurnover;
+    private Double yTurnover;//年营业额
 
-    private Long area_id;
+    private Long area_id;//经营地址区县
 
-    private Long cardType_id;
+    private Long cardType_id;//证件类型
 
-    private Long companyType_id;
+    private Long companyType_id;//公司类型
 
-    private Long mianIndustry_id;
+    private Long mianIndustry_id;//主营行业
 
-    private Long auditingusertype_id;
+    private Long auditingusertype_id;//1, 线索用户 2, 注册用户, 3, 认证用户 ,4, 激活用户
 
-    private String tel;
+    private String tel;//联系电话
 
-    private byte[] location;
+    private byte[] location;//开户银行区县
 
     public Long getId() {
         return id;

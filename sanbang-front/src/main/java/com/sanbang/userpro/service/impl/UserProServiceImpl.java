@@ -1227,9 +1227,20 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			story.setAddTime(new Date());
 			story.setCompanyType_id(Long.valueOf(companyType_id));
 			story.setUserType(userRole);
-			story.setArea_id(Long.valueOf(area_id));
+			story.setArea_id(Long.valueOf(4522011));
 			story.setMianIndustry_id(Long.valueOf(mianIndustry_id));
-
+			story.setDeleteStatus(false);
+			story.setAssets(0.0);
+			story.setCovered(0.0);
+			story.setDevice_num(0);
+			story.setEmployee_num(0);
+			story.setFixed_assets(0.0);
+			story.setObtainYear(0);
+			story.setRent(false);
+			story.setStatus(1);
+			story.setyTurnover(0.0);
+			
+			
 			// 用户详情
 			ezs_userinfo userinfo = new ezs_userinfo();
 			userinfo.setAddTime(new Date());
@@ -1250,7 +1261,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 
 				aa = ezs_userMapper.insert(user);
 			} catch (Exception e) {
-				log.info("注册：保存用户登陆信息错误" + e.toString());
+				log.info("注册：保存用户注册信息错误" + e.toString());
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
 				result.setSuccess(false);
 				result.setMsg("系统错误");
@@ -1268,7 +1279,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		} else {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
 			result.setSuccess(false);
-			result.setMsg("系统错误");
+			result.setMsg("请重新注册");
 		}
 
 		return result;
@@ -1279,7 +1290,17 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			String address, String area_id, String mianIndustry_id,
 			String companyType_id, String trueName, long sex_id,
 			String tel, String email) {
-
+        
+		List<ezs_store> list=ezs_storeMapper.getstoreInfoByName(companyName);
+		
+		if(list!=null&&list.size()>0){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("公司名称已经存在");
+			return result;
+		}
+		
+		
 		if (Tools.isEmpty(companyName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
@@ -1333,13 +1354,13 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			return result;
 		}
 		
-		if (Tools.paramValidate(email, 2)) {
+		if (!Tools.paramValidate(email, 2)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("邮箱格式不正确");
 			return result;
 		}
-
+		result.setSuccess(true);
 		return result;
 	}
 

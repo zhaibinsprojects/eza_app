@@ -61,7 +61,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 	private String baseurl;
 	
 	//h5基础路径
-	@Value("${consparam.ezaisheng.ser.url}")
+	@Value("${consparam.ser.baseurl}")
 	private String serurl;
 	
 	

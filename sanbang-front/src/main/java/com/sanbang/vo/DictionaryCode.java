@@ -2,8 +2,11 @@ package com.sanbang.vo;
 
 public class DictionaryCode {
 	
+	
+	
+	
 	/**
-     * 用户名不合法
+     * 请求成功
      */
     public static final int ERROR_WEB_REQ_SUCCESS = 101000;
 	

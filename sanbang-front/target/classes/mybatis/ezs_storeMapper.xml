@@ -399,4 +399,15 @@
       tel = #{tel,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!--得到公司名称-->
+   <select id="getstoreInfoByName" resultMap="BaseResultMap">
+   	select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ezs_store
+    where companyName = #{companyName}
+   	
+   </select>
 </mapper>

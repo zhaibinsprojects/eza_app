@@ -1,5 +1,9 @@
 package com.sanbang.dao;
 
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_store;
@@ -19,4 +23,12 @@ public interface ezs_storeMapper {
     int updateByPrimaryKeyWithBLOBs(ezs_store record);
 
     int updateByPrimaryKey(ezs_store record);
+    
+    /**
+     * 得到公司名称
+     * @param name
+     * @return
+     */
+    List<ezs_store> getstoreInfoByName(@Param("companyName")String companyName);
+    
 }

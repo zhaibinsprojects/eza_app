@@ -138,4 +138,18 @@
       belongsArea = #{belongsArea,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!--得到一级数据-->
+  <select id="getAreaParentList" resultMap="BaseResultMap">
+  	SELECT
+  	A.id, A.areaName
+  	FROM ezs_area A WHERE  ISNULL(A.parent_id) AND NOT ISNULL(A.areaName)
+  </select>
+  
+  <!--得到子子级数据-->
+  <select id="getAreaListByParId" resultMap="BaseResultMap">
+  	SELECT
+  	 A.id, A.areaName
+  	FROM ezs_area A WHERE  A.parent_id=#{areaid} AND NOT ISNULL(A.areaName)
+  </select>
 </mapper>
