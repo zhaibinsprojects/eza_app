@@ -39,7 +39,7 @@
       password, trueName, userRole, 
       parent_id, store_id, userInfo_id
       )
-    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+    values (null, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{lastLoginDate,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, #{loginCount,jdbcType=INTEGER}, 
       #{loginDate,jdbcType=TIMESTAMP}, #{loginIp,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{trueName,jdbcType=VARCHAR}, #{userRole,jdbcType=VARCHAR}, 
@@ -209,4 +209,58 @@
       userInfo_id = #{userInfo_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!--用户登陆信息-->
+  <resultMap id="userinfomap" type="User_Proinfo">
+	  	<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+	    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+	    <result column="lastLoginDate" property="lastLoginDate" jdbcType="TIMESTAMP" />
+	    <result column="lastLoginIp" property="lastLoginIp" jdbcType="VARCHAR" />
+	    <result column="loginCount" property="loginCount" jdbcType="INTEGER" />
+	    <result column="loginDate" property="loginDate" jdbcType="TIMESTAMP" />
+	    <result column="loginIp" property="loginIp" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="VARCHAR" />
+	    <result column="trueName" property="trueName" jdbcType="VARCHAR" />
+	    <result column="userRole" property="userRole" jdbcType="VARCHAR" />
+	    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+	    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+	    <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
+         
+         <!--用户详情-->
+         <association property="userInfo" column="userInfo_id" select="selectByPrimaryKey">
+         </association>
+         
+         <!--商城-->
+         <association property="store" column="store_id" select="com.sanbang.dao.ezs_storeMapper.selectByPrimaryKey">
+         </association>
+         
+         
+         <!--角色-->
+         <association property="roles" column="user_id" select="com.sanbang.dao.ezs_user_roleMappe.selectByPrimaryKey">
+         </association>
+         
+         <!--配置-->
+          <association property="config" column="user_id" select="com.sanbang.dao.ezs_userconfigMapper.selectByPrimaryKey">
+         </association>
+         
+  </resultMap>
+  
+	<!--查询用户手机号-->
+	<select  id="checkMobile" resultType="int">
+  	 select 
+     count(phone)
+    from ezs_user
+    where phone = #{phone}
+	</select>
+     
+     <!--查看用户是否已存在-->
+     <select id="getUserInfoByUserNameFromBack" resultMap="BaseResultMap">
+     	select 
+    <include refid="Base_Column_List" />
+	    from ezs_user
+	    where name = #{username}
+     </select> 
+  
 </mapper>

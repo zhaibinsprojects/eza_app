@@ -121,18 +121,18 @@ public class RegistController {
 	 */
 	@RequestMapping(value="/userAdd")
 	@ResponseBody
-	public Result userAdd(@RequestParam(value="userName",required=false) String username,
+	public Result userAdd(
 			@RequestParam(value="passwd",required=false) String passwd,
 			@RequestParam(value="passwdA",required=false) String passwdA,
 			@RequestParam(value="mobile",required=false) String mobile,
 			@RequestParam(value="code",required=false) String code,
-			HttpServletRequest request,Integer flag,HttpSession session) throws Exception{
+			HttpServletRequest request,HttpSession session) throws Exception{
 //		username="t000007";
 //		passwd="14e1b600b1fd579f47433b88e8d85291";
 //		mobile="13717706563";
 		Result result=Result.failure();
 		String myip=IpUtils.getIpAddr(request);
-		result= userProService.userAdd(username, passwd,passwdA, mobile,code,myip,flag,session,request);
+		result= userProService.userAdd(mobile, passwd,passwdA, mobile,code,myip,null,session,request);
 		return result;
 	}
 	

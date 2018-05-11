@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class ezs_user  extends ezs_userinfo implements Serializable{
     /**
-	 * 
+	 * //用户登陆信息
 	 */
 	private static final long serialVersionUID = -1598895147863170074L;
 

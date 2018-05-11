@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dao.ezs_userinfoMapper;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
@@ -58,6 +59,9 @@ public class UserProServiceImpl implements UserProService{
 	@Resource(name="ezs_userinfoMapper")
 	private com.sanbang.dao.ezs_userinfoMapper ezs_userinfoMapper;
 
+	//用户登陆信息
+	@Resource(name="ezs_userMapper")
+	private ezs_userMapper ezs_userMapper;
 
 	@Value("${consparam.cookie.useridcard}")
 	private String USERIDCARD;
@@ -245,7 +249,7 @@ public class UserProServiceImpl implements UserProService{
 			}
 			// 根据用户名查询用户的信息
 	    	ezs_user userProInfo=null;
-			userProInfo = ezs_userinfoMapper.getUserInfoByUserName(userName.trim());
+			userProInfo = ezs_userMapper.getUserInfoByUserName(userName.trim());
 			if(userProInfo == null){
 				 result.put("code", "888");
 				 result.put("message", "用户不存在");
@@ -468,10 +472,6 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			}else{
 				//result=regbyauto(username, mobile, passwd , myip,flag);
 			}
-		}else{
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("参数错误");
 		}
 		log.info("注册结果：code="+result.getErrorcode()+" &message="+result.getMsg() );
 		return result;
@@ -520,13 +520,13 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					}else{
 						result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_ERROR);
 						result.setSuccess(false);
-						result.setMsg("验证码不能为空");
+						result.setMsg("验证码错误");
 						return result;
 					}
 				}else{
 					result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_ERROR);
 					result.setSuccess(false);
-					result.setMsg("验证码不能为空");
+					result.setMsg("验证码错误");
 					return result;
 				}
 				try {
@@ -542,7 +542,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	public Result regself(Result result,String mobile,String username,String myip,String passwd){
 		//用户自注册
 		Map<String,Object> map=new HashMap<>();
-		List<ezs_user> upis=ezs_userinfoMapper.getUserInfoByUserNameFromBack(username);
+		List<ezs_user> upis=ezs_userMapper.getUserInfoByUserNameFromBack(username);
 			if(upis!=null&&upis.size()!=0){
 				//已存在，不能注册
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
@@ -564,7 +564,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					upi.setPassword(passwd);
 					upi.setUserRole("BUYER");
 					int a = 0;
-						a=ezs_userinfoMapper.insert(upi);
+						a=ezs_userMapper.insert(upi);
 					if(a==1){
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
 						result.setSuccess(true);
@@ -812,7 +812,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 						RedisUtils.del(doFtCodde);
 						int a=0;
 						try {
-							a=ezs_userinfoMapper.updateUserPwdByMobile(mp);
+							a=ezs_userMapper.updateUserPwdByMobile(mp);
 						} catch (Exception e) {
 							log.error("修改密码失败",e);
 						}
@@ -866,7 +866,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		}else{
 			List<ezs_user>  count=null;
 				try {
-					count=ezs_userinfoMapper.getUserInfoByUserNameFromBack(userName);
+					count=ezs_userMapper.getUserInfoByUserNameFromBack(userName);
 					if(count!=null&&count.size()>0){
 						//可以注册
 						map.put("code", "000");
@@ -898,7 +898,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		}else{
 			int count=0;
 				try {
-					count=ezs_userinfoMapper.checkMobile(mobile);
+					count=ezs_userMapper.checkMobile(mobile);
 					if(count==0){
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
@@ -1127,7 +1127,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	@Override
 	public ezs_user getUserInfoByUserName(String userName) {
 		
-		return ezs_userinfoMapper.getUserInfoByUserName(userName);
+		return ezs_userMapper.getUserInfoByUserName(userName);
 	}
 	@Override
 	public boolean userLogot(User_Proinfo upi,String cookieuserkey) throws Exception {
@@ -1140,7 +1140,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 
 	@Override
 	public String getUserMessage(String username) {
-		return ezs_userinfoMapper.getUserMessage(username);
+		return ezs_userMapper.getUserMessage(username);
 	}
 
 
