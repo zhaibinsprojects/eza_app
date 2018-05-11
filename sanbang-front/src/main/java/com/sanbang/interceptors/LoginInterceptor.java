@@ -34,14 +34,16 @@ public class LoginInterceptor implements HandlerInterceptor{
 	@Value("${consparam.cookie.userkey}")
 	private String cookieuserkey;
 	
+	
+	
 	@Value("${urlparam.filter.urls}")
 	private String filterurls;
 	
-	@Value("${consparam.ezaisheng.base.url}")
-	private String baseurl;
-	
 	@Value("${urlparam.urltrail.urls}")
 	private String urltrails;
+	
+	
+	
 	
 	@Value("${consparam.cookie.usertrailidcard}")
 	private String cookieusertrailidcard;
@@ -51,6 +53,17 @@ public class LoginInterceptor implements HandlerInterceptor{
 	
 	@Value("${consparam.redis.usertrailidcardexpir}")
 	private String redisusertrailidcardexpir;
+	
+	
+	
+	//项目基础路径
+	@Value("${consparam.ezaisheng.base.url}")
+	private String baseurl;
+	
+	//h5基础路径
+	@Value("${consparam.ezaisheng.ser.url}")
+	private String serurl;
+	
 	
 	private Set<String> filterUrls=null;
 	
@@ -118,9 +131,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 								rememberPath(request, response);
 								log.debug("用户未登陆");
 								if(HttpRequestDeviceUtils.isMobileDevice(request)){
-									response.sendRedirect(baseurl+"apph5/userPro/toLoginPage.htm");
-								}else{
-									response.sendRedirect(baseurl+"userPro/toLoginPage.htm");
+									response.sendRedirect(serurl+"index.html");
 								}
 								return false;
 							}
@@ -129,9 +140,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 							rememberPath(request, response);
 							log.debug("用户未登陆");
 							if(HttpRequestDeviceUtils.isMobileDevice(request)){
-								response.sendRedirect(baseurl+"apph5/userPro/toLoginPage.htm");
-							}else{
-								response.sendRedirect(baseurl+"userPro/toLoginPage.htm");
+								response.sendRedirect(serurl+"index.html");
 							}
 							return false;
 						}
@@ -201,7 +210,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 	public void rememberPath(HttpServletRequest request,HttpServletResponse response){
 		String pathtrail=request.getServletPath();
 		String pathparam=request.getQueryString();
-//		request.getp
+		
 		if(urltrailurls.contains(pathtrail)){
 			//记录轨迹
 //			String useridcard=RedisUserSession.getUserKey(cookieusertrailidcard, request);
@@ -217,6 +226,8 @@ public class LoginInterceptor implements HandlerInterceptor{
 				rrt=(RedisResult<String>) RedisUtils.set(tempKey,pathtrail, Long.parseLong(redisusertrailidcardexpir));
 			}
 		}
+		
 	}
+	
 	
 }

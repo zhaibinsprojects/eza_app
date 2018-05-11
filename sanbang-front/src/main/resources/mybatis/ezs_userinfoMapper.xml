@@ -30,19 +30,20 @@
     delete from ezs_userinfo
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_userinfo" >
+  <!--新增商铺-->
+  <insert id="insert" parameterType="ezs_userinfo"  useGeneratedKeys="true" keyProperty="id">
     insert into ezs_userinfo (id, addTime, deleteStatus, 
       email, enable, entryTime, 
       phone, status, depart_id, 
       position_id, sex_id, QQ, 
       updateStatus)
-    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+    values (null, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{email,jdbcType=VARCHAR}, #{enable,jdbcType=BIT}, #{entryTime,jdbcType=TIMESTAMP}, 
       #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{depart_id,jdbcType=BIGINT}, 
       #{position_id,jdbcType=BIGINT}, #{sex_id,jdbcType=BIGINT}, #{QQ,jdbcType=VARCHAR}, 
       #{updateStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_userinfo" >
+  <insert id="insertSelective" parameterType="ezs_userinfo"  >
     insert into ezs_userinfo
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

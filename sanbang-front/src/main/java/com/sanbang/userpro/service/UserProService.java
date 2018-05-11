@@ -44,7 +44,7 @@ public interface UserProService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Result userAdd(String username,String passwd,String passwdA,String mobile,String code,String myip,Integer flag,HttpSession session, HttpServletRequest request) throws Exception;
+	public Result userAdd(String username,String passwd,String passwdA,String mobile,String code,String myip,Integer flag,HttpSession session, HttpServletRequest request,HttpServletResponse response) throws Exception;
 	
 	/**
 	 * 注册发送验证码
@@ -156,5 +156,27 @@ public interface UserProService {
 	 * 分享码业务
 	 */
     Result sharCodeTodo(String sharcode,String phone);
+
+    /**
+     * 
+     * @param result
+     * @param request
+     * @param userRole 角色选择
+     * @param companyName 公司名称
+     * @param address 经营地址
+     * @param area_id 经营地址
+     * @param mianIndustry_id 主营行业
+     * @param companyType_id 公司类型
+     * @param trueName 姓名
+     * @param sex_id 姓别
+     * @param tel 固定电话
+     * @param email 邮箱
+     * @return 
+     */
+	Result userAddInfo(Result result, HttpServletRequest request, String userRole,
+			String companyName, String address,
+			String area_id, String mianIndustry_id, String companyType_id,
+			String trueName, long sex_id, String tel,
+			String email);
 
 }

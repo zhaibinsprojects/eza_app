@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,14 +127,45 @@ public class RegistController {
 			@RequestParam(value="passwdA",required=false) String passwdA,
 			@RequestParam(value="mobile",required=false) String mobile,
 			@RequestParam(value="code",required=false) String code,
-			HttpServletRequest request,HttpSession session) throws Exception{
+			HttpServletRequest request,HttpSession session,HttpServletResponse response) throws Exception{
 //		username="t000007";
 //		passwd="14e1b600b1fd579f47433b88e8d85291";
 //		mobile="13717706563";
 		Result result=Result.failure();
 		String myip=IpUtils.getIpAddr(request);
-		result= userProService.userAdd(mobile, passwd,passwdA, mobile,code,myip,null,session,request);
+		result= userProService.userAdd(mobile, passwd,passwdA, mobile,code,myip,null,session,request,response);
 		return result;
 	}
+	
+	
+	/**
+	 * 
+	 * @param request
+     * @param userRole 角色选择
+     * @param companyName 公司名称
+     * @param address 经营地址
+     * @param area_id 经营地址
+     * @param mianIndustry_id 主营行业
+     * @param companyType_id 公司类型
+     * @param trueName 姓名
+     * @param sex_id 姓别
+     * @param tel 固定电话
+     * @param email 邮箱
+	 * @param session
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/userAddInfo")
+	@ResponseBody
+	public Result userAddInfo(HttpServletRequest request, 
+			String userRole, String companyName, String address, 
+			String area_id, String mianIndustry_id, String companyType_id,
+			String trueName, int sex_id, String tel, String email,
+			HttpSession session) throws Exception{
+		Result result=Result.failure();
+		result=userProService.userAddInfo(result, request, userRole, companyName, address, area_id, mianIndustry_id, companyType_id, trueName, sex_id, tel, email);
+		return result;
+	}
+	
 	
 }

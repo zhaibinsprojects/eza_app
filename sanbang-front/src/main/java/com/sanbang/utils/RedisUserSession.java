@@ -22,7 +22,7 @@ public class RedisUserSession {
 	 * @return
 	 * @throws Exception
 	 */
-	public static User_Proinfo getUserInfo(HttpServletRequest request){
+	public static ezs_user getLoginUserInfo(HttpServletRequest request){
 		if(null==request){
 			return null;
 		}
@@ -34,10 +34,10 @@ public class RedisUserSession {
 					userKey=ck.getValue();
 					// String tempCached=(String)arg0.getSession().getAttribute("USERKEY");
 					@SuppressWarnings("unchecked")
-					RedisResult<User_Proinfo> tempCached=(RedisResult<User_Proinfo>) RedisUtils.get(userKey,ezs_user.class);
+					RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get(userKey,ezs_user.class);
 					if(tempCached!=null&&tempCached.getCode()==RedisConstants.SUCCESS){
 						//缓存中已经存在了  说明该用户已经登陆了
-						User_Proinfo result = tempCached.getResult();
+						ezs_user result = tempCached.getResult();
 						result.setUserkey(userKey);;
 						return result;
 					}else{
@@ -51,6 +51,46 @@ public class RedisUserSession {
 		log.debug("获取用户信息,未找到cookie");
 		return null;
 	}
+	
+	
+	
+	/**
+	 * 若存在当前用户则 返回UserProInfo 不存在 返回null
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public static ezs_user getRegistUserInfo(HttpServletRequest request){
+		if(null==request){
+			return null;
+		}
+		Cookie [] cookies=request.getCookies();
+		String userKey="";
+		if(cookies!=null){
+			for(Cookie ck:cookies){
+				if(ck.getName().equals("SANBANGREGISTCARD")){
+					userKey=ck.getValue();
+					// String tempCached=(String)arg0.getSession().getAttribute("USERKEY");
+					@SuppressWarnings("unchecked")
+					RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get(userKey,ezs_user.class);
+					if(tempCached!=null&&tempCached.getCode()==RedisConstants.SUCCESS){
+						//缓存中已经存在了  说明该用户已经登陆了
+						ezs_user result = tempCached.getResult();
+						result.setUserkey(userKey);;
+						return result;
+					}else{
+						// log.info("获取用户信息,缓存中用户信息过期或异常");
+						break;
+					}
+				}
+			}
+			log.debug("获取用户信息,cookie中未有身份标识.cookie:"+cookies.toString());
+		}
+		log.debug("获取用户信息,未找到cookie");
+		return null;
+	}
+	
 	/**
 	 * 若存在当前用户则 返回UserProInfo 不存在 返回null
 	 * @param request

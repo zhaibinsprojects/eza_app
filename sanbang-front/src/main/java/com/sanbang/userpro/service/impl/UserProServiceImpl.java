@@ -23,8 +23,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanbang.bean.User_Proinfo;
+import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
+import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dao.ezs_userinfoMapper;
 import com.sanbang.redis.RedisConstants;
@@ -38,6 +40,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.SendMobileMessage;
+import com.sanbang.utils.StringUtil;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.Dictionary;
 import com.sanbang.vo.DictionaryCode;
@@ -62,6 +65,10 @@ public class UserProServiceImpl implements UserProService{
 	//用户登陆信息
 	@Resource(name="ezs_userMapper")
 	private ezs_userMapper ezs_userMapper;
+	
+	//商铺
+	@Resource(name="ezs_storeMapper")
+	private  ezs_storeMapper ezs_storeMapper;
 
 	@Value("${consparam.cookie.useridcard}")
 	private String USERIDCARD;
@@ -101,7 +108,10 @@ public class UserProServiceImpl implements UserProService{
 	
 	@Value("${consparam.reg.passwd}")
 	private String randpasswd;
-
+	
+	//注册阶段标识
+	@Value("${consparam.cookie.registcard}")
+	private String registcarid;
 
 	/**
 	 * 更新缓存中的值
@@ -232,7 +242,7 @@ public class UserProServiceImpl implements UserProService{
 	
 	public void loginuser(String userName,HttpServletRequest request,HttpServletResponse response,Map<String,Object> result,
 			String userAgent, String pd,String ip,Date date,Integer flag){
-		User_Proinfo upi=RedisUserSession.getUserInfo(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 	    if(upi!=null&&upi.getName().equals(userName.trim())){
 	    	/*int tempStatus=upi.getStatus();
 	    	if(tempStatus==0){
@@ -446,7 +456,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
-	public Result userAdd(String username, String passwd,String passwdA, String mobile,String code,String myip,Integer flag,HttpSession session,HttpServletRequest request) throws Exception{
+	public Result userAdd(String username, String passwd,String passwdA, String mobile,String code,String myip,Integer flag,HttpSession session,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		log.info("新用户注册 参数：username="+username+" &passwd="+passwd+" &mobile="+mobile+" &code="+code);
 		Result result=Result.failure();
 		
@@ -464,11 +474,11 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			}else if(flag==5){
 				username="wx_"+RandomStr32.getStrDefined(7);
 			}
-			passwd=MD5Util.md5Encode(randpasswd);
+			passwd=MD5Util.md5Encode(randpasswd).toLowerCase();
 		}
 		if(result.getSuccess()){
 			if(flag==null){
-				result=regself(result,mobile, username, myip, passwd);
+				result=regself( request,response,result,mobile, username, myip, passwd);
 			}else{
 				//result=regbyauto(username, mobile, passwd , myip,flag);
 			}
@@ -479,7 +489,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 
 	Result userAddParam(Result result,String username, String passwd,String passwdA, String mobile,String code,HttpServletRequest request){
 			
-			if(StringUtils.isEmpty(passwd)||passwd.trim().length()!=32){
+			if(StringUtils.isEmpty(passwd)||passwd.trim().length()<6||passwd.trim().length()>20){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_NOT_LEGAL);
 				result.setSuccess(false);
 				result.setMsg("密码格式错误");
@@ -539,9 +549,11 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		
 		return result;
 	}
-	public Result regself(Result result,String mobile,String username,String myip,String passwd){
+	
+	
+	@SuppressWarnings("unchecked")
+	public Result regself(HttpServletRequest request,HttpServletResponse response,Result result,String mobile,String username,String myip,String passwd){
 		//用户自注册
-		Map<String,Object> map=new HashMap<>();
 		List<ezs_user> upis=ezs_userMapper.getUserInfoByUserNameFromBack(username);
 			if(upis!=null&&upis.size()!=0){
 				//已存在，不能注册
@@ -551,34 +563,68 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 				return result;
 			}
 			
-					ezs_user upi=new ezs_user();
-					upi.setName(username);
-					upi.setPassword(passwd);
-					upi.setAddTime(new Date());
-					upi.setLastLoginDate(new Date());
-					upi.setLastLoginIp(myip);
-					upi.setLoginCount(1);
-					upi.setLoginDate(new Date());
-					upi.setLoginIp(myip);
-					upi.setName(username);
-					upi.setPassword(passwd);
-					upi.setUserRole("BUYER");
-					int a = 0;
-						a=ezs_userMapper.insert(upi);
-					if(a==1){
-						result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
-						result.setSuccess(true);
-						result.setMsg("注册成功");
-					//TODO
-					//开通环信
-					//hunXinService.regHuanxinSingle(username, HunXinServiceImpl.passwordefault, userInfo.getUserid());
-						
-					}else{
-						result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
-						result.setSuccess(false);
-						result.setMsg("注册失败");
-						
+			ezs_user upi=new ezs_user();
+			upi.setName(username);
+			upi.setPassword(passwd);
+			upi.setAddTime(new Date());
+			upi.setLastLoginDate(new Date());
+			upi.setLastLoginIp(myip);
+			upi.setLoginCount(1);
+			upi.setLoginDate(new Date());
+			upi.setLoginIp(myip);
+			upi.setName(username);
+			upi.setPassword(passwd);
+			upi.setUserRole("BUYER");
+			upi.setDeleteStatus(false);
+			
+			
+			
+			//缓存用名称密码
+			Cookie [] cookies=request.getCookies();			
+			if(cookies!=null){
+
+				RedisResult<String> rrt = null;
+				String tempKey=RandomStr32.getStr32()+RandomStr32.getStr32();
+				String userKey=RedisUserSession.getUserKey(registcarid, request);
+				
+				if(userKey!=null){
+					if(cookies!=null){
+						for(Cookie ck:cookies){
+							if(ck.getName().equals(userKey)){
+								userKey=ck.getValue();
+								ck.setValue(tempKey);
+							}
+						}
 					}
+					Cookie cookie=new Cookie(registcarid, tempKey);
+					response.addCookie(cookie);
+					RedisUtils.del(userKey);
+					rrt=(RedisResult<String>) RedisUtils.set(tempKey,upi, Long.parseLong(redisuserkeyexpir));
+				}else{
+					Cookie cookie=new Cookie(registcarid, tempKey);
+					response.addCookie(cookie);
+					rrt=(RedisResult<String>) RedisUtils.set(tempKey,upi, Long.parseLong(redisuserkeyexpir));
+				}
+				
+				if(rrt.getCode()==RedisConstants.SUCCESS){
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
+					result.setSuccess(true);
+					result.setMsg("请求成功");
+				}else{
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
+					result.setSuccess(false);
+					result.setMsg("请求失败");
+					//hunXinService.regHuanxinSingle(username, HunXinServiceImpl.passwordefault, userInfo.getUserid());
+				}
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
+				result.setSuccess(false);
+				result.setMsg("请开启cookie使用权限");
+			}
+			
+			
+			
+			
 		try {
 				RedisUtils.del(mobile+"RECODE");
 //			    RedisUtils.del(mobile+"RESENDTIME");
@@ -650,7 +696,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					 result.setMsg("请等待"+mobileintervalstr+"s后再次点击");
 				 }
 			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_GET_CODE_LIMIT);
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_GET_CODE_LIMIT);
 				 result.setSuccess(false);
 				 result.setMsg("验证码已发送多次，请查收短信");
 			}
@@ -1156,4 +1202,147 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public Result userAddInfo(Result result, HttpServletRequest request, String userRole, String companyName,
+			String address, String area_id, String mianIndustry_id, String companyType_id, String trueName, long sex_id,
+			String tel, String email) {
+
+		// 校验
+		result = checkAdduserinfo(result, request, userRole, companyName, address, area_id, mianIndustry_id,
+				companyType_id, trueName, sex_id, tel, email);
+		if (!result.getSuccess()) {
+			return result;
+		}
+
+		// 获取上一步用户登陆信息
+		ezs_user user = RedisUserSession.getRegistUserInfo(request);
+
+		if (user != null) {
+			// 商铺信息
+			ezs_store story = new ezs_store();
+			story.setAddress(address);
+			story.setCompanyName(companyName);
+			story.setAddTime(new Date());
+			story.setCompanyType_id(Long.valueOf(companyType_id));
+			story.setUserType(userRole);
+			story.setArea_id(Long.valueOf(area_id));
+			story.setMianIndustry_id(Long.valueOf(mianIndustry_id));
+
+			// 用户详情
+			ezs_userinfo userinfo = new ezs_userinfo();
+			userinfo.setAddTime(new Date());
+			userinfo.setDeleteStatus(false);
+			userinfo.setEmail(email);
+			userinfo.setPhone(user.getPhone());
+			userinfo.setSex_id(sex_id);
+			userinfo.setStatus(0);
+			userinfo.setUpdateStatus(0);
+
+			int aa = 0;
+			try {
+				long storyid = ezs_storeMapper.insert(story);
+				long userinfoid = ezs_userinfoMapper.insert(userinfo);
+				user.setUserInfo_id(userinfoid);
+				user.setStore_id(storyid);
+				user.setUserRole(userRole);
+
+				aa = ezs_userMapper.insert(user);
+			} catch (Exception e) {
+				log.info("注册：保存用户登陆信息错误" + e.toString());
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
+				result.setSuccess(false);
+				result.setMsg("系统错误");
+			}
+
+			if (aa > 0) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
+				result.setSuccess(true);
+				result.setMsg("注册成功");
+			} else {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
+				result.setSuccess(false);
+				result.setMsg("注册失败");
+			}
+		} else {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+
+		return result;
+	}
+	
+	private Result checkAdduserinfo(Result result, HttpServletRequest request,
+			String userRole, String companyName,
+			String address, String area_id, String mianIndustry_id,
+			String companyType_id, String trueName, long sex_id,
+			String tel, String email) {
+
+		if (Tools.isEmpty(companyName)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("公司名称不能为空");
+			return result;
+		}
+		if (Tools.isEmpty(address)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("详细地址不能为空");
+			return result;
+		}
+		if (Tools.isEmpty(area_id)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请选择经营地址");
+			return result;
+		}
+		if (Tools.isEmpty(mianIndustry_id)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请选择主营行业");
+			return result;
+		}
+		if (Tools.isEmpty(companyType_id)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请选择公司类型");
+			return result;
+		}
+		if (Tools.isEmpty(trueName)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("姓名不能为空");
+			return result;
+		}
+
+		if(!Tools.isEmpty(tel)){
+		if (!Tools.isMobileAndPhone(tel)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("固定电话格式不正确");
+			return result;
+		}
+		}
+
+		if (Tools.isEmpty(email)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("邮箱不能为空");
+			return result;
+		}
+		
+		if (Tools.paramValidate(email, 2)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("邮箱格式不正确");
+			return result;
+		}
+
+		return result;
+	}
+
+
+	
 }
