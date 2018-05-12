@@ -1,7 +1,7 @@
 package com.sanbang.index.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,9 @@ import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.index.service.GoodsClassService;
 import com.sanbang.index.service.GoodsService;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCode;
 
 @Controller
 @RequestMapping("/home")
@@ -31,43 +33,38 @@ public class HomeGoodsMessController {
 	 * @param goodsName
 	 * @return
 	 */
-	@RequestMapping("/goodsDetailByName")
+	@RequestMapping("/goodByName")
 	@ResponseBody
 	public Object goodsDetailByName(HttpServletRequest request,HttpServletResponse response,String goodsName){
-		List<ezs_goods> glist = this.goodsService.queryByName(goodsName);
+		Map<String, Object> mmp = null;
+		mmp = this.goodsService.queryByName(goodsName);
+		List<ezs_goods> glist = (List<ezs_goods>) mmp.get("Obj");
 		Result rs = Result.success();
+		rs.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		rs.setObj(glist);
 		return rs;
 	}
 	/**
-	 * 根据条件获取商品列表
+	 * 优品推荐商品
 	 * @param request
 	 * @param response
-	 * @param goodsName
-	 * @param condition 条件类型
-	 * @return
+	 * @param currentPage 当前页面[1,00]
+	 * @return 
 	 */
-	@RequestMapping("/goodsDetailByCondition")
+	@RequestMapping("/goodsIntroduce")
 	@ResponseBody
-	public Object goodsDetailByCondition(HttpServletRequest request,HttpServletResponse response,String goodsName,String condition){
-		List<ezs_goods> glist = new ArrayList<>();
+	public Object allGoodsDetail(HttpServletRequest request,HttpServletResponse response,String currentPage){
+		Map<String, Object> mmp = null;
+		List<ezs_goods> glist = null;
+		Page page = null;
+		mmp = this.goodsService.goodsIntroduce(currentPage);
+		glist = (List<ezs_goods>) mmp.get("Obj");
+		int tErrorCode = (int) mmp.get("ErrorCode");
+		page = (Page) mmp.get("Page");
 		Result rs = Result.success();
 		rs.setObj(glist);
-		return rs;
-	}
-	/**
-	 * 获取所有商品列表信息
-	 * @param request
-	 * @param response
-	 * @param goodsName
-	 * @return
-	 */
-	@RequestMapping("/allGoodsDetail")
-	@ResponseBody
-	public Object allGoodsDetail(HttpServletRequest request,HttpServletResponse response,String goodsName){
-		List<ezs_goods> glist = new ArrayList<>();
-		Result rs = Result.success();
-		rs.setObj(glist);
+		rs.setMeta(page);
+		rs.setErrorcode(tErrorCode);
 		return rs;
 	}
 	/**
