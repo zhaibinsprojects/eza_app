@@ -31,16 +31,12 @@
 			value="com.sanbang.dao.ezs_userinfoMapper" />
 	</bean>
 	
-<<<<<<< HEAD
 	<!--查询一级分类-->
 	<bean id="ezs_cataMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_cataMapper" />
 	</bean>
 	
-	
-=======
->>>>>>> 78679368054f014932dadbf68e39f310db76487f
 	<!--商铺-->
 	<bean id="ezs_storeMapper" parent="baseMapper">
 		<property name="mapperInterface"
