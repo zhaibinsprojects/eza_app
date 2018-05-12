@@ -59,20 +59,6 @@ public class HomeProvinceMessController {
 		return rs;
 	}
 	/**
-	 * 查询省份信息
-	 * @param request
-	 * @param response
-	 * @return id 省份的id
-	 */
-	@RequestMapping("/dertailByProvince")
-	@ResponseBody
-	public Object dertailByProvince(HttpServletRequest request,HttpServletResponse response,String id){
-		List<ezs_area> alist = new ArrayList<>();
-		Result rs = Result.success();
-		rs.setObj(alist);
-		return rs;
-	}
-	/**
 	 * 查询省份信息（只含有省份）
 	 * @param request
 	 * @param response
@@ -87,12 +73,12 @@ public class HomeProvinceMessController {
 		obj = this.addressService.getProvince();
 		if(obj!=null&&obj.size()>0){
 			if(obj.get("ErrorCode").equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				elist = (List<ezs_area>) obj.get("Obj");
-				rs.setObj(elist);
+				elist = (List<ezs_area>) obj.get("Obj"); 
 				rs = Result.success();
+				rs.setObj(elist);
 			}else{
 				rs = Result.failure();
-				rs.setMsg(obj.get("Msg").toString());
+				rs.setMsg(obj.get("Msg").toString()); 
 			}
 		}else{
 			rs = Result.failure();

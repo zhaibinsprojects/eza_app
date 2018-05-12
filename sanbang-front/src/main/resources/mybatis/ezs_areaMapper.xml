@@ -154,7 +154,7 @@
   <resultMap id="BaseHotAreaResultMap" type="com.sanbang.vo.HotProvince" >
     <id column="pid" property="id" jdbcType="BIGINT" />
     <result column="pname" property="areaName" jdbcType="VARCHAR" />
-    <result column="num" property="level" jdbcType="INTEGER" />
+    <result column="num" property="num" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_HotArea_Column_List" >
     COUNT(area_custo.cid) as num ,area_custo.pid as pid ,area_custo.pname as pname

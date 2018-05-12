@@ -57,11 +57,14 @@ public class HomeGoodsMessController {
 		Map<String, Object> mmp = null;
 		List<ezs_goods> glist = null;
 		Page page = null;
+		if(currentPage==null){
+			currentPage = "1";
+		}
 		mmp = this.goodsService.goodsIntroduce(currentPage);
 		glist = (List<ezs_goods>) mmp.get("Obj");
 		int tErrorCode = (int) mmp.get("ErrorCode");
 		page = (Page) mmp.get("Page");
-		Result rs = Result.success();
+		Result rs = Result.success(); 
 		rs.setObj(glist);
 		rs.setMeta(page);
 		rs.setErrorcode(tErrorCode);
