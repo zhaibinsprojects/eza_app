@@ -41,7 +41,21 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_areaMapper" />
 	</bean>
-	
+	<!-- 商品信息 -->
+	<bean id="ezs_goodsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goodsMapper" />
+	</bean>
+	<!-- 商品种类信息 -->
+	<bean id="ezs_goods_classMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_classMapper" />
+	</bean>
+	<!-- 用户信息 -->
+	<bean id="ezs_customerMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customerMapper" />
+	</bean>
 </beans>
 
 
