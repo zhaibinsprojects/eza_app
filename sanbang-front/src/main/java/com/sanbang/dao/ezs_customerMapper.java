@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_customer;
@@ -17,4 +19,6 @@ public interface ezs_customerMapper {
     int updateByPrimaryKeySelective(ezs_customer record);
 
     int updateByPrimaryKey(ezs_customer record);
+    //新增
+    List<ezs_customer> selectByAreaHot();
 }
