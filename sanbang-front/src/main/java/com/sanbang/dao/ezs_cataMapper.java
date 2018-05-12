@@ -13,5 +13,14 @@ public interface ezs_cataMapper {
 	 * 查询品类一级分类
 	 */
 	List<ezs_goods_class> getListForClass();
+	/**
+	 * 查询二级分类，条件：一级分类的id
+	 */
+	List<ezs_goods_class> getCataList2();
+	
+	
+	
+	
+	
 	
 }
