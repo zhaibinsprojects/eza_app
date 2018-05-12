@@ -27,7 +27,7 @@ public interface UserProService {
 	 * @return
 	 */
 
-	Map<String, Object> login(String userName, String pd, String code,
+	Result login(String userName, String pd, String code,
 			String userAgent, String ip, HttpServletRequest request,
 			HttpServletResponse response, Integer flag) throws Exception;
 
@@ -97,13 +97,7 @@ public interface UserProService {
 	 * @return
 	 */
 	Result checkMobile(String mobile)throws Exception;
-	
-	/**
-	 * 根据用户名查询用户信息
-	 * @param userName
-	 * @return
-	 */
-	public ezs_user getUserInfoByUserName(String userName);
+
 	
     /**
      * 发送修改手机号码的验证码
@@ -132,18 +126,9 @@ public interface UserProService {
 	 * @throws Exception
 	 */
 
-	boolean userLogot(User_Proinfo upi, String cookieuserkey) throws Exception;
+	boolean userLogot(ezs_user upi, String cookieuserkey) throws Exception;
 	
-	/**
-	 * 验证登陆的图片验证码
-	 * @param randImgCode
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	Map<String, Object> loginRandImgVali(String randImgCode,HttpServletRequest request) throws Exception;
 
-	Map<String, Object> sendContractCode(String phone, String code, Integer flag);
 
 	Map<String, Object> checkSCCode(String mobile, String code)
 			throws Exception;

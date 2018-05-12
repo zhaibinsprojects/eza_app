@@ -41,7 +41,11 @@ public class ezs_user  extends ezs_userinfo implements Serializable{
     
  // 用户在redis的key
   	private String userkey;
+  	
+  	private boolean isAvatar;//是否主账户 true 是 fasle否
 
+  	
+  	
     public String getUserkey() {
 		return userkey;
 	}
@@ -170,14 +174,25 @@ public class ezs_user  extends ezs_userinfo implements Serializable{
         this.userInfo_id = userInfo_id;
     }
 
+    
+	public boolean isAvatar() {
+		return isAvatar;
+	}
+
+	public void setAvatar(boolean isAvatar) {
+		this.isAvatar = isAvatar;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_user [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", lastLoginDate="
 				+ lastLoginDate + ", lastLoginIp=" + lastLoginIp + ", loginCount=" + loginCount + ", loginDate="
 				+ loginDate + ", loginIp=" + loginIp + ", name=" + name + ", password=" + password + ", trueName="
 				+ trueName + ", userRole=" + userRole + ", parent_id=" + parent_id + ", store_id=" + store_id
-				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + "]";
+				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", isAvatar=" + isAvatar + "]";
 	}
+
+	
     
     
 }
