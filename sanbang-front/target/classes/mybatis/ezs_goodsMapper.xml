@@ -598,4 +598,21 @@
       lockStatus = #{lockStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!-- 商品查询 -->
+  <select id="selectByGoodName" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goods a
+    where a.name like '%${_parameter}%'
+  </select>
+  <!-- 优品推荐 -->
+  <select id="goodsIntroduce" resultMap="BaseResultMap" parameterType="com.sanbang.utils.Page">
+    select
+    <include refid="Base_Column_List" />
+    from ezs_goods where recommend = '1' order by recommend_time desc LIMIT #{startPos},#{pageSize}
+  </select>
+  <!-- 总页数 -->
+  <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
+    select count(*) from ezs_goods where recommend = '1'
+  </select>
 </mapper>
