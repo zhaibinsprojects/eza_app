@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_pact;
@@ -17,4 +19,8 @@ public interface ezs_pactMapper {
     int updateByPrimaryKeySelective(ezs_pact record);
 
     int updateByPrimaryKey(ezs_pact record);
+
+	List<ezs_pact> selectPactBySellerId(Long sellerUser_id);
+
+	List<ezs_pact> selectPactContractByIdAndDate(String orderno, String startTime, String endTime);
 }
