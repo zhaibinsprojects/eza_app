@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.dao.ezs_goodsMapper;
-import com.sanbang.index.service.GoodsService;
+import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.HomeDictionaryCode;
 
-@Service("goodsService")
-public class GoodsServiceImpl implements GoodsService {
+@Service
+public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	
 	@Autowired
 	private ezs_goodsMapper goodsMapper;

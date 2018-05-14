@@ -6,7 +6,7 @@ import java.util.Map;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
 
-public interface GoodsService {
+public interface RecommendGoodsService {
 	
 	public ezs_goods queryById(Long id);
 	

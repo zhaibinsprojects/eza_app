@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.index.service.GoodsClassService;
-import com.sanbang.index.service.GoodsService;
+import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
@@ -23,7 +23,7 @@ import com.sanbang.vo.DictionaryCode;
 @RequestMapping("/home")
 public class HomeGoodsMessController {
 	@Autowired
-	private GoodsService goodsService;
+	private RecommendGoodsService recommendGoodsService;
 	@Autowired
 	private GoodsClassService goodsClassService;
 	/**
@@ -37,7 +37,7 @@ public class HomeGoodsMessController {
 	@ResponseBody
 	public Object goodsDetailByName(HttpServletRequest request,HttpServletResponse response,String goodsName){
 		Map<String, Object> mmp = null;
-		mmp = this.goodsService.queryByName(goodsName);
+		mmp = this.recommendGoodsService.queryByName(goodsName);
 		List<ezs_goods> glist = (List<ezs_goods>) mmp.get("Obj");
 		Result rs = Result.success();
 		rs.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -60,7 +60,7 @@ public class HomeGoodsMessController {
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		mmp = this.goodsService.goodsIntroduce(currentPage);
+		mmp = this.recommendGoodsService.goodsIntroduce(currentPage);
 		glist = (List<ezs_goods>) mmp.get("Obj");
 		int tErrorCode = (int) mmp.get("ErrorCode");
 		page = (Page) mmp.get("Page");
