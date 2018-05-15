@@ -125,4 +125,32 @@
       parent_id = #{parent_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+   <!--得到字典表数据通过name-->
+  <select id="getDictById" resultMap="BaseResultMap">
+	  	SELECT
+		*
+	FROM
+		ezs_dict A
+	WHERE
+		A.`code` = #{code} and A.deleteStatus=0
+  </select>
+  
+  <!--得到字典表数据通过父name-->
+  <select id="getDictByParentId" resultMap="BaseResultMap">
+	  	SELECT
+		*
+	FROM
+		ezs_dict B
+	WHERE
+		B.parent_id = (
+			SELECT
+				A.id
+			FROM
+				ezs_dict A
+			WHERE
+				A.`code` = #{code}
+		)
+		and B.deleteStatus=0
+  </select>
 </mapper>

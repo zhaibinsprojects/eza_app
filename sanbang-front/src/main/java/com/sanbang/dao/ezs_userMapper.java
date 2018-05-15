@@ -57,11 +57,6 @@ public interface ezs_userMapper {
 
 	String getUserMessage(String username);
 
-	/**
-	 * 
-	 * @param mp
-	 * @return
-	 */
-	int updateUserPwdByMobile(Map<String, Object> mp);
+	
 
 }

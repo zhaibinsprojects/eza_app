@@ -21,7 +21,7 @@ import com.sanbang.vo.MessageDictionary;
 
 @Controller
 @RequestMapping("/userRegist")
-public class RegistController {
+public class UserRegistController {
 
 	
 	private  static final String view="/memberuser/regist/";
@@ -88,25 +88,7 @@ public class RegistController {
 	
 	
 	
-	/**
-	 * 用户注册发送修改手机号码的验证码
-	 * @param phone
-	 * @param request
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/sendUpMoCode")
-	@ResponseBody
-	public Map<String,Object> sendUpMoCode(@RequestParam(value="mobile",required=false) String mobile, HttpServletRequest request) throws Exception {  
-		
-		StringBuilder code = new StringBuilder();  
-		Random random = new Random();  
-		// 6位验证码  
-		for (int i = 0; i < 6; i++) {  
-			code.append(String.valueOf(random.nextInt(10)));  
-		}  
-		Map<String,Object> map=userProService.sendUpMoCode(mobile,code.toString());
-		return map;
-	}  
+
 	
 	
 	/**

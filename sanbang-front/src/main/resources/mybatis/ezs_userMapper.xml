@@ -18,6 +18,31 @@
     <result column="store_id" property="store_id" jdbcType="BIGINT" />
     <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
   </resultMap>
+  
+  
+  <resultMap id="userinfoMap" type="ezs_user" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="lastLoginDate" property="lastLoginDate" jdbcType="TIMESTAMP" />
+    <result column="lastLoginIp" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="loginCount" property="loginCount" jdbcType="INTEGER" />
+    <result column="loginDate" property="loginDate" jdbcType="TIMESTAMP" />
+    <result column="loginIp" property="loginIp" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="trueName" property="trueName" jdbcType="VARCHAR" />
+    <result column="userRole" property="userRole" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+    <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
+    
+   <association property="userInfo_id" column="id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey"></association>
+    
+  </resultMap>
+  
+  
+  
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, lastLoginDate, lastLoginIp, loginCount, loginDate, loginIp, 
     name, password, trueName, userRole, parent_id, store_id, userInfo_id
@@ -211,7 +236,7 @@
   </update>
   
   <!--用户登陆信息-->
-  <resultMap id="userinfomap" type="User_Proinfo">
+  <resultMap id="userinfomap" type="ezs_user">
 	  	<id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
 	    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -256,11 +281,16 @@
 	</select>
      
      <!--查看用户是否已存在-->
-     <select id="getUserInfoByUserNameFromBack" resultMap="BaseResultMap">
+     <select id="getUserInfoByUserNameFromBack" resultMap="userinfoMap">
      	select 
     <include refid="Base_Column_List" />
 	    from ezs_user
 	    where name = #{username}
      </select> 
+  
+   <!--修改密码-->
+    <update id="modifyPassword">
+    	update ezs_user A set A.password=#{password} where A.name=#{userName}
+    </update>
   
 </mapper>

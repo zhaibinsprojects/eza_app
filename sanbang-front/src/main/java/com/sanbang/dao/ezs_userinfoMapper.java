@@ -1,12 +1,7 @@
 package com.sanbang.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
 
 @Repository(value="ezs_userinfoMapper")

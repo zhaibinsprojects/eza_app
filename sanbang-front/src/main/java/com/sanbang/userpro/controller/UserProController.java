@@ -10,16 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.userpro.service.UserProService;
@@ -111,6 +108,8 @@ public class UserProController {
 					request, response,flag);
 		return result;
 	}
+	
+	
 	/**
 	 * 当前登录用户退出
 	 * @param httpSession
@@ -120,7 +119,7 @@ public class UserProController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/userLogot")
-	public Object userLogot(HttpServletRequest request) throws Exception {
+	public Result userLogot(HttpServletRequest request) throws Exception {
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		userProService.userLogot(upi,RedisUserSession.getUserKey(cookieuserkey, request));
@@ -133,10 +132,6 @@ public class UserProController {
 	
 	
 	
-
-	
-	
-	
 	/**
 	 * 用户忘记密码发送短信验证码  (修改密码)
 	 * @param phone
@@ -145,15 +140,23 @@ public class UserProController {
 	 */
 	@RequestMapping(value="/sendFtCode")
 	@ResponseBody
-	public Map<String,Object> sendFtCode(@RequestParam(value="mobile",required=false) String mobile, HttpServletRequest request) throws Exception {
+	public Result sendFtCode(@RequestParam(value="mobile",required=false) String mobile, HttpServletRequest request) throws Exception {
+		Result result=Result.failure();
+		
+		//检查手机号
+		result=userProService.checkUserName(mobile);
+		if(!result.getSuccess()){
+			return result;
+		}
+		//发送忘记密码验证码
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  
 		// 6位验证码  
 		for (int i = 0; i < 6; i++) {  
 			code.append(String.valueOf(random.nextInt(10)));  
 		}
-		Map<String,Object> map=userProService.sendFtCode(mobile,code.toString());
-		return map;
+		result=userProService.sendFtCode(mobile,code.toString());
+		return result;
 	}
 	
 	/**
@@ -165,10 +168,11 @@ public class UserProController {
 	 */
 	@RequestMapping(value="/checkFtCode")
 	@ResponseBody
-	public Map<String,Object> checkFtCode(@RequestParam(value="mobile",required=false) String mobile,
+	public Object checkFtCode(@RequestParam(value="mobile",required=false) String mobile,
 			@RequestParam(value="code",required=false) String code,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Map<String,Object> map=userProService.checkFtCode(mobile, code,request,response);
-		return map;
+		Result result=Result.failure();
+		result=userProService.checkFtCode(mobile, code,request,response);
+		return result;
 	}
 	
 	/**
@@ -181,10 +185,11 @@ public class UserProController {
 	 */
 	@RequestMapping(value="/checkFtCode/modifyPasswd/chkPasswd")
 	@ResponseBody
-	public Map<String,Object> chgPwd(@RequestParam(value="passwd",required=false)String passwd,@RequestParam(value="passwdA",required=false) String passwdA,
+	public Result chgPwd(@RequestParam(value="passwd",required=false)String passwd,@RequestParam(value="passwdA",required=false) String passwdA,
 			HttpSession session,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Map<String,Object> map=userProService.chgPasswd(passwd, passwdA,request);
-		return map;
+		Result result=Result.failure();	
+		result=userProService.chgPasswd(passwd, passwdA,request);
+		return result;
 	}
 	
 	/**
@@ -195,9 +200,10 @@ public class UserProController {
 	 */
 	@RequestMapping(value="/checkUserName")
 	@ResponseBody
-	public Map<String,Object> checkUserName(@RequestParam(value="userName",required=false)String userName) throws Exception{
-			Map<String,Object> map=userProService.checkUserName(userName);
-		return map;
+	public Result checkUserName(@RequestParam(value="userName",required=false)String userName) throws Exception{
+		Result result=Result.failure();	
+		result=userProService.checkUserName(userName);
+		return result;
 	}
 	
 	/**

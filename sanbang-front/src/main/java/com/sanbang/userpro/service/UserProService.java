@@ -6,15 +6,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sanbang.bean.User_Proinfo;
+import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.LinkUserVo;
 
 
 /**
  * 用户相关业务处理
  * 
- * @author zhangxiantao
+ * @author langjf
  *  
  * 2016年7月28日
  */
@@ -63,7 +65,7 @@ public interface UserProService {
 	 * @param string
 	 * @return
 	 */
-	public Map<String, Object> sendFtCode(String phone, String string) throws Exception;
+	Result sendFtCode(String phone, String string) throws Exception;
 	
 	/**
 	 * 检查验证码
@@ -72,7 +74,7 @@ public interface UserProService {
 	 * @return
 	 * @throws Exception 
 	 */
-	Map<String, Object> checkFtCode(String mobile, String code,HttpServletRequest request,
+	Result checkFtCode(String mobile, String code,HttpServletRequest request,
 			HttpServletResponse response) throws Exception;
 	
 	/**
@@ -82,14 +84,14 @@ public interface UserProService {
 	 * @param session
 	 * @return
 	 */
-	public Map<String, Object> chgPasswd(String passwd,String passwdA,HttpServletRequest request) throws Exception;
+	Result chgPasswd(String passwd,String passwdA,HttpServletRequest request) throws Exception;
 	
 	/**
 	 * 检查用户是否存在
 	 * @param userName
 	 * @return
 	 */
-	public Map<String, Object> checkUserName(String userName) throws Exception;
+	Result checkUserName(String userName) throws Exception;
 	
 	/**
 	 * 检查手机号码是否存在
@@ -105,7 +107,7 @@ public interface UserProService {
      * @param code
      * @return
      */
-	Map<String, Object> sendUpMoCode(String phone, String code)  throws Exception;
+	Result sendUpMoCode(String phone, String code)  throws Exception;
 
 
 	/**
@@ -116,7 +118,7 @@ public interface UserProService {
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String, Object> checkUpMoCode(String mobile, String code,User_Proinfo upi, HttpServletRequest request)  throws Exception;
+	Result checkUpMoCode(String mobile, String code,ezs_user upi, HttpServletRequest request)  throws Exception;
 
 
 	/**
@@ -129,10 +131,13 @@ public interface UserProService {
 	boolean userLogot(ezs_user upi, String cookieuserkey) throws Exception;
 	
 
-
-	Map<String, Object> checkSCCode(String mobile, String code)
+	/**
+	 * 检查修改密码前的验证码(忘记密码模块修改密码)
+	 */
+	Result checkSCCode(String mobile, String code)
 			throws Exception;
 
+	
 	String getUserMessage(String username);
 
 	Object updateUserSessionInfo(String username, String mobile);
@@ -164,4 +169,22 @@ public interface UserProService {
 			String trueName, long sex_id, String tel,
 			String email);
 
+	/**
+	 * 个人资料修改
+	 * @param request
+	 * @param ezsuser
+	 * @param typeval
+	 * @param linkvo
+	 * @return
+	 */
+	Result upUserInfo(HttpServletRequest request,ezs_user ezsuser,String typeval,LinkUserVo linkvo);
+	
+	/**
+	 * 修改公司信息
+	 * @param request
+	 * @param store
+	 * @return
+	 */
+	Result upStoreInfo(HttpServletRequest request,ezs_store store,ezs_user upi);
+	
 }

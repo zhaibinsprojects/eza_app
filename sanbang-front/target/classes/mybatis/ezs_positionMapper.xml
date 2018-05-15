@@ -90,4 +90,11 @@
       store_id = #{store_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="selectByStoryid" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from ezs_position
+    where store_id = #{storeid}
+  </select>
 </mapper>

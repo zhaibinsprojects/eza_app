@@ -3,11 +3,16 @@ package com.sanbang.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ezs_user  extends ezs_userinfo implements Serializable{
-    /**
-	 * //用户登陆信息
+/**
+ * 用户登陆信息
+ * @author langjf
+ *
+ */
+public class ezs_user  implements Serializable{
+   /**
+	 * 
 	 */
-	private static final long serialVersionUID = -1598895147863170074L;
+	private static final long serialVersionUID = -1920448728627022578L;
 
 	private Long id;
 
@@ -44,7 +49,9 @@ public class ezs_user  extends ezs_userinfo implements Serializable{
   	
   	private boolean isAvatar;//是否主账户 true 是 fasle否
 
+  	private ezs_userinfo ezs_userinfo;//个人信息
   	
+  	private ezs_store ezs_store;//公司资料信息
   	
     public String getUserkey() {
 		return userkey;
@@ -182,6 +189,24 @@ public class ezs_user  extends ezs_userinfo implements Serializable{
 	public void setAvatar(boolean isAvatar) {
 		this.isAvatar = isAvatar;
 	}
+	
+
+
+	public ezs_userinfo getEzs_userinfo() {
+		return ezs_userinfo;
+	}
+
+	public void setEzs_userinfo(ezs_userinfo ezs_userinfo) {
+		this.ezs_userinfo = ezs_userinfo;
+	}
+	
+	public ezs_store getEzs_store() {
+		return ezs_store;
+	}
+
+	public void setEzs_store(ezs_store ezs_store) {
+		this.ezs_store = ezs_store;
+	}
 
 	@Override
 	public String toString() {
@@ -189,7 +214,8 @@ public class ezs_user  extends ezs_userinfo implements Serializable{
 				+ lastLoginDate + ", lastLoginIp=" + lastLoginIp + ", loginCount=" + loginCount + ", loginDate="
 				+ loginDate + ", loginIp=" + loginIp + ", name=" + name + ", password=" + password + ", trueName="
 				+ trueName + ", userRole=" + userRole + ", parent_id=" + parent_id + ", store_id=" + store_id
-				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", isAvatar=" + isAvatar + "]";
+				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", isAvatar=" + isAvatar + ", ezs_userinfo="
+				+ ezs_userinfo + ", ezs_store=" + ezs_store + "]";
 	}
 
 	
