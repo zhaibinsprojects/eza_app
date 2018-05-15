@@ -143,4 +143,12 @@ public class DictionaryCode {
      * 查询合同详情成功
      */
     public static final int ERROR_WEB_QUERY_CONTRACT_INFO_SUCCESS = 110012;
+    /**
+     * 查询发票详情成功
+     */
+    public static final int ERROR_WEB_QUERY_BILL_INFO_SUCCESS = 110013;
+    /**
+     * 查询发票详情失败
+     */
+    public static final int ERROR_WEB_QUERY_BILL_INFO_FAIL = 110014;
 }

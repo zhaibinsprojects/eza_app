@@ -62,6 +62,28 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_customerMapper" />
 	</bean>
+	<!-- 票据信息 -->
+	<bean id="ezs_invoiceMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_invoiceMapper" />
+	</bean>
+	
+	<!-- 发票信息 -->
+	<bean id="ezs_billMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_billMapper" />
+	</bean>
+	<!-- 合同信息 -->
+	<bean id="ezs_pactMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_pactMapper" />
+	</bean>
+	<!-- 购买详情信息 -->
+	<bean id="ezs_payinfoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_payinfoMapper" />
+	</bean>
+	
 </beans>
 
 
