@@ -1,6 +1,7 @@
 package com.sanbang.index.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
@@ -13,6 +14,6 @@ public interface GoodsClassService {
 	
 	public ezs_goods_class queryByGoods(ezs_goods goods);
 	
-	public List<ezs_goods_class> queryAllGoodsClass();
+	public Map<String, Object> queryAllGoodsClass();
 
 }

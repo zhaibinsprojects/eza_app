@@ -1,5 +1,6 @@
 package com.sanbang.index.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +12,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
+import com.sanbang.bean.ezs_user;
+import com.sanbang.index.service.AccessoryService;
+import com.sanbang.index.service.CustomizedRecordService;
+import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
 import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
+import com.sanbang.vo.HomeDictionaryCode;
 
 @Controller
 @RequestMapping("/home")
@@ -26,6 +35,10 @@ public class HomeGoodsMessController {
 	private RecommendGoodsService recommendGoodsService;
 	@Autowired
 	private GoodsClassService goodsClassService;
+	@Autowired
+	private CustomizedService customizedService;
+	@Autowired
+	private CustomizedRecordService customizedRecordService;
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -79,12 +92,40 @@ public class HomeGoodsMessController {
 	@RequestMapping("/allGoodsClass")
 	@ResponseBody
 	public Object allGoodsClassDetail(HttpServletRequest request,HttpServletResponse response){
-		List<ezs_goods_class> glist = this.goodsClassService.queryAllGoodsClass();
+		Map<String, Object> mmp = this.goodsClassService.queryAllGoodsClass();
+		List<ezs_goods_class> gclist = (List<ezs_goods_class>) mmp.get("Obj");
 		Result rs = Result.success();
-		rs.setObj(glist);
+		rs.setObj(gclist);
 		return rs;
 	}
-	
-	
-
+	/**
+	 * 采购定制
+	 * @param request
+	 * @param response
+	 * @param customizedrecord  定制采购产品记录
+	 * @param customized 定制采购产品
+	 * @return
+	 */
+	@RequestMapping("/customGoods") 
+	@ResponseBody
+	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
+			,ezs_customized customized,ezs_user user){
+		Result rs = null;
+		if(customizedrecord==null||customized==null||user==null){
+			rs = Result.failure();
+			rs.setMsg("参数不能为空");
+			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_UN_NULL);
+		}else{
+			this.customizedService.insert(customized);
+			//由以上插入并返回产生
+			customizedrecord.setCustomized_id(customized.getId());
+			customizedrecord.setOperate_id(Integer.parseInt(user.getId().toString()));
+			customizedrecord.setPurchase_id(Integer.parseInt(user.getId().toString()));
+			this.customizedRecordService.insert(customizedrecord);
+			rs = Result.success();
+			rs.setMsg("数据插入成功！");
+			
+		}
+		return rs;
+	}
 }

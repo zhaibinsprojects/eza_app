@@ -1,6 +1,8 @@
 package com.sanbang.index.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +35,17 @@ public class GoodsClassServiceImpl implements GoodsClassService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	/**
+	 * 查询所有产品分类（三级）
+	 */
 	@Override
-	public List<ezs_goods_class> queryAllGoodsClass() {
-		List<ezs_goods_class> eslist = this.goodClassMapper.selectAllGoodClass();
-		return eslist;
+	public Map<String, Object> queryAllGoodsClass() {
+		Map<String, Object> mmp = new HashMap<>();
+		//按三级目录查询种类
+		List<ezs_goods_class> eslist = this.goodClassMapper.selectAllGoodClassByLevel("3");
+		mmp.put("Obj", eslist);
+		
+		return mmp;
 	}
 
 }

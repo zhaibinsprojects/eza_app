@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_address;
@@ -17,4 +19,6 @@ public interface ezs_addressMapper {
     int updateByPrimaryKeySelective(ezs_address record);
 
     int updateByPrimaryKey(ezs_address record);
+    
+    List<ezs_address> getAddressByUserId(Long userId);
 }
