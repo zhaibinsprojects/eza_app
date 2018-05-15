@@ -10,15 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
 import com.sanbang.area.service.AreaService;
-import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
@@ -26,7 +21,6 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.LinkUserVo;
 
 @Controller
 @RequestMapping("/setup/companyinfo/")
@@ -34,7 +28,6 @@ public class UserSetupCompanyInfoController {
 
 	private Logger log=Logger.getLogger(UserSetupCompanyInfoController.class);
 	
-	private  static final String view="/memberuser/regist/";
 	
 	@Autowired
 	private UserProService userProService;
@@ -71,7 +64,7 @@ public class UserSetupCompanyInfoController {
 	 */
 	@RequestMapping(value="/init")
 	@ResponseBody
-	public Object checkMobile(HttpServletRequest request) throws Exception{
+	public Object upCompanyInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
@@ -95,7 +88,29 @@ public class UserSetupCompanyInfoController {
 		return result;
 	}
 	
-	
+	/**
+	 * 保存企业资料
+	 * @param userName
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/upCompanyInfo")
+	@ResponseBody
+	public Object upCompanyOperat(HttpServletRequest request) throws Exception{
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		if(null!=upi.getEzs_userinfo()){
+			result=userProService.upStoreInfo(request, upi.getEzs_store(), upi);
+		};
+		
+		return result;
+	}
 	
 	
 }

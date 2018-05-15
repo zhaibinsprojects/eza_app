@@ -155,7 +155,7 @@ public class UserSetupLinkController {
 	
 	
 	/**
-	 * 修改登陆手机号
+	 * 修改其他信息
 	 * @param request
 	 * @return
 	 * typeval  truename  sex tel  email qq

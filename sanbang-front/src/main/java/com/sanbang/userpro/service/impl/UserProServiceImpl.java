@@ -1093,7 +1093,7 @@ public class UserProServiceImpl implements UserProService{
 			story.setCompanyName(companyName);
 			story.setAddTime(new Date());
 			story.setUserType(userRole);
-			story.setArea_id(Long.valueOf(4522011));
+			story.setArea_id(Long.valueOf(area_id));
 			story.setDeleteStatus(false);
 			story.setAssets(0.0);
 			story.setCovered(0.0);
@@ -1159,6 +1159,7 @@ public class UserProServiceImpl implements UserProService{
 	}
 	
 	private void Industry(String[] Industrys,long store){
+		ezs_industry_dictMapper.delIndustryDictByStoreId(store);
 		for (String long1 : Industrys) {
 			ezs_industry_dictMapper.insert(new ezs_industry_dict(store, Long.valueOf(long1)));
 		}
@@ -1346,7 +1347,6 @@ public class UserProServiceImpl implements UserProService{
 	public Result upStoreInfo(HttpServletRequest request,ezs_store store,ezs_user upi) {
 		Result result=upcomvali(request,store);
 		if(result.getSuccess()){
-			try {
 				String address = request.getParameter("address");// 经营地址
 				String assets = request.getParameter("assets");// 总资产
 				String companyName = request.getParameter("companyName");// 企业名称
@@ -1357,8 +1357,22 @@ public class UserProServiceImpl implements UserProService{
 				String obtainYear = request.getParameter("obtainYear");// 实际控制人从业年限
 				String rent = request.getParameter("rent");// 租用
 				String yTurnover = request.getParameter("yTurnover");//// 年营业额
-				String area_id = request.getParameter("area_id");// 经营地址区县
 				
+				String area_id = request.getParameter("area_id");// 经营地址区县
+
+				String companyTypes = request.getParameter("companyType_id");// 公司类型
+				String mianIndustrys = request.getParameter("mianIndustry_id");// 主营行业
+				
+				String[] Industrys=mianIndustrys.split(",");
+				String[] cmtypes=companyTypes.split(",");
+				
+				try {
+					//主营行业部分
+					Industry(Industrys, upi.getStore_id());;
+					//经营类型部分
+					companyType(cmtypes, upi.getStore_id());
+				
+			    store.setArea_id(Long.valueOf(area_id));
 				store.setId(upi.getStore_id());
 				store.setAddress(address);
 				store.setCompanyName(companyName);
@@ -1385,6 +1399,7 @@ public class UserProServiceImpl implements UserProService{
 		
 		return result;
 	}
+		
 
 	static Result upcomvali(HttpServletRequest request, ezs_store store) {
 		Result result = Result.success();
@@ -1398,7 +1413,6 @@ public class UserProServiceImpl implements UserProService{
 		String obtainYear = request.getParameter("obtainYear");// 实际控制人从业年限
 		String rent = request.getParameter("rent");// 租用
 		String yTurnover = request.getParameter("yTurnover");//// 年营业额
-		String area_id = request.getParameter("area_id");// 经营地址区县
 
 		String companyTypes = request.getParameter("companyType_id");// 公司类型
 		String mianIndustrys = request.getParameter("mianIndustry_id");// 主营行业

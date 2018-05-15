@@ -2,7 +2,9 @@ package com.sanbang.dict.service;
 
 import java.util.List;
 
+import com.sanbang.bean.ezs_companyType_dict;
 import com.sanbang.bean.ezs_dict;
+import com.sanbang.bean.ezs_industry_dict;
 
 public interface DictService {
 	
@@ -24,4 +26,8 @@ public interface DictService {
 	
 	 
 	 ezs_dict  getDictByThisId(long id);
+	 
+	 List< ezs_industry_dict> getIndustryByThisId(long storeid);
+	 
+	 List<ezs_companyType_dict> getCompanyTypeByThisId(long storeid);
 }

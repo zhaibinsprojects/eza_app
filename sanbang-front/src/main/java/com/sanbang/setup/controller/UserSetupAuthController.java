@@ -1,6 +1,9 @@
 package com.sanbang.setup.controller;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -14,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
+import com.sanbang.area.service.AreaService;
 import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
 
@@ -53,17 +58,21 @@ public class UserSetupAuthController {
 	@Autowired
 	private  DictService dictService;
 	
+	@Autowired
+	private AreaService areaService;
 	
 	
+	
+
 	/**
-	 * 设置注册联系人资料
+	 * 企业认证初始化
 	 * @param userName
 	 * @return
 	 * @throws Exception 
 	 */
-	@RequestMapping(value="/init")
+	@RequestMapping(value="/cominit")
 	@ResponseBody
-	public Object checkMobile(HttpServletRequest request) throws Exception{
+	public Object upCompanyInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
@@ -73,37 +82,81 @@ public class UserSetupAuthController {
 		}
 		
 		if(null!=upi.getEzs_userinfo()){
+			Map<String, Object> map=new HashMap<>();
+			map.put("cominfo", upi.getEzs_store());
+			//主营行业
+			map.put("industry", dictService.getDictByParentId(DictionaryCate.EZS_INDUSTRY));
+			//公司类型
+			map.put("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
 			
-			result.setObj(new LinkUserVo("headimg",
-					upi.getName(),
-					upi.getEzs_userinfo().getPhone(),
-					upi.getTrueName(), 
-					upi.getEzs_userinfo().getSex_id(), 
-					(upi.getEzs_userinfo().getSex_id()!=null&&upi.getEzs_userinfo().getSex_id()!=0)?
-							dictService.getDictByThisId(upi.getEzs_userinfo().getSex_id()).getName():"", 
-					upi.getEzs_userinfo().getPosition_id(), 
-					(upi.getEzs_userinfo().getPosition_id()!=null&&upi.getEzs_userinfo().getPosition_id()!=0)?
-							dictService.getDictByThisId(upi.getEzs_userinfo().getPosition_id()).getName():"",
-					upi.getEzs_userinfo().getTel(), 
-					upi.getEzs_userinfo().getPhone(), 
-					upi.getEzs_userinfo().getEmail(), 
-					upi.getEzs_userinfo().getQQ()));
+			//已有地址
+			map.put("area", areaService.getAreaParentList());
+			//已有com
+			map.put("hasccom", dictService.getCompanyTypeByThisId(upi.getStore_id()));
+			//已有indus
+			map.put("hascindus", dictService.getIndustryByThisId(upi.getStore_id()));
+			
+			//审核状态
+			//0:初始数据无业务 审核状态  1:需要审核 2.审核通过,3审核未通过
+			map.put("authstatus", upi.getEzs_store().getStatus());
+			
+ 			result.setObj(map);
 		};
 		
-		
 		return result;
 	}
 	
 	
 	/**
-	 * 修改登陆手机号
+	 * 个体认证初始化
+	 * @param userName
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/indivinit")
+	@ResponseBody
+	public Object indivinit(HttpServletRequest request) throws Exception{
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		if(null!=upi.getEzs_userinfo()){
+			Map<String, Object> map=new HashMap<>();
+			map.put("cominfo", upi.getEzs_store());
+			//主营行业
+			map.put("industry", dictService.getDictByParentId(DictionaryCate.EZS_INDUSTRY));
+			//公司类型
+			map.put("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
+			
+			//已有地址
+			map.put("area", areaService.getAreaParentList());
+			//已有com
+			map.put("hasccom", dictService.getCompanyTypeByThisId(upi.getStore_id()));
+			//已有indus
+			map.put("hascindus", dictService.getIndustryByThisId(upi.getStore_id()));
+			
+			//审核状态
+			//0:初始数据无业务 审核状态  1:需要审核 2.审核通过,3审核未通过
+			map.put("authstatus", upi.getEzs_store().getStatus());
+			
+ 			result.setObj(map);
+		};
+		
+		return result;
+	}
+	
+	/**
+	 * 保存企业基本信息
 	 * @param request
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/sendUpMoCode")
-	public Result sendUpMoCode(@RequestParam(name="code")String code,
-			@RequestParam(name="mobile")String mobile,
+	@RequestMapping("/saveComAuth")
+	public Result saveComAuth(
 			HttpServletRequest request){
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
@@ -113,9 +166,9 @@ public class UserSetupAuthController {
 			return result;
 		}
 		try {
-			result=userProService.sendUpMoCode(mobile, code);
+			//result=userProService.sendUpMoCode(mobile, code);
 		} catch (Exception e) {
-			log.info("h5设置个人资料"+upi.getName()+"错误"+e.toString());
+			log.info("h5认证企业"+upi.getName()+"错误"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误！");
 		}
@@ -126,34 +179,7 @@ public class UserSetupAuthController {
 	
 	
 	
-	
-	/**
-	 * 修改登陆手机号
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/checkUpMoCode")
-	public Result checkUpMoCode(@RequestParam(name="code")String code,
-			@RequestParam(name="mobile")String mobile,
-			HttpServletRequest request){
-		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
-		
-		try {
-			result=userProService.checkUpMoCode(mobile, code, upi, request);
-		} catch (Exception e) {
-			log.info("h5设置个人资料"+upi.getName()+"错误"+e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setMsg("系统错误！");
-		}
-		return result;
-	}
+
 	
 	
 	

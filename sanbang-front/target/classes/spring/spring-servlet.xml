@@ -61,23 +61,5 @@
 	<!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的  -->
 	
 	
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/**"/>
-			<mvc:exclude-mapping path="/app/**" />
-			<bean class="com.sanbang.interceptors.BasePathInterceptor" />
-		</mvc:interceptor>
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/userPro/**" />
-			<mvc:exclude-mapping path="/home/**" />
-			<mvc:exclude-mapping path="/store/**" />
-			<mvc:exclude-mapping path="/userRegist/**" />
-			<mvc:exclude-mapping path="/cata/**" />
-			<mvc:exclude-mapping path="/area/**" />
-			<bean class="com.sanbang.interceptors.LoginInterceptor" />
-		</mvc:interceptor>
-	</mvc:interceptors>
-	
 	
 </beans>

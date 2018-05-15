@@ -28,4 +28,11 @@
       </if>
     </trim>
   </insert>
+  <delete id="delIndustryDictByStoreId">
+  	DELETE FROM ezs_industry_dict   WHERE industry_id=#{storeid}
+  </delete>
+  
+  <select id="getCompanyTypeByThisId" resultMap="BaseResultMap">
+  	select * from ezs_industry_dict where  industry_id=${storeid}
+  </select>
 </mapper>
