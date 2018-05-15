@@ -2,7 +2,6 @@ package com.sanbang.setup.controller;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
-import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;

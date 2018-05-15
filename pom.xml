@@ -321,7 +321,21 @@
 
 		</dependencies>
 	</dependencyManagement>
-	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>front</finalName>
+	</build>
 
 	<modules>
 		<module>sanbang-front</module>
