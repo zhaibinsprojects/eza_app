@@ -31,7 +31,7 @@
 		<jsp-api.version>2.0</jsp-api.version>
 		<joda-time.version>2.5</joda-time.version>
 		<commons-lang3.version>3.3.2</commons-lang3.version>
-		<commons-io.version>1.3.2</commons-io.version>
+		<commons-io.version>2.4</commons-io.version>
 		<commons-net.version>3.3</commons-net.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<httpclient-cache.version>4.2.3</httpclient-cache.version>
@@ -49,6 +49,13 @@
 		<com.belerweb.pinyin4j.version>2.5.0</com.belerweb.pinyin4j.version>
 		<com.jcraft.jsch.version>0.1.31</com.jcraft.jsch.version>
 		<freemarker.version>2.3.20</freemarker.version>
+		<org.apache.poi>3.9</org.apache.poi>
+		<org.apache.xmlbeans>2.3.0</org.apache.xmlbeans>
+		<dom4j>1.6.1</dom4j>
+		<com.google.zxing>2.0</com.google.zxing>
+		<com.github.xuwei-k>0.1.0</com.github.xuwei-k>
+		<org.xhtmlrenderer>9.0.6</org.xhtmlrenderer>
+		<net.sourceforge.nekohtml>1.9.14</net.sourceforge.nekohtml>
 	</properties>
 
 
@@ -116,7 +123,7 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>${commons-io.version}</version>
+				<version>1.3.2</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-net</groupId>
@@ -124,6 +131,11 @@
 				<version>${commons-net.version}</version>
 			</dependency>
 			<!-- Jackson Json处理工具包 -->
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
@@ -318,7 +330,57 @@
 				<artifactId>json-simple</artifactId>
 				<version>1.1</version>
 			</dependency>
+			
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${org.apache.poi}</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${org.apache.poi}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>${org.apache.poi}</version>
+		</dependency>
+			
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>${org.apache.xmlbeans}</version>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${com.google.zxing}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.xuwei-k</groupId>
+			<artifactId>html2image</artifactId>
+			<version>${com.github.xuwei-k}</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-core</artifactId>
+			<version>${org.xhtmlrenderer}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>${net.sourceforge.nekohtml}</version>
+		</dependency>
+		
+			
+			
 		</dependencies>
 	</dependencyManagement>
 	<build>
