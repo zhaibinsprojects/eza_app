@@ -6,12 +6,10 @@ import java.util.Date;
 
 public class ezs_store implements Serializable {
 
-
 	/**
 	 * 商城表
 	 */
-	private static final long serialVersionUID = 8401813899561112150L;
-
+	private static final long serialVersionUID = 6766488311876147515L;
 
 	private Long id;
 
@@ -84,6 +82,8 @@ public class ezs_store implements Serializable {
 	private Long regArea_id;// 注册区县ID
 
 	private String regAddress;// 注册地址
+
+	private String idCardNum;// 经营者省份证号
 
 	public Long getId() {
 		return id;
@@ -373,6 +373,14 @@ public class ezs_store implements Serializable {
 		this.regAddress = regAddress;
 	}
 
+	public String getIdCardNum() {
+		return idCardNum;
+	}
+
+	public void setIdCardNum(String idCardNum) {
+		this.idCardNum = idCardNum;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_store [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", address="
@@ -385,7 +393,9 @@ public class ezs_store implements Serializable {
 				+ cardType_id + ", companyType_id=" + companyType_id + ", mianIndustry_id=" + mianIndustry_id
 				+ ", auditingusertype_id=" + auditingusertype_id + ", tel=" + tel + ", location="
 				+ Arrays.toString(location) + ", accountType=" + accountType + ", admin_status=" + admin_status
-				+ ", capitalPrice=" + capitalPrice + ", account=" + account + ", unifyCode=" + unifyCode + "]";
+				+ ", capitalPrice=" + capitalPrice + ", account=" + account + ", unifyCode=" + unifyCode + ", person="
+				+ person + ", regArea_id=" + regArea_id + ", regAddress=" + regAddress + ", idCardNum=" + idCardNum
+				+ "]";
 	}
 
 }

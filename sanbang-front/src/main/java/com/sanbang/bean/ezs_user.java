@@ -2,6 +2,9 @@ package com.sanbang.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.sanbang.vo.userauth.AuthImageVo;
 
 /**
  * 用户登陆信息
@@ -11,10 +14,7 @@ import java.util.Date;
  */
 public class ezs_user implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7070179206899219115L;
+	private static final long serialVersionUID = -2710575667615236430L;
 
 	private Long id;
 
@@ -36,9 +36,9 @@ public class ezs_user implements Serializable {
 
 	private String password;
 
-	private String trueName;
+	private String trueName;//真实名称
 
-	private String userRole;
+	private String userRole;//角色
 
 	private Long parent_id;
 
@@ -57,7 +57,9 @@ public class ezs_user implements Serializable {
 
 	private ezs_store ezs_store;// 公司资料信息
 
-	private ezs_bill ezs_bill;
+	private ezs_bill ezs_bill;// 发票信息
+
+	private List<AuthImageVo> authimg;// 资质存储
 
 	public Long getId() {
 		return id;
@@ -227,6 +229,14 @@ public class ezs_user implements Serializable {
 		this.ezs_bill = ezs_bill;
 	}
 
+	public List<AuthImageVo> getAuthimg() {
+		return authimg;
+	}
+
+	public void setAuthimg(List<AuthImageVo> authimg) {
+		this.authimg = authimg;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_user [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", lastLoginDate="
@@ -235,7 +245,7 @@ public class ezs_user implements Serializable {
 				+ trueName + ", userRole=" + userRole + ", parent_id=" + parent_id + ", store_id=" + store_id
 				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", authkey=" + authkey + ", isAvatar="
 				+ isAvatar + ", ezs_userinfo=" + ezs_userinfo + ", ezs_store=" + ezs_store + ", ezs_bill=" + ezs_bill
-				+ "]";
+				+ ", authimg=" + authimg + "]";
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.sanbang.area.service.AreaService;
 import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
+import com.sanbang.setup.service.AuthService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -63,6 +65,8 @@ public class UserSetupAuthController {
 	
 	@Autowired
 	private AreaService areaService;
+	
+	private AuthService authService;
 	
 	
 	
@@ -160,7 +164,7 @@ public class UserSetupAuthController {
 	@ResponseBody
 	@RequestMapping("/saveComAuth")
 	public Result saveComAuth(
-			HttpServletRequest request){
+			HttpServletRequest request,HttpServletResponse response){
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
@@ -169,16 +173,40 @@ public class UserSetupAuthController {
 			return result;
 		}
 		try {
-			//result=userProService.sendUpMoCode(mobile, code);
+			result=authService.saveComAuth(result, request, upi, response);
 		} catch (Exception e) {
-			log.info("h5认证企业"+upi.getName()+"错误"+e.toString());
+			log.info("h5保存认证企业基本信息"+upi.getName()+"错误"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误！");
 		}
 		return result;
 	}
 	
-	
+	/**
+	 * 保存企业开票信息
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/saveComneinAuth")
+	public Result saveComneinAuth(
+			HttpServletRequest request,HttpServletResponse response){
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		try {
+			result=authService.saveComEin(result, request, upi, response);
+		} catch (Exception e) {
+			log.info("h5保存认证企业开票信息"+upi.getName()+"错误"+e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		return result;
+	}
 	
 	
 	

@@ -111,11 +111,6 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_positionMapper" />
 	</bean>
-	<!--发票信息-->
-	<bean id="ezs_billMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_billMapper" />
-	</bean>
 	
 </beans>
 
