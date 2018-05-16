@@ -26,9 +26,20 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 	@Override
 	public Map<String, Object> getSecondTheme(Long id) {
 		// TODO Auto-generated method stub
+		List<ezs_column> elist = null;
 		Map<String, Object> mmp = new HashMap<>();
-		List<ezs_column> elist = this.columnMapper.getSecondThemeByFirstTheme(id);
-		mmp.put("Obj", elist);
+		try {
+			elist = this.columnMapper.getSecondThemeByFirstTheme(id);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(elist!=null){
+			mmp.put("Obj", elist);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}else{
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_CODE_ERROR);
+			mmp.put("Msg","参数传递有误");
+		}
 		return mmp;
 	}
 

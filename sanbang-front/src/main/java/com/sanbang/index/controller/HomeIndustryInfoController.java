@@ -34,10 +34,18 @@ public class HomeIndustryInfoController {
 	public Object getTheme(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		List<ezs_column> elist = null;
+		Result rs = null;
 		mmp = this.industryInfoService.getSecondTheme(Long.valueOf(57));
-		elist = (List<ezs_column>) mmp.get("Obj");
-		Result rs = Result.success();
-		rs.setObj(elist);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			elist = (List<ezs_column>) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(elist);
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
 		return rs;
 	}
 	/**
@@ -56,7 +64,7 @@ public class HomeIndustryInfoController {
 		Result rs = null;
 		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
-		String ErrorCode = mmp.get("ErrorCode").toString();
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
 			rs = Result.success();
@@ -65,6 +73,7 @@ public class HomeIndustryInfoController {
 			
 		}else{
 			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;

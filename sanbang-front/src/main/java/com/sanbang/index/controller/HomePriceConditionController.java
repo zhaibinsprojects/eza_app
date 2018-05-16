@@ -69,7 +69,7 @@ public class HomePriceConditionController {
 		
 		mmp = this.priceConditionService.getPriceInTime(tMp);
 		List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
-		String ErrorCode = (String) mmp.get("ErrorCode");
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
 			rs.setObj(plist);			
@@ -118,7 +118,7 @@ public class HomePriceConditionController {
 		List<ezs_column> elist = null;
 		Result rs = null;
 		Map<String, Object> mmp = this.priceConditionService.getSecondTheme(Long.valueOf(12));
-		String ErrorCode = mmp.get("ErrorCode").toString();
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		elist = (List<ezs_column>) mmp.get("Obj");
 		if(ErrorCode!=null&&(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS))){
 			rs = Result.success();
@@ -145,7 +145,7 @@ public class HomePriceConditionController {
 		Result rs = null;
 		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
-		String ErrorCode = mmp.get("ErrorCode").toString();
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
 			rs = Result.success();
@@ -171,7 +171,7 @@ public class HomePriceConditionController {
 		List<ezs_column> elist = null;
 		Result rs = null;
 		Map<String, Object> mmp = this.priceConditionService.getSecondTheme(Long.valueOf(17));
-		String ErrorCode = mmp.get("ErrorCode").toString();
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		elist = (List<ezs_column>) mmp.get("Obj");
 		if(ErrorCode!=null&&(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS))){
 			rs = Result.success();
@@ -198,7 +198,7 @@ public class HomePriceConditionController {
 		Result rs = null;
 		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
-		String ErrorCode = mmp.get("ErrorCode").toString();
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
 			rs = Result.success();
@@ -215,13 +215,13 @@ public class HomePriceConditionController {
 	 * 价格趋势+条件筛选
 	 * @param request
 	 * @param response
-	 * @param kindId
-	 * @param colorId
-	 * @param formId
-	 * @param source
-	 * @param purpose
-	 * @param burning
-	 * @param protection
+	 * @param kindId 类别
+	 * @param colorId 颜色
+	 * @param formId 形态
+	 * @param source 来源
+	 * @param purpose 用途
+	 * @param burning 燃烧指数
+	 * @param protection 是否环保
 	 * @return
 	 */
 	@RequestMapping("/getPriceTrendcy")
