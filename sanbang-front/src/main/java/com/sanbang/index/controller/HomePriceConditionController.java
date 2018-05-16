@@ -12,8 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.utils.Result;
@@ -28,7 +30,8 @@ public class HomePriceConditionController {
 	private PriceConditionService priceConditionService;
 	@Autowired
 	private IndustryInfoService industryInfoService;
-	
+	@Autowired
+	private AddressService addressService;
 	/*
 	 * 需要先判断用户是否已登录
 	 * 并是否已经订阅
@@ -77,6 +80,31 @@ public class HomePriceConditionController {
 		}
 		return rs;
 	}
+	/**
+	 * 根据地址节点的子节点获取父节点信息
+	 * @param request
+	 * @param response
+	 * @param childId
+	 * @return
+	 */
+	@RequestMapping("/getParentByChild")
+	@ResponseBody
+	public Object getParentByChild(HttpServletRequest request,HttpServletResponse response,Long childId){
+		Result rs = null;
+		Map<String, Object> mmp = this.addressService.getParentByChild(childId);
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ezs_area area = (ezs_area) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(area);
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg("参数传递有误");
+		}
+		return rs;
+	}
+	
 	/**
 	 * 行情分析-二级栏目（年、月、周、日评）
 	 * @param request
@@ -183,4 +211,46 @@ public class HomePriceConditionController {
 		}
 		return rs;
 	}
+	/**
+	 * 价格趋势+条件筛选
+	 * @param request
+	 * @param response
+	 * @param kindId
+	 * @param colorId
+	 * @param formId
+	 * @param source
+	 * @param purpose
+	 * @param burning
+	 * @param protection
+	 * @return
+	 */
+	@RequestMapping("/getPriceTrendcy")
+	@ResponseBody
+	public Object getPriceTrendcy(HttpServletRequest request,HttpServletResponse response,String kindId,String colorId
+			,String formId,String source,String purpose,String burning,String protection){
+		Map<String, Object> tMp = new HashMap<>();
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		//参数传递
+		tMp.put("kindId", kindId);
+		tMp.put("colorId", colorId);
+		tMp.put("formId", formId);
+		tMp.put("source", source);
+		tMp.put("purpose", purpose);
+		tMp.put("burning", burning);
+		tMp.put("protection", protection);
+		mmp = this.priceConditionService.getPriceTrendcy(tMp);
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(plist);			
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(ErrorCode);
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	
 }

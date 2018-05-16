@@ -1,5 +1,7 @@
 package com.sanbang.vo;
 
+import java.util.Date;
+
 import com.sanbang.bean.ezs_price_trend;
 
 public class PriceTrendIfo extends ezs_price_trend {
@@ -9,7 +11,15 @@ public class PriceTrendIfo extends ezs_price_trend {
 	private String goodFormName;
 	private Double goodPrice;
 	private String goodArea;
+	//当日均价
+	private Double currentAVGPrice;
+	//前一日均价
+	private Double preAVGPrice;
+	//成交日期
+	private String dealDate;
+	//涨幅
 	private String sandByOne;
+	//品类名称
 	private String sandBytwo;
 	private String sandBytree;
 	
@@ -72,5 +82,23 @@ public class PriceTrendIfo extends ezs_price_trend {
 	}
 	public PriceTrendIfo() {
 		super();
+	}
+	public Double getCurrentAVGPrice() {
+		return currentAVGPrice;
+	}
+	public void setCurrentAVGPrice(Double currentAVGPrice) {
+		this.currentAVGPrice = currentAVGPrice;
+	}
+	public Double getPreAVGPrice() {
+		return preAVGPrice;
+	}
+	public void setPreAVGPrice(Double preAVGPrice) {
+		this.preAVGPrice = preAVGPrice;
+	}
+	public String getDealDate() {
+		return dealDate;
+	}
+	public void setDealDate(String dealDate) {
+		this.dealDate = dealDate;
 	}
 }
