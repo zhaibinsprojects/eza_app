@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.goods.service.GoodsService;
 
 /**
@@ -22,6 +23,8 @@ public class GoodsServiceImpl implements GoodsService{
 	private com.sanbang.dao.ezs_goodsMapper ezs_goodsMapper;
 	@Resource(name="ezs_dvaluateMapper")
 	private com.sanbang.dao.ezs_dvaluateMapper ezs_dvaluateMapper;
+	@Resource(name="ezs_goodscartMapper")
+	private com.sanbang.dao.ezs_goodscartMapper ezs_goodscartMapper;
 	
 	/**
 	 * 查询单个货品详情
@@ -41,7 +44,12 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	
-	
+	public int insertCart(ezs_goodscart goodsCart){
+		int n ;
+		n = ezs_goodscartMapper.insert(goodsCart);
+		return n;
+		
+	}
 	
 	
 }

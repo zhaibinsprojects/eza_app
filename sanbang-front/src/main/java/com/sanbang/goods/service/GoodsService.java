@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goodscart;
 
 /**
  * 货品相关业务处理
@@ -22,4 +23,11 @@ public interface GoodsService {
 	 * @param id
 	 */
 	public List<ezs_dvaluate> listForEvaluate(long id);
+	/**
+	 * 加入采购单（添加购物车）
+	 * @param goodsCart 购物车实体
+	 */
+	public int insertCart(ezs_goodscart goodsCart);	
+	
+	
 }
