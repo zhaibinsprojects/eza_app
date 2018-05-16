@@ -1,18 +1,14 @@
 package com.sanbang.goods.service;
 
-import java.util.List;
+import com.sanbang.bean.ezs_goods;
 
 /**
- * 品类相关业务处理
- * 
+ * 货品相关业务处理
  * @author hanlongfei
- *  
  * 2018年05月12日
  */
 public interface GoodsService {
-	/**
-	 * 查询一级分类
-	 */
-	public List getListForClass();
+	//查询单个货品详情
+	public ezs_goods getGoodsDetail(long id);
 	
 }

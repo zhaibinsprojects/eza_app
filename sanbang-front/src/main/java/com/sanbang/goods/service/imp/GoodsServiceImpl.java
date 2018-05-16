@@ -1,34 +1,31 @@
 package com.sanbang.goods.service.imp;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.sanbang.bean.ezs_goods_class;
+import com.sanbang.bean.ezs_goods;
 import com.sanbang.goods.service.GoodsService;
 
 /**
- * 品类相关处理
- * 
+ * 货品相关处理
  * @author hanlongfei
- *  
  * 2018年05月12日
  */
 @Service("goodsService")
 public class GoodsServiceImpl implements GoodsService{
-	@Resource(name="ezs_cataMapper")
-	private com.sanbang.dao.ezs_cataMapper ezs_cataMapper;
+	@Resource(name="ezs_goodsMapper")
+	private com.sanbang.dao.ezs_goodsMapper ezs_goodsMapper;
 	
-	public List getListForClass(){
-		List<ezs_goods_class> list = new ArrayList();
-		
-		list = ezs_cataMapper.getListForClass();
-		
-		
+	/**
+	 * 查询单个货品详情
+	 * @param id
+	 * @return
+	 */
+	public ezs_goods getGoodsDetail(long id){
+		ezs_goods list = new ezs_goods();
+		list = ezs_goodsMapper.selectByPrimaryKey(id);
 		return list;
 	}
-	
+
 }
