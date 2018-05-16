@@ -928,4 +928,14 @@
       store_id = #{store_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="selectByAreaHot" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_customer GROUP BY area_id ORDER BY COUNT(area_id) DESC
+  </select>
+  
+  
+  
+  
 </mapper>

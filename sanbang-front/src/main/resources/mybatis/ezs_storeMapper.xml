@@ -552,4 +552,10 @@
     where companyName = #{companyName}
    	
    </select>
+   
+   <!--通过id获取store  -->
+   <select id="selectById" resultMap="BaseResultMap">
+  		 select * from ezs_store where id = #{store_id}
+   </select>
+   
 </mapper>

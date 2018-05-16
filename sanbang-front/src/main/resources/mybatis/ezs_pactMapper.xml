@@ -161,4 +161,21 @@
       sellerUser_id = #{sellerUser_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 通过id查询合同信息 -->
+   <select id="selectPactBySellerId" resultType="ezs_pact"  >
+    	select * from 	ezs_pact where id = #{sellerId}						
+  </select>
+  <!-- 根据订单签订时间查询合同 -->
+   <select id="selectPactByDate" resultType="ezs_pact"  >
+    	select * from 	ezs_pact pact where
+	     (unix_timestamp(pact.sign_time)&gt;=unix_timestamp(#{startTime}) 
+	     and unix_timestamp(pact.sign_time)&lt;unix_timestamp(#{endTime}))
+   </select>
+   <!-- 根据订单编号查询合同 -->
+   <select id="selectPactByOrderNo" resultType="ezs_pact"> 
+   		select * from ezs_pact where order_no = #{orderno}
+   </select>
+   
+   
 </mapper>

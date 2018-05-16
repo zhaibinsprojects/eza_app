@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_area;
+import com.sanbang.vo.HotProvince;
 
 @Repository
 public interface ezs_areaMapper {
@@ -33,4 +34,6 @@ public interface ezs_areaMapper {
      * @return
      */
     List<ezs_area> getAreaListByParId(@Param("areaid")long areaid);
+    
+    List<HotProvince> getHotArea(); 
 }

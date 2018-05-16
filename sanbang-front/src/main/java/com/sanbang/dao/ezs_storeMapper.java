@@ -31,4 +31,11 @@ public interface ezs_storeMapper {
      */
     List<ezs_store> getstoreInfoByName(@Param("companyName")String companyName);
     
+    /**
+     * 通过id获取store 
+     * @param store_id
+     * @return
+     */
+	ezs_store selectById(Long store_id);
+    
 }

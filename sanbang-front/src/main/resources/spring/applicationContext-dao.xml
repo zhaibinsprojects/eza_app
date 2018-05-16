@@ -31,6 +31,12 @@
 			value="com.sanbang.dao.ezs_userinfoMapper" />
 	</bean>
 	
+	<!--查询一级分类-->
+	<bean id="ezs_cataMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_cataMapper" />
+	</bean>
+	
 	<!--商铺-->
 	<bean id="ezs_storeMapper" parent="baseMapper">
 		<property name="mapperInterface"
@@ -41,6 +47,47 @@
 	<bean id="ezs_areaMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_areaMapper" />
+	</bean>
+	<!-- 商品信息 -->
+	<bean id="ezs_goodsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goodsMapper" />
+	</bean>
+	<!-- 商品种类信息 -->
+	<bean id="ezs_goods_classMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_classMapper" />
+	</bean>
+	<!-- 用户信息 -->
+	<bean id="ezs_customerMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customerMapper" />
+	</bean>
+	<!-- 票据信息 -->
+	<bean id="ezs_invoiceMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_invoiceMapper" />
+	</bean>
+	
+	<!-- 发票信息 -->
+	<bean id="ezs_billMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_billMapper" />
+	</bean>
+	<!-- 合同信息 -->
+	<bean id="ezs_pactMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_pactMapper" />
+	</bean>
+	<!-- 购买详情信息 -->
+	<bean id="ezs_payinfoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_payinfoMapper" />
+	</bean>
+	<!-- 附件表详情信息 -->
+	<bean id="ezs_accessoryMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_accessoryMapper" />
 	</bean>
 	
 	<!--字典接口-->

@@ -116,8 +116,40 @@ public class DictionaryCode {
      * ip受限
      */
     public static final int ERROR_WEB_IP_LIMIT = 110006;
+    /**
+     * 供应商激活信息提交失败
+     */
+    public static final int ERROR_WEB_ACTIVATE_INFO_FAIL = 110007;
+    /**
+     * 供应商激活信息提交成功
+     */
+    public static final int ERROR_WEB_ACTIVATE_INFO_SUCCESS = 110008;
+    /**
+     * 查询合同列表成功
+     */
+    public static final int ERROR_WEB_QUERY_CONTRACT_LIST_SUCCESS = 110009;
     
+    /**
+     * 查询合同列表失败
+     */
+    public static final int ERROR_WEB_QUERY_CONTRACT_LIST_FAIL = 110010;
     
+    /**
+     * 查询合同详情失败
+     */
+    public static final int ERROR_WEB_QUERY_CONTRACT_INFO_FAIL = 110011;
     
-    
+    /**
+     * 查询合同详情成功
+     */
+    public static final int ERROR_WEB_QUERY_CONTRACT_INFO_SUCCESS = 110012;
+    /**
+     * 查询发票详情成功
+     */
+    public static final int ERROR_WEB_QUERY_BILL_INFO_SUCCESS = 110013;
+    /**
+     * 查询发票详情失败
+     */
+    public static final int ERROR_WEB_QUERY_BILL_INFO_FAIL = 110014;
+
 }

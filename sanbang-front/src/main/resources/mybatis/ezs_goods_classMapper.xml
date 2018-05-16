@@ -138,4 +138,9 @@
       display = #{display,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectAllGoodClass" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goods_class
+  </select>
 </mapper>

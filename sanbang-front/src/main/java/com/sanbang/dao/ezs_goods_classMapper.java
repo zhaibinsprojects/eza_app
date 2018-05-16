@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goods_class;
@@ -17,4 +19,6 @@ public interface ezs_goods_classMapper {
     int updateByPrimaryKeySelective(ezs_goods_class record);
 
     int updateByPrimaryKey(ezs_goods_class record);
+    
+    List<ezs_goods_class> selectAllGoodClass();
 }
