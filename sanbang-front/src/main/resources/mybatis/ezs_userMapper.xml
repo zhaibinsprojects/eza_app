@@ -277,9 +277,9 @@
 	<!--查询用户手机号-->
 	<select  id="checkMobile" resultType="int">
   	 select 
-     count(phone)
+     count(name)
     from ezs_user
-    where phone = #{phone}
+    where name = #{name}
 	</select>
      
      <!--查看用户是否已存在-->

@@ -864,6 +864,7 @@ public class UserProServiceImpl implements UserProService{
 						result.setMsg("手机号码已经被注册");
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 					result.setSuccess(false);
 					result.setMsg("服务器异常");
@@ -1122,6 +1123,7 @@ public class UserProServiceImpl implements UserProService{
 			int aa = 0;
 			try {
 				long storyid = ezs_storeMapper.insert(story);
+				storyid=story.getId();
 				//主营行业部分
 				Industry(Industrys, storyid);;
 				//经营类型部分

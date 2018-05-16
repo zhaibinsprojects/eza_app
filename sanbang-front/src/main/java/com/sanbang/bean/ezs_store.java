@@ -4,12 +4,20 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * 商城表
+ */
+
 public class ezs_store implements Serializable {
 
 	/**
-	 * 商城表
+	 * 
 	 */
-	private static final long serialVersionUID = 6766488311876147515L;
+	private static final long serialVersionUID = -6428132396052424895L;
+
+	/**
+	 * 
+	 */
 
 	private Long id;
 
@@ -84,6 +92,16 @@ public class ezs_store implements Serializable {
 	private String regAddress;// 注册地址
 
 	private String idCardNum;// 经营者省份证号
+
+	private Integer creditScore;
+
+	private String number;
+
+	private Long customerAudit_id;
+
+	private String creditLevel;
+
+	private Long location_id;
 
 	public Long getId() {
 		return id;
@@ -379,6 +397,46 @@ public class ezs_store implements Serializable {
 
 	public void setIdCardNum(String idCardNum) {
 		this.idCardNum = idCardNum;
+	}
+
+	public Integer getCreditScore() {
+		return creditScore;
+	}
+
+	public void setCreditScore(Integer creditScore) {
+		this.creditScore = creditScore;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public Long getCustomerAudit_id() {
+		return customerAudit_id;
+	}
+
+	public void setCustomerAudit_id(Long customerAudit_id) {
+		this.customerAudit_id = customerAudit_id;
+	}
+
+	public String getCreditLevel() {
+		return creditLevel;
+	}
+
+	public void setCreditLevel(String creditLevel) {
+		this.creditLevel = creditLevel;
+	}
+
+	public Long getLocation_id() {
+		return location_id;
+	}
+
+	public void setLocation_id(Long location_id) {
+		this.location_id = location_id;
 	}
 
 	@Override
