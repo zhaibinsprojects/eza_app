@@ -1,4 +1,4 @@
-package com.sanbang.setup.controller.service.impl;
+package com.sanbang.setup.service.impl;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
