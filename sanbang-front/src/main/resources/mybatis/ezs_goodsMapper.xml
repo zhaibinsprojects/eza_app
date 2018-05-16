@@ -615,4 +615,12 @@
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
   </select>
+  <!-- 根据供应商id查询商品列表-->
+  <select id="selectGoodsListBySellerId" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ezs_goods a
+    where user_id = #{sellerId}
+  </select>
+  
 </mapper>
