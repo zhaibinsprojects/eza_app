@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.redis.RedisConstants;
@@ -138,7 +137,7 @@ public class RedisUserSession {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static boolean updateUserInfo(String userKey,User_Proinfo upi,Long timeOut){
+	public static boolean updateUserInfo(String userKey,ezs_user upi,Long timeOut){
 		RedisResult<String> rrt;
 		rrt=(RedisResult<String>) RedisUtils.set(userKey,upi, timeOut);
 		if(rrt.getCode()==RedisConstants.SUCCESS){

@@ -7,7 +7,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sanbang.bean.User_Proinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;

@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ezs_userinfo implements Serializable {
-	
-    /**
+
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9100840609420972274L;
+	private static final long serialVersionUID = 5881163343819974853L;
 
 	private Long id;
 
@@ -35,6 +35,8 @@ public class ezs_userinfo implements Serializable {
     private String QQ;
 
     private Integer updateStatus;
+    
+    private String tel;
     
 
 	public Long getId() {
@@ -140,6 +142,15 @@ public class ezs_userinfo implements Serializable {
     public void setUpdateStatus(Integer updateStatus) {
         this.updateStatus = updateStatus;
     }
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+    
     
     
 }

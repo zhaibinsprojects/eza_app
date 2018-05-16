@@ -22,13 +22,16 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sanbang.bean.User_Proinfo;
+import com.sanbang.bean.ezs_companyType_dict;
+import com.sanbang.bean.ezs_industry_dict;
+import com.sanbang.bean.ezs_position;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
+import com.sanbang.dao.ezs_industry_dictMapper;
+import com.sanbang.dao.ezs_positionMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
-import com.sanbang.dao.ezs_userinfoMapper;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.userpro.service.UserProService;
@@ -40,10 +43,10 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.SendMobileMessage;
-import com.sanbang.utils.StringUtil;
 import com.sanbang.utils.Tools;
-import com.sanbang.vo.Dictionary;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.LinkUserVo;
+import com.sanbang.vo.MessageDictionary;
 
 
 /**
@@ -69,16 +72,30 @@ public class UserProServiceImpl implements UserProService{
 	//商铺
 	@Resource(name="ezs_storeMapper")
 	private  ezs_storeMapper ezs_storeMapper;
+	
+	//关于用户公司类型存储
+	@Resource(name="ezs_companyType_dictMapper")
+	private com.sanbang.dao.ezs_companyType_dictMapper  ezs_companyType_dictMapper;
 
+	//关于用户公司主营行业存储
+	@Resource(name="ezs_industry_dictMapper")
+	private ezs_industry_dictMapper  ezs_industry_dictMapper;
+	
+	@Resource(name="ezs_positionMapper")
+	private ezs_positionMapper ezs_positionMapper;
+	
 	@Value("${consparam.cookie.useridcard}")
 	private String USERIDCARD;
 	
+	//#用户cookie 中uerKey有效期
 	@Value("${consparam.cookie.cookieuserkeyexpir}")
 	private String cookieuserkeyexpir;
 	
+	//rediskey有效期
 	@Value("${consparam.redis.redisuserkeyexpir}")
 	private String redisuserkeyexpir;
 	
+	//cookie
 	@Value("${consparam.cookie.userkey}")
 	private String cookieuserkey;
 	
@@ -146,22 +163,20 @@ public class UserProServiceImpl implements UserProService{
 	 * 登录
 	 */
 	@Override
-	public Map<String, Object> login(String userName, String pd,String code,String userAgent,String ip,HttpServletRequest request,HttpServletResponse response,Integer flag) {
+	public Result login(String userName, String pd,String code,String userAgent,String ip,HttpServletRequest request,HttpServletResponse response,Integer flag) {
+		Result result=Result.failure();
 		Date date=new Date();
 		StringBuilder sbd=new StringBuilder("用户");
 		sbd.append(userName).append("请求登陆，passwd=").append(pd).append(" &userAgent=").append(userAgent).append(" &ip=").append(ip).append(" &登录,时间:").append(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
         log.info(sbd.toString());
-        Map<String, Object> result = null;
         String useridcard=RedisUserSession.getUserKey(USERIDCARD, request);
-        result=loginParam(userName, pd, code,useridcard, request,flag);
-       if(result.size()==0){
+        result=loginParam(userName, pd, useridcard, request,flag);
+       if(result.getSuccess()){
     	   loginuser(userName, request, response, result, userAgent, pd, ip, date,flag);
-
        }else{
-    	    result.put("code", "888");
-			result.put("message", "参数错误");
+    	  return result;
        }
-	  log.debug("用户" + userName +"登陆结果"+result.get("code")+"  "+result.get("message"));
+	  log.debug("用户" + userName +"登陆结果"+result.getErrorcode()+"  "+result.getMsg());
 	  return result;
 	}
 	
@@ -187,198 +202,142 @@ public class UserProServiceImpl implements UserProService{
 	}
 	
 	
-	Map<String, Object> loginParam(String userName, String pd,String randImgCode,String useridcard,HttpServletRequest request,Integer flag){
-		Map<String, Object> result=new HashMap<String,Object>();
+	Result loginParam(String userName, String pd,String useridcard,HttpServletRequest request,Integer flag){
+		Result result=Result.success();
 		
 		if(flag==null){
+			//直接登陆
 			if(StringUtils.isEmpty(pd)){
-				result.put("passwdtip", "登陆密码不能为空");
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("登陆密码不能为空");
 			}
 			if(StringUtils.isEmpty(userName)||!Tools.paramValidate(userName, 7)){
-	        	result.put("usernametip", "用户名格式错误");
+				result.setSuccess(false);
+	        	result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("用户名格式错误");;
 	        }
 			if(StringUtils.isEmpty(pd)||pd.trim().length()!=32){
-				result.put("passwdtip", "密码格式错误");
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("密码格式错误");
 			}
 		}else{
 			//短信验证码
 			if(StringUtils.isEmpty(userName)||!Tools.paramValidate(userName,1)){
-	        	result.put("usernametip", "手机号码格式错误");
+				result.setSuccess(false);
+	        	result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("手机号码格式错误");
 	        }
 			if(StringUtils.isEmpty(pd)){
-				result.put("passwdtip", "登陆码不能为空");
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("登陆码不能为空");
 			}else{
 				boolean b=ckcodemobile(pd, userName, "MOBILELOGINFLAG");
 				if(!b){
-					result.put("passwdtip", "登陆码错误！");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("登陆验证码错误");
 				}
-				RedisUtils.del(userName+"MOBILELOGINFLAG");
-			}
-		}
-        if(StringUtils.isEmpty(randImgCode)){
-			result.put("randimgtip", "验证码不能为空");
-		}else{
-			//检验验证码
-			
-			if(StringUtils.isEmpty(useridcard)){
-				result.put("randimgtip", "请重新输入验证码");
-			}else{
-				RedisResult<String> vacode=null;
-				vacode=(RedisResult<String>) RedisUtils.get(useridcard+"validatecode",String.class);
-				if(vacode!=null&&vacode.getCode()==RedisConstants.SUCCESS){
-					String valicode=vacode.getResult();
-					if(valicode.equalsIgnoreCase(randImgCode)){
-					}else{
-						result.put("randimgtip", "验证码错误，请重新获取");
-					}
-					RedisUtils.del(useridcard+"validatecode");
-				}else{
-					result.put("randimgtip", "验证码失效");
-				}
+				//RedisUtils.del(userName+"MOBILELOGINFLAG");
 			}
 		}
 		return result;
 	}
 	
-	public void loginuser(String userName,HttpServletRequest request,HttpServletResponse response,Map<String,Object> result,
+	public void loginuser(String userName,HttpServletRequest request,HttpServletResponse response,Result result,
 			String userAgent, String pd,String ip,Date date,Integer flag){
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 	    if(upi!=null&&upi.getName().equals(userName.trim())){
-	    	/*int tempStatus=upi.getStatus();
-	    	if(tempStatus==0){
-				//首次登陆 应该跳转到 注册联系人资料
-				result.put("code", "111");
-				result.put("message", "用户首次登陆");
+	    	Boolean tempStatus=upi.getDeleteStatus();
+	    	if(tempStatus){
+	    		result.setSuccess(true);
+	    		result.setMsg("登陆成功");
+	    		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			}else{
-				result.put("code", "000");
-				result.put("message", "登陆成功");
-			}*/
+				result.setSuccess(false);
+	    		result.setMsg("登陆失败用户未启用");
+	    		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
 	    }else{
 	    	if(StringUtils.isEmpty(userAgent)){
 				userAgent="unknownUserAgent";
 			}
 			// 根据用户名查询用户的信息
 	    	ezs_user userProInfo=null;
-			userProInfo = ezs_userMapper.getUserInfoByUserName(userName.trim());
-			if(userProInfo == null){
-				 result.put("code", "888");
-				 result.put("message", "用户不存在");
-				 result.put("usernametip", "用户不存在");
+			List<ezs_user> userProInfolist=null;
+			userProInfolist = ezs_userMapper.getUserInfoByUserNameFromBack(userName.trim());
+			if(userProInfolist == null||userProInfolist.size()==0){
+				result.setSuccess(false);
+	    		result.setMsg("用户不存在");
+	    		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			}else {
+				userProInfo=userProInfolist.get(0);
 				boolean b=false;
 				if(flag==null){
-					b=pd.equals(userProInfo.getPassword());
+					b=MD5Util.md5Encode(pd).toLowerCase().equals(userProInfo.getPassword());
 				}else{
 					b=true;
+					RedisUtils.del(userName+"MOBILELOGINFLAG");
 				}
 				//密码验证正确
-				if(b){/*
+				if(b){
 					// 判断是否是财务关联账户,如果是,将登陆信息切换到主账户.avatar:账户登录标识,true:主账户登录,false:财务账户登录,并保存在redis中
 					// 如果当前为主账户,更改标识
-					if(userProInfo.getAuthtime() == 3){
+					if(userProInfo.getParent_id() ==0){
 						userProInfo.setAvatar(true);
 					}else{
 						// 非主账户,是否有关联的主账户
-						List<ezs_user> connectUser = ezs_userinfoMapper.getConnectUserInfo(userProInfo.getId());
-						if(connectUser != null){
-							if(connectUser.getAuthtime() == 3){
-								connectUser.setAvatar(false);
-								userProInfo = connectUser;
-							}
-						}
+						userProInfo.setAvatar(false);
 					}
-					//判断是否是首次登陆
-					int tempStatus=userProInfo.getStatus();
+					
+					//判断是否启用
+					int tempStatus=userProInfo.getEzs_userinfo().getStatus();
+					
+					//添加缓存
 					String str32=RandomStr32.getStr32();
-					String userKey=userProInfo.getUsername()+userProInfo.getMobile()+str32;
+					String userKey=userProInfo.getName()+userProInfo.getEzs_userinfo().getPhone()+str32;
 					Cookie cookie=new Cookie(cookieuserkey, userKey);
 					cookie.setMaxAge(Integer.parseInt(cookieuserkeyexpir));
 					cookie.setPath("/");
-					if(userProInfo.getGroupid()==5||userProInfo.getGroupid()==6){
-						userProInfo.setStatus((short) 4);
-						//更新到数据库
-						UserProInfo uppi=new UserProInfo();
-						uppi.setUserkey(userKey);
-						uppi.setUsername(userProInfo.getUsername());
-						uppi.setStatus(userProInfo.getStatus());
-						ezs_userinfoMapper.updateUserProInfo(uppi);
-					}
 					userProInfo.setUserkey(userKey);
 					response.addCookie(cookie);
+					
 					try {
-						if(tempStatus==0&&userProInfo.getRegtime()*1000l>1479052799000l){
+						if(tempStatus==0&&userProInfo.getAddTime().getTime()>1479052799000l){
 							//首次登陆 应该跳转到 注册联系人资料
-							result.put("code", "111");
-							result.put("message", "用户首次登陆");
+							result.setSuccess(false);
+				    		result.setMsg("用户不存在");
+				    		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 							RedisResult<String> rrt;
 	    					rrt=(RedisResult<String>) RedisUtils.set(userKey,userProInfo, Long.parseLong(redisuserkeyexpir));
-	    					RedisUtils.setHash("ACCOUNTCONNECTMAP", userKey+"avatar", userProInfo.getAvatar()?"1":"0");
-	    					RedisUtils.setHash("ACCOUNTCONNECTMAP", userKey+"send", userProInfo.getSend()?"1":"0");
 	    					if(rrt.getCode()==RedisConstants.SUCCESS){
 	    						log.debug("用户"+userName+"：userKey保存到redis成功执行");
 	    					}else{
 	    						log.debug("用户"+userName+"：userKey保存到redis失败");
 	    					}
 						}else{
-							//如果审核通过 应该更改 status状态
-							//此时判断是否有需要跳转的url，有的话跳转
-							remberPath(request, result,response);
-							result.put("code", "000");
-							result.put("message", "登陆成功");
-							
-							//添加 用户登陆后 判断当前用户类型
-							Integer tempFlag=judgeUserType(userProInfo);
-							result.put("userType",tempFlag );
-							userProInfo.setAid(tempFlag);
-							RedisResult<String> rrt;
-	    					rrt=(RedisResult<String>) RedisUtils.set(userKey,userProInfo, Long.parseLong(redisuserkeyexpir));
-	    					RedisUtils.setHash("ACCOUNTCONNECTMAP", userKey+"avatar", userProInfo.getAvatar()?"1":"0");
-	    					RedisUtils.setHash("ACCOUNTCONNECTMAP", userKey+"send", userProInfo.getSend()?"1":"0");
-	    					if(rrt.getCode()==RedisConstants.SUCCESS){
-	    						log.debug("用户"+userName+"：userKey保存到redis成功执行");
-	    					}else{
-	    						log.debug("用户"+userName+"：userKey保存到redis失败");
-	    					}
+							result.setSuccess(false);
+				    		result.setMsg("用户状态异常");
+				    		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 						}
 					} catch (Exception e) {
-						result.put("code", "999");
-	    				result.put("message", "运行错误异常");
+						result.setSuccess(false);
+			    		result.setMsg("系统错误");
+			    		result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 						log.info("系统错误", e);
 					}
-					String refadd = RedisUserSession.getUserKey("SOUNDSTATICREFPAGE", request);
-					String userid = userProInfo.getId()+"";
 					log.error("IP===========>"+ip);
-					sLoginRec.saveLoginRec(userKey,1,refadd,userid,userAgent, ip, pd, userName);
-				*/}else{
+				}else{
 					//密码错误
-					 result.put("code", "888");
-					 result.put("message", "用户名密码错误");
-					 result.put("usernametip", "用户名密码错误");
+					result.setSuccess(false);
+		    		result.setMsg("用户名密码错误");
+		    		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				}
 			}
 	    }
 	}
-	
-/*	public Integer judgeUserType(UserProInfo upi){
-		//0代表未确定 1代表买方类型  2代表卖方   3代表既是买方又是卖方 
-		if(upi.getAid()==null||upi.getAid()==0){
-			//未确定类型
-			return judgeUserType3(upi);
-		}else if(upi.getAid()==3){
-			//跳转到 买方中心
-			return 3;
-		}else if(upi.getAid()==2){
-			//查询是否是买方
-			return judgeUserType2(upi, 2, "destoon_buy_6", "buyer");
-			
-		}else if(upi.getAid()==1){
-			//查询是否是卖方
-			return judgeUserType2(upi, 1, "destoon_sell", "seller");
-		}else{
-			return 0;
-		}
-	}*/
-	
 	
 	
 	
@@ -393,67 +352,11 @@ public class UserProServiceImpl implements UserProService{
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
 	}
-   /**
-    * 对将要跳转的路径 做恢复
-    */
-   @SuppressWarnings("unchecked")
-public void remberPath(HttpServletRequest request,Map<String,Object> result,HttpServletResponse response){
-	 //此时判断是否有需要跳转的url，有的话跳转
-		String usertourl=RedisUserSession.getUserKey(cookieusertrailidcard, request);
-		if(usertourl!=null){
-			RedisResult<String> temres=null;
-			temres=(RedisResult<String>)  RedisUtils.get(usertourl,String.class);
-			if(temres!=null&&temres.getCode()==RedisConstants.SUCCESS){
-				String temStrstr=temres.getResult();
-				result.put("tourl", temStrstr);
-				RedisUtils.del(temStrstr);
-				Cookie cookie = new Cookie(cookieusertrailidcard, null);
-				cookie.setMaxAge(0);
-				cookie.setDomain("/");
-				response.addCookie(cookie);
-			}else{
-				resumePath(request, result,response);
-			}
-		}else{
-			resumePath(request, result,response);
-		}
-		
-   }
 
-	
-	public Map<String, Object> loginRandImgVali(String randImgCode,HttpServletRequest request) throws Exception{
-		Map<String, Object> result=new HashMap<String,Object>();
-		String useridcard=RedisUserSession.getUserKey(USERIDCARD, request);
-		RedisResult<String> vacode=null;
-		if(StringUtils.isEmpty(randImgCode)){
-			 result.put("code", "888");
-			 result.put("message", "验证码不能为空");
-			result.put("randimgtip", "验证码不能为空");
-		}else{
-			vacode=(RedisResult<String>) RedisUtils.get(useridcard+"validatecode",String.class);
-			if(vacode!=null&&vacode.getCode()==RedisConstants.SUCCESS){
-				String valicode=vacode.getResult();
-				if(valicode.equalsIgnoreCase(randImgCode)){
-					result.put("code", "000");
-					result.put("message", "操作成功");
-				}else{
-					 RedisUtils.del(useridcard+"validatecode");
-					 result.put("code", "888");
-					 result.put("message", "验证码错误，请重新填写");
-					 result.put("randimgtip", "验证码错误，请重新填写");
-				}
-			}else{
-				 result.put("code", "888");
-				 result.put("message", "验证码错误");
-				 result.put("randimgtip", "验证码错误");
-			}
-		}
-		return result;
-	}
+
 	/**
 	 * 注册新用户
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
 	public Result userAdd(String username, String passwd,String passwdA, String mobile,String code,String myip,Integer flag,HttpSession session,HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -490,32 +393,32 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	Result userAddParam(Result result,String username, String passwd,String passwdA, String mobile,String code,HttpServletRequest request){
 			
 			if(StringUtils.isEmpty(passwd)||passwd.trim().length()<6||passwd.trim().length()>20){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_NOT_LEGAL);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("密码格式错误");
 				return result;
 			}
 			if(StringUtils.isEmpty(passwdA)){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_SAME_CHARACTER);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("确认密码不能为空");
 				return result;
 			}else{
 				if(StringUtils.isNotEmpty(passwd)&&!passwd.equals(passwdA)){
-					result.setErrorcode(DictionaryCode.ERROR_WEB_PASSWORD_NEQ_CHARACTER);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);
 					result.setMsg("两次密码输入不一致");
 					return result;
 				}
 			}
 			if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("格式有误，请输入正确的手机号码");
 				return result;
 			}
 			if(StringUtils.isEmpty(code)){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_NULL);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("验证码不能为空");
 				return result;
@@ -528,20 +431,19 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 				if((mCode!=null&&mCode.equals(code.trim()))){
 					result.setSuccess(true);
 					}else{
-						result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_ERROR);
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 						result.setSuccess(false);
 						result.setMsg("验证码错误");
 						return result;
 					}
 				}else{
-					result.setErrorcode(DictionaryCode.ERROR_WEB_CODE_ERROR);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);
 					result.setMsg("验证码错误");
 					return result;
 				}
 				try {
 						RedisUtils.del(mobile+"RECODE");
-//					    RedisUtils.del(mobile+"RESENDTIME");
 				} catch (Exception e1) {
 					log.info("删除redis数据失败",e1);
 				}
@@ -627,7 +529,6 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			
 		try {
 				RedisUtils.del(mobile+"RECODE");
-//			    RedisUtils.del(mobile+"RESENDTIME");
 		} catch (Exception e1) {
 			log.info("删除redis数据失败",e1);
 		}
@@ -647,8 +548,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	@Override
 	public  Result  sendCode(String phone,String code,String mobilerecodestr,String mobilesendcodeexpirstr,String mobileintervalstr,String mobilesendtimesstr,Integer flag,String content) {
 		 Result result=Result.failure();
-		Map<String, Object> map=new HashMap<String,Object>();
-		 if(StringUtils.isEmpty(phone)||!Tools.paramValidate(phone, 1)){
+   		 if(StringUtils.isEmpty(phone)||!Tools.paramValidate(phone, 1)){
 			 	result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
 				result.setSuccess(false);
 				result.setMsg("格式有误，请输入正确的手机号码");
@@ -710,12 +610,12 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	 * 发送修改手机号码验证码
 	 */
 	@Override
-	public  Map<String, Object>  sendUpMoCode(String phone,String code) {
-		Map<String, Object> map=new HashMap<String,Object>();
+	public  Result  sendUpMoCode(String phone,String code) {
+		Result result=Result.failure();
 		if(StringUtils.isEmpty(phone)||!Tools.paramValidate(phone, 1)){
-			 map.put("code", "888");
-			 map.put("message", "手机号码格式错误");
-			 map.put("phone", "手机号码格式错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			 result.setSuccess(false);
+			 result.setMsg("手机号码格式错误");
 		 }else{
 			 
 			//先判断发送的次数 和 时间间隔
@@ -743,38 +643,41 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					 log.info("短信验证码,发送内容:"+content);
 					 try {
 						 SendMobileMessage.sendMsg(phone, content);
-						 map.put("code", "000");
-						 map.put("message", "验证码发送成功");
+						 result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						 result.setSuccess(true);
+						 result.setObj(new HashMap<>().put("mobile", phone));
+						 result.setMsg("验证码发送成功");
 						 RedisUtils.set(phone+mobileupmocode, code, Long.parseLong(mobilesendcodeexpir));
 						 //这里需要改
 						 RedisUtils.set(phone+mobileupmocode+"times", ++codetimes, DateUtils.getTimeValue());
 					 } catch (Exception e) {
 						 log.error("短信验证码功能失败");
 						 log.error(e.toString());
-						 map.put("code", "666");
-						 map.put("message", "验证码发送失败");
+						 result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+						 result.setSuccess(false);
+						 result.setMsg("服务器异常");
 					 } 
 				 }else{
-					 map.put("code", "888");
-					 map.put("message", "请等待"+mobileinterval+"s后发送");
-					 map.put("phone", "请等待"+mobileinterval+"s后发送");
+					 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					 result.setSuccess(false);
+					 result.setMsg("请等待"+mobileinterval+"s后再次点击");
 				 }
 			}else{
-				 map.put("code", "888");
-				 map.put("message", "验证码已发送多次，请查收短信");
-				 map.put("phone", "验证码已发送多次，请查收短信");
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				 result.setSuccess(false);
+				 result.setMsg("验证码已发送多次，请查收短信");
 			}
 			 
 			
 		 }
-		return map;
+		return result;
 	}
 	/**
 	 * 发送忘记密码短信验证码
 	 */
 	@Override
-	public  Map<String, Object>  sendFtCode(String phone,String code) {
-		Map<String, Object> map=new HashMap<String,Object>();
+	public  Result  sendFtCode(String phone,String code) {
+		Result result=Result.failure();
 		if(StringUtils.isNotEmpty(phone)&&Tools.paramValidate(phone, 1)){
 			//先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimes);
@@ -797,42 +700,45 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 				 if(expir-reexpir>codeinterval){
 					 //间隔大于60 可以发送短信
 					// 短信内容
-						String content = "您的短信验证码:"+code.toString()+",请勿告诉他人,有效时间为10分钟!";
+						String content =MessageDictionary.upPswCode(code);
 						
 						log.info("短信验证码,发送内容:"+content);
 						
 						try {
-							//SendMobileMessage.sendMsg(phone, content);
-							map.put("code", "000");
-							map.put("message", "验证码发送成功");
+							SendMobileMessage.sendMsg(phone, content);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							result.setSuccess(true);
+							result.setObj(new HashMap<>().put("mobile", phone));
+							result.setMsg("验证码发送成功");
+							
 							RedisUtils.set(phone+mobileftcode, code, Long.parseLong(mobilesendcodeexpir));
 							//这里需要改
 							RedisUtils.set(phone+mobileftcode+"times", ++codetimes, DateUtils.getTimeValue());
 						} catch (Exception e) {
 							log.error("短信验证码功能失败");
 							log.error(e.toString());
-							map.put("code", "888");
-							map.put("message", "验证码发送失败");
-							map.put("ftcode", "验证码发送失败");
+							result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+							result.setSuccess(false);
+							result.setMsg("服务器异常");
 						}
 					}else{
-						 map.put("code", "888");
-						 map.put("message", "请等待"+mobileinterval+"s后发送");
-						 map.put("phone", "请等待"+mobileinterval+"s后发送");
+						 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+						 result.setSuccess(false);
+						 result.setMsg("请等待"+mobileinterval+"s后再次点击");
 					}
 				 }else{
-					 map.put("code", "888");
-					 map.put("message", "验证码已发送多次，请查收短信");
-					 map.put("phone", "验证码已发送多次，请查收短信");
+					 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					 result.setSuccess(false);
+					 result.setMsg("验证码已发送多次，请查收短信");
 				 }
 			}else{
-				map.put("code", "888");
-				map.put("message", "参数错误");
-				map.put("phone", "手机号码错误");
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				 result.setSuccess(false);
+				 result.setMsg("手机号码格式错误");
 				
 			}
 			
-		return map;
+		return result;
 	}
 	
 	/**
@@ -841,8 +747,8 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class,propagation=Propagation.REQUIRED,isolation=Isolation.SERIALIZABLE)
-	public Map<String, Object> chgPasswd(String passwd, String passwdA,HttpServletRequest request) throws EzaishengUCException {
-		Map<String,Object> map=new HashMap<String,Object>();
+	public Result chgPasswd(String passwd, String passwdA,HttpServletRequest request) throws EzaishengUCException {
+		Result result=Result.failure();	
 		log.info("修改密码  passwd="+passwd+" &passwdA="+passwdA);
 		if(StringUtils.isNotEmpty(passwd)){
 			if(StringUtils.isNotEmpty(passwdA)){
@@ -852,84 +758,86 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 					@SuppressWarnings("unchecked")
 					RedisResult<String> mobileres=(RedisResult<String>) RedisUtils.get(doFtCodde,String.class);
 					if(mobileres!=null&&mobileres.getResult()!=null&&mobileres.getCode()==RedisConstants.SUCCESS){
-						Map<String,Object> mp=new HashMap<String,Object>();
-						mp.put("mobile", mobileres.getResult());
-						mp.put("password", passwd);
 						RedisUtils.del(doFtCodde);
 						int a=0;
 						try {
-							a=ezs_userMapper.updateUserPwdByMobile(mp);
+							a=ezs_userMapper.modifyPassword(mobileres.getResult(),MD5Util.md5Encode(passwd).toLowerCase());
 						} catch (Exception e) {
 							log.error("修改密码失败",e);
 						}
 						if(a>=1){
-							map.put("code", "000");
-							map.put("message", "操作成功");
+							 result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							 result.setSuccess(true);
+							 result.setMsg("操作成功");
 						}else{
-							map.put("code", "999");
-							map.put("message", "操作异常");
+							result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+							result.setSuccess(false);
+							result.setMsg("操作异常");
 							throw new EzaishengUCException("手机号修改异常");
 						}
 					}else{
-						map.put("code", "999");
-						map.put("message", "操作异常");
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+						result.setSuccess(false);
+						result.setMsg("操作异常");
 					}
 					
 				}else{
-					map.put("code", "888");
-					map.put("passwdA", "密码和确认密码必须相同");
-					map.put("message", "密码和确认密码必须相同");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("密码和确认密码必须相同");
 				}
 			}else{
-				map.put("code", "888");
-				map.put("passwdA", "确认密码不能为空");
-				map.put("message", "确认密码不能为空");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("确认密码不能为空");
 			}
 		}else{
-			map.put("code", "888");
-			map.put("passwd", "密码不能为空");
-			map.put("message", "密码不能为空");
+			
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("密码不能为空");
 		}
-		log.info("修改密码结果：code="+map.get("code")+" &passwd="+map.get("message"));
-		return map;
+		log.info("修改密码结果：code="+result.getErrorcode()+" &passwd="+result.getMsg());
+		return result;
 	}
 
 	/**
 	 * 检查用户名是否存在
 	 */
 	@Override
-	public Map<String,Object> checkUserName(String userName) {
-		Map<String,Object> map=new HashMap<String, Object>();
+	public Result checkUserName(String userName) {
+		Result result=Result.failure();
 		log.info("检验账号:userName="+userName);
 		if(StringUtils.isEmpty(userName)){
-			map.put("code", "888");
-			map.put("userName", "请输入6-20位以内数字或字母！");
-			map.put("message", "请输入6-20位以内数字或字母！");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入6-20位以内数字或字母!");
 		}else if(!Tools.paramValidate(userName, 0)){
-			map.put("code", "888");
-			map.put("userName", "账号格式错误");
-			map.put("message", "账号格式错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("账号格式错误");
 		}else{
 			List<ezs_user>  count=null;
 				try {
 					count=ezs_userMapper.getUserInfoByUserNameFromBack(userName);
 					if(count!=null&&count.size()>0){
 						//可以注册
-						map.put("code", "000");
-						map.put("userName", "账号不存在");
-						map.put("message", "账号不存在");
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+						result.setSuccess(false);
+						result.setMsg("账号格式错误");
 					}else{
-						map.put("code", "888");
-						map.put("userName", "账号已经存在");
-						map.put("message", "账号已经存在");
+						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						result.setSuccess(true);
+						result.setMsg("户名存在");
 					}
 				} catch (Exception e) {
-					map.put("code", "999");
-					map.put("message", "操作异常");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setSuccess(false);
+					result.setMsg("系统错误");
 				}
 		}
-		log.info("检验账号结果:code="+map.get("code")+" &message="+map.get("message"));
-		return map;
+		log.info("检验账号结果:code="+result.getErrorcode()+" &message="+result.getMsg());
+		return result;
 	}
 	/**
 	 * 检查手机号码是否存在
@@ -938,7 +846,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	public Result checkMobile(String mobile) {
 		Result result=Result.failure();
 		if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("格式有误，请输入正确的手机号码");
 		}else{
@@ -951,7 +859,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 						result.setMsg("该手机号可用");
 						//可以注册
 					}else{
-						result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 						result.setSuccess(false);
 						result.setMsg("手机号码已经被注册");
 					}
@@ -968,11 +876,11 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	 * 检查修改密码前的验证码(忘记密码模块修改密码)
 	 */
 	@Override
-	public Map<String, Object> checkFtCode(String mobile, String code,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public Result checkFtCode(String mobile, String code,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		log.info("修改密码前验证验证码：mobile="+mobile+"  &code="+code);
-		Map<String,Object> map=null;
-		map=checkFtCodeParam(mobile, code);
-		if(map.size()==0){
+		Result result =Result.failure();
+		result=checkFtCodeParam(mobile, code);
+		if(result.getSuccess()){
 			@SuppressWarnings("unchecked")
 			RedisResult<String> ftcode=(RedisResult<String>) RedisUtils.get(mobile+"FTCODE",String.class);
 			if(ftcode!=null&&ftcode.getResult()!=null&&ftcode.getCode()==RedisConstants.SUCCESS){
@@ -994,49 +902,53 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 							log.info("用户"+mobile+"：修改密码前手机号码信息保存到redis失败");
 						}
 					}
-						map.put("code", "000");
-						map.put("message", "操作成功");
+					result.setMsg("操作成功");
+					//删除缓存中验证码
+					RedisUtils.del(mobile+"FTCODE");
+					RedisUtils.del(mobile+"FTSENDTIME");
 				}else{
-					map.put("code", "888");
-					map.put("message", "参数错误");
-					map.put("ftcode", "验证码错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("验证码错误");
 				}
-				//删除缓存中验证码
-				RedisUtils.del(mobile+"FTCODE");
-				RedisUtils.del(mobile+"FTSENDTIME");
+				
 			}else{
-				map.put("code", "888");
-				map.put("message", "参数错误");
-				map.put("ftcode", "验证码失效");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("验证码失效");
 			}
 		}else{
-			map.put("code", "888");
-			map.put("message", "参数错误");
+			return result;
 		}
-		return map;
+		return result;
 	}
-	Map<String, Object> checkFtCodeParam(String mobile, String code){
-		Map<String,Object> map=new HashMap<String,Object>();
+	Result checkFtCodeParam(String mobile, String code){
+		Result result=Result.success();
 		if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
-			map.put("phone", "手机号码格式错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("手机号码格式错误");
 		}
 		if(StringUtils.isEmpty(code)){
-			map.put("ftcode", "验证码不能为空");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("验证码不能为空");
 		}
-		return map;
+		return result;
 	}
 	/**
 	 * 修改手机号码
 	 */
 	@Override
-	public Map<String, Object> checkUpMoCode(String mobile, String code,User_Proinfo upi,HttpServletRequest request) throws Exception{
+	@Transactional(rollbackFor=Exception.class,propagation=Propagation.REQUIRED,isolation=Isolation.SERIALIZABLE)
+	public Result checkUpMoCode(String mobile, String code,ezs_user upi,HttpServletRequest request) throws Exception{
 		if(upi==null){
 			throw new EzaishengUCException("系统异常");
 		}
 		log.info("修改手机号码前验证验证码：mobile="+mobile+"  &code="+code);
-		Map<String,Object> map=null;
-		map=checkUpMoCodeParam(mobile, code);
-		if(map.size()==0){
+		Result result=Result.success();
+		result=checkUpMoCodeParam(mobile, code);
+		if(result.getSuccess()){
 			@SuppressWarnings("unchecked")
 			RedisResult<String> ftcode=(RedisResult<String>) RedisUtils.get(mobile+"UPMOCODE",String.class);
 			if(ftcode!=null&&ftcode.getResult()!=null&&ftcode.getCode()==RedisConstants.SUCCESS){
@@ -1044,139 +956,93 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 				if(temCode.trim().equals(code.trim())){
 						//正确  进入下一步
 					ezs_user uupi=new ezs_user();
-						uupi.setName(upi.getName());
-						uupi.setPhone(mobile);
-						int temaa=ezs_userinfoMapper.updateByPrimaryKeySelective(uupi);
+						uupi.setName(mobile);
+				    ezs_userinfo info=new ezs_userinfo();
+				    info.setPhone(mobile);
+						int temaa=ezs_userinfoMapper.updateByPrimaryKeySelective(info);
+						int temaa1=ezs_userMapper.updateByPrimaryKeySelective(uupi);
 						if(temaa==1){
 							//更新缓存
-							upi.getUserInfo().setPhone(mobile);
+							upi.setName(mobile);
+							upi.getEzs_userinfo().setPhone(mobile);
 							RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
-							map.put("code", "000");
-							map.put("message", "操作成功");
+							result.setSuccess(true);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							result.setMsg("操作成功");
 						}else{
-							map.put("code", "999");
-							map.put("message", "系统异常");
+							result.setSuccess(false);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+							result.setMsg("系统错误");
 						}
 						
 				}else{
-					map.put("code", "888");
-					map.put("message", "参数错误");
-					map.put("upmocode", "验证码错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("验证码错误");
 				}
 				//删除缓存中验证码
 				RedisUtils.del(mobile+"UPMOCODE");
 			}else{
-				map.put("upmocode", "请重新获取验证码");
-				map.put("code", "888");
-				map.put("message", "参数错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请重新获取验证码");
 			}
 		}else{
-			map.put("code", "888");
-			map.put("message", "参数错误");
+			return result;
 		}
-		return map;
+		return result;
 	}
-	Map<String, Object> checkUpMoCodeParam(String mobile, String code){
-		Map<String,Object> map=new HashMap<String,Object>();
+	Result checkUpMoCodeParam(String mobile, String code){
+		Result result=Result.success();
 		if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
-			map.put("mobile", "手机号码格式错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("手机号码格式错误");
 		}
 		if(StringUtils.isEmpty(code)){
-			map.put("upmocode", "验证码不能为空");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("验证码不能为空");
 		}
-		return map;
-	}
-	
-	/**
-	 * 发送签章短信验证码
-	 * flag 为1 交易保发送合同 短信验证码 为2 小易商城发送短信验证码
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public  Map<String, Object>  sendContractCode(String phone,String code,Integer flag) {
-		Map<String, Object> map=new HashMap<String,Object>();
-		if(StringUtils.isEmpty(phone)||!Tools.paramValidate(phone, 1)){
-			map.put("status", "fail");
-			map.put("message", "格式有误，请输入正确的手机号码");
-			map.put("phone", "格式有误，请输入正确的手机号码");
-		}else{
-				//判断时间间隔
-				Long expir=Long.parseLong(mobilesendcodeexpir);
-				Long codeinterval=Long.parseLong(mobileinterval);
-				RedisResult<Long> reexpirresult=(RedisResult<Long>) RedisUtils.getExpir(phone+"JYBSC");
-				Long reexpir=0l;
-				if(reexpirresult.getCode()==RedisConstants.SUCCESS){
-					reexpir=reexpirresult.getResult();
-				}
-				if(expir-reexpir>codeinterval){
-					//间隔大于60 可以发送短信
-					// 短信内容
-					String content = "您的短信验证码:"+code.toString()+",请勿告诉他人,有效时间为10分钟!";
-					log.info("短信验证码,发送内容:"+content);
-					try {
-						//SendMobileMessage.sendMsg(phone, content);
-						map.put("status", "success");
-						map.put("message", "验证码发送成功");
-						RedisUtils.set(phone+"JYBSC", code, Long.parseLong(mobilesendcodeexpir));
-					} catch (Exception e) {
-						log.error("短信验证码功能失败");
-						log.error(e.toString());
-						map.put("status", "fail");
-						map.put("message", "验证码发送失败");
-					}
-				}else{
-					map.put("status", "fail");
-					map.put("message", "请等待"+mobileinterval+"s后再次点击");
-					map.put("phone", "请等待"+mobileinterval+"s后再次点击");
-				}
-
-			
-			
-		}
-		return map;
+		return result;
 	}
 	
 	/**
 	 * 检查修改密码前的验证码(忘记密码模块修改密码)
 	 */
 	@Override
-	public Map<String, Object> checkSCCode(String mobile, String code) throws Exception {
-		log.info("签合同验证验证码：mobile="+mobile+"  &code="+code);
-		Map<String,Object> map=null;
-		map=checkFtCodeParam(mobile, code);
-		if(map.size()==0){
+	public Result checkSCCode(String mobile, String code) throws Exception {
+		log.info("忘记密码模块修改密码：mobile="+mobile+"  &code="+code);
+		Result result=Result.failure();
+		result=checkFtCodeParam(mobile, code);
+		if(result.getSuccess()){
 			@SuppressWarnings("unchecked")
 			RedisResult<String> ftcode=(RedisResult<String>) RedisUtils.get(mobile+"JYBSC",String.class);
 			if(ftcode!=null&&ftcode.getResult()!=null&&ftcode.getCode()==RedisConstants.SUCCESS){
 				String temCode=ftcode.getResult();
 				if(temCode.trim().equals(code.trim())){
 						//正确  进入下一步
-						map.put("status", "success");
-						map.put("message", "操作成功");
+					result.setMsg("正确 进入下一步");
 				}else{
-					map.put("status", "fail");
-					map.put("message", "验证码错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("验证码错误");
 				}
 				//删除缓存中验证码
 				RedisUtils.del(mobile+"JYBSC");
 			}else{
-				map.put("status", "fail");
-				map.put("message", "验证码错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("验证码错误");
 			}
 		}else{
-			map.put("status", "fail");
-			map.put("message", "请检查手机号和验证码！");
+			return result;
 		}
-		return map;
+		return result;
 	}
 	
 	@Override
-	public ezs_user getUserInfoByUserName(String userName) {
-		
-		return ezs_userMapper.getUserInfoByUserName(userName);
-	}
-	@Override
-	public boolean userLogot(User_Proinfo upi,String cookieuserkey) throws Exception {
+	public boolean userLogot(ezs_user upi,String cookieuserkey) throws Exception {
 		if(upi!=null){
 			RedisUtils.del(cookieuserkey);
 		}
@@ -1205,6 +1071,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 
 
 	@Override
+	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
 	public Result userAddInfo(Result result, HttpServletRequest request, String userRole, String companyName,
 			String address, String area_id, String mianIndustry_id, String companyType_id, String trueName, long sex_id,
 			String tel, String email) {
@@ -1225,10 +1092,8 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			story.setAddress(address);
 			story.setCompanyName(companyName);
 			story.setAddTime(new Date());
-			story.setCompanyType_id(Long.valueOf(companyType_id));
 			story.setUserType(userRole);
-			story.setArea_id(Long.valueOf(4522011));
-			story.setMianIndustry_id(Long.valueOf(mianIndustry_id));
+			story.setArea_id(Long.valueOf(area_id));
 			story.setDeleteStatus(false);
 			story.setAssets(0.0);
 			story.setCovered(0.0);
@@ -1237,7 +1102,7 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			story.setFixed_assets(0.0);
 			story.setObtainYear(0);
 			story.setRent(false);
-			story.setStatus(1);
+			story.setStatus(0);
 			story.setyTurnover(0.0);
 			
 			
@@ -1246,14 +1111,22 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 			userinfo.setAddTime(new Date());
 			userinfo.setDeleteStatus(false);
 			userinfo.setEmail(email);
-			userinfo.setPhone(user.getPhone());
+			userinfo.setPhone(user.getName());
 			userinfo.setSex_id(sex_id);
 			userinfo.setStatus(0);
 			userinfo.setUpdateStatus(0);
 
+			String[] Industrys=mianIndustry_id.split(",");
+			String[] cmtypes=companyType_id.split(",");
+			
 			int aa = 0;
 			try {
 				long storyid = ezs_storeMapper.insert(story);
+				//主营行业部分
+				Industry(Industrys, storyid);;
+				//经营类型部分
+				companyType(cmtypes, storyid);
+				
 				long userinfoid = ezs_userinfoMapper.insert(userinfo);
 				user.setUserInfo_id(userinfoid);
 				user.setStore_id(storyid);
@@ -1283,6 +1156,19 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 		}
 
 		return result;
+	}
+	
+	private void Industry(String[] Industrys,long store){
+		ezs_industry_dictMapper.delIndustryDictByStoreId(store);
+		for (String long1 : Industrys) {
+			ezs_industry_dictMapper.insert(new ezs_industry_dict(store, Long.valueOf(long1)));
+		}
+	}
+	private void companyType(String[] cmtypes,long store){
+		for (String long1 : cmtypes) {
+			ezs_companyType_dictMapper.insert(new ezs_companyType_dict(store, Long.valueOf(long1)) );
+		}
+		
 	}
 	
 	private Result checkAdduserinfo(Result result, HttpServletRequest request,
@@ -1365,5 +1251,275 @@ public void remberPath(HttpServletRequest request,Map<String,Object> result,Http
 	}
 
 
+	@Override
+	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
+	public Result upUserInfo(HttpServletRequest request,ezs_user ezsuser,String typeval,LinkUserVo linkvo) {
+		Result result=Result.success();
+		if(Tools.isEmpty(typeval)){
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+			return result;
+		}
+		ezs_userinfo upuser=new ezs_userinfo();
+		upuser.setId(ezsuser.getEzs_userinfo().getId());
+		
+		ezs_user uupi=new ezs_user();
+		
+		switch (typeval) {
+		case "truename":
+			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 3)){
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("真实姓名格式不正确！");
+			}else{
+				uupi.setTrueName(linkvo.getTruename());
+				ezs_userMapper.updateByPrimaryKeySelective(uupi);
+			}
+			
+			break;
+		case "sex":
+			upuser.setSex_id(linkvo.getSex());
+			ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+			break;
+		case "position":
+			upuser.setPosition_id(linkvo.getPosition());
+			ezs_position ezsposition=ezs_positionMapper.selectByStoryid(ezsuser.getStore_id());
+			if(null==ezsposition){
+				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+			}else{
+				ezsposition.setName(linkvo.getPositionval());
+				ezs_positionMapper.updateByPrimaryKeySelective(ezsposition);
+			}
+			break;
+		case "tel":
+			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 1)){
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("电话号格式不正确！");
+			}else{
+				upuser.setTel(linkvo.getTel());
+				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+			}
+			break;
+		case "email":
+			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 2)){
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("邮箱格式不正确！");
+			}else{
+				upuser.setTel(linkvo.getTel());
+				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+			}
+			break;
+		case "qq":
+			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 6)){
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("qq号格式不正确！");
+			}else{
+				upuser.setTel(linkvo.getTel());
+				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+			}
+			break;
+		default:
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+			break;
+		}
+		try {
+			ezsuser=ezs_userMapper.getUserInfoByUserNameFromBack(ezsuser.getName()).get(0);
+			RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), ezsuser, Long.parseLong(redisuserkeyexpir));
+		} catch (NumberFormatException e) {
+			log.info("h5设置个人资料"+ezsuser.getName()+"错误"+e.toString());
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		
+		return result;
+	}
+
+
+	@Override
+	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
+	public Result upStoreInfo(HttpServletRequest request,ezs_store store,ezs_user upi) {
+		Result result=upcomvali(request,store);
+		if(result.getSuccess()){
+				String address = request.getParameter("address");// 经营地址
+				String assets = request.getParameter("assets");// 总资产
+				String companyName = request.getParameter("companyName");// 企业名称
+				String covered = request.getParameter("covered");// 占地面积
+				String device_num = request.getParameter("device_num");// 设备数量
+				String employee_num = request.getParameter("employee_num");// 员工数量
+				String fixed_assets = request.getParameter("fixed_assets");// 固定资产
+				String obtainYear = request.getParameter("obtainYear");// 实际控制人从业年限
+				String rent = request.getParameter("rent");// 租用
+				String yTurnover = request.getParameter("yTurnover");//// 年营业额
+				
+				String area_id = request.getParameter("area_id");// 经营地址区县
+
+				String companyTypes = request.getParameter("companyType_id");// 公司类型
+				String mianIndustrys = request.getParameter("mianIndustry_id");// 主营行业
+				
+				String[] Industrys=mianIndustrys.split(",");
+				String[] cmtypes=companyTypes.split(",");
+				
+				try {
+					//主营行业部分
+					Industry(Industrys, upi.getStore_id());;
+					//经营类型部分
+					companyType(cmtypes, upi.getStore_id());
+				
+			    store.setArea_id(Long.valueOf(area_id));
+				store.setId(upi.getStore_id());
+				store.setAddress(address);
+				store.setCompanyName(companyName);
+				store.setyTurnover(Double.valueOf(yTurnover));
+				store.setCovered(Double.valueOf(covered));
+				store.setDevice_num(Integer.valueOf(device_num));
+				store.setEmployee_num(Integer.valueOf(employee_num));
+				store.setAssets(Double.valueOf(assets));
+				store.setFixed_assets(Double.valueOf(fixed_assets));
+				store.setObtainYear(Integer.valueOf(obtainYear));
+				store.setRent(Boolean.valueOf(rent));
+				
+				ezs_storeMapper.updateByPrimaryKeySelective(store);
+				upi=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+				RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
+				result.setMsg("保存成功");
+			} catch (Exception e) {
+				log.info("h5设置公司资料"+upi.getName()+"错误"+e.toString());
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("参数错误");
+			}
+		}
+		
+		return result;
+	}
+		
+
+	static Result upcomvali(HttpServletRequest request, ezs_store store) {
+		Result result = Result.success();
+		String address = request.getParameter("address");// 经营地址
+		String assets = request.getParameter("assets");// 总资产
+		String companyName = request.getParameter("companyName");// 企业名称
+		String covered = request.getParameter("covered");// 占地面积
+		String device_num = request.getParameter("device_num");// 设备数量
+		String employee_num = request.getParameter("employee_num");// 员工数量
+		String fixed_assets = request.getParameter("fixed_assets");// 固定资产
+		String obtainYear = request.getParameter("obtainYear");// 实际控制人从业年限
+		String rent = request.getParameter("rent");// 租用
+		String yTurnover = request.getParameter("yTurnover");//// 年营业额
+
+		String companyTypes = request.getParameter("companyType_id");// 公司类型
+		String mianIndustrys = request.getParameter("mianIndustry_id");// 主营行业
+
+		if (Tools.isEmpty(companyName)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入公司名称");
+		}
+		if (Tools.isEmpty(address)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入详细地址");
+		}
+		if (Tools.isEmpty(mianIndustrys)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请选择主营行业");
+		}
+		if (Tools.isEmpty(companyTypes)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请选择公司类型");
+		}
+		if (Tools.isEmpty(yTurnover)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入年营业额");
+			if (!Tools.isNum(yTurnover)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效年营业额");
+			}
+		}
+		if (Tools.isEmpty(covered)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入场地面积");
+			if (!Tools.isNum(covered)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效场地面积");
+			}
+		}
+
+		if (Tools.isEmpty(device_num)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入设备数量");
+			if (!Tools.isNum(device_num)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效设备数量");
+			}
+		}
+
+		if (Tools.isEmpty(employee_num)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入员工数量");
+			if (!Tools.isNum(employee_num)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效员工数量");
+			}
+		}
+		if (Tools.isEmpty(assets)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入总资产");
+			if (!Tools.isNum(assets)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效总资产");
+			}
+		}
+
+		if (Tools.isEmpty(fixed_assets)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入固定资产");
+			if (!Tools.isNum(fixed_assets)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效固定资产");
+			}
+		}
+
+		if (Tools.isEmpty(obtainYear)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入实际控制人从业年限");
+			if (!Tools.isNum(obtainYear)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效实际控制人从业年限");
+			}
+		}
+
+		if (Tools.isEmpty(rent)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请选择是否租用");
+		}
+		return result;
+	}
+	
+	
 	
 }

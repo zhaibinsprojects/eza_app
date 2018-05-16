@@ -25,4 +25,9 @@ public class AreaServiceImpl implements AreaService{
 		return ezs_areaMapper.getAreaListByParId(areaid);
 	}
 
+	@Override
+	public ezs_area getAreaById(long areaid) {
+		return ezs_areaMapper.selectByPrimaryKey(areaid);
+	}
+
 }

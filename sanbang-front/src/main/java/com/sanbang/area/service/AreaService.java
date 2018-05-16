@@ -19,4 +19,6 @@ public interface AreaService {
      * @return
      */
     List<ezs_area> getAreaListByParId(long areaid);
+    
+    ezs_area  getAreaById(long areaid);
 }

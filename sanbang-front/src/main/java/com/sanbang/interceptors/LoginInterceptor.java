@@ -168,7 +168,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 	 * @throws IOException
 	 */
 	private boolean judgeUri(ezs_user upi,String saveLinkInfoUrl,String userKey,HttpServletResponse response,HttpServletRequest request) throws IOException{
-		if(upi.getStatus()==null||upi.getStatus()==0){
+		if(upi.getDeleteStatus()){
 			if(upi.getLastLoginDate().getTime()*1000l>1479052799000l||
 					(StringUtils.isEmpty(upi.getTrueName())&&upi.getLastLoginDate().getTime()*1000l<1479052799000l)){
 				log.info("用户信息未记入缓存 拦截 并重定向到登陆页");

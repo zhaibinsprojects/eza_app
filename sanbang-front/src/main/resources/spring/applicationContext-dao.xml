@@ -42,6 +42,7 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_storeMapper" />
 	</bean>
+	
 	<!--地址接口-->
 	<bean id="ezs_areaMapper" parent="baseMapper">
 		<property name="mapperInterface"
@@ -87,6 +88,28 @@
 	<bean id="ezs_accessoryMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_accessoryMapper" />
+	</bean>
+	
+	<!--字典接口-->
+	<bean id="ezs_dictMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_dictMapper" />
+	</bean>
+	
+	<!--企业类型接口-->
+	<bean id="ezs_companyType_dictMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_companyType_dictMapper" />
+	</bean>
+	<!--主营行业接口-->
+	<bean id="ezs_industry_dictMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_industry_dictMapper" />
+	</bean>
+	<!--职位接口-->
+	<bean id="ezs_positionMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_positionMapper" />
 	</bean>
 	
 </beans>

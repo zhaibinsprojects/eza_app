@@ -21,7 +21,7 @@ import com.sanbang.vo.MessageDictionary;
 
 @Controller
 @RequestMapping("/userRegist")
-public class RegistController {
+public class UserRegistController {
 
 	
 	private  static final String view="/memberuser/regist/";
@@ -60,7 +60,7 @@ public class RegistController {
 	
 	
 	/**
-	 * 用户注册发送修改手机号码的验证码
+	 * 用户注册发送的验证码
 	 * @param phone
 	 * @param request
 	 * @throws Exception
@@ -88,25 +88,7 @@ public class RegistController {
 	
 	
 	
-	/**
-	 * 用户注册发送修改手机号码的验证码
-	 * @param phone
-	 * @param request
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/sendUpMoCode")
-	@ResponseBody
-	public Map<String,Object> sendUpMoCode(@RequestParam(value="mobile",required=false) String mobile, HttpServletRequest request) throws Exception {  
-		
-		StringBuilder code = new StringBuilder();  
-		Random random = new Random();  
-		// 6位验证码  
-		for (int i = 0; i < 6; i++) {  
-			code.append(String.valueOf(random.nextInt(10)));  
-		}  
-		Map<String,Object> map=userProService.sendUpMoCode(mobile,code.toString());
-		return map;
-	}  
+
 	
 	
 	/**
@@ -128,9 +110,6 @@ public class RegistController {
 			@RequestParam(value="mobile",required=false) String mobile,
 			@RequestParam(value="code",required=false) String code,
 			HttpServletRequest request,HttpSession session,HttpServletResponse response) throws Exception{
-//		username="t000007";
-//		passwd="14e1b600b1fd579f47433b88e8d85291";
-//		mobile="13717706563";
 		Result result=Result.failure();
 		String myip=IpUtils.getIpAddr(request);
 		result= userProService.userAdd(mobile, passwd,passwdA, mobile,code,myip,null,session,request,response);
@@ -166,6 +145,8 @@ public class RegistController {
 		result=userProService.userAddInfo(result, request, userRole, companyName, address, area_id, mianIndustry_id, companyType_id, trueName, sex_id, tel, email);
 		return result;
 	}
+	
+	
 	
 	
 }

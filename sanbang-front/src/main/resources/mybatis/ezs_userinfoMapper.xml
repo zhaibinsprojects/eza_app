@@ -14,11 +14,12 @@
     <result column="position_id" property="position_id" jdbcType="BIGINT" />
     <result column="sex_id" property="sex_id" jdbcType="BIGINT" />
     <result column="QQ" property="QQ" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
     <result column="updateStatus" property="updateStatus" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, email, enable, entryTime, phone, status, depart_id, position_id, 
-    sex_id, QQ, updateStatus
+    sex_id, QQ, updateStatus,tel
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -36,12 +37,12 @@
       email, enable, entryTime, 
       phone, status, depart_id, 
       position_id, sex_id, QQ, 
-      updateStatus)
+      updateStatus,tel)
     values (null, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{email,jdbcType=VARCHAR}, #{enable,jdbcType=BIT}, #{entryTime,jdbcType=TIMESTAMP}, 
       #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{depart_id,jdbcType=BIGINT}, 
       #{position_id,jdbcType=BIGINT}, #{sex_id,jdbcType=BIGINT}, #{QQ,jdbcType=VARCHAR}, 
-      #{updateStatus,jdbcType=INTEGER})
+      #{updateStatus,jdbcType=INTEGER},#{tel})
   </insert>
   <insert id="insertSelective" parameterType="ezs_userinfo"  >
     insert into ezs_userinfo

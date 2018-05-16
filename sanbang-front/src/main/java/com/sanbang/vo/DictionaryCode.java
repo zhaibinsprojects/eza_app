@@ -151,4 +151,5 @@ public class DictionaryCode {
      * 查询发票详情失败
      */
     public static final int ERROR_WEB_QUERY_BILL_INFO_FAIL = 110014;
+
 }

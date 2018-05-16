@@ -17,4 +17,6 @@ public interface ezs_positionMapper {
     int updateByPrimaryKeySelective(ezs_position record);
 
     int updateByPrimaryKey(ezs_position record);
+    
+    ezs_position selectByStoryid(Long storeid);
 }

@@ -37,12 +37,6 @@ public interface ezs_userMapper {
      */
     ezs_userinfo selectUserinfoByuserName(String username);
     
-    /**
-	 * 根据用户名查询用户的信息
-	 * @param userName
-	 * @return
-	 */
-    ezs_user getUserInfoByUserName(String userName);
 
 	/**
 	 * 修改密码
@@ -63,11 +57,6 @@ public interface ezs_userMapper {
 
 	String getUserMessage(String username);
 
-	/**
-	 * 
-	 * @param mp
-	 * @return
-	 */
-	int updateUserPwdByMobile(Map<String, Object> mp);
+	
 
 }
