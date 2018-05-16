@@ -23,9 +23,9 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @return
 	 */
 	public ezs_goods getGoodsDetail(long id){
-		ezs_goods list = new ezs_goods();
-		list = ezs_goodsMapper.selectByPrimaryKey(id);
-		return list;
+		ezs_goods goods = new ezs_goods();
+		goods = ezs_goodsMapper.selectByPrimaryKey(id);
+		return goods;
 	}
 
 }
