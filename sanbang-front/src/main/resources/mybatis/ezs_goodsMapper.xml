@@ -50,6 +50,7 @@
     <result column="util_id" property="util_id" jdbcType="BIGINT" />
     <result column="classOfFinish_id" property="classOfFinish_id" jdbcType="BIGINT" />
     <result column="lockStatus" property="lockStatus" jdbcType="INTEGER" />
+    <result column="lastModifyDate" property="lastModifyDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
@@ -57,7 +58,7 @@
     inventory, keyword, lipolysis, memberLook, name, price, protection, purpose, recommend, 
     recommend_time, seo_description, source, status, tensile, validity, water, area_id, 
     color_id, form_id, goodClass_id, goods_main_photo_id, logistics_id, quality_id, region_id, 
-    supply_id, user_id, util_id, classOfFinish_id, lockStatus
+    supply_id, user_id, util_id, classOfFinish_id, lockStatus,lastModifyDate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -85,7 +86,7 @@
       color_id, form_id, goodClass_id, 
       goods_main_photo_id, logistics_id, quality_id, 
       region_id, supply_id, user_id, 
-      util_id, classOfFinish_id, lockStatus
+      util_id, classOfFinish_id, lockStatus,lastModifyDate
       )
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{addess,jdbcType=VARCHAR}, #{ash,jdbcType=VARCHAR}, #{bending,jdbcType=VARCHAR}, 
@@ -103,6 +104,7 @@
       #{goods_main_photo_id,jdbcType=BIGINT}, #{logistics_id,jdbcType=BIGINT}, #{quality_id,jdbcType=BIGINT}, 
       #{region_id,jdbcType=BIGINT}, #{supply_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
       #{util_id,jdbcType=BIGINT}, #{classOfFinish_id,jdbcType=BIGINT}, #{lockStatus,jdbcType=INTEGER}
+      #{lastModifyDate,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="ezs_goods" >
@@ -252,6 +254,9 @@
       <if test="lockStatus != null" >
         lockStatus,
       </if>
+      <if test="lastModifyDate != null" >
+        lastModifyDate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -397,6 +402,9 @@
       </if>
       <if test="lockStatus != null" >
         #{lockStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+ 		#{ lastModifyDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -544,6 +552,9 @@
       <if test="lockStatus != null" >
         lockStatus = #{lockStatus,jdbcType=INTEGER},
       </if>
+      <if test="lastModifyDate != null" >
+        lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -596,6 +607,7 @@
       util_id = #{util_id,jdbcType=BIGINT},
       classOfFinish_id = #{classOfFinish_id,jdbcType=BIGINT},
       lockStatus = #{lockStatus,jdbcType=INTEGER}
+      lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
     where id = #{id,jdbcType=BIGINT}
   </update>
   <!-- 商品查询 -->
@@ -620,7 +632,9 @@
   	select 
     <include refid="Base_Column_List" />
     from ezs_goods a
-    where user_id = #{sellerId}
+    where status=#{status} and user_id=#{sellerId} 
+    order by
+    lastModifyDate  desc
   </select>
   
 </mapper>

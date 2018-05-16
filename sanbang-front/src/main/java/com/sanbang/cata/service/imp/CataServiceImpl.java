@@ -22,12 +22,9 @@ public class CataServiceImpl implements CataService{
 	@Resource(name="ezs_cataMapper")
 	private com.sanbang.dao.ezs_cataMapper ezs_cataMapper;
 	
-	public List getListForClass(){
+	public List getOnelevelList(){
 		List<ezs_goods_class> list = new ArrayList();
-		
-		list = ezs_cataMapper.getListForClass();
-		
-		
+		list = ezs_cataMapper.getOnelevelList();
 		return list;
 	}
 	

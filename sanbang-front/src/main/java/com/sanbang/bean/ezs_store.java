@@ -6,10 +6,12 @@ import java.util.Date;
 
 public class ezs_store implements Serializable {
 
+
 	/**
 	 * 商城表
 	 */
-	private static final long serialVersionUID = 5190649705433629576L;
+	private static final long serialVersionUID = 8401813899561112150L;
+
 
 	private Long id;
 

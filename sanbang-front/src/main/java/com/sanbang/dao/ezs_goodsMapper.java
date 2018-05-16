@@ -27,5 +27,5 @@ public interface ezs_goodsMapper {
     
     int goodsIntroduceCount();
 
-	List<ezs_goods> selectGoodsListBySellerId(Long sellerId);
+	List<ezs_goods> selectGoodsListBySellerId(Long sellerId, int status);
 }

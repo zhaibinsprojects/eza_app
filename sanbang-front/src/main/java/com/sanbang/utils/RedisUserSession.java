@@ -148,5 +148,42 @@ public class RedisUserSession {
 			return false;
 		}
 	}
+	
+	/**
+	 * 若存在当前用户则 返回UserProInfo 不存在 返回null
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public static ezs_user getAuthUserInfo(HttpServletRequest request){
+		if(null==request){
+			return null;
+		}
+		Cookie [] cookies=request.getCookies();
+		String authkey="";
+		if(cookies!=null){
+			for(Cookie ck:cookies){
+				if(ck.getName().equals("USEAUTHCARD")){
+					authkey=ck.getValue();
+					// String tempCached=(String)arg0.getSession().getAttribute("USERKEY");
+					@SuppressWarnings("unchecked")
+					RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get(authkey,ezs_user.class);
+					if(tempCached!=null&&tempCached.getCode()==RedisConstants.SUCCESS){
+						//缓存中已经存在了  说明该用户已经登陆了
+						ezs_user result = tempCached.getResult();
+						result.setAuthkey(authkey);
+						return result;
+					}else{
+						// log.info("获取用户信息,缓存中用户信息过期或异常");
+						break;
+					}
+				}
+			}
+			log.debug("获取用户信息,cookie中未有身份标识.cookie:"+cookies.toString());
+		}
+		log.debug("获取用户信息,未找到cookie");
+		return null;
+	}
 
 }

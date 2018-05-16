@@ -55,6 +55,9 @@ public class UserSetupAuthController {
 	@Value("${consparam.mobile.sendtimes}")
 	private String mobilesendtimes;
 	
+	@Value("${consparam.cookie.userauthcard}")
+	private String userauthcard;
+	
 	@Autowired
 	private  DictService dictService;
 	
