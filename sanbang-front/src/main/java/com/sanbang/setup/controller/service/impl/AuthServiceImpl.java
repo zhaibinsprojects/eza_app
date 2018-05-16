@@ -15,7 +15,7 @@ import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
-import com.sanbang.setup.controller.service.AuthService;
+import com.sanbang.setup.service.AuthService;
 import com.sanbang.utils.RandomStr32;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;

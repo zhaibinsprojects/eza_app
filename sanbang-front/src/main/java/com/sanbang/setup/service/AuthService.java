@@ -1,4 +1,4 @@
-package com.sanbang.setup.controller.service;
+package com.sanbang.setup.service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
