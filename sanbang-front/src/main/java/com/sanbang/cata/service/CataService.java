@@ -13,6 +13,6 @@ public interface CataService {
 	/**
 	 * 查询一级分类
 	 */
-	public List getListForClass();
+	public List getOnelevelList();
 	
 }

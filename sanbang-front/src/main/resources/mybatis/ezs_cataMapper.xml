@@ -7,8 +7,8 @@
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
   </resultMap>
   <!-- 查询品类，一级分类 -->
-  <select id="getListForClass" resultType="ezs_goods_class" parameterType="java.lang.String" >	<!-- 返回类型是list时，resultType的值是list内存储的类型 -->
-    select * from ezs_goods_class gc where gc.parent_id = '1'
+  <select id="getOnelevelList" resultType="ezs_goods_class" parameterType="java.lang.String" >
+    select * from ezs_goods_class gc where gc.parent_id = ''
   </select>
   
 </mapper>
