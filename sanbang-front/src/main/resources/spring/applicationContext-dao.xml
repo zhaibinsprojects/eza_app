@@ -83,6 +83,11 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_payinfoMapper" />
 	</bean>
+	<!-- 附件表详情信息 -->
+	<bean id="ezs_accessoryMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_accessoryMapper" />
+	</bean>
 	
 </beans>
 

@@ -76,6 +76,9 @@
 			<mvc:exclude-mapping path="/cata/**" />
 			<mvc:exclude-mapping path="/goods/**" />
 			<mvc:exclude-mapping path="/area/**" />
+			<mvc:exclude-mapping path="/seller2/**" />
+			<mvc:exclude-mapping path="/seller3/**" />
+			<mvc:exclude-mapping path="/seller/**" />
 			<bean class="com.sanbang.interceptors.LoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

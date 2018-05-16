@@ -13,6 +13,22 @@
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
     <result column="order_no" property="order_no" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="infoResultMap" type="ezs_invoice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
+    <result column="express_no" property="express_no" jdbcType="VARCHAR" />
+    <result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
+    <result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
+    <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <association property="accessory" javaType="ezs_invoice">
+		<id property="id" column="id"/>
+		<result property="path" column="path"/>
+    </association>
+  </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, express_name, express_no, express_time, invoice_status, 
     receipt_id, user_id, order_no
@@ -150,4 +166,53 @@
       order_no = #{order_no,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+    
+  <!-- 通过id查询开票信息 -->
+   <select id="selectInvoiceListInfoById" resultType="ezs_invoice"  >
+    	select * from 	ezs_invoice where user_id = #{userId}						
+  </select>
+  
+  <!-- 根据订单编号和签订时间查询开票记录 -->
+   <select id="selectInvoiceByIdAndDate" resultType="ezs_invoice"  >
+    	select * from 	ezs_invoice invoice
+    	<where>
+			 <if test="orderno != null" >
+	        	order_no = #{orderno,jdbcType=VARCHAR},
+	      	</if>
+			 <if test="startTime != null and endTime != null" >
+	        	and (unix_timestamp(invoice.addTime)&gt;=unix_timestamp(#{startTime}) and unix_timestamp(invoice.addTime)&lt;unix_timestamp(#{endTime}))
+	      	</if>
+    	</where>
+  </select>
+	 
+   <!-- 通过id查询开票信息条数 -->
+   <select id="selectCount"  >
+    	select count(*) from ezs_invoice 						
+  </select>
+  
+   <!-- 通过id查询开票信息 -->
+   <select id="selectInvoiceInfoById"  resultMap="infoResultMap" >
+    	select ein.id, ein.express_time,ein.express_name,ein.express_no,
+    	ein.invoice_status, eac.path
+    	from 	ezs_invoice ein,ezs_accessory eac where ein.user_id = eac.user_id
+    	and 	ein.id={invoiceId}				
+  </select>
+  
+   <!-- 根据订单签订时间查询合同 -->
+   <select id="selectInvoiceByDate" resultType="ezs_invoice"  >
+    	select * from 	ezs_invoice invoice where
+	     (unix_timestamp(invoice.express_time)&gt;=unix_timestamp(#{startTime}) 
+	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
+   </select>
+   <!-- 根据订单编号查询合同 -->
+   <select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
+   		select * from ezs_invoice where order_no = #{orderno}
+   </select>
+   <!-- 根据订单编号查询合同详细信息 -->
+   <select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
+   		select * from ezs_invoice where order_no = #{orderno}
+   </select>
+  
+  
 </mapper>

@@ -32,7 +32,7 @@ public interface ezs_storeMapper {
     List<ezs_store> getstoreInfoByName(@Param("companyName")String companyName);
     
     /**
-     * 通过id获取store 集合
+     * 通过id获取store 
      * @param store_id
      * @return
      */

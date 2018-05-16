@@ -164,18 +164,18 @@
   
   <!-- 通过id查询合同信息 -->
    <select id="selectPactBySellerId" resultType="ezs_pact"  >
-    	select * from 	ezs_pact where id = #{sellerUser_id}						
+    	select * from 	ezs_pact where id = #{sellerId}						
   </select>
-  <!-- 根据订单编号和签订时间查询合同 -->
-   <select id="selectPactContractByIdAndDate" resultType="ezs_pact"  >
-    	select * from 	ezs_pact pact
-    	<where>
-			 <if test="orderno != null" >
-	        	orderno = #{orderno,jdbcType=VARCHAR},
-	      	</if>
-			 <if test="startTime != null and endTime != null" >
-	        	and (unix_timestamp(pact.sign_time)&gt;=unix_timestamp(#{startTime}) and unix_timestamp(pact.sign_time)&lt;unix_timestamp(#{endTime}))
-	      	</if>
-    	</where>
+  <!-- 根据订单签订时间查询合同 -->
+   <select id="selectPactByDate" resultType="ezs_pact"  >
+    	select * from 	ezs_pact pact where
+	     (unix_timestamp(pact.sign_time)&gt;=unix_timestamp(#{startTime}) 
+	     and unix_timestamp(pact.sign_time)&lt;unix_timestamp(#{endTime}))
    </select>
+   <!-- 根据订单编号查询合同 -->
+   <select id="selectPactByOrderNo" resultType="ezs_pact"> 
+   		select * from ezs_pact where order_no = #{orderno}
+   </select>
+   
+   
 </mapper>

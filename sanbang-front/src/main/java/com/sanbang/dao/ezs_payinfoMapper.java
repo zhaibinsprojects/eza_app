@@ -17,4 +17,6 @@ public interface ezs_payinfoMapper {
     int updateByPrimaryKeySelective(ezs_payinfo record);
 
     int updateByPrimaryKey(ezs_payinfo record);
+
+	ezs_payinfo selectByBillId(Long billId);
 }

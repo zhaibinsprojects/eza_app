@@ -1,18 +1,19 @@
 package com.sanbang.seller.controller;
 
-import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.sanbang.bean.ezs_pact;
 import com.sanbang.seller.service.SellerContractService;
 import com.sanbang.utils.Result;
 
-@RestController
+@Controller
 @RequestMapping("/seller")
 public class SellerContractController {
 	
@@ -45,23 +46,19 @@ public class SellerContractController {
 		Object object = sellerContractService.queryContractInfo(pactId, result, request, response);
 		return object;
 	}
-	
-	@RequestMapping("/queryContractByIdAndDate")
-	public Object queryContractByIdAndDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response){
+	/**
+	 * 根据订单编号和时间搜索合同
+	 * @param orderno
+	 * @param startTime
+	 * @param endTime
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/queryContractByIdOrDate")
+	public Object queryContractByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Object object = sellerContractService.queryContractByIdAndDate(result, orderno, startTime, endTime, request, response);
+		Object object = sellerContractService.queryContractByIdOrDate(orderno, startTime, endTime, request, response);
 		return object;
 	} 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
