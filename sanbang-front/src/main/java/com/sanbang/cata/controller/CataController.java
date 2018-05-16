@@ -13,15 +13,12 @@ import com.sanbang.cata.service.CataService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 
-
 @Controller
 @RequestMapping("/cata")
 public class CataController {
 	
 	@Autowired
 	private CataService cataService;
-	
-	
 	
 	@RequestMapping("/onelevelList")
 	@ResponseBody

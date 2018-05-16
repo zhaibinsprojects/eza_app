@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
 
 /**
  * 品类相关处理
- * 
  * @author hanlongfei
- *  
  * 2018年05月11日
  */
 @Service("cataService")
