@@ -269,7 +269,9 @@
          <!--配置-->
           <association property="config" column="user_id" select="com.sanbang.dao.ezs_userconfigMapper.selectByPrimaryKey">
          </association>
-         
+         <!--配置-->
+          <association property="config" column="user_id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
+         </association>
   </resultMap>
   
 	<!--查询用户手机号-->

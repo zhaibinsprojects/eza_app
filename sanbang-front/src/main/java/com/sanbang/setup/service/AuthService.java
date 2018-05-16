@@ -9,9 +9,12 @@ import com.sanbang.utils.Result;
 public interface AuthService {
 
 	/**
-	 * 保存公司信息
+	 * 暂存保存公司信息
 	 */
 	public Result saveComAuth(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
 	
-	
+	/**
+	 * 暂存税号
+	 */
+	public Result saveComein(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
 }

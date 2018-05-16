@@ -61,50 +61,71 @@ public class  AuthServiceImpl implements AuthService {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public Result saveComAuth(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response) {
-			result=savecomvali(request);
-			if(result.getSuccess()){
-				String companyName = request.getParameter("companyName");// 企业名称
-				String area_id = request.getParameter("area_id");// 经营地址区县
-				String address = request.getParameter("address");// 经营地址
-				String capitalPrice = request.getParameter("capitalPrice ");// 注册资本
-				String unifyCode = request.getParameter("unifyCode ");// 社会信用代码
-				String persion = request.getParameter("persion ");// 法人
-				ezs_user uupi=new ezs_user();
-				uupi.getEzs_store().setCompanyName(companyName);
-				uupi.getEzs_store().setArea_id(Long.valueOf(area_id));
-				uupi.getEzs_store().setAddress(address);
-				uupi.getEzs_store().setCapitalPrice(Double.valueOf(capitalPrice));
-				uupi.getEzs_store().setUnifyCode(unifyCode);
-				uupi.getEzs_store().setPerson(persion);
-				
-				ezs_user gupi=RedisUserSession.getAuthUserInfo(request);
-				if(null==gupi){
-				String str32=RandomStr32.getStr32();
-				String userauthcard="USEAUTHCARD"+upi.getName()+str32;
-				Cookie cookie=new Cookie(userauthcard, userauthcard);
+		public Result saveComAuth(Result result, HttpServletRequest request,ezs_user upi,
+			HttpServletResponse response) {
+		result = savecomvali(request);
+		if (result.getSuccess()) {
+			String companyName = request.getParameter("companyName");// 企业名称
+			String area_id = request.getParameter("area_id");// 经营地址区县
+			String address = request.getParameter("address");// 经营地址
+			String capitalPrice = request.getParameter("capitalPrice ");// 注册资本
+			String unifyCode = request.getParameter("unifyCode ");// 社会信用代码
+			String persion = request.getParameter("persion ");// 法人
+
+			ezs_user uupi = new ezs_user();
+			uupi.getEzs_store().setCompanyName(companyName);
+			uupi.getEzs_store().setArea_id(Long.valueOf(area_id));
+			uupi.getEzs_store().setAddress(address);
+			uupi.getEzs_store().setCapitalPrice(Double.valueOf(capitalPrice));
+			uupi.getEzs_store().setUnifyCode(unifyCode);
+			uupi.getEzs_store().setPerson(persion);
+
+			ezs_user gupi = RedisUserSession.getAuthUserInfo(request);
+
+			if (null == gupi) {
+				String str32 = RandomStr32.getStr32();
+				String userauthcard = "USEAUTHCARD" + upi.getName() + str32;
+				Cookie cookie = new Cookie(userauthcard, userauthcard);
 				cookie.setMaxAge(Integer.parseInt(cookieuserkeyexpir));
 				cookie.setPath("/");
 				upi.setUserkey(userauthcard);
-				
-				RedisResult<String> recode=null;
-				recode=(RedisResult<String>) RedisUtils.set(userauthcard,uupi, Long.parseLong(redisuserkeyexpir));
-				 //TODO
-				if(recode!=null&&recode.getCode()==RedisConstants.SUCCESS){
+
+				RedisResult<String> recode = null;
+				recode = (RedisResult<String>) RedisUtils.set(userauthcard, uupi, Long.parseLong(redisuserkeyexpir));
+				// TODO
+				if (recode != null && recode.getCode() == RedisConstants.SUCCESS) {
 					response.addCookie(cookie);
 					result.setSuccess(true);
-		    		result.setMsg("保存成功");
-		    		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				}else{
+					result.setMsg("保存成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				} else {
 					result.setSuccess(false);
-		    		result.setMsg("系统错误");
-		    		result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setMsg("系统错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 				}
+			} else {
+				gupi.getEzs_store().setCompanyName(companyName);
+				gupi.getEzs_store().setArea_id(Long.valueOf(area_id));
+				gupi.getEzs_store().setAddress(address);
+				gupi.getEzs_store().setCapitalPrice(Double.valueOf(capitalPrice));
+				gupi.getEzs_store().setUnifyCode(unifyCode);
+				gupi.getEzs_store().setPerson(persion);
+				boolean res=RedisUserSession.updateUserInfo(gupi.getAuthkey(), gupi, Long.parseLong(redisuserkeyexpir));
+				
+				if (res) {
+					result.setSuccess(true);
+					result.setMsg("保存成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				} else {
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 				}
-			
 			}
-			return result;
+
 		}
+		return result;
+	}
 		
 	Result savecomvali(HttpServletRequest request) {
 		
@@ -148,6 +169,118 @@ public class  AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入法人");
+		}
+			
+			return result;
+		}
+
+	@Override
+	public Result saveComein(Result result, HttpServletRequest request,
+			ezs_user upi, HttpServletResponse response) {
+		result = savecomeinvali(request);
+		if (result.getSuccess()) {
+			String companyName = request.getParameter("companyName");// 企业名称
+			String dutyNo = request.getParameter("dutyNo");// 税号
+			String number = request.getParameter("number ");// 开户账号
+			String phone = request.getParameter("phone");// 电话号码
+			String address = request.getParameter("address ");//单位地址
+			String bank = request.getParameter("bank");// 开户行
+
+			ezs_user uupi = new ezs_user();
+			uupi.getEzs_bill().setCompanyName(companyName);
+			uupi.getEzs_bill().setDutyNo(dutyNo);
+			uupi.getEzs_bill().setNumber(number);
+			uupi.getEzs_bill().setPhone(phone);
+			uupi.getEzs_bill().setAddress(address);
+			uupi.getEzs_bill().setBank(bank);
+			
+			ezs_user gupi = RedisUserSession.getAuthUserInfo(request);
+
+			if (null == gupi) {
+				String str32 = RandomStr32.getStr32();
+				String userauthcard = "USEAUTHCARD" + upi.getName() + str32;
+				Cookie cookie = new Cookie(userauthcard, userauthcard);
+				cookie.setMaxAge(Integer.parseInt(cookieuserkeyexpir));
+				cookie.setPath("/");
+				upi.setUserkey(userauthcard);
+
+				RedisResult<String> recode = null;
+				recode = (RedisResult<String>) RedisUtils.set(userauthcard, uupi, Long.parseLong(redisuserkeyexpir));
+				// TODO
+				if (recode != null && recode.getCode() == RedisConstants.SUCCESS) {
+					response.addCookie(cookie);
+					result.setSuccess(true);
+					result.setMsg("保存成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				} else {
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				}
+			} else {
+				gupi.getEzs_bill().setCompanyName(companyName);
+				gupi.getEzs_bill().setDutyNo(dutyNo);
+				gupi.getEzs_bill().setNumber(number);
+				gupi.getEzs_bill().setPhone(phone);
+				gupi.getEzs_bill().setAddress(address);
+				gupi.getEzs_bill().setBank(bank);
+				boolean res=RedisUserSession.updateUserInfo(gupi.getAuthkey(), gupi, Long.parseLong(redisuserkeyexpir));
+				
+				if (res) {
+					result.setSuccess(true);
+					result.setMsg("保存成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				} else {
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				}
+			}
+
+		}
+		return result;
+	}
+	
+Result savecomeinvali(HttpServletRequest request) {
+		
+		Result result = Result.success();
+		
+		String companyName = request.getParameter("companyName");// 企业名称
+		String dutyNo = request.getParameter("dutyNo");// 税号
+		String number = request.getParameter("number ");// 开户账号
+		String phone = request.getParameter("phone");// 电话号码
+		String address = request.getParameter("address ");//单位地址
+		String bank = request.getParameter("bank");// 开户行
+
+		if (Tools.isEmpty(companyName)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入公司名称");
+		}
+		if (Tools.isEmpty(dutyNo)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入税号");
+		}
+		if (Tools.isEmpty(address)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入单位地址");
+		}
+		if (Tools.isEmpty(phone)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入电话号码");
+		}
+		if (Tools.isEmpty(bank)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入开户行");
+		}
+		if (Tools.isEmpty(bank)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入开户账号");
 		}
 			
 			return result;
