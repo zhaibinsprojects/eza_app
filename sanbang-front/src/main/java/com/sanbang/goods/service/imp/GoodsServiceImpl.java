@@ -1,9 +1,13 @@
 package com.sanbang.goods.service.imp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.goods.service.GoodsService;
 
@@ -16,6 +20,8 @@ import com.sanbang.goods.service.GoodsService;
 public class GoodsServiceImpl implements GoodsService{
 	@Resource(name="ezs_goodsMapper")
 	private com.sanbang.dao.ezs_goodsMapper ezs_goodsMapper;
+	@Resource(name="ezs_dvaluateMapper")
+	private com.sanbang.dao.ezs_dvaluateMapper ezs_dvaluateMapper;
 	
 	/**
 	 * 查询单个货品详情
@@ -27,5 +33,15 @@ public class GoodsServiceImpl implements GoodsService{
 		goods = ezs_goodsMapper.selectByPrimaryKey(id);
 		return goods;
 	}
-
+	
+	public List<ezs_dvaluate> listForEvaluate(long id){
+		List<ezs_dvaluate> list = new ArrayList();
+		list  = ezs_dvaluateMapper.listForEvaluate(id);
+		return list;
+	}
+	
+	
+	
+	
+	
 }
