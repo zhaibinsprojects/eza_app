@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_dvaluate;
@@ -19,4 +21,7 @@ public interface ezs_dvaluateMapper {
     int updateByPrimaryKeyWithBLOBs(ezs_dvaluate record);
 
     int updateByPrimaryKey(ezs_dvaluate record);
+    
+    //新增
+    List<ezs_dvaluate> listForEvaluate(long id);
 }
