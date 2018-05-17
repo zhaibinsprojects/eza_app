@@ -3,8 +3,7 @@ package com.sanbang.goods.service.imp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_dvaluate;
@@ -19,11 +18,11 @@ import com.sanbang.goods.service.GoodsService;
  */
 @Service("goodsService")
 public class GoodsServiceImpl implements GoodsService{
-	@Resource(name="ezs_goodsMapper")
+	@Autowired
 	private com.sanbang.dao.ezs_goodsMapper ezs_goodsMapper;
-	@Resource(name="ezs_dvaluateMapper")
+	@Autowired
 	private com.sanbang.dao.ezs_dvaluateMapper ezs_dvaluateMapper;
-	@Resource(name="ezs_goodscartMapper")
+	@Autowired
 	private com.sanbang.dao.ezs_goodscartMapper ezs_goodscartMapper;
 	
 	/**

@@ -111,7 +111,25 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_positionMapper" />
 	</bean>
+	 <bean id="ezs_dvaluateMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_dvaluateMapper" />
+	</bean>
 	
+	<bean id="ezs_goodscartMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goodscartMapper" />
+	</bean>
+	
+	<bean id="ezs_orderformMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_orderformMapper" />
+	</bean>
+	
+	<bean id="ezs_documentshareMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_documentshareMapper" />
+	</bean>
 </beans>
 
 
