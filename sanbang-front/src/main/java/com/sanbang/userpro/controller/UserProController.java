@@ -85,7 +85,32 @@ public class UserProController {
 
 	
 	/**
-	 * 用户登录验证
+	 * 用户密码登录验证
+	 * @param userName
+	 * @param passwd
+	 * @param httpSession
+	 * @param request
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/userLoginpsw")
+	@ResponseBody
+	public Result userLoginpsw(
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "passwd", required = false) String passwd,
+			@RequestParam(value = "code", required = false) String code,
+			HttpSession httpSession, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		Result result=Result.failure();
+		String userAgent = request.getHeader("User-Agent");
+		String ip = IpUtils.getIpAddr(request);
+		result = userProService.login(userName, passwd, code, userAgent, ip,
+					request, response,null);
+		return result;
+	}
+	
+	/**
+	 * 用户验证码登录
 	 * @param userName
 	 * @param passwd
 	 * @param httpSession
@@ -100,15 +125,14 @@ public class UserProController {
 			@RequestParam(value = "passwd", required = false) String passwd,
 			@RequestParam(value = "code", required = false) String code,
 			HttpSession httpSession, HttpServletRequest request,
-			HttpServletResponse response,Integer flag) throws Exception {
+			HttpServletResponse response) throws Exception {
 		Result result=Result.failure();
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
-					request, response,flag);
+					request, response,null);
 		return result;
 	}
-	
 	
 	/**
 	 * 当前登录用户退出
