@@ -17,4 +17,5 @@ public interface RecommendGoodsService {
 	public void dropGoodsById(ezs_goods goods);
 	
 	public Map<String, Object> goodsIntroduce(String currentPage);
+	
 }

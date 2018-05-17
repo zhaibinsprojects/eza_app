@@ -23,6 +23,7 @@ import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Controller
@@ -48,11 +49,11 @@ public class HomeGoodsMessController {
 	public Object goodsDetailByName(HttpServletRequest request,HttpServletResponse response,String goodsName){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		List<ezs_goods> glist = null;
+		List<GoodsInfo> glist = null;
 		mmp = this.recommendGoodsService.queryByName(goodsName);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			glist = (List<ezs_goods>) mmp.get("Obj");
+			glist = (List<GoodsInfo>) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(glist);
 		}else{
@@ -73,7 +74,7 @@ public class HomeGoodsMessController {
 	@ResponseBody
 	public Object allGoodsDetail(HttpServletRequest request,HttpServletResponse response,String currentPage){
 		Map<String, Object> mmp = null;
-		List<ezs_goods> glist = null;
+		List<GoodsInfo> glist = null;
 		Result rs = null;
 		Page page = null;
 		if(currentPage==null){
@@ -82,7 +83,7 @@ public class HomeGoodsMessController {
 		mmp = this.recommendGoodsService.goodsIntroduce(currentPage);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			glist = (List<ezs_goods>) mmp.get("Obj");
+			glist = (List<GoodsInfo>) mmp.get("Obj");
 			page = (Page) mmp.get("Page");
 			rs = Result.success(); 
 			rs.setObj(glist);

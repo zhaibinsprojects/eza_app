@@ -33,7 +33,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	@Override
 	public Map<String, Object> queryByName(String name) {
 		Map<String, Object> mmp = new HashMap<>();
-		List<ezs_goods> glist = null;
+		List<GoodsInfo> glist = null;
 		try {
 			glist = this.goodsMapper.selectByGoodName(name);			
 		} catch (Exception e) {
@@ -77,7 +77,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
 		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_goods> glist = this.goodsMapper.goodsIntroduce(page);
+			List<GoodsInfo> glist = this.goodsMapper.goodsIntroduce(page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);
