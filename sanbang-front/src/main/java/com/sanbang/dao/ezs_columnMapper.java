@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_column;
@@ -17,4 +19,6 @@ public interface ezs_columnMapper {
     int updateByPrimaryKeySelective(ezs_column record);
 
     int updateByPrimaryKey(ezs_column record);
+    
+    List<ezs_column> getSecondThemeByFirstTheme(Long FirstThemeId);
 }

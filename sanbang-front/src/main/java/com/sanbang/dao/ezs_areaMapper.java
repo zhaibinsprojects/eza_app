@@ -36,4 +36,9 @@ public interface ezs_areaMapper {
     List<ezs_area> getAreaListByParId(@Param("areaid")long areaid);
     
     List<HotProvince> getHotArea(); 
+        
+    ezs_area selectParentByChildKey(Long pId);
+    
+    
+    
 }

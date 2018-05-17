@@ -114,4 +114,12 @@
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 根据商品id修改收藏状态 -->
+  <update id="updateCollect" parameterType="java.long.Long" >
+    update ezs_documentshare
+    set house = #{house,jdbcType=INTEGER} 
+    where goods_id = #{goods_id,jdbcType=BIGINT}
+  </update>
+  
 </mapper>

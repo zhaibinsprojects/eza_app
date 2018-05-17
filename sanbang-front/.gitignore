@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 /bin/
 /target/
+=======
+target/
+.settings/
+>>>>>>> cdd272509c16052766ba41b95f2f255b12715924

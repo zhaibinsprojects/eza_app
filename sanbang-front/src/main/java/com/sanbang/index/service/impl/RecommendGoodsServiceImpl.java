@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Service
@@ -19,6 +21,8 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	
 	@Autowired
 	private ezs_goodsMapper goodsMapper;
+	@Autowired
+	private ezs_accessoryMapper accessoryMapper;
 
 	@Override
 	public ezs_goods queryById(Long id) {
@@ -29,9 +33,19 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	@Override
 	public Map<String, Object> queryByName(String name) {
 		Map<String, Object> mmp = new HashMap<>();
-		List<ezs_goods> glist = null;
-		glist = this.goodsMapper.selectByGoodName(name);
-		mmp.put("Obj", glist);
+		List<GoodsInfo> glist = null;
+		try {
+			glist = this.goodsMapper.selectByGoodName(name);			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(glist!=null){
+			mmp.put("Obj", glist);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}else{
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
 		return mmp;
 	}
 
@@ -62,13 +76,14 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 		int totalCount = this.goodsMapper.goodsIntroduceCount();
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_goods> glist = this.goodsMapper.goodsIntroduce(page);
+		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+			List<GoodsInfo> glist = this.goodsMapper.goodsIntroduce(page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);
 		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+			mmp.put("Msg", "页码越界");
 			mmp.put("Page", page);
 		}
 		return mmp;

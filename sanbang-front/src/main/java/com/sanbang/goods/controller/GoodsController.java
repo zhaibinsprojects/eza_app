@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
+import com.sanbang.bean.ezs_orderform;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
@@ -26,7 +27,7 @@ public class GoodsController {
 	private GoodsService goodsService;
 
 	/**
-	 * 查询货品详情
+	 * 查询货品详情（描述说明也走这方法）
 	 * @param request
 	 * @param id 货品id
 	 * @return
@@ -55,8 +56,26 @@ public class GoodsController {
 		return result;
 	}
 	
-	//货品收藏（）
-	
+	/**
+	 * 当第一次收藏时，是insert,取消收藏时是update更新状态（货品收藏）
+	 * @param request
+	 * @param share	
+	 * @return
+	 */
+	public Result updateShare(HttpServletRequest request,Long goodId){
+		Result result = new Result();
+		int n;
+		if(goodId != null){
+			goodsService.updateCollect(goodId);
+			result.setMsg("取消成功");
+		}else{
+			n = goodsService.insertCollect(goodId);
+			if(n>0){
+				result.setMsg("添加成功");
+			}
+		}
+		return result;
+	}
 	
 	/**
 	 * 加入采购单（加入购物车）
@@ -75,23 +94,16 @@ public class GoodsController {
 		return result;
 	}
 	
-	
 	//立即购买（加入订单）
-	public Result insertOrder(HttpServletRequest request,ezs_goodscart goodsCart){
+	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
 		Result result = new Result();
-		
-		
-		
-		
-		
+		int n;
+		n = goodsService.insertOrder(order);
+		if(n>0){
+			result.setMsg("添加成功");
+		}
 		return result;
 	}
-	
-	
-	
-	
-	
-	
 	
 	//预约预定
 	public Result insertReserveOrder(HttpServletRequest request,ezs_goodscart goodsCart){
@@ -101,12 +113,15 @@ public class GoodsController {
 		return result;
 	}
 	
-	
-	
-	
-	
-	
-	
+	//同类货品（以及品类筛选都是走这个方法）
+	public Result listForGoods(Long id){
+		Result result = new Result();
+		List<ezs_goods> list = new ArrayList();
+		list = goodsService.listForGoods(id);
+		result.setObj(list);
+		result.setMsg("返回成功");
+		return result;
+	}
 	
 	
 }

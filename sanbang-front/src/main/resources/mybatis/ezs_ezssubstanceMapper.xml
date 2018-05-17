@@ -35,14 +35,14 @@
     <result column="childEc_id" property="childEc_id" jdbcType="BIGINT" />
     <result column="ec_id" property="ec_id" jdbcType="BIGINT" />
     <result column="ss_id" property="ss_id" jdbcType="BIGINT" />
-    <result column="u_id" property="u_id" jdbcType="BIGINT" />
+    <!-- <result column="u_id" property="u_id" jdbcType="BIGINT" /> -->
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, attachment, attribute, author, bold, clickLike, clickRate, 
     clickRrample, content, fixedTime, keyWord, linkPort, linkUrl, meta, multimediaFiles, 
     name, origin, originUrl, pcView, photos, publicTime, remarkValue, staticStatus, status, 
-    subheading, tagTitle, thumbnail, titleColor, childEc_id, ec_id, ss_id, u_id, user_id
+    subheading, tagTitle, thumbnail, titleColor, childEc_id, ec_id, ss_id,  user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -443,4 +443,12 @@
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="goodsIndustryCountByKinds" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select count(*) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="goodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+    select
+    <include refid="Base_Column_List" />
+    from ezs_ezssubstance where ec_id = #{content} order by addTime desc LIMIT #{startPos},#{pageSize}
+  </select>
 </mapper>

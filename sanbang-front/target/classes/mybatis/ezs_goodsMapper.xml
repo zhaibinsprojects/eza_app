@@ -610,19 +610,6 @@
       lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <!-- 商品查询 -->
-  <select id="selectByGoodName" resultMap="BaseResultMap" parameterType="string" >
-    select 
-    <include refid="Base_Column_List" />
-    from ezs_goods a
-    where a.name like '%${_parameter}%'
-  </select>
-  <!-- 优品推荐 -->
-  <select id="goodsIntroduce" resultMap="BaseResultMap" parameterType="com.sanbang.utils.Page">
-    select
-    <include refid="Base_Column_List" />
-    from ezs_goods where recommend = '1' order by recommend_time desc LIMIT #{startPos},#{pageSize}
-  </select>
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
@@ -633,6 +620,103 @@
     <include refid="Base_Column_List" />
     from ezs_goods a
     where status=#{status} and user_id=#{sellerId} 
+    order by
+    lastModifyDate  desc
+  </select>
+  <!-- 商品查询带图 -->
+  <resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="addess" property="addess" jdbcType="VARCHAR" />
+    <result column="ash" property="ash" jdbcType="VARCHAR" />
+    <result column="bending" property="bending" jdbcType="VARCHAR" />
+    <result column="burning" property="burning" jdbcType="VARCHAR" />
+    <result column="cantilever" property="cantilever" jdbcType="VARCHAR" />
+    <result column="click" property="click" jdbcType="INTEGER" />
+    <result column="cncl_num" property="cncl_num" jdbcType="BIT" />
+    <result column="collect" property="collect" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="crack" property="crack" jdbcType="VARCHAR" />
+    <result column="density" property="density" jdbcType="VARCHAR" />
+    <result column="flexural" property="flexural" jdbcType="VARCHAR" />
+    <result column="freely" property="freely" jdbcType="VARCHAR" />
+    <result column="good_no" property="good_no" jdbcType="VARCHAR" />
+    <result column="good_self" property="good_self" jdbcType="BIT" />
+    <result column="goods_salenum" property="goods_salenum" jdbcType="INTEGER" />
+    <result column="inventory" property="inventory" jdbcType="DOUBLE" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="lipolysis" property="lipolysis" jdbcType="VARCHAR" />
+    <result column="memberLook" property="memberLook" jdbcType="BIT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="protection" property="protection" jdbcType="BIT" />
+    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="recommend" property="recommend" jdbcType="BIT" />
+    <result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
+    <result column="seo_description" property="seo_description" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="tensile" property="tensile" jdbcType="VARCHAR" />
+    <result column="validity" property="validity" jdbcType="INTEGER" />
+    <result column="water" property="water" jdbcType="VARCHAR" />
+    <result column="area_id" property="area_id" jdbcType="BIGINT" />
+    <result column="color_id" property="color_id" jdbcType="BIGINT" />
+    <result column="form_id" property="form_id" jdbcType="BIGINT" />
+    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
+    <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
+    <result column="quality_id" property="quality_id" jdbcType="BIGINT" />
+    <result column="region_id" property="region_id" jdbcType="BIGINT" />
+    <result column="supply_id" property="supply_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="util_id" property="util_id" jdbcType="BIGINT" />
+    <result column="classOfFinish_id" property="classOfFinish_id" jdbcType="BIGINT" />
+    <result column="lockStatus" property="lockStatus" jdbcType="INTEGER" />
+    <association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
+	    <id column="goods_main_photo_id" property="id" jdbcType="BIGINT" />
+	    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+	    <result column="adeleteStatus" property="deleteStatus" jdbcType="BIT" />
+	    <result column="aext" property="ext" jdbcType="VARCHAR" />
+	    <result column="aheight" property="height" jdbcType="INTEGER" />
+	    <result column="ainfo" property="info" jdbcType="VARCHAR" />
+	    <result column="aname" property="name" jdbcType="VARCHAR" />
+	    <result column="apath" property="path" jdbcType="VARCHAR" />
+	    <result column="asize" property="size" jdbcType="REAL" />
+	    <result column="awidth" property="width" jdbcType="INTEGER" />
+	    <result column="aalbum_id" property="album_id" jdbcType="BIGINT" />
+	    <result column="aconfig_id" property="config_id" jdbcType="BIGINT" />
+	    <result column="auser_id" property="user_id" jdbcType="BIGINT" />
+    </association>
+  </resultMap>
+  <sql id="Goods_Base_Column_List" >
+    g.id, g.addTime, g.deleteStatus, g.addess, g.ash, g.bending, g.burning, g.cantilever, g.click, g.cncl_num, 
+    g.collect, g.content, g.crack, g.density, g.flexural, g.freely, g.good_no, g.good_self, g.goods_salenum, 
+    g.inventory, g.keyword, g.lipolysis, g.memberLook, g.name, g.price, g.protection, g.purpose, g.recommend, 
+    g.recommend_time, g.seo_description, g.source, g.status,g.tensile, g.validity, g.water, g.area_id, 
+    g.color_id, g.form_id, g.goodClass_id, g.goods_main_photo_id, g.logistics_id, g.quality_id, g.region_id, 
+    g.supply_id, g.user_id, g.util_id, g.classOfFinish_id, g.lockStatus,g.lastModifyDate,
+    a.id aid,a.addTime aaddTime,a.deleteStatus adeleteStatus,a.ext aext,a.height aheight,a.info ainfo,a.name aname,
+    a.path apath,a.size asize,a.width awidth,a.album_id aalbum_id,a.config_id aconfig_id,a.user_id auser_id
+  </sql>
+   <select id="selectByGoodName" resultMap="GoodsResultMap" parameterType="string" >
+    select 
+    <include refid="Goods_Base_Column_List" />
+    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
+    g.name like '%${_parameter}%'
+  </select>
+  <!-- 优品推荐2包含图片 -->
+  <select id="goodsIntroduce" resultMap="GoodsResultMap" parameterType="com.sanbang.utils.Page">
+    select
+    <include refid="Goods_Base_Column_List" />
+    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
+  </select>
+  
+  <!-- 查询同类货品 -->
+  <select id="listForGoods" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ezs_goods goods left join ezs_goods_class gc on goods.goodClass_id = gc.level 
+    where goods.goodClass_id=#{sellerId} 
     order by
     lastModifyDate  desc
   </select>
