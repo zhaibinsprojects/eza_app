@@ -125,8 +125,8 @@ public class HomePriceConditionController {
 			rs.setObj(elist);
 		}else{
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			rs.setMsg("参数传递有误");
+			rs.setErrorcode(ErrorCode);
+			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}

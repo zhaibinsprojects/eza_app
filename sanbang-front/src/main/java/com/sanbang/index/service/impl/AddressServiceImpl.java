@@ -95,7 +95,7 @@ public class AddressServiceImpl implements AddressService {
 			mmp.put("Obj", pArea);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		}else{
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_CODE_ERROR);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;

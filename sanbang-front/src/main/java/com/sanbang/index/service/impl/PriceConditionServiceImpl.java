@@ -50,9 +50,16 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	public Map<String, Object> getSecondTheme(Long id) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
-		List<ezs_column> elist = this.columnMapper.getSecondThemeByFirstTheme(id);
-		mmp.put("Obj", elist);
-		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		List<ezs_column> elist = null;
+		try {
+			elist = this.columnMapper.getSecondThemeByFirstTheme(id);
+			mmp.put("Obj", elist);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);			
+		} catch (Exception e) {
+			// TODO: handle exception
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
 		return mmp;
 	}
 	//获取价格趋势信息
@@ -82,7 +89,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Obj", ppList);
 		}else{
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_CODE_ERROR);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;

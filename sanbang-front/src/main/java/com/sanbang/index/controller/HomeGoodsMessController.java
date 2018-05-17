@@ -134,16 +134,23 @@ public class HomeGoodsMessController {
 		if(customizedrecord==null||customized==null||user==null){
 			rs = Result.failure();
 			rs.setMsg("参数不能为空");
-			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_UN_NULL);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 		}else{
-			this.customizedService.insert(customized);
-			//由以上插入并返回产生
-			customizedrecord.setCustomized_id(customized.getId());
-			customizedrecord.setOperate_id(Integer.parseInt(user.getId().toString()));
-			customizedrecord.setPurchase_id(Integer.parseInt(user.getId().toString()));
-			this.customizedRecordService.insert(customizedrecord);
-			rs = Result.success();
-			rs.setMsg("数据插入成功！");
+			try {
+				this.customizedService.insert(customized);
+				//由以上插入并返回产生
+				customizedrecord.setCustomized_id(customized.getId());
+				customizedrecord.setOperate_id(Integer.parseInt(user.getId().toString()));
+				customizedrecord.setPurchase_id(Integer.parseInt(user.getId().toString()));
+				this.customizedRecordService.insert(customizedrecord);				
+				rs = Result.success();
+				rs.setMsg("数据插入成功！");
+			} catch (Exception e) {
+				// TODO: handle exception
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				rs.setMsg("参数传递有误！");
+			}
 		}
 		return rs;
 	}

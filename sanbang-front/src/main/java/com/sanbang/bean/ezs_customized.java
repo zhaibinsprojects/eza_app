@@ -47,7 +47,7 @@ public class ezs_customized {
 
     private String remark;
 
-    private Integer category;
+    private Integer category_id;
 
     public Integer getId() {
         return id;
@@ -225,11 +225,11 @@ public class ezs_customized {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCategory() {
-        return category;
+    public Integer getCategory_id() {
+        return category_id;
     }
 
-    public void setCategory(Integer category) {
-        this.category = category;
+    public void setCategory_id(Integer category_id) {
+        this.category_id = category_id;
     }
 }
