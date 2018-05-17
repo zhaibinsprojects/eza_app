@@ -1,6 +1,4 @@
-##ignore this file##
-/target/ 
+/.classpath
+/.gitignore
+/target/
 
-.classpath
-.project
-.settings   
