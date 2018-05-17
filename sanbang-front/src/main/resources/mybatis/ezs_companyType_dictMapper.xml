@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_companyType_dictMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_companyType_dict" >
+    <result column="cType_id" property="cType_id" jdbcType="BIGINT" />
+    <result column="dict_id" property="dict_id" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_companyType_dict" >
+    insert into ezs_companyType_dict (cType_id, dict_id)
+    values (#{cType_id,jdbcType=BIGINT}, #{dict_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_companyType_dict" >
+    insert into ezs_companyType_dict
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cType_id != null" >
+        cType_id,
+      </if>
+      <if test="dict_id != null" >
+        dict_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cType_id != null" >
+        #{cType_id,jdbcType=BIGINT},
+      </if>
+      <if test="dict_id != null" >
+        #{dict_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="delCompanyTypeByStoreId">
+  	delete from  ezs_companyType_dict where cType_id=${storeid}
+  </delete>
+  
+  <select id="getCompanyTypeByThisId" resultMap="BaseResultMap">
+  	select * from ezs_companyType_dict where  cType_id=${storeid}
+  </select>
+</mapper>
