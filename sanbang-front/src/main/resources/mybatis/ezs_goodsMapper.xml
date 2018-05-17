@@ -710,4 +710,15 @@
     <include refid="Goods_Base_Column_List" />
     from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
   </select>
+  
+  <!-- 查询同类货品 -->
+  <select id="listForGoods" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ezs_goods goods left join ezs_goods_class gc on goods.goodClass_id = gc.level 
+    where goods.goodClass_id=#{sellerId} 
+    order by
+    lastModifyDate  desc
+  </select>
+  
 </mapper>

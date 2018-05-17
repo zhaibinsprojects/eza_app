@@ -29,4 +29,7 @@ public interface ezs_goodsMapper {
     int goodsIntroduceCount();
 
 	List<ezs_goods> selectGoodsListBySellerId(Long sellerId, int status);
+	
+	//同类货品
+	List<ezs_goods> listForGoods(Long id);
 }
