@@ -121,15 +121,6 @@
 			value="com.sanbang.dao.ezs_goodscartMapper" />
 	</bean>
 	
-	<bean id="ezs_orderformMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_orderformMapper" />
-	</bean>
-	
-	<bean id="ezs_documentshareMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_documentshareMapper" />
-	</bean>
 </beans>
 
 

@@ -4,6 +4,7 @@ package com.sanbang.setup.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +24,7 @@ import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.setup.service.AuthService;
+import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -66,7 +68,11 @@ public class UserSetupAuthController {
 	@Autowired
 	private AreaService areaService;
 	
+	@Autowired
 	private AuthService authService;
+	
+	@Resource(name="fileUploadService")
+	private FileUploadService fileUploadService;
 	
 	
 	
@@ -188,7 +194,7 @@ public class UserSetupAuthController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/saveComneinAuth")
+	@RequestMapping("/saveComEinAuth")
 	public Result saveComneinAuth(
 			HttpServletRequest request,HttpServletResponse response){
 		Result result=Result.failure();
@@ -209,10 +215,182 @@ public class UserSetupAuthController {
 	}
 	
 	
+	/**
+	 * 保存企业基本信息
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/saveDivAuth")
+	public Result saveDivAuth(
+			HttpServletRequest request,HttpServletResponse response){
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		try {
+			result=authService.saveindivAuth(result, request, upi, response);
+		} catch (Exception e) {
+			log.info("h5保存认证个体基本信息"+upi.getName()+"错误"+e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		return result;
+	}
 	
+	/**
+	 * 保存企业开票信息
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/saveDivEinAuth")
+	public Result saveDivEinAuth(
+			HttpServletRequest request,HttpServletResponse response){
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		try {
+			result=authService.saveindivEin(result, request, upi, response);
+		} catch (Exception e) {
+			log.info("h5保存认证个体开票信息"+upi.getName()+"错误"+e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		return result;
+	}
 
 	
+	/**
+	 * 上传认证图片
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public Result upAuthPic(
+			HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(value="type",required=false) String type){
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		
+		//检查上传类型
+		result=checkuptype(type);
+		
+		if(!result.getSuccess()){
+			return result;
+		}
+		
+		
+		try {
+			Map<String , Object> map=fileUploadService.uploadFile(request,0,0,10*1024*1024l);
+			if("000".equals(map.get("code"))){
+				result=fileUploadService.tempsaveimg(type, String.valueOf(map.get("url")), request);
+				return result;
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("上传失败");
+				result.setObj("");
+				result.setSuccess(false);
+			}
+		} catch (Exception e) {
+			log.info("文件：上传接口调用失败"+e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("上传失败");
+			result.setObj("");
+			result.setSuccess(false);
+		} 
+		
+		
+		
+		
+		return result;
+	}
 	
-	
+	/**
+	 * 检查上传类型
+	 * @param type
+	 * @return
+	 */
+	private Result checkuptype(String type){
+		Result result=Result.failure();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		result.setMsg("上传类型错误");
+		
+		switch (type) {
+		//身份证，正面
+		case "IDCARD_FONT":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+		// 身份证，反面
+		case "IDCARD_BACK":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+			//开户许可证
+		case "ACCOUNT_OPENING_LICENSE":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+			//企业授权证书
+		case "LETTER_OF_AUTHORIZATION":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+			//其他资质
+		case "OTHER_QUALIFICATIONS":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+			//被授权人身份证复印件
+		case "LICENSEE_IDCARD":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+			//工商营业执照
+		case "BUSINESS_LICENSE":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+		/*case "":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+		case "":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;
+		case "":
+			result.setSuccess(true);
+			result.setMsg("上传成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			break;*/
+		default:
+			break;
+		}
+		
+		return result;
+	}
 	
 }

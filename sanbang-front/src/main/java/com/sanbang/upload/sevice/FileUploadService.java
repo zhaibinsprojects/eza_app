@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sanbang.utils.Result;
+
 public interface FileUploadService {
 
 	/**
@@ -13,4 +15,13 @@ public interface FileUploadService {
 	 * size是当前图片的大小 单位是字节
 	 */
 	Map<String,Object> uploadFile(HttpServletRequest request,int width,int height,long size) throws Exception;
+	
+	/**
+	 * 暂存文件信息 redis
+	 * @param type
+	 * @param picurl
+	 * @param request
+	 * @return
+	 */
+	Result tempsaveimg(String type,String picurl,HttpServletRequest request);
 }

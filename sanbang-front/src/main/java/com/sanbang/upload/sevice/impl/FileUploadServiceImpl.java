@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
@@ -32,8 +34,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.sanbang.bean.ezs_user;
 import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.RedisUserSession;
+import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 @Service("fileUploadService")
 public class FileUploadServiceImpl implements FileUploadService {
@@ -212,12 +219,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 		log.info("上传图片文件结果:code=" + map.get("code") + " &message=" + map.get("message"));
 		return map;
 	}
+
 	/**
 	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
 	 * 图片宽和长就是多少 size是当前图片的大小 单位是字节 返回 json串 code为000代表操作成功
 	 */
-	public Map<String, Object> uploadFileforshop(HttpServletRequest request, int width, int height, long size,String type)
-			throws Exception {
+	public Map<String, Object> uploadFileforshop(HttpServletRequest request, int width, int height, long size,
+			String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("上传图片文件");
 		String path = null;
@@ -245,7 +253,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 						if (b) {
 							// 判断图片长宽
 							if (width != 0 && height != 0) {
-								if (filterImgLessforshop(file.getInputStream(), width, height,type)) {
+								if (filterImgLessforshop(file.getInputStream(), width, height, type)) {
 									// 判断是否存在年月文件夹，没有就创建
 									saveFileMethodformall(ym, d, hms, file, path, map);
 								} else {
@@ -280,6 +288,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 		log.info("上传图片文件结果:code=" + map.get("code") + " &message=" + map.get("message"));
 		return map;
 	}
+
 	public boolean sizeInfo(MultipartFile file, long size) {
 		long fileSize = file.getSize();
 		if (fileSize <= size) {
@@ -288,12 +297,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 			return false;
 		}
 	}
+
 	/**
 	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
 	 * 图片宽和长就是多少 size是当前图片的大小 单位是字节 返回 json串 code为000代表操作成功
 	 */
-	public Map<String, Object> uploadFilenomark(HttpServletRequest request, int width, int height, long size,String type)
-			throws Exception {
+	public Map<String, Object> uploadFilenomark(HttpServletRequest request, int width, int height, long size,
+			String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("上传图片文件");
 		String path = null;
@@ -321,7 +331,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 						if (b) {
 							// 判断图片长宽
 							if (width != 0 && height != 0) {
-								if (filterImgLessforshop(file.getInputStream(), width, height,type)) {
+								if (filterImgLessforshop(file.getInputStream(), width, height, type)) {
 									// 判断是否存在年月文件夹，没有就创建
 									saveFileMethod(ym, d, hms, file, path, map);
 								} else {
@@ -540,17 +550,20 @@ public class FileUploadServiceImpl implements FileUploadService {
 			return false;
 		}
 	}
+
 	/**
 	 * 判断图片宽高是否小于定义宽度
 	 * 
 	 * @param file
 	 * @param standWidth
 	 * @param standHeight
-	 * @param size  1 等于 2 大于等于  3 小于等于   为空 默认为小于等于
+	 * @param size
+	 *            1 等于 2 大于等于 3 小于等于 为空 默认为小于等于
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean filterImgLessforshop(InputStream file, int standWidth, int standHeight,String type) throws IOException {
+	public boolean filterImgLessforshop(InputStream file, int standWidth, int standHeight, String type)
+			throws IOException {
 		BufferedImage bi = null;
 		int width = 0;
 		int height = 0;
@@ -558,28 +571,27 @@ public class FileUploadServiceImpl implements FileUploadService {
 		width = bi.getWidth();
 		height = bi.getHeight();
 		// System.out.println("尺寸："+width+" "+height);
-		if(Tools.isEmpty(type)||"3".equals(type)){
+		if (Tools.isEmpty(type) || "3".equals(type)) {
 			if (width <= standWidth && height <= standHeight) {
 				return true;
 			} else {
 				return false;
-			}	
-		}else if("2".equals(type)){
+			}
+		} else if ("2".equals(type)) {
 			if (width >= standWidth && height >= standHeight) {
 				return true;
 			} else {
 				return false;
-			}	
-		}else if("1".equals(type)){
+			}
+		} else if ("1".equals(type)) {
 			if (width == standWidth && height == standHeight) {
 				return true;
 			} else {
 				return false;
-			}	
+			}
 		}
 		return false;
-		
-		
+
 	}
 
 	public boolean formatPic(InputStream is) throws Exception {
@@ -731,6 +743,45 @@ public class FileUploadServiceImpl implements FileUploadService {
 		System.out.println(fsi.getUrl("e:/adsf/tempath/2061/sdkfjk.jpg", fsi.BASEURL, fsi.TEMPATHFLAG));
 		System.out.println(
 				fsi.getPath(fsi.BASEPATH, "localhost:8080/website/userImgs/tempath/2061/sdkfjk.jpg", fsi.TEMPATHFLAG));
+	}
+
+	@Override
+	public Result tempsaveimg(String type, String picurl, HttpServletRequest request) {
+		Result result = Result.success();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+
+		AuthImageVo authimg = new AuthImageVo();
+		authimg.setImgcode(type);
+		authimg.setImgurl(picurl);
+
+		List<AuthImageVo> list = upi.getAuthimg();
+
+		if (null != list && list.size() > 0) {
+			int index = -1;
+			for (AuthImageVo authImageVo : list) {
+				if (type.equals(authImageVo.getImgcode())) {
+					authImageVo.setImgurl(picurl);
+					index = 1;
+				}
+			}
+			if (index == -1) {
+				list.add(authimg);
+			}
+			;
+		} else {
+			list.add(authimg);
+		}
+
+		result.setSuccess(true);
+		result.setMsg("上传成功");
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setObj(new HashMap<>().put("url", picurl));
+		return result;
 	}
 
 }
