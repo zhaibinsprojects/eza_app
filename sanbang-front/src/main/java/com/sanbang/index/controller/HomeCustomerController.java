@@ -62,8 +62,7 @@ public class HomeCustomerController {
 	public Object getUserMess(HttpServletRequest request,HttpServletResponse response,ezs_user user){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user01 = new ezs_user();
-		mmp = this.customerService.getUserMessByUser(user01);
+		mmp = this.customerService.getUserMessByUser(user);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			UserInfoMess uim = (UserInfoMess) mmp.get("Obj");

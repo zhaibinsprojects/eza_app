@@ -62,6 +62,8 @@ public class HomeIndustryInfoController {
 		Map<String, Object> mmp = null;
 		List<ezs_ezssubstance> elist = null;
 		Result rs = null;
+		if(currentPage==null)
+			currentPage = "1";
 		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");

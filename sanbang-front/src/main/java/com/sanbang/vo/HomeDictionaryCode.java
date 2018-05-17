@@ -19,9 +19,9 @@ public class HomeDictionaryCode {
      */
     public static final int ERROR_HOME_UN_LOGIN = 101203;
     /**
-     * 用户未登录
+     * 查询类型有误
      */
-    public static final int ERROR_HOME_UN_NULL = 101204;
+    public static final int ERROR_HOME_KIND_ERROR = 101204;
     
     
     

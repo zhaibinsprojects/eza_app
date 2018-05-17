@@ -76,13 +76,14 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 		int totalCount = this.goodsMapper.goodsIntroduceCount();
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
 			List<GoodsInfo> glist = this.goodsMapper.goodsIntroduce(page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);
 		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+			mmp.put("Msg", "页码越界");
 			mmp.put("Page", page);
 		}
 		return mmp;

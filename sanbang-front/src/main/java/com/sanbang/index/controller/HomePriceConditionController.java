@@ -143,6 +143,8 @@ public class HomePriceConditionController {
 		Map<String, Object> mmp = null;
 		List<ezs_ezssubstance> elist = null;
 		Result rs = null;
+		if(currentPage==null)
+			currentPage = "1";
 		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
@@ -154,6 +156,7 @@ public class HomePriceConditionController {
 			
 		}else{
 			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
@@ -196,6 +199,8 @@ public class HomePriceConditionController {
 		Map<String, Object> mmp = null;
 		List<ezs_ezssubstance> elist = null;
 		Result rs = null;
+		if(currentPage==null)
+			currentPage = "1";
 		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
@@ -207,6 +212,7 @@ public class HomePriceConditionController {
 			
 		}else{
 			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
