@@ -1,10 +1,8 @@
 package com.sanbang.index.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.sanbang.bean.ezs_goods;
-import com.sanbang.utils.Page;
 
 public interface RecommendGoodsService {
 	

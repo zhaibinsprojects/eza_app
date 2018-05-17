@@ -143,4 +143,9 @@
     <include refid="Base_Column_List" />
     from ezs_goods_class
   </select>
+  <select id="selectAllGoodClassByLevel" resultMap="BaseResultMap" parameterType="string">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goods_class where level = ${_parameter}
+  </select>
 </mapper>

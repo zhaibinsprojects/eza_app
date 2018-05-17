@@ -313,4 +313,10 @@
       finalSection = #{finalSection,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getSecondThemeByFirstTheme" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_column
+    where parentEzsColumn_id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>

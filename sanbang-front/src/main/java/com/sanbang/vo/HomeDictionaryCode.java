@@ -14,6 +14,14 @@ public class HomeDictionaryCode {
      * 页码越界
      */
     public static final int ERROR_HOME_PAGE_FAIL = 101202;
+    /**
+     * 用户未登录
+     */
+    public static final int ERROR_HOME_UN_LOGIN = 101203;
+    /**
+     * 用户未登录
+     */
+    public static final int ERROR_HOME_UN_NULL = 101204;
     
     
     
