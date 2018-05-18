@@ -45,32 +45,5 @@ public class CataServiceImpl implements CataService{
 		list = ezs_cataMapper.getThreelevelList(parentId);
 		return list;
 	}
-	/**
-	 * 自营，地区、品类筛选
-	 * @param area
-	 * @param type
-	 * @return
-	 */
-	public List listByAreaAndType(String area,String type){
-		List<ezs_goods_class> list = new ArrayList();
-		list = ezs_cataMapper.listByAreaAndType(area,type);
-		return list;
-	}
-	/**
-	 * 其他筛选
-	 * @param terms	字符串数组
-	 * @return
-	 */
-	public List listByOthers(String[] terms){
-		List<ezs_goods_class> list = new ArrayList();
-		for(String term : terms){
-			
-			
-		}
-		list = ezs_cataMapper.listByOthers(terms);
-		return list;
-	}
-	
-	
 	
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.goods.service.GoodsService;
@@ -79,5 +80,33 @@ public class GoodsServiceImpl implements GoodsService{
 		list = ezs_goodsMapper.listForGoods(id);
 		return list;
 	}
+	
+	/**
+	 * 自营，地区、品类筛选
+	 * @param area
+	 * @param type
+	 * @return
+	 */
+	public List listByAreaAndType(String area,String type){
+		List<ezs_goods> list = new ArrayList();
+		list = ezs_goodsMapper.listByAreaAndType(area,type);
+		return list;
+	}
+	/**
+	 * 其他筛选
+	 * @param terms	字符串数组
+	 * @return
+	 */
+	public List listByOthers(String[] terms){
+		List<ezs_goods> list = new ArrayList();
+		for(String term : terms){
+			
+			
+		}
+		list = ezs_goodsMapper.listByOthers(terms);
+		return list;
+	}
+	
+	
 	
 }

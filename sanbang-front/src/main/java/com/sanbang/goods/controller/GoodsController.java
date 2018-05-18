@@ -124,4 +124,42 @@ public class GoodsController {
 	}
 	
 	
+	/**
+	 * 自营、地区筛选、品类筛选
+	 * @param request
+	 * @param area	地区
+	 * @param type	类别
+	 * @return
+	 */
+	@RequestMapping("/areaAndType")
+	@ResponseBody
+	public Result listByAreaAndType(HttpServletRequest request,String area,String type){
+		Result result=Result.success();
+		List<ezs_goods> list = new ArrayList();
+		list = goodsService.listByAreaAndType(area,type);
+		
+		
+		
+		return result;
+	}
+	
+	/**
+	 * 其他筛选（颜色、形态、来源、用途、重要参数、燃烧等级、是否环保）
+	 * @param request
+	 * @param terms	不定参数（颜色、形态、用途、、、）
+	 * @return
+	 */
+	@RequestMapping("/others")
+	@ResponseBody
+	public Result listByOthers(HttpServletRequest request,String... terms){
+		Result result=Result.success();
+		//这儿和service中处理都行
+		
+		
+		
+		return result;
+	}
+	
+	
+	
 }
