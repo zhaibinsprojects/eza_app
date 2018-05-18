@@ -101,6 +101,7 @@ public class UserProController {
 			@RequestParam(value = "code", required = false) String code,
 			HttpSession httpSession, HttpServletRequest request,
 			HttpServletResponse response,Integer flag) throws Exception {
+		
 		Result result=Result.failure();
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
