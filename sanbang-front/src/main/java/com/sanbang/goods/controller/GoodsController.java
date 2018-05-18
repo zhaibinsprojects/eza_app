@@ -48,6 +48,8 @@ public class GoodsController {
 	 * @param id 货品id
 	 * @return
 	 */
+	@RequestMapping("/listForEvaluate")
+	@ResponseBody
 	public Result listForEvaluate(HttpServletRequest request,long id){
 		Result result = new Result();
 		List<ezs_dvaluate> list  = new ArrayList();
@@ -62,6 +64,8 @@ public class GoodsController {
 	 * @param share	
 	 * @return
 	 */
+	@RequestMapping("/updateShare")
+	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
 		int n;
@@ -83,6 +87,8 @@ public class GoodsController {
 	 * @param goodsCart
 	 * @return
 	 */
+	@RequestMapping("/insertCart")
+	@ResponseBody
 	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
 		Result result = new Result();
 		int n;
@@ -94,7 +100,14 @@ public class GoodsController {
 		return result;
 	}
 	
-	//立即购买（加入订单）
+	/**
+	 * 立即购买（加入订单）
+	 * @param request
+	 * @param order
+	 * @return
+	 */
+	@RequestMapping("/insertOrder")
+	@ResponseBody
 	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
 		Result result = new Result();
 		int n;
@@ -106,6 +119,12 @@ public class GoodsController {
 	}
 	
 	//预约预定
+	/**
+	 * 
+	 * @param request
+	 * @param goodsCart	
+	 * @return
+	 */
 	public Result insertReserveOrder(HttpServletRequest request,ezs_goodscart goodsCart){
 		Result result = new Result();
 		
@@ -113,7 +132,13 @@ public class GoodsController {
 		return result;
 	}
 	
-	//同类货品（以及品类筛选都是走这个方法）
+	/**
+	 * 同类货品（以及品类筛选都是走这个方法）
+	 * @param id 
+	 * @return
+	 */
+	@RequestMapping("/listForGoods")
+	@ResponseBody
 	public Result listForGoods(Long id){
 		Result result = new Result();
 		List<ezs_goods> list = new ArrayList();
@@ -137,25 +162,29 @@ public class GoodsController {
 		Result result=Result.success();
 		List<ezs_goods> list = new ArrayList();
 		list = goodsService.listByAreaAndType(area,type);
-		
-		
-		
+		result.setObj(list);
 		return result;
 	}
 	
 	/**
-	 * 其他筛选（颜色、形态、来源、用途、重要参数、燃烧等级、是否环保）
+	 * 其他筛选
 	 * @param request
-	 * @param terms	不定参数（颜色、形态、用途、、、）
+	 * @param color	颜色
+	 * @param form 形状
+	 * @param purpose 用途
+	 * @param source 来源
+	 * @param burning 燃烧等级
+	 * @param protection 是否环保
 	 * @return
 	 */
 	@RequestMapping("/others")
 	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,String... terms){
+	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,boolean protection){
 		Result result=Result.success();
-		//这儿和service中处理都行
-		
-		
+		List<ezs_goods> list = new ArrayList();	
+		list = goodsService.listByOthers(color,form,purpose,source,burning,protection);
+		result.setObj(list);
+		result.setMsg("返回成功");
 		
 		return result;
 	}
