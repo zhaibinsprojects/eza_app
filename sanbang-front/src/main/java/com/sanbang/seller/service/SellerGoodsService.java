@@ -20,4 +20,10 @@ public interface SellerGoodsService {
 
 	Result addGoodsInfo(Result result, ezs_user upi, HttpServletRequest request, HttpServletResponse response);
 
+	Result pullOffShelvesById(Result result, long goodsId);
+
+	Result updateGoodsInfoById(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response);
+
+	Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response);
+
 }

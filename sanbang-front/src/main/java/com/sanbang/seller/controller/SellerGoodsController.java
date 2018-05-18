@@ -18,6 +18,7 @@ import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.seller.service.SellerGoodsService;
+import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
@@ -30,6 +31,15 @@ public class SellerGoodsController {
 	@Autowired
 	SellerGoodsService sellerGoodsService;
 	
+	@Autowired
+	FileUploadService fileUploadService;
+	/**
+	 * 查询货品列表   status:1 正常上架    status:0（默认值） 待审核     status:2 下架
+	 * @param status
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/queryGoodsList")
 	public Object queryGoodsList(int status, HttpServletRequest request, HttpServletResponse response){
 		Result result = Result.failure();
@@ -66,7 +76,13 @@ public class SellerGoodsController {
 		}
 		return result;
 	}
-	
+	/**
+	 * 查看货品属性
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/queryGoodsInfoById")
 	public Object queryGoodsInfoById(long id, HttpServletRequest request, HttpServletResponse response){
 		Result result = Result.failure();
@@ -96,9 +112,16 @@ public class SellerGoodsController {
 		return result;
 	}
 	
-	@RequestMapping("addGoodsInfo")
+	/**
+	 * 添加货品， 图片上传未完成
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/addGoodsInfo")
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
+		Map<String,Object> map = new HashMap<>();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -107,13 +130,91 @@ public class SellerGoodsController {
 		}
 		try {
 			result = sellerGoodsService.addGoodsInfo(result, upi, request,response);
+//			map = fileUploadService.uploadFile(request, 0, 0, 10*1024*1024l);
 		} catch (Exception e) {
 			log.info("供应商"+upi.getName()+"添加货品出错"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误！");
 		}
+		
 		return result;
+	}
+	/**
+	 * 供应商货品下架
+	 * @param goodsId
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/pullOffShelves")
+	public Object pullOffShelves(long goodsId, HttpServletRequest request, HttpServletResponse response){
+		Result result=Result.failure();
+		Map<String,Object> map = new HashMap<>();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		result = sellerGoodsService.pullOffShelvesById(result, goodsId);
+		return result;
+	}
+	
+
+	/**
+	 * 供应商货品属性修改， 图片修改未完成
+	 * @param goodsId
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/updateGoodsInfoById")
+	public Object updateGoodsInfoById(long goodsId, HttpServletRequest request, HttpServletResponse response){
+		Result result=Result.failure();
+		Map<String,Object> map = new HashMap<>();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		result = sellerGoodsService.updateGoodsInfoById(result, goodsId, request,response);
+		
+		return result;
+	}
+	
+	@RequestMapping("/submitGoodsForAudit")
+	public Object submitGoodsForAudit(long goodsId, HttpServletRequest request, HttpServletResponse response){
+		Result result=Result.failure();
+		Map<String,Object> map = new HashMap<>();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	
+		return fileUploadService;
 	}
 	
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

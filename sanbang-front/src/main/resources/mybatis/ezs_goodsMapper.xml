@@ -636,5 +636,10 @@
     order by
     lastModifyDate  desc
   </select>
+  <!-- 供应商下架货品 -->
+  <update id="pullOffShelves" >
+  	update ezs_goods set status = 1 where id =#{goodsId}
+  </update>
+  
   
 </mapper>

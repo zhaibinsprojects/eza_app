@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
+import com.sanbang.utils.Result;
 
 @Repository
 public interface ezs_goodsMapper {
@@ -28,4 +29,6 @@ public interface ezs_goodsMapper {
     int goodsIntroduceCount();
 
 	List<ezs_goods> selectGoodsListBySellerId(Long sellerId, int status);
+
+	int pullOffShelves(long goodsId);
 }

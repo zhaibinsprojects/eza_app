@@ -130,6 +130,14 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_documentshareMapper" />
 	</bean>
+	<bean id="ezs_goods_audit_processMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_audit_processMapper" />
+	</bean>
+	<bean id="ezs_goods_logMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_logMapper" />
+	</bean>
 </beans>
 
 
