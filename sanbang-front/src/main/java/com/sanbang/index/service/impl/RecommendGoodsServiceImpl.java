@@ -12,6 +12,7 @@ import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Service
@@ -29,7 +30,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	@Override
 	public Map<String, Object> queryByName(String name) {
 		Map<String, Object> mmp = new HashMap<>();
-		List<ezs_goods> glist = null;
+		List<GoodsInfo> glist = null;
 		glist = this.goodsMapper.selectByGoodName(name);
 		mmp.put("Obj", glist);
 		return mmp;
@@ -63,7 +64,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
 		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_goods> glist = this.goodsMapper.goodsIntroduce(page);
+			List<GoodsInfo> glist = this.goodsMapper.goodsIntroduce(page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);
