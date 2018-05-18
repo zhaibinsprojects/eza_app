@@ -18,4 +18,6 @@ public interface AddressService {
 	 * @return
 	 */
 	public Map<String, Object> getChildByParents(Long aid);
+	
+	public Map<String, Object> getParentByChild(Long pId);
 }

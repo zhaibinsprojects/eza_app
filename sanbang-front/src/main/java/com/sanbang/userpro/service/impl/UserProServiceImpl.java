@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -170,7 +171,7 @@ public class UserProServiceImpl implements UserProService{
 		sbd.append(userName).append("请求登陆，passwd=").append(pd).append(" &userAgent=").append(userAgent).append(" &ip=").append(ip).append(" &登录,时间:").append(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
         log.info(sbd.toString());
         String useridcard=RedisUserSession.getUserKey(USERIDCARD, request);
-        result=loginParam(userName, pd, useridcard, request,flag);
+        result=loginParam(userName, pd,code, useridcard, request,flag);
        if(result.getSuccess()){
     	   loginuser(userName, request, response, result, userAgent, pd, ip, date,flag);
        }else{
@@ -202,7 +203,7 @@ public class UserProServiceImpl implements UserProService{
 	}
 	
 	
-	Result loginParam(String userName, String pd,String useridcard,HttpServletRequest request,Integer flag){
+	Result loginParam(String userName, String pd,String code,String useridcard,HttpServletRequest request,Integer flag){
 		Result result=Result.success();
 		
 		if(flag==null){
@@ -217,7 +218,7 @@ public class UserProServiceImpl implements UserProService{
 	        	result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("用户名格式错误");;
 	        }
-			if(StringUtils.isEmpty(pd)||pd.trim().length()!=32){
+			if(StringUtils.isEmpty(pd)||MD5Util.md5Encode(pd.trim()).length()!=32){
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("密码格式错误");
@@ -229,18 +230,18 @@ public class UserProServiceImpl implements UserProService{
 	        	result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("手机号码格式错误");
 	        }
-			if(StringUtils.isEmpty(pd)){
+			if(StringUtils.isEmpty(code)){
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("登陆码不能为空");
 			}else{
-				boolean b=ckcodemobile(pd, userName, "MOBILELOGINFLAG");
+				boolean b=ckcodemobile(code, userName, "MOBILELOGINFLAG");
 				if(!b){
 					result.setSuccess(false);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setMsg("登陆验证码错误");
 				}
-				//RedisUtils.del(userName+"MOBILELOGINFLAG");
+				RedisUtils.del(userName+"MOBILELOGINFLAG");
 			}
 		}
 		return result;
@@ -251,7 +252,7 @@ public class UserProServiceImpl implements UserProService{
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 	    if(upi!=null&&upi.getName().equals(userName.trim())){
 	    	Boolean tempStatus=upi.getDeleteStatus();
-	    	if(tempStatus){
+	    	if(!tempStatus){
 	    		result.setSuccess(true);
 	    		result.setMsg("登陆成功");
 	    		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -285,7 +286,7 @@ public class UserProServiceImpl implements UserProService{
 				if(b){
 					// 判断是否是财务关联账户,如果是,将登陆信息切换到主账户.avatar:账户登录标识,true:主账户登录,false:财务账户登录,并保存在redis中
 					// 如果当前为主账户,更改标识
-					if(userProInfo.getParent_id() ==0){
+					if(Tools.isEmpty(String.valueOf(userProInfo.getParent_id()))){
 						userProInfo.setAvatar(true);
 					}else{
 						// 非主账户,是否有关联的主账户
@@ -295,7 +296,7 @@ public class UserProServiceImpl implements UserProService{
 					//判断是否启用
 					int tempStatus=userProInfo.getEzs_userinfo().getStatus();
 					
-					//添加缓存
+					//添加缓存 
 					String str32=RandomStr32.getStr32();
 					String userKey=userProInfo.getName()+userProInfo.getEzs_userinfo().getPhone()+str32;
 					Cookie cookie=new Cookie(cookieuserkey, userKey);
@@ -307,8 +308,8 @@ public class UserProServiceImpl implements UserProService{
 					try {
 						if(tempStatus==0&&userProInfo.getAddTime().getTime()>1479052799000l){
 							//首次登陆 应该跳转到 注册联系人资料
-							result.setSuccess(false);
-				    		result.setMsg("用户不存在");
+							result.setSuccess(true);
+				    		result.setMsg("登陆成功");
 				    		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 							RedisResult<String> rrt;
 	    					rrt=(RedisResult<String>) RedisUtils.set(userKey,userProInfo, Long.parseLong(redisuserkeyexpir));
@@ -467,7 +468,7 @@ public class UserProServiceImpl implements UserProService{
 			
 			ezs_user upi=new ezs_user();
 			upi.setName(username);
-			upi.setPassword(passwd);
+			upi.setPassword(MD5Util.md5Encode(passwd));
 			upi.setAddTime(new Date());
 			upi.setLastLoginDate(new Date());
 			upi.setLastLoginIp(myip);
@@ -475,7 +476,6 @@ public class UserProServiceImpl implements UserProService{
 			upi.setLoginDate(new Date());
 			upi.setLoginIp(myip);
 			upi.setName(username);
-			upi.setPassword(passwd);
 			upi.setUserRole("BUYER");
 			upi.setDeleteStatus(false);
 			
@@ -483,7 +483,6 @@ public class UserProServiceImpl implements UserProService{
 			
 			//缓存用名称密码
 			Cookie [] cookies=request.getCookies();			
-			if(cookies!=null){
 
 				RedisResult<String> rrt = null;
 				String tempKey=RandomStr32.getStr32()+RandomStr32.getStr32();
@@ -492,13 +491,14 @@ public class UserProServiceImpl implements UserProService{
 				if(userKey!=null){
 					if(cookies!=null){
 						for(Cookie ck:cookies){
-							if(ck.getName().equals(userKey)){
+							if(ck.getName().equals(registcarid)){
 								userKey=ck.getValue();
 								ck.setValue(tempKey);
 							}
 						}
 					}
 					Cookie cookie=new Cookie(registcarid, tempKey);
+					cookie.setMaxAge(3600);
 					response.addCookie(cookie);
 					RedisUtils.del(userKey);
 					rrt=(RedisResult<String>) RedisUtils.set(tempKey,upi, Long.parseLong(redisuserkeyexpir));
@@ -518,11 +518,6 @@ public class UserProServiceImpl implements UserProService{
 					result.setMsg("请求失败");
 					//hunXinService.regHuanxinSingle(username, HunXinServiceImpl.passwordefault, userInfo.getUserid());
 				}
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
-				result.setSuccess(false);
-				result.setMsg("请开启cookie使用权限");
-			}
 			
 			
 			
@@ -554,6 +549,15 @@ public class UserProServiceImpl implements UserProService{
 				result.setMsg("格式有误，请输入正确的手机号码");
 				return result;
 		 }else{
+			 
+			 int istrue=ezs_userMapper.checkMobile(phone);
+			 if(istrue==0){
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+					result.setSuccess(false);
+					result.setMsg("未找到该手机号码客户");
+					return result;
+			 }
+			 
 			 //先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimesstr);
 			 RedisResult<Integer> rrtin=(RedisResult<Integer>) RedisUtils.get(phone+mobilerecodestr+"times",Integer.class);
@@ -617,7 +621,13 @@ public class UserProServiceImpl implements UserProService{
 			 result.setSuccess(false);
 			 result.setMsg("手机号码格式错误");
 		 }else{
-			 
+			 int istrue=ezs_userMapper.checkMobile(phone);
+			 if(istrue==0){
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+					result.setSuccess(false);
+					result.setMsg("未找到该手机号码客户");
+					return result;
+			 }
 			//先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimes);
 			 //这里需要改
@@ -679,6 +689,13 @@ public class UserProServiceImpl implements UserProService{
 	public  Result  sendFtCode(String phone,String code) {
 		Result result=Result.failure();
 		if(StringUtils.isNotEmpty(phone)&&Tools.paramValidate(phone, 1)){
+			int istrue=ezs_userMapper.checkMobile(phone);
+			 if(istrue==0){
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+					result.setSuccess(false);
+					result.setMsg("未找到该手机号码客户");
+					return result;
+			 }
 			//先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimes);
 			 //这里需要改
@@ -864,6 +881,7 @@ public class UserProServiceImpl implements UserProService{
 						result.setMsg("手机号码已经被注册");
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 					result.setSuccess(false);
 					result.setMsg("服务器异常");
@@ -1122,6 +1140,7 @@ public class UserProServiceImpl implements UserProService{
 			int aa = 0;
 			try {
 				long storyid = ezs_storeMapper.insert(story);
+				storyid=story.getId();
 				//主营行业部分
 				Industry(Industrys, storyid);;
 				//经营类型部分
@@ -1131,7 +1150,8 @@ public class UserProServiceImpl implements UserProService{
 				user.setUserInfo_id(userinfoid);
 				user.setStore_id(storyid);
 				user.setUserRole(userRole);
-
+				user.setTrueName(trueName);
+				user.setStore_id(storyid);
 				aa = ezs_userMapper.insert(user);
 			} catch (Exception e) {
 				log.info("注册：保存用户注册信息错误" + e.toString());

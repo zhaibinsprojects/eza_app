@@ -3,24 +3,27 @@ package com.sanbang.dao;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-
 import com.sanbang.bean.ezs_goods_class;
 
 
 @Repository(value="ezs_cataMapper")
 public interface ezs_cataMapper {
 	/**
-	 * 查询品类一级分类
+	 * 查询一级分类
 	 */
-	List<ezs_goods_class> getListForClass();
+	List<ezs_goods_class> getOnelevelList();
 	/**
-	 * 查询二级分类，条件：一级分类的id
+	 * 查询二级分类
+	 * @param parentId
+	 * @return
 	 */
-	List<ezs_goods_class> getCataList2();
-	
-	
-	
-	
+	List<ezs_goods_class> getTwolevelList(long parentId);
+	/**
+	 * 查询三级分类
+	 * @param parentId
+	 * @return
+	 */
+	List<ezs_goods_class> getThreelevelList(long parentId);
 	
 	
 }

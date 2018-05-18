@@ -185,4 +185,14 @@
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 根据货品id 查询图片 -->
+  <select id="selectPhotoById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+  	<include refid="Base_Column_List" /> 
+  	from ezs_accessory acc where acc.id in 
+  	(select gph.photo_id from ezs_goods_photo gph 
+  	where gph.goods_id=#{goodsId}  )
+  </select>
+  
 </mapper>

@@ -51,6 +51,11 @@ public class UserProController {
 	@Value("${consparam.cookie.useridcard}")
 	private String USERIDCARD;
 	
+	@Value("${consparam.mobile.sendtimes}")
+	private String sendtimes;
+	
+	
+	
 	private static final String SHOPPINGCARTNUM = "spcnum";
 
 	
@@ -78,14 +83,14 @@ public class UserProController {
         Result result = Result.failure();
       //无密登录
 		content = MessageDictionary.loginCode(code.toString());
-		result=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60","3",null,content);
+		result=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60",sendtimes,null,content);
         return result;
     }  
 
 
 	
 	/**
-	 * 用户登录验证
+	 * 用户密码登录验证
 	 * @param userName
 	 * @param passwd
 	 * @param httpSession
@@ -93,23 +98,51 @@ public class UserProController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "/userLogin")
+	@RequestMapping(value = "/userLoginpsw")
+	@ResponseBody
+	public Result userLoginpsw(
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "passwd", required = false) String passwd,
+			@RequestParam(value = "code", required = false) String code,
+			HttpSession httpSession, HttpServletRequest request,
+<<<<<<< HEAD
+			HttpServletResponse response,Integer flag) throws Exception {
+		
+=======
+			HttpServletResponse response) throws Exception {
+>>>>>>> 80cd2c6286476e5384c4fe5222d561946e24b141
+		Result result=Result.failure();
+		String userAgent = request.getHeader("User-Agent");
+		String ip = IpUtils.getIpAddr(request);
+		result = userProService.login(userName, passwd, code, userAgent, ip,
+					request, response,null);
+		return result;
+	}
+	
+	/**
+	 * 用户验证码登录
+	 * @param userName
+	 * @param passwd
+	 * @param httpSession
+	 * @param request
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/userLoginPhone")
 	@ResponseBody
 	public Result userLogin(
 			@RequestParam(value = "userName", required = false) String userName,
 			@RequestParam(value = "passwd", required = false) String passwd,
 			@RequestParam(value = "code", required = false) String code,
 			HttpSession httpSession, HttpServletRequest request,
-			HttpServletResponse response,Integer flag) throws Exception {
-		
+			HttpServletResponse response) throws Exception {
 		Result result=Result.failure();
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
-					request, response,flag);
+					request, response,1);
 		return result;
 	}
-	
 	
 	/**
 	 * 当前登录用户退出
@@ -120,6 +153,7 @@ public class UserProController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/userLogot")
+	@ResponseBody
 	public Result userLogot(HttpServletRequest request) throws Exception {
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
@@ -145,10 +179,10 @@ public class UserProController {
 		Result result=Result.failure();
 		
 		//检查手机号
-		result=userProService.checkUserName(mobile);
+		/*result=userProService.checkUserName(mobile);
 		if(!result.getSuccess()){
 			return result;
-		}
+		}*/
 		//发送忘记密码验证码
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  
@@ -184,7 +218,7 @@ public class UserProController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@RequestMapping(value="/checkFtCode/modifyPasswd/chkPasswd")
+	@RequestMapping(value="/modifyPasswd")
 	@ResponseBody
 	public Result chgPwd(@RequestParam(value="passwd",required=false)String passwd,@RequestParam(value="passwdA",required=false) String passwdA,
 			HttpSession session,HttpServletRequest request,HttpServletResponse response) throws Exception{

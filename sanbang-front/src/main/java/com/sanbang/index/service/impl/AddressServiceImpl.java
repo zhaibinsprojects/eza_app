@@ -31,12 +31,13 @@ public class AddressServiceImpl implements AddressService {
 		Map<String,Object> mmp = new HashMap<>();
 		List<HotProvince> hlist = null;
 		//查询缓存是否已存在
-		hlist = (List<HotProvince>) RedisUtils.getList("hotProvince");
+		//hlist = (List<HotProvince>) RedisUtils.getList("hotProvince");
+		//hlist =(List<HotProvince>) RedisUtils.get("hotProvince",HotProvince.class);
 		if(hlist==null){
 			hlist = this.areaMapper.getHotArea();
 			if(hlist!=null){
 				//存储redis
-				RedisUtils.setList("hotProvince", hlist);
+				//RedisUtils.setList("hotProvince", hlist);
 				mmp.put("HotAreasList", hlist);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			}else{
@@ -54,11 +55,11 @@ public class AddressServiceImpl implements AddressService {
 	public Map<String, Object> getProvince() {
 		Map<String,Object> mmp = new HashMap<String, Object>();
 		List<ezs_area> elist = null;
-		elist = (List<ezs_area>) RedisUtils.getList("ProvinceMess");
+		//elist = (List<ezs_area>) RedisUtils.getList("ProvinceMess");
 		if(elist==null){
 			elist = this.areaMapper.getAreaParentList();
 			if(elist!=null){
-				RedisUtils.setList("ProvinceMess", elist);
+				//RedisUtils.setList("ProvinceMess", elist);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Obj", elist);
 			}else{
@@ -82,6 +83,20 @@ public class AddressServiceImpl implements AddressService {
 		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_HOTCITY_FAIL);
 			mmp.put("Msg", "查询异常");
+		}
+		return mmp;
+	}
+	@Override
+	public Map<String, Object> getParentByChild(Long pId) {
+		// TODO Auto-generated method stub
+		Map<String,Object> mmp = new HashMap<String, Object>();
+		ezs_area pArea = this.areaMapper.selectParentByChildKey(pId);
+		if(pArea!=null){
+			mmp.put("Obj", pArea);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}else{
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;
 	}

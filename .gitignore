@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 /.classpath
 /.gitignore
 /target/
+=======
+target/
+.settings/
+>>>>>>> 80cd2c6286476e5384c4fe5222d561946e24b141

@@ -116,21 +116,55 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_positionMapper" />
 	</bean>
+	 <bean id="ezs_dvaluateMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_dvaluateMapper" />
+	</bean>
+	
+	<bean id="ezs_goodscartMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goodscartMapper" />
+	</bean>
+	
+	<bean id="ezs_orderformMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_orderformMapper" />
+	</bean>
+	
+	<bean id="ezs_documentshareMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_documentshareMapper" />
+	</bean>
+	
+	<!-- 定制采购-订购商 -->
+	<bean id="ezs_customized_recordMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customized_recordMapper" />
+	</bean>
+	<!-- 定制采购-定制单 -->
+	<bean id="ezs_customizedMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customizedMapper" />
+	</bean>
+	<!-- 地址 -->
+ 	<bean id="ezs_addressMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_addressMapper" />
+	</bean>
+	<!-- 栏目 -->
+	<bean id="ezs_columnMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_columnMapper"/>
+	</bean>
+	<!-- 文章 -->
+	<bean id="ezs_ezssubstanceMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_ezssubstanceMapper"/>
+	</bean>
+	<!-- 实时报价 -->
+	<bean id="ezs_price_trendMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_price_trendMapper"/>
+	</bean>
 	
 </beans>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

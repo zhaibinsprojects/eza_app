@@ -2,6 +2,9 @@ package com.sanbang.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.sanbang.vo.userauth.AuthImageVo;
 
 /**
  * 用户登陆信息
@@ -10,12 +13,8 @@ import java.util.Date;
  *
  */
 public class ezs_user implements Serializable {
-	
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7393404551601475968L;
+	private static final long serialVersionUID = -2710575667615236430L;
 
 	private Long id;
 
@@ -37,9 +36,9 @@ public class ezs_user implements Serializable {
 
 	private String password;
 
-	private String trueName;
+	private String trueName;//真实名称
 
-	private String userRole;
+	private String userRole;//角色
 
 	private Long parent_id;
 
@@ -58,13 +57,9 @@ public class ezs_user implements Serializable {
 
 	private ezs_store ezs_store;// 公司资料信息
 
-	public String getUserkey() {
-		return userkey;
-	}
+	private ezs_bill ezs_bill;// 发票信息
 
-	public void setUserkey(String userkey) {
-		this.userkey = userkey;
-	}
+	private List<AuthImageVo> authimg;// 资质存储
 
 	public Long getId() {
 		return id;
@@ -103,7 +98,7 @@ public class ezs_user implements Serializable {
 	}
 
 	public void setLastLoginIp(String lastLoginIp) {
-		this.lastLoginIp = lastLoginIp == null ? null : lastLoginIp.trim();
+		this.lastLoginIp = lastLoginIp;
 	}
 
 	public Integer getLoginCount() {
@@ -127,7 +122,7 @@ public class ezs_user implements Serializable {
 	}
 
 	public void setLoginIp(String loginIp) {
-		this.loginIp = loginIp == null ? null : loginIp.trim();
+		this.loginIp = loginIp;
 	}
 
 	public String getName() {
@@ -135,7 +130,7 @@ public class ezs_user implements Serializable {
 	}
 
 	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
+		this.name = name;
 	}
 
 	public String getPassword() {
@@ -143,7 +138,7 @@ public class ezs_user implements Serializable {
 	}
 
 	public void setPassword(String password) {
-		this.password = password == null ? null : password.trim();
+		this.password = password;
 	}
 
 	public String getTrueName() {
@@ -151,7 +146,7 @@ public class ezs_user implements Serializable {
 	}
 
 	public void setTrueName(String trueName) {
-		this.trueName = trueName == null ? null : trueName.trim();
+		this.trueName = trueName;
 	}
 
 	public String getUserRole() {
@@ -159,7 +154,7 @@ public class ezs_user implements Serializable {
 	}
 
 	public void setUserRole(String userRole) {
-		this.userRole = userRole == null ? null : userRole.trim();
+		this.userRole = userRole;
 	}
 
 	public Long getParent_id() {
@@ -186,6 +181,22 @@ public class ezs_user implements Serializable {
 		this.userInfo_id = userInfo_id;
 	}
 
+	public String getUserkey() {
+		return userkey;
+	}
+
+	public void setUserkey(String userkey) {
+		this.userkey = userkey;
+	}
+
+	public String getAuthkey() {
+		return authkey;
+	}
+
+	public void setAuthkey(String authkey) {
+		this.authkey = authkey;
+	}
+
 	public boolean isAvatar() {
 		return isAvatar;
 	}
@@ -210,12 +221,20 @@ public class ezs_user implements Serializable {
 		this.ezs_store = ezs_store;
 	}
 
-	public String getAuthkey() {
-		return authkey;
+	public ezs_bill getEzs_bill() {
+		return ezs_bill;
 	}
 
-	public void setAuthkey(String authkey) {
-		this.authkey = authkey;
+	public void setEzs_bill(ezs_bill ezs_bill) {
+		this.ezs_bill = ezs_bill;
+	}
+
+	public List<AuthImageVo> getAuthimg() {
+		return authimg;
+	}
+
+	public void setAuthimg(List<AuthImageVo> authimg) {
+		this.authimg = authimg;
 	}
 
 	@Override
@@ -225,7 +244,8 @@ public class ezs_user implements Serializable {
 				+ loginDate + ", loginIp=" + loginIp + ", name=" + name + ", password=" + password + ", trueName="
 				+ trueName + ", userRole=" + userRole + ", parent_id=" + parent_id + ", store_id=" + store_id
 				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", authkey=" + authkey + ", isAvatar="
-				+ isAvatar + ", ezs_userinfo=" + ezs_userinfo + ", ezs_store=" + ezs_store + "]";
+				+ isAvatar + ", ezs_userinfo=" + ezs_userinfo + ", ezs_store=" + ezs_store + ", ezs_bill=" + ezs_bill
+				+ ", authimg=" + authimg + "]";
 	}
 
 }

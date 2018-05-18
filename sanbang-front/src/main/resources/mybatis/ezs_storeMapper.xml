@@ -67,7 +67,7 @@
     delete from ezs_store
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_store" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_store"   useGeneratedKeys="true" keyProperty="id">
     insert into ezs_store (id, addTime, deleteStatus, 
       account, accountType, address, 
       admin_status, assets, capitalPrice, 
