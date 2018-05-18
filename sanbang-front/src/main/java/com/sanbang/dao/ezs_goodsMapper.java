@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
-import com.sanbang.utils.Result;
+import com.sanbang.vo.GoodsInfo;
 
 @Repository
 public interface ezs_goodsMapper {
@@ -22,13 +22,30 @@ public interface ezs_goodsMapper {
 
     int updateByPrimaryKey(ezs_goods record);
     
-    List<ezs_goods> selectByGoodName(String name);
+    List<GoodsInfo> selectByGoodName(String name);
     
-    List<ezs_goods> goodsIntroduce(Page page);
+    List<GoodsInfo> goodsIntroduce(Page page);
     
     int goodsIntroduceCount();
 
 	List<ezs_goods> selectGoodsListBySellerId(Long sellerId, int status);
 
 	int pullOffShelves(long goodsId);
+	
+	//同类货品
+	List<ezs_goods> listForGoods(Long id);
+	
+	/**
+	 * 自营，地区、类别筛选
+	 * @param area 地区
+	 * @param type 类别
+	 * @return
+	 */
+	List<ezs_goods> listByAreaAndType(String area,String type);
+	/**
+	 * 其他筛选条件
+	 * @param terms	字符串数组
+	 * @return
+	 */
+	List<ezs_goods> listByOthers(String[] terms);
 }
