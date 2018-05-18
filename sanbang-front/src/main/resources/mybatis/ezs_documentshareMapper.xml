@@ -116,7 +116,7 @@
   </update>
   
   <!-- 根据商品id修改收藏状态 -->
-  <update id="updateCollect" parameterType="java.long.Long" >
+  <update id="updateCollect" parameterType="java.lang.Long" >
     update ezs_documentshare
     set house = #{house,jdbcType=INTEGER} 
     where goods_id = #{goods_id,jdbcType=BIGINT}

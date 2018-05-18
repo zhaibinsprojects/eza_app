@@ -121,8 +121,6 @@
 			value="com.sanbang.dao.ezs_goodscartMapper" />
 	</bean>
 	
-<<<<<<< HEAD
-=======
 	<bean id="ezs_orderformMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_orderformMapper" />
@@ -164,21 +162,4 @@
 			value="com.sanbang.dao.ezs_price_trendMapper"/>
 	</bean>
 	
->>>>>>> cdd272509c16052766ba41b95f2f255b12715924
 </beans>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

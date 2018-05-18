@@ -27,9 +27,9 @@ public class GoodsServiceImpl implements GoodsService{
 	@Autowired
 	private com.sanbang.dao.ezs_goodscartMapper ezs_goodscartMapper;
 	@Autowired
-	private com.sanbang.dao.ezs_documentshareMapper documentshareMapper;
+	private com.sanbang.dao.ezs_documentshareMapper ezs_documentshareMapper;
 	@Autowired
-	private com.sanbang.dao.ezs_orderformMapper orderformMapper;
+	private com.sanbang.dao.ezs_orderformMapper ezs_orderformMapper;
 	
 	
 	/**
@@ -58,19 +58,19 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public int updateCollect(Long id){
-		int n = documentshareMapper.updateCollect(id);
+		int n = ezs_documentshareMapper.updateCollect(id);
 		return n;
 	}
 	
 	public int insertCollect(Long id){
 		ezs_documentshare share = new ezs_documentshare();
 		share.setGood_id(id);
-		int n = documentshareMapper.insert(share);
+		int n = ezs_documentshareMapper.insert(share);
 		return n;
 	}
 	
 	public int insertOrder(ezs_orderform order){
-		int n = orderformMapper.insert(order);
+		int n = ezs_orderformMapper.insert(order);
 		return n;
 	}
 	//同类货品
