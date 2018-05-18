@@ -105,12 +105,7 @@ public class UserProController {
 			@RequestParam(value = "passwd", required = false) String passwd,
 			@RequestParam(value = "code", required = false) String code,
 			HttpSession httpSession, HttpServletRequest request,
-<<<<<<< HEAD
-			HttpServletResponse response,Integer flag) throws Exception {
-		
-=======
 			HttpServletResponse response) throws Exception {
->>>>>>> 80cd2c6286476e5384c4fe5222d561946e24b141
 		Result result=Result.failure();
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
