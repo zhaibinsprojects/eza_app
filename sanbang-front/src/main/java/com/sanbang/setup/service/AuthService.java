@@ -28,4 +28,5 @@ public interface AuthService {
 	 * 个体暂存税号
 	 */
 	public Result saveindivEin(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
+
 }
