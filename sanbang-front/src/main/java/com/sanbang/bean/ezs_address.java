@@ -3,6 +3,12 @@ package com.sanbang.bean;
 import java.util.Date;
 
 public class ezs_address {
+	
+	public static final Boolean ADDRESS_DELETESTATUS_0 = false;//启用
+	public static final Boolean ADDRESS_DELETESTATUS_1 = true;//不启用
+	public static final Boolean ADDRESS_BESTOW_0 = false;//默认
+	public static final Boolean ADDRESS_BESTOW_1 = true;//非默认
+	
     private Long id;
 
     private Date addTime;
