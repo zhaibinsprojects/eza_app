@@ -724,4 +724,60 @@
   <select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select g.* from ezs_goods g where EXISTS (select 1 from ezs_documentshare e where e.good_id = g.id and e.deleteStatus = '0' and e.house = '1' and e.user_id = #{userId})
   </select>
+  <!-- 自营，地区、品类筛选 -->
+  <!-- 关联表：ezs_area，area_id:商品库存区县 -->
+  <!-- 关联表：ezs_goods_class，goodClass_id:商品分类 -->
+  <!-- mybatis会自动封装到实体类中，忽略联合查询的多余字段 -->
+  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.lang.String" >
+    select * from ezs_goods g left join ezs_area a on g.area_id = a.id 
+    left join ezs_goods_class gc on g.goodClass_id = gc.id 
+    where 
+    <if test="areaName !=null and areaName != '' ">
+        a.areaName = #{areaName, jdbcType=VARCHAR}
+    </if>
+    <if test="name !=null and name != '' ">
+        gc.name = #{name, jdbcType=VARCHAR}
+    </if> 
+  </select>
+  
+  <!-- 其他筛选 -->
+  <!-- 
+  	left join ezs_dict dict1 on goods.color_id = dict1.id 
+    left join ezs_dict dict2 on goods.form_id = dict2.id where 
+    <if test="colorName !=null and colorName != '' ">  
+        dict1.name = #{colorName, jdbcType=VARCHAR} 
+    </if>
+    <if test="formName !=null and formName != '' ">  
+        dict2.name = #{formName, jdbcType=VARCHAR} 
+    </if>
+   -->
+  <select id="listByOthers" resultType="ezs_goods" parameterType="java.util.Map" >
+    select * from ezs_goods goods where 1 = 1 
+    <if test="color_id !=null and color_id != '' ">  
+        and goods.color_id = #{color_id, jdbcType=BIGINT}
+    </if>
+    <if test="form_id !=null and form_id != '' ">  
+        and goods.form_id = #{form_id, jdbcType=BIGINT}   
+    </if>
+    <if test="purpose !=null and purpose != '' ">  
+        and goods.purpose = #{purpose, jdbcType=VARCHAR}   
+    </if>
+    <if test="source !=null and source != '' ">  
+        and goods.source = #{source, jdbcType=VARCHAR}   
+    </if>
+    <if test="burning !=null and burning != '' ">  
+        and goods.burning = #{burning, jdbcType=VARCHAR}   
+    </if>
+    <if test="protection !=null and protection != '' ">  
+        and goods.protection = #{protection, jdbcType=BIT}
+    </if>
+    <!-- 下面的是重要参数信息，是一个范围值 -->
+    <if test="ash !=null and ash != '' "> 
+        and goods.ash &gt;= #{ash1, jdbcType=BIGINT} and goods.ash &lt;= #{ash2, jdbcType=BIGINT} 
+    </if>
+    order by lastModifyDate desc
+  </select>
+  
+  
+  
 </mapper>
