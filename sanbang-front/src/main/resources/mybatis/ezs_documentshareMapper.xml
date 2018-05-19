@@ -13,13 +13,13 @@
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, give, house, ezsSubstance_id, user_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
     <include refid="Base_Column_List" />
     from ezs_documentshare
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey"  >
     delete from ezs_documentshare
     where id = #{id,jdbcType=BIGINT}
   </delete>
@@ -116,7 +116,7 @@
   </update>
   
   <!-- 根据商品id修改收藏状态 -->
-  <update id="updateCollect" parameterType="java.long.Long" >
+  <update id="updateCollect"  >
     update ezs_documentshare
     set house = #{house,jdbcType=INTEGER} 
     where goods_id = #{goods_id,jdbcType=BIGINT}

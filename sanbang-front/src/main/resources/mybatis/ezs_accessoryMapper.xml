@@ -30,7 +30,7 @@
     delete from ezs_accessory
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_accessory" >
+  <insert id="insert" parameterType="ezs_accessory"  useGeneratedKeys="true" keyProperty="id">
     insert into ezs_accessory (id, addTime, deleteStatus, 
       ext, height, info, 
       name, path, size, width, 
@@ -42,7 +42,7 @@
       #{album_id,jdbcType=BIGINT}, #{config_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_accessory" >
+  <insert id="insertSelective" parameterType="ezs_accessory" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_accessory
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -193,6 +193,30 @@
   	from ezs_accessory acc where acc.id in 
   	(select gph.photo_id from ezs_goods_photo gph 
   	where gph.goods_id=#{goodsId}  )
+  </select>
+  
+  
+   <resultMap id="authimgmap" type="com.sanbang.vo.userauth.AuthImageVo" >
+    <result column="paperType" property="imgcode" jdbcType="VARCHAR" />
+    <result column="path" property="imgurl" jdbcType="VARCHAR" />
+    <result column="id" property="accid" jdbcType="BIGINT" />
+    <result column="validDate" property="usetime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!--得到上传图片-->
+  <select id="getAuthImgListByStoreid" resultMap="authimgmap">
+	  	SELECT
+		 B.paperType,
+ 		 B.validDate,
+  		 C.name,
+		 C.path,
+		 C.id
+	FROM
+		ezs_card_dict A
+	LEFT JOIN ezs_paper B ON A.paper_id = B.id
+	LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
+	WHERE A.store_id=${storeid}
   </select>
   
 </mapper>
