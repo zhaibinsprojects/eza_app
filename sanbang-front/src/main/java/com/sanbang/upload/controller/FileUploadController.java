@@ -50,18 +50,22 @@ public class FileUploadController {
 				result.setSuccess(true);
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setMsg("上传成功");
+				result.setMsg("上传失败");
 				result.setObj("");
 				result.setSuccess(false);
 			}
 		} catch (Exception e) {
 			log.info("文件：上传接口调用失败"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setMsg("上传成功");
+			result.setMsg("上传失败");
 			result.setObj("");
 			result.setSuccess(false);
 		} 
 		
+		
 	}
+	
+	
+
 	
 }

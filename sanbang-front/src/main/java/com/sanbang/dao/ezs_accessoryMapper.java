@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_accessory;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 @Repository
 public interface ezs_accessoryMapper {
@@ -21,4 +22,6 @@ public interface ezs_accessoryMapper {
     int updateByPrimaryKey(ezs_accessory record);
 
 	List<ezs_accessory> selectPhotoById(Long photo_id);
+	
+	List<AuthImageVo> getAuthImgListByStoreid(long storeid);
 }

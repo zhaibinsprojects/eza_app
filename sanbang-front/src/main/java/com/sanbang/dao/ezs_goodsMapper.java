@@ -2,6 +2,8 @@ package com.sanbang.dao;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goods;
@@ -32,7 +34,11 @@ public interface ezs_goodsMapper {
 
 	int pullOffShelves(long goodsId);
 	
-	//同类货品
+	/**
+	 * 同类货品
+	 * @param id 级别id
+	 * @return
+	 */
 	List<ezs_goods> listForGoods(Long id);
 	
 	/**
@@ -43,9 +49,14 @@ public interface ezs_goodsMapper {
 	 */
 	List<ezs_goods> listByAreaAndType(String area,String type);
 	/**
-	 * 其他筛选条件
-	 * @param terms	字符串数组
+	 * 
+	 * @param color 颜色
+	 * @param form 形态
+	 * @param purpose 用途
+	 * @param source
+	 * @param burning
+	 * @param protection
 	 * @return
 	 */
-	List<ezs_goods> listByOthers(String[] terms);
+	List<ezs_goods> listByOthers(Long color,Long form,String purpose,String source,String burning,boolean protection);
 }

@@ -9,23 +9,40 @@ import com.sanbang.utils.Result;
 public interface AuthService {
 
 	/**
-	 * 公司暂存保存公司信息
+	 * 保存公司信息
 	 */
-	public Result saveComAuth(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
-	
+	public Result saveComAuth(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
+
 	/**
-	 * 公司暂存税号
+	 * 保存公司税号
 	 */
-	public Result saveComEin(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
-	
-	
+	public Result saveComEin(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
+
 	/**
-	 * 个体暂存保存公司信息
+	 * 个体保存公司信息
 	 */
-	public Result saveindivAuth(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
+	public Result saveindivAuth(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
+
+	/**
+	 * 个体暂存税号
+	 */
+	public Result saveindivEin(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
+
+	/**
+	 * 提交信息
+	 * @param result
+	 * @param request
+	 * @param upi
+	 * @param response
+	 * @param flag
+	 * @return
+	 */
+	public Result saveAuthInfo(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response,
+			String flag);
 	
 	/**
 	 * 个体暂存税号
 	 */
-	public Result saveindivEin(Result result, HttpServletRequest request,ezs_user upi,HttpServletResponse response);
+	public Result savePicUrl(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
+	
 }

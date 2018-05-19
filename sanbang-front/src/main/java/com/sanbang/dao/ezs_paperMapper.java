@@ -1,10 +1,7 @@
 package com.sanbang.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.sanbang.bean.ezs_paper;
 
-@Repository
 public interface ezs_paperMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -17,4 +14,5 @@ public interface ezs_paperMapper {
     int updateByPrimaryKeySelective(ezs_paper record);
 
     int updateByPrimaryKey(ezs_paper record);
+    
 }

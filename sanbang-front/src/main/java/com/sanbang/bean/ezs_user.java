@@ -14,7 +14,7 @@ import com.sanbang.vo.userauth.AuthImageVo;
  */
 public class ezs_user implements Serializable {
 
-	private static final long serialVersionUID = -2710575667615236430L;
+	private static final long serialVersionUID = 4407580224409222723L;
 
 	private Long id;
 
@@ -36,9 +36,9 @@ public class ezs_user implements Serializable {
 
 	private String password;
 
-	private String trueName;//真实名称
+	private String trueName;// 真实名称
 
-	private String userRole;//角色
+	private String userRole;// 角色
 
 	private Long parent_id;
 
@@ -60,6 +60,10 @@ public class ezs_user implements Serializable {
 	private ezs_bill ezs_bill;// 发票信息
 
 	private List<AuthImageVo> authimg;// 资质存储
+
+	private boolean authimgstate;// 资质信息完成
+
+	private boolean authorfilestate;// 授权文件完成情况
 
 	public Long getId() {
 		return id;
@@ -237,6 +241,22 @@ public class ezs_user implements Serializable {
 		this.authimg = authimg;
 	}
 
+	public boolean isAuthimgstate() {
+		return authimgstate;
+	}
+
+	public void setAuthimgstate(boolean authimgstate) {
+		this.authimgstate = authimgstate;
+	}
+
+	public boolean isAuthorfilestate() {
+		return authorfilestate;
+	}
+
+	public void setAuthorfilestate(boolean authorfilestate) {
+		this.authorfilestate = authorfilestate;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_user [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", lastLoginDate="
@@ -245,7 +265,8 @@ public class ezs_user implements Serializable {
 				+ trueName + ", userRole=" + userRole + ", parent_id=" + parent_id + ", store_id=" + store_id
 				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", authkey=" + authkey + ", isAvatar="
 				+ isAvatar + ", ezs_userinfo=" + ezs_userinfo + ", ezs_store=" + ezs_store + ", ezs_bill=" + ezs_bill
-				+ ", authimg=" + authimg + "]";
+				+ ", authimg=" + authimg + ", authimgstate=" + authimgstate + ", authorfilestate=" + authorfilestate
+				+ "]";
 	}
 
 }

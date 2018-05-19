@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-/.classpath
-/.gitignore
-/target/
-sanbang-front/target/
-=======
-/.classpath
-/.gitignore
-/target/
->>>>>>> b9cff317c13ac9731e6d2c435a466a4754e9eacc
+.classpath		#仓库中所有名为.classpath的文件都屏蔽
+.gitignore		#仓库中所有名为.gitignore的文件都屏蔽
+target/			#屏蔽target目录
+.settings/		#屏蔽.settings目录

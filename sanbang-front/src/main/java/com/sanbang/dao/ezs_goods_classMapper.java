@@ -21,4 +21,6 @@ public interface ezs_goods_classMapper {
     int updateByPrimaryKey(ezs_goods_class record);
     
     List<ezs_goods_class> selectAllGoodClass();
+    
+    List<ezs_goods_class> selectAllGoodClassByLevel(String level);
 }

@@ -10,9 +10,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
@@ -32,8 +37,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.sanbang.bean.ezs_user;
 import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.RedisUserSession;
+import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 @Service("fileUploadService")
 public class FileUploadServiceImpl implements FileUploadService {
@@ -67,6 +77,10 @@ public class FileUploadServiceImpl implements FileUploadService {
 
 	// 支持的图片格式数组
 	public String[] format;
+	
+	// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
 
 	@PostConstruct
 	public void initMethod() {
@@ -74,6 +88,8 @@ public class FileUploadServiceImpl implements FileUploadService {
 	}
 
 	private static final String IMAGEENDPATH = "-100.jpg";
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");                
 
 	/**
 	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
@@ -212,12 +228,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 		log.info("上传图片文件结果:code=" + map.get("code") + " &message=" + map.get("message"));
 		return map;
 	}
+
 	/**
 	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
 	 * 图片宽和长就是多少 size是当前图片的大小 单位是字节 返回 json串 code为000代表操作成功
 	 */
-	public Map<String, Object> uploadFileforshop(HttpServletRequest request, int width, int height, long size,String type)
-			throws Exception {
+	public Map<String, Object> uploadFileforshop(HttpServletRequest request, int width, int height, long size,
+			String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("上传图片文件");
 		String path = null;
@@ -245,7 +262,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 						if (b) {
 							// 判断图片长宽
 							if (width != 0 && height != 0) {
-								if (filterImgLessforshop(file.getInputStream(), width, height,type)) {
+								if (filterImgLessforshop(file.getInputStream(), width, height, type)) {
 									// 判断是否存在年月文件夹，没有就创建
 									saveFileMethodformall(ym, d, hms, file, path, map);
 								} else {
@@ -280,6 +297,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 		log.info("上传图片文件结果:code=" + map.get("code") + " &message=" + map.get("message"));
 		return map;
 	}
+
 	public boolean sizeInfo(MultipartFile file, long size) {
 		long fileSize = file.getSize();
 		if (fileSize <= size) {
@@ -288,12 +306,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 			return false;
 		}
 	}
+
 	/**
 	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
 	 * 图片宽和长就是多少 size是当前图片的大小 单位是字节 返回 json串 code为000代表操作成功
 	 */
-	public Map<String, Object> uploadFilenomark(HttpServletRequest request, int width, int height, long size,String type)
-			throws Exception {
+	public Map<String, Object> uploadFilenomark(HttpServletRequest request, int width, int height, long size,
+			String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("上传图片文件");
 		String path = null;
@@ -321,7 +340,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 						if (b) {
 							// 判断图片长宽
 							if (width != 0 && height != 0) {
-								if (filterImgLessforshop(file.getInputStream(), width, height,type)) {
+								if (filterImgLessforshop(file.getInputStream(), width, height, type)) {
 									// 判断是否存在年月文件夹，没有就创建
 									saveFileMethod(ym, d, hms, file, path, map);
 								} else {
@@ -540,17 +559,20 @@ public class FileUploadServiceImpl implements FileUploadService {
 			return false;
 		}
 	}
+
 	/**
 	 * 判断图片宽高是否小于定义宽度
 	 * 
 	 * @param file
 	 * @param standWidth
 	 * @param standHeight
-	 * @param size  1 等于 2 大于等于  3 小于等于   为空 默认为小于等于
+	 * @param size
+	 *            1 等于 2 大于等于 3 小于等于 为空 默认为小于等于
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean filterImgLessforshop(InputStream file, int standWidth, int standHeight,String type) throws IOException {
+	public boolean filterImgLessforshop(InputStream file, int standWidth, int standHeight, String type)
+			throws IOException {
 		BufferedImage bi = null;
 		int width = 0;
 		int height = 0;
@@ -558,28 +580,27 @@ public class FileUploadServiceImpl implements FileUploadService {
 		width = bi.getWidth();
 		height = bi.getHeight();
 		// System.out.println("尺寸："+width+" "+height);
-		if(Tools.isEmpty(type)||"3".equals(type)){
+		if (Tools.isEmpty(type) || "3".equals(type)) {
 			if (width <= standWidth && height <= standHeight) {
 				return true;
 			} else {
 				return false;
-			}	
-		}else if("2".equals(type)){
+			}
+		} else if ("2".equals(type)) {
 			if (width >= standWidth && height >= standHeight) {
 				return true;
 			} else {
 				return false;
-			}	
-		}else if("1".equals(type)){
+			}
+		} else if ("1".equals(type)) {
 			if (width == standWidth && height == standHeight) {
 				return true;
 			} else {
 				return false;
-			}	
+			}
 		}
 		return false;
-		
-		
+
 	}
 
 	public boolean formatPic(InputStream is) throws Exception {
@@ -731,6 +752,156 @@ public class FileUploadServiceImpl implements FileUploadService {
 		System.out.println(fsi.getUrl("e:/adsf/tempath/2061/sdkfjk.jpg", fsi.BASEURL, fsi.TEMPATHFLAG));
 		System.out.println(
 				fsi.getPath(fsi.BASEPATH, "localhost:8080/website/userImgs/tempath/2061/sdkfjk.jpg", fsi.TEMPATHFLAG));
+	}
+
+	@Override
+	public Result tempsaveimg(String type, String picurl, HttpServletRequest request) {
+		Result result = Result.success();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+
+		ezs_user authupi = RedisUserSession.getAuthUserInfo(request);
+		
+		AuthImageVo authimg = new AuthImageVo();
+		authimg.setImgcode(type);
+		authimg.setImgurl(picurl);
+
+		List<AuthImageVo> list = authupi.getAuthimg();
+		
+		if(list==null){
+			list=new ArrayList<>();
+		}
+		// 执照法人资质处理
+		if (!type.equals("OTHER_QUALIFICATIONS")) {
+			if (null != list && list.size() > 0) {
+				int index = -1;
+				for (AuthImageVo authImageVo : list) {
+					if (type.equals(authImageVo.getImgcode())) {
+						authImageVo.setImgurl(picurl);
+						index = 1;
+					}
+				}
+				if (index == -1) {
+					list.add(authimg);
+				}
+				;
+			} else {
+				list.add(authimg);
+			}
+		} else {
+			// 其他资质处理
+			if (type.equals("OTHER_QUALIFICATIONS")) {
+				String name=request.getParameter("name");
+				String usetime=request.getParameter("usetime");
+				
+				if(Tools.isEmpty(name)){
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("资质名称不能为空");
+					return result;
+				}
+				if(Tools.isEmpty(usetime)){
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("有效日期不能为空");
+					return result;
+				}
+				authimg.setName(name);
+				try {
+					authimg.setUsetime(sdf.parse(usetime));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				list.add(authimg);
+			}
+		}
+		
+		
+		
+		authupi.setAuthimg(list);
+		
+		//认证授权图片处理
+		authPicCash(list, authupi);
+		//认证授权图片处理
+		
+		boolean res = RedisUserSession.updateUserInfo(authupi.getAuthkey(), authupi,
+				Long.parseLong(redisuserkeyexpir));
+
+		if (res) {
+			result.setSuccess(true);
+			result.setMsg("保存成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setObj(new HashMap<>().put("imgurl", authimg.getImgurl()));
+		} else {
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * 认证授权图片处理
+	 * @param list
+	 */
+	private void authPicCash(List<AuthImageVo> list,ezs_user authupi){
+		
+		//企业授权
+		if(!authupi.isAuthorfilestate()){
+			int i=0;
+			for (AuthImageVo authImageVo : list) {
+				if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
+						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+				i++;	
+				}
+			}
+			if(i==2){
+				authupi.setAuthorfilestate(true);
+			}
+		}
+		
+		//1.企业账号，2.个体户
+		int account=authupi.getEzs_store().getAccountType();
+		if(1==account){
+			authupi.setAuthimgstate(false);
+			//企业授权
+			if(!authupi.isAuthimgstate()){
+				int i=0;
+				for (AuthImageVo authImageVo : list) {
+					if(authImageVo.getImgcode().equals("BUSLIC")
+							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
+							||authImageVo.getImgcode().equals("IDCARD_FONT")
+							||authImageVo.getImgcode().equals("IDCARD_BACK")){
+					i++;	
+					}
+				}
+				if(i==4){
+					authupi.setAuthimgstate(true);
+				}
+			}
+		}else{
+			authupi.setAuthimgstate(false);
+			//企业授权
+			if(!authupi.isAuthimgstate()){
+				int i=0;
+				for (AuthImageVo authImageVo : list) {
+					if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
+							||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+					i++;	
+					}
+				}
+				if(i==4){
+					authupi.setAuthimgstate(true);
+				}
+			}
+		}
+		
+		
 	}
 
 }

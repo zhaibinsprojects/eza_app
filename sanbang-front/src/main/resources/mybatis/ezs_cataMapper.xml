@@ -21,31 +21,4 @@
     select * from ezs_goods_class gc where gc.parent_id = '2'
   </select>
   
-  <!-- 自营，地区、品类筛选 -->
-  <select id="listByAreaAndType" resultType="ezs_goods_class" parameterType="java.lang.String" >
-    select * from ezs_goods_class gc where 
-    <if test="level !=null and studentSex != '' ">  
-        gc.level = #{level, jdbcType=BIGINT}   
-    </if>    
-  </select>
-  
-  <!-- 其他筛选 -->
-  <select id="listByOthers" resultType="ezs_goods_class" parameterType="java.lang.String" >
-  	<!-- 此sql需要后续关联查询再坐修改 -->
-    select * from ezs_goods_class gc left join xxxx xx on gc.a = xx.b left join yyyy yy on gc.c = yy.d where 
-    <if test="level !=null and studentSex != '' ">  
-        gc.level = #{level, jdbcType=BIGINT}   
-    </if>
-    
-    <if test="level !=null and studentSex != '' ">  
-        gc.level = #{level, jdbcType=BIGINT}   
-    </if>
-    <if test="level !=null and studentSex != '' ">  
-        gc.level = #{level, jdbcType=BIGINT}   
-    </if>
-    <if test="level !=null and studentSex != '' ">  
-        gc.level = #{level, jdbcType=BIGINT}   
-    </if>
-  </select>
-  
 </mapper>
