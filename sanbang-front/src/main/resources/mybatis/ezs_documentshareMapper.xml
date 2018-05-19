@@ -13,13 +13,13 @@
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, give, house, ezsSubstance_id, user_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ezs_documentshare
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey">
     delete from ezs_documentshare
     where id = #{id,jdbcType=BIGINT}
   </delete>

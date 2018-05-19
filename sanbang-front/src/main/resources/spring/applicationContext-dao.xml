@@ -161,5 +161,14 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_price_trendMapper"/>
 	</bean>
+	<!--图片-->
+	<bean id="ezs_paperMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_paperMapper"/>
+	</bean> 
+	<bean id="ezs_card_dictMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_card_dictMapper"/>
+	</bean>
 	
 </beans>

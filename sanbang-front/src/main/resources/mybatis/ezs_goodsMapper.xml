@@ -716,7 +716,7 @@
   	select 
     <include refid="Base_Column_List" />
     from ezs_goods goods left join ezs_goods_class gc on goods.goodClass_id = gc.level 
-    where goods.goodClass_id=#{sellerId} 
+    where goods.goodClass_id=#{goodClass_id} 
     order by
     lastModifyDate  desc
   </select>
