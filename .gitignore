@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-/.classpath
-/.gitignore
-/target/
-=======
-target/
-.settings/
->>>>>>> 80cd2c6286476e5384c4fe5222d561946e24b141
+.classpath		#仓库中所有名为.classpath的文件都屏蔽
+.gitignore		#仓库中所有名为.gitignore的文件都屏蔽
+target/			#屏蔽target目录
+.settings/		#屏蔽.settings目录
