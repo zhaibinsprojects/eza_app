@@ -138,20 +138,12 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_goods_logMapper" />
 	</bean>
+	<bean id="ezs_purchase_orderformMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_purchase_orderformMapper" />
+	</bean>
+	<bean id="ezs_logisticsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_logisticsMapper" />
+	</bean>
 </beans>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

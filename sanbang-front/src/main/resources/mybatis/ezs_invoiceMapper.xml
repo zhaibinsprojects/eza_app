@@ -201,18 +201,23 @@
   
    <!-- 根据订单签订时间查询合同 -->
    <select id="selectInvoiceByDate" resultType="ezs_invoice"  >
-    	select * from 	ezs_invoice invoice where
+    	select 
+    	<include refid="Base_Column_List" /> 
+    	from 	ezs_invoice invoice where
 	     (unix_timestamp(invoice.express_time)&gt;=unix_timestamp(#{startTime}) 
 	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
    </select>
    <!-- 根据订单编号查询合同 -->
    <select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
-   		select * from ezs_invoice where order_no = #{orderno}
+   		select 
+   		<include refid="Base_Column_List" /> 
+   		from ezs_invoice where order_no = #{orderno}
    </select>
    <!-- 根据订单编号查询合同详细信息 -->
    <select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
-   		select * from ezs_invoice where order_no = #{orderno}
+   		select 
+   		<include refid="Base_Column_List" /> 
+   		from ezs_invoice where order_no = #{orderno}
    </select>
-  
-  
+ 
 </mapper>

@@ -220,4 +220,12 @@
       order_no = #{order_no,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!-- 根据订单号查询物流信息 -->
+  <select id="selectByOrderNo" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ezs_logistics
+    where order_no =#{orderNo,jdbcType=VARCHAR}
+  </select>
+  
 </mapper>

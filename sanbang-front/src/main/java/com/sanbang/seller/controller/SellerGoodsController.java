@@ -24,6 +24,7 @@ import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
+@RequestMapping("/seller")
 public class SellerGoodsController {
 	//日志
 	private Logger log=Logger.getLogger(SellerGoodsController.class);

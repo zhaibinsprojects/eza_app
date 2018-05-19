@@ -32,6 +32,4 @@ public interface ezs_invoiceMapper {
 	ezs_invoice selectInvoiceByOrderNo(String orderno);
 
 	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2);
-
-	
 }
