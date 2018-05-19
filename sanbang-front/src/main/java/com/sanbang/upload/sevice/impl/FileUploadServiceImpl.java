@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -74,6 +77,10 @@ public class FileUploadServiceImpl implements FileUploadService {
 
 	// 支持的图片格式数组
 	public String[] format;
+	
+	// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
 
 	@PostConstruct
 	public void initMethod() {
@@ -81,6 +88,8 @@ public class FileUploadServiceImpl implements FileUploadService {
 	}
 
 	private static final String IMAGEENDPATH = "-100.jpg";
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");                
 
 	/**
 	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
@@ -755,33 +764,144 @@ public class FileUploadServiceImpl implements FileUploadService {
 			return result;
 		}
 
+		ezs_user authupi = RedisUserSession.getAuthUserInfo(request);
+		
 		AuthImageVo authimg = new AuthImageVo();
 		authimg.setImgcode(type);
 		authimg.setImgurl(picurl);
 
-		List<AuthImageVo> list = upi.getAuthimg();
-
-		if (null != list && list.size() > 0) {
-			int index = -1;
-			for (AuthImageVo authImageVo : list) {
-				if (type.equals(authImageVo.getImgcode())) {
-					authImageVo.setImgurl(picurl);
-					index = 1;
+		List<AuthImageVo> list = authupi.getAuthimg();
+		
+		if(list==null){
+			list=new ArrayList<>();
+		}
+		// 执照法人资质处理
+		if (!type.equals("OTHER_QUALIFICATIONS")) {
+			if (null != list && list.size() > 0) {
+				int index = -1;
+				for (AuthImageVo authImageVo : list) {
+					if (type.equals(authImageVo.getImgcode())) {
+						authImageVo.setImgurl(picurl);
+						index = 1;
+					}
 				}
-			}
-			if (index == -1) {
+				if (index == -1) {
+					list.add(authimg);
+				}
+				;
+			} else {
 				list.add(authimg);
 			}
-			;
 		} else {
-			list.add(authimg);
+			// 其他资质处理
+			if (type.equals("OTHER_QUALIFICATIONS")) {
+				String name=request.getParameter("name");
+				String usetime=request.getParameter("usetime");
+				
+				if(Tools.isEmpty(name)){
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("资质名称不能为空");
+					return result;
+				}
+				if(Tools.isEmpty(usetime)){
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("有效日期不能为空");
+					return result;
+				}
+				authimg.setName(name);
+				try {
+					authimg.setUsetime(sdf.parse(usetime));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				list.add(authimg);
+			}
 		}
+		
+		
+		
+		authupi.setAuthimg(list);
+		
+		//认证授权图片处理
+		authPicCash(list, authupi);
+		//认证授权图片处理
+		
+		boolean res = RedisUserSession.updateUserInfo(authupi.getAuthkey(), authupi,
+				Long.parseLong(redisuserkeyexpir));
 
-		result.setSuccess(true);
-		result.setMsg("上传成功");
-		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-		result.setObj(new HashMap<>().put("url", picurl));
+		if (res) {
+			result.setSuccess(true);
+			result.setMsg("保存成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setObj(new HashMap<>().put("imgurl", authimg.getImgurl()));
+		} else {
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
+	}
+	
+	
+	/**
+	 * 认证授权图片处理
+	 * @param list
+	 */
+	private void authPicCash(List<AuthImageVo> list,ezs_user authupi){
+		
+		//企业授权
+		if(!authupi.isAuthorfilestate()){
+			int i=0;
+			for (AuthImageVo authImageVo : list) {
+				if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
+						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+				i++;	
+				}
+			}
+			if(i==2){
+				authupi.setAuthorfilestate(true);
+			}
+		}
+		
+		//1.企业账号，2.个体户
+		int account=authupi.getEzs_store().getAccountType();
+		if(1==account){
+			authupi.setAuthimgstate(false);
+			//企业授权
+			if(!authupi.isAuthimgstate()){
+				int i=0;
+				for (AuthImageVo authImageVo : list) {
+					if(authImageVo.getImgcode().equals("BUSLIC")
+							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
+							||authImageVo.getImgcode().equals("IDCARD_FONT")
+							||authImageVo.getImgcode().equals("IDCARD_BACK")){
+					i++;	
+					}
+				}
+				if(i==4){
+					authupi.setAuthimgstate(true);
+				}
+			}
+		}else{
+			authupi.setAuthimgstate(false);
+			//企业授权
+			if(!authupi.isAuthimgstate()){
+				int i=0;
+				for (AuthImageVo authImageVo : list) {
+					if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
+							||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+					i++;	
+					}
+				}
+				if(i==4){
+					authupi.setAuthimgstate(true);
+				}
+			}
+		}
+		
+		
 	}
 
 }

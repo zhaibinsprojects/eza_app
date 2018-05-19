@@ -24,19 +24,6 @@ public interface ezs_cataMapper {
 	 * @return
 	 */
 	List<ezs_goods_class> getThreelevelList(long parentId);
-	/**
-	 * 自营，地区、类别筛选
-	 * @param area 地区
-	 * @param type 类别
-	 * @return
-	 */
-	List<ezs_goods_class> listByAreaAndType(String area,String type);
-	/**
-	 * 其他筛选条件
-	 * @param terms	字符串数组
-	 * @return
-	 */
-	List<ezs_goods_class> listByOthers(String[] terms);
 	
 	
 }
