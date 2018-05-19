@@ -21,20 +21,6 @@ public interface CataService {
 	 * @param parentId	父id
 	 */
 	public List getThreelevelList(long parentId);
-	/**
-	 * 自营，地区、品类筛选
-	 * @param area
-	 * @param type
-	 */
-	public List listByAreaAndType(String area,String type);
-	/**
-	 * 其他筛选
-	 * @param terms	字符串数组
-	 */
-	public List listByOthers(String[] terms);
-	
-	
-	
 	
 	
 }

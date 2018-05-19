@@ -2,6 +2,8 @@ package com.sanbang.goods.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
@@ -57,5 +59,24 @@ public interface GoodsService {
 	 * @return
 	 */
 	public List<ezs_goods> listForGoods(Long id);
+	
+	
+	/**
+	 * 自营，地区、品类筛选
+	 * @param area
+	 * @param type
+	 */
+	public List listByAreaAndType(String area,String type);
+	/**
+	 * 
+	 * @param color	颜色
+	 * @param form 形态
+	 * @param purpose 用途
+	 * @param source 来源
+	 * @param burning 燃烧级别
+	 * @param isProtection 是否环保
+	 * @return
+	 */
+	public List listByOthers(Long color,Long form,String purpose,String source,String burning,boolean protection);
 	
 }

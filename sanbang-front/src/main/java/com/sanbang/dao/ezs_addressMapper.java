@@ -1,6 +1,7 @@
 package com.sanbang.dao;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,12 @@ public interface ezs_addressMapper {
     ezs_address selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(ezs_address record);
+
+    ezs_address findByAreaidAndAreainfoAnduserid(@Param("area_id")Long areaid, @Param("area_info")String areainfo, @Param("user_id")Long userid);
+
+	List<ezs_address> selectByUserId(Long userid);
+
+
 
     int updateByPrimaryKey(ezs_address record);
     

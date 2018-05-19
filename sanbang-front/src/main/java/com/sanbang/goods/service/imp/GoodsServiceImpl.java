@@ -3,6 +3,7 @@ package com.sanbang.goods.service.imp;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,9 @@ public class GoodsServiceImpl implements GoodsService{
 	@Autowired
 	private com.sanbang.dao.ezs_goodscartMapper ezs_goodscartMapper;
 	@Autowired
-	private com.sanbang.dao.ezs_documentshareMapper documentshareMapper;
+	private com.sanbang.dao.ezs_documentshareMapper ezs_documentshareMapper;
 	@Autowired
-	private com.sanbang.dao.ezs_orderformMapper orderformMapper;
+	private com.sanbang.dao.ezs_orderformMapper ezs_orderformMapper;
 	
 	
 	/**
@@ -58,26 +59,40 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public int updateCollect(Long id){
-		int n = documentshareMapper.updateCollect(id);
+		int n = ezs_documentshareMapper.updateCollect(id);
 		return n;
 	}
 	
 	public int insertCollect(Long id){
 		ezs_documentshare share = new ezs_documentshare();
 		share.setGood_id(id);
-		int n = documentshareMapper.insert(share);
+		int n = ezs_documentshareMapper.insert(share);
 		return n;
 	}
 	
 	public int insertOrder(ezs_orderform order){
-		int n = orderformMapper.insert(order);
+		int n = ezs_orderformMapper.insert(order);
 		return n;
 	}
-	//同类货品
+	
 	public List<ezs_goods> listForGoods(Long id){
 		List<ezs_goods> list = new ArrayList();
 		list = ezs_goodsMapper.listForGoods(id);
 		return list;
 	}
+	
+	public List listByAreaAndType(String area,String type){
+		List<ezs_goods> list = new ArrayList();
+		list = ezs_goodsMapper.listByAreaAndType(area,type);
+		return list;
+	}
+	
+	public List listByOthers(Long color,Long form,String use,String source,String burning,boolean protection){
+		List<ezs_goods> list = new ArrayList();
+		list = ezs_goodsMapper.listByOthers(color,form,use,source,burning,protection);
+		return list;
+	}
+	
+	
 	
 }
