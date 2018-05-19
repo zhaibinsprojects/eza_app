@@ -720,5 +720,8 @@
     order by
     lastModifyDate  desc
   </select>
-  
+  <!-- 由购物车查询商品信息 -->
+  <select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select g.* from ezs_goods g where EXISTS (select 1 from ezs_documentshare e where e.good_id = g.id and e.deleteStatus = '0' and e.house = '1' and e.user_id = #{userId})
+  </select>
 </mapper>

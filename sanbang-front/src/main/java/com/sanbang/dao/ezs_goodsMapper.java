@@ -32,4 +32,6 @@ public interface ezs_goodsMapper {
 	
 	//同类货品
 	List<ezs_goods> listForGoods(Long id);
+	
+	List<ezs_goods> getGoodsFromCollection(Long userId);
 }
