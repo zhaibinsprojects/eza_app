@@ -116,15 +116,8 @@
   </update>
   
   <!-- 根据商品id修改收藏状态 -->
-<<<<<<< HEAD
+
   <update id="updateCollect" parameterType="java.lang.Long" >
-=======
-<<<<<<< HEAD
-  <update id="updateCollect">
-=======
-  <update id="updateCollect" parameterType="java.lang.Long" >
->>>>>>> c8261f1b3aa22e69e0b5f273429bb9be7d0ef8ee
->>>>>>> branch 'master' of https://gitee.com/jflang/sanbang-parent.git
     update ezs_documentshare
     set house = #{house,jdbcType=INTEGER} 
     where goods_id = #{goods_id,jdbcType=BIGINT}
