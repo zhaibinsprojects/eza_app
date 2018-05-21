@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_pact;
+import com.sanbang.utils.Page;
 
 @Repository
 public interface ezs_pactMapper {
@@ -24,7 +26,12 @@ public interface ezs_pactMapper {
 
 	List<ezs_pact> selectPactBySellerId(Long sellerUser_id);
 
-	List<ezs_pact> selectPactByOrderNo(String orderno);
+	ezs_invoice selectPactByOrderNo(String orderno);
 
-	List<ezs_pact> selectPactByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2);
+	List<ezs_pact> selectPactByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2, @Param("sellerId")Long sellerId,@Param("page")Page page);
+
+	int selectCountById(Long sellerId);
+
+	List<ezs_pact> queryPact(Page page, Long sellerId);
+
 }

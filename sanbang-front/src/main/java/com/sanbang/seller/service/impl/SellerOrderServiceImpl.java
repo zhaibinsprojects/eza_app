@@ -34,6 +34,8 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 		//获取总页数
 		int totalCount = purchaseOrderformMapper.selectCount(userId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
+		int startPos = 0;
+		page.setStartPos(startPos);
 		page.setPageSize(10);
 		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
 			List<ezs_purchase_orderform> list = this.purchaseOrderformMapper.queryOrders(page, userId,orderType, orderStatus);

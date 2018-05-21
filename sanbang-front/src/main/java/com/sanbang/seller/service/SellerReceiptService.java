@@ -1,6 +1,7 @@
 package com.sanbang.seller.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,14 +18,12 @@ public interface SellerReceiptService {
 
 	ezs_invoice getInvoiceInfoById(String orderno);
 
-	int getCount();
-
 	ezs_payinfo getPayInfoById(Long billId);
-
+	
 	ezs_user getUserInfoById(Long paymentUser_id);
 
-	List<ezs_invoice> getInvoiceListInfoById(Long userId);
+	Map<String, Object> getInvoiceListById(Long userId, String currentPage);
 
-	Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
-			HttpServletRequest request, HttpServletResponse response);
+	Map<String, Object> queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
+			long userId, String currentPage);
 }

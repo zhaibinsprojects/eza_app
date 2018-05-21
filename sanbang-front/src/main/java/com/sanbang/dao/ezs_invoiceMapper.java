@@ -2,12 +2,15 @@ package com.sanbang.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_pact;
+import com.sanbang.utils.Page;
+import com.sanbang.vo.GoodsInfo;
 
 @Repository
 public interface ezs_invoiceMapper {
@@ -23,13 +26,16 @@ public interface ezs_invoiceMapper {
 
     int updateByPrimaryKey(ezs_invoice record);
 
-	List<ezs_invoice> selectInvoiceListInfoById(Long userId);
+	Map<String, Object> selectInvoiceListInfoById(Long userId, String currentPage);
 
-	int selectCount();
 
 	ezs_invoice selectInvoiceInfoById(Long invoiceId);
 
 	ezs_invoice selectInvoiceByOrderNo(String orderno);
 
-	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2);
+	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2,@Param("userId")long userId, @Param("page")Page page);
+
+	int getInvoiceCountByUserId(Long userId);
+
+	List<ezs_invoice> goodsInvoiceCountPage(Page page, Long userId);
 }

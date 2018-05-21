@@ -12,13 +12,16 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_photo;
+import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.seller.service.SellerGoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
@@ -42,39 +45,32 @@ public class SellerGoodsController {
 	 * @return
 	 */
 	@RequestMapping("/queryGoodsList")
-	public Object queryGoodsList(int status, HttpServletRequest request, HttpServletResponse response){
+	public Object queryGoodsList(int status, HttpServletRequest request, HttpServletResponse response,String currentPage){
 		Result result = Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		List<ezs_goods> list = new ArrayList<>();
+		Map<String, Object> map = null;
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
 		}
-		
-		Long sellerId = upi.getId();
-		
-		List<ezs_goods> list = new ArrayList<>();
-		try {
-			list = sellerGoodsService.queryGoodsListBySellerId(sellerId, status);
-			if (list.size() > 0 ) {
-				result.setSuccess(true);
-				result.setMsg("查询成功");
-			}
-			if (list.size() == 0 ) {
-				result.setSuccess(true);
-				result.setMsg("暂无数据");
-			}
-			if (list.size() < 0 ) {
-				result.setSuccess(false);
-				result.setMsg("查询失败");
-			}
-			result.setObj(list);
-		} catch (Exception e) {
-			log.info("查询货品列表出错"+e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setSuccess(false);
-			result.setMsg("系统错误！");
+		Long useId = upi.getId();
+		Page page = null;
+		if(currentPage==null){
+			currentPage = "1";
 		}
+		map = sellerGoodsService.queryGoodsListBySellerId(useId, status, currentPage);
+		
+		list = (List<ezs_goods>)map.get("Obj");
+		
+		int errorCode = (int) map.get("ErrorCode");
+		
+		page = (Page) map.get("page");
+		result.setObj(list);
+		result.setMeta(page);
+		result.setErrorcode(errorCode);
+		
 		return result;
 	}
 	/**
@@ -197,6 +193,51 @@ public class SellerGoodsController {
 		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	
 		return fileUploadService;
 	}
+	
+	
+	/**
+	 * 上传货品图片
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public Result upAuthPic(
+			HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(value="type",required=false) String type){
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+	
+		try {
+			Map<String , Object> map=fileUploadService.uploadFile(request,0,0,10*1024*1024l);
+			if("000".equals(map.get("code"))){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setMsg("上传成功");
+				result.setObj(new HashMap<>().put("picurl", map.get("url")));
+				result.setSuccess(false);
+				return result;
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("上传失败");
+				result.setObj("");
+				result.setSuccess(false);
+			}
+		} catch (Exception e) {
+			log.info("文件：上传接口调用失败"+e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("上传失败");
+			result.setObj("");
+			result.setSuccess(false);
+		} 
+		
+		
+		return result;
+	}
+	
 	
 	
 }

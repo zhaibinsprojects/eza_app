@@ -622,6 +622,7 @@
     where status=#{status} and user_id=#{sellerId} 
     order by
     lastModifyDate  desc
+    LIMIT #{startPos},#{pageSize}
   </select>
   <!-- 供应商下架货品 -->
   <update id="pullOffShelves" >
@@ -778,5 +779,12 @@
     </if>
     order by lastModifyDate desc
   </select>
-  
+  <!-- 根据id查询订单总数 -->
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(*) from 	
+		ezs_goods
+    	where user_id = #{sellerId}
+	</select>
+
+
 </mapper>

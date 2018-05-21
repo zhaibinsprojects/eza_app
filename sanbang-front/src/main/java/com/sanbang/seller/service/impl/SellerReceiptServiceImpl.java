@@ -5,7 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +26,12 @@ import com.sanbang.dao.ezs_invoiceMapper;
 import com.sanbang.dao.ezs_payinfoMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.seller.service.SellerReceiptService;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
+import com.sanbang.vo.HomeDictionaryCode;
 @Service
 public class SellerReceiptServiceImpl implements SellerReceiptService {
 	
@@ -52,17 +57,25 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	}
 
 	@Override
-	public List<ezs_invoice> getInvoiceListInfoById(Long userId) {
-		
-		return invoiceMapper.selectInvoiceListInfoById(userId);
-	}
-
-	
-
-	@Override
-	public int getCount() {
-		
-		return invoiceMapper.selectCount();
+	public Map<String, Object> getInvoiceListById(Long userId, String currentPage) {
+		Map<String, Object> mmp = new HashMap<>();
+		//获取总页数
+		int totalCount = this.invoiceMapper.getInvoiceCountByUserId(userId);
+		Page page = new Page(totalCount, Integer.valueOf(currentPage));
+		page.setPageSize(10);
+		int startPos = 0;
+		page.setStartPos(startPos);
+		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+			List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Page", page);
+			mmp.put("Obj", glist);
+		}else{
+			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+			mmp.put("Msg", "页码越界");
+			mmp.put("Page", page);
+		}
+		return mmp;
 	}
 
 	@Override
@@ -77,37 +90,71 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	}
 
 	@Override
-	public Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
-			HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, Object> queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
+			long userId, String currentPage) {
 		log.info("条件查询合同**************************");
-		
+		Map<String, Object> mmp = new HashMap<>();
 		List<ezs_invoice> list = new ArrayList<>();
-		ezs_invoice invoice = new  ezs_invoice();
-		if(Tools.notEmpty(orderno) && Tools.isNum(orderno)){
-			invoice = invoiceMapper.selectInvoiceByOrderNo(orderno);
-			result.setObj(invoice);
-		}
-		if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)){
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Date dt1;
-			Date dt2;
-			try {
-				dt1 = df.parse(startTime);
-				dt2 = df.parse(endTime);
-				if (dt1.getTime() > dt2.getTime()) {
-					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-					result.setMsg("日期格式错误");
-					return result;
+		//获取总页数
+		int totalCount = invoiceMapper.getInvoiceCountByUserId(userId);
+		
+		Page page = new Page(totalCount, Integer.valueOf(currentPage));
+		page.setPageSize(10);
+		int startPos = 0;
+		page.setStartPos(startPos);
+		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+			if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)){
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				Date dt1;
+				Date dt2;
+				try {
+					dt1 = df.parse(startTime);
+					dt2 = df.parse(endTime);
+					if (dt1.getTime() > dt2.getTime()) {
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+						result.setMsg("日期格式错误");
+					}
+					list = invoiceMapper.selectInvoiceByDate(dt1, dt2,userId,page);
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
-				list = invoiceMapper.selectInvoiceByDate(dt1, dt2);
-				result.setObj(list);
-				
-			} catch (ParseException e) {
-				
-				e.printStackTrace();
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Page", page);
+				mmp.put("Obj", list);
+			}else{
+				ezs_invoice invoice = 	invoiceMapper.selectInvoiceByOrderNo(orderno);
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Page", page);
+				mmp.put("Obj", invoice);
 			}
+		}else{
+			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+			mmp.put("Msg", "页码越界");
+			mmp.put("Page", page);
 		}
-		return result;
+		return mmp;
+		
+//		if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)){
+//			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//			Date dt1;
+//			Date dt2;
+//			try {
+//				dt1 = df.parse(startTime);
+//				dt2 = df.parse(endTime);
+//				if (dt1.getTime() > dt2.getTime()) {
+//					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//					result.setMsg("日期格式错误");
+//					return result;
+//				}
+//				list = invoiceMapper.selectInvoiceByDate(dt1, dt2);
+//				result.setObj(list);
+//				
+//			} catch (ParseException e) {
+//				
+//				e.printStackTrace();
+//			}
+//		}
+//		return result;
 	}
 
 	@Override

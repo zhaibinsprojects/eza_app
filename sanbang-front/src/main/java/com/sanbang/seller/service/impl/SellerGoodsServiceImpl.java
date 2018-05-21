@@ -1,7 +1,9 @@
 package com.sanbang.seller.service.impl;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,12 +16,14 @@ import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_audit_process;
 import com.sanbang.bean.ezs_goods_log;
+import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_goods_audit_processMapper;
 import com.sanbang.dao.ezs_goods_logMapper;
 import com.sanbang.seller.service.SellerGoodsService;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
@@ -41,9 +45,24 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	ezs_goods_audit_processMapper goodsAuditProcessMapper;
 	
 	@Override
-	public List<ezs_goods> queryGoodsListBySellerId(Long sellerId, int status) {
-		
-		return goodsMapper.selectGoodsListBySellerId(sellerId, status);
+	public Map<String, Object> queryGoodsListBySellerId(Long sellerId, int status, String currentPage) {
+		Map<String, Object> mmp = new HashMap<>();
+		//获取总页数
+		int totalCount = goodsMapper.selectCount(sellerId);
+		Page page = new Page(totalCount, Integer.valueOf(currentPage));
+		int startPos = 0;
+		page.setStartPos(startPos);
+		page.setPageSize(10);
+		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+			List<ezs_goods> list = goodsMapper.selectGoodsListBySellerId(sellerId, status, currentPage);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Page", page);
+			mmp.put("Obj", list);
+		}else{
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Page", page);
+		}
+		return mmp;
 	}
 
 	@Override
