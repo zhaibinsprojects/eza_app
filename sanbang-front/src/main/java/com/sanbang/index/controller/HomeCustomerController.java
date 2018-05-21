@@ -92,4 +92,5 @@ public class HomeCustomerController {
 		System.out.println("UserName:"+tempCached.getResult().getName());
 		return "";
 	}
+	
 }
