@@ -621,8 +621,14 @@
       addess2 = #{addess2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+<<<<<<< HEAD
 
 
+=======
+<<<<<<< HEAD
+  
+=======
+>>>>>>> refs/remotes/origin/master
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
@@ -802,6 +808,7 @@
     </if>
     order by lastModifyDate desc
   </select>
+<<<<<<< HEAD
   <!-- 根据id查询订单总数 -->
 	<select id="selectCount" resultType="java.lang.Integer">
 		select count(*) from 	
@@ -881,4 +888,6 @@
     select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
     g.name like '%${_parameter}%'
   </select>
+=======
+>>>>>>> refs/remotes/origin/master
 </mapper>
