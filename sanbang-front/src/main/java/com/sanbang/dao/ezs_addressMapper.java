@@ -1,7 +1,10 @@
 package com.sanbang.dao;
 
 import java.util.List;
+<<<<<<< HEAD
 import org.apache.ibatis.annotations.Param;
+=======
+>>>>>>> refs/remotes/origin/local_changes
 
 import org.springframework.stereotype.Repository;
 

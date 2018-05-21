@@ -14,7 +14,10 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.index.service.CustomerService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+<<<<<<< HEAD
 import com.sanbang.vo.DictionaryCode;
+=======
+>>>>>>> refs/remotes/origin/local_changes
 import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.UserInfoMess;
 
@@ -73,6 +76,12 @@ public class HomeCustomerController {
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
+		ezs_user user01 = new ezs_user();
+		user01.setId(Long.valueOf(13));
+		mmp = this.customerService.getUserMessByUser(user01);
+		UserInfoMess uim = (UserInfoMess) mmp.get("Obj");
+		Result rs = Result.success();
+		rs.setObj(uim);
 		return rs;
 	}
 }

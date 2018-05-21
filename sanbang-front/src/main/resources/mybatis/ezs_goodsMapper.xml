@@ -809,4 +809,75 @@
 	</select>
 
 
+  <!-- 商品查询带图 -->
+  <resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="addess" property="addess" jdbcType="VARCHAR" />
+    <result column="ash" property="ash" jdbcType="VARCHAR" />
+    <result column="bending" property="bending" jdbcType="VARCHAR" />
+    <result column="burning" property="burning" jdbcType="VARCHAR" />
+    <result column="cantilever" property="cantilever" jdbcType="VARCHAR" />
+    <result column="click" property="click" jdbcType="INTEGER" />
+    <result column="cncl_num" property="cncl_num" jdbcType="BIT" />
+    <result column="collect" property="collect" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="crack" property="crack" jdbcType="VARCHAR" />
+    <result column="density" property="density" jdbcType="VARCHAR" />
+    <result column="flexural" property="flexural" jdbcType="VARCHAR" />
+    <result column="freely" property="freely" jdbcType="VARCHAR" />
+    <result column="good_no" property="good_no" jdbcType="VARCHAR" />
+    <result column="good_self" property="good_self" jdbcType="BIT" />
+    <result column="goods_salenum" property="goods_salenum" jdbcType="INTEGER" />
+    <result column="inventory" property="inventory" jdbcType="DOUBLE" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="lipolysis" property="lipolysis" jdbcType="VARCHAR" />
+    <result column="memberLook" property="memberLook" jdbcType="BIT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="protection" property="protection" jdbcType="BIT" />
+    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="recommend" property="recommend" jdbcType="BIT" />
+    <result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
+    <result column="seo_description" property="seo_description" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="tensile" property="tensile" jdbcType="VARCHAR" />
+    <result column="validity" property="validity" jdbcType="INTEGER" />
+    <result column="water" property="water" jdbcType="VARCHAR" />
+    <result column="area_id" property="area_id" jdbcType="BIGINT" />
+    <result column="color_id" property="color_id" jdbcType="BIGINT" />
+    <result column="form_id" property="form_id" jdbcType="BIGINT" />
+    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
+    <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
+    <result column="quality_id" property="quality_id" jdbcType="BIGINT" />
+    <result column="region_id" property="region_id" jdbcType="BIGINT" />
+    <result column="supply_id" property="supply_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="util_id" property="util_id" jdbcType="BIGINT" />
+    <result column="classOfFinish_id" property="classOfFinish_id" jdbcType="BIGINT" />
+    <result column="lockStatus" property="lockStatus" jdbcType="INTEGER" />
+    <association property="goods_main_photo_id" javaType="com.sanbang.bean.ezs_accessory">
+	    <id column="goods_main_photo_id" property="goods_main_photo_id" jdbcType="BIGINT" />
+	    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+	    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+	    <result column="ext" property="ext" jdbcType="VARCHAR" />
+	    <result column="height" property="height" jdbcType="INTEGER" />
+	    <result column="info" property="info" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="path" property="path" jdbcType="VARCHAR" />
+	    <result column="size" property="size" jdbcType="REAL" />
+	    <result column="width" property="width" jdbcType="INTEGER" />
+	    <result column="album_id" property="album_id" jdbcType="BIGINT" />
+	    <result column="config_id" property="config_id" jdbcType="BIGINT" />
+	    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    </association>
+  </resultMap>
+   <select id="selectByGoodsName" resultMap="GoodsResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
+    g.name like '%${_parameter}%'
+  </select>
 </mapper>

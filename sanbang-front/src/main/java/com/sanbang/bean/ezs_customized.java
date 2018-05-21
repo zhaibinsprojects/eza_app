@@ -231,5 +231,5 @@ public class ezs_customized {
 
     public void setCategory_id(Integer category_id) {
         this.category_id = category_id;
-    }
+
 }

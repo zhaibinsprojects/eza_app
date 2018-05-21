@@ -393,3 +393,4 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		return result;
 	}
 }	
+

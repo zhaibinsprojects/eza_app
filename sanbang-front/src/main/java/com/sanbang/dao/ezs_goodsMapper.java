@@ -32,6 +32,7 @@ public interface ezs_goodsMapper {
     
     int goodsIntroduceCount();
 
+
 	List<ezs_goods> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("currentPage")String currentPage);
 
 	int pullOffShelves(long goodsId);
@@ -66,4 +67,6 @@ public interface ezs_goodsMapper {
 	int selectCount(Long sellerId);
 
 	List<ezs_goods> queryGoods(Page page, Long sellerId, int status);
+
+    List<GoodsInfo> selectByGoodsName(String name);
 }

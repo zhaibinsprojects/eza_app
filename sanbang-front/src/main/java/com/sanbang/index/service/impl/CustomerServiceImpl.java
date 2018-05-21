@@ -17,7 +17,10 @@ import com.sanbang.dao.ezs_customerMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dao.ezs_userinfoMapper;
 import com.sanbang.index.service.CustomerService;
+<<<<<<< HEAD
 import com.sanbang.vo.DictionaryCode;
+=======
+>>>>>>> refs/remotes/origin/local_changes
 import com.sanbang.vo.UserInfoMess;
 
 @Service
@@ -51,6 +54,10 @@ public class CustomerServiceImpl implements CustomerService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
+		uim.setUser(user);
+		//包含默认地址的非默认地址
+		uim.setUserAddress(elist);
+		mmp.put("Obj", uim);
 		return mmp;
 	}
 

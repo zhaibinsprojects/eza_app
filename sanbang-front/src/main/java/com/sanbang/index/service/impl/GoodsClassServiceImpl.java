@@ -56,6 +56,10 @@ public class GoodsClassServiceImpl implements GoodsClassService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
+		//按三级目录查询种类
+		List<ezs_goods_class> eslist = this.goodClassMapper.selectAllGoodClassByLevel("3");
+		mmp.put("Obj", eslist);
+		
 		return mmp;
 	}
 

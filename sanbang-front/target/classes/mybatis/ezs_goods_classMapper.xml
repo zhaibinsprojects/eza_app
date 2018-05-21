@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_goods_classMapper" >
+  <resultMap id="BaseResultMap" type="ezs_goods_class" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+    <result column="photo_id" property="photo_id" jdbcType="BIGINT" />
+    <result column="display" property="display" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, level, name, sequence, parent_id, photo_id, display
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goods_class
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_goods_class
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="ezs_goods_class" >
+    insert into ezs_goods_class (id, addTime, deleteStatus, 
+      level, name, sequence, 
+      parent_id, photo_id, display
+      )
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{level,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, 
+      #{parent_id,jdbcType=BIGINT}, #{photo_id,jdbcType=BIGINT}, #{display,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="ezs_goods_class" >
+    insert into ezs_goods_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sequence != null" >
+        sequence,
+      </if>
+      <if test="parent_id != null" >
+        parent_id,
+      </if>
+      <if test="photo_id != null" >
+        photo_id,
+      </if>
+      <if test="display != null" >
+        display,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="parent_id != null" >
+        #{parent_id,jdbcType=BIGINT},
+      </if>
+      <if test="photo_id != null" >
+        #{photo_id,jdbcType=BIGINT},
+      </if>
+      <if test="display != null" >
+        #{display,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_goods_class" >
+    update ezs_goods_class
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="parent_id != null" >
+        parent_id = #{parent_id,jdbcType=BIGINT},
+      </if>
+      <if test="photo_id != null" >
+        photo_id = #{photo_id,jdbcType=BIGINT},
+      </if>
+      <if test="display != null" >
+        display = #{display,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="ezs_goods_class" >
+    update ezs_goods_class
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      level = #{level,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=INTEGER},
+      parent_id = #{parent_id,jdbcType=BIGINT},
+      photo_id = #{photo_id,jdbcType=BIGINT},
+      display = #{display,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectAllGoodClassByLevel" resultMap="BaseResultMap" parameterType="string">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goods_class where level = ${_parameter}
+  </select>
+</mapper>
