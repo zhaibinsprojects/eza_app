@@ -17,7 +17,6 @@ public interface ezs_goodsMapper {
     int deleteByPrimaryKey(Long id);
 
     int insert(ezs_goods record);
-
     int insertSelective(ezs_goods record);
 
     ezs_goods selectByPrimaryKey(Long id);

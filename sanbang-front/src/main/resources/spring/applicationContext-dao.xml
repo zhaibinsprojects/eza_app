@@ -146,7 +146,6 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_logisticsMapper" />
 	</bean>
-	
 	<!-- 定制采购-订购商 -->
 	<bean id="ezs_customized_recordMapper" parent="baseMapper">
 		<property name="mapperInterface"
