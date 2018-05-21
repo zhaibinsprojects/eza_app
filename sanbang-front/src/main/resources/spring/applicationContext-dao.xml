@@ -48,11 +48,6 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_areaMapper" />
 	</bean>
-	<!--用户地址管理-->
-	<bean id="ezs_addressMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_addressMapper" />
-	</bean>
 	<!-- 商品信息 -->
 	<bean id="ezs_goodsMapper" parent="baseMapper">
 		<property name="mapperInterface"

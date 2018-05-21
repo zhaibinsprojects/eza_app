@@ -121,5 +121,10 @@
     set house = #{house,jdbcType=INTEGER} 
     where goods_id = #{goods_id,jdbcType=BIGINT}
   </update>
-  
+  <!-- 移除收藏商品 -->
+  <update id="updateCollectByUserId">
+    update ezs_documentshare
+    set house = 0
+    where good_id = #{gId} and user_id = #{userId}
+  </update>
 </mapper>

@@ -43,6 +43,7 @@ public interface ezs_goodsMapper {
 	 */
 	List<ezs_goods> listForGoods(Long id);
 	
+	List<ezs_goods> getGoodsFromCollection(Long userId);
 	/**
 	 * 自营，地区、类别筛选
 	 * @param area 地区

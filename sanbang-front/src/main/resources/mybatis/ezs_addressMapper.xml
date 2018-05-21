@@ -173,12 +173,10 @@
   	from ezs_address 
   	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0
   </select>
-
   <!-- 根据用户id获取用户地址 -->
   <select id="getAddressByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
 	<include refid="Base_Column_List" />
  	from ezs_address where user_id = #{id} and bestow = '0'
   </select>
-
 </mapper>

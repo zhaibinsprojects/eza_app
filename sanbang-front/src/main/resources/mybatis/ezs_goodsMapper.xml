@@ -1,76 +1,78 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sanbang.dao.ezs_goodsMapper" >
-  <resultMap id="BaseResultMap" type="ezs_goods" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="addess" property="addess" jdbcType="VARCHAR" />
-    <result column="ash" property="ash" jdbcType="VARCHAR" />
-    <result column="bending" property="bending" jdbcType="VARCHAR" />
-    <result column="burning" property="burning" jdbcType="VARCHAR" />
-    <result column="cantilever" property="cantilever" jdbcType="VARCHAR" />
-    <result column="click" property="click" jdbcType="INTEGER" />
-    <result column="cncl_num" property="cncl_num" jdbcType="BIT" />
-    <result column="collect" property="collect" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="crack" property="crack" jdbcType="VARCHAR" />
-    <result column="density" property="density" jdbcType="VARCHAR" />
-    <result column="flexural" property="flexural" jdbcType="VARCHAR" />
-    <result column="freely" property="freely" jdbcType="VARCHAR" />
-    <result column="good_no" property="good_no" jdbcType="VARCHAR" />
-    <result column="good_self" property="good_self" jdbcType="BIT" />
-    <result column="goods_salenum" property="goods_salenum" jdbcType="INTEGER" />
-    <result column="inventory" property="inventory" jdbcType="DOUBLE" />
-    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
-    <result column="lipolysis" property="lipolysis" jdbcType="VARCHAR" />
-    <result column="memberLook" property="memberLook" jdbcType="BIT" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="protection" property="protection" jdbcType="BIT" />
-    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
-    <result column="recommend" property="recommend" jdbcType="BIT" />
-    <result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
-    <result column="seo_description" property="seo_description" jdbcType="VARCHAR" />
-    <result column="source" property="source" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="tensile" property="tensile" jdbcType="VARCHAR" />
-    <result column="validity" property="validity" jdbcType="INTEGER" />
-    <result column="water" property="water" jdbcType="VARCHAR" />
-    <result column="area_id" property="area_id" jdbcType="BIGINT" />
-    <result column="color_id" property="color_id" jdbcType="BIGINT" />
-    <result column="form_id" property="form_id" jdbcType="BIGINT" />
-    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
-    <result column="goods_main_photo_id" property="goods_main_photo_id" jdbcType="BIGINT" />
-    <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
-    <result column="quality_id" property="quality_id" jdbcType="BIGINT" />
-    <result column="region_id" property="region_id" jdbcType="BIGINT" />
-    <result column="supply_id" property="supply_id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
-    <result column="util_id" property="util_id" jdbcType="BIGINT" />
-    <result column="classOfFinish_id" property="classOfFinish_id" jdbcType="BIGINT" />
-    <result column="lockStatus" property="lockStatus" jdbcType="INTEGER" />
-    <result column="lastModifyDate" property="lastModifyDate" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanbang.dao.ezs_goodsMapper">
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_goods">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
+    <result column="addess" jdbcType="VARCHAR" property="addess" />
+    <result column="ash" jdbcType="VARCHAR" property="ash" />
+    <result column="bending" jdbcType="VARCHAR" property="bending" />
+    <result column="burning" jdbcType="VARCHAR" property="burning" />
+    <result column="cantilever" jdbcType="VARCHAR" property="cantilever" />
+    <result column="click" jdbcType="INTEGER" property="click" />
+    <result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+    <result column="collect" jdbcType="INTEGER" property="collect" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="crack" jdbcType="VARCHAR" property="crack" />
+    <result column="density" jdbcType="VARCHAR" property="density" />
+    <result column="flexural" jdbcType="VARCHAR" property="flexural" />
+    <result column="freely" jdbcType="VARCHAR" property="freely" />
+    <result column="good_no" jdbcType="VARCHAR" property="good_no" />
+    <result column="good_self" jdbcType="BIT" property="good_self" />
+    <result column="goods_salenum" jdbcType="INTEGER" property="goods_salenum" />
+    <result column="inventory" jdbcType="DOUBLE" property="inventory" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="lastModifyDate" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="lipolysis" jdbcType="VARCHAR" property="lipolysis" />
+    <result column="lockStatus" jdbcType="BIT" property="lockStatus" />
+    <result column="memberLook" jdbcType="BIT" property="memberLook" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="protection" jdbcType="BIT" property="protection" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+    <result column="recommend" jdbcType="BIT" property="recommend" />
+    <result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
+    <result column="seo_description" jdbcType="VARCHAR" property="seo_description" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="tensile" jdbcType="VARCHAR" property="tensile" />
+    <result column="validity" jdbcType="INTEGER" property="validity" />
+    <result column="water" jdbcType="VARCHAR" property="water" />
+    <result column="area_id" jdbcType="BIGINT" property="area_id" />
+    <result column="classOfFinish_id" jdbcType="BIGINT" property="classOfFinish_id" />
+    <result column="color_id" jdbcType="BIGINT" property="color_id" />
+    <result column="form_id" jdbcType="BIGINT" property="form_id" />
+    <result column="goodClass_id" jdbcType="BIGINT" property="goodClass_id" />
+    <result column="goods_main_photo_id" jdbcType="BIGINT" property="goods_main_photo_id" />
+    <result column="logistics_id" jdbcType="BIGINT" property="logistics_id" />
+    <result column="quality_id" jdbcType="BIGINT" property="quality_id" />
+    <result column="region_id" jdbcType="BIGINT" property="region_id" />
+    <result column="supply_id" jdbcType="BIGINT" property="supply_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+    <result column="util_id" jdbcType="BIGINT" property="util_id" />
+    <result column="addess2" jdbcType="VARCHAR" property="addess2" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
     collect, content, crack, density, flexural, freely, good_no, good_self, goods_salenum, 
-    inventory, keyword, lipolysis, memberLook, name, price, protection, purpose, recommend, 
-    recommend_time, seo_description, source, status, tensile, validity, water, area_id, 
-    color_id, form_id, goodClass_id, goods_main_photo_id, logistics_id, quality_id, region_id, 
-    supply_id, user_id, util_id, classOfFinish_id, lockStatus,lastModifyDate
+    inventory, keyword, lastModifyDate, lipolysis, lockStatus, memberLook, name, price, 
+    protection, purpose, recommend, recommend_time, seo_description, source, status, 
+    tensile, validity, water, area_id, classOfFinish_id, color_id, form_id, goodClass_id, 
+    goods_main_photo_id, logistics_id, quality_id, region_id, supply_id, user_id, util_id, 
+    addess2
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ezs_goods
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from ezs_goods
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_goods" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_goods">
     insert into ezs_goods (id, addTime, deleteStatus, 
       addess, ash, bending, 
       burning, cantilever, click, 
@@ -78,487 +80,495 @@
       crack, density, flexural, 
       freely, good_no, good_self, 
       goods_salenum, inventory, keyword, 
-      lipolysis, memberLook, name, 
-      price, protection, purpose, 
-      recommend, recommend_time, seo_description, 
-      source, status, tensile, 
-      validity, water, area_id, 
+      lastModifyDate, lipolysis, lockStatus, 
+      memberLook, name, price, 
+      protection, purpose, recommend, 
+      recommend_time, seo_description, source, 
+      status, tensile, validity, 
+      water, area_id, classOfFinish_id, 
       color_id, form_id, goodClass_id, 
       goods_main_photo_id, logistics_id, quality_id, 
       region_id, supply_id, user_id, 
-      util_id, classOfFinish_id, lockStatus,lastModifyDate
-      )
+      util_id, addess2)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{addess,jdbcType=VARCHAR}, #{ash,jdbcType=VARCHAR}, #{bending,jdbcType=VARCHAR}, 
       #{burning,jdbcType=VARCHAR}, #{cantilever,jdbcType=VARCHAR}, #{click,jdbcType=INTEGER}, 
-      #{cncl_num,jdbcType=BIT}, #{collect,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{cncl_num,jdbcType=DOUBLE}, #{collect,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
       #{crack,jdbcType=VARCHAR}, #{density,jdbcType=VARCHAR}, #{flexural,jdbcType=VARCHAR}, 
       #{freely,jdbcType=VARCHAR}, #{good_no,jdbcType=VARCHAR}, #{good_self,jdbcType=BIT}, 
       #{goods_salenum,jdbcType=INTEGER}, #{inventory,jdbcType=DOUBLE}, #{keyword,jdbcType=VARCHAR}, 
-      #{lipolysis,jdbcType=VARCHAR}, #{memberLook,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, 
-      #{price,jdbcType=DECIMAL}, #{protection,jdbcType=BIT}, #{purpose,jdbcType=VARCHAR}, 
-      #{recommend,jdbcType=BIT}, #{recommend_time,jdbcType=TIMESTAMP}, #{seo_description,jdbcType=VARCHAR}, 
-      #{source,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{tensile,jdbcType=VARCHAR}, 
-      #{validity,jdbcType=INTEGER}, #{water,jdbcType=VARCHAR}, #{area_id,jdbcType=BIGINT}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{lipolysis,jdbcType=VARCHAR}, #{lockStatus,jdbcType=BIT}, 
+      #{memberLook,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{protection,jdbcType=BIT}, #{purpose,jdbcType=VARCHAR}, #{recommend,jdbcType=BIT}, 
+      #{recommend_time,jdbcType=TIMESTAMP}, #{seo_description,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{tensile,jdbcType=VARCHAR}, #{validity,jdbcType=INTEGER}, 
+      #{water,jdbcType=VARCHAR}, #{area_id,jdbcType=BIGINT}, #{classOfFinish_id,jdbcType=BIGINT}, 
       #{color_id,jdbcType=BIGINT}, #{form_id,jdbcType=BIGINT}, #{goodClass_id,jdbcType=BIGINT}, 
       #{goods_main_photo_id,jdbcType=BIGINT}, #{logistics_id,jdbcType=BIGINT}, #{quality_id,jdbcType=BIGINT}, 
       #{region_id,jdbcType=BIGINT}, #{supply_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
-      #{util_id,jdbcType=BIGINT}, #{classOfFinish_id,jdbcType=BIGINT}, #{lockStatus,jdbcType=INTEGER}
-      #{lastModifyDate,jdbcType=TIMESTAMP}
-      )
+      #{util_id,jdbcType=BIGINT}, #{addess2,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_goods" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_goods">
     insert into ezs_goods
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="addTime != null" >
+      <if test="addTime != null">
         addTime,
       </if>
-      <if test="deleteStatus != null" >
+      <if test="deleteStatus != null">
         deleteStatus,
       </if>
-      <if test="addess != null" >
+      <if test="addess != null">
         addess,
       </if>
-      <if test="ash != null" >
+      <if test="ash != null">
         ash,
       </if>
-      <if test="bending != null" >
+      <if test="bending != null">
         bending,
       </if>
-      <if test="burning != null" >
+      <if test="burning != null">
         burning,
       </if>
-      <if test="cantilever != null" >
+      <if test="cantilever != null">
         cantilever,
       </if>
-      <if test="click != null" >
+      <if test="click != null">
         click,
       </if>
-      <if test="cncl_num != null" >
+      <if test="cncl_num != null">
         cncl_num,
       </if>
-      <if test="collect != null" >
+      <if test="collect != null">
         collect,
       </if>
-      <if test="content != null" >
+      <if test="content != null">
         content,
       </if>
-      <if test="crack != null" >
+      <if test="crack != null">
         crack,
       </if>
-      <if test="density != null" >
+      <if test="density != null">
         density,
       </if>
-      <if test="flexural != null" >
+      <if test="flexural != null">
         flexural,
       </if>
-      <if test="freely != null" >
+      <if test="freely != null">
         freely,
       </if>
-      <if test="good_no != null" >
+      <if test="good_no != null">
         good_no,
       </if>
-      <if test="good_self != null" >
+      <if test="good_self != null">
         good_self,
       </if>
-      <if test="goods_salenum != null" >
+      <if test="goods_salenum != null">
         goods_salenum,
       </if>
-      <if test="inventory != null" >
+      <if test="inventory != null">
         inventory,
       </if>
-      <if test="keyword != null" >
+      <if test="keyword != null">
         keyword,
       </if>
-      <if test="lipolysis != null" >
-        lipolysis,
-      </if>
-      <if test="memberLook != null" >
-        memberLook,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="protection != null" >
-        protection,
-      </if>
-      <if test="purpose != null" >
-        purpose,
-      </if>
-      <if test="recommend != null" >
-        recommend,
-      </if>
-      <if test="recommend_time != null" >
-        recommend_time,
-      </if>
-      <if test="seo_description != null" >
-        seo_description,
-      </if>
-      <if test="source != null" >
-        source,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="tensile != null" >
-        tensile,
-      </if>
-      <if test="validity != null" >
-        validity,
-      </if>
-      <if test="water != null" >
-        water,
-      </if>
-      <if test="area_id != null" >
-        area_id,
-      </if>
-      <if test="color_id != null" >
-        color_id,
-      </if>
-      <if test="form_id != null" >
-        form_id,
-      </if>
-      <if test="goodClass_id != null" >
-        goodClass_id,
-      </if>
-      <if test="goods_main_photo_id != null" >
-        goods_main_photo_id,
-      </if>
-      <if test="logistics_id != null" >
-        logistics_id,
-      </if>
-      <if test="quality_id != null" >
-        quality_id,
-      </if>
-      <if test="region_id != null" >
-        region_id,
-      </if>
-      <if test="supply_id != null" >
-        supply_id,
-      </if>
-      <if test="user_id != null" >
-        user_id,
-      </if>
-      <if test="util_id != null" >
-        util_id,
-      </if>
-      <if test="classOfFinish_id != null" >
-        classOfFinish_id,
-      </if>
-      <if test="lockStatus != null" >
-        lockStatus,
-      </if>
-      <if test="lastModifyDate != null" >
+      <if test="lastModifyDate != null">
         lastModifyDate,
       </if>
+      <if test="lipolysis != null">
+        lipolysis,
+      </if>
+      <if test="lockStatus != null">
+        lockStatus,
+      </if>
+      <if test="memberLook != null">
+        memberLook,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="protection != null">
+        protection,
+      </if>
+      <if test="purpose != null">
+        purpose,
+      </if>
+      <if test="recommend != null">
+        recommend,
+      </if>
+      <if test="recommend_time != null">
+        recommend_time,
+      </if>
+      <if test="seo_description != null">
+        seo_description,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="tensile != null">
+        tensile,
+      </if>
+      <if test="validity != null">
+        validity,
+      </if>
+      <if test="water != null">
+        water,
+      </if>
+      <if test="area_id != null">
+        area_id,
+      </if>
+      <if test="classOfFinish_id != null">
+        classOfFinish_id,
+      </if>
+      <if test="color_id != null">
+        color_id,
+      </if>
+      <if test="form_id != null">
+        form_id,
+      </if>
+      <if test="goodClass_id != null">
+        goodClass_id,
+      </if>
+      <if test="goods_main_photo_id != null">
+        goods_main_photo_id,
+      </if>
+      <if test="logistics_id != null">
+        logistics_id,
+      </if>
+      <if test="quality_id != null">
+        quality_id,
+      </if>
+      <if test="region_id != null">
+        region_id,
+      </if>
+      <if test="supply_id != null">
+        supply_id,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="util_id != null">
+        util_id,
+      </if>
+      <if test="addess2 != null">
+        addess2,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="addTime != null" >
+      <if test="addTime != null">
         #{addTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="deleteStatus != null" >
+      <if test="deleteStatus != null">
         #{deleteStatus,jdbcType=BIT},
       </if>
-      <if test="addess != null" >
+      <if test="addess != null">
         #{addess,jdbcType=VARCHAR},
       </if>
-      <if test="ash != null" >
+      <if test="ash != null">
         #{ash,jdbcType=VARCHAR},
       </if>
-      <if test="bending != null" >
+      <if test="bending != null">
         #{bending,jdbcType=VARCHAR},
       </if>
-      <if test="burning != null" >
+      <if test="burning != null">
         #{burning,jdbcType=VARCHAR},
       </if>
-      <if test="cantilever != null" >
+      <if test="cantilever != null">
         #{cantilever,jdbcType=VARCHAR},
       </if>
-      <if test="click != null" >
+      <if test="click != null">
         #{click,jdbcType=INTEGER},
       </if>
-      <if test="cncl_num != null" >
-        #{cncl_num,jdbcType=BIT},
+      <if test="cncl_num != null">
+        #{cncl_num,jdbcType=DOUBLE},
       </if>
-      <if test="collect != null" >
+      <if test="collect != null">
         #{collect,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
+      <if test="content != null">
         #{content,jdbcType=VARCHAR},
       </if>
-      <if test="crack != null" >
+      <if test="crack != null">
         #{crack,jdbcType=VARCHAR},
       </if>
-      <if test="density != null" >
+      <if test="density != null">
         #{density,jdbcType=VARCHAR},
       </if>
-      <if test="flexural != null" >
+      <if test="flexural != null">
         #{flexural,jdbcType=VARCHAR},
       </if>
-      <if test="freely != null" >
+      <if test="freely != null">
         #{freely,jdbcType=VARCHAR},
       </if>
-      <if test="good_no != null" >
+      <if test="good_no != null">
         #{good_no,jdbcType=VARCHAR},
       </if>
-      <if test="good_self != null" >
+      <if test="good_self != null">
         #{good_self,jdbcType=BIT},
       </if>
-      <if test="goods_salenum != null" >
+      <if test="goods_salenum != null">
         #{goods_salenum,jdbcType=INTEGER},
       </if>
-      <if test="inventory != null" >
+      <if test="inventory != null">
         #{inventory,jdbcType=DOUBLE},
       </if>
-      <if test="keyword != null" >
+      <if test="keyword != null">
         #{keyword,jdbcType=VARCHAR},
       </if>
-      <if test="lipolysis != null" >
+      <if test="lastModifyDate != null">
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lipolysis != null">
         #{lipolysis,jdbcType=VARCHAR},
       </if>
-      <if test="memberLook != null" >
+      <if test="lockStatus != null">
+        #{lockStatus,jdbcType=BIT},
+      </if>
+      <if test="memberLook != null">
         #{memberLook,jdbcType=BIT},
       </if>
-      <if test="name != null" >
+      <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="price != null" >
+      <if test="price != null">
         #{price,jdbcType=DECIMAL},
       </if>
-      <if test="protection != null" >
+      <if test="protection != null">
         #{protection,jdbcType=BIT},
       </if>
-      <if test="purpose != null" >
+      <if test="purpose != null">
         #{purpose,jdbcType=VARCHAR},
       </if>
-      <if test="recommend != null" >
+      <if test="recommend != null">
         #{recommend,jdbcType=BIT},
       </if>
-      <if test="recommend_time != null" >
+      <if test="recommend_time != null">
         #{recommend_time,jdbcType=TIMESTAMP},
       </if>
-      <if test="seo_description != null" >
+      <if test="seo_description != null">
         #{seo_description,jdbcType=VARCHAR},
       </if>
-      <if test="source != null" >
+      <if test="source != null">
         #{source,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
+      <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="tensile != null" >
+      <if test="tensile != null">
         #{tensile,jdbcType=VARCHAR},
       </if>
-      <if test="validity != null" >
+      <if test="validity != null">
         #{validity,jdbcType=INTEGER},
       </if>
-      <if test="water != null" >
+      <if test="water != null">
         #{water,jdbcType=VARCHAR},
       </if>
-      <if test="area_id != null" >
+      <if test="area_id != null">
         #{area_id,jdbcType=BIGINT},
       </if>
-      <if test="color_id != null" >
-        #{color_id,jdbcType=BIGINT},
-      </if>
-      <if test="form_id != null" >
-        #{form_id,jdbcType=BIGINT},
-      </if>
-      <if test="goodClass_id != null" >
-        #{goodClass_id,jdbcType=BIGINT},
-      </if>
-      <if test="goods_main_photo_id != null" >
-        #{goods_main_photo_id,jdbcType=BIGINT},
-      </if>
-      <if test="logistics_id != null" >
-        #{logistics_id,jdbcType=BIGINT},
-      </if>
-      <if test="quality_id != null" >
-        #{quality_id,jdbcType=BIGINT},
-      </if>
-      <if test="region_id != null" >
-        #{region_id,jdbcType=BIGINT},
-      </if>
-      <if test="supply_id != null" >
-        #{supply_id,jdbcType=BIGINT},
-      </if>
-      <if test="user_id != null" >
-        #{user_id,jdbcType=BIGINT},
-      </if>
-      <if test="util_id != null" >
-        #{util_id,jdbcType=BIGINT},
-      </if>
-      <if test="classOfFinish_id != null" >
+      <if test="classOfFinish_id != null">
         #{classOfFinish_id,jdbcType=BIGINT},
       </if>
-      <if test="lockStatus != null" >
-        #{lockStatus,jdbcType=INTEGER},
+      <if test="color_id != null">
+        #{color_id,jdbcType=BIGINT},
       </if>
-      <if test="lastModifyDate != null" >
- 		#{ lastModifyDate,jdbcType=TIMESTAMP},
+      <if test="form_id != null">
+        #{form_id,jdbcType=BIGINT},
+      </if>
+      <if test="goodClass_id != null">
+        #{goodClass_id,jdbcType=BIGINT},
+      </if>
+      <if test="goods_main_photo_id != null">
+        #{goods_main_photo_id,jdbcType=BIGINT},
+      </if>
+      <if test="logistics_id != null">
+        #{logistics_id,jdbcType=BIGINT},
+      </if>
+      <if test="quality_id != null">
+        #{quality_id,jdbcType=BIGINT},
+      </if>
+      <if test="region_id != null">
+        #{region_id,jdbcType=BIGINT},
+      </if>
+      <if test="supply_id != null">
+        #{supply_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="util_id != null">
+        #{util_id,jdbcType=BIGINT},
+      </if>
+      <if test="addess2 != null">
+        #{addess2,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_goods" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_goods">
     update ezs_goods
-    <set >
-      <if test="addTime != null" >
+    <set>
+      <if test="addTime != null">
         addTime = #{addTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="deleteStatus != null" >
+      <if test="deleteStatus != null">
         deleteStatus = #{deleteStatus,jdbcType=BIT},
       </if>
-      <if test="addess != null" >
+      <if test="addess != null">
         addess = #{addess,jdbcType=VARCHAR},
       </if>
-      <if test="ash != null" >
+      <if test="ash != null">
         ash = #{ash,jdbcType=VARCHAR},
       </if>
-      <if test="bending != null" >
+      <if test="bending != null">
         bending = #{bending,jdbcType=VARCHAR},
       </if>
-      <if test="burning != null" >
+      <if test="burning != null">
         burning = #{burning,jdbcType=VARCHAR},
       </if>
-      <if test="cantilever != null" >
+      <if test="cantilever != null">
         cantilever = #{cantilever,jdbcType=VARCHAR},
       </if>
-      <if test="click != null" >
+      <if test="click != null">
         click = #{click,jdbcType=INTEGER},
       </if>
-      <if test="cncl_num != null" >
-        cncl_num = #{cncl_num,jdbcType=BIT},
+      <if test="cncl_num != null">
+        cncl_num = #{cncl_num,jdbcType=DOUBLE},
       </if>
-      <if test="collect != null" >
+      <if test="collect != null">
         collect = #{collect,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
+      <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="crack != null" >
+      <if test="crack != null">
         crack = #{crack,jdbcType=VARCHAR},
       </if>
-      <if test="density != null" >
+      <if test="density != null">
         density = #{density,jdbcType=VARCHAR},
       </if>
-      <if test="flexural != null" >
+      <if test="flexural != null">
         flexural = #{flexural,jdbcType=VARCHAR},
       </if>
-      <if test="freely != null" >
+      <if test="freely != null">
         freely = #{freely,jdbcType=VARCHAR},
       </if>
-      <if test="good_no != null" >
+      <if test="good_no != null">
         good_no = #{good_no,jdbcType=VARCHAR},
       </if>
-      <if test="good_self != null" >
+      <if test="good_self != null">
         good_self = #{good_self,jdbcType=BIT},
       </if>
-      <if test="goods_salenum != null" >
+      <if test="goods_salenum != null">
         goods_salenum = #{goods_salenum,jdbcType=INTEGER},
       </if>
-      <if test="inventory != null" >
+      <if test="inventory != null">
         inventory = #{inventory,jdbcType=DOUBLE},
       </if>
-      <if test="keyword != null" >
+      <if test="keyword != null">
         keyword = #{keyword,jdbcType=VARCHAR},
       </if>
-      <if test="lipolysis != null" >
+      <if test="lastModifyDate != null">
+        lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lipolysis != null">
         lipolysis = #{lipolysis,jdbcType=VARCHAR},
       </if>
-      <if test="memberLook != null" >
+      <if test="lockStatus != null">
+        lockStatus = #{lockStatus,jdbcType=BIT},
+      </if>
+      <if test="memberLook != null">
         memberLook = #{memberLook,jdbcType=BIT},
       </if>
-      <if test="name != null" >
+      <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="price != null" >
+      <if test="price != null">
         price = #{price,jdbcType=DECIMAL},
       </if>
-      <if test="protection != null" >
+      <if test="protection != null">
         protection = #{protection,jdbcType=BIT},
       </if>
-      <if test="purpose != null" >
+      <if test="purpose != null">
         purpose = #{purpose,jdbcType=VARCHAR},
       </if>
-      <if test="recommend != null" >
+      <if test="recommend != null">
         recommend = #{recommend,jdbcType=BIT},
       </if>
-      <if test="recommend_time != null" >
+      <if test="recommend_time != null">
         recommend_time = #{recommend_time,jdbcType=TIMESTAMP},
       </if>
-      <if test="seo_description != null" >
+      <if test="seo_description != null">
         seo_description = #{seo_description,jdbcType=VARCHAR},
       </if>
-      <if test="source != null" >
+      <if test="source != null">
         source = #{source,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
+      <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="tensile != null" >
+      <if test="tensile != null">
         tensile = #{tensile,jdbcType=VARCHAR},
       </if>
-      <if test="validity != null" >
+      <if test="validity != null">
         validity = #{validity,jdbcType=INTEGER},
       </if>
-      <if test="water != null" >
+      <if test="water != null">
         water = #{water,jdbcType=VARCHAR},
       </if>
-      <if test="area_id != null" >
+      <if test="area_id != null">
         area_id = #{area_id,jdbcType=BIGINT},
       </if>
-      <if test="color_id != null" >
-        color_id = #{color_id,jdbcType=BIGINT},
-      </if>
-      <if test="form_id != null" >
-        form_id = #{form_id,jdbcType=BIGINT},
-      </if>
-      <if test="goodClass_id != null" >
-        goodClass_id = #{goodClass_id,jdbcType=BIGINT},
-      </if>
-      <if test="goods_main_photo_id != null" >
-        goods_main_photo_id = #{goods_main_photo_id,jdbcType=BIGINT},
-      </if>
-      <if test="logistics_id != null" >
-        logistics_id = #{logistics_id,jdbcType=BIGINT},
-      </if>
-      <if test="quality_id != null" >
-        quality_id = #{quality_id,jdbcType=BIGINT},
-      </if>
-      <if test="region_id != null" >
-        region_id = #{region_id,jdbcType=BIGINT},
-      </if>
-      <if test="supply_id != null" >
-        supply_id = #{supply_id,jdbcType=BIGINT},
-      </if>
-      <if test="user_id != null" >
-        user_id = #{user_id,jdbcType=BIGINT},
-      </if>
-      <if test="util_id != null" >
-        util_id = #{util_id,jdbcType=BIGINT},
-      </if>
-      <if test="classOfFinish_id != null" >
+      <if test="classOfFinish_id != null">
         classOfFinish_id = #{classOfFinish_id,jdbcType=BIGINT},
       </if>
-      <if test="lockStatus != null" >
-        lockStatus = #{lockStatus,jdbcType=INTEGER},
+      <if test="color_id != null">
+        color_id = #{color_id,jdbcType=BIGINT},
       </if>
-      <if test="lastModifyDate != null" >
-        lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      <if test="form_id != null">
+        form_id = #{form_id,jdbcType=BIGINT},
+      </if>
+      <if test="goodClass_id != null">
+        goodClass_id = #{goodClass_id,jdbcType=BIGINT},
+      </if>
+      <if test="goods_main_photo_id != null">
+        goods_main_photo_id = #{goods_main_photo_id,jdbcType=BIGINT},
+      </if>
+      <if test="logistics_id != null">
+        logistics_id = #{logistics_id,jdbcType=BIGINT},
+      </if>
+      <if test="quality_id != null">
+        quality_id = #{quality_id,jdbcType=BIGINT},
+      </if>
+      <if test="region_id != null">
+        region_id = #{region_id,jdbcType=BIGINT},
+      </if>
+      <if test="supply_id != null">
+        supply_id = #{supply_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="util_id != null">
+        util_id = #{util_id,jdbcType=BIGINT},
+      </if>
+      <if test="addess2 != null">
+        addess2 = #{addess2,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_goods" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_goods">
     update ezs_goods
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -568,7 +578,7 @@
       burning = #{burning,jdbcType=VARCHAR},
       cantilever = #{cantilever,jdbcType=VARCHAR},
       click = #{click,jdbcType=INTEGER},
-      cncl_num = #{cncl_num,jdbcType=BIT},
+      cncl_num = #{cncl_num,jdbcType=DOUBLE},
       collect = #{collect,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
       crack = #{crack,jdbcType=VARCHAR},
@@ -580,7 +590,9 @@
       goods_salenum = #{goods_salenum,jdbcType=INTEGER},
       inventory = #{inventory,jdbcType=DOUBLE},
       keyword = #{keyword,jdbcType=VARCHAR},
+      lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
       lipolysis = #{lipolysis,jdbcType=VARCHAR},
+      lockStatus = #{lockStatus,jdbcType=BIT},
       memberLook = #{memberLook,jdbcType=BIT},
       name = #{name,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
@@ -595,6 +607,7 @@
       validity = #{validity,jdbcType=INTEGER},
       water = #{water,jdbcType=VARCHAR},
       area_id = #{area_id,jdbcType=BIGINT},
+      classOfFinish_id = #{classOfFinish_id,jdbcType=BIGINT},
       color_id = #{color_id,jdbcType=BIGINT},
       form_id = #{form_id,jdbcType=BIGINT},
       goodClass_id = #{goodClass_id,jdbcType=BIGINT},
@@ -605,11 +618,10 @@
       supply_id = #{supply_id,jdbcType=BIGINT},
       user_id = #{user_id,jdbcType=BIGINT},
       util_id = #{util_id,jdbcType=BIGINT},
-      classOfFinish_id = #{classOfFinish_id,jdbcType=BIGINT},
-      lockStatus = #{lockStatus,jdbcType=INTEGER}
-      lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      addess2 = #{addess2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
@@ -725,7 +737,10 @@
     order by
     lastModifyDate  desc
   </select>
-  
+  <!-- 由购物车查询商品信息 -->
+  <select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select g.* from ezs_goods g where EXISTS (select 1 from ezs_documentshare e where e.good_id = g.id and e.deleteStatus = '0' and e.house = '1' and e.user_id = #{userId})
+  </select>
   <!-- 自营，地区、品类筛选 -->
   <!-- 关联表：ezs_area，area_id:商品库存区县 -->
   <!-- 关联表：ezs_goods_class，goodClass_id:商品分类 -->
@@ -741,6 +756,13 @@
         gc.name = #{name, jdbcType=VARCHAR}
     </if> 
   </select>
+  
+
+  
+  
+
+  
+  
   
   <!-- 其他筛选 -->
   <!-- 
