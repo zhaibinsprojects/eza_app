@@ -23,8 +23,6 @@ public class AddressController {
 	private AddressService addressService;
 	@Autowired
 	HttpServletRequest httpServletRequest;
-	
-	
 	/**
 	 * 添加新地址
 	 * @param ezs_address

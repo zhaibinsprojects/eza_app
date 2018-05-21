@@ -618,4 +618,15 @@
     </trim>
  	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc;      
   </select>
+  <!-- 获取价格趋势,最近两天实时交易 -->
+  <select id="selectPriceChangesByGood" resultMap="PriceTrendcyResultMap" parameterType="java.lang.Long">
+  select 
+	IFNULL(AVG(a2.price),0) currentPrice,
+	IFNULL((
+		select AVG(a1.price) 
+		from ezs_price_trend a1 
+		where a1.type = '3' and a1.goodClass_id = a2.goodClass_id GROUP BY DATE_FORMAT(a1.data_time,'%Y-%m-%d') order by a1.data_time desc LIMIT 1,1
+	),0)  prePrice
+	from ezs_price_trend a2 where EXISTS (select 1 from ezs_goods g2 where a2.goodClass_id = g2.goodClass_id and g2.id = #{gId} ) and a2.type = '3' GROUP BY DATE_FORMAT(a2.data_time,'%Y-%m-%d') order by a2.data_time desc LIMIT 0,1;
+  </select>
 </mapper>
