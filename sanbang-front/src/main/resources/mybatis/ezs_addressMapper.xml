@@ -161,7 +161,6 @@
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD
   <select id="findByAreaidAndAreainfoAnduserid" resultType="ezs_address">
   	select 
     <include refid="Base_Column_List" />
@@ -175,12 +174,10 @@
   	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0
   </select>
   
-=======
   <!-- 根据用户id获取用户地址 -->
   <select id="getAddressByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
 	<include refid="Base_Column_List" />
  	from ezs_address where user_id = #{id} and bestow = '0'
   </select>
->>>>>>> 80cd2c6286476e5384c4fe5222d561946e24b141
 </mapper>

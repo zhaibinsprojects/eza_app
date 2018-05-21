@@ -60,7 +60,7 @@
     <!-- 使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求 -->  
 	<!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的  -->
 	
-<<<<<<< HEAD
+
 	<!-- <mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
@@ -82,8 +82,6 @@
 			<bean class="com.sanbang.interceptors.LoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors> -->
-=======
-	
->>>>>>> 80cd2c6286476e5384c4fe5222d561946e24b141
+
 	
 </beans>

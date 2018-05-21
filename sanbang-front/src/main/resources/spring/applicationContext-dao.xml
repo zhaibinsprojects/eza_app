@@ -146,11 +146,6 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_customizedMapper" />
 	</bean>
-	<!-- 地址 -->
- 	<bean id="ezs_addressMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_addressMapper" />
-	</bean>
 	<!-- 栏目 -->
 	<bean id="ezs_columnMapper" parent="baseMapper">
 		<property name="mapperInterface"

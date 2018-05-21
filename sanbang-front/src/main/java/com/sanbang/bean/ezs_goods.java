@@ -22,7 +22,7 @@ public class ezs_goods {
 
     private Integer click;
 
-    private Boolean cncl_num;
+    private Double cncl_num;
 
     private Integer collect;
 
@@ -46,7 +46,11 @@ public class ezs_goods {
 
     private String keyword;
 
+    private Date lastModifyDate;
+
     private String lipolysis;
+
+    private Boolean lockStatus;
 
     private Boolean memberLook;
 
@@ -76,6 +80,8 @@ public class ezs_goods {
 
     private Long area_id;
 
+    private Long classOfFinish_id;
+
     private Long color_id;
 
     private Long form_id;
@@ -96,9 +102,7 @@ public class ezs_goods {
 
     private Long util_id;
 
-    private Long classOfFinish_id;
-
-    private Integer lockStatus;
+    private String addess2;
 
     public Long getId() {
         return id;
@@ -172,11 +176,11 @@ public class ezs_goods {
         this.click = click;
     }
 
-    public Boolean getCncl_num() {
+    public Double getCncl_num() {
         return cncl_num;
     }
 
-    public void setCncl_num(Boolean cncl_num) {
+    public void setCncl_num(Double cncl_num) {
         this.cncl_num = cncl_num;
     }
 
@@ -268,12 +272,28 @@ public class ezs_goods {
         this.keyword = keyword == null ? null : keyword.trim();
     }
 
+    public Date getLastModifyDate() {
+        return lastModifyDate;
+    }
+
+    public void setLastModifyDate(Date lastModifyDate) {
+        this.lastModifyDate = lastModifyDate;
+    }
+
     public String getLipolysis() {
         return lipolysis;
     }
 
     public void setLipolysis(String lipolysis) {
         this.lipolysis = lipolysis == null ? null : lipolysis.trim();
+    }
+
+    public Boolean getLockStatus() {
+        return lockStatus;
+    }
+
+    public void setLockStatus(Boolean lockStatus) {
+        this.lockStatus = lockStatus;
     }
 
     public Boolean getMemberLook() {
@@ -388,6 +408,14 @@ public class ezs_goods {
         this.area_id = area_id;
     }
 
+    public Long getClassOfFinish_id() {
+        return classOfFinish_id;
+    }
+
+    public void setClassOfFinish_id(Long classOfFinish_id) {
+        this.classOfFinish_id = classOfFinish_id;
+    }
+
     public Long getColor_id() {
         return color_id;
     }
@@ -468,19 +496,11 @@ public class ezs_goods {
         this.util_id = util_id;
     }
 
-    public Long getClassOfFinish_id() {
-        return classOfFinish_id;
+    public String getAddess2() {
+        return addess2;
     }
 
-    public void setClassOfFinish_id(Long classOfFinish_id) {
-        this.classOfFinish_id = classOfFinish_id;
-    }
-
-    public Integer getLockStatus() {
-        return lockStatus;
-    }
-
-    public void setLockStatus(Integer lockStatus) {
-        this.lockStatus = lockStatus;
+    public void setAddess2(String addess2) {
+        this.addess2 = addess2 == null ? null : addess2.trim();
     }
 }
