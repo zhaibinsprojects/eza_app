@@ -2,12 +2,6 @@
 .gitignore		#仓库中所有名为.gitignore的文件都屏蔽
 target/			#屏蔽target目录
 .settings/		#屏蔽.settings目录
-<<<<<<< HEAD
 /bin/
 /target/
-=======
-/target/
-<<<<<<< HEAD
-=======
-相关文档/
->>>>>>> 07caeb8666e0cd897aec216928d19bae7b618868
+#此文件每次编译都会重新生成/bin/这个目录，如果没有有则重新生成了， 如果有则忽略
