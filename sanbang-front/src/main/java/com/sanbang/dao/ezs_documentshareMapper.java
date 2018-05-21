@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_documentshare;
@@ -20,4 +22,6 @@ public interface ezs_documentshareMapper {
     
     //更新状态
     int updateCollect(Long id);
+    
+    int updateCollectByUserId(Map<String, Object> mp);
 }

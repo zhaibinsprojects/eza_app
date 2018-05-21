@@ -116,10 +116,20 @@
   </update>
   
   <!-- 根据商品id修改收藏状态 -->
+<<<<<<< HEAD
   <update id="updateCollect">
+=======
+
+  <update id="updateCollect" parameterType="java.lang.Long" >
+>>>>>>> 07caeb8666e0cd897aec216928d19bae7b618868
     update ezs_documentshare
     set house = #{house,jdbcType=INTEGER} 
     where goods_id = #{goods_id,jdbcType=BIGINT}
   </update>
-  
+  <!-- 移除收藏商品 -->
+  <update id="updateCollectByUserId">
+    update ezs_documentshare
+    set house = 0
+    where good_id = #{gId} and user_id = #{userId}
+  </update>
 </mapper>

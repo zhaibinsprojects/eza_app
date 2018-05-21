@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_user;
 import com.sanbang.index.service.CustomerService;
+import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;
+import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.HomeDictionaryCode;
@@ -74,5 +76,14 @@ public class HomeCustomerController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
+	}
+	@RequestMapping("/getRedisMess")
+	public Object getRedisMess(){
+		ezs_user user = new ezs_user();
+		user.setName("123123");
+		RedisUtils.set("user", user,Long.valueOf(2000));
+		RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get("user", ezs_user.class);
+		System.out.println("UserName:"+tempCached.getResult().getName());
+		return "";
 	}
 }
