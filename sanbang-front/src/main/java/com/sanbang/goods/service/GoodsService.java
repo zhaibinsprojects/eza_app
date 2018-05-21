@@ -1,8 +1,7 @@
 package com.sanbang.goods.service;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -77,6 +76,6 @@ public interface GoodsService {
 	 * @param isProtection 是否环保
 	 * @return
 	 */
-	public List listByOthers(Long color,Long form,String purpose,String source,String burning,boolean protection);
+	public List listByOthers(Map map);
 	
 }

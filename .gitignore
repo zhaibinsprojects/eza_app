@@ -2,4 +2,18 @@
 .gitignore		#仓库中所有名为.gitignore的文件都屏蔽
 target/			#屏蔽target目录
 .settings/		#屏蔽.settings目录
+<<<<<<< HEAD
+<<<<<<< HEAD
 /bin/
+=======
+相关文档/
+=======
+.classpath		#仓库中所有名为.classpath的文件都屏蔽
+.gitignore		#仓库中所有名为.gitignore的文件都屏蔽
+target/			#屏蔽target目录
+.settings/		#屏蔽.settings目录
+>>>>>>> branch 'master' of https://gitee.com/jflang/sanbang-parent.git
+>>>>>>> 07caeb8666e0cd897aec216928d19bae7b618868
+=======
+/bin/
+>>>>>>> 1d4d7e98382bf190942eb38b5c37f5230ebbed14

@@ -2,7 +2,7 @@ package com.sanbang.goods.service.imp;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,9 +87,9 @@ public class GoodsServiceImpl implements GoodsService{
 		return list;
 	}
 	
-	public List listByOthers(Long color,Long form,String use,String source,String burning,boolean protection){
+	public List listByOthers(Map map){
 		List<ezs_goods> list = new ArrayList();
-		list = ezs_goodsMapper.listByOthers(color,form,use,source,burning,protection);
+		list = ezs_goodsMapper.listByOthers(map);
 		return list;
 	}
 	

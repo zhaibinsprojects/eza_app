@@ -161,6 +161,10 @@
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+<<<<<<< HEAD
+  
+=======
+>>>>>>> 07caeb8666e0cd897aec216928d19bae7b618868
   <select id="findByAreaidAndAreainfoAnduserid" resultType="ezs_address">
   	select 
     <include refid="Base_Column_List" />
@@ -173,6 +177,10 @@
   	from ezs_address 
   	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0
   </select>
+<<<<<<< HEAD
+  
+=======
+>>>>>>> 07caeb8666e0cd897aec216928d19bae7b618868
   <!-- 根据用户id获取用户地址 -->
   <select id="getAddressByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 

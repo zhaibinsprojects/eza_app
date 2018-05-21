@@ -1,8 +1,7 @@
 package com.sanbang.dao;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -48,14 +47,9 @@ public interface ezs_goodsMapper {
 	 */
 	List<ezs_goods> listByAreaAndType(String area,String type);
 	/**
-	 * 
-	 * @param color 颜色
-	 * @param form 形态
-	 * @param purpose 用途
-	 * @param source
-	 * @param burning
-	 * @param protection
+	 * 其他筛选
+	 * @param map 查询条件
 	 * @return
 	 */
-	List<ezs_goods> listByOthers(Long color,Long form,String purpose,String source,String burning,boolean protection);
+	List<ezs_goods> listByOthers(Map map);
 }

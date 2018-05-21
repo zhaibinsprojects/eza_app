@@ -1,7 +1,15 @@
 package com.sanbang.goods.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.xhtmlrenderer.pdf.ITextFontResolver;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.itextpdf.text.pdf.BaseFont;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
@@ -17,6 +28,9 @@ import com.sanbang.bean.ezs_orderform;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 
 @Controller
@@ -34,7 +48,7 @@ public class GoodsController {
 	 */
 	@RequestMapping("/goodsDetail")
 	@ResponseBody
-	public Result getGoodsDetail(HttpServletRequest request,long id){
+	public Result getGoodsDetail(HttpServletRequest request,Long id){
 		ezs_goods goods = goodsService.getGoodsDetail(id);
 		Result result=Result.failure();
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
@@ -50,7 +64,7 @@ public class GoodsController {
 	 */
 	@RequestMapping("/listForEvaluate")
 	@ResponseBody
-	public Result listForEvaluate(HttpServletRequest request,long id){
+	public Result listForEvaluate(HttpServletRequest request,Long id){
 		Result result = new Result();
 		List<ezs_dvaluate> list  = new ArrayList();
 		list = goodsService.listForEvaluate(id);
@@ -179,16 +193,72 @@ public class GoodsController {
 	 */
 	@RequestMapping("/others")
 	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,boolean protection){
+	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
 		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList();	
-		list = goodsService.listByOthers(color,form,purpose,source,burning,protection);
+		List<ezs_goods> list = new ArrayList();
+		//将接收的参数转换成map类型
+		Map mmp = new HashMap();
+		mmp.put("color", color);
+		mmp.put("form", form);
+		mmp.put("purpose", purpose);
+		mmp.put("source", source);
+		mmp.put("burning", burning);
+		mmp.put("protection", protection);
+		
+		list = goodsService.listByOthers(mmp);
 		result.setObj(list);
 		result.setMsg("返回成功");
 		
 		return result;
 	}
 	
-	
-	
+	//生成PDF（质检报告）
+	/**
+	 * 
+	 * @param params
+	 * @param templPath	模板路径
+	 * @param ftlName 文件名称
+	 * @param htmlPath	生成的html文件的名称
+	 * @param pdfPath	导出pdf的路径
+	 * @param fontPath	
+	 * @return
+	 */
+	@RequestMapping("/exportPDF")
+	@ResponseBody
+	public String exportPDF(Map<String, Object> params, String templPath, String ftlName, String htmlPath,
+			String pdfPath, String fontPath){
+		Configuration configuration = null;
+		try {
+			configuration = new Configuration();
+			configuration.setDefaultEncoding("UTF-8");
+			configuration.setDirectoryForTemplateLoading(new File(templPath));
+			Template temp = configuration.getTemplate(ftlName);		//文件名称
+			File htmlFile = new File(htmlPath);
+			if (!htmlFile.exists()) {
+				htmlFile.createNewFile();
+			}
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(htmlPath)), "utf-8"));
+			temp.process(params, out);
+			out.flush();
+
+			String url = htmlFile.toURI().toURL().toString();
+			OutputStream os = new FileOutputStream(pdfPath);
+			ITextRenderer renderer = new ITextRenderer();
+			renderer.setDocument(url);
+
+			// 解决中文问题
+			ITextFontResolver fontResolver = renderer.getFontResolver();
+
+			fontResolver.addFont(fontPath + "simsun.ttc", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+			renderer.layout();
+			renderer.createPDF(os);
+			os.close();
+		} catch (Exception e) {
+			System.out.println("老师，你好");
+			return "";
+		}
+		return pdfPath; 
+		
+	}
 }
