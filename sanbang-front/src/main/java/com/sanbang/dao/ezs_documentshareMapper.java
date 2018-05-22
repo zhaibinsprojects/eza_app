@@ -21,7 +21,7 @@ public interface ezs_documentshareMapper {
     int updateByPrimaryKey(ezs_documentshare record);
     
     //更新状态
-    int updateCollect(Long id);
+    int updateCollect(Map mmp);
     
     int updateCollectByUserId(Map<String, Object> mp);
 }

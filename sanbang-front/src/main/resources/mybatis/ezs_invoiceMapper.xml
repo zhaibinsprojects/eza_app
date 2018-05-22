@@ -169,8 +169,13 @@
   
     
   <!-- 通过id查询开票信息 -->
-   <select id="selectInvoiceListInfoById" resultType="ezs_invoice"  >
-    	select * from 	ezs_invoice where user_id = #{userId}						
+   <select id="goodsInvoiceCountPage" resultType="ezs_invoice"  parameterType="com.sanbang.utils.Page">
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_invoice
+    where user_id = #{userId}	
+    order by g.recommend_time 
+    desc LIMIT #{startPos},#{pageSize}					
   </select>
   
   <!-- 根据订单编号和签订时间查询开票记录 -->
@@ -186,11 +191,6 @@
     	</where>
   </select>
 	 
-   <!-- 通过id查询开票信息条数 -->
-   <select id="selectCount"  >
-    	select count(*) from ezs_invoice 						
-  </select>
-  
    <!-- 通过id查询开票信息 -->
    <select id="selectInvoiceInfoById"  resultMap="infoResultMap" >
     	select ein.id, ein.express_time,ein.express_name,ein.express_no,
@@ -201,18 +201,27 @@
   
    <!-- 根据订单签订时间查询合同 -->
    <select id="selectInvoiceByDate" resultType="ezs_invoice"  >
-    	select * from 	ezs_invoice invoice where
+    	select 
+    	<include refid="Base_Column_List" /> 
+    	from 	ezs_invoice invoice where
 	     (unix_timestamp(invoice.express_time)&gt;=unix_timestamp(#{startTime}) 
 	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
+	     and user_id = #{userId,jdbcType=BIGINT}
+	     LIMIT #{startPos},#{pageSize}
    </select>
    <!-- 根据订单编号查询合同 -->
    <select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
-   		select * from ezs_invoice where order_no = #{orderno}
+   		select 
+   		<include refid="Base_Column_List" /> 
+   		from ezs_invoice where order_no = #{orderno}
    </select>
    <!-- 根据订单编号查询合同详细信息 -->
    <select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
-   		select * from ezs_invoice where order_no = #{orderno}
+   		select 
+   		<include refid="Base_Column_List" /> 
+   		from ezs_invoice where order_no = #{orderno}
    </select>
+<<<<<<< HEAD
    <!-- 查询票据信息包含图 -->
    <resultMap id="invoiceMsgResultMap" type="com.sanbang.vo.InvoiceInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -237,4 +246,11 @@
     select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
    	where e.id = #{ id } and e.deleteStatus = '0' ORDER BY e.addtime desc
   </select>
+=======
+ 	<!-- 根据uesrId查询invoice数量 -->
+ 	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
+ 		select count(*) from ezs_invoice where user_id = #{userId}
+ 	</select>
+ 	
+>>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
 </mapper>

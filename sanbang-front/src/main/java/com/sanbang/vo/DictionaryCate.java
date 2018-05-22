@@ -400,5 +400,4 @@ public class DictionaryCate {
      */
     public final static String NFLAT = "NFLAT";
 
-    
 }

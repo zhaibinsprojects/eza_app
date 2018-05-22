@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
+
 import com.sanbang.index.service.CustomizedRecordService;
 import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
@@ -27,7 +27,6 @@ import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsInfo;
-import com.sanbang.vo.HomeDictionaryCode;
 
 @Controller
 @RequestMapping("/home")

@@ -66,7 +66,10 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_KIND_ERROR);
 			mmp.put("Msg", "查询类型有误");
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_CODE_ERROR);
+			mmp.put("Msg","参数传递有误");
 		}
 		return mmp;
 	}
+	
 }

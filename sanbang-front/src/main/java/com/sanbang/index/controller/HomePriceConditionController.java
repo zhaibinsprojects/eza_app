@@ -213,10 +213,14 @@ public class HomePriceConditionController {
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg(mmp.get("Msg").toString());
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setMsg("参数传递有误");
 		}
 		return rs;
 	}
+	
+	
+	
 	/**
 	 * 价格趋势+条件筛选
 	 * @param request

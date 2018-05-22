@@ -11,6 +11,7 @@ import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.seller.service.SellerActivateService;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
@@ -34,12 +35,15 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 		if (!result.getSuccess()) {
 			return result;
 		}
-		// 获取上一步用户登陆信息
-//		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		ezs_user user = new ezs_user();
-		user.setStore_id((long)2);
-		if (user != null) {
-			Long store_id = user.getStore_id();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+//		user.setStore_id((long)2);
+		if (upi != null) {
+			Long store_id = upi.getStore_id();
 //			ezs_store store = ezs_storeMapper.selectById(store_id);
 			ezs_store store = ezs_storeMapper.selectByPrimaryKey(store_id);
 			store.setCompanyName(companyName);
@@ -191,6 +195,4 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 		result.setSuccess(true);
 		return result;
 	}
-	
-	
 }

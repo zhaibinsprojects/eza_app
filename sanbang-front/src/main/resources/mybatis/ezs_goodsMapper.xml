@@ -621,6 +621,10 @@
       addess2 = #{addess2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
@@ -633,7 +637,12 @@
     where status=#{status} and user_id=#{sellerId} 
     order by
     lastModifyDate  desc
+    LIMIT #{startPos},#{pageSize}
   </select>
+  <!-- 供应商下架货品 -->
+  <update id="pullOffShelves" >
+  	update ezs_goods set status = 1 where id =#{goodsId}
+  </update>
   <!-- 商品查询带图 -->
   <resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -723,7 +732,7 @@
   </select>
   
   <!-- 查询同类货品 -->
-  <select id="listForGoods" resultMap="BaseResultMap">
+  <select id="listForGoods" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
     <include refid="Base_Column_List" />
     from ezs_goods goods left join ezs_goods_class gc on goods.goodClass_id = gc.level 
@@ -739,24 +748,18 @@
   <!-- 关联表：ezs_area，area_id:商品库存区县 -->
   <!-- 关联表：ezs_goods_class，goodClass_id:商品分类 -->
   <!-- mybatis会自动封装到实体类中，忽略联合查询的多余字段 -->
-  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.lang.String" >
-    select * from ezs_goods g left join ezs_area a on g.area_id = a.id 
-    left join ezs_goods_class gc on g.goodClass_id = gc.id 
-    where 
+  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.util.Map" >
+  
+    select * from ezs_goods g where 1 = 1
     <if test="areaName !=null and areaName != '' ">
-        a.areaName = #{areaName, jdbcType=VARCHAR}
+        and g.area_id = #{area_id, jdbcType=BIGINT}
     </if>
     <if test="name !=null and name != '' ">
-        gc.name = #{name, jdbcType=VARCHAR}
+        and g.goodClass_id = #{goodClass_id, jdbcType=BIGINT}
     </if> 
   </select>
   
 
-  
-  
-
-  
-  
   
   <!-- 其他筛选 -->
   <!-- 
@@ -794,5 +797,25 @@
         and goods.ash &gt;= #{ash1, jdbcType=BIGINT} and goods.ash &lt;= #{ash2, jdbcType=BIGINT} 
     </if>
     order by lastModifyDate desc
+
   </select>
+
+ 
+
+  <!-- 根据id查询订单总数 -->
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(*) from 	
+		ezs_goods
+    	where user_id = #{sellerId}
+	</select>
+
+
+   <select id="selectByGoodsName" resultMap="GoodsResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
+    g.name like '%${_parameter}%'
+
+  </select>
+
 </mapper>

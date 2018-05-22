@@ -34,6 +34,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	public Map<String, Object> queryByName(String name) {
 		Map<String, Object> mmp = new HashMap<>();
 		List<GoodsInfo> glist = null;
+
 		try {
 			glist = this.goodsMapper.selectByGoodName(name);			
 		} catch (Exception e) {

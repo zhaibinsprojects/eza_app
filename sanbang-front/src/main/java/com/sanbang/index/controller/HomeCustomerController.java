@@ -75,6 +75,22 @@ public class HomeCustomerController {
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
+		ezs_user user01 = new ezs_user();
+		user01.setId(Long.valueOf(13));
+		mmp = this.customerService.getUserMessByUser(user01);
+		UserInfoMess uim = (UserInfoMess) mmp.get("Obj");
+		 rs = Result.success();
+		rs.setObj(uim);
 		return rs;
+	}
+
+	@RequestMapping("/getRedisMess")
+	public Object getRedisMess(){
+		ezs_user user = new ezs_user();
+		user.setName("123123");
+		RedisUtils.set("user", user,Long.valueOf(2000));
+		RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get("user", ezs_user.class);
+		System.out.println("UserName:"+tempCached.getResult().getName());
+		return "";
 	}
 }

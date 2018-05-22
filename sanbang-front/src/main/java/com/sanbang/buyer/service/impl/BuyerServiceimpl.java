@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +25,15 @@ import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.dao.ezs_pactMapper;
+import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
 import com.sanbang.utils.httpclient.HttpRequestParam;
+import com.sanbang.vo.CertSignInfoBean;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.MapTools;
 import com.sanbang.vo.PagerOrder;
 
 import net.sf.json.JSONObject;
@@ -40,6 +44,9 @@ public class BuyerServiceimpl implements BuyerService {
 	@Value("${config.sign.callbackurl}")
 	private String callbackurl;
 
+	@Value("${config.sign.baseurl}")
+	private String signbase;
+	
 	@Autowired
 	private ezs_orderformMapper ezs_orderformMapper;
 
@@ -141,7 +148,7 @@ public class BuyerServiceimpl implements BuyerService {
 
 			}
 
-			String url = "http://test.ezaisheng.com/website/certSign/forh5/showcontentpdf.do";
+			String url = signbase+"/website/certSign/forh5/showcontentpdf.do";
 			Map<String, Object> mv = new HashMap<>();
 
 			mv.put("orderid", pact.get(0).getOrder_no());
@@ -271,7 +278,7 @@ public class BuyerServiceimpl implements BuyerService {
 			mv.put("qiyedaimazheng", qiyedaimazheng);
 			mv.put("accountType", accountType);// 1.企业账号，2.个体户
 
-			String url = "http://test.ezaisheng.com/website/certSign/forh5/signContractFast.do";
+			String url = signbase+"/website/certSign/forh5/signContractFast.do";
 			HttpRequestParam httpParam = new HttpRequestParam();
 			for (Entry<String, Object> en : mv.entrySet()) {
 				httpParam.addUrlParams(new BasicNameValuePair(en.getKey(), String.valueOf(en.getValue())));
@@ -324,4 +331,61 @@ public class BuyerServiceimpl implements BuyerService {
 		return map;
 	}
 
+	@Override
+	public Result getContentList(String member, int temid, int pageno,HttpServletRequest request) {
+		Result result=Result.failure();
+		try {
+			if (Tools.isEmpty(member)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("商户编号不能为空");
+				return result;
+			}
+
+			if (0==temid) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("合同类型不正确！");
+				return result;
+			}
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("member",member);
+			map.put("temid", temid);
+			map.put("pageno", pageno);
+
+			String url = signbase+"/website/certSign/forh5/contentForOut.do";
+			HttpRequestParam httpParam = new HttpRequestParam();
+			for (Entry<String, Object> en : map.entrySet()) {
+				httpParam.addUrlParams(new BasicNameValuePair(en.getKey(), String.valueOf(en.getValue())));
+			}
+			JSONObject callBackRet = null;
+			callBackRet = HttpRemoteRequestUtils.doPost(url, httpParam);
+			if ((boolean) callBackRet.get("success")) {
+				map.clear();
+				List<Map<String, Object>> list1=MapTools.parseJSON2List(String.valueOf(callBackRet.get("content")));
+				map.put("content", list1);
+				result.setSuccess(true);
+				result.setMsg("请求成功 ");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			} else {
+				result.setSuccess(false);
+				result.setMsg("无合同数据");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+
+			}
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	
+	
+	
+	
 }

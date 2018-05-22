@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_area;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.vo.DictionaryCode;

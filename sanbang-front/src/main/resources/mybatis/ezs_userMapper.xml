@@ -273,10 +273,10 @@
          <association property="ezs_store" column="store_id" select="com.sanbang.dao.ezs_storeMapper.selectByPrimaryKey">
          </association>
          <!--联系人-->
-          <association property="ezs_bill" column="id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
+          <association property="ezs_bill" column="user_id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
          </association>
          <!--资质-->
-         <collection property="authimg" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" column="store_id"></collection>
+         <collection property="authimg" column="user_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
   </resultMap>
   
 	<!--查询用户手机号-->
