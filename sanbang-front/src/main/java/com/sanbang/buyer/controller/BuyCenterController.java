@@ -11,10 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.buyer.controller.service.GoodsCollectionService;
+import com.sanbang.buyer.service.GoodsCollectionService;
+import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.utils.Result;
-import com.sanbang.vo.Dictionary;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
 /**
  * 
@@ -26,8 +27,10 @@ import com.sanbang.vo.PriceTrendIfo;
 public class BuyCenterController {
 	@Autowired
 	private GoodsCollectionService goodsCollectionService;
+	@Autowired
+	private GoodsInvoiceService goodsInvoiceService;
 	/**
-	 * 添加商品到收藏夹（已存在暂不开发）
+	 * 添加商品到收藏夹（不启用）
 	 * @param request
 	 * @param response
 	 * @param gId
@@ -104,7 +107,7 @@ public class BuyCenterController {
 		return rs;
 	}
 	/**
-	 * 添加商品到购物车
+	 * 添加商品到购物车（不启用）
 	 * @param request
 	 * @param response
 	 * @param gId
@@ -148,6 +151,82 @@ public class BuyCenterController {
 			plist = (List<PriceTrendIfo>) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(plist);
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 获取用户票据信息
+	 * @param request
+	 * @param response
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInvoiceByUser")
+	@ResponseBody
+	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response,Long userId){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		List<InvoiceInfo> iList = null;
+		mmp = this.goodsInvoiceService.getInvoiceByUser(userId);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			iList = (List<InvoiceInfo>) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(iList);
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 根据票据ID查询票据信息
+	 * @param request
+	 * @param response
+	 * @param invoiceId
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInvoiceByKey")
+	@ResponseBody
+	public Object getGoodsInvoiceByKey(HttpServletRequest request,HttpServletResponse response,Long invoiceId){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		InvoiceInfo invoiceInfo = null;
+		mmp = this.goodsInvoiceService.getInvoiceByKey(invoiceId);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			invoiceInfo = (InvoiceInfo) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(invoiceInfo);
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param invoiceId
+	 * @return
+	 */
+	@RequestMapping("/changeInvoiceStateByKey")
+	@ResponseBody
+	public Object changeInvoiceStateByKey(HttpServletRequest request,HttpServletResponse response,Long invoiceId){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		mmp = this.goodsInvoiceService.changeInvoiceStateById(invoiceId);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg("修改成功");
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));

@@ -23,6 +23,8 @@ public class PagerOrder {
 	//订单状态10.待确认 20.待签约 30.待付款 40.首款待支付 50.首款待确认 60.待发货 
 	//70.已发货 80.尾款待支付 90.尾款待确认 100.退货中 110.已完成 120.已退货 130.已取消
 	private int order_status=-1;
+	
+	private long userid;//当前登录用户id
 
 	public int getPageNow() {
 		return pageNow;
@@ -78,6 +80,14 @@ public class PagerOrder {
 
 	public void setOrder_status(int order_status) {
 		this.order_status = order_status;
+	}
+
+	public long getUserid() {
+		return userid;
+	}
+
+	public void setUserid(long userid) {
+		this.userid = userid;
 	}
 	
 	

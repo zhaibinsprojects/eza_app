@@ -1,22 +1,29 @@
-<<<<<<< HEAD
-.classpath		#仓库中所有名为.classpath的文件都屏蔽
-.gitignore		#仓库中所有名为.gitignore的文件都屏蔽
-target/			#屏蔽target目录
-.settings/		#屏蔽.settings目录
-/bin/
-/target/
-#此文件每次编译都会重新生成/bin/这个目录，如果没有有则重新生成了， 如果有则忽略
-=======
-#仓库中所有名为.classpath的文件都屏蔽
-.classpath
+# IntelliJ IDEA Project files
+.idea
+*.iml
+*.ipr
+*.iws
+out
 
-#屏蔽target目录
+# Eclipse Project files
+.classpath
+.project
+.settings/
+
+# Build files
 target/
 
-#屏蔽.settings目录	
-.settings/
-/bin
+bin/
+gen/
+local.properties
 
-# auto file of mac
 .DS_Store
->>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
+Thumbs.db
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
+

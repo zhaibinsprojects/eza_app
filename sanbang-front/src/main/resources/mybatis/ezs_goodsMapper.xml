@@ -621,7 +621,6 @@
       addess2 = #{addess2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'

@@ -185,6 +185,4 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
-	
-	
 </beans>
