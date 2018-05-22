@@ -1,14 +1,27 @@
-# 仓库中所有名为.classpath的文件都屏蔽
+# Lines that start with '#' are comments.
+# IntelliJ IDEA Project files
+.idea
+*.iml
+*.ipr
+*.iws
+out
+
+# Eclipse Project files
 .classpath
+.project
+.settings/
 
-# 屏蔽build目录
-/target
-/bin
+bin/
+gen/
+local.properties
 
-# 屏蔽IDE目录
-/.settings
-/.idea
-
-# auto file of mac
 .DS_Store
+Thumbs.db
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
 
