@@ -256,7 +256,6 @@ public class ezs_customized {
     public void setCategory_id(Long category_id) {
         this.category_id = category_id;
     }
-<<<<<<< HEAD
 
     public Long getPurchaser_id() {
         return purchaser_id;
@@ -273,7 +272,5 @@ public class ezs_customized {
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
     }
-=======
 
->>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
 }

@@ -236,8 +236,20 @@
 
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-core</artifactId>
+			<artifactId>flying-saucer-pdf</artifactId>
+			<version>9.1.13</version>
 		</dependency>
+		
+		
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itext-xtra</artifactId>
+		    <version>5.4.5</version>
+		</dependency>
+		
+	
+		
+		
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
@@ -270,6 +282,10 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
+		
+		
+		
+		
 		<!-- json -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -277,8 +293,8 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
-    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-resources-plugin</artifactId>
+    		<groupId>org.apache.maven.plugins</groupId>
+	   	 	<artifactId>maven-resources-plugin</artifactId>
 	    <version>2.4.3</version>
 	</dependency>
 	</dependencies>
