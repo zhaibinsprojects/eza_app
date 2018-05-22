@@ -11,12 +11,11 @@ import java.util.Date;
  *
  */
 public class ezs_order_info implements Serializable {
-
-	private static final long serialVersionUID = -6148932296951649380L;
+	private static final long serialVersionUID = 800230349418654360L;
 
 	private String good_no;// 商品编号
 
-	private Date addTime;// 订单时间
+	private String addTime;// 订单时间
 
 	private boolean deleteStatus;
 
@@ -42,7 +41,7 @@ public class ezs_order_info implements Serializable {
 	// 商品量
 	private BigDecimal goods_amount;
 
-	// 订单状态10.待确认 20.待签约 30.待付款 40.首款待支付 50.首款待确认 60.待发货
+	// 1待处理 订单状态10.待确认 20.待签约 30.待付款 40.首款待支付 50.首款待确认 60.待发货
 	// 70.已发货 80.尾款待支付 90.尾款待确认 100.退货中 110.已完成 120.已退货 130.已取消
 	private Integer order_status;
 
@@ -58,9 +57,13 @@ public class ezs_order_info implements Serializable {
 	// 合同状态 1.纸质 2.电子
 	private int pact_status;
 	// 订单完成时
-	private Date finishtime;
+	private String finishtime;
 	// 收货地址id
 	private Long address_id;
+
+	private long buyerid;
+
+	private long sellerid;
 
 	public String getGood_no() {
 		return good_no;
@@ -70,11 +73,11 @@ public class ezs_order_info implements Serializable {
 		this.good_no = good_no;
 	}
 
-	public Date getAddTime() {
+	public String getAddTime() {
 		return addTime;
 	}
 
-	public void setAddTime(Date addTime) {
+	public void setAddTime(String addTime) {
 		this.addTime = addTime;
 	}
 
@@ -206,11 +209,11 @@ public class ezs_order_info implements Serializable {
 		this.pact_status = pact_status;
 	}
 
-	public Date getFinishtime() {
+	public String getFinishtime() {
 		return finishtime;
 	}
 
-	public void setFinishtime(Date finishtime) {
+	public void setFinishtime(String finishtime) {
 		this.finishtime = finishtime;
 	}
 
@@ -222,6 +225,22 @@ public class ezs_order_info implements Serializable {
 		this.address_id = address_id;
 	}
 
+	public long getBuyerid() {
+		return buyerid;
+	}
+
+	public void setBuyerid(long buyerid) {
+		this.buyerid = buyerid;
+	}
+
+	public long getSellerid() {
+		return sellerid;
+	}
+
+	public void setSellerid(long sellerid) {
+		this.sellerid = sellerid;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_order_info [good_no=" + good_no + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
@@ -229,7 +248,8 @@ public class ezs_order_info implements Serializable {
 				+ addess + ", areaName=" + areaName + ", area_id=" + area_id + ", order_type=" + order_type
 				+ ", total_price=" + total_price + ", goods_amount=" + goods_amount + ", order_status=" + order_status
 				+ ", first_price=" + first_price + ", end_price=" + end_price + ", all_price=" + all_price
-				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id + "]";
+				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
+				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + "]";
 	}
 
 }

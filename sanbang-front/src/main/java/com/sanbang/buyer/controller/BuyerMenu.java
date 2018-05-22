@@ -27,6 +27,8 @@ public class BuyerMenu {
 
 	@Autowired
 	private BuyerService buyerService;
+	
+	
 
 
 	/**
@@ -95,6 +97,7 @@ public class BuyerMenu {
 			pageNow = 1;
 		}
 		PagerOrder pager = new PagerOrder();
+		pager.setUserid(upi.getId());
 		pager.setOrder_status(order_status);
 		pager.setOrder_type(order_type);
 		pager.setPageNow(pageNow);
@@ -140,6 +143,38 @@ public class BuyerMenu {
 		return result;
 	}
 
+	
+	
+	/**
+	 * 关闭订单
+	 * 
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderclose")
+	@ResponseBody
+	public Result orderclose(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+
+		Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+		result.setObj(map);
+		return result;
+	}
+
+	
+	
 	/**
 	 * 支付确认
 	 * 
@@ -167,6 +202,35 @@ public class BuyerMenu {
 		result.setObj(map);
 		return result;
 	}
+	
+	
+	/**
+	 * 上传支付凭证
+	 * //PAYIMG
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderpaysubmit")
+	@ResponseBody
+	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			@RequestParam(name = "urlparam", defaultValue = "-1") String urlParam,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		result = buyerService.orderpaysubmit(request, order_no, urlParam);
+		return result;
+	}
+	
 	
 	
 	/**
