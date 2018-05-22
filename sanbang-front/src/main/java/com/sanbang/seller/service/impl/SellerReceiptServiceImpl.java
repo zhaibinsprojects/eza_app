@@ -34,7 +34,7 @@ import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Service
-public abstract class SellerReceiptServiceImpl implements SellerReceiptService {
+public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	// 日志
 	private static Logger log = Logger.getLogger(SellerReceiptServiceImpl.class.getName());
