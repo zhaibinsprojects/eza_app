@@ -1,5 +1,6 @@
 package com.sanbang.index.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,9 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
+
+import com.sanbang.index.service.AccessoryService;
+>>>>>>> refs/remotes/origin/local_changes
 import com.sanbang.index.service.CustomizedRecordService;
 import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
@@ -117,6 +121,10 @@ public class HomeGoodsMessController {
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
+		Map<String, Object> mmp = this.goodsClassService.queryAllGoodsClass();
+		List<ezs_goods_class> gclist = (List<ezs_goods_class>) mmp.get("Obj");
+		Result rs = Result.success();
+		rs.setObj(gclist);
 		return rs;
 	}
 	/**
@@ -152,6 +160,17 @@ public class HomeGoodsMessController {
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("参数传递有误！");
 			}
+			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_UN_NULL);
+		}else{
+			this.customizedService.insert(customized);
+			//由以上插入并返回产生
+			customizedrecord.setCustomized_id(customized.getId());
+			customizedrecord.setOperate_id(Integer.parseInt(user.getId().toString()));
+			customizedrecord.setPurchase_id(Integer.parseInt(user.getId().toString()));
+			this.customizedRecordService.insert(customizedrecord);
+			rs = Result.success();
+			rs.setMsg("数据插入成功！");
+			
 		}
 		return rs;
 	}

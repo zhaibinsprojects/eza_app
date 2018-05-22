@@ -138,10 +138,10 @@
       display = #{display,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectAllGoodClass" resultMap="BaseResultMap">
+  <select id="selectAllGoodClassByLevel" resultMap="BaseResultMap" parameterType="string">
     select 
     <include refid="Base_Column_List" />
-    from ezs_goods_class
+    from ezs_goods_class where level = ${_parameter}
   </select>
   <select id="selectAllGoodClassByLevel" resultMap="BaseResultMap" parameterType="string">
     select 

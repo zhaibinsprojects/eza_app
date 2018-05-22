@@ -51,6 +51,10 @@ public class CustomerServiceImpl implements CustomerService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
+		uim.setUser(user);
+		//包含默认地址的非默认地址
+		uim.setUserAddress(elist);
+		mmp.put("Obj", uim);
 		return mmp;
 	}
 
