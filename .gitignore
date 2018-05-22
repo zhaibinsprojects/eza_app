@@ -2,12 +2,12 @@
 .classpath
 
 # 屏蔽build目录
-target/
+/target
 /bin
 
 # 屏蔽IDE目录
-.settings/
-.idea/
+/.settings
+/.idea
 
 # auto file of mac
 .DS_Store
