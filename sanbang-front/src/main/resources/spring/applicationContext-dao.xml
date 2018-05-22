@@ -185,4 +185,9 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
+	<!-- 统计数据接口 -->
+	<bean id="ezs_goodscartMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goodscartMapper" />
+	</bean>
 </beans>
