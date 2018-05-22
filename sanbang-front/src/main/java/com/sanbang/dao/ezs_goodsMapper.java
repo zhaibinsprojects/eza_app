@@ -36,7 +36,7 @@ public interface ezs_goodsMapper {
 	 * @param id 级别id
 	 * @return
 	 */
-	List<ezs_goods> listForGoods(Long id);
+	List<ezs_goods> listForGoods(Long goodClass_id);
 	
 	List<ezs_goods> getGoodsFromCollection(Long userId);
 	/**
@@ -45,7 +45,7 @@ public interface ezs_goodsMapper {
 	 * @param type 类别
 	 * @return
 	 */
-	List<ezs_goods> listByAreaAndType(String area,String type);
+	List<ezs_goods> listByAreaAndType(Map mmp);
 	/**
 	 * 其他筛选
 	 * @param map 查询条件

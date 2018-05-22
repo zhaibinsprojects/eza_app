@@ -1,6 +1,7 @@
 package com.sanbang.goods.service.imp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +59,11 @@ public class GoodsServiceImpl implements GoodsService{
 		
 	}
 	
-	public int updateCollect(Long id){
-		int n = ezs_documentshareMapper.updateCollect(id);
+	public int updateCollect(Long id,Boolean status){
+		Map mmp = new HashMap();
+		mmp.put("good_id", id);
+		mmp.put("house", status);
+		int n = ezs_documentshareMapper.updateCollect(mmp);
 		return n;
 	}
 	
@@ -70,20 +74,28 @@ public class GoodsServiceImpl implements GoodsService{
 		return n;
 	}
 	
+	public ezs_documentshare getCollect(Long id){
+		ezs_documentshare n = ezs_documentshareMapper.selectByPrimaryKey(id);
+		return n;
+	}
+	
 	public int insertOrder(ezs_orderform order){
 		int n = ezs_orderformMapper.insert(order);
 		return n;
 	}
 	
-	public List<ezs_goods> listForGoods(Long id){
+	public List<ezs_goods> listForGoods(Long goodClass_id){
 		List<ezs_goods> list = new ArrayList();
-		list = ezs_goodsMapper.listForGoods(id);
+		list = ezs_goodsMapper.listForGoods(goodClass_id);
 		return list;
 	}
 	
-	public List listByAreaAndType(String area,String type){
+	public List listByAreaAndType(Long area,Long type){
+		Map mmp = new HashMap();
+		mmp.put("area_id",area);
+		mmp.put("goodClass_id",type);
 		List<ezs_goods> list = new ArrayList();
-		list = ezs_goodsMapper.listByAreaAndType(area,type);
+		list = ezs_goodsMapper.listByAreaAndType(mmp);
 		return list;
 	}
 	

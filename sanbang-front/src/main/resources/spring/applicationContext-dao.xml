@@ -165,4 +165,10 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
+	
+	<bean id="ezs_addressMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_addressMapper"/>
+	</bean>
+	
 </beans>

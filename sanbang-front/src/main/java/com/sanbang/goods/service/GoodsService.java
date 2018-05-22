@@ -3,6 +3,7 @@ package com.sanbang.goods.service;
 import java.util.List;
 import java.util.Map;
 
+import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
@@ -36,7 +37,7 @@ public interface GoodsService {
 	 * @param id
 	 * @return
 	 */
-	public int updateCollect(Long id);
+	public int updateCollect(Long id,Boolean status);
 	
 	/**
 	 * 如果是第一次收藏，就插入数据
@@ -57,7 +58,7 @@ public interface GoodsService {
 	 * @param id
 	 * @return
 	 */
-	public List<ezs_goods> listForGoods(Long id);
+	public List<ezs_goods> listForGoods(Long goodClass_id);
 	
 	
 	/**
@@ -65,7 +66,7 @@ public interface GoodsService {
 	 * @param area
 	 * @param type
 	 */
-	public List listByAreaAndType(String area,String type);
+	public List listByAreaAndType(Long area,Long type);
 	/**
 	 * 
 	 * @param color	颜色
@@ -78,4 +79,6 @@ public interface GoodsService {
 	 */
 	public List listByOthers(Map map);
 	
+	
+	public ezs_documentshare getCollect(Long id);
 }

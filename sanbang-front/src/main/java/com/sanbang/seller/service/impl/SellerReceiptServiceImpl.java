@@ -116,4 +116,9 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 		return invoiceMapper.selectInvoiceByOrderNo(orderno);
 	}
 	
+	public int insertInvoice(ezs_invoice invoice){
+		return invoiceMapper.insert(invoice);
+	}
+	
+	
 }

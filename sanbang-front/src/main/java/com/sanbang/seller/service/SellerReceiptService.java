@@ -27,4 +27,6 @@ public interface SellerReceiptService {
 
 	Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
 			HttpServletRequest request, HttpServletResponse response);
+	
+	int insertInvoice(ezs_invoice invoice);
 }

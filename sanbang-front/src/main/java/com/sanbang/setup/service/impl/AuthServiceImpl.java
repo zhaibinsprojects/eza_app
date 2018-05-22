@@ -787,7 +787,7 @@ public class AuthServiceImpl implements AuthService {
 	public static void main(String[] args) {
 		List<AuthImageVo> list=new ArrayList<>();
 		try {
-			savepic("type1,url1@name1@2018-05-06 22:26:00;"
+			savepic("type1,@nurl1ame1@2018-05-06 22:26:00;"
 					+ "type2,url2@name2@2018-05-06 22:26:00;"
 					+ "type3,url3",list );
 		} catch (ParseException e) {
