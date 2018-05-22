@@ -205,4 +205,38 @@ public class BuyerMenu {
 		result = buyerService.seller_order_signature(order_no, request, response);
 		return result;
 	}
+	
+	
+	/**
+	 * 获取合同列表
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getContentList")
+	@ResponseBody
+	public Result getContentList(@RequestParam(name = "pageno", defaultValue = "1") int pageno,
+			HttpServletRequest request, HttpServletResponse response) {
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		try {
+			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 5, pageno, request);
+		} catch (Exception e) {
+			result.setMsg("未获取到数据");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 }

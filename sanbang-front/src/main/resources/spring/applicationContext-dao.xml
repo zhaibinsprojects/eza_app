@@ -141,6 +141,11 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_customizedMapper" />
 	</bean>
+	<!-- 地址 -->
+ 	<bean id="ezs_addressMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_addressMapper" />
+	</bean>
 	<!-- 栏目 -->
 	<bean id="ezs_columnMapper" parent="baseMapper">
 		<property name="mapperInterface"
@@ -160,9 +165,10 @@
 	<bean id="ezs_paperMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_paperMapper"/>
-	</bean> 
+	</bean>
 	<bean id="ezs_card_dictMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
+	
 </beans>

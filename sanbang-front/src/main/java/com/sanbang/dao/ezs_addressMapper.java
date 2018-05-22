@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_address;
 
-@Repository
 public interface ezs_addressMapper {
     int deleteByPrimaryKey(Long id);
 

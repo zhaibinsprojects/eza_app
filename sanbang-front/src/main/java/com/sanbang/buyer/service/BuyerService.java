@@ -54,4 +54,14 @@ public interface BuyerService {
 	
 	 
 	 
+	 /**
+	  * 合同查看
+	  * @param member
+	  * @param temid
+	  * @param pageno
+	  * @return
+	  */
+	 public Result  getContentList(String member,int temid,int pageno,HttpServletRequest request);
+	 
+	 
 }

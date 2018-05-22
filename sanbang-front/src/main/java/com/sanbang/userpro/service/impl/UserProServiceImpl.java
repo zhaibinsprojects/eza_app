@@ -972,27 +972,9 @@ public class UserProServiceImpl implements UserProService{
 			if(ftcode!=null&&ftcode.getResult()!=null&&ftcode.getCode()==RedisConstants.SUCCESS){
 				String temCode=ftcode.getResult();
 				if(temCode.trim().equals(code.trim())){
-						//正确  进入下一步
-					ezs_user uupi=new ezs_user();
-						uupi.setName(mobile);
-				    ezs_userinfo info=new ezs_userinfo();
-				    info.setPhone(mobile);
-						int temaa=ezs_userinfoMapper.updateByPrimaryKeySelective(info);
-						int temaa1=ezs_userMapper.updateByPrimaryKeySelective(uupi);
-						if(temaa==1){
-							//更新缓存
-							upi.setName(mobile);
-							upi.getEzs_userinfo().setPhone(mobile);
-							RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
-							result.setSuccess(true);
-							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-							result.setMsg("操作成功");
-						}else{
-							result.setSuccess(false);
-							result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-							result.setMsg("系统错误");
-						}
-						
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+					result.setMsg("操作成功");
 				}else{
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);
@@ -1306,14 +1288,19 @@ public class UserProServiceImpl implements UserProService{
 			upuser.setPosition_id(linkvo.getPosition());
 			ezs_position ezsposition=ezs_positionMapper.selectByStoryid(ezsuser.getStore_id());
 			if(null==ezsposition){
-				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+				ezsposition=new ezs_position();
+				ezsposition.setAddTime(new Date());
+				ezsposition.setDeleteStatus(true);
+				ezsposition.setName(linkvo.getPositionval());
+				ezsposition.setStore_id(ezsuser.getStore_id());
+				ezs_positionMapper.insertSelective(ezsposition);
 			}else{
 				ezsposition.setName(linkvo.getPositionval());
 				ezs_positionMapper.updateByPrimaryKeySelective(ezsposition);
 			}
 			break;
 		case "tel":
-			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 1)){
+			if(Tools.isEmpty(linkvo.getTel())&&!Tools.paramValidate(linkvo.getTel(), 1)){
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("电话号格式不正确！");
@@ -1323,22 +1310,22 @@ public class UserProServiceImpl implements UserProService{
 			}
 			break;
 		case "email":
-			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 2)){
+			if(Tools.isEmpty(linkvo.getEmail())&&!Tools.paramValidate(linkvo.getEmail(), 2)){
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("邮箱格式不正确！");
 			}else{
-				upuser.setTel(linkvo.getTel());
+				upuser.setTel(linkvo.getEmail());
 				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
 			}
 			break;
 		case "qq":
-			if(Tools.isEmpty(linkvo.getTruename())&&!Tools.paramValidate(linkvo.getTruename(), 6)){
+			if(Tools.isEmpty(linkvo.getQq())&&!Tools.paramValidate(linkvo.getQq(), 6)){
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("qq号格式不正确！");
 			}else{
-				upuser.setTel(linkvo.getTel());
+				upuser.setTel(linkvo.getQq());
 				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
 			}
 			break;
@@ -1537,6 +1524,133 @@ public class UserProServiceImpl implements UserProService{
 			result.setSuccess(false);
 			result.setMsg("请选择是否租用");
 		}
+		return result;
+	}
+
+
+	@Override
+	public Result sendToUpMoPhoneCheck(String mobile, String code, ezs_user upi, HttpServletRequest request) throws EzaishengUCException {
+		if(upi==null){
+			throw new EzaishengUCException("系统异常");
+		}
+		log.info("修改手机号码前验证验证码：mobile="+mobile+"  &code="+code);
+		Result result=Result.success();
+		result=checkUpMoCodeParam(mobile, code);
+		if(result.getSuccess()){
+			@SuppressWarnings("unchecked")
+			RedisResult<String> ftcode=(RedisResult<String>) RedisUtils.get(mobile+"TOUPMOCODE",String.class);
+			if(ftcode!=null&&ftcode.getResult()!=null&&ftcode.getCode()==RedisConstants.SUCCESS){
+				String temCode=ftcode.getResult();
+				if(temCode.trim().equals(code.trim())){
+						//正确  进入下一步
+					ezs_user uupi=new ezs_user();
+						uupi.setName(mobile);
+						uupi.setId(upi.getId());
+				    ezs_userinfo info=new ezs_userinfo();
+				    info.setPhone(mobile);
+				    info.setId(upi.getEzs_userinfo().getId());
+						int temaa=ezs_userinfoMapper.updateByPrimaryKeySelective(info);
+						int temaa1=ezs_userMapper.updateByPrimaryKeySelective(uupi);
+						if(temaa==1){
+							//更新缓存
+							upi.setName(mobile);
+							upi.getEzs_userinfo().setPhone(mobile);
+							RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
+							result.setSuccess(true);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							result.setMsg("操作成功");
+						}else{
+							result.setSuccess(false);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+							result.setMsg("系统错误");
+						}
+						
+				}else{
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("验证码错误");
+				}
+				//删除缓存中验证码
+				RedisUtils.del(mobile+"TOUPMOCODE");
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请重新获取验证码");
+			}
+		}else{
+			return result;
+		}
+		return result;
+	}
+
+
+	@Override
+	public Result sendToUpMoCode(String phone, String code) throws Exception {
+		Result result=Result.failure();
+		if(StringUtils.isEmpty(phone)||!Tools.paramValidate(phone, 1)){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			 result.setSuccess(false);
+			 result.setMsg("手机号码格式错误");
+		 }else{
+			 int istrue=ezs_userMapper.checkMobile(phone);
+			 if(istrue==0){
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+					result.setSuccess(false);
+					result.setMsg("手机号码已存在,请输入其他号码");
+					return result;
+			 }
+			//先判断发送的次数 和 时间间隔
+			 Long totalcodetimes=Long.parseLong(mobilesendtimes);
+			 //这里需要改
+			 RedisResult<Integer> rrtin=(RedisResult<Integer>) RedisUtils.get(phone+"TOUPMOCODE"+"times",Integer.class);
+			 Integer codetimes=0;
+			 //先判断发送的次数
+			 if(rrtin.getCode()==RedisConstants.SUCCESS){ 
+				 codetimes=rrtin.getResult();
+			 }
+			 if(codetimes<totalcodetimes){
+				//判断时间间隔
+				 Long expir=Long.parseLong(mobilesendcodeexpir);
+				 Long codeinterval=Long.parseLong(mobileinterval);
+				 RedisResult<Long> reexpirresult=(RedisResult<Long>) RedisUtils.getExpir(phone+"TOUPMOCODE");
+				 Long reexpir=0l;
+				 if(reexpirresult.getCode()==RedisConstants.SUCCESS){
+					 reexpir=reexpirresult.getResult();
+				 }
+				 if(expir-reexpir>codeinterval){
+					 //间隔大于60 可以发送短信
+					 // 短信内容
+					 String content = "您的短信验证码:"+code.toString()+",请勿告诉他人,有效时间为"+mobilesendcodeexpir+"分钟!";
+					 log.info("短信验证码,发送内容:"+content);
+					 try {
+						 SendMobileMessage.sendMsg(phone, content);
+						 result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						 result.setSuccess(true);
+						 result.setObj(new HashMap<>().put("mobile", phone));
+						 result.setMsg("验证码发送成功");
+						 RedisUtils.set(phone+"TOUPMOCODE", code, Long.parseLong(mobilesendcodeexpir));
+						 //这里需要改
+						 RedisUtils.set(phone+"TOUPMOCODE"+"times", ++codetimes, DateUtils.getTimeValue());
+					 } catch (Exception e) {
+						 log.error("短信验证码功能失败");
+						 log.error(e.toString());
+						 result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+						 result.setSuccess(false);
+						 result.setMsg("服务器异常");
+					 } 
+				 }else{
+					 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					 result.setSuccess(false);
+					 result.setMsg("请等待"+mobileinterval+"s后再次点击");
+				 }
+			}else{
+				 result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				 result.setSuccess(false);
+				 result.setMsg("验证码已发送多次，请查收短信");
+			}
+			 
+			
+		 }
 		return result;
 	}
 	
