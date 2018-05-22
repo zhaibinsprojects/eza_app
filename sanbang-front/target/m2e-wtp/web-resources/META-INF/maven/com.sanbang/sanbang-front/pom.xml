@@ -277,9 +277,9 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
-    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-resources-plugin</artifactId>
-	</dependency>
+    		<groupId>org.apache.maven.plugins</groupId>
+	    	<artifactId>maven-resources-plugin</artifactId>
+		</dependency>
 	
 	<dependency>
 		    <groupId>com.lowagie</groupId>
