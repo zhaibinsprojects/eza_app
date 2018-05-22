@@ -17,11 +17,17 @@ import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
+<<<<<<< HEAD
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.upload.sevice.FileUploadService;
+=======
+import com.sanbang.seller.service.SellerReceiptService;
+import com.sanbang.utils.Page;
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 
 @Controller
 @RequestMapping("/seller")
@@ -43,34 +49,34 @@ public class SellerReceiptController {
 	 * @return
 	 */
 	@RequestMapping("/getReceiptInfo")
-	public Object getReceiptInfo(HttpServletRequest request, HttpServletResponse response){
-		
+	public Object getReceiptInfo(HttpServletRequest request, HttpServletResponse response, String currentPage){
 		Map<String, Object> map = new HashMap<>();
-		
+		List<ezs_invoice> list = null;
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
+			result.setMsg("请重新登陆！");
 			return result;
 		}
 		Long userId = upi.getId();
-
-//		ezs_user seller = new ezs_user();
-//		seller.setId((long) 2);
-//		Long userId = seller.getId();
-
-		if (userId != null && String.valueOf(userId) != "") {
-			List<ezs_invoice> invoice = sellerReceiptService.getInvoiceListInfoById(userId);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_QUERY_BILL_INFO_SUCCESS);
-			result.setSuccess(true);
-			result.setObj(invoice);
-		}else{
-			result.setErrorcode(DictionaryCode.ERROR_WEB_QUERY_BILL_INFO_FAIL);
-			result.setSuccess(false);
-			return result;
+		Page page = null;
+		if(currentPage==null){
+			currentPage = "1";
 		}
-		
+		map = sellerReceiptService.getInvoiceListById(userId,currentPage);
+		Integer ErrorCode = (Integer)map.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			list = (List<ezs_invoice>) map.get("Obj");
+			page = (Page) map.get("Page");
+			result = Result.success(); 
+			result.setObj(list);
+			result.setMeta(page);
+		}else{
+			result = Result.failure();
+			result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
+			result.setMsg(map.get("Msg").toString());
+		}
 		return result;
 	}
 	
@@ -84,82 +90,16 @@ public class SellerReceiptController {
 	 * @return
 	 */
 	@RequestMapping("/queryInvoiceByIdOrDate")
-	public Object queryInvoiceByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response){
-		Result result=Result.failure();
-		Object object = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, request, response);
-		return object;
-	} 
-	
-//	/**
-//	 * 根据id
-//	 * @param byerId
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/getByerBillInfoById")
-//	public Object getByerBillInfoById(String byerId, HttpServletRequest request, HttpServletResponse response){
-//		Map<String, Object> map = new HashMap<>();
-//		
-//		Result result=Result.failure();
-//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-//		if(upi==null){
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//			result.setMsg("用户未登录");
-//			return result;
-//		}
-//		
-//		Long userId = upi.getId();
-//		ezs_bill bill = sellerReceiptService.getBillInfoById(userId);
-//		Long billId = bill.getId();
-//		ezs_payinfo payInfo = sellerReceiptService.getPayInfoById(billId);
-//		Long paymentUser_id = payInfo.getPaymentUser_id();
-//		
-//		ezs_user buyer = sellerReceiptService.getUserInfoById(paymentUser_id);
-//		
-//		
-//		String companyName = bill.getCompanyName();
-//		String dutyNo = bill.getDutyNo();
-//		String address = bill.getAddress();
-//		String phone = bill.getPhone();
-//		String bank = bill.getBank();
-//		String number = bill.getNumber();
-//		
-//		String name = buyer.getName();
-//		String moblie = buyer.getPhone();
-//		Long position_id = buyer.getPosition_id();
-//		
-//		map.put("companyName", companyName);
-//		map.put("dutyNo", dutyNo);
-//		map.put("address", address);
-//		map.put("phone", phone);
-//		map.put("bank", bank);
-//		map.put("number", number);
-//		map.put("name", name);
-//		map.put("moblie", moblie);
-//		map.put("position_id", position_id);
-//
-//		return map;
-//	}
-	/**
-	 * 根据订单编号查询票据详情
-	 * @param invoiceId
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/getBuyerInvoiceInfoById")
-	public Object getBuyerInvoiceInfoById(String orderno, HttpServletRequest request, HttpServletResponse response){
-		
+	public Object queryInvoiceByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response,String currentPage){
 		Map<String, Object> map = new HashMap<>();
-		
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
+			result.setMsg("请重新登陆！");
 			return result;
 		}
+<<<<<<< HEAD
 		ezs_invoice invoice = sellerReceiptService.getInvoiceInfoById(orderno);
 		
 		Long id = invoice.getId();
@@ -240,3 +180,15 @@ public class SellerReceiptController {
 	
 	
 }
+=======
+		Long userId = upi.getId();
+		Page page = null;
+		if(currentPage==null){
+			currentPage = "1";
+		}
+
+		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage);
+		return map;
+  }
+}
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574

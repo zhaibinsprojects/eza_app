@@ -22,7 +22,4 @@ public class HomeDictionaryCode {
      * 查询类型有误
      */
     public static final int ERROR_HOME_KIND_ERROR = 101204;
-    
-    
-    
 }

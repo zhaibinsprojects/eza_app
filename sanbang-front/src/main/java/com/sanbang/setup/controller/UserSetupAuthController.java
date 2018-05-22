@@ -117,7 +117,7 @@ public class UserSetupAuthController {
 			
 			map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			map.put("trueName", upi.getTrueName());// 联系人
-			map.put("area", areaService.getAreaListByParId(upi.getEzs_store().getArea_id()));// 经营地址区县
+			map.put("area", areaService.getAreaListByParId(	upi.getEzs_store().getArea_id()));// 经营地址区县
 			map.put("address", upi.getEzs_store().getAddress());// 经营地址
 			
 			if(0!=upi.getEzs_store().getStatus()){

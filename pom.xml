@@ -383,21 +383,32 @@
 		    <artifactId>maven-resources-plugin</artifactId>
 		    <version>2.4.3</version>
 		</dependency>
+<<<<<<< HEAD
 				<!-- freemark -->	
 			<!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
+=======
+			
+		<!-- freemark -->	
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 		<dependency>
 		    <groupId>com.lowagie</groupId>
 		    <artifactId>itext</artifactId>
 		    <version>2.0.8</version>
 		</dependency>
 					
+<<<<<<< HEAD
 				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-xtra -->
+=======
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 		<dependency>
 		    <groupId>com.itextpdf</groupId>
 		    <artifactId>itext-xtra</artifactId>
 		    <version>5.4.5</version>
 		</dependency>
+<<<<<<< HEAD
 				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-asian -->
+=======
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 		<dependency>
 		    <groupId>com.itextpdf</groupId>
 		    <artifactId>itext-asian</artifactId>
@@ -408,14 +419,21 @@
         <artifactId>itext</artifactId>  
         <version>2.0.8</version>  
     	</dependency>   
+<<<<<<< HEAD
   
 	    <!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/core-renderer -->  
+=======
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 	   <dependency>  
 	       <groupId>org.xhtmlrenderer</groupId>  
 	       <artifactId>core-renderer</artifactId>  
 	       <version>R8</version>  
+<<<<<<< HEAD
 	   </dependency>	
 			
+=======
+	   </dependency>
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 		</dependencies>
 	</dependencyManagement>
 	<build>

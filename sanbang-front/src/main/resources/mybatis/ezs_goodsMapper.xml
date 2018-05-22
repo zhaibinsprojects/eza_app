@@ -634,7 +634,12 @@
     where status=#{status} and user_id=#{sellerId} 
     order by
     lastModifyDate  desc
+    LIMIT #{startPos},#{pageSize}
   </select>
+  <!-- 供应商下架货品 -->
+  <update id="pullOffShelves" >
+  	update ezs_goods set status = 1 where id =#{goodsId}
+  </update>
   <!-- 商品查询带图 -->
   <resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -789,5 +794,25 @@
         and goods.ash &gt;= #{ash1, jdbcType=BIGINT} and goods.ash &lt;= #{ash2, jdbcType=BIGINT} 
     </if>
     order by lastModifyDate desc
+
   </select>
+
+ 
+
+  <!-- 根据id查询订单总数 -->
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(*) from 	
+		ezs_goods
+    	where user_id = #{sellerId}
+	</select>
+
+
+   <select id="selectByGoodsName" resultMap="GoodsResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
+    g.name like '%${_parameter}%'
+
+  </select>
+
 </mapper>

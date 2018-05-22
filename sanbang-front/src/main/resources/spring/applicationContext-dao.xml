@@ -130,7 +130,22 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_documentshareMapper" />
 	</bean>
-	
+	<bean id="ezs_goods_audit_processMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_audit_processMapper" />
+	</bean>
+	<bean id="ezs_goods_logMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_logMapper" />
+	</bean>
+	<bean id="ezs_purchase_orderformMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_purchase_orderformMapper" />
+	</bean>
+	<bean id="ezs_logisticsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_logisticsMapper" />
+	</bean>
 	<!-- 定制采购-订购商 -->
 	<bean id="ezs_customized_recordMapper" parent="baseMapper">
 		<property name="mapperInterface"
@@ -140,6 +155,11 @@
 	<bean id="ezs_customizedMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_customizedMapper" />
+	</bean>
+	<!-- 地址 -->
+ 	<bean id="ezs_addressMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_addressMapper" />
 	</bean>
 	<!-- 栏目 -->
 	<bean id="ezs_columnMapper" parent="baseMapper">
@@ -160,7 +180,7 @@
 	<bean id="ezs_paperMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_paperMapper"/>
-	</bean> 
+	</bean>
 	<bean id="ezs_card_dictMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>

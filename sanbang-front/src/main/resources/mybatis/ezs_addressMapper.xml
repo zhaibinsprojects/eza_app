@@ -18,6 +18,7 @@
     id, addTime, deleteStatus, area_info, bestow, mobile, telephone, trueName, zip, area_id, 
     user_id
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

@@ -62,6 +62,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		}
 		return mmp;
 	}
+	
 	//获取价格趋势信息
 	@Override
 	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp) {
@@ -89,7 +90,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Obj", ppList);
 		}else{
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_CODE_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;

@@ -108,8 +108,27 @@ public interface UserProService {
      * @return
      */
 	Result sendUpMoCode(String phone, String code)  throws Exception;
+	
+	/**
+	 * 检查用户修改手机号前的验证码验证
+	 * @param mobile
+	 * @param code
+	 * @param upi
+	 * @param request
+	 * @return
+	 */
+	Result   checkUpMoCode(String mobile, String code,ezs_user upi, HttpServletRequest request) throws Exception;
 
 
+	 /**
+     * 发送修改手机号码的验证码
+     * @param phone
+     * @param code
+     * @return
+     */
+	Result sendToUpMoCode(String phone, String code)  throws Exception;
+	
+	
 	/**
 	 * 检查用户修改手机号前的验证码验证 及成功后的  更新 数据库  
 	 * @param mobile
@@ -118,7 +137,7 @@ public interface UserProService {
 	 * @return
 	 * @throws Exception
 	 */
-	Result checkUpMoCode(String mobile, String code,ezs_user upi, HttpServletRequest request)  throws Exception;
+	Result sendToUpMoPhoneCheck(String mobile, String code,ezs_user upi, HttpServletRequest request)  throws Exception;
 
 
 	/**

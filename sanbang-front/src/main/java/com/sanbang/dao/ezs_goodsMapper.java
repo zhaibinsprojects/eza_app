@@ -2,9 +2,13 @@ package com.sanbang.dao;
 
 import java.util.List;
 import java.util.Map;
+<<<<<<< HEAD
 
+=======
+import javax.servlet.http.HttpServletRequest;
+import org.apache.ibatis.annotations.Param;
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 import org.springframework.stereotype.Repository;
-
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.GoodsInfo;
@@ -14,7 +18,6 @@ public interface ezs_goodsMapper {
     int deleteByPrimaryKey(Long id);
 
     int insert(ezs_goods record);
-
     int insertSelective(ezs_goods record);
 
     ezs_goods selectByPrimaryKey(Long id);
@@ -29,27 +32,49 @@ public interface ezs_goodsMapper {
     
     int goodsIntroduceCount();
 
-	List<ezs_goods> selectGoodsListBySellerId(Long sellerId, int status);
+
+	List<ezs_goods> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("currentPage")String currentPage);
+
+	int pullOffShelves(long goodsId);
 	
 	/**
 	 * 同类货品
 	 * @param id 级别id
 	 * @return
 	 */
+<<<<<<< HEAD
 	List<ezs_goods> listForGoods(Long goodClass_id);
+=======
+	List<ezs_goods> listForGoods(Long id);
 	
 	List<ezs_goods> getGoodsFromCollection(Long userId);
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
+	
 	/**
 	 * 自营，地区、类别筛选
 	 * @param area 地区
 	 * @param type 类别
 	 * @return
 	 */
+<<<<<<< HEAD
 	List<ezs_goods> listByAreaAndType(Map mmp);
+=======
+	List<ezs_goods> listByAreaAndType(@Param("area")String area,@Param("type")String type);
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 	/**
 	 * 其他筛选
 	 * @param map 查询条件
 	 * @return
 	 */
+<<<<<<< HEAD
 	List<ezs_goods> listByOthers(Map map);
+=======
+	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);
+
+	int selectCount(Long sellerId);
+
+	List<ezs_goods> queryGoods(Page page, Long sellerId, int status);
+
+    List<GoodsInfo> selectByGoodsName(String name);
+>>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 }
