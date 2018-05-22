@@ -71,25 +71,5 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 		}
 		return mmp;
 	}
-
-	@Override
-	public Map<String, Object> getIndustryInfoByKinds(Long kindsId, String currentPage) {
-		// TODO Auto-generated method stub
-		Map<String, Object> mmp = new HashMap<>();
-		//获取总页数
-		int totalCount = this.ezssubstanceMapper.goodsIndustryCountByKinds(kindsId);
-		ExPage page = new ExPage(totalCount, Integer.valueOf(currentPage));
-		page.setPageSize(10);
-		page.setContent(String.valueOf(kindsId));
-		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_ezssubstance> glist = this.ezssubstanceMapper.goodsIndustryByPage(page);
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Page", page);
-			mmp.put("Obj", glist);
-		}else{
-			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-			mmp.put("Page", page);
-		}
-		return mmp;
-	}
+	
 }

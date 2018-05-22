@@ -102,7 +102,7 @@ public class SellerContractController {
 			currentPage = "1";
 		}
 		
-		map = sellerContractService.queryContractByIdOrDate(currentPage, sellerId);
-		return object;
+		map = sellerContractService.queryContractByIdOrDate(currentPage, currentPage, currentPage, currentPage, sellerId);
+		return result;
 	} 
 }

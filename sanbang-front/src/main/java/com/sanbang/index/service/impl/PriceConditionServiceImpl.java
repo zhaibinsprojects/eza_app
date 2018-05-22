@@ -62,39 +62,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		}
 		return mmp;
 	}
-	//获取价格趋势信息
-	@Override
-	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp) {
-		// TODO Auto-generated method stub
-		Map<String, Object> mmp = new HashMap<>();
-		List<PriceTrendIfo> ppList = new ArrayList<>();
-		List<PriceTrendIfo> pList = null;
-		try {
-			pList = this.priceTrendMapper.getPriceTrendcy(mp);			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		if(pList!=null&&pList.size()>0){
-			for (PriceTrendIfo priceTrendIfo : pList) {
-				//涨幅
-				Double increase = null;
-				try {
-					increase = (priceTrendIfo.getCurrentAVGPrice()-priceTrendIfo.getPreAVGPrice())/priceTrendIfo.getPreAVGPrice();				
-				} catch (Exception e) {
-					increase = 0.00;
-				}
-				priceTrendIfo.setSandByOne(String.valueOf(increase));
-				ppList.add(priceTrendIfo);
-			}
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Obj", ppList);
-		}else{
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-		List<ezs_column> elist = this.columnMapper.getSecondThemeByFirstTheme(id);
-		mmp.put("Obj", elist);
-		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-		return mmp;
-	}
+	
 	//获取价格趋势信息
 	@Override
 	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp) {

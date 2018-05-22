@@ -129,7 +129,7 @@ public class SellerContractServiceImpl implements SellerContractService {
 				map.put("Page", page);
 				map.put("Obj", list);
 			}else{
-				ezs_invoice invoice = ezs_pactMapper.selectPactByOrderNo(orderno);
+				List<ezs_pact> invoice = ezs_pactMapper.selectPactByOrderNo(orderno);
 				map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				map.put("Page", page);
 				map.put("Obj", invoice);

@@ -26,7 +26,7 @@ public interface ezs_pactMapper {
 
 	List<ezs_pact> selectPactBySellerId(Long sellerUser_id);
 
-	ezs_invoice selectPactByOrderNo(String orderno);
+	List<ezs_pact> selectPactByOrderNo(String orderno);
 
 	List<ezs_pact> selectPactByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2, @Param("sellerId")Long sellerId,@Param("page")Page page);
 

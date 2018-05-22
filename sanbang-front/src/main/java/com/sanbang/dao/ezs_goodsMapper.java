@@ -39,13 +39,9 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	List<ezs_goods> listForGoods(Long id);
-<<<<<<< HEAD
 	
 	List<ezs_goods> getGoodsFromCollection(Long userId);
-=======
 	
-	List<ezs_goods> getGoodsFromCollection(Long userId);
->>>>>>> refs/remotes/origin/master
 	/**
 	 * 自营，地区、类别筛选
 	 * @param area 地区

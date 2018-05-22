@@ -218,87 +218,9 @@ public class HomePriceConditionController {
 		}
 		return rs;
 	}
-	/**
-	 * 行情分析（年、月、周、日评）
-	 * @param request
-	 * @param response
-	 * @param user
-	 * @return
-	 */
-	@RequestMapping("/getPriceAnalyze")
-	@ResponseBody
-	public Object getPriceAnalyze(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
-		Map<String, Object> mmp = null;
-		List<ezs_ezssubstance> elist = null;
-		Result rs = null;
-		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
-		ExPage page = (ExPage) mmp.get("Page");
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
-			rs = Result.success();
-			rs.setObj(elist);
-			rs.setMeta(page);
-			
-		}else{
-			rs = Result.failure();
-			rs.setMsg(mmp.get("Msg").toString());
-		}
-		return rs;
-	}
-	/**
-	 * 研究报告二级栏目
-	 * @param request
-	 * @param response
-	 * @param user
-	 * @return
-	 */
-	@RequestMapping("/getResearchReportTheme")
-	@ResponseBody
-	public Object getResearchReportTheme(HttpServletRequest request,HttpServletResponse response){
-		List<ezs_column> elist = null;
-		Result rs = null;
-		Map<String, Object> mmp = this.priceConditionService.getSecondTheme(Long.valueOf(17));
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		elist = (List<ezs_column>) mmp.get("Obj");
-		if(ErrorCode!=null&&(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS))){
-			rs = Result.success();
-			rs.setObj(elist);
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			rs.setMsg("参数传递有误");
-		}
-		return rs;
-	}
-	/**
-	 * 研究报告
-	 * @param request
-	 * @param response
-	 * @param user
-	 * @return
-	 */
-	@RequestMapping("/getResearchReport")
-	@ResponseBody
-	public Object getResearchReport(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
-		Map<String, Object> mmp = null;
-		List<ezs_ezssubstance> elist = null;
-		Result rs = null;
-		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
-		ExPage page = (ExPage) mmp.get("Page");
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
-			rs = Result.success();
-			rs.setObj(elist);
-			rs.setMeta(page);
-			
-		}else{
-			rs = Result.failure();
-			rs.setMsg(mmp.get("Msg").toString());
-		}
-		return rs;
-	}
+	
+	
+	
 	/**
 	 * 价格趋势+条件筛选
 	 * @param request

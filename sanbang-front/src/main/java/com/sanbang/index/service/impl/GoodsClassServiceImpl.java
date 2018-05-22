@@ -57,7 +57,7 @@ public class GoodsClassServiceImpl implements GoodsClassService {
 			mmp.put("Msg", "参数传递有误");
 		}
 		//按三级目录查询种类
-		List<ezs_goods_class> eslist = this.goodClassMapper.selectAllGoodClassByLevel("3");
+		 eslist = this.goodClassMapper.selectAllGoodClassByLevel("3");
 		mmp.put("Obj", eslist);
 		
 		return mmp;
