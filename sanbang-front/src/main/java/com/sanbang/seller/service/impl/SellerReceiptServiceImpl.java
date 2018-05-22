@@ -34,7 +34,7 @@ import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Service
-public class SellerReceiptServiceImpl implements SellerReceiptService {
+public abstract class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	// 日志
 	private static Logger log = Logger.getLogger(SellerReceiptServiceImpl.class.getName());
@@ -141,5 +141,9 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	public ezs_invoice getInvoiceInfoById(String orderno) {
 		return invoiceMapper.selectInvoiceByOrderNo(orderno);
 	}
-
+	
+	public int insertInvoice(ezs_invoice invoice){
+		return invoiceMapper.insert(invoice);
+	}
+	
 }

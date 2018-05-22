@@ -1,4 +1,4 @@
-package com.sanbang.buyer.controller.service.impl;
+package com.sanbang.buyer.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_goods;
-import com.sanbang.buyer.controller.service.GoodsCollectionService;
+import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.dao.ezs_documentshareMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_price_trendMapper;

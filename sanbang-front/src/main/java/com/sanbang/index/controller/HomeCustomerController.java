@@ -83,6 +83,7 @@ public class HomeCustomerController {
 		rs.setObj(uim);
 		return rs;
 	}
+
 	@RequestMapping("/getRedisMess")
 	public Object getRedisMess(){
 		ezs_user user = new ezs_user();
@@ -92,5 +93,4 @@ public class HomeCustomerController {
 		System.out.println("UserName:"+tempCached.getResult().getName());
 		return "";
 	}
-	
 }

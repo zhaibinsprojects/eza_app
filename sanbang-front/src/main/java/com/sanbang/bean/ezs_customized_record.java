@@ -3,40 +3,44 @@ package com.sanbang.bean;
 import java.util.Date;
 
 public class ezs_customized_record {
-    private Integer id;
+    private Long id;
 
-    private Integer purchase_id;
+    private Date addTime;
 
-    private Integer customized_id;
+    private Boolean deleteStatus;
 
     private Date deal_time;
 
     private String remark;
 
-    private Integer operate_id;
+    private Long customized_id;
 
-    public Integer getId() {
+    private Long operater_id;
+
+    private Long purchaser_id;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getPurchase_id() {
-        return purchase_id;
+    public Date getAddTime() {
+        return addTime;
     }
 
-    public void setPurchase_id(Integer purchase_id) {
-        this.purchase_id = purchase_id;
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
     }
 
-    public Integer getCustomized_id() {
-        return customized_id;
+    public Boolean getDeleteStatus() {
+        return deleteStatus;
     }
 
-    public void setCustomized_id(Integer customized_id) {
-        this.customized_id = customized_id;
+    public void setDeleteStatus(Boolean deleteStatus) {
+        this.deleteStatus = deleteStatus;
     }
 
     public Date getDeal_time() {
@@ -55,11 +59,27 @@ public class ezs_customized_record {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getOperate_id() {
-        return operate_id;
+    public Long getCustomized_id() {
+        return customized_id;
     }
 
-    public void setOperate_id(Integer operate_id) {
-        this.operate_id = operate_id;
+    public void setCustomized_id(Long customized_id) {
+        this.customized_id = customized_id;
+    }
+
+    public Long getOperater_id() {
+        return operater_id;
+    }
+
+    public void setOperater_id(Long operater_id) {
+        this.operater_id = operater_id;
+    }
+
+    public Long getPurchaser_id() {
+        return purchaser_id;
+    }
+
+    public void setPurchaser_id(Long purchaser_id) {
+        this.purchaser_id = purchaser_id;
     }
 }

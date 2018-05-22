@@ -119,8 +119,8 @@
   
   <update id="updateCollect">
     update ezs_documentshare
-    set house = #{house,jdbcType=INTEGER} 
-    where goods_id = #{goods_id,jdbcType=BIGINT}
+    set house = #{house,jdbcType=BIT},
+    where good_id = #{good_id,jdbcType=BIGINT}
   </update>
   <!-- 移除收藏商品 -->
   <update id="updateCollectByUserId">

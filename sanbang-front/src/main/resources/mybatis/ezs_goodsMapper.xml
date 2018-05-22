@@ -621,7 +621,6 @@
       addess2 = #{addess2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
@@ -729,7 +728,7 @@
   </select>
   
   <!-- 查询同类货品 -->
-  <select id="listForGoods" resultMap="BaseResultMap">
+  <select id="listForGoods" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
     <include refid="Base_Column_List" />
     from ezs_goods goods left join ezs_goods_class gc on goods.goodClass_id = gc.level 
@@ -745,24 +744,18 @@
   <!-- 关联表：ezs_area，area_id:商品库存区县 -->
   <!-- 关联表：ezs_goods_class，goodClass_id:商品分类 -->
   <!-- mybatis会自动封装到实体类中，忽略联合查询的多余字段 -->
-  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.lang.String" >
-    select * from ezs_goods g left join ezs_area a on g.area_id = a.id 
-    left join ezs_goods_class gc on g.goodClass_id = gc.id 
-    where 
+  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.util.Map" >
+  
+    select * from ezs_goods g where 1 = 1
     <if test="areaName !=null and areaName != '' ">
-        a.areaName = #{areaName, jdbcType=VARCHAR}
+        and g.area_id = #{area_id, jdbcType=BIGINT}
     </if>
     <if test="name !=null and name != '' ">
-        gc.name = #{name, jdbcType=VARCHAR}
+        and g.goodClass_id = #{goodClass_id, jdbcType=BIGINT}
     </if> 
   </select>
   
 
-  
-  
-
-  
-  
   
   <!-- 其他筛选 -->
   <!-- 
