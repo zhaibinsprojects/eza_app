@@ -141,14 +141,9 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	public ezs_invoice getInvoiceInfoById(String orderno) {
 		return invoiceMapper.selectInvoiceByOrderNo(orderno);
 	}
-<<<<<<< HEAD
 	
 	public int insertInvoice(ezs_invoice invoice){
 		return invoiceMapper.insert(invoice);
 	}
 	
-	
-=======
-
->>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 }

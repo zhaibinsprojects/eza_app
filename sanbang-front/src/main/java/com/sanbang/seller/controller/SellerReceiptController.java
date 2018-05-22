@@ -99,7 +99,6 @@ public class SellerReceiptController {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
-<<<<<<< HEAD
 		ezs_invoice invoice = sellerReceiptService.getInvoiceInfoById(orderno);
 		
 		Long id = invoice.getId();
@@ -180,15 +179,3 @@ public class SellerReceiptController {
 	
 	
 }
-=======
-		Long userId = upi.getId();
-		Page page = null;
-		if(currentPage==null){
-			currentPage = "1";
-		}
-
-		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage);
-		return map;
-  }
-}
->>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574

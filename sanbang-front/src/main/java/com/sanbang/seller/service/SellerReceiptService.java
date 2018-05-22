@@ -24,13 +24,10 @@ public interface SellerReceiptService {
 
 	Map<String, Object> getInvoiceListById(Long userId, String currentPage);
 
-<<<<<<< HEAD
 	Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
 			HttpServletRequest request, HttpServletResponse response);
 	
 	int insertInvoice(ezs_invoice invoice);
-=======
 	Map<String, Object> queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
 			long userId, String currentPage);
->>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 }
