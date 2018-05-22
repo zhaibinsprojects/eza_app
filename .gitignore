@@ -4,5 +4,8 @@
 target/
 #屏蔽.settings目录
 .settings/
-/bin/
-/target/
+/bin
+
+# auto file of mac
+.DS_Store
+
