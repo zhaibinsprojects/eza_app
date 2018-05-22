@@ -3,7 +3,7 @@ WebAPP api
 ```http://localhost:8080/front```
 
 ## .gitignore注释的写法
-*.gitignore*文件不支持行内注释
+*.gitignore*文件**不支持**行内注释
 
 ### 正确写法
 ```
