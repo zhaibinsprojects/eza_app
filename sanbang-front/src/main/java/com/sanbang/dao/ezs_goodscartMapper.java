@@ -1,5 +1,9 @@
 package com.sanbang.dao;
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goodscart;
@@ -17,4 +21,6 @@ public interface ezs_goodscartMapper {
     int updateByPrimaryKeySelective(ezs_goodscart record);
 
     int updateByPrimaryKey(ezs_goodscart record);
+    
+    List<ezs_goodscart> selectBeanByStartEndTime(@Param("startTime")String startTime,@Param("endTime") String endTime);
 }

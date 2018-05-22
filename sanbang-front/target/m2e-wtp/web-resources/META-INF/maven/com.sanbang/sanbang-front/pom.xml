@@ -276,6 +276,36 @@
 			<artifactId>json-lib</artifactId>
 			<classifier>jdk15</classifier>
 		</dependency>
+		<dependency>
+    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-resources-plugin</artifactId>
+	</dependency>
+	
+	<dependency>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		</dependency>
+					
+				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-xtra -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itext-xtra</artifactId>
+		</dependency>
+				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-asian -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itext-asian</artifactId>
+		</dependency>
+	 <dependency>   
+        <groupId>com.lowagie</groupId>  
+        <artifactId>itext</artifactId>  
+    </dependency>   
+  
+    <!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/core-renderer -->  
+   <dependency>  
+       <groupId>org.xhtmlrenderer</groupId>  
+       <artifactId>core-renderer</artifactId>  
+   </dependency>
 	</dependencies>
 	
 </project>
