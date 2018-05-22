@@ -77,13 +77,4 @@ public class HomeCustomerController {
 		}
 		return rs;
 	}
-	@RequestMapping("/getRedisMess")
-	public Object getRedisMess(){
-		ezs_user user = new ezs_user();
-		user.setName("123123");
-		RedisUtils.set("user", user,Long.valueOf(2000));
-		RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get("user", ezs_user.class);
-		System.out.println("UserName:"+tempCached.getResult().getName());
-		return "";
-	}
 }

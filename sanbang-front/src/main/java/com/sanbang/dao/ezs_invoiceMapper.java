@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_pact;
+import com.sanbang.vo.InvoiceInfo;
 
 @Repository
 public interface ezs_invoiceMapper {
@@ -32,6 +33,9 @@ public interface ezs_invoiceMapper {
 	ezs_invoice selectInvoiceByOrderNo(String orderno);
 
 	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2);
-
+	
+	List<InvoiceInfo> selectInvoiceByUser(Long userId);
+	
+	InvoiceInfo selectByPrimaryKeyTwo(Long id);
 	
 }

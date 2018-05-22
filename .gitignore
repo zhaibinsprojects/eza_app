@@ -1,5 +1,8 @@
-.classpath		#仓库中所有名为.classpath的文件都屏蔽
-.gitignore		#仓库中所有名为.gitignore的文件都屏蔽
-target/			#屏蔽target目录
-.settings/		#屏蔽.settings目录
+#仓库中所有名为.classpath的文件都屏蔽
+.classpath
+#屏蔽target目录
+target/
+#屏蔽.settings目录
+.settings/
 /bin/
+/target/

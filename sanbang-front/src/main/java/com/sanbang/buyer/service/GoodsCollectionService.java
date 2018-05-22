@@ -1,4 +1,4 @@
-package com.sanbang.buyer.controller.service;
+package com.sanbang.buyer.service;
 
 import java.util.Map;
 

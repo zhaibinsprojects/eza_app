@@ -2,33 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_customized_recordMapper" >
   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customized_record" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="purchase_id" property="purchase_id" jdbcType="INTEGER" />
-    <result column="customized_id" property="customized_id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
     <result column="deal_time" property="deal_time" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="operate_id" property="operate_id" jdbcType="INTEGER" />
+    <result column="customized_id" property="customized_id" jdbcType="BIGINT" />
+    <result column="operater_id" property="operater_id" jdbcType="BIGINT" />
+    <result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, purchase_id, customized_id, deal_time, remark, operate_id
+    id, addTime, deleteStatus, deal_time, remark, customized_id, operater_id, purchaser_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_customized_record
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_customized_record
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_customized_record" >
-    insert into ezs_customized_record (id, purchase_id, customized_id, 
-      deal_time, remark, operate_id
-      )
-    values (#{id,jdbcType=INTEGER}, #{purchase_id,jdbcType=INTEGER}, #{customized_id,jdbcType=INTEGER}, 
-      #{deal_time,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{operate_id,jdbcType=INTEGER}
-      )
+    insert into ezs_customized_record (id, addTime, deleteStatus, 
+      deal_time, remark, customized_id, 
+      operater_id, purchaser_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{deal_time,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{customized_id,jdbcType=BIGINT}, 
+      #{operater_id,jdbcType=BIGINT}, #{purchaser_id,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized_record" >
     insert into ezs_customized_record
@@ -36,11 +38,11 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="purchase_id != null" >
-        purchase_id,
+      <if test="addTime != null" >
+        addTime,
       </if>
-      <if test="customized_id != null" >
-        customized_id,
+      <if test="deleteStatus != null" >
+        deleteStatus,
       </if>
       <if test="deal_time != null" >
         deal_time,
@@ -48,19 +50,25 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="operate_id != null" >
-        operate_id,
+      <if test="customized_id != null" >
+        customized_id,
+      </if>
+      <if test="operater_id != null" >
+        operater_id,
+      </if>
+      <if test="purchaser_id != null" >
+        purchaser_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
       </if>
-      <if test="purchase_id != null" >
-        #{purchase_id,jdbcType=INTEGER},
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="customized_id != null" >
-        #{customized_id,jdbcType=INTEGER},
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
       </if>
       <if test="deal_time != null" >
         #{deal_time,jdbcType=TIMESTAMP},
@@ -68,19 +76,25 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="operate_id != null" >
-        #{operate_id,jdbcType=INTEGER},
+      <if test="customized_id != null" >
+        #{customized_id,jdbcType=BIGINT},
+      </if>
+      <if test="operater_id != null" >
+        #{operater_id,jdbcType=BIGINT},
+      </if>
+      <if test="purchaser_id != null" >
+        #{purchaser_id,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customized_record" >
     update ezs_customized_record
     <set >
-      <if test="purchase_id != null" >
-        purchase_id = #{purchase_id,jdbcType=INTEGER},
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="customized_id != null" >
-        customized_id = #{customized_id,jdbcType=INTEGER},
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
       </if>
       <if test="deal_time != null" >
         deal_time = #{deal_time,jdbcType=TIMESTAMP},
@@ -88,19 +102,27 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="operate_id != null" >
-        operate_id = #{operate_id,jdbcType=INTEGER},
+      <if test="customized_id != null" >
+        customized_id = #{customized_id,jdbcType=BIGINT},
+      </if>
+      <if test="operater_id != null" >
+        operater_id = #{operater_id,jdbcType=BIGINT},
+      </if>
+      <if test="purchaser_id != null" >
+        purchaser_id = #{purchaser_id,jdbcType=BIGINT},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customized_record" >
     update ezs_customized_record
-    set purchase_id = #{purchase_id,jdbcType=INTEGER},
-      customized_id = #{customized_id,jdbcType=INTEGER},
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
       deal_time = #{deal_time,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
-      operate_id = #{operate_id,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+      customized_id = #{customized_id,jdbcType=BIGINT},
+      operater_id = #{operater_id,jdbcType=BIGINT},
+      purchaser_id = #{purchaser_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

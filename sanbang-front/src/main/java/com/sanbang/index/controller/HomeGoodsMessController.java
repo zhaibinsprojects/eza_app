@@ -1,13 +1,16 @@
 package com.sanbang.index.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.aspectj.lang.reflect.NoSuchPointcutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -130,28 +133,18 @@ public class HomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
-			,ezs_customized customized,ezs_user user){
+			,ezs_customized customized,ezs_user user) throws Exception{
+		Map<String, Object> mmp = null;
 		Result rs = null;
-		if(customizedrecord==null||customized==null||user==null){
-			rs = Result.failure();
-			rs.setMsg("参数不能为空");
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg(mmp.get("Msg").toString());
 		}else{
-			try {
-				this.customizedService.insert(customized);
-				//由以上插入并返回产生
-				customizedrecord.setCustomized_id(customized.getId());
-				customizedrecord.setOperate_id(Integer.parseInt(user.getId().toString()));
-				customizedrecord.setPurchase_id(Integer.parseInt(user.getId().toString()));
-				this.customizedRecordService.insert(customizedrecord);				
-				rs = Result.success();
-				rs.setMsg("数据插入成功！");
-			} catch (Exception e) {
-				// TODO: handle exception
-				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				rs.setMsg("参数传递有误！");
-			}
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
