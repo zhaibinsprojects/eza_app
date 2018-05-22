@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.sanbang</groupId>
@@ -233,11 +233,6 @@
 			<groupId>com.github.xuwei-k</groupId>
 			<artifactId>html2image</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-core</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
@@ -245,7 +240,6 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			
 		</dependency>
 
 		<!-- Jackson Json处理工具包 -->
@@ -270,6 +264,17 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-xtra</artifactId>
+			<version>5.4.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf</artifactId>
+			<version>9.1.13</version>
+		</dependency>
 		<!-- json -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -277,10 +282,10 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
-    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-resources-plugin</artifactId>
-	    <version>2.4.3</version>
-	</dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.4.3</version>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -185,17 +185,8 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
-	
-<<<<<<< HEAD
-	
-=======
->>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
 	<bean id="ezs_addressMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_addressMapper"/>
 	</bean>
-<<<<<<< HEAD
-=======
-	
->>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
 </beans>

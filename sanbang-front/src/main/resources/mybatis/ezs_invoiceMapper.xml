@@ -221,7 +221,6 @@
    		<include refid="Base_Column_List" /> 
    		from ezs_invoice where order_no = #{orderno}
    </select>
-<<<<<<< HEAD
    <!-- 查询票据信息包含图 -->
    <resultMap id="invoiceMsgResultMap" type="com.sanbang.vo.InvoiceInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -246,11 +245,9 @@
     select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
    	where e.id = #{ id } and e.deleteStatus = '0' ORDER BY e.addtime desc
   </select>
-=======
  	<!-- 根据uesrId查询invoice数量 -->
  	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
  		select count(*) from ezs_invoice where user_id = #{userId}
  	</select>
  	
->>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
 </mapper>
