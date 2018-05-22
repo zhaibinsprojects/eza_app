@@ -5,5 +5,5 @@
 target/
 
 #屏蔽.settings目录	
-.settings/		
-/bin/
+.settings/
+/bin
