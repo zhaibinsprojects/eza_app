@@ -17,13 +17,10 @@ import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
-<<<<<<< HEAD
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.upload.sevice.FileUploadService;
-=======
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
->>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;

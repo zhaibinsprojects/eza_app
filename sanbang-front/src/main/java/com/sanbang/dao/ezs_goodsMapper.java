@@ -2,12 +2,8 @@ package com.sanbang.dao;
 
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
-
-=======
 import javax.servlet.http.HttpServletRequest;
 import org.apache.ibatis.annotations.Param;
->>>>>>> 57d2f15f122f7aeb33fc47a59b450ff93d950574
 import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
