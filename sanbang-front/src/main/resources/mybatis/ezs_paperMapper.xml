@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_paperMapper" >
-  <resultMap id="BaseResultMap" type="ezs_paper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_paper" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="paperType" property="paperType" jdbcType="VARCHAR" />
     <result column="validDate" property="validDate" jdbcType="TIMESTAMP" />
     <result column="certificate_id" property="certificate_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, validDate, certificate_id
+    id, addTime, deleteStatus, paperType, validDate, certificate_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -21,13 +22,15 @@
     delete from ezs_paper
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_paper" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_paper"  useGeneratedKeys="true" keyProperty="id">
     insert into ezs_paper (id, addTime, deleteStatus, 
-      validDate, certificate_id)
+      paperType, validDate, certificate_id
+      )
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{validDate,jdbcType=TIMESTAMP}, #{certificate_id,jdbcType=BIGINT})
+      #{paperType,jdbcType=VARCHAR}, #{validDate,jdbcType=TIMESTAMP}, #{certificate_id,jdbcType=BIGINT}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_paper" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_paper" useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_paper
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -38,6 +41,9 @@
       </if>
       <if test="deleteStatus != null" >
         deleteStatus,
+      </if>
+      <if test="paperType != null" >
+        paperType,
       </if>
       <if test="validDate != null" >
         validDate,
@@ -56,6 +62,9 @@
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
       </if>
+      <if test="paperType != null" >
+        #{paperType,jdbcType=VARCHAR},
+      </if>
       <if test="validDate != null" >
         #{validDate,jdbcType=TIMESTAMP},
       </if>
@@ -64,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_paper" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_paper" >
     update ezs_paper
     <set >
       <if test="addTime != null" >
@@ -72,6 +81,9 @@
       </if>
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="paperType != null" >
+        paperType = #{paperType,jdbcType=VARCHAR},
       </if>
       <if test="validDate != null" >
         validDate = #{validDate,jdbcType=TIMESTAMP},
@@ -82,10 +94,11 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_paper" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_paper" >
     update ezs_paper
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      paperType = #{paperType,jdbcType=VARCHAR},
       validDate = #{validDate,jdbcType=TIMESTAMP},
       certificate_id = #{certificate_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}

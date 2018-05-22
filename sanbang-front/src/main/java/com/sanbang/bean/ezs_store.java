@@ -4,12 +4,20 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * 商城表
+ */
+
 public class ezs_store implements Serializable {
 
 	/**
-	 * 商城表
+	 * 
 	 */
-	private static final long serialVersionUID = 5190649705433629576L;
+	private static final long serialVersionUID = -6428132396052424895L;
+
+	/**
+	 * 
+	 */
 
 	private Long id;
 
@@ -82,6 +90,18 @@ public class ezs_store implements Serializable {
 	private Long regArea_id;// 注册区县ID
 
 	private String regAddress;// 注册地址
+
+	private String idCardNum;// 经营者省份证号
+
+	private Integer creditScore;
+
+	private String number;
+
+	private Long customerAudit_id;
+
+	private String creditLevel;
+
+	private Long location_id;
 
 	public Long getId() {
 		return id;
@@ -371,6 +391,54 @@ public class ezs_store implements Serializable {
 		this.regAddress = regAddress;
 	}
 
+	public String getIdCardNum() {
+		return idCardNum;
+	}
+
+	public void setIdCardNum(String idCardNum) {
+		this.idCardNum = idCardNum;
+	}
+
+	public Integer getCreditScore() {
+		return creditScore;
+	}
+
+	public void setCreditScore(Integer creditScore) {
+		this.creditScore = creditScore;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public Long getCustomerAudit_id() {
+		return customerAudit_id;
+	}
+
+	public void setCustomerAudit_id(Long customerAudit_id) {
+		this.customerAudit_id = customerAudit_id;
+	}
+
+	public String getCreditLevel() {
+		return creditLevel;
+	}
+
+	public void setCreditLevel(String creditLevel) {
+		this.creditLevel = creditLevel;
+	}
+
+	public Long getLocation_id() {
+		return location_id;
+	}
+
+	public void setLocation_id(Long location_id) {
+		this.location_id = location_id;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_store [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", address="
@@ -383,7 +451,9 @@ public class ezs_store implements Serializable {
 				+ cardType_id + ", companyType_id=" + companyType_id + ", mianIndustry_id=" + mianIndustry_id
 				+ ", auditingusertype_id=" + auditingusertype_id + ", tel=" + tel + ", location="
 				+ Arrays.toString(location) + ", accountType=" + accountType + ", admin_status=" + admin_status
-				+ ", capitalPrice=" + capitalPrice + ", account=" + account + ", unifyCode=" + unifyCode + "]";
+				+ ", capitalPrice=" + capitalPrice + ", account=" + account + ", unifyCode=" + unifyCode + ", person="
+				+ person + ", regArea_id=" + regArea_id + ", regAddress=" + regAddress + ", idCardNum=" + idCardNum
+				+ "]";
 	}
 
 }

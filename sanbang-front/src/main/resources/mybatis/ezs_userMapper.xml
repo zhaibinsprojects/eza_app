@@ -254,34 +254,41 @@
 	    <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
          
          <!--用户详情-->
-         <association property="userInfo" column="userInfo_id" select="selectByPrimaryKey">
+         <association property="ezs_userinfo" column="userInfo_id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey">
+			    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+			    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+			    <result column="email" property="email" jdbcType="VARCHAR" />
+			    <result column="enable" property="enable" jdbcType="BIT" />
+			    <result column="entryTime" property="entryTime" jdbcType="TIMESTAMP" />
+			    <result column="phone" property="phone" jdbcType="VARCHAR" />
+			    <result column="status" property="status" jdbcType="INTEGER" />
+			    <result column="depart_id" property="depart_id" jdbcType="BIGINT" />
+			    <result column="position_id" property="position_id" jdbcType="BIGINT" />
+			    <result column="sex_id" property="sex_id" jdbcType="BIGINT" />
+			    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
+			    <result column="tel" property="tel" jdbcType="VARCHAR" />
+			    <result column="updateStatus" property="updateStatus" jdbcType="INTEGER" />
          </association>
-         
-         <!--商城-->
-         <association property="store" column="store_id" select="com.sanbang.dao.ezs_storeMapper.selectByPrimaryKey">
+          <!--商城-->
+         <association property="ezs_store" column="store_id" select="com.sanbang.dao.ezs_storeMapper.selectByPrimaryKey">
          </association>
-         
-         
-         <!--角色-->
-         <association property="roles" column="user_id" select="com.sanbang.dao.ezs_user_roleMappe.selectByPrimaryKey">
+         <!--联系人-->
+          <association property="ezs_bill" column="user_id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
          </association>
-         
-         <!--配置-->
-          <association property="config" column="user_id" select="com.sanbang.dao.ezs_userconfigMapper.selectByPrimaryKey">
-         </association>
-         
+         <!--资质-->
+         <collection property="authimg" column="user_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
   </resultMap>
   
 	<!--查询用户手机号-->
 	<select  id="checkMobile" resultType="int">
   	 select 
-     count(phone)
+     count(name)
     from ezs_user
-    where phone = #{phone}
+    where name = #{name}
 	</select>
      
      <!--查看用户是否已存在-->
-     <select id="getUserInfoByUserNameFromBack" resultMap="userinfoMap">
+     <select id="getUserInfoByUserNameFromBack" resultMap="userinfomap">
      	select 
     <include refid="Base_Column_List" />
 	    from ezs_user

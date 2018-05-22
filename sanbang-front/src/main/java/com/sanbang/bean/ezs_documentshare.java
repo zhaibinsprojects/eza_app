@@ -16,6 +16,8 @@ public class ezs_documentshare {
     private Long ezsSubstance_id;
 
     private Long user_id;
+    
+    private Long good_id;
 
     public Long getId() {
         return id;
@@ -72,4 +74,14 @@ public class ezs_documentshare {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+	public Long getGood_id() {
+		return good_id;
+	}
+
+	public void setGood_id(Long good_id) {
+		this.good_id = good_id;
+	}
+    
+    
 }

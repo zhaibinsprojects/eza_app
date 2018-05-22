@@ -161,10 +161,8 @@
       receUser_id = #{receUser_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
 	<!--根据billId  查询seller信息 -->  
   <select id="selectByBillId" resultMap="BaseResultMap">
   	select * from ezs_payinfo where bill_id = #{billId}
   </select>
-  
 </mapper>

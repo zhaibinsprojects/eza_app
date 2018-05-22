@@ -1,3 +1,17 @@
+<<<<<<< HEAD
 /.classpath
 /.gitignore
 /target/
+=======
+#仓库中所有名为.classpath的文件都屏蔽
+.classpath
+#屏蔽target目录
+target/
+#屏蔽.settings目录
+.settings/
+/bin
+
+# auto file of mac
+.DS_Store
+
+>>>>>>> 59d700dca034345d7495bc1830473298449b4dd7

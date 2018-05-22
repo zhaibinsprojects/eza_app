@@ -43,17 +43,17 @@ public class HomeProvinceMessController {
 		List<ezs_area> alist = new ArrayList<>();
 		//获取热门省份ID
 		Map<String, Object> mmp = this.addressService.getHotAddress();
-		String errorcode = (String)mmp.get("ErrorCode");
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		List<HotProvince> clist = null;
 		Result rs = null;
-		if(errorcode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			clist = (List<HotProvince>) mmp.get("HotAreasList");
 			rs = Result.success();
 			rs.setObj(clist);
 		}
 		else{
 			rs = Result.failure();
-			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_HOTCITY_FAIL);
+			rs.setErrorcode(Integer.parseInt(mmp.get("ErrorCode").toString()));
 			rs.setMsg("查询热门城市异常");
 		}
 		return rs;
@@ -68,17 +68,18 @@ public class HomeProvinceMessController {
 	@ResponseBody
 	public Object getProvinces(HttpServletRequest request,HttpServletResponse response){
 		List<ezs_area> elist = null;
-		Map<String,Object> obj = null;
+		Map<String,Object> mmp = null;
 		Result rs = null;
-		obj = this.addressService.getProvince();
-		if(obj!=null&&obj.size()>0){
-			if(obj.get("ErrorCode").equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				elist = (List<ezs_area>) obj.get("Obj"); 
+		mmp = this.addressService.getProvince();
+		if(mmp!=null&&mmp.size()>0){
+			if(mmp.get("ErrorCode").equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				elist = (List<ezs_area>) mmp.get("Obj");
 				rs = Result.success();
 				rs.setObj(elist);
 			}else{
 				rs = Result.failure();
-				rs.setMsg(obj.get("Msg").toString()); 
+				rs.setMsg(mmp.get("Msg").toString());
+				rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			}
 		}else{
 			rs = Result.failure();
@@ -97,16 +98,17 @@ public class HomeProvinceMessController {
 	@ResponseBody
 	public Object getChildByParents(HttpServletRequest request,HttpServletResponse response,Long aid){
 		List<ezs_area> elist = null;
-		Map<String,Object> obj = null;
+		Map<String,Object> mmp = null;
 		Result rs = null;
-		obj = this.addressService.getChildByParents(aid);
-		elist = (List<ezs_area>) obj.get("Obj");
-		if(obj.get("ErrorCode").equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		mmp = this.addressService.getChildByParents(aid);
+		elist = (List<ezs_area>) mmp.get("Obj");
+		if(mmp.get("ErrorCode").equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
 			rs.setObj(elist);
 			rs.setMsg("请求成功");
 		}else{
-			rs = Result.failure();
+			rs = Result.failure(); 
+			rs.setErrorcode(Integer.parseInt(mmp.get("ErrorCode").toString()));
 			rs.setMsg("请求失败");
 		}
 		return rs;

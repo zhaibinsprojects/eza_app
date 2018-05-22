@@ -17,4 +17,6 @@ public interface ezs_logisticsMapper {
     int updateByPrimaryKeySelective(ezs_logistics record);
 
     int updateByPrimaryKey(ezs_logistics record);
+
+	ezs_logistics selectByOrderNo(String orderNo);
 }

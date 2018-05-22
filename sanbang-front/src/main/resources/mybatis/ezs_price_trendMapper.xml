@@ -468,4 +468,165 @@
       purchasing_standard = #{purchasing_standard,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!-- 实时报价分类列表展示 -->
+  <resultMap id="PriceConditionResultMap" type="com.sanbang.vo.PriceTrendIfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="ash" property="ash" jdbcType="VARCHAR" />
+    <result column="bending" property="bending" jdbcType="VARCHAR" />
+    <result column="burning" property="burning" jdbcType="VARCHAR" />
+    <result column="cantilever" property="cantilever" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="crack" property="crack" jdbcType="VARCHAR" />
+    <!-- <result column="data_sources" property="data_sources" jdbcType="INTEGER" /> -->
+    <result column="date_from" property="date_from" jdbcType="VARCHAR" />
+    <result column="density" property="density" jdbcType="VARCHAR" />
+    <result column="flexural" property="flexural" jdbcType="VARCHAR" />
+    <result column="freely" property="freely" jdbcType="VARCHAR" />
+    <result column="lipolysis" property="lipolysis" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="procurement_standard" property="procurement_standard" jdbcType="VARCHAR" />
+    <result column="protection" property="protection" jdbcType="BIT" />
+    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="source_tel" property="source_tel" jdbcType="VARCHAR" />
+    <result column="specification" property="specification" jdbcType="VARCHAR" />
+    <result column="tensile" property="tensile" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="water" property="water" jdbcType="VARCHAR" />
+    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
+    <result column="region_id" property="region_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="provider" property="provider" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="color_id" property="color_id" jdbcType="BIGINT" />
+    <result column="form_id" property="form_id" jdbcType="BIGINT" />
+    <result column="data_time" property="data_time" jdbcType="TIMESTAMP" />
+    <result column="goodClass_sources" property="goodClass_sources" jdbcType="VARCHAR" />
+    <result column="data_sources_new" property="data_sources_new" jdbcType="VARCHAR" />
+    <result column="price_type" property="price_type" jdbcType="INTEGER" />
+    <result column="purchasing_standard" property="purchasing_standard" jdbcType="VARCHAR" />
+    <result column="goodClass" property="goodClassName" jdbcType="VARCHAR" />
+    <result column="goodColor" property="goodColorName" jdbcType="VARCHAR" />
+    <result column="goodForm" property="goodFormName" jdbcType="VARCHAR" />
+  </resultMap>
+   <sql id="PriceConditionColumnList" >
+    g.id, g.addTime, g.deleteStatus, g.ash, g.bending, g.burning, g.cantilever, g.content, g.crack, 
+    g.date_from, g.density, g.flexural, g.freely, g.lipolysis, g.price, g.procurement_standard, g.protection, 
+    g.purpose, g.source, g.source_tel, g.specification, g.tensile, g.type, g.water, g.goodClass_id, g.region_id, 
+    g.user_id, g.provider, g.status, g.color_id, g.form_id, g.data_time, g.goodClass_sources, g.data_sources_new, 
+    g.price_type, g.purchasing_standard,
+    gc.name as goodClass,e1.name as goodColor,e2.name as goodForm
+  </sql>
+  <select id="selectByCondition" resultMap="PriceConditionResultMap">
+    select 
+    <include refid="PriceConditionColumnList" />
+    from ezs_price_trend g,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' 
+	and  g.goodClass_id = gc.id and g.color_id = e1.id and g.form_id = e2.id
+	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
+      <if test="countryType != null" >
+        g.type = #{countryType}
+      </if>
+      <if test="kindId != null" >
+        g.goodClass_id = #{kindId}
+      </if>
+      <if test="colorId != null" >
+        g.color_id = #{colorId}
+      </if>
+      <if test="formId != null" >
+        g.form_id = #{formId}
+      </if>
+      <if test="source != null" >
+        g.date_from = #{source}
+      </if>
+      <if test="purpose != null" >
+        g.purpose = #{purpose}
+      </if>
+      <if test="burning != null" >
+        g.burning = #{burning}
+      </if>
+      <if test="protection != null" >
+        g.protection = #{protection}
+      </if>
+    </trim>
+  </select>
+  <!-- 价格走势 -->
+  <resultMap id="PriceTrendcyResultMap" type="com.sanbang.vo.PriceTrendIfo" >
+    <result column="currentPrice" property="currentAVGPrice" jdbcType="VARCHAR" />
+    <result column="prePrice" property="preAVGPrice" jdbcType="VARCHAR" />
+    <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
+    <result column="className" property="sandBytwo" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getPriceTrendcy" resultMap="PriceTrendcyResultMap">
+    select
+	IFNULL(AVG(a.price),0) currentPrice,
+	a.data_time dealDate,
+	gc.name className,
+	(
+	select IFNULL(AVG(p.price),0)
+	from ezs_price_trend p where p.type = '3' and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
+	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
+      <if test="kindId != null" >
+        p.goodClass_id = #{kindId}
+      </if>
+      <if test="colorId != null" >
+        p.color_id = #{colorId}
+      </if>
+      <if test="formId != null" >
+        p.form_id = #{formId}
+      </if>
+      <if test="source != null" >
+        p.date_from = #{source}
+      </if>
+      <if test="purpose != null" >
+        p.purpose = #{purpose}
+      </if>
+      <if test="burning != null" >
+        p.burning = #{burning}
+      </if>
+      <if test="protection != null" >
+        g.protection = #{protection}
+      </if>
+    </trim>
+ 	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
+	) prePrice
+	from ezs_price_trend a,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' 
+	and  a.goodClass_id = gc.id and a.color_id = e1.id and a.form_id = e2.id and a.type = '3'
+	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
+      <if test="kindId != null" >
+        a.goodClass_id = #{kindId}
+      </if>
+      <if test="colorId != null" >
+        a.color_id = #{colorId}
+      </if>
+      <if test="formId != null" >
+        a.form_id = #{formId}
+      </if>
+      <if test="source != null" >
+        a.date_from = #{source}
+      </if>
+      <if test="purpose != null" >
+        a.purpose = #{purpose}
+      </if>
+      <if test="burning != null" >
+        a.burning = #{burning}
+      </if>
+      <if test="protection != null" >
+        a.protection = #{protection}
+      </if>
+    </trim>
+ 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc;      
+  </select>
+  <!-- 获取价格趋势,最近两天实时交易 -->
+  <select id="selectPriceChangesByGood" resultMap="PriceTrendcyResultMap" parameterType="java.lang.Long">
+  select 
+	IFNULL(AVG(a2.price),0) currentPrice,
+	IFNULL((
+		select AVG(a1.price) 
+		from ezs_price_trend a1 
+		where a1.type = '3' and a1.goodClass_id = a2.goodClass_id GROUP BY DATE_FORMAT(a1.data_time,'%Y-%m-%d') order by a1.data_time desc LIMIT 1,1
+	),0)  prePrice
+	from ezs_price_trend a2 where EXISTS (select 1 from ezs_goods g2 where a2.goodClass_id = g2.goodClass_id and g2.id = #{gId} ) and a2.type = '3' GROUP BY DATE_FORMAT(a2.data_time,'%Y-%m-%d') order by a2.data_time desc LIMIT 0,1;
+  </select>
 </mapper>

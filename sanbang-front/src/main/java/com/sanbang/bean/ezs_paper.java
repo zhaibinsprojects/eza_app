@@ -9,6 +9,8 @@ public class ezs_paper {
 
     private Boolean deleteStatus;
 
+    private String paperType;
+
     private Date validDate;
 
     private Long certificate_id;
@@ -35,6 +37,14 @@ public class ezs_paper {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public String getPaperType() {
+        return paperType;
+    }
+
+    public void setPaperType(String paperType) {
+        this.paperType = paperType == null ? null : paperType.trim();
     }
 
     public Date getValidDate() {
