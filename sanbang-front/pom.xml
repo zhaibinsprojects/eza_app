@@ -211,10 +211,12 @@
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
+			<version>${com.google.zxing}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.xuwei-k</groupId>
 			<artifactId>html2image</artifactId>
+			<version>${com.github.xuwei-k}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
@@ -222,11 +224,11 @@
 			<version>9.1.13</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>itext-xtra</artifactId>
-		    <version>5.4.5</version>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-xtra</artifactId>
+			<version>5.4.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
@@ -266,11 +268,15 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
-    		<groupId>org.apache.maven.plugins</groupId>
-	   	 	<artifactId>maven-resources-plugin</artifactId>
-	    <version>2.4.3</version>
-	</dependency>
-
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.4.3</version>
+		</dependency>
 	</dependencies>
-
+	<repositories>
+		<repository>
+			<id>aliyun</id>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 </project>
