@@ -10,6 +10,9 @@ out
 .project
 .settings/
 
+# Build files
+target/
+
 bin/
 gen/
 local.properties
