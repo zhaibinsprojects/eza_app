@@ -272,5 +272,4 @@ public class ezs_customized {
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
     }
-
 }

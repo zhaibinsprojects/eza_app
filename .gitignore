@@ -1,10 +1,13 @@
-#仓库中所有名为.classpath的文件都屏蔽
+# 仓库中所有名为.classpath的文件都屏蔽
 .classpath
-#屏蔽target目录
-target/
-#屏蔽.settings目录
-.settings/
+
+# 屏蔽build目录
+/target
 /bin
+
+# 屏蔽IDE目录
+/.settings
+/.idea
 
 # auto file of mac
 .DS_Store
