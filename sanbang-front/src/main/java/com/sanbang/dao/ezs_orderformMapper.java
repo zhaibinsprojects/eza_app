@@ -2,6 +2,7 @@ package com.sanbang.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_order_info;
@@ -25,10 +26,10 @@ public interface ezs_orderformMapper {
     int updateByPrimaryKey(ezs_orderform record);
     
     //订单列表
-    List<ezs_order_info>  getOrderListByValue(PagerOrder pager);
+    List<ezs_order_info>  getOrderListByValue(@Param("pager")PagerOrder pager);
     
     //订单总条数
-    int getOrderListByValueCount(PagerOrder pager);
+    int getOrderListByValueCount(@Param("pager")PagerOrder pager);
     
     /**
      * 订单详情

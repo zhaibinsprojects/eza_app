@@ -904,5 +904,18 @@ public class Tools {
 		 }  
 		 return str;
 	 }
-	 
+	 /**
+		 * 在批量支付时,产生批量转账的批次号 类型:String,长度:不超过32位
+		 * 
+		 * @return
+		 */
+		public static synchronized String getH5PayNO() {
+			long time = System.currentTimeMillis();
+			String result = "HP" + time + num;
+			num++;
+			if (num == 1000) {
+				num = 100;
+			}
+			return result;
+		}
 }

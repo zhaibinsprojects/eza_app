@@ -63,5 +63,21 @@ public interface BuyerService {
 	  */
 	 public Result  getContentList(String member,int temid,int pageno,HttpServletRequest request);
 	 
+	 /**
+	  * 关闭订单
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result   orderclose(HttpServletRequest request,String order_no);
+	 
+	 /**
+	  * 上传订单支付凭证
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result  orderpaysubmit(HttpServletRequest request,String order_no,String urlParam);
+	 
 	 
 }

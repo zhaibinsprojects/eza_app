@@ -1,6 +1,9 @@
 package com.sanbang.buyer.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +14,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.ibatis.builder.ResultMapResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_order_info;
+import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_pact;
+import com.sanbang.bean.ezs_payinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dao.ezs_addressMapper;
@@ -35,6 +45,7 @@ import com.sanbang.vo.CertSignInfoBean;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MapTools;
 import com.sanbang.vo.PagerOrder;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 import net.sf.json.JSONObject;
 
@@ -58,8 +69,11 @@ public class BuyerServiceimpl implements BuyerService {
 
 	@Autowired
 	private ezs_pactMapper ezs_pactMapper;
+	
+	@Autowired
+	private com.sanbang.dao.ezs_accessoryMapper ezs_accessoryMapper;
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 
 	@Override
 	public List<ezs_order_info> getOrderListByValue(PagerOrder pager) {
@@ -90,25 +104,25 @@ public class BuyerServiceimpl implements BuyerService {
 		map.put("goods_amount", orderinfo.getGoods_amount());
 		map.put("total_price", orderinfo.getTotal_price());
 		map.put("order_no", orderinfo.getOrder_no());
-		map.put("addTime", sdf.format(orderinfo.getAddTime()));
+		map.put("addTime", orderinfo.getAddTime());
 		map.put("order_status", orderinfo.getOrder_status());
+		
 		return map;
 	}
 
-	@SuppressWarnings("null")
 	private String getaddressinfo(long areaid) {
 		StringBuilder sb = new StringBuilder();
 		String threeinfo = "";
 		String twoinfo = "";
 		String oneinfo = "";
 		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
-		if (ezs_threeinfo == null) {
+		if (ezs_threeinfo != null) {
 			threeinfo = ezs_threeinfo.getAreaName();
 			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
-			if (ezs_twoinfo == null) {
+			if (ezs_twoinfo != null) {
 				twoinfo = ezs_twoinfo.getAreaName();
 				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
-				if (ezs_oneinfo == null) {
+				if (ezs_oneinfo != null) {
 					oneinfo = ezs_twoinfo.getAreaName();
 				}
 			}
@@ -139,15 +153,21 @@ public class BuyerServiceimpl implements BuyerService {
 			}
 			// 先查一下合同的pdf在不在
 			List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
-
-			if (pact == null) {
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+			
+			if (pact == null||pact.size()==0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
 				return result;
 
 			}
-
+			if (orderinfo.getPact_status() == 1) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("纸质合同线下签订中，请您耐心等待！");
+				return result;
+			}
 			String url = signbase+"/website/certSign/forh5/showcontentpdf.do";
 			Map<String, Object> mv = new HashMap<>();
 
@@ -165,13 +185,15 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setMsg("系统错误");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			}
-
-			if ((boolean) callBackRet.get("success")) {
+			com.sanbang.vo.sign.Result  res=(com.sanbang.vo.sign.Result) JSONObject.toBean(callBackRet,com.sanbang.vo.sign.Result.class);
+			
+			if (res.isSuccess()) {
 				mv.clear();
-				mv.put("pdfurl", callBackRet.get("pdfurl"));
+				mv.put("pdfurl", res.getContent());
 				result.setSuccess(true);
 				result.setMsg("请求成功 ");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setObj(mv);
 			} else {
 				result.setSuccess(false);
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
@@ -252,6 +274,18 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setMsg("纸质合同线下签订中，请您耐心等待！");
 				return result;
 			}
+			
+			// 先查一下合同的pdf在不在
+			List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
+
+			if (pact == null||pact.size()==0) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
+				return result;
+
+			}
+			
 
 			Map<String, Object> mv = new HashMap<>();
 			String company = upi.getEzs_store().getCompanyName();
@@ -285,12 +319,14 @@ public class BuyerServiceimpl implements BuyerService {
 			}
 			JSONObject callBackRet = null;
 			callBackRet = HttpRemoteRequestUtils.doPost(url, httpParam);
-			if ((boolean) callBackRet.get("success")) {
+			com.sanbang.vo.sign.Result  res=(com.sanbang.vo.sign.Result) JSONObject.toBean(callBackRet,com.sanbang.vo.sign.Result.class);
+			if (res.isSuccess()) {
 				mv.clear();
-				mv.put("pdfurl", callBackRet.get("content"));
+				mv.put("pdfurl", res.getContent());
 				result.setSuccess(true);
 				result.setMsg("请求成功 ");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setObj(mv);
 			} else {
 				result.setSuccess(false);
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
@@ -361,13 +397,14 @@ public class BuyerServiceimpl implements BuyerService {
 			}
 			JSONObject callBackRet = null;
 			callBackRet = HttpRemoteRequestUtils.doPost(url, httpParam);
-			if ((boolean) callBackRet.get("success")) {
+			com.sanbang.vo.sign.Result  res=(com.sanbang.vo.sign.Result) JSONObject.toBean(callBackRet,com.sanbang.vo.sign.Result.class);
+			if (res.isSuccess()) {
 				map.clear();
-				List<Map<String, Object>> list1=MapTools.parseJSON2List(String.valueOf(callBackRet.get("content")));
-				map.put("content", list1);
+				map.put("pdfurl", res.getContent());
 				result.setSuccess(true);
 				result.setMsg("请求成功 ");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setObj(map);
 			} else {
 				result.setSuccess(false);
 				result.setMsg("无合同数据");
@@ -384,8 +421,149 @@ public class BuyerServiceimpl implements BuyerService {
 		return result;
 	}
 
+	@Override
+	public Result orderclose(HttpServletRequest request, String order_no) {
+		Result result=Result.failure();
+		ezs_orderform orderinfo = ezs_orderformMapper.selectByorderno(order_no);
+		if(orderinfo==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("订单不存在");
+		}
+		orderinfo.setDeleteStatus(true);
+		int status=ezs_orderformMapper.updateByPrimaryKey(orderinfo);
+		result.setSuccess(true);
+		result.setMsg("修改成功");
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		return result;
+	}
+
+	//PAYIMG
+	@Override
+	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
+	public Result orderpaysubmit(HttpServletRequest request, String order_no,String urlParam) {
+		
+		Result result=Result.failure();
+		
+		try {
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+			if(orderinfo==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("订单不存在");
+				return result;
+			}
+			
+			List<AuthImageVo> list=new ArrayList<>();
+			savepic(urlParam, list);
+			if(null==list||list.size()==0){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请上传图片");
+				return result;
+			}
+			
+			if(list.size()>1){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("只能上传一张图片");
+				return result;
+			}
+			
+			//票据记录
+			AuthImageVo vo=list.get(0);
+			
+			if(!vo.getImgcode().equals("PAYIMG")){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("标识错误");
+				return result;
+			}
+			
+			//添加图片记录
+			ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
+			ezs_accessory.setAddTime(new Date());
+			ezs_accessory.setDeleteStatus(false);
+			ezs_accessory.setExt("");
+			ezs_accessory.setHeight(0);
+			ezs_accessory.setInfo(null);
+			ezs_accessory.setName("");
+			ezs_accessory.setPath(vo.getImgurl());
+			ezs_accessory.setSize(null);
+			ezs_accessory.setWidth(null);
+			ezs_accessory.setUser_id(upi.getId());
+			ezs_accessoryMapper.insertSelective(ezs_accessory);
+			//upi记录
+			vo.setAccid(ezs_accessory.getId());
+			
+			//票据记录
+			ezs_payinfo payinfo=new ezs_payinfo();
+			payinfo.setAddTime(new Date());
+			payinfo.setPaymentUser_id(upi.getId());
+			payinfo.setPrice(orderinfo.getFirst_price());
+			payinfo.setDeleteStatus(false);
+			payinfo.setOrder_no(order_no);
+			payinfo.setOrder_type(2);
+			payinfo.setPay_no(Tools.getH5PayNO());//流水号
+			payinfo.setBill_id(vo.getAccid());//票据id
+			payinfo.setPaymentUser_id(orderinfo.getBuyerid());//支付人id
+			payinfo.setReceUser_id(orderinfo.getSellerid());//收款人id 
+			orderinfo.setOrder_status(40);
+			
+			ezs_orderform  order=new ezs_orderform();
+			order.setOrder_no(orderinfo.getOrder_no());
+			order.setOrder_status(orderinfo.getOrder_status());
+			int status=ezs_orderformMapper.updateByPrimaryKey(order);
+			result.setSuccess(true);
+			result.setMsg("提交成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			return result;
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	
-	
+	private static List<AuthImageVo> savepic(String param,List<AuthImageVo> list) throws ParseException{
+		if(!Tools.isEmpty(param)){
+		String[] aa=param.split(";");
+		if(null==aa||aa.length==0){
+			return list;
+		}
+		for (String bb : aa) {
+			String[] cc=bb.split(",");
+			if(null==cc||cc.length<2){
+				return list;
+			}
+			AuthImageVo ImageVo=new AuthImageVo();
+			ImageVo.setImgcode(cc[0]);
+			
+			if(cc[1].indexOf("@")>0&&cc[1].split("@").length==3){
+				ImageVo.setImgurl(cc[1].split("@")[0]);
+				ImageVo.setName(cc[1].split("@")[1]);
+				ImageVo.setUsetime(sdf.parse(cc[1].split("@")[2]));
+				list.add(ImageVo);
+				System.out.println(ImageVo.toString());
+			}else{
+				ImageVo.setImgurl(cc[1].split("@")[0]);
+				list.add(ImageVo);
+				System.out.println(ImageVo.toString());
+			}
+		}
+		}
+		return list;
+	}
 	
 	
 }
