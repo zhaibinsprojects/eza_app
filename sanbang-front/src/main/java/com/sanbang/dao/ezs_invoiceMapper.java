@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_pact;
+import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.InvoiceInfo;

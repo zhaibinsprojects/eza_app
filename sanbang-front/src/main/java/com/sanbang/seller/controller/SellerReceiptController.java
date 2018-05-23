@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
@@ -117,10 +116,8 @@ public class SellerReceiptController {
 		}
 		return result;
   }
-	
-	
 	/**
-	 * 查看发票信息
+	 * 票据详情页面
 	 * @param orderNo
 	 * @param request
 	 * @param response
@@ -137,6 +134,7 @@ public class SellerReceiptController {
 			result.setMsg("用户未登录");
 			return result;
 		}
+		Long userId = upi.getId();
 		
 		ezs_invoice invoice = null; 
 		ezs_accessory accessory = null;		
@@ -149,17 +147,14 @@ public class SellerReceiptController {
 				String path = accessory.getPath();
 				map.put("invoice", invoice);
 				map.put("path", path);
-				
 				result.setSuccess(true);
 				result.setMsg("查询成功");
 				result.setObj(map);
-			
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("查询失败");
 			}
-			
 		} catch (Exception e) {
 			log.info("查询发票信息出错" + e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -168,4 +163,6 @@ public class SellerReceiptController {
 		}
 		return result;
 	}
+	
 }
+

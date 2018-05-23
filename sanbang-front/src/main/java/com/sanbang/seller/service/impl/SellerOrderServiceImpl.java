@@ -13,15 +13,12 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
-import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_invoiceMapper;
 import com.sanbang.dao.ezs_logisticsMapper;
 import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.seller.service.SellerOrderService;
-import com.sanbang.utils.Page;
-import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PagerOrder;
 @Service
 public class SellerOrderServiceImpl implements SellerOrderService {
@@ -78,13 +75,18 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 		map.put("order_status", purchaseOrder.getOrder_status());
 		return map;
 	}
+	
+	@Override
+	public ezs_invoice queryInvoiceByNo(String orderNo) {
+		
+		return invoiceMapper.selectInvoiceByOrderNo(orderNo);
+	}
 
 	@Override
 	public ezs_logistics queryLogisticsByNo(String orderNo) {
 		return logisticsMapper.selectByOrderNo(orderNo);
 	}
 	
-	@SuppressWarnings("null")
 	private String getaddressinfo(long areaid) {
 		StringBuilder sb = new StringBuilder();
 		String threeinfo = "";

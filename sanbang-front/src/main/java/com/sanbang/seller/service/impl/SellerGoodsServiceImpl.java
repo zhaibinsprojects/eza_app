@@ -1,6 +1,5 @@
 package com.sanbang.seller.service.impl;
 
-import java.awt.geom.RectangularShape;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,14 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_accessory;
-import com.sanbang.bean.ezs_card_dict;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_audit_process;
 import com.sanbang.bean.ezs_goods_cartography;
-import com.sanbang.bean.ezs_goods_log;
 import com.sanbang.bean.ezs_goods_photo;
-import com.sanbang.bean.ezs_paper;
-import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_card_dictMapper;
@@ -50,7 +44,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	@Resource(name="ezs_goodsMapper")
+	@Autowired
 	ezs_goodsMapper goodsMapper;
 
 	@Autowired
@@ -158,6 +152,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String seo_description = request.getParameter("seo_description");// 货品详细描述
 
 				ezs_goods goods = new ezs_goods();
+				goods.setDeleteStatus(true);
+				goods.setAddTime(new Date());
 				goods.setGoodClass_id(Long.parseLong(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
@@ -169,6 +165,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setSupply_id(Long.parseLong(color_id));
 				goods.setSupply_id(Long.parseLong(form_id));
 				goods.setSource(source);
+				goods.setClick(0);
+				goods.setCollect(0);
+				goods.setGoods_salenum(0);
+				goods.setStatus(0);
 				if (protection == "0") {
 					goods.setProtection(true);
 				} else if (protection == "1") {
@@ -490,6 +490,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String seo_description = request.getParameter("seo_description");// 货品详细描述
 
 				ezs_goods goods = new ezs_goods();
+				goods.setDeleteStatus(true);
 				goods.setGoodClass_id(Long.parseLong(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
@@ -522,6 +523,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setFlexural(flexural);
 				goods.setBurning(burning);
 				goods.setSeo_description(seo_description);
+				goods.setLastModifyDate(new Date());
 				int aa = goodsMapper.updateByPrimaryKeySelective(goods);
 				long goodsid=goods.getId();
 				if (aa > 0) {
@@ -578,24 +580,42 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	@Override
 	public Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request,
 			HttpServletResponse response) {
-
-		ezs_goods_audit_process goodsAudit = new ezs_goods_audit_process();
-
-		goodsAudit.setGoods_id(goodsId);
-
-		goodsAudit.setStatus(540);
-
-		int aa = goodsAuditProcessMapper.insertSelective(goodsAudit);
-
-		if (aa <= 0) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+		if ( null != goods ) {
+			ezs_goods_audit_process goodsAudit = null;
+			goodsAudit = goodsAuditProcessMapper.selectByGoodsId(goodsId);
+			if (null == goodsAudit) {
+				ezs_goods_audit_process newGoodsAudit = new ezs_goods_audit_process();
+				newGoodsAudit.setAddTime(new Date());
+				newGoodsAudit.setGoods_id(goodsId);
+				newGoodsAudit.setSupplyPrice(goods.getPrice());
+				newGoodsAudit.setStatus(540);
+				int aa = goodsAuditProcessMapper.insertSelective(newGoodsAudit);
+				if (aa <= 0) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+				}
+				result.setSuccess(true);
+				result.setMsg("提交审核成功，请静待结果");
+			}else{
+				goodsAudit.setAddTime(new Date());
+				goodsAudit.setGoods_id(goodsId);
+				goodsAudit.setSupplyPrice(goods.getPrice());
+				int aa = goodsAuditProcessMapper.updateByPrimaryKey(goodsAudit);
+				if (aa <= 0) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+				}
+				result.setSuccess(true);
+				result.setMsg("提交审核成功，请静待结果");
+			}
+		}else{
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("系统错误");
 		}
-
-		result.setSuccess(true);
-		result.setMsg("提交审核成功，请静待结果");
-
 		return result;
 	}
 

@@ -18,11 +18,15 @@ public interface SellerReceiptService {
 	ezs_user getUserInfoById(Long paymentUser_id);
 
 	Map<String, Object> getInvoiceListById(Long userId, String currentPage);
-
+	
+	int insertInvoice(ezs_invoice invoice);
+	
 	Map<String, Object> queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
 			long userId, String currentPage);
 
 	ezs_invoice queryInvoiceByNo(String orderNo);
 
 	ezs_accessory queryAccessoryById(Long receipt_id);
+
+	ezs_invoice getInvoiceInfoById(String orderno);
 }

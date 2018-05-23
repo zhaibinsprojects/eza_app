@@ -197,7 +197,16 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_order_canceMapper"/>
 	</bean>
+		<!--关闭订单-->
+	<bean id="ezs_goods_photoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_photoMapper"/>
+	</bean>
 
+	<bean id="ezs_goods_cartographyMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_cartographyMapper"/>
+	</bean>
 	
 	
 </beans>

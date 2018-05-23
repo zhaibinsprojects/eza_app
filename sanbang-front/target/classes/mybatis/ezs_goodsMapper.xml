@@ -754,21 +754,7 @@
         and g.goodClass_id = #{goodClass_id, jdbcType=BIGINT}
     </if> 
   </select>
-
-  
-
-  <!-- 其他筛选 -->
-  <!-- 
-  	left join ezs_dict dict1 on goods.color_id = dict1.id 
-    left join ezs_dict dict2 on goods.form_id = dict2.id where 
-    <if test="colorName !=null and colorName != '' ">  
-        dict1.name = #{colorName, jdbcType=VARCHAR} 
-    </if>
-    <if test="formName !=null and formName != '' ">  
-        dict2.name = #{formName, jdbcType=VARCHAR} 
-    </if>
-   -->
-  <select id="listByOthers" resultType="ezs_goods" parameterType="java.util.Map" >
+  <select id="listByOthers" resultType="ezs_goods" parameterType="map" >
     select * from ezs_goods goods where 1 = 1 
     <if test="color_id !=null and color_id != '' ">  
         and goods.color_id = #{color_id, jdbcType=BIGINT}
@@ -793,7 +779,6 @@
         and goods.ash &gt;= #{ash1, jdbcType=BIGINT} and goods.ash &lt;= #{ash2, jdbcType=BIGINT} 
     </if>
     order by lastModifyDate desc
-
   </select>
   <!-- 根据id查询订单总数 -->
 	<select id="selectCount" resultType="java.lang.Integer">

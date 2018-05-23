@@ -14,6 +14,10 @@ import com.sanbang.vo.userauth.AuthImageVo;
  */
 public class ezs_user implements Serializable {
 
+
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 4407580224409222723L;
 
 	private Long id;
@@ -268,5 +272,7 @@ public class ezs_user implements Serializable {
 				+ ", authimg=" + authimg + ", authimgstate=" + authimgstate + ", authorfilestate=" + authorfilestate
 				+ "]";
 	}
+
+	
 
 }

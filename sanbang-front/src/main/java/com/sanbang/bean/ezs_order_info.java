@@ -2,21 +2,21 @@ package com.sanbang.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 订单列表
  * 
- * @author LENOVO
- *
+ * @author LENOVO 全款： 应付金额=实际付款金额 all_price ; 非全款 应付金额=first_price+end_price
+ *         实际付款金额=first_price+end_price-adjust_price ; 订单总金额 =total_price
  */
 public class ezs_order_info implements Serializable {
 
-	private static final long serialVersionUID = -6148932296951649380L;
+
+	private static final long serialVersionUID = 5024357524788189125L;
 
 	private String good_no;// 商品编号
 
-	private Date addTime;// 订单时间
+	private String addTime;// 订单时间
 
 	private boolean deleteStatus;
 
@@ -34,7 +34,7 @@ public class ezs_order_info implements Serializable {
 	private String areaName;
 
 	private Long area_id;// 库存所地区
-	// 订单类型 10.自营商品订单
+	// 订单类型 ORDER_SELF_GOOD.自营商品订单 2=ORDER_MATCH_GOOD.撮合商品订单
 	private String order_type;
 	// 总价
 	private BigDecimal total_price;
@@ -42,7 +42,7 @@ public class ezs_order_info implements Serializable {
 	// 商品量
 	private BigDecimal goods_amount;
 
-	// 订单状态10.待确认 20.待签约 30.待付款 40.首款待支付 50.首款待确认 60.待发货
+	// 1待处理 订单状态10.待确认 20.待签约 30.待付款 40.首款待支付 50.首款待确认 60.待发货
 	// 70.已发货 80.尾款待支付 90.尾款待确认 100.退货中 110.已完成 120.已退货 130.已取消
 	private Integer order_status;
 
@@ -58,9 +58,34 @@ public class ezs_order_info implements Serializable {
 	// 合同状态 1.纸质 2.电子
 	private int pact_status;
 	// 订单完成时
-	private Date finishtime;
+	private String finishtime;
 	// 收货地址id
 	private Long address_id;
+
+	private long buyerid;
+
+	private long sellerid;
+
+	// 支付方式（0.全款，1：首款+尾款 ）
+	// @Column(columnDefinition = "int default 0")
+	private int pay_mode;
+
+	// 线上付款 线下付款（1.线上，2.线下）（首款）
+	// 商品量
+	// @Column(columnDefinition = "int default 1")
+	private int pay_mode01;
+
+	// 线上付款 线下付款（1.线上，2.线下）（尾款）
+	// 商品量
+	// @Column(columnDefinition = "int default 1")
+	private int pay_mode02;
+
+	// 运送状态
+	// @Column(columnDefinition = "int default 0")
+	private int sc_status;
+
+	// 运费信息
+	private ezs_logistics ezs_logistics;
 
 	public String getGood_no() {
 		return good_no;
@@ -70,11 +95,11 @@ public class ezs_order_info implements Serializable {
 		this.good_no = good_no;
 	}
 
-	public Date getAddTime() {
+	public String getAddTime() {
 		return addTime;
 	}
 
-	public void setAddTime(Date addTime) {
+	public void setAddTime(String addTime) {
 		this.addTime = addTime;
 	}
 
@@ -206,11 +231,11 @@ public class ezs_order_info implements Serializable {
 		this.pact_status = pact_status;
 	}
 
-	public Date getFinishtime() {
+	public String getFinishtime() {
 		return finishtime;
 	}
 
-	public void setFinishtime(Date finishtime) {
+	public void setFinishtime(String finishtime) {
 		this.finishtime = finishtime;
 	}
 
@@ -222,6 +247,62 @@ public class ezs_order_info implements Serializable {
 		this.address_id = address_id;
 	}
 
+	public long getBuyerid() {
+		return buyerid;
+	}
+
+	public void setBuyerid(long buyerid) {
+		this.buyerid = buyerid;
+	}
+
+	public long getSellerid() {
+		return sellerid;
+	}
+
+	public void setSellerid(long sellerid) {
+		this.sellerid = sellerid;
+	}
+
+	public int getPay_mode() {
+		return pay_mode;
+	}
+
+	public void setPay_mode(int pay_mode) {
+		this.pay_mode = pay_mode;
+	}
+
+	public int getPay_mode01() {
+		return pay_mode01;
+	}
+
+	public void setPay_mode01(int pay_mode01) {
+		this.pay_mode01 = pay_mode01;
+	}
+
+	public int getPay_mode02() {
+		return pay_mode02;
+	}
+
+	public void setPay_mode02(int pay_mode02) {
+		this.pay_mode02 = pay_mode02;
+	}
+
+	public int getSc_status() {
+		return sc_status;
+	}
+
+	public void setSc_status(int sc_status) {
+		this.sc_status = sc_status;
+	}
+
+	public ezs_logistics getEzs_logistics() {
+		return ezs_logistics;
+	}
+
+	public void setEzs_logistics(ezs_logistics ezs_logistics) {
+		this.ezs_logistics = ezs_logistics;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_order_info [good_no=" + good_no + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
@@ -229,7 +310,10 @@ public class ezs_order_info implements Serializable {
 				+ addess + ", areaName=" + areaName + ", area_id=" + area_id + ", order_type=" + order_type
 				+ ", total_price=" + total_price + ", goods_amount=" + goods_amount + ", order_status=" + order_status
 				+ ", first_price=" + first_price + ", end_price=" + end_price + ", all_price=" + all_price
-				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id + "]";
+				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
+				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
+				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
+				+ ezs_logistics + "]";
 	}
 
 }

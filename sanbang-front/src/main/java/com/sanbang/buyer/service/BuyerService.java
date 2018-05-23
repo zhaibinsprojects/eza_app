@@ -54,4 +54,58 @@ public interface BuyerService {
 	
 	 
 	 
+	 /**
+	  * 合同查看
+	  * @param member
+	  * @param temid
+	  * @param pageno
+	  * @return
+	  */
+	 public Result  getContentList(String member,int temid,int pageno,HttpServletRequest request);
+	 
+	 /**
+	  * 关闭订单
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result   orderclose(HttpServletRequest request,String order_no);
+	 
+	 /**
+	  * 上传订单支付凭证
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result  orderpaysubmit(HttpServletRequest request,String order_no,String urlParam);
+	 
+	 
+	 /**
+	  * 发票信息查看
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public  Result getezs_invoice(HttpServletRequest request,String order_no);
+	 
+	 
+	 
+	 /**
+	  * 物流信息查看
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public  Result getezs_logistics(HttpServletRequest request,String order_no);
+	 
+	 
+	 /**
+	  * 判断是否可支付
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result payconfirm(HttpServletRequest request,String order_no);
+	 
+	 
 }

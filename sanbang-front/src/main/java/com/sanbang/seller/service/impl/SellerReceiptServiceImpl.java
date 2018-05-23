@@ -34,21 +34,22 @@ import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
+
 @Service
 public class SellerReceiptServiceImpl implements SellerReceiptService {
-	
-	//日志
+
+	// 日志
 	private static Logger log = Logger.getLogger(SellerReceiptServiceImpl.class.getName());
-	
+
 	@Autowired
 	ezs_billMapper billMapper;
-	
+
 	@Autowired
 	ezs_invoiceMapper invoiceMapper;
-	
+
 	@Autowired
 	ezs_payinfoMapper payinfoMapper;
-	
+
 	@Autowired
 	ezs_userMapper userMapper;
 	
@@ -57,26 +58,36 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	
 	@Override
 	public ezs_bill getBillInfoById(Long userId) {
-	
+
 		return billMapper.selectByPrimaryKey(userId);
 	}
 
 	@Override
 	public Map<String, Object> getInvoiceListById(Long userId, String currentPage) {
-		Map<String, Object> mmp = new HashMap<>();
-		//获取总页数
+		Result result=Result.failure();
+		Map<String, Object> mmp=new HashMap<>();
+		// 获取总页数
 		int totalCount = this.invoiceMapper.getInvoiceCountByUserId(userId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Page", page);
-			mmp.put("Obj", glist);
-		}else{
-			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-			mmp.put("Msg", "页码越界");
-			mmp.put("Page", page);
+		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+			int startPos = 0;
+			page.setStartPos(startPos);
+			if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+				List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
+				result.setErrorcode( DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Page", page);
+				mmp.put("Obj", glist);
+				result.setMsg("请求成功");
+				result.setObj(mmp);
+			} else {
+				result.setErrorcode(HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+				mmp.put("Msg", "页码越界");
+				mmp.put("Page", page);
+				result.setMsg("请求失败");
+				result.setObj(mmp);
+			}
+			return mmp;
 		}
 		return mmp;
 	}
@@ -88,7 +99,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	@Override
 	public ezs_user getUserInfoById(Long paymentUser_id) {
-		
+
 		return userMapper.selectByPrimaryKey(paymentUser_id);
 	}
 
@@ -98,15 +109,15 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 		log.info("条件查询合同**************************");
 		Map<String, Object> mmp = new HashMap<>();
 		List<ezs_invoice> list = new ArrayList<>();
-		//获取总页数
+		// 获取总页数
 		int totalCount = invoiceMapper.getInvoiceCountByUserId(userId);
-		
+
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
 		int startPos = 0;
 		page.setStartPos(startPos);
-		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)){
+		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+			if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)) {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				Date dt1;
 				Date dt2;
@@ -117,20 +128,20 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 						result.setMsg("日期格式错误");
 					}
-					list = invoiceMapper.selectInvoiceByDate(dt1, dt2,userId,page);
+					list = invoiceMapper.selectInvoiceByDate(dt1, dt2, userId, page);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Page", page);
 				mmp.put("Obj", list);
-			}else{
-				ezs_invoice invoice = 	invoiceMapper.selectInvoiceByOrderNo(orderno);
+			} else {
+				ezs_invoice invoice = invoiceMapper.selectInvoiceByOrderNo(orderno);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Page", page);
 				mmp.put("Obj", invoice);
 			}
-		}else{
+		} else {
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
 			mmp.put("Msg", "页码越界");
 			mmp.put("Page", page);
@@ -149,4 +160,15 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 		
 		return accessoryMapper.selectByPrimaryKey(receipt_id);
 	}
+
+
+	@Override
+	public ezs_invoice getInvoiceInfoById(String orderno) {
+		return invoiceMapper.selectInvoiceByOrderNo(orderno);
+	}
+	
+	public int insertInvoice(ezs_invoice invoice){
+		return invoiceMapper.insert(invoice);
+	}
+	
 }

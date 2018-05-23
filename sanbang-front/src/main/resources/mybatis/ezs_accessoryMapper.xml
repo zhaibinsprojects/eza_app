@@ -127,6 +127,7 @@
       </if>
     </trim>
   </insert>
+  
   <update id="updateByPrimaryKeySelective" parameterType="ezs_accessory" >
     update ezs_accessory
     <set >
@@ -169,6 +170,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
   <update id="updateByPrimaryKey" parameterType="ezs_accessory" >
     update ezs_accessory
     set addTime = #{addTime,jdbcType=TIMESTAMP},

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .classpath		#仓库中所有名为.classpath的文件都屏蔽
 .gitignore		#仓库中所有名为.gitignore的文件都屏蔽
 target/			#屏蔽target目录
@@ -17,3 +18,34 @@ target/			#屏蔽target目录
 >>>>>>> 07caeb8666e0cd897aec216928d19bae7b618868
 >>>>>>> refs/remotes/origin/master
 /.settings/
+=======
+# IntelliJ IDEA Project files
+.idea
+*.iml
+*.ipr
+*.iws
+out
+
+# Eclipse Project files
+.classpath
+.project
+.settings/
+
+# Build files
+target/
+
+bin/
+gen/
+local.properties
+
+.DS_Store
+Thumbs.db
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
+
+>>>>>>> 1d4e001eb6dfb48a55a6718a2b4269e9d8e6581e

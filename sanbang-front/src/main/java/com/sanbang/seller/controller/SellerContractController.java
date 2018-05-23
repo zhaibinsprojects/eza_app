@@ -96,6 +96,7 @@ public class SellerContractController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryContractByIdOrDate")
 	@ResponseBody
 	public Object queryContractByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response, String currentPage){

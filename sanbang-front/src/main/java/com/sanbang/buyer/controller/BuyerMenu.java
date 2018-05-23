@@ -27,6 +27,8 @@ public class BuyerMenu {
 
 	@Autowired
 	private BuyerService buyerService;
+	
+	
 
 
 	/**
@@ -95,6 +97,7 @@ public class BuyerMenu {
 			pageNow = 1;
 		}
 		PagerOrder pager = new PagerOrder();
+		pager.setUserid(upi.getId());
 		pager.setOrder_status(order_status);
 		pager.setOrder_type(order_type);
 		pager.setPageNow(pageNow);
@@ -140,6 +143,66 @@ public class BuyerMenu {
 		return result;
 	}
 
+	
+	
+	/**
+	 * 关闭订单
+	 *  private String msg;
+                    取消原因
+       private String name;
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderclose")
+	@ResponseBody
+	public Result orderclose(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+
+		result= buyerService.orderclose(request,order_no);
+		return result;
+	}
+
+	
+	
+	/**
+	 * 支付之前确认是否为待支付状态
+	 * 
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderconfirmBefore")
+	@ResponseBody
+	public Result orderconfirmBefore(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		result = buyerService.payconfirm(request,order_no);
+		return result;
+	}
+	
+	
 	/**
 	 * 支付确认
 	 * 
@@ -167,6 +230,35 @@ public class BuyerMenu {
 		result.setObj(map);
 		return result;
 	}
+	
+	
+	/**
+	 * 上传支付凭证
+	 * //PAYIMG
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderpaysubmit")
+	@ResponseBody
+	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			@RequestParam(name = "urlparam", defaultValue = "-1") String urlParam,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		result = buyerService.orderpaysubmit(request, order_no, urlParam);
+		return result;
+	}
+	
 	
 	
 	/**
@@ -203,6 +295,77 @@ public class BuyerMenu {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		result = buyerService.seller_order_signature(order_no, request, response);
+		return result;
+	}
+	
+	
+	/**
+	 * 获取合同列表
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getContentList")
+	@ResponseBody
+	public Result getContentList(@RequestParam(name = "pageno", defaultValue = "1") int pageno,
+			HttpServletRequest request, HttpServletResponse response) {
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		try {
+			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 5, pageno, request);
+		} catch (Exception e) {
+			result.setMsg("未获取到数据");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 发票信息
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getezs_invoice")
+	public Result getezs_invoice(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result=buyerService.getezs_invoice(request, order_no);
+		return result;
+	}
+	
+	
+	
+	/**
+	 * 物流信息查看
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getezs_logistics")
+	public Result getezs_logistics(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result=buyerService.getezs_logistics(request, order_no);
 		return result;
 	}
 }

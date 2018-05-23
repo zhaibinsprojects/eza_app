@@ -173,11 +173,7 @@ public class UserProController {
 	public Result sendFtCode(@RequestParam(value="mobile",required=false) String mobile, HttpServletRequest request) throws Exception {
 		Result result=Result.failure();
 		
-		//检查手机号
-		/*result=userProService.checkUserName(mobile);
-		if(!result.getSuccess()){
-			return result;
-		}*/
+	
 		//发送忘记密码验证码
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  

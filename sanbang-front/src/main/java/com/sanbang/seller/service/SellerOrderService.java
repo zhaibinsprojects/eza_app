@@ -6,7 +6,6 @@ import java.util.Map;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
-import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.vo.PagerOrder;
 
 public interface SellerOrderService {
@@ -17,5 +16,6 @@ public interface SellerOrderService {
 
 	List<ezs_order_info> getOrderListByValue(PagerOrder pager);
 
+	ezs_invoice queryInvoiceByNo(String orderNo);
 }
 

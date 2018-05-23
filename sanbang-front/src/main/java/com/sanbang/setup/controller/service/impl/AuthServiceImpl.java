@@ -122,16 +122,19 @@ public class  AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(unifyCode)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入社会信用代码");
+			return result;
 		}
 
 		if (Tools.isEmpty(capitalPrice)) {
@@ -142,12 +145,15 @@ public class  AuthServiceImpl implements AuthService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效注册资本金额");
+				return result;
 			}
+			return result;
 		}
 		if (Tools.isEmpty(persion)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入法人");
+			return result;
 		}
 			
 			return result;

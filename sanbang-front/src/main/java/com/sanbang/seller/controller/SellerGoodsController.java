@@ -50,18 +50,15 @@ public class SellerGoodsController {
 		List<ezs_goods> list = new ArrayList<>();
 		Map<String, Object> map = null;
 
-//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-//		if(upi==null){
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//			result.setMsg("用户未登录");
-//			return result;
-//		}
-//		Long useId = upi.getId();
-		
-		
-		ezs_user upi= new ezs_user();
-		upi.setId((long) 22);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
 		Long useId = upi.getId();
+		
+
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
@@ -97,9 +94,8 @@ public class SellerGoodsController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		ezs_goods goods = new ezs_goods();
 		
-		goods = sellerGoodsService.queryGoodsInfoById(id);
+		ezs_goods goods = sellerGoodsService.queryGoodsInfoById(id);
 		
 		
 		
@@ -127,12 +123,15 @@ public class SellerGoodsController {
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
+//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+//		if(upi==null){
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//			result.setMsg("请重新登陆！");
+//			return result;
+//		}
+		ezs_user upi = new ezs_user();
+		upi.setId((long) 22);
+		
 		try {
 			result = sellerGoodsService.addGoodsInfo(result, upi, request,response);
 		} catch (Exception e) {
@@ -188,19 +187,27 @@ public class SellerGoodsController {
 		
 		return result;
 	}
-	
+	/**
+	 * 提交审核
+	 * @param goodsId
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/submitGoodsForAudit")
 	@ResponseBody
 	public Object submitGoodsForAudit(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
+//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+//		if(upi==null){
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//			result.setMsg("请重新登陆！");
+//			return result;
+//		}
 		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	
-		return fileUploadService;
+		
+		
+		return result;
 	}
 }

@@ -214,6 +214,36 @@
    		<include refid="Base_Column_List" /> 
    		from ezs_invoice where order_no = #{orderno}
    </select>
+   <!-- 根据订单编号查询合同详细信息 -->
+   <select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
+   		select 
+   		<include refid="Base_Column_List" /> 
+   		from ezs_invoice where order_no = #{orderno}
+   </select>
+   <!-- 查询票据信息包含图 -->
+   <resultMap id="invoiceMsgResultMap" type="com.sanbang.vo.InvoiceInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
+    <result column="express_no" property="express_no" jdbcType="VARCHAR" />
+    <result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
+    <result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
+    <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+	<result column="pname" property="pname" jdbcType="VARCHAR"/>
+	<result column="pext" property="pext"  jdbcType="VARCHAR"/>
+  </resultMap>
+   <select id="selectInvoiceByUser" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long">
+   	select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
+   	where e.user_id = #{ userId } and e.deleteStatus = '0' ORDER BY e.addtime desc
+   </select>
+   <select id="selectByPrimaryKeyTwo" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long" >
+    select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
+   	where e.id = #{ id } and e.deleteStatus = '0' ORDER BY e.addtime desc
+  </select>
  	<!-- 根据uesrId查询invoice数量 -->
  	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
  		select count(*) from ezs_invoice where user_id = #{userId}
