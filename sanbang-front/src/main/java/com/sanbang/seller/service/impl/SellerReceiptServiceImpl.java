@@ -145,12 +145,5 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	public int insertInvoice(ezs_invoice invoice){
 		return invoiceMapper.insert(invoice);
 	}
-
-	@Override
-	public Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
-			HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }

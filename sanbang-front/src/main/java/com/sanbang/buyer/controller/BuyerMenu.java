@@ -147,7 +147,9 @@ public class BuyerMenu {
 	
 	/**
 	 * 关闭订单
-	 * 
+	 *  private String msg;
+                    取消原因
+       private String name;
 	 * @param order_no
 	 * @param request
 	 * @return
@@ -168,11 +170,37 @@ public class BuyerMenu {
 			return result;
 		}
 
-		Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
-		result.setObj(map);
+		result= buyerService.orderclose(request,order_no);
 		return result;
 	}
 
+	
+	
+	/**
+	 * 支付之前确认是否为待支付状态
+	 * 
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderconfirmBefore")
+	@ResponseBody
+	public Result orderconfirmBefore(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		result = buyerService.payconfirm(request,order_no);
+		return result;
+	}
 	
 	
 	/**
@@ -303,4 +331,41 @@ public class BuyerMenu {
 		return result;
 	}
 	
+	/**
+	 * 发票信息
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getezs_invoice")
+	public Result getezs_invoice(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result=buyerService.getezs_invoice(request, order_no);
+		return result;
+	}
+	
+	
+	
+	/**
+	 * 物流信息查看
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getezs_logistics")
+	public Result getezs_logistics(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result=buyerService.getezs_logistics(request, order_no);
+		return result;
+	}
 }

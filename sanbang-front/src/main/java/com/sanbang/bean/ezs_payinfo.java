@@ -9,21 +9,21 @@ public class ezs_payinfo {
     private Date addTime;
 
     private Boolean deleteStatus;
-
+ // 订单编号
     private String order_no;
-
+ // 1.采购单，2.订单
     private Integer order_type;
 
     private Integer pay_mode;
-
+ // 流水号
     private String pay_no;
-
+ // 金额
     private BigDecimal price;
 
     private Long bill_id;
-
+ // 支付人
     private Long paymentUser_id;
-
+ // 收款人
     private Long receUser_id;
 
     public Long getId() {

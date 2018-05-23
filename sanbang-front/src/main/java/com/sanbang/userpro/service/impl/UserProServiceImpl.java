@@ -550,14 +550,6 @@ public class UserProServiceImpl implements UserProService{
 				return result;
 		 }else{
 			 
-			 int istrue=ezs_userMapper.checkMobile(phone);
-			 if(istrue==0){
-				 result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
-					result.setSuccess(false);
-					result.setMsg("未找到该手机号码客户");
-					return result;
-			 }
-			 
 			 //先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimesstr);
 			 RedisResult<Integer> rrtin=(RedisResult<Integer>) RedisUtils.get(phone+mobilerecodestr+"times",Integer.class);
