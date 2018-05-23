@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ReturnOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ReturnOrder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="guanliremark" property="guanliremark" jdbcType="VARCHAR" />
+    <result column="guanliwuliumoeny" property="guanliwuliumoeny" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="DECIMAL" />
+    <result column="prodectname" property="prodectname" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="returnAddress" property="returnAddress" jdbcType="VARCHAR" />
+    <result column="returnReason" property="returnReason" jdbcType="VARCHAR" />
+    <result column="returnType" property="returnType" jdbcType="INTEGER" />
+    <result column="set_return_no" property="set_return_no" jdbcType="VARCHAR" />
+    <result column="state1" property="state1" jdbcType="VARCHAR" />
+    <result column="state2" property="state2" jdbcType="VARCHAR" />
+    <result column="tmoney" property="tmoney" jdbcType="DECIMAL" />
+    <result column="tnum" property="tnum" jdbcType="DECIMAL" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="updatetime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="upoper" property="upoper" jdbcType="BIGINT" />
+    <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
+    <result column="orderForm_id" property="orderForm_id" jdbcType="BIGINT" />
+    <result column="finshtime" property="finshtime" jdbcType="VARCHAR" />
+    <result column="order_status_store" property="order_status_store" jdbcType="INTEGER" />
+    <result column="returnTotal" property="returnTotal" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="upoper_id" property="upoper_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, guanliremark, guanliwuliumoeny, num, prodectname, remark, 
+    returnAddress, returnReason, returnType, set_return_no, state1, state2, tmoney, tnum, 
+    type, updatetime, upoper, logistics_id, orderForm_id, finshtime, order_status_store, 
+    returnTotal, status, upoper_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_set_return_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_set_return_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ReturnOrder" >
+    insert into ezs_set_return_order (id, addTime, deleteStatus, 
+      guanliremark, guanliwuliumoeny, num, 
+      prodectname, remark, returnAddress, 
+      returnReason, returnType, set_return_no, 
+      state1, state2, tmoney, 
+      tnum, type, updatetime, 
+      upoper, logistics_id, orderForm_id, 
+      finshtime, order_status_store, returnTotal, 
+      status, upoper_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{guanliremark,jdbcType=VARCHAR}, #{guanliwuliumoeny,jdbcType=VARCHAR}, #{num,jdbcType=DECIMAL}, 
+      #{prodectname,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{returnAddress,jdbcType=VARCHAR}, 
+      #{returnReason,jdbcType=VARCHAR}, #{returnType,jdbcType=INTEGER}, #{set_return_no,jdbcType=VARCHAR}, 
+      #{state1,jdbcType=VARCHAR}, #{state2,jdbcType=VARCHAR}, #{tmoney,jdbcType=DECIMAL}, 
+      #{tnum,jdbcType=DECIMAL}, #{type,jdbcType=INTEGER}, #{updatetime,jdbcType=VARCHAR}, 
+      #{upoper,jdbcType=BIGINT}, #{logistics_id,jdbcType=BIGINT}, #{orderForm_id,jdbcType=BIGINT}, 
+      #{finshtime,jdbcType=VARCHAR}, #{order_status_store,jdbcType=INTEGER}, #{returnTotal,jdbcType=DECIMAL}, 
+      #{status,jdbcType=INTEGER}, #{upoper_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ReturnOrder" >
+    insert into ezs_set_return_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="guanliremark != null" >
+        guanliremark,
+      </if>
+      <if test="guanliwuliumoeny != null" >
+        guanliwuliumoeny,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="prodectname != null" >
+        prodectname,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="returnAddress != null" >
+        returnAddress,
+      </if>
+      <if test="returnReason != null" >
+        returnReason,
+      </if>
+      <if test="returnType != null" >
+        returnType,
+      </if>
+      <if test="set_return_no != null" >
+        set_return_no,
+      </if>
+      <if test="state1 != null" >
+        state1,
+      </if>
+      <if test="state2 != null" >
+        state2,
+      </if>
+      <if test="tmoney != null" >
+        tmoney,
+      </if>
+      <if test="tnum != null" >
+        tnum,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="upoper != null" >
+        upoper,
+      </if>
+      <if test="logistics_id != null" >
+        logistics_id,
+      </if>
+      <if test="orderForm_id != null" >
+        orderForm_id,
+      </if>
+      <if test="finshtime != null" >
+        finshtime,
+      </if>
+      <if test="order_status_store != null" >
+        order_status_store,
+      </if>
+      <if test="returnTotal != null" >
+        returnTotal,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="upoper_id != null" >
+        upoper_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="guanliremark != null" >
+        #{guanliremark,jdbcType=VARCHAR},
+      </if>
+      <if test="guanliwuliumoeny != null" >
+        #{guanliwuliumoeny,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="prodectname != null" >
+        #{prodectname,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="returnAddress != null" >
+        #{returnAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="returnReason != null" >
+        #{returnReason,jdbcType=VARCHAR},
+      </if>
+      <if test="returnType != null" >
+        #{returnType,jdbcType=INTEGER},
+      </if>
+      <if test="set_return_no != null" >
+        #{set_return_no,jdbcType=VARCHAR},
+      </if>
+      <if test="state1 != null" >
+        #{state1,jdbcType=VARCHAR},
+      </if>
+      <if test="state2 != null" >
+        #{state2,jdbcType=VARCHAR},
+      </if>
+      <if test="tmoney != null" >
+        #{tmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="tnum != null" >
+        #{tnum,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="upoper != null" >
+        #{upoper,jdbcType=BIGINT},
+      </if>
+      <if test="logistics_id != null" >
+        #{logistics_id,jdbcType=BIGINT},
+      </if>
+      <if test="orderForm_id != null" >
+        #{orderForm_id,jdbcType=BIGINT},
+      </if>
+      <if test="finshtime != null" >
+        #{finshtime,jdbcType=VARCHAR},
+      </if>
+      <if test="order_status_store != null" >
+        #{order_status_store,jdbcType=INTEGER},
+      </if>
+      <if test="returnTotal != null" >
+        #{returnTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="upoper_id != null" >
+        #{upoper_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ReturnOrder" >
+    update ezs_set_return_order
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="guanliremark != null" >
+        guanliremark = #{guanliremark,jdbcType=VARCHAR},
+      </if>
+      <if test="guanliwuliumoeny != null" >
+        guanliwuliumoeny = #{guanliwuliumoeny,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="prodectname != null" >
+        prodectname = #{prodectname,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="returnAddress != null" >
+        returnAddress = #{returnAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="returnReason != null" >
+        returnReason = #{returnReason,jdbcType=VARCHAR},
+      </if>
+      <if test="returnType != null" >
+        returnType = #{returnType,jdbcType=INTEGER},
+      </if>
+      <if test="set_return_no != null" >
+        set_return_no = #{set_return_no,jdbcType=VARCHAR},
+      </if>
+      <if test="state1 != null" >
+        state1 = #{state1,jdbcType=VARCHAR},
+      </if>
+      <if test="state2 != null" >
+        state2 = #{state2,jdbcType=VARCHAR},
+      </if>
+      <if test="tmoney != null" >
+        tmoney = #{tmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="tnum != null" >
+        tnum = #{tnum,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="upoper != null" >
+        upoper = #{upoper,jdbcType=BIGINT},
+      </if>
+      <if test="logistics_id != null" >
+        logistics_id = #{logistics_id,jdbcType=BIGINT},
+      </if>
+      <if test="orderForm_id != null" >
+        orderForm_id = #{orderForm_id,jdbcType=BIGINT},
+      </if>
+      <if test="finshtime != null" >
+        finshtime = #{finshtime,jdbcType=VARCHAR},
+      </if>
+      <if test="order_status_store != null" >
+        order_status_store = #{order_status_store,jdbcType=INTEGER},
+      </if>
+      <if test="returnTotal != null" >
+        returnTotal = #{returnTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="upoper_id != null" >
+        upoper_id = #{upoper_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ReturnOrder" >
+    update ezs_set_return_order
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      guanliremark = #{guanliremark,jdbcType=VARCHAR},
+      guanliwuliumoeny = #{guanliwuliumoeny,jdbcType=VARCHAR},
+      num = #{num,jdbcType=DECIMAL},
+      prodectname = #{prodectname,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      returnAddress = #{returnAddress,jdbcType=VARCHAR},
+      returnReason = #{returnReason,jdbcType=VARCHAR},
+      returnType = #{returnType,jdbcType=INTEGER},
+      set_return_no = #{set_return_no,jdbcType=VARCHAR},
+      state1 = #{state1,jdbcType=VARCHAR},
+      state2 = #{state2,jdbcType=VARCHAR},
+      tmoney = #{tmoney,jdbcType=DECIMAL},
+      tnum = #{tnum,jdbcType=DECIMAL},
+      type = #{type,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=VARCHAR},
+      upoper = #{upoper,jdbcType=BIGINT},
+      logistics_id = #{logistics_id,jdbcType=BIGINT},
+      orderForm_id = #{orderForm_id,jdbcType=BIGINT},
+      finshtime = #{finshtime,jdbcType=VARCHAR},
+      order_status_store = #{order_status_store,jdbcType=INTEGER},
+      returnTotal = #{returnTotal,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      upoper_id = #{upoper_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 新增 -->
+  <select id="selectListByState" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_set_return_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  
+</mapper>
