@@ -30,7 +30,7 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Service("sellerReceiptService")
-public abstract class SellerReceiptServiceImpl implements SellerReceiptService {
+public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	// 日志
 	private static Logger log = Logger.getLogger(SellerReceiptServiceImpl.class.getName());
