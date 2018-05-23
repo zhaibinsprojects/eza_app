@@ -356,7 +356,6 @@
 				<artifactId>json-simple</artifactId>
 				<version>1.1</version>
 			</dependency>
-<<<<<<< HEAD
 			
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -440,8 +439,6 @@
     		<artifactId>itext-asian</artifactId>
     		<version>5.2.0</version>
 		</dependency> -->
-=======
->>>>>>> 3de86984bdb066d87589f23bfafc8f11aa16548a
 
 			<dependency>
 				<groupId>org.xhtmlrenderer</groupId>
