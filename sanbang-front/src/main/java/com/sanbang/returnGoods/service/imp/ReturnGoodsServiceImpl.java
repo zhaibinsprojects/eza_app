@@ -17,7 +17,7 @@ import com.sanbang.returnGoods.service.ReturnGoodsService;
  */
 @Service("returnGoodsService")
 public class ReturnGoodsServiceImpl implements ReturnGoodsService{
-	@Resource(name="ReturnOrderMapper")
+	@Resource(name="returnOrderMapper")
 	private com.sanbang.dao.ReturnOrderMapper returnOrderMapper;
 	/**
 	 * 查询所有退货订单
