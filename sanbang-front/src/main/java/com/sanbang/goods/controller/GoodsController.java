@@ -281,11 +281,11 @@ public class GoodsController {
 		
 	}
 	
-	public static void main(String[] args) {
-		GoodsController  aa=new GoodsController();
-		Map<String, Object> map=new HashMap<>();
-		map.put("orderAmount", "aaa");
-		map.put("AcapAmount", "bb");
-		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
-	}
+//	public static void main(String[] args) {
+//		GoodsController  aa=new GoodsController();
+//		Map<String, Object> map=new HashMap<>();
+//		map.put("orderAmount", "aaa");
+//		map.put("AcapAmount", "bb");
+//		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
+//	}
 }

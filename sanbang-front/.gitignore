@@ -1,8 +1,29 @@
-#仓库中所有名为.classpath的文件都屏蔽
+# IntelliJ IDEA Project files
+.idea
+*.iml
+*.ipr
+*.iws
+out
+
+# Eclipse Project files
 .classpath
-#屏蔽target目录
-/target
-#屏蔽.settings目录
-/.settings
-/bin
-/target
+.project
+.settings/
+
+# Build files
+target/
+
+bin/
+gen/
+local.properties
+
+.DS_Store
+Thumbs.db
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
+

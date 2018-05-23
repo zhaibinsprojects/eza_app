@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_invoice;
+import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_payinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_billMapper;
@@ -27,9 +30,10 @@ import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
-@Service("sellerReceiptService")
+@Service
 public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	// 日志
@@ -141,6 +145,5 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	public int insertInvoice(ezs_invoice invoice){
 		return invoiceMapper.insert(invoice);
 	}
-
 	
 }
