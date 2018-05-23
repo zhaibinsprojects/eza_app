@@ -330,7 +330,6 @@
 				<artifactId>json-simple</artifactId>
 				<version>1.1</version>
 			</dependency>
-<<<<<<< HEAD
 			
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -389,32 +388,17 @@
 		    <artifactId>itext</artifactId>
 		    <version>2.0.8</version>
 		</dependency>
-		<!-- <dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>itext-xtra</artifactId>
-		    <version>5.4.5</version>
-		</dependency> -->
 		<dependency>
 		    <groupId>com.itextpdf</groupId>
 		    <artifactId>itext-asian</artifactId>
 		    <version>5.2.0</version>
 		</dependency>
 		 
-		 
-		 
-		 
 		<dependency>
     		<groupId>com.itextpdf</groupId>
     		<artifactId>itextpdf</artifactId>
     		<version>5.5.11</version>
 		</dependency>
-		<!-- pdf导出中文需要用到 -->
-		<!-- <dependency>
-    		<groupId>com.itextpdf</groupId>
-    		<artifactId>itext-asian</artifactId>
-    		<version>5.2.0</version>
-		</dependency> -->
-
 
 			<dependency>
 				<groupId>org.apache.xmlbeans</groupId>

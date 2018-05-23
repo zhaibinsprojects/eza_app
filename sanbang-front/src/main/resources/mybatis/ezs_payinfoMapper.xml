@@ -28,7 +28,7 @@
     delete from ezs_payinfo
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_payinfo" >
+  <insert id="insert" parameterType="ezs_payinfo" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_payinfo (id, addTime, deleteStatus, 
       order_no, order_type, pay_mode, 
       pay_no, price, bill_id, 

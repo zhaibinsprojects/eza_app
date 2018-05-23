@@ -2,16 +2,17 @@ package com.sanbang.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 订单列表
  * 
- * @author LENOVO
- *
+ * @author LENOVO 全款： 应付金额=实际付款金额 all_price ; 非全款 应付金额=first_price+end_price
+ *         实际付款金额=first_price+end_price-adjust_price ; 订单总金额 =total_price
  */
 public class ezs_order_info implements Serializable {
-	private static final long serialVersionUID = 800230349418654360L;
+
+
+	private static final long serialVersionUID = 5024357524788189125L;
 
 	private String good_no;// 商品编号
 
@@ -33,7 +34,7 @@ public class ezs_order_info implements Serializable {
 	private String areaName;
 
 	private Long area_id;// 库存所地区
-	// 订单类型 10.自营商品订单
+	// 订单类型 ORDER_SELF_GOOD.自营商品订单 2=ORDER_MATCH_GOOD.撮合商品订单
 	private String order_type;
 	// 总价
 	private BigDecimal total_price;
@@ -64,6 +65,27 @@ public class ezs_order_info implements Serializable {
 	private long buyerid;
 
 	private long sellerid;
+
+	// 支付方式（0.全款，1：首款+尾款 ）
+	// @Column(columnDefinition = "int default 0")
+	private int pay_mode;
+
+	// 线上付款 线下付款（1.线上，2.线下）（首款）
+	// 商品量
+	// @Column(columnDefinition = "int default 1")
+	private int pay_mode01;
+
+	// 线上付款 线下付款（1.线上，2.线下）（尾款）
+	// 商品量
+	// @Column(columnDefinition = "int default 1")
+	private int pay_mode02;
+
+	// 运送状态
+	// @Column(columnDefinition = "int default 0")
+	private int sc_status;
+
+	// 运费信息
+	private ezs_logistics ezs_logistics;
 
 	public String getGood_no() {
 		return good_no;
@@ -241,6 +263,46 @@ public class ezs_order_info implements Serializable {
 		this.sellerid = sellerid;
 	}
 
+	public int getPay_mode() {
+		return pay_mode;
+	}
+
+	public void setPay_mode(int pay_mode) {
+		this.pay_mode = pay_mode;
+	}
+
+	public int getPay_mode01() {
+		return pay_mode01;
+	}
+
+	public void setPay_mode01(int pay_mode01) {
+		this.pay_mode01 = pay_mode01;
+	}
+
+	public int getPay_mode02() {
+		return pay_mode02;
+	}
+
+	public void setPay_mode02(int pay_mode02) {
+		this.pay_mode02 = pay_mode02;
+	}
+
+	public int getSc_status() {
+		return sc_status;
+	}
+
+	public void setSc_status(int sc_status) {
+		this.sc_status = sc_status;
+	}
+
+	public ezs_logistics getEzs_logistics() {
+		return ezs_logistics;
+	}
+
+	public void setEzs_logistics(ezs_logistics ezs_logistics) {
+		this.ezs_logistics = ezs_logistics;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_order_info [good_no=" + good_no + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
@@ -249,7 +311,9 @@ public class ezs_order_info implements Serializable {
 				+ ", total_price=" + total_price + ", goods_amount=" + goods_amount + ", order_status=" + order_status
 				+ ", first_price=" + first_price + ", end_price=" + end_price + ", all_price=" + all_price
 				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
-				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + "]";
+				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
+				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
+				+ ezs_logistics + "]";
 	}
 
 }

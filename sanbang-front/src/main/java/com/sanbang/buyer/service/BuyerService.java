@@ -80,4 +80,32 @@ public interface BuyerService {
 	 public Result  orderpaysubmit(HttpServletRequest request,String order_no,String urlParam);
 	 
 	 
+	 /**
+	  * 发票信息查看
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public  Result getezs_invoice(HttpServletRequest request,String order_no);
+	 
+	 
+	 
+	 /**
+	  * 物流信息查看
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public  Result getezs_logistics(HttpServletRequest request,String order_no);
+	 
+	 
+	 /**
+	  * 判断是否可支付
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result payconfirm(HttpServletRequest request,String order_no);
+	 
+	 
 }
