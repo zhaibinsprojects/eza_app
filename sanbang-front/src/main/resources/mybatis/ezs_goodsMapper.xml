@@ -72,7 +72,7 @@
     delete from ezs_goods
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_goods">
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_goods"  useGeneratedKeys="true" keyProperty="id">
     insert into ezs_goods (id, addTime, deleteStatus, 
       addess, ash, bending, 
       burning, cantilever, click, 
@@ -621,33 +621,25 @@
       addess2 = #{addess2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-<<<<<<< HEAD
-
-
-=======
-<<<<<<< HEAD
-  
-=======
->>>>>>> refs/remotes/origin/master
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
     select count(*) from ezs_goods where recommend = '1'
   </select>
   <!-- 根据供应商id查询商品列表-->
-  <select id="selectGoodsListBySellerId" resultMap="BaseResultMap">
+  <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap">
   	select 
     <include refid="Base_Column_List" />
-    from ezs_goods a
+    from ezs_goods 
     where status=#{status} and user_id=#{sellerId} 
     order by
     lastModifyDate  desc
-    LIMIT #{startPos},#{pageSize}
+    LIMIT #{page.startPos},#{page.pageSize}
   </select>
   <!-- 供应商下架货品 -->
   <update id="pullOffShelves" >
   	update ezs_goods set status = 1 where id =#{goodsId}
   </update>
-  <!-- 商品查询带图 -->
+   <!-- 商品查询带图 -->
   <resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
@@ -736,7 +728,7 @@
   </select>
   
   <!-- 查询同类货品 -->
-  <select id="listForGoods" resultMap="BaseResultMap">
+  <select id="listForGoods" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
     <include refid="Base_Column_List" />
     from ezs_goods goods left join ezs_goods_class gc on goods.goodClass_id = gc.level 
@@ -752,25 +744,19 @@
   <!-- 关联表：ezs_area，area_id:商品库存区县 -->
   <!-- 关联表：ezs_goods_class，goodClass_id:商品分类 -->
   <!-- mybatis会自动封装到实体类中，忽略联合查询的多余字段 -->
-  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.lang.String" >
-    select * from ezs_goods g left join ezs_area a on g.area_id = a.id 
-    left join ezs_goods_class gc on g.goodClass_id = gc.id 
-    where 
+  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.util.Map" >
+  
+    select * from ezs_goods g where 1 = 1
     <if test="areaName !=null and areaName != '' ">
-        a.areaName = #{areaName, jdbcType=VARCHAR}
+        and g.area_id = #{area_id, jdbcType=BIGINT}
     </if>
     <if test="name !=null and name != '' ">
-        gc.name = #{name, jdbcType=VARCHAR}
+        and g.goodClass_id = #{goodClass_id, jdbcType=BIGINT}
     </if> 
   </select>
-  
 
   
-  
 
-  
-  
-  
   <!-- 其他筛选 -->
   <!-- 
   	left join ezs_dict dict1 on goods.color_id = dict1.id 
@@ -807,8 +793,8 @@
         and goods.ash &gt;= #{ash1, jdbcType=BIGINT} and goods.ash &lt;= #{ash2, jdbcType=BIGINT} 
     </if>
     order by lastModifyDate desc
+
   </select>
-<<<<<<< HEAD
   <!-- 根据id查询订单总数 -->
 	<select id="selectCount" resultType="java.lang.Integer">
 		select count(*) from 	
@@ -817,77 +803,12 @@
 	</select>
 
 
-  <!-- 商品查询带图 -->
-  <resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="addess" property="addess" jdbcType="VARCHAR" />
-    <result column="ash" property="ash" jdbcType="VARCHAR" />
-    <result column="bending" property="bending" jdbcType="VARCHAR" />
-    <result column="burning" property="burning" jdbcType="VARCHAR" />
-    <result column="cantilever" property="cantilever" jdbcType="VARCHAR" />
-    <result column="click" property="click" jdbcType="INTEGER" />
-    <result column="cncl_num" property="cncl_num" jdbcType="BIT" />
-    <result column="collect" property="collect" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="crack" property="crack" jdbcType="VARCHAR" />
-    <result column="density" property="density" jdbcType="VARCHAR" />
-    <result column="flexural" property="flexural" jdbcType="VARCHAR" />
-    <result column="freely" property="freely" jdbcType="VARCHAR" />
-    <result column="good_no" property="good_no" jdbcType="VARCHAR" />
-    <result column="good_self" property="good_self" jdbcType="BIT" />
-    <result column="goods_salenum" property="goods_salenum" jdbcType="INTEGER" />
-    <result column="inventory" property="inventory" jdbcType="DOUBLE" />
-    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
-    <result column="lipolysis" property="lipolysis" jdbcType="VARCHAR" />
-    <result column="memberLook" property="memberLook" jdbcType="BIT" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="protection" property="protection" jdbcType="BIT" />
-    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
-    <result column="recommend" property="recommend" jdbcType="BIT" />
-    <result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
-    <result column="seo_description" property="seo_description" jdbcType="VARCHAR" />
-    <result column="source" property="source" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="tensile" property="tensile" jdbcType="VARCHAR" />
-    <result column="validity" property="validity" jdbcType="INTEGER" />
-    <result column="water" property="water" jdbcType="VARCHAR" />
-    <result column="area_id" property="area_id" jdbcType="BIGINT" />
-    <result column="color_id" property="color_id" jdbcType="BIGINT" />
-    <result column="form_id" property="form_id" jdbcType="BIGINT" />
-    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
-    <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
-    <result column="quality_id" property="quality_id" jdbcType="BIGINT" />
-    <result column="region_id" property="region_id" jdbcType="BIGINT" />
-    <result column="supply_id" property="supply_id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
-    <result column="util_id" property="util_id" jdbcType="BIGINT" />
-    <result column="classOfFinish_id" property="classOfFinish_id" jdbcType="BIGINT" />
-    <result column="lockStatus" property="lockStatus" jdbcType="INTEGER" />
-    <association property="goods_main_photo_id" javaType="com.sanbang.bean.ezs_accessory">
-	    <id column="goods_main_photo_id" property="goods_main_photo_id" jdbcType="BIGINT" />
-	    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-	    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-	    <result column="ext" property="ext" jdbcType="VARCHAR" />
-	    <result column="height" property="height" jdbcType="INTEGER" />
-	    <result column="info" property="info" jdbcType="VARCHAR" />
-	    <result column="name" property="name" jdbcType="VARCHAR" />
-	    <result column="path" property="path" jdbcType="VARCHAR" />
-	    <result column="size" property="size" jdbcType="REAL" />
-	    <result column="width" property="width" jdbcType="INTEGER" />
-	    <result column="album_id" property="album_id" jdbcType="BIGINT" />
-	    <result column="config_id" property="config_id" jdbcType="BIGINT" />
-	    <result column="user_id" property="user_id" jdbcType="BIGINT" />
-    </association>
-  </resultMap>
    <select id="selectByGoodsName" resultMap="GoodsResultMap" parameterType="string" >
     select 
     <include refid="Base_Column_List" />
     select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
     g.name like '%${_parameter}%'
+
   </select>
-=======
->>>>>>> refs/remotes/origin/master
+
 </mapper>
