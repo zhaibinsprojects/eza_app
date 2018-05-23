@@ -15,7 +15,7 @@ import com.sanbang.returnGoods.service.ReturnGoodsService;
  * @author hanlongfei
  * 2018年05月23日
  */
-@Service("cataService")
+@Service("returnGoodsService")
 public class ReturnGoodsServiceImpl implements ReturnGoodsService{
 	@Resource(name="ReturnOrderMapper")
 	private com.sanbang.dao.ReturnOrderMapper returnOrderMapper;
