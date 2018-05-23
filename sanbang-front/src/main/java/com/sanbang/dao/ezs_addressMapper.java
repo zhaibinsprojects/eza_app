@@ -1,16 +1,20 @@
 package com.sanbang.dao;
 
+
 import java.util.List;
-<<<<<<< HEAD
 import org.apache.ibatis.annotations.Param;
-=======
->>>>>>> refs/remotes/origin/local_changes
+
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_address;
 
-@Repository
+
 public interface ezs_addressMapper {
     int deleteByPrimaryKey(Long id);
 

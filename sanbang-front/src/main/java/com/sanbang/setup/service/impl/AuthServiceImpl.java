@@ -161,23 +161,27 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 
 		if (Tools.isEmpty(trueName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入联系人");
+			return result;
 		}
 
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(unifyCode)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入社会信用代码");
+			return result;
 		}
 
 		if (Tools.isEmpty(capitalPrice)) {
@@ -188,12 +192,15 @@ public class AuthServiceImpl implements AuthService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效注册资本金额");
+				return result;
 			}
+			return result;
 		}
 		if (Tools.isEmpty(persion)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入法人");
+			return result;
 		}
 
 		return result;
@@ -271,31 +278,37 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(dutyNo)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入税号");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入单位地址");
+			return result;
 		}
 		if (Tools.isEmpty(phone)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入电话号码");
+			return result;
 		}
 		if (Tools.isEmpty(bank)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户行");
+			return result;
 		}
 		if (Tools.isEmpty(bank)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户账号");
+			return result;
 		}
 
 		return result;
@@ -428,31 +441,37 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(dutyNo)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入税号");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入单位地址");
+			return result;
 		}
 		if (Tools.isEmpty(phone)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入电话号码");
+			return result;
 		}
 		if (Tools.isEmpty(bank)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户行");
+			return result;
 		}
 		if (Tools.isEmpty(number)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户账号");
+			return result;
 		}
 
 		return result;
@@ -475,32 +494,38 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(trueName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入联系人");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(account)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入注册号");
+			return result;
 		}
 
 		if (Tools.isEmpty(idCardNum)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入经营者省份证号");
+			return result;
 		}
 		if (Tools.isEmpty(persion)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入经营者");
+			return result;
 		}
 
 		return result;
@@ -531,12 +556,14 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善企业基本信息");
+			return result;
 		}
 		//企业信息
 		if(null==upi.getEzs_bill()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善开票信息");
+			return result;
 		}
 		//检查资质信息
 		authPicCash(upi.getAuthimg(), upi);
@@ -545,12 +572,14 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善资质信息");
+			return result;
 		}
 		
 		if(upi.isAuthorfilestate()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善授权信息");
+			return result;
 		}
 		
 		return result;
@@ -787,7 +816,7 @@ public class AuthServiceImpl implements AuthService {
 	public static void main(String[] args) {
 		List<AuthImageVo> list=new ArrayList<>();
 		try {
-			savepic("type1,url1@name1@2018-05-06 22:26:00;"
+			savepic("type1,@nurl1ame1@2018-05-06 22:26:00;"
 					+ "type2,url2@name2@2018-05-06 22:26:00;"
 					+ "type3,url3",list );
 		} catch (ParseException e) {

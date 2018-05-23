@@ -3,6 +3,7 @@ package com.sanbang.setup.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
 import com.sanbang.area.service.AreaService;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
@@ -30,6 +32,7 @@ import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
@@ -45,6 +48,9 @@ public class UserSetupAuthController {
 	
 	@Autowired
 	private UserProService userProService;
+	
+	@Autowired
+	private com.sanbang.dao.ezs_areaMapper ezs_areaMapper;
 	
 	//注册验证码标识
 	@Value("${consparam.mobile.recode}")
@@ -117,8 +123,10 @@ public class UserSetupAuthController {
 			
 			map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			map.put("trueName", upi.getTrueName());// 联系人
-			map.put("area", areaService.getAreaListByParId(upi.getEzs_store().getArea_id()));// 经营地址区县
-			map.put("address", upi.getEzs_store().getAddress());// 经营地址
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}
+			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
 			if(0!=upi.getEzs_store().getStatus()){
 				map.put("capitalPrice", upi.getEzs_store().getCapitalPrice());// 注册资本
@@ -655,188 +663,40 @@ public class UserSetupAuthController {
 		
 		return result;
 	}
-=======
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
-import com.sanbang.area.service.AreaService;
-import com.sanbang.bean.ezs_contact;
-import com.sanbang.bean.ezs_user;
-import com.sanbang.dict.service.DictService;
-import com.sanbang.userpro.service.UserProService;
-import com.sanbang.utils.RedisUserSession;
-import com.sanbang.utils.Result;
-import com.sanbang.vo.DictionaryCate;
-import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.LinkUserVo;
-
-@Controller
-@RequestMapping("/setup/auth/")
-public class UserSetupAuthController {
-
-	private Logger log=Logger.getLogger(UserSetupAuthController.class);
-	
-	private  static final String view="/memberuser/regist/";
-	
-	@Autowired
-	private UserProService userProService;
-	
-	//注册验证码标识
-	@Value("${consparam.mobile.recode}")
-	private String mobilerecode;
-	
-	//验证码有效时间
-	@Value("${consparam.mobile.sendcodeexpir}")
-	private String mobilesendcodeexpir;
-	
-	//验证码发送的间隔
-	@Value("${consparam.mobile.interval}")
-	private String mobileinterval;
-	
-	//#短信验证码发送的次数
-	@Value("${consparam.mobile.sendtimes}")
-	private String mobilesendtimes;
-	
-	@Value("${consparam.cookie.userauthcard}")
-	private String userauthcard;
-	
-	@Autowired
-	private  DictService dictService;
-	
-	@Autowired
-	private AreaService areaService;
-	
-	
-	
-
-	/**
-	 * 企业认证初始化
-	 * @param userName
-	 * @return
-	 * @throws Exception 
-	 */
-	@RequestMapping(value="/cominit")
-	@ResponseBody
-	public Object upCompanyInit(HttpServletRequest request) throws Exception{
-		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
-		
-		if(null!=upi.getEzs_userinfo()){
-			Map<String, Object> map=new HashMap<>();
-			map.put("cominfo", upi.getEzs_store());
-			//主营行业
-			map.put("industry", dictService.getDictByParentId(DictionaryCate.EZS_INDUSTRY));
-			//公司类型
-			map.put("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
-			
-			//已有地址
-			map.put("area", areaService.getAreaParentList());
-			//已有com
-			map.put("hasccom", dictService.getCompanyTypeByThisId(upi.getStore_id()));
-			//已有indus
-			map.put("hascindus", dictService.getIndustryByThisId(upi.getStore_id()));
-			
-			//审核状态
-			//0:初始数据无业务 审核状态  1:需要审核 2.审核通过,3审核未通过
-			map.put("authstatus", upi.getEzs_store().getStatus());
-			
- 			result.setObj(map);
-		};
-		
-		return result;
-	}
-	
 	
 	/**
-	 * 个体认证初始化
-	 * @param userName
-	 * @return
-	 * @throws Exception 
-	 */
-	@RequestMapping(value="/indivinit")
-	@ResponseBody
-	public Object indivinit(HttpServletRequest request) throws Exception{
-		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
-		
-		if(null!=upi.getEzs_userinfo()){
-			Map<String, Object> map=new HashMap<>();
-			map.put("cominfo", upi.getEzs_store());
-			//主营行业
-			map.put("industry", dictService.getDictByParentId(DictionaryCate.EZS_INDUSTRY));
-			//公司类型
-			map.put("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
-			
-			//已有地址
-			map.put("area", areaService.getAreaParentList());
-			//已有com
-			map.put("hasccom", dictService.getCompanyTypeByThisId(upi.getStore_id()));
-			//已有indus
-			map.put("hascindus", dictService.getIndustryByThisId(upi.getStore_id()));
-			
-			//审核状态
-			//0:初始数据无业务 审核状态  1:需要审核 2.审核通过,3审核未通过
-			map.put("authstatus", upi.getEzs_store().getStatus());
-			
- 			result.setObj(map);
-		};
-		
-		return result;
-	}
-	
-	/**
-	 * 保存企业基本信息
-	 * @param request
+	 * 地址
+	 * @param areaid
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("/saveComAuth")
-	public Result saveComAuth(
-			HttpServletRequest request){
-		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo = ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo = ezs_twoinfo.getAreaName();
+				}
+			}
 		}
-		try {
-			//result=userProService.sendUpMoCode(mobile, code);
-		} catch (Exception e) {
-			log.info("h5认证企业"+upi.getName()+"错误"+e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setMsg("系统错误！");
-		}
-		return result;
-	}
-	
-	
-	
-	
-	
 
-	
-	
-	
+		sb.append(oneinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb.append("@");	
+		}
+		sb.append(threeinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb.append("@");	
+		}
+		sb.append(threeinfo);
+		return sb.toString();
+	}
 	
 }

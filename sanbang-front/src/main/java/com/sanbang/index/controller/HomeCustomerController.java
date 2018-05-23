@@ -79,10 +79,11 @@ public class HomeCustomerController {
 		user01.setId(Long.valueOf(13));
 		mmp = this.customerService.getUserMessByUser(user01);
 		UserInfoMess uim = (UserInfoMess) mmp.get("Obj");
-		Result rs = Result.success();
+		 rs = Result.success();
 		rs.setObj(uim);
 		return rs;
 	}
+
 	@RequestMapping("/getRedisMess")
 	public Object getRedisMess(){
 		ezs_user user = new ezs_user();
@@ -92,8 +93,4 @@ public class HomeCustomerController {
 		System.out.println("UserName:"+tempCached.getResult().getName());
 		return "";
 	}
-<<<<<<< HEAD
-	
-=======
->>>>>>> refs/remotes/origin/master
 }

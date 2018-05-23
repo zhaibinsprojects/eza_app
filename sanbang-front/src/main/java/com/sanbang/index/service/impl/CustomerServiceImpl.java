@@ -17,10 +17,7 @@ import com.sanbang.dao.ezs_customerMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dao.ezs_userinfoMapper;
 import com.sanbang.index.service.CustomerService;
-<<<<<<< HEAD
 import com.sanbang.vo.DictionaryCode;
-=======
->>>>>>> refs/remotes/origin/local_changes
 import com.sanbang.vo.UserInfoMess;
 
 @Service
