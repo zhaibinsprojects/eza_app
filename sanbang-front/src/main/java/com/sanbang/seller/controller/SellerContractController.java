@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.seller.service.SellerContractService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
@@ -26,6 +29,9 @@ public class SellerContractController {
 	@Autowired
 	SellerContractService sellerContractService;
 	
+	@Autowired
+	private BuyerService buyerService;
+	
 	/**
 	 * 合同管理，展示合同列表
 	 * @param status
@@ -34,6 +40,7 @@ public class SellerContractController {
 	 * @return
 	 */
 	@RequestMapping("/contractManage")
+	@ResponseBody
 	public Object contractManage(HttpServletRequest request, HttpServletResponse response, String currentPage){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
@@ -44,7 +51,6 @@ public class SellerContractController {
 			return result;
 		}
 		Long sellerId = upi.getId();
-		
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
@@ -71,10 +77,15 @@ public class SellerContractController {
 	 * @return
 	 */
 	@RequestMapping("/queryContractInfo")
-	public Object queryContractInfo(Long pactId, HttpServletRequest request, HttpServletResponse response){
-		Result result=Result.failure();
-		Object object = sellerContractService.queryContractInfo(pactId, result, request, response);
-		return object;
+	@ResponseBody
+	public Object queryContractInfo(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result = buyerService.showOrderContent(request, order_no);
+		return result;
 	}
 	/**
 	 * 根据订单编号和时间搜索合同
@@ -86,6 +97,7 @@ public class SellerContractController {
 	 * @return
 	 */
 	@RequestMapping("/queryContractByIdOrDate")
+	@ResponseBody
 	public Object queryContractByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response, String currentPage){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
@@ -96,13 +108,24 @@ public class SellerContractController {
 			return result;
 		}
 		Long sellerId = upi.getId();
-		
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
 		}
 		
-		map = sellerContractService.queryContractByIdOrDate(currentPage, sellerId);
-		return object;
+		map = sellerContractService.queryContractByIdOrDate(orderno, startTime, endTime, currentPage, sellerId);
+		
+		List<ezs_pact> list = new ArrayList<>();
+		
+		list = (List<ezs_pact>)map.get("Obj");
+		
+		int errorCode = (int) map.get("ErrorCode");
+		
+		page = (Page) map.get("page");
+		result.setObj(list);
+		result.setMeta(page);
+		result.setErrorcode(errorCode);
+		
+		return result;
 	} 
 }
