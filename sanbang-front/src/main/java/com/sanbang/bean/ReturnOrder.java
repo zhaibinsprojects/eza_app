@@ -12,7 +12,7 @@ public class ReturnOrder {
 
     private String guanliremark;
 
-    private String guanliwuliumoeny;
+    private String guanliwuliumoeny;	//管理员填写的
 
     private BigDecimal num;
 
@@ -20,7 +20,7 @@ public class ReturnOrder {
 
     private String remark;
 
-    private String returnAddress;
+    private String returnAddress;	//管理员退货地址
 
     private String returnReason;
 
@@ -34,7 +34,7 @@ public class ReturnOrder {
 
     private BigDecimal tmoney;
 
-    private BigDecimal tnum;
+    private BigDecimal tnum;	//管理员退货数量
 
     private Integer type;
 
@@ -46,7 +46,7 @@ public class ReturnOrder {
 
     private Long orderForm_id;
 
-    private String finshtime;
+    private String finshtime;	//退货完成时间
 
     private Integer order_status_store;
 

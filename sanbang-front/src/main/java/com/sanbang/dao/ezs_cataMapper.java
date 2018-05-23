@@ -17,13 +17,13 @@ public interface ezs_cataMapper {
 	 * @param parentId
 	 * @return
 	 */
-	List<ezs_goods_class> getTwolevelList(long parentId);
+	List<ezs_goods_class> getTwolevelList(long parent_id);
 	/**
 	 * 查询三级分类
 	 * @param parentId
 	 * @return
 	 */
-	List<ezs_goods_class> getThreelevelList(long parentId);
+	List<ezs_goods_class> getThreelevelList(long parent_id);
 	
 	
 }

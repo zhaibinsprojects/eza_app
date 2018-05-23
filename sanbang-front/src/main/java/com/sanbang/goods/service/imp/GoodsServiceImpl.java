@@ -105,6 +105,10 @@ public class GoodsServiceImpl implements GoodsService{
 		return list;
 	}
 	
-	
+	public List<ezs_orderform> orderList(Long user_id){
+		List<ezs_orderform> list = new ArrayList();
+		list = ezs_orderformMapper.orderList(user_id);
+		return list;
+	}
 	
 }
