@@ -3,6 +3,7 @@ package com.sanbang.setup.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
 import com.sanbang.area.service.AreaService;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
@@ -30,6 +32,7 @@ import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
@@ -45,6 +48,9 @@ public class UserSetupAuthController {
 	
 	@Autowired
 	private UserProService userProService;
+	
+	@Autowired
+	private com.sanbang.dao.ezs_areaMapper ezs_areaMapper;
 	
 	//注册验证码标识
 	@Value("${consparam.mobile.recode}")
@@ -117,8 +123,10 @@ public class UserSetupAuthController {
 			
 			map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			map.put("trueName", upi.getTrueName());// 联系人
-			map.put("area", areaService.getAreaListByParId(	upi.getEzs_store().getArea_id()));// 经营地址区县
-			map.put("address", upi.getEzs_store().getAddress());// 经营地址
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}
+			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
 			if(0!=upi.getEzs_store().getStatus()){
 				map.put("capitalPrice", upi.getEzs_store().getCapitalPrice());// 注册资本
@@ -654,6 +662,41 @@ public class UserSetupAuthController {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo = ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo = ezs_twoinfo.getAreaName();
+				}
+			}
+		}
+
+		sb.append(oneinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb.append("@");	
+		}
+		sb.append(threeinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb.append("@");	
+		}
+		sb.append(threeinfo);
+		return sb.toString();
 	}
 	
 }
