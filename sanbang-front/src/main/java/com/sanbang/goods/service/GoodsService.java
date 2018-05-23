@@ -81,4 +81,13 @@ public interface GoodsService {
 	
 	
 	public ezs_documentshare getCollect(Long id);
+	
+	/**
+	 * 采购单列表
+	 * @param user_id	用户id
+	 * @return
+	 */
+	public List<ezs_orderform> orderList(Long user_id);
+	
+	
 }
