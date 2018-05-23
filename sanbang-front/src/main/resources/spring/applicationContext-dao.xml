@@ -156,6 +156,11 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_customizedMapper" />
 	</bean>
+	<!-- 地址 -->
+ 	<bean id="ezs_addressMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_addressMapper" />
+	</bean>
 	<!-- 栏目 -->
 	<bean id="ezs_columnMapper" parent="baseMapper">
 		<property name="mapperInterface"
@@ -175,32 +180,24 @@
 	<bean id="ezs_paperMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_paperMapper"/>
-	</bean> 
+	</bean>
 	<bean id="ezs_card_dictMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
-<<<<<<< HEAD
-	<!-- 定制采购-订购商 -->
-	<bean id="ezs_customized_recordMapper" parent="baseMapper">
+	
+	<!-- 卖家退货订单 -->
+	<bean id="returnOrderMapper" parent="baseMapper">
 		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_customized_recordMapper" />
+			value="com.sanbang.dao.ReturnOrderMapper"/>
 	</bean>
-	<!-- 定制采购-定制单 -->
-	<bean id="ezs_customizedMapper" parent="baseMapper">
+	
+		<!--关闭订单-->
+	<bean id="ezs_order_canceMapper" parent="baseMapper">
 		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_customizedMapper" />
+			value="com.sanbang.dao.ezs_order_canceMapper"/>
 	</bean>
- 	<!-- 地址 -->
- 	<bean id="ezs_addressMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_addressMapper" />
-	</bean>
-	<!-- 图片 -->
-	<bean id="ezs_accessoryMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_accessoryMapper" />
-	</bean>
-=======
->>>>>>> refs/remotes/origin/master
+
+	
+	
 </beans>
