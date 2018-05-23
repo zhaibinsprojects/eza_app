@@ -34,7 +34,7 @@ import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 
 @Service
-public abstract class SellerReceiptServiceImpl implements SellerReceiptService {
+public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	// 日志
 	private static Logger log = Logger.getLogger(SellerReceiptServiceImpl.class.getName());
@@ -144,13 +144,6 @@ public abstract class SellerReceiptServiceImpl implements SellerReceiptService {
 	
 	public int insertInvoice(ezs_invoice invoice){
 		return invoiceMapper.insert(invoice);
-	}
-
-	@Override
-	public Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
-			HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }
