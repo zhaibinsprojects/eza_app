@@ -49,7 +49,7 @@ public class HomeIndustryInfoController {
 		return rs;
 	}
 	/**
-	 * 根据二级栏目id获取相应的文章(分页展示，每页10条)
+	 * 行情资讯--根据二级栏目id获取相应的文章(分页展示，每页10条)
 	 * @param request
 	 * @param response
 	 * @param id 二级栏目id
@@ -64,7 +64,11 @@ public class HomeIndustryInfoController {
 		Result rs = null;
 		if(currentPage==null)
 			currentPage = "1";
-		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		if(id==null){
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(57), currentPage);
+		}else{
+			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		}
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -80,4 +84,5 @@ public class HomeIndustryInfoController {
 		}
 		return rs;
 	}
+	
 }

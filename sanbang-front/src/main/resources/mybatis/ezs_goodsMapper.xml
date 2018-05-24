@@ -724,7 +724,7 @@
   <select id="goodsIntroduce" resultMap="GoodsResultMap" parameterType="com.sanbang.utils.Page">
     select
     <include refid="Goods_Base_Column_List" />
-    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
+    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
   </select>
   
   <!-- 查询同类货品 -->
@@ -804,14 +804,4 @@
 		ezs_goods
     	where user_id = #{sellerId}
 	</select>
-
-
-   <select id="selectByGoodsName" resultMap="GoodsResultMap" parameterType="string" >
-    select 
-    <include refid="Base_Column_List" />
-    select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
-    g.name like '%${_parameter}%'
-
-  </select>
-
 </mapper>
