@@ -134,7 +134,7 @@ public class GoodsController {
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping("/insertOrder")		//sql错误
+	@RequestMapping("/insertOrder")
 	@ResponseBody
 	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
 		Result result = new Result();
@@ -147,7 +147,30 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 预约预定
+	 * 采购单列表（订单）
+	 * @param request
+	 * @param user_id
+	 * @return
+	 */
+	@RequestMapping("/orderList")
+	@ResponseBody
+	public Result orderList(HttpServletRequest request,Long user_id){
+		List<ezs_orderform> list = new ArrayList();
+		Result result = new Result();
+		list =  goodsService.orderList(user_id);
+		if(list.size()>0){
+			result.setObj(list);
+		}else{
+			result.setMsg("采购单为空");
+		}
+		return result;
+	}
+	
+	
+	
+	
+	/**
+	 * 预约预定（采购定制，预约定制，同一个接口）
 	 * @param request
 	 * @param goodsCart	
 	 * @return
@@ -158,7 +181,6 @@ public class GoodsController {
 		Result result = new Result();
 		
 		
-		
 		return result;
 	}
 	
@@ -167,7 +189,7 @@ public class GoodsController {
 	 * @param id 商品类别id
 	 * @return
 	 */
-	@RequestMapping("/listForGoods")		//sql错误
+	@RequestMapping("/listForGoods")
 	@ResponseBody
 	public Result listForGoods(Long goodClass_id){
 		Result result = new Result();
@@ -281,11 +303,11 @@ public class GoodsController {
 		
 	}
 	
-	public static void main(String[] args) {
-		GoodsController  aa=new GoodsController();
-		Map<String, Object> map=new HashMap<>();
-		map.put("orderAmount", "aaa");
-		map.put("AcapAmount", "bb");
-		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
-	}
+//	public static void main(String[] args) {
+//		GoodsController  aa=new GoodsController();
+//		Map<String, Object> map=new HashMap<>();
+//		map.put("orderAmount", "aaa");
+//		map.put("AcapAmount", "bb");
+//		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
+//	}
 }

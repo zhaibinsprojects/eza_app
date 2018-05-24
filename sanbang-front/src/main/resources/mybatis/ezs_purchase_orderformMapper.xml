@@ -388,11 +388,12 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
-  <!-- 总页数 -->  
+  <!-- 总页数  -->  
   <select id="selectCount">
   	select count(*) from ezs_purchase_orderform where user_id = #{userId,jdbcType=BIGINT}
   </select>
-  <!-- 订单分页查询 -->
+
+   <!-- 订单分页查询  -->  
   <select id="queryOrders" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
   	select 
     <include refid="Base_Column_List" />
@@ -406,7 +407,118 @@
 	and
 	order_status = #{orderStatus,jdbcType=BIGINT}
   	order by 
-  	addTime  desc LIMIT #{startPos},#{pageSize}
-  </select>	
+  	addTime  desc 
+  	LIMIT #{startPos},#{pageSize}
+  </select>
+	
+	
+	<select id="getOrderListByValueCount" parameterType="com.sanbang.vo.PagerOrder" resultType="Integer">
+	  SELECT
+		count(*)
+	FROM
+		ezs_goodscart A
+	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
+	LEFT JOIN ezs_goods C ON C.id = A.goods_id
+	LEFT JOIN ezs_address D ON D.id = B.address_id
+	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
+	WHERE
+		1 = 1
+		<if test="pager.order_status!=null and pager.order_status!=-1">
+	 	and B.order_status=#{pager.order_status}	
+		</if>
+		<if test="pager.order_status!=null and pager.order_status==-1">
+	 	and B.order_status in (10,20,30,40,50,60,70,80,90,130,110)	
+		</if>
+		<if test="pager.order_type!=null">
+		 and B.order_type=#{pager.order_type}	
+		</if>
+	</select>
+	
+	<!-- 订单列表 -->
+	<select id="getOrderListByValue" parameterType="com.sanbang.vo.PagerOrder" resultMap="BaseResultMap">
+	  SELECT
+	   C.price,
+		C.good_no,
+		B.addTime,
+		A.count,
+		C.`name`,
+		C.area_id,
+		C.addess,
+		B.total_price,
+		B.goods_amount,
+		B.order_status,
+		B.first_price,
+		B.end_price,
+		B.all_price,
+		B.pact_status,
+		B.address_id,
+		B.finishtime,
+		B.order_no,
+		B.order_type,
+		B.deleteStatus,
+		D.areaName 
+	FROM
+		ezs_goodscart A
+	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
+	LEFT JOIN ezs_goods C ON C.id = A.goods_id
+	LEFT JOIN ezs_area D ON D.id = B.address_id
+	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
+	WHERE
+		1 = 1
+
+		<if test="pager.order_status!=null and pager.order_status!=-1">
+	 	and B.order_status=#{pager.order_status}	
+		</if>
+		<if test="pager.order_status!=null and pager.order_status==-1">
+	 	and B.order_status in (10,20,30,40,50,60,70,80,90,130,110)	
+		</if>
+		<if test="pager.order_type!=null">
+		 and B.order_type=#{pager.order_type}	
+		</if>
+		limit #{pager.secount},#{pager.pageSize}
+	</select>
+	
+	<!-- 订单详情 -->
+	<select id="getOrderListByOrderno" resultMap="BaseResultMap">
+	  SELECT
+	    C.price,
+		C.good_no,
+		B.addTime,
+		A.count,
+		C.`name`,
+		C.area_id,
+		C.addess,
+		B.total_price,
+		B.goods_amount,
+		B.order_status,
+		B.first_price,
+		B.end_price,
+		B.all_price,
+		B.pact_status,
+		B.address_id,
+		B.finishtime,
+		B.order_no,
+		B.order_type,
+		B.deleteStatus,
+		D.areaName 
+	FROM
+		ezs_goodscart A
+	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
+	LEFT JOIN ezs_goods C ON C.id = A.goods_id
+	LEFT JOIN ezs_area D ON D.id = B.address_id
+	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
+	WHERE
+		1 = 1
+	and 
+	B.order_no=#{order_no}	
+	</select>
+	
+	<!-- 订单详细信息 -->
+	<select id="selectByorderno" resultMap="BaseResultMap">
+    select 
+		*
+    from ezs_purchase_orderform
+    where id = #{id,jdbcType=BIGINT}
+	</select>
 	
 </mapper>

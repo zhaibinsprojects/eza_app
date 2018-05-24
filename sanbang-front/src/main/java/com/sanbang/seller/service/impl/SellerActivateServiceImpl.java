@@ -41,7 +41,8 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
-//		user.setStore_id((long)2);
+//		ezs_user upi = new ezs_user(); 
+//		upi.setStore_id((long)2);
 		if (upi != null) {
 			Long store_id = upi.getStore_id();
 //			ezs_store store = ezs_storeMapper.selectById(store_id);
@@ -58,7 +59,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setOpen_branch_name(open_branch_name);
 			store.setOpen_branch_no(open_branch_no);
 			store.setLocation_detail(location_detail);
-			
+			store.setStatus(1);
 			if (rent == "0") {
 				store.setRent(false);//非租用
 			}else if(rent == "1"){

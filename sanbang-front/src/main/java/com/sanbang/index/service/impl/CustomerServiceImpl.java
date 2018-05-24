@@ -8,14 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_address;
-import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.dao.ezs_addressMapper;
-import com.sanbang.dao.ezs_areaMapper;
-import com.sanbang.dao.ezs_customerMapper;
-import com.sanbang.dao.ezs_userMapper;
-import com.sanbang.dao.ezs_userinfoMapper;
 import com.sanbang.index.service.CustomerService;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.UserInfoMess;

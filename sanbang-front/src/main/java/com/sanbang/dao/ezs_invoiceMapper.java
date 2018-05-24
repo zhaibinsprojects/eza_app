@@ -12,6 +12,7 @@ import com.sanbang.bean.ezs_pact;
 import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.GoodsInfo;
+import com.sanbang.vo.InvoiceInfo;
 
 @Repository
 public interface ezs_invoiceMapper {
@@ -29,7 +30,6 @@ public interface ezs_invoiceMapper {
 
 	Map<String, Object> selectInvoiceListInfoById(Long userId, String currentPage);
 
-
 	ezs_invoice selectInvoiceInfoById(Long invoiceId);
 
 	ezs_invoice selectInvoiceByOrderNo(String orderno);
@@ -44,5 +44,5 @@ public interface ezs_invoiceMapper {
 
 	int getInvoiceCountByUserId(Long userId);
 
-	List<ezs_invoice> goodsInvoiceCountPage(Page page, Long userId);
+	List<ezs_invoice> goodsInvoiceCountPage(@Param("page")Page page, @Param("userId")Long userId);
 }

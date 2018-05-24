@@ -17,4 +17,6 @@ public interface ezs_goods_audit_processMapper {
     int updateByPrimaryKeySelective(ezs_goods_audit_process record);
 
     int updateByPrimaryKey(ezs_goods_audit_process record);
+
+	ezs_goods_audit_process selectByGoodsId(long goodsId);
 }

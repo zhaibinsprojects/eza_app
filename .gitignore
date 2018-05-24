@@ -9,6 +9,7 @@ out
 .classpath
 .project
 .settings/
+.vscode/
 
 # Build files
 target/

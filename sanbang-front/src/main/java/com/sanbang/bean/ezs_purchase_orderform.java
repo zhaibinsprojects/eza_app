@@ -57,7 +57,7 @@ public class ezs_purchase_orderform {
     private Long user_id;
 
     private String msg;
-
+    
     public Long getId() {
         return id;
     }

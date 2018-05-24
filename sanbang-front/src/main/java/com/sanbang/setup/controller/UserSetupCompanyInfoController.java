@@ -74,6 +74,9 @@ public class UserSetupCompanyInfoController {
 		}
 		
 		if(null!=upi.getEzs_userinfo()){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("请求成功");
 			Map<String, Object> map=new HashMap<>();
 			map.put("cominfo", upi.getEzs_store());
 			//主营行业

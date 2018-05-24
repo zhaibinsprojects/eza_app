@@ -162,6 +162,32 @@
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>1.9.9</version>
 			</dependency>
+			<!-- poi -->
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${org.apache.poi}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${org.apache.poi}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-schemas</artifactId>
+				<version>${org.apache.poi}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans</artifactId>
+				<version>${org.apache.xmlbeans}</version>
+			</dependency>
+			<dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>${dom4j}</version>
+			</dependency>
 
 			<!-- 单元测试 -->
 			<dependency>
@@ -330,43 +356,89 @@
 				<artifactId>json-simple</artifactId>
 				<version>1.1</version>
 			</dependency>
+			
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${org.apache.poi}</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${org.apache.poi}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>${org.apache.poi}</version>
+		</dependency>
+			
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>${org.apache.xmlbeans}</version>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${com.google.zxing}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.xuwei-k</groupId>
+			<artifactId>html2image</artifactId>
+			<version>${com.github.xuwei-k}</version>
+		</dependency>
 
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi</artifactId>
-				<version>${org.apache.poi}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi-ooxml</artifactId>
-				<version>${org.apache.poi}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi-ooxml-schemas</artifactId>
-				<version>${org.apache.poi}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.xmlbeans</groupId>
-				<artifactId>xmlbeans</artifactId>
-				<version>${org.apache.xmlbeans}</version>
-			</dependency>
-			<dependency>
-				<groupId>dom4j</groupId>
-				<artifactId>dom4j</artifactId>
-				<version>${dom4j}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.zxing</groupId>
-				<artifactId>core</artifactId>
-				<version>${com.google.zxing}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.github.xuwei-k</groupId>
-				<artifactId>html2image</artifactId>
-				<version>${com.github.xuwei-k}</version>
-			</dependency>
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-core</artifactId>
+			<version>${org.xhtmlrenderer}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>${net.sourceforge.nekohtml}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-resources-plugin</artifactId>
+		    <version>2.4.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		    <version>2.0.8</version>
+		</dependency>
+		<!-- <dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itext-xtra</artifactId>
+		    <version>5.4.5</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itext-asian</artifactId>
+		    <version>5.2.0</version>
+		</dependency>
+		 
+		 
+		 
+		 
+		<dependency>
+    		<groupId>com.itextpdf</groupId>
+    		<artifactId>itextpdf</artifactId>
+    		<version>5.5.11</version>
+		</dependency>
+		<!-- pdf导出中文需要用到 -->
+		<!-- <dependency>
+    		<groupId>com.itextpdf</groupId>
+    		<artifactId>itext-asian</artifactId>
+    		<version>5.2.0</version>
+		</dependency> -->
 
 			<dependency>
 				<groupId>org.xhtmlrenderer</groupId>
@@ -383,25 +455,27 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.4.3</version>
 			</dependency>
+			<!-- freemark -->
 			<dependency>
 				<groupId>com.lowagie</groupId>
 				<artifactId>itext</artifactId>
 				<version>2.0.8</version>
 			</dependency>
+
 			<dependency>
-                <groupId>com.itextpdf</groupId>
-                <artifactId>itext-xtra</artifactId>
-                <version>5.4.5</version>
-            </dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itext-xtra</artifactId>
+				<version>5.4.5</version>
+			</dependency>
 			<dependency>
 				<groupId>com.itextpdf</groupId>
 				<artifactId>itext-asian</artifactId>
 				<version>5.2.0</version>
 			</dependency>
 			<dependency>
-				<groupId>com.itextpdf</groupId>
-				<artifactId>itextpdf</artifactId>
-				<version>5.5.11</version>
+				<groupId>com.lowagie</groupId>
+				<artifactId>itext</artifactId>
+				<version>2.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>org.xhtmlrenderer</groupId>

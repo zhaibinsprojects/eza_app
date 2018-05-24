@@ -42,7 +42,7 @@ public class GoodsServiceImpl implements GoodsService{
 	
 	public ezs_goods getGoodsDetail(Long id){
 		ezs_goods goods = new ezs_goods();
-		goods = ezs_goodsMapper.selectByPrimaryKey(id);
+		goods = ezs_goodsMapper.getGoodsDetail(id);
 		return goods;
 	}
 	
@@ -105,6 +105,10 @@ public class GoodsServiceImpl implements GoodsService{
 		return list;
 	}
 	
-	
+	public List<ezs_orderform> orderList(Long user_id){
+		List<ezs_orderform> list = new ArrayList();
+		list = ezs_orderformMapper.orderList(user_id);
+		return list;
+	}
 	
 }

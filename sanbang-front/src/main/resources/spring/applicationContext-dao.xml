@@ -185,11 +185,33 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
+
 	<!-- 定制采购 -->
 	<bean id="ezs_customized_resMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_customized_resMapper" />
+
+	
+	<!-- 卖家退货订单 -->
+	<bean id="returnOrderMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ReturnOrderMapper"/>
 	</bean>
 	
+		<!--关闭订单-->
+	<bean id="ezs_order_canceMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_order_canceMapper"/>
+	</bean>
+		<!--关闭订单-->
+	<bean id="ezs_goods_photoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_photoMapper"/>
+	</bean>
+
+	<bean id="ezs_goods_cartographyMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_cartographyMapper"/>
+	</bean>
 	
 </beans>
