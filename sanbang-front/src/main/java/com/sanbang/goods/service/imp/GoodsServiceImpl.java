@@ -42,7 +42,7 @@ public class GoodsServiceImpl implements GoodsService{
 	
 	public ezs_goods getGoodsDetail(Long id){
 		ezs_goods goods = new ezs_goods();
-		goods = ezs_goodsMapper.selectByPrimaryKey(id);
+		goods = ezs_goodsMapper.getGoodsDetail(id);
 		return goods;
 	}
 	
