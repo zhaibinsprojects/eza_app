@@ -399,5 +399,11 @@ public class DictionaryCate {
      * 汇率
      */
     public final static String NFLAT = "NFLAT";
+    
+    //颜色
+    public final static String EZS_COLOR="EZS_COLOR";
+    
+    //形态
+    public final static String EZS_FORM="EZS_FORM";
 
 }

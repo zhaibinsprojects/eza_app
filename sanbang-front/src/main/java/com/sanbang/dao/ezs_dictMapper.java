@@ -34,5 +34,10 @@ public interface ezs_dictMapper {
 	  * @return
 	  */
 	 List<ezs_dict>  getDictByParentId(@Param("code")String code);
-    
+	 
+	 
+	 /**
+	  * 通过商品id或的属性
+	  */
+	String selectPropertyById(Long propertyId);
 }

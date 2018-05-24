@@ -14,15 +14,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.area.service.AreaService;
+import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_cartography;
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.bean.ezs_userinfo;
+import com.sanbang.cata.service.CataService;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerGoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
@@ -36,6 +43,18 @@ public class SellerGoodsController {
 	
 	@Autowired
 	FileUploadService fileUploadService;
+	
+	@Autowired
+	DictService dictService;
+	
+	@Autowired
+	AreaService areaService;
+	
+	@Autowired
+	CataService cataService; 
+	
+	
+	
 	/**
 	 * 查询货品列表   status:1 正常上架    status:0（默认值） 待审核     status:2 下架
 	 * @param status
@@ -57,8 +76,6 @@ public class SellerGoodsController {
 			return result;
 		}
 		Long useId = upi.getId();
-		
-
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
@@ -97,23 +114,95 @@ public class SellerGoodsController {
 		
 		ezs_goods goods = sellerGoodsService.queryGoodsInfoById(id);
 		
-		
-		
 		Long goodsId = goods.getId();
-		List<ezs_goods_photo> photoList = sellerGoodsService.queryPhotoById(goodsId);
-		List<ezs_goods_cartography> cartographyList = sellerGoodsService.queryCartographyById(goodsId);
+		List<ezs_accessory> photoList = sellerGoodsService.queryPhotoById(goodsId);
+		List<ezs_accessory> cartographyList = sellerGoodsService.queryCartographyById(goodsId);
+		
+		
+		Long color_id = goods.getColor_id();
+		String color = sellerGoodsService.getGoodsProperty(color_id);
+		Long form_id = goods.getForm_id();
+		String form = sellerGoodsService.getGoodsProperty(form_id);
+		
+		
 		
 		map.put("goods", goods);
 		map.put("photoList", photoList);
 		map.put("cartographyList", cartographyList);
+		
+		map.put("color", color);
+		map.put("form",form);
+		//		//颜色
+//		map.put("EZS_COLOR", dictService.getDictByParentId(DictionaryCate.EZS_COLOR));
+		
+//		//形态
+//		map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
+		
+//		map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
+//		//地址
+//		map.put("area", areaService.getAreaParentList());
+//		//分类
+//		map.put("cata",cataService.getOnelevelList());
+		
+		
 		
 		result.setObj(map);
 		
 		return result;
 	}
 	
+	
+	
+
 	/**
-	 * 添加货品， 图片上传未完成
+	 * 商品添加初始化
+	 * @param userName
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("/goodsInit")
+	@ResponseBody
+	public Object goodsInit(HttpServletRequest request) throws Exception{
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		if(null!=upi.getEzs_userinfo()){
+			Map<String, Object> map=new HashMap<>();
+			//颜色
+			map.put("EZS_COLOR", dictService.getDictByParentId(DictionaryCate.EZS_COLOR));
+			//形态
+			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
+			//形态
+			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
+			//地址
+			map.put("area", areaService.getAreaParentList());
+			//分类
+			map.put("cata",cataService.getOnelevelList());
+ 			result.setObj(map);
+		};
+		
+		return result;
+	}
+	
+	//查询父级分类
+	@RequestMapping("/getCataListByparid")
+	@ResponseBody
+	public Result getCataListByparid(HttpServletRequest request,long parentsId){
+		Result result=Result.success();
+		List<ezs_goods_class> list = cataService.getTwolevelList(parentsId);
+		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
+		result.setObj(list);
+		return result;
+	}
+	
+	
+	/**
+	 * 添加货品
 	 * @param request
 	 * @param response
 	 * @return
@@ -123,15 +212,12 @@ public class SellerGoodsController {
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-//		if(upi==null){
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//			result.setMsg("请重新登陆！");
-//			return result;
-//		}
-		ezs_user upi = new ezs_user();
-		upi.setId((long) 22);
-		
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
 		try {
 			result = sellerGoodsService.addGoodsInfo(result, upi, request,response);
 		} catch (Exception e) {
@@ -177,12 +263,15 @@ public class SellerGoodsController {
 	public Object updateGoodsInfoById(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
+//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+//		if(upi==null){
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//			result.setMsg("请重新登陆！");
+//			return result;
+//		}
+		ezs_user upi = new ezs_user();
+		upi.setId((long) 1);
+		
 		result = sellerGoodsService.updateGoodsInfoById(result, goodsId,upi, request,response);
 		
 		return result;
@@ -199,12 +288,12 @@ public class SellerGoodsController {
 	public Object submitGoodsForAudit(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-//		if(upi==null){
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//			result.setMsg("请重新登陆！");
-//			return result;
-//		}
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
 		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	
 		
 		

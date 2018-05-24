@@ -153,4 +153,9 @@
 		)
 		and B.deleteStatus=0
   </select>
+  
+	<select id="selectPropertyById"  resultType="java.lang.String">
+		select name from ezs_dict where id = #{propertyId}
+	</select>  
+  
 </mapper>

@@ -30,9 +30,13 @@
   </insert>
   
   <select id="selectCartographyById" resultType="ezs_goods_cartography">
-  	select cartography_id from  ezs_goods_cartography where goods_id= #{goods_id}
+  	select * from  ezs_goods_cartography where goods_id= #{goods_id}
   </select>
   <update id="updateSelective">
   	update cartography_id set cartography_id = #{cartography_id} where goods_id = #{goods_id}
   </update>
+  
+  <delete id="deleteByGoodsId">
+  	delete from ezs_goods_cartography where goods_id =#{goodsId}
+  </delete>
 </mapper>

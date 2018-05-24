@@ -105,7 +105,7 @@ public class SellerContractServiceImpl implements SellerContractService {
 		
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+		if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
 			if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)){
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				Date dt1;

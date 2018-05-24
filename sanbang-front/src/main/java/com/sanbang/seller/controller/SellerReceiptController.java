@@ -67,8 +67,8 @@ public class SellerReceiptController {
 			result.setMeta(page);
 		}else{
 			result = Result.failure();
-			result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
-			result.setMsg(map.get("Msg").toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("查询失败");
 		}
 		return result;
 	}
@@ -117,7 +117,7 @@ public class SellerReceiptController {
 		return result;
   }
 	/**
-	 * 票据详情页面
+	 * 票据详情页面(发票查看)
 	 * @param orderNo
 	 * @param request
 	 * @param response

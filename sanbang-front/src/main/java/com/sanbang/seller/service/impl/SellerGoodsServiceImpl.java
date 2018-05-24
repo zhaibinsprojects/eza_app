@@ -24,6 +24,7 @@ import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_card_dictMapper;
+import com.sanbang.dao.ezs_dictMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_goods_audit_processMapper;
 import com.sanbang.dao.ezs_goods_cartographyMapper;
@@ -71,6 +72,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	@Autowired
 	ezs_goods_cartographyMapper cartographyMapper;
 	
+	@Autowired
+	ezs_dictMapper dictMapper;
+	
 	@Override
 	public Map<String, Object> queryGoodsListBySellerId(Long sellerId, int status, String currentPage) {
 		Map<String, Object> mmp = new HashMap<>();
@@ -78,7 +82,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		int totalCount = goodsMapper.selectCount(sellerId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		if (Integer.valueOf(currentPage) >= 1 || Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+		if ((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)) {
 			List<ezs_goods> list = goodsMapper.selectGoodsListBySellerId(sellerId, status, page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
@@ -97,9 +101,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	}
 
 	@Override
-	public List<ezs_goods_photo> queryPhotoById(Long goodsId) {
+	public List<ezs_accessory> queryPhotoById(Long goodsId) {
 
-		return photoMapper.selectPhotoById(goodsId);
+		return ezs_accessoryMapper.selectPhotoById(goodsId);
 	}
 
 	@Override
@@ -116,7 +120,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			if (null != list && list.size() > 0) {
 				
 				//检查保存商品图片是否必填
-				if(!checkIsMustForGoodsAdd("goodtype", list)){
+				if(!checkIsMustForGoodsAdd("goods", list)){
 					result.setMsg("至少上传一张商品图片");
 					result.setSuccess(false);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -154,16 +158,16 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				ezs_goods goods = new ezs_goods();
 				goods.setDeleteStatus(true);
 				goods.setAddTime(new Date());
-				goods.setGoodClass_id(Long.parseLong(goodClass_id));
+				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
 				goods.setValidity(Integer.valueOf(validity));
-				goods.setInventory(Double.parseDouble(inventory));
-				goods.setArea_id(Long.parseLong(area_id));
+				goods.setInventory(Double.valueOf(inventory));
+				goods.setArea_id(Long.valueOf(area_id));
 				goods.setAddess(addess);
-				goods.setSupply_id(Long.parseLong(supply_id));
-				goods.setSupply_id(Long.parseLong(color_id));
-				goods.setSupply_id(Long.parseLong(form_id));
+				goods.setSupply_id(Long.valueOf(supply_id));
+				goods.setSupply_id(Long.valueOf(color_id));
+				goods.setSupply_id(Long.valueOf(form_id));
 				goods.setSource(source);
 				goods.setClick(0);
 				goods.setCollect(0);
@@ -205,7 +209,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				ezs_goods_cartography  cartography = null;
 				
 				for (AuthImageVo img : list) {
-					ezs_accessory ezs_accessory = new com.sanbang.bean.ezs_accessory();
+					ezs_accessory ezs_accessory = new ezs_accessory();
 					ezs_accessory.setAddTime(new Date());
 					ezs_accessory.setDeleteStatus(false);
 					ezs_accessory.setExt("");
@@ -213,18 +217,20 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					ezs_accessory.setInfo(null);
 					ezs_accessory.setName("");
 					ezs_accessory.setPath(img.getImgurl());
-					ezs_accessory.setSize(null);
-					ezs_accessory.setWidth(null);
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());
 					ezs_accessoryMapper.insertSelective(ezs_accessory);
 					// upi记录
 					img.setAccid(ezs_accessory.getId());
 					//aaa
 					if("goods".equals(img.getImgcode())){
+						goodsPhoto=new ezs_goods_photo();
 						goodsPhoto.setGoods_id(goods.getId());
 						goodsPhoto.setPhoto_id(img.getAccid());
 						photoMapper.insertSelective(goodsPhoto);
 					}else if("process".equals(img.getImgcode())){
+						cartography=new ezs_goods_cartography();
 						cartography.setGoods_id(goods.getId());
 						cartography.setCartography_id(img.getAccid());
 						cartographyMapper.insertSelective(cartography);
@@ -232,8 +238,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				}
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("参数错误");
+			result.setSuccess(true);
+			result.setMsg("添加货品成功，请静待审核");
 		} catch (Exception e) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
@@ -454,7 +460,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			if (null != list && list.size() > 0) {
 				
 				//检查保存商品图片是否必填
-				if(!checkIsMustForGoodsAdd("goodtype", list)){
+				if(!checkIsMustForGoodsAdd("goods", list)){
 					result.setMsg("至少上传一张商品图片");
 					result.setSuccess(false);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -489,19 +495,24 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String burning = request.getParameter("burning");// 燃烧等级
 				String seo_description = request.getParameter("seo_description");// 货品详细描述
 
-				ezs_goods goods = new ezs_goods();
+				ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 				goods.setDeleteStatus(true);
-				goods.setGoodClass_id(Long.parseLong(goodClass_id));
+				goods.setAddTime(new Date());
+				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
 				goods.setValidity(Integer.valueOf(validity));
-				goods.setInventory(Double.parseDouble(inventory));
-				goods.setArea_id(Long.parseLong(area_id));
+				goods.setInventory(Double.valueOf(inventory));
+				goods.setArea_id(Long.valueOf(area_id));
 				goods.setAddess(addess);
-				goods.setSupply_id(Long.parseLong(supply_id));
-				goods.setSupply_id(Long.parseLong(color_id));
-				goods.setSupply_id(Long.parseLong(form_id));
+				goods.setSupply_id(Long.valueOf(supply_id));
+				goods.setSupply_id(Long.valueOf(color_id));
+				goods.setSupply_id(Long.valueOf(form_id));
 				goods.setSource(source);
+				goods.setClick(0);
+				goods.setCollect(0);
+				goods.setGoods_salenum(0);
+				goods.setStatus(0);
 				if (protection == "0") {
 					goods.setProtection(true);
 				} else if (protection == "1") {
@@ -528,7 +539,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				long goodsid=goods.getId();
 				if (aa > 0) {
 					result.setSuccess(true);
-					result.setMsg("添加货品成功");
+					result.setMsg("修改货品成功");
 				} else {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);
@@ -537,9 +548,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				// 图片信息
 				ezs_goods_photo goodsPhoto = null ;
 				ezs_goods_cartography  cartography = null;
-				
+				photoMapper.deleteByGoodsId(goodsId);
+				cartographyMapper.deleteByGoodsId(goodsId);
 				for (AuthImageVo img : list) {
-					ezs_accessory ezs_accessory = new com.sanbang.bean.ezs_accessory();
+					ezs_accessory ezs_accessory = new ezs_accessory();
 					ezs_accessory.setAddTime(new Date());
 					ezs_accessory.setDeleteStatus(false);
 					ezs_accessory.setExt("");
@@ -547,27 +559,29 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					ezs_accessory.setInfo(null);
 					ezs_accessory.setName("");
 					ezs_accessory.setPath(img.getImgurl());
-					ezs_accessory.setSize(null);
-					ezs_accessory.setWidth(null);
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());
-					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
+					ezs_accessoryMapper.insertSelective(ezs_accessory);
 					// upi记录
 					img.setAccid(ezs_accessory.getId());
 					//aaa
 					if("goods".equals(img.getImgcode())){
+						goodsPhoto=new ezs_goods_photo();
 						goodsPhoto.setGoods_id(goods.getId());
 						goodsPhoto.setPhoto_id(img.getAccid());
-						photoMapper.updateSelective(goodsPhoto);
+						photoMapper.insertSelective(goodsPhoto);
 					}else if("process".equals(img.getImgcode())){
+						cartography=new ezs_goods_cartography();
 						cartography.setGoods_id(goods.getId());
 						cartography.setCartography_id(img.getAccid());
-						cartographyMapper.updateSelective(cartography);
+						cartographyMapper.insertSelective(cartography);
 					}
 				}
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("参数错误");
+			result.setSuccess(true);
+			result.setMsg("修改货品成功，请静待审核");
 		} catch (Exception e) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
@@ -620,7 +634,15 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	}
 
 	@Override
-	public List<ezs_goods_cartography> queryCartographyById(Long goodsId) {
+	public List<ezs_accessory> queryCartographyById(Long goodsId) {
 		return cartographyMapper.selectCartographyById(goodsId);
 	}
+
+	@Override
+	public String getGoodsProperty(Long propertyId) {
+		
+		return dictMapper.selectPropertyById(propertyId);
+	}
+
+	
 }
