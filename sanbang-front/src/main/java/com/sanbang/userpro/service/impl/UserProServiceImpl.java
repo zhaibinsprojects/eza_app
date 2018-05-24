@@ -247,6 +247,7 @@ public class UserProServiceImpl implements UserProService{
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void loginuser(String userName,HttpServletRequest request,HttpServletResponse response,Result result,
 			String userAgent, String pd,String ip,Date date,Integer flag){
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
@@ -294,7 +295,7 @@ public class UserProServiceImpl implements UserProService{
 					}
 					
 					//判断是否启用
-					int tempStatus=userProInfo.getEzs_userinfo().getStatus();
+					boolean tempStatus=userProInfo.getDeleteStatus();
 					
 					//添加缓存 
 					String str32=RandomStr32.getStr32();
@@ -306,7 +307,7 @@ public class UserProServiceImpl implements UserProService{
 					response.addCookie(cookie);
 					
 					try {
-						if(tempStatus==0&&userProInfo.getAddTime().getTime()>1479052799000l){
+						if(!tempStatus&&userProInfo.getAddTime().getTime()>1479052799000l){
 							//首次登陆 应该跳转到 注册联系人资料
 							result.setSuccess(true);
 				    		result.setMsg("登陆成功");
@@ -1387,6 +1388,7 @@ public class UserProServiceImpl implements UserProService{
 				ezs_storeMapper.updateByPrimaryKeySelective(store);
 				upi=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
 				RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setMsg("保存成功");
 			} catch (Exception e) {
 				log.info("h5设置公司资料"+upi.getName()+"错误"+e.toString());

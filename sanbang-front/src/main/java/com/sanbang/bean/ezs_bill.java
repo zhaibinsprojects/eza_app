@@ -1,9 +1,15 @@
 package com.sanbang.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ezs_bill {
-    private Long id;
+public class ezs_bill implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5031913451410226434L;
+
+	private Long id;
 
     private Date addTime;
 
@@ -102,4 +108,12 @@ public class ezs_bill {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+	@Override
+	public String toString() {
+		return "ezs_bill [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", address=" + address
+				+ ", bank=" + bank + ", companyName=" + companyName + ", dutyNo=" + dutyNo + ", number=" + number
+				+ ", phone=" + phone + ", user_id=" + user_id + "]";
+	}
+    
 }
