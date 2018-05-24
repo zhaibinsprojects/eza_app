@@ -10,14 +10,7 @@ import java.util.Date;
 
 public class ezs_store implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6428132396052424895L;
-
-	/**
-	 * 
-	 */
+	private static final long serialVersionUID = 860976361940964280L;
 
 	private Long id;
 
@@ -72,8 +65,6 @@ public class ezs_store implements Serializable {
 	private Long auditingusertype_id;// 1, 线索用户 2, 注册用户, 3, 认证用户 ,4, 激活用户
 
 	private String tel;// 联系电话
-
-	private byte[] location;// 开户银行区县
 
 	private Integer accountType;// 1.企业账号，2.个体户
 
@@ -319,13 +310,7 @@ public class ezs_store implements Serializable {
 		this.tel = tel == null ? null : tel.trim();
 	}
 
-	public byte[] getLocation() {
-		return location;
-	}
-
-	public void setLocation(byte[] location) {
-		this.location = location;
-	}
+	
 
 	public Integer getAccountType() {
 		return accountType;
@@ -449,11 +434,16 @@ public class ezs_store implements Serializable {
 				+ open_branch_no + ", registerDate=" + registerDate + ", rent=" + rent + ", status=" + status
 				+ ", userType=" + userType + ", yTurnover=" + yTurnover + ", area_id=" + area_id + ", cardType_id="
 				+ cardType_id + ", companyType_id=" + companyType_id + ", mianIndustry_id=" + mianIndustry_id
-				+ ", auditingusertype_id=" + auditingusertype_id + ", tel=" + tel + ", location="
-				+ Arrays.toString(location) + ", accountType=" + accountType + ", admin_status=" + admin_status
-				+ ", capitalPrice=" + capitalPrice + ", account=" + account + ", unifyCode=" + unifyCode + ", person="
-				+ person + ", regArea_id=" + regArea_id + ", regAddress=" + regAddress + ", idCardNum=" + idCardNum
-				+ "]";
+				+ ", auditingusertype_id=" + auditingusertype_id + ", tel=" + tel + ", accountType=" + accountType
+				+ ", admin_status=" + admin_status + ", capitalPrice=" + capitalPrice + ", account=" + account
+				+ ", unifyCode=" + unifyCode + ", person=" + person + ", regArea_id=" + regArea_id + ", regAddress="
+				+ regAddress + ", idCardNum=" + idCardNum + ", creditScore=" + creditScore + ", number=" + number
+				+ ", customerAudit_id=" + customerAudit_id + ", creditLevel=" + creditLevel + ", location_id="
+				+ location_id + "]";
 	}
+
+	
+
+
 
 }
