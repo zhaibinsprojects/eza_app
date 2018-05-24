@@ -780,6 +780,7 @@
     </if>
     order by lastModifyDate desc
   </select>
+
   <!-- 根据id查询订单总数 -->
 	<select id="selectCount" resultType="java.lang.Integer">
 		select count(*) from 	
@@ -787,13 +788,16 @@
     	where user_id = #{sellerId}
 	</select>
 
-
-   <select id="selectByGoodsName" resultMap="GoodsResultMap" parameterType="string" >
-    select 
-    <include refid="Base_Column_List" />
-    select g.*,a.* from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
-    g.name like '%${_parameter}%'
-
-  </select>
+	<!-- 查询商品详情，颜色，形态...做关联 -->
+	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
+		select g.*,d1.name colorName,d2.name formName,
+		a.areaName areaName,gc.name goodClassName  
+		from ezs_goods g 
+		left join ezs_dict d1 on g.color_id = d1.id 
+		left join ezs_dict d2 on g.form_id = d2.id 
+		left join ezs_area a on g.area_id = a.id 
+		left join ezs_goods_class gc on g.goodClass_id = gc.id 
+    	where g.id = #{id, jdbcType=BIGINT}
+	</select>
 
 </mapper>
