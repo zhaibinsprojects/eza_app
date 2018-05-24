@@ -145,7 +145,11 @@ public class HomePriceConditionController {
 		Result rs = null;
 		if(currentPage==null)
 			currentPage = "1";
-		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		if(id==null){
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage);
+		}else{
+			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		}
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -201,10 +205,14 @@ public class HomePriceConditionController {
 		Result rs = null;
 		if(currentPage==null)
 			currentPage = "1";
-		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		if(id==null){
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage);
+		}else{
+			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		}
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(elist);
@@ -213,8 +221,7 @@ public class HomePriceConditionController {
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			rs.setMsg("参数传递有误");
+			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}

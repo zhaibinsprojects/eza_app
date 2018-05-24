@@ -167,12 +167,15 @@ public class UserSetupAuthController {
 		//开票信息
 		if("comEin".equals(typevalue)){
 			if(0!=upi.getEzs_store().getStatus()){
-				map.put("companyName",upi.getEzs_bill().getCompanyName());
-				map.put("dutyNo",upi.getEzs_bill().getDutyNo());
-				map.put("number",upi.getEzs_bill().getNumber());
-				map.put("phone",upi.getEzs_bill().getPhone());
-				map.put("address", upi.getEzs_bill().getAddress());
-				map.put("bank",upi.getEzs_bill().getBank());
+				if(null!=upi.getEzs_bill()){
+					map.put("companyName",upi.getEzs_bill().getCompanyName());
+					map.put("dutyNo",upi.getEzs_bill().getDutyNo());
+					map.put("number",upi.getEzs_bill().getNumber());
+					map.put("phone",upi.getEzs_bill().getPhone());
+					map.put("address", upi.getEzs_bill().getAddress());
+					map.put("bank",upi.getEzs_bill().getBank());
+				}
+				
 			}
 			
 			result.setObj(map);
@@ -284,12 +287,14 @@ public class UserSetupAuthController {
 		//开票信息
 		if("comEin".equals(typevalue)){
 			if(0!=upi.getEzs_store().getStatus()){
+				if(0!=upi.getEzs_store().getStatus()){
 				map.put("companyName",upi.getEzs_bill().getCompanyName());
 				map.put("dutyNo",upi.getEzs_bill().getDutyNo());
 				map.put("number",upi.getEzs_bill().getNumber());
 				map.put("phone",upi.getEzs_bill().getPhone());
 				map.put("address", upi.getEzs_bill().getAddress());
 				map.put("bank",upi.getEzs_bill().getBank());
+				}
 			}
 			
 			result.setObj(map);
@@ -435,6 +440,8 @@ public class UserSetupAuthController {
 	 * @param response
 	 * @return
 	 */
+	@ResponseBody
+	@RequestMapping("/upAuthPic")
 	public Result upAuthPic(
 			HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(value="type",required=false) String type){

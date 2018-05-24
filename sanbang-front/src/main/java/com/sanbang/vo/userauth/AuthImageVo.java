@@ -9,6 +9,10 @@ import java.util.Date;
  */
 public class AuthImageVo implements Serializable {
 
+
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 737992306918047050L;
 
 	private String imgcode;// 标识
@@ -67,6 +71,8 @@ public class AuthImageVo implements Serializable {
 		return "AuthImageVo [imgcode=" + imgcode + ", imgurl=" + imgurl + ", usetime=" + usetime + ", name=" + name
 				+ ", accid=" + accid + "]";
 	}
+
+
 
 	
 
