@@ -16,11 +16,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_payinfo;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_billMapper;
 import com.sanbang.dao.ezs_invoiceMapper;
 import com.sanbang.dao.ezs_payinfoMapper;
@@ -50,7 +52,10 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	@Autowired
 	ezs_userMapper userMapper;
-
+	
+	@Autowired
+	ezs_accessoryMapper accessoryMapper;
+	
 	@Override
 	public ezs_bill getBillInfoById(Long userId) {
 
@@ -59,22 +64,30 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	@Override
 	public Map<String, Object> getInvoiceListById(Long userId, String currentPage) {
-		Map<String, Object> mmp = new HashMap<>();
+		Result result=Result.failure();
+		Map<String, Object> mmp=new HashMap<>();
 		// 获取总页数
 		int totalCount = this.invoiceMapper.getInvoiceCountByUserId(userId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		int startPos = 0;
-		page.setStartPos(startPos);
 		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
-			List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Page", page);
-			mmp.put("Obj", glist);
-		} else {
-			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-			mmp.put("Msg", "页码越界");
-			mmp.put("Page", page);
+			int startPos = 0;
+			page.setStartPos(startPos);
+			if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+				List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
+				result.setErrorcode( DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Page", page);
+				mmp.put("Obj", glist);
+				result.setMsg("请求成功");
+				result.setObj(mmp);
+			} else {
+				result.setErrorcode(HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+				mmp.put("Msg", "页码越界");
+				mmp.put("Page", page);
+				result.setMsg("请求失败");
+				result.setObj(mmp);
+			}
+			return mmp;
 		}
 		return mmp;
 	}
@@ -134,8 +147,20 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 			mmp.put("Page", page);
 		}
 		return mmp;
+	}	
 
+	@Override
+	public ezs_invoice queryInvoiceByNo(String orderNo) {
+		
+		return invoiceMapper.selectInvoiceByOrderNo(orderNo);
 	}
+
+	@Override
+	public ezs_accessory queryAccessoryById(Long receipt_id) {
+		
+		return accessoryMapper.selectByPrimaryKey(receipt_id);
+	}
+
 
 	@Override
 	public ezs_invoice getInvoiceInfoById(String orderno) {

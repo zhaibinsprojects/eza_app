@@ -31,7 +31,7 @@ public interface ezs_goodsMapper {
     int goodsIntroduceCount();
 
 
-	List<ezs_goods> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("currentPage")String currentPage);
+	List<ezs_goods> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("page")Page page);
 
 	int pullOffShelves(long goodsId);
 	
@@ -58,18 +58,23 @@ public interface ezs_goodsMapper {
 //	List<ezs_goods> listByAreaAndType(@Param("area")String area,@Param("type")String type);
 //	因为我将listByAreaAndType的参数做了改变，因为同名，不知道这是谁需要的方法，所以暂且将这个方法注释掉，有问题大家再讨论
 	
+	
+
+
+    List<GoodsInfo> selectByGoodsName(String name);
 	/**
 	 * 其他筛选
 	 * @param map 查询条件
 	 * @return
 	 */
+	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);
+
 	List<ezs_goods> listByOthers(Map map);
 	
 //	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);
 //	同理，这里也是如此
 	int selectCount(Long sellerId);
 
-	List<ezs_goods> queryGoods(Page page, Long sellerId, int status);
+	List<ezs_goods> queryGoods(@Param("page")Page page, @Param("sellerId")Long sellerId, @Param("status")int status);
 
-    List<GoodsInfo> selectByGoodsName(String name);
 }

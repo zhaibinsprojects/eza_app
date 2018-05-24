@@ -175,22 +175,22 @@
    	select count(*)  from ezs_pact where sellerUser_id =#{sellerId}
    </select>
    <!-- 根据userId查询合同分页 -->
-   <select id="queryPact">
+   <select id="queryPact" parameterType="com.sanbang.utils.Page" resultType="ezs_pact">
    	select 
     <include refid="Base_Column_List" />
     from ezs_pact
     where sellerUser_id =#{sellerId} 
-    LIMIT #{startPos},#{pageSize}
+    LIMIT #{page.startPos},#{page.pageSize}
    </select>
    <!-- 根据订单签订时间查询 -->
-   <select id="selectPactByDate" resultType="ezs_pact"  >
+   <select id="selectPactByDate" parameterType="com.sanbang.utils.Page" resultType="ezs_pact"  >
     	select 
     	<include refid="Base_Column_List" /> 
     	from 	ezs_pact pact where
 	     (unix_timestamp(pact.sign_time)&gt;=unix_timestamp(#{startTime}) 
 	     and unix_timestamp(pact.sign_time)&lt;unix_timestamp(#{endTime}))
 	     and sellerUser_id = #{sellerId,jdbcType=BIGINT}
-	     LIMIT #{startPos},#{pageSize}
+	     LIMIT #{page.startPos},#{page.pageSize}
    </select>
    
 </mapper>

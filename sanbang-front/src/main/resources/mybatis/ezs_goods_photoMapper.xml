@@ -28,4 +28,10 @@
       </if>
     </trim>
   </insert>
+  <select id="selectPhotoById" resultType="ezs_goods_photo">
+  	select photo_id from ezs_goods_photo where  goods_id = #{goodsId}
+  </select>
+  <update id="updateSelective">
+  	update ezs_goods_photo set photo_id = #{photoId} where goods_id = #{goodsId}
+  </update>
 </mapper>

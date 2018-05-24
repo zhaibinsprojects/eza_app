@@ -1,5 +1,7 @@
 package com.sanbang.seller.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -7,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.seller.service.SellerActivateService;
 import com.sanbang.utils.Result;
@@ -34,6 +37,7 @@ public class SellerActivateController {
 	 * @return
 	 */
 	@RequestMapping("/sellerActivate") // 固定产值，经营年限  找不到对应字段
+	@ResponseBody
 	public Object sellerActivate(String companyName, String yTurnover, String covered, String rent, String device_num,
 			String employee_num, String assets, String obtainYear,String open_bank_name, String openBankNo, String open_branch_name,
 			String open_branch_no, String location_detail, HttpServletRequest request, HttpServletResponse response){

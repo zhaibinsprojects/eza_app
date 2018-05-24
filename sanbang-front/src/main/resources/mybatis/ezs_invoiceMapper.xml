@@ -168,14 +168,14 @@
   </update>
   
     
-  <!-- 通过id查询开票信息 -->
+  <!-- 通过userId查询开票信息 -->
    <select id="goodsInvoiceCountPage" resultType="ezs_invoice"  parameterType="com.sanbang.utils.Page">
     select 
     <include refid="Base_Column_List" />
     from ezs_invoice
     where user_id = #{userId}	
-    order by g.recommend_time 
-    desc LIMIT #{startPos},#{pageSize}					
+    order by finish_time 
+    desc LIMIT #{page.startPos},#{page.pageSize}					
   </select>
   
   <!-- 根据订单编号和签订时间查询开票记录 -->
@@ -200,14 +200,13 @@
   </select>
   
    <!-- 根据订单签订时间查询合同 -->
-   <select id="selectInvoiceByDate" resultType="ezs_invoice"  >
+   <select id="selectInvoiceByDate" parameterType="com.sanbang.utils.Page" resultType="ezs_invoice"  >
     	select 
     	<include refid="Base_Column_List" /> 
     	from 	ezs_invoice invoice where
 	     (unix_timestamp(invoice.express_time)&gt;=unix_timestamp(#{startTime}) 
 	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
-	     and user_id = #{userId,jdbcType=BIGINT}
-	     LIMIT #{startPos},#{pageSize}
+	     LIMIT #{page.startPos},#{page.pageSize}
    </select>
    <!-- 根据订单编号查询合同 -->
    <select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 

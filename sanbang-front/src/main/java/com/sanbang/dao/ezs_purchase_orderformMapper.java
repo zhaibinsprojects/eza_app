@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.utils.Page;
+import com.sanbang.vo.PagerOrder;
 
 @Repository
 public interface ezs_purchase_orderformMapper {
@@ -26,5 +28,9 @@ public interface ezs_purchase_orderformMapper {
 
 	int selectCount(Long userId);
 
-	List<ezs_purchase_orderform> queryOrders(@Param("page")Page page, @Param("userId")Long userId, @Param("orderType")String orderType, @Param("orderStatus")Integer orderStatus);
+	int getOrderListByValueCount(@Param("pager")PagerOrder pager);
+
+	List<ezs_order_info> getOrderListByValue(@Param("pager")PagerOrder pager);
+
+	ezs_order_info getOrderListByOrderno(String order_no);
 }
