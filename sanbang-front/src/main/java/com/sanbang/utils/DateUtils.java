@@ -115,6 +115,35 @@ public class DateUtils {
 	calendar.add(Calendar.DAY_OF_MONTH,i); 
 		return calendar.getTime();
 	}
+	/**
+	 * 获取前后日期 i为正数 向后推迟i天，负数时向前提前i天
+	 * 返回String类型时间
+	 */
+	public static String getNeedate1(int i,String formtStr) 
+	 {
+		 Date dat = null;
+		 Calendar cd = Calendar.getInstance();
+		 cd.add(Calendar.DATE, i);
+		 dat = cd.getTime();
+		 SimpleDateFormat dformat = new SimpleDateFormat(formtStr);
+		 return dformat.format(dat);
+	 }
+	/**
+	 * 获取前后日期 i为正数 向后推迟i月，负数时向前提前i月
+	 * 返回String类型时间
+	 */
+	public static String getNeedate2(int i,String formtStr) 
+	 {
+		 Date dat = null;
+		 Calendar cd = Calendar.getInstance();
+		 cd.add(Calendar.MONTH, i);
+		 dat = cd.getTime();
+		 SimpleDateFormat dformat = new SimpleDateFormat(formtStr);
+		 return dformat.format(dat);
+	 }
+	
+	
+	
 	
 	public static Boolean compareDate(String paytime){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
