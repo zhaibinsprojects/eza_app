@@ -158,4 +158,9 @@
 		select name from ezs_dict where id = #{propertyId}
 	</select>  
   
+  <select id="selectAuditingById" resultType="java.lang.String">
+  	select code from ezs_dict where id = #{auditingusertype_id}
+  </select>
+  
+  
 </mapper>
