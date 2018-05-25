@@ -62,6 +62,8 @@
     goods_main_photo_id, logistics_id, quality_id, region_id, supply_id, user_id, util_id, 
     addess2
   </sql>
+  
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -724,7 +726,7 @@
   <select id="goodsIntroduce" resultMap="GoodsResultMap" parameterType="com.sanbang.utils.Page">
     select
     <include refid="Goods_Base_Column_List" />
-    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
+    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
   </select>
   
   <!-- 查询同类货品 -->
@@ -787,7 +789,6 @@
 		ezs_goods
     	where user_id = #{sellerId}
 	</select>
-
 	<!-- 查询商品详情，颜色，形态...做关联 -->
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
@@ -799,5 +800,4 @@
 		left join ezs_goods_class gc on g.goodClass_id = gc.id 
     	where g.id = #{id, jdbcType=BIGINT}
 	</select>
-
 </mapper>

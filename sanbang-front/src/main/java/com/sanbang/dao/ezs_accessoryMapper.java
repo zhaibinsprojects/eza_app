@@ -21,8 +21,12 @@ public interface ezs_accessoryMapper {
     int updateByPrimaryKeySelective(ezs_accessory record);
 
     int updateByPrimaryKey(ezs_accessory record);
-
+    
+    //goodsphotos
 	List<ezs_accessory> selectPhotoById(Long photo_id);
 	
 	List<AuthImageVo> getAuthImgListByStoreid(@Param("storeid")long storeid);
+	//Cartograph
+	List<ezs_accessory> selectCartographyById(Long goodsId);
+	
 }

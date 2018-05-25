@@ -286,13 +286,15 @@ public class BuyerServiceimpl implements BuyerService {
 		Result result = Result.failure();
 		try {
 
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
-
+//			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+//			if (upi == null) {
+//				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//				result.setMsg("用户未登录");
+//				return result;
+//			}
+			ezs_user upi = new ezs_user();
+			upi.setId((long) 22);
+			Long sellerId = upi.getId();
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
