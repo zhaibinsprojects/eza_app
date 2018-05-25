@@ -13,7 +13,7 @@ public class ezs_payinfo {
     private String order_no;
  // 1.采购单，2.订单
     private Integer order_type;
-
+ // 方式 1.线下 2.线上
     private Integer pay_mode;
  // 流水号
     private String pay_no;

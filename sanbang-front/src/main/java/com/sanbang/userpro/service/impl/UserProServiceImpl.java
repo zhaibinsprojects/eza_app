@@ -539,6 +539,7 @@ public class UserProServiceImpl implements UserProService{
 	 * @param mobilesendcodeexpirstr 验证码有效期 单位为 秒
 	 * @param mobileintervalstr   验证码距离下一次点击的时间间隔
 	 * @param mobilesendtimesstr  验证码 获取次数
+	 * flag=1无密登陆
 	 * @return
 	 */
 	@Override
@@ -550,6 +551,17 @@ public class UserProServiceImpl implements UserProService{
 				result.setMsg("格式有误，请输入正确的手机号码");
 				return result;
 		 }else{
+			 //无密登陆
+			 if(null!=flag&&flag==1){
+				 List<ezs_user> upis=ezs_userMapper.getUserInfoByUserNameFromBack(phone);
+					if(upis==null||upis.size()==0){
+						//不存在，不能登陆
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+						result.setSuccess(false);
+						result.setMsg("无该手机号注册信息，请先注册！");
+						return result;
+					}
+			 }
 			 
 			 //先判断发送的次数 和 时间间隔
 			 Long totalcodetimes=Long.parseLong(mobilesendtimesstr);
@@ -576,8 +588,10 @@ public class UserProServiceImpl implements UserProService{
 			 				SendMobileMessage.sendMsg(phone, content);
 			 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 							result.setSuccess(true);
-							result.setObj(new HashMap<>().put("mobile", phone));
+							Map<String, Object> map=new HashMap<>();
+							map.put("mobile", phone);
 							result.setMsg("验证码发送成功");
+							result.setObj(map);
 			 				RedisUtils.set(phone+mobilerecodestr, code, Long.parseLong(mobilesendcodeexpirstr));
 			 				RedisUtils.set(phone+mobilerecodestr+"times", ++codetimes, DateUtils.getTimeValue());
 			 			} catch (Exception e) {

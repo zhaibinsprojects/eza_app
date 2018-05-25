@@ -41,8 +41,13 @@ public interface AuthService {
 			String flag);
 	
 	/**
-	 * 个体暂存税号
+	 * 资质信息存储
 	 */
 	public Result savePicUrl(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
+	
+	/**
+	 * 授权信息存储
+	 */
+	public Result saveAuthPicUrl(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
 	
 }

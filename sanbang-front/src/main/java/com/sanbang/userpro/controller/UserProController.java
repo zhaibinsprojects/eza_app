@@ -83,7 +83,7 @@ public class UserProController {
         Result result = Result.failure();
       //无密登录
 		content = MessageDictionary.loginCode(code.toString());
-		result=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60",sendtimes,null,content);
+		result=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60",sendtimes,1,content);
         return result;
     }  
 
