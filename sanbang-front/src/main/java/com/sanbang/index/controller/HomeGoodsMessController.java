@@ -20,6 +20,7 @@ import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
 import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.Page;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsInfo;
@@ -46,16 +47,16 @@ public class HomeGoodsMessController {
 	@ResponseBody
 	public Object goodsDetailByName(HttpServletRequest request,HttpServletResponse response,String goodsName){
 		Map<String, Object> mmp = null;
-		Result rs = null;
 		List<GoodsInfo> glist = null;
+		Result 	rs = Result.failure();
 		mmp = this.recommendGoodsService.queryByName(goodsName);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			glist = (List<GoodsInfo>) mmp.get("Obj");
-			rs = Result.success();
+			 rs.setSuccess(true);
 			rs.setObj(glist);
 		}else{
-			rs = Result.failure();
+			 rs.setSuccess(false);
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
@@ -83,7 +84,7 @@ public class HomeGoodsMessController {
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			glist = (List<GoodsInfo>) mmp.get("Obj");
 			page = (Page) mmp.get("Page");
-			rs = Result.success(); 
+			rs = Result.success();
 			rs.setObj(glist);
 			rs.setMeta(page);
 		}else{
@@ -94,7 +95,7 @@ public class HomeGoodsMessController {
 		return rs;
 	}
 	/**
-	 * 获取所有商品种类信息
+	 * 获取所有商品种类信息(三级分类)
 	 * @param request
 	 * @param response
 	 * @return
@@ -131,6 +132,14 @@ public class HomeGoodsMessController {
 			,ezs_customized customized,ezs_user user) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		//判断用户是否登录
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
 		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

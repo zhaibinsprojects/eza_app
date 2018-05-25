@@ -451,4 +451,13 @@
     <include refid="Base_Column_List" />
     from ezs_ezssubstance where ec_id = #{content} order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
+  
+  <select id="goodsAllIndustryCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id) 
+  </select>
+  <select id="selectAllGoodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  	select 
+  	<include refid="Base_Column_List" />
+	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id ) order by addTime desc LIMIT #{startPos},#{pageSize}
+  </select>
 </mapper>
