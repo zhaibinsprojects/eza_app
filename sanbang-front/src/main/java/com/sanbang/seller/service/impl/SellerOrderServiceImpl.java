@@ -28,6 +28,7 @@ import com.sanbang.dao.ezs_logisticsMapper;
 import com.sanbang.dao.ezs_pactMapper;
 import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.seller.service.SellerOrderService;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
@@ -139,14 +140,14 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 		Result result = Result.failure();
 		try {
 
-//			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-//			if (upi == null) {
-//				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//				result.setMsg("用户未登录");
-//				return result;
-//			}
-			ezs_user upi = new ezs_user();
-			upi.setId((long) 22);
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+//			ezs_user upi = new ezs_user();
+//			upi.setId((long) 22);
 			Long sellerId = upi.getId();
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);

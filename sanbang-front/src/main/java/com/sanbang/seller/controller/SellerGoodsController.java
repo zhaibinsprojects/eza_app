@@ -263,15 +263,12 @@ public class SellerGoodsController {
 	public Object updateGoodsInfoById(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-//		if(upi==null){
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//			result.setMsg("请重新登陆！");
-//			return result;
-//		}
-		ezs_user upi = new ezs_user();
-		upi.setId((long) 1);
-		
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
 		result = sellerGoodsService.updateGoodsInfoById(result, goodsId,upi, request,response);
 		
 		return result;
