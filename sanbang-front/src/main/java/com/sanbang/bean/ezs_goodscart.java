@@ -22,12 +22,9 @@ public class ezs_goodscart {
 
     private Long sc_id;
     
-<<<<<<< HEAD
     //往前台返回发票信息所需
     private ezs_bill bill;
-
-    public Long getId() {
-=======
+    
     private String atime;
     private Double acount;//销售数量
     private BigDecimal aprice;//销售额
@@ -67,7 +64,6 @@ public class ezs_goodscart {
 	}
 
 	public Long getId() {
->>>>>>> ee2118a5be8ac47398a497d035aa92883507e3ca
         return id;
     }
 

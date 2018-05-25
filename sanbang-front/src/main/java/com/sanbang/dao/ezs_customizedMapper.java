@@ -17,11 +17,9 @@ public interface ezs_customizedMapper {
 
     int updateByPrimaryKey(ezs_customized record);
     
-<<<<<<< HEAD
     List customizedList(Long user_id);
-=======
+
     //add by zhaibin
     List<ezs_customized> getPurchaseByUserId(Long userId);
     
->>>>>>> ee2118a5be8ac47398a497d035aa92883507e3ca
 }

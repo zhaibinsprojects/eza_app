@@ -3,7 +3,6 @@ package com.sanbang.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_dict;
 
@@ -34,11 +33,9 @@ public interface ezs_dictMapper {
 	  */
 	 List<ezs_dict>  getDictByParentId(@Param("code")String code);
 	 
-<<<<<<< HEAD
+
 	 List<ezs_dict> conditionList();
-	 
-=======
-	 
+
 	 /**
 	  * 通过商品id或的属性
 	  */
@@ -49,5 +46,4 @@ public interface ezs_dictMapper {
 	 * @return
 	 */
 	String selectAuditingById(Long auditingusertype_id);
->>>>>>> ee2118a5be8ac47398a497d035aa92883507e3ca
 }
