@@ -22,10 +22,52 @@ public class ezs_goodscart {
 
     private Long sc_id;
     
+<<<<<<< HEAD
     //往前台返回发票信息所需
     private ezs_bill bill;
 
     public Long getId() {
+=======
+    private String atime;
+    private Double acount;//销售数量
+    private BigDecimal aprice;//销售额
+    private int updatecount;//更新次数
+    
+
+    public String getAtime() {
+		return atime;
+	}
+
+	public void setAtime(String atime) {
+		this.atime = atime;
+	}
+
+	public Double getAcount() {
+		return acount;
+	}
+
+	public void setAcount(Double acount) {
+		this.acount = acount;
+	}
+
+	public BigDecimal getAprice() {
+		return aprice;
+	}
+
+	public void setAprice(BigDecimal aprice) {
+		this.aprice = aprice;
+	}
+
+	public int getUpdatecount() {
+		return updatecount;
+	}
+
+	public void setUpdatecount(int updatecount) {
+		this.updatecount = updatecount;
+	}
+
+	public Long getId() {
+>>>>>>> ee2118a5be8ac47398a497d035aa92883507e3ca
         return id;
     }
 

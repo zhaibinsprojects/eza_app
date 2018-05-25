@@ -64,30 +64,22 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 	@Override
 	public Map<String, Object> getInvoiceListById(Long userId, String currentPage) {
-		Result result=Result.failure();
-		Map<String, Object> mmp=new HashMap<>();
+		Map<String, Object> mmp = new HashMap<>();
 		// 获取总页数
 		int totalCount = this.invoiceMapper.getInvoiceCountByUserId(userId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
+		int startPos = 0;
+		page.setStartPos(startPos);
 		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
-			int startPos = 0;
-			page.setStartPos(startPos);
-			if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
-				List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
-				result.setErrorcode( DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				mmp.put("Page", page);
-				mmp.put("Obj", glist);
-				result.setMsg("请求成功");
-				result.setObj(mmp);
-			} else {
-				result.setErrorcode(HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-				mmp.put("Msg", "页码越界");
-				mmp.put("Page", page);
-				result.setMsg("请求失败");
-				result.setObj(mmp);
-			}
-			return mmp;
+			List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Page", page);
+			mmp.put("Obj", glist);
+		} else {
+			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+			mmp.put("Msg", "页码越界");
+			mmp.put("Page", page);
 		}
 		return mmp;
 	}
@@ -114,9 +106,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		int startPos = 0;
-		page.setStartPos(startPos);
-		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+		if ((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)) {
 			if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)) {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				Date dt1;

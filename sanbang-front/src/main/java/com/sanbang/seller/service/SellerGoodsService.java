@@ -12,6 +12,7 @@ import com.sanbang.bean.ezs_goods_cartography;
 import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 public interface SellerGoodsService {
 
@@ -19,7 +20,7 @@ public interface SellerGoodsService {
 
 	ezs_goods queryGoodsInfoById(long id);
 
-	List<ezs_goods_photo> queryPhotoById(Long goodsId);
+	List<ezs_accessory> queryPhotoById(Long goodsId);
 
 	Result addGoodsInfo(Result result, ezs_user upi, HttpServletRequest request, HttpServletResponse response);
 
@@ -29,6 +30,8 @@ public interface SellerGoodsService {
 
 	Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response);
 
-	List<ezs_goods_cartography> queryCartographyById(Long goodsId);
+	List<ezs_accessory> queryCartographyById(Long goodsId);
+	//查询货品属性
+	String getGoodsProperty(Long propertyId);
 
 }

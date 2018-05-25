@@ -185,6 +185,12 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
+
+	<!-- 定制采购 -->
+	<bean id="ezs_customized_resMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customized_resMapper" />
+	</bean>
 	
 	<!-- 卖家退货订单 -->
 	<bean id="returnOrderMapper" parent="baseMapper">
@@ -207,6 +213,5 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_goods_cartographyMapper"/>
 	</bean>
-	
 	
 </beans>

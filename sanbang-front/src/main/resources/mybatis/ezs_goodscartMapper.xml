@@ -138,4 +138,22 @@
       sc_id = #{sc_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectByDay" resultMap="BaseResultMap">
+  	select DATE_FORMAT(s.addTime,'%Y-%m-%d') atime,ROUND(SUM(s.count),2) acount,SUM(s.count*s.price) aprice,IFNULL(ll.lcount,0) updatecount from
+  	(select addTime,count,price from ezs_goodscart where addTime >= #{needate1}) s left join
+  	(select count(*) lcount,DATE_FORMAT(l.addTime,'%Y-%m-%d') ltime from ezs_goods_log l where l.addTime >=#{needate1} group by ltime) ll
+  	on ll.ltime = DATE_FORMAT(s.addTime,'%Y-%m-%d') group by atime
+  </select>
+  
+  <select id="selectByMonth" resultMap="BaseResultMap">
+  	select DATE_FORMAT(s.addTime,'%Y-%m') atime,ROUND(SUM(s.count),2) acount,SUM(s.count*s.price) aprice,IFNULL(ll.lcount,0) updatecount from
+  	(select addTime,count,price from ezs_goodscart where addTime >= #{needate2}) s left join
+  	(select count(*) lcount,DATE_FORMAT(l.addTime,'%Y-%m') ltime from ezs_goods_log l where l.addTime >=#{needate2} group by ltime) ll
+  	on ll.ltime = DATE_FORMAT(s.addTime,'%Y-%m') group by atime
+  </select>
+  <select id="selectByCustom" resultMap="BaseResultMap">
+  	
+  	
+  </select>
+  
 </mapper>
