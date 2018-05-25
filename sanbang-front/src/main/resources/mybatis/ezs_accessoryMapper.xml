@@ -218,7 +218,7 @@
 		ezs_card_dict A
 	LEFT JOIN ezs_paper B ON A.paper_id = B.id
 	LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
-	WHERE A.store_id=${storeid}
+	WHERE A.store_id=#{storeid}
   </select>
   
 </mapper>

@@ -1,8 +1,10 @@
 package com.sanbang.userpro.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,9 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.area.service.AreaService;
+import com.sanbang.bean.ezs_user;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.IpUtils;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCate;
+import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MessageDictionary;
 
 @Controller
@@ -28,6 +36,12 @@ public class UserRegistController {
 	
 	@Autowired
 	private UserProService userProService;
+	
+	@Autowired
+	private DictService dictService;
+	
+	@Autowired
+	private AreaService areaService;
 	
 	//注册验证码标识
 	@Value("${consparam.mobile.recode}")
@@ -44,6 +58,10 @@ public class UserRegistController {
 	//#短信验证码发送的次数
 	@Value("${consparam.mobile.sendtimes}")
 	private String mobilesendtimes;
+	
+	//注册阶段标识
+	@Value("${consparam.cookie.registcard}")
+	private String registcarid;
 	
 	/**
 	 * 检查手机号码是否存在
@@ -79,7 +97,7 @@ public class UserRegistController {
 		// 分享码业务处理
 		String sharcode = request.getParameter("sharcode");
 		userProService.sharCodeTodo(sharcode, mobile);
-		
+	
 		result = userProService.sendCode(mobile, code.toString(), mobilerecode, mobilesendcodeexpir, mobileinterval,
 				mobilesendtimes, null, MessageDictionary.registCode(code));
 
@@ -117,8 +135,54 @@ public class UserRegistController {
 	}
 	
 	
+	
+	
 	/**
-	 * 
+	 * 填写账号信息Init
+	 * @param userName
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/userAddInfoinit")
+	@ResponseBody
+	public Object upCompanyInit(HttpServletRequest request) throws Exception{
+		Result result=Result.failure();
+		
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+			
+			// 获取上一步用户注册信息
+			ezs_user user = RedisUserSession.getRegistUserInfo(request);
+			
+			if(user==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请先输入用户名密码");
+				return result;
+				}
+			
+			Map<String, Object> map=new HashMap<>();
+			//主营行业
+			map.put("industrydic", dictService.getDictByParentId(DictionaryCate.EZS_INDUSTRY));
+			//公司类型
+			map.put("comdic", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
+			//地址
+			map.put("areadic", areaService.getAreaParentList());
+			//性别
+			map.put("sexdic", dictService.getDictByParentId(DictionaryCate.EZS_SEX));
+			//买家卖家选择
+			map.put("cusdic", dictService.getDictByParentId(DictionaryCate.CRM_CUSTOMER_TYPE));
+			
+ 			result.setObj(map);
+		
+		return result;
+	}
+	
+	
+	
+	/**
+	 * 填写账号信息
 	 * @param request
      * @param userRole 角色选择
      * @param companyName 公司名称
