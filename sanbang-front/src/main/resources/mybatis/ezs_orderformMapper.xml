@@ -518,10 +518,4 @@
     where id = #{id,jdbcType=BIGINT}
 	</select>
 	
-	<!-- 用户的采购单 -->
-	<select id="orderList" resultMap="orderMap" parameterType="java.lang.Long" >
-    select * from ezs_orderform 
-    where user_id = #{user_id,jdbcType=BIGINT}
-	</select>
-	
 </mapper>

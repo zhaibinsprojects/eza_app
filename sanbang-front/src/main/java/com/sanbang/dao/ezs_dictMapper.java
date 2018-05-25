@@ -27,12 +27,13 @@ public interface ezs_dictMapper {
 	  */
 	 ezs_dict  getDictById(@Param("code")String code);
 	 
-	 
 	 /**
 	  * 得到字典表数据通过父name
 	  * @param id
 	  * @return
 	  */
 	 List<ezs_dict>  getDictByParentId(@Param("code")String code);
-    
+	 
+	 List<ezs_dict> conditionList();
+	 
 }

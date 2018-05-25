@@ -8,6 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_customized_record;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -32,6 +35,14 @@ public class GoodsServiceImpl implements GoodsService{
 	private com.sanbang.dao.ezs_documentshareMapper ezs_documentshareMapper;
 	@Autowired
 	private com.sanbang.dao.ezs_orderformMapper ezs_orderformMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_customizedMapper ezs_customizedMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_customized_recordMapper ezs_customized_recordMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_dictMapper ezs_dictMapper;
+	
+	
 	
 	
 	/**
@@ -105,10 +116,27 @@ public class GoodsServiceImpl implements GoodsService{
 		return list;
 	}
 	
-	public List<ezs_orderform> orderList(Long user_id){
-		List<ezs_orderform> list = new ArrayList();
-		list = ezs_orderformMapper.orderList(user_id);
+	public List conditionList(){
+		List<ezs_dict> list = new ArrayList();
+		list = ezs_dictMapper.conditionList();
 		return list;
+	}
+	
+	
+	public List<ezs_customized> customizedList(Long user_id){
+		List<ezs_customized> list = new ArrayList();
+		list = ezs_customizedMapper.customizedList(user_id);
+		return list;
+	}
+	
+	public int insertCustomized(ezs_customized customized){
+		int n = ezs_customizedMapper.insert(customized);
+		return n;
+	}
+	
+	public int insertCustomizedRecord(ezs_customized_record customizedRecord){
+		int n = ezs_customized_recordMapper.insert(customizedRecord);
+		return n;
 	}
 	
 }

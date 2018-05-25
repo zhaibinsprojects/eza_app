@@ -45,11 +45,4 @@ public interface ezs_orderformMapper {
      */
     ezs_orderform  selectByorderno(String order_no);
     
-    /**
-     * 用户的采购单
-     * @param user_id	用户id
-     * @return
-     */
-    List<ezs_orderform> orderList(Long user_id);
-    
 }

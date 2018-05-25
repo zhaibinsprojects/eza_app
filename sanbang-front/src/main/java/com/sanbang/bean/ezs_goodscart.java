@@ -21,6 +21,9 @@ public class ezs_goodscart {
     private Long of_id;
 
     private Long sc_id;
+    
+    //往前台返回发票信息所需
+    private ezs_bill bill;
 
     public Long getId() {
         return id;
@@ -93,4 +96,13 @@ public class ezs_goodscart {
     public void setSc_id(Long sc_id) {
         this.sc_id = sc_id;
     }
+
+	public ezs_bill getBill() {
+		return bill;
+	}
+
+	public void setBill(ezs_bill bill) {
+		this.bill = bill;
+	}
+    
 }

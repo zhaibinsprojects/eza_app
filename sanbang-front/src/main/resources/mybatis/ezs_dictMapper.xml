@@ -153,4 +153,10 @@
 		)
 		and B.deleteStatus=0
   </select>
+  
+  
+  <select id="conditionList" resultType="ezs_dict">
+	  	select * from ezs_dict where deleteStatus = '0'
+  </select>
+  
 </mapper>
