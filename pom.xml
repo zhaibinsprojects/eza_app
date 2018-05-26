@@ -424,19 +424,12 @@
 		    <artifactId>itext-asian</artifactId>
 		    <version>5.2.0</version>
 		</dependency>
-<<<<<<< HEAD
 		
-			 <dependency>   
-        <groupId>com.lowagie</groupId>  
-        <artifactId>itext</artifactId>  
-        <version>2.0.8</version>  
-
-    	</dependency>   
-  
-=======
-		 
-		 
-		 
+		<dependency>   
+        	<groupId>com.lowagie</groupId>  
+        	<artifactId>itext</artifactId>  
+        	<version>2.0.8</version>  
+    	</dependency>    
 		 
 		<dependency>
     		<groupId>com.itextpdf</groupId>
@@ -449,7 +442,6 @@
     		<artifactId>itext-asian</artifactId>
     		<version>5.2.0</version>
 		</dependency> -->
->>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 
 			<dependency>
 				<groupId>org.xhtmlrenderer</groupId>

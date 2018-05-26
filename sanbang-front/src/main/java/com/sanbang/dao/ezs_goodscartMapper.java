@@ -1,14 +1,11 @@
 package com.sanbang.dao;
 
-<<<<<<< HEAD
 import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-=======
 import java.util.List;
 
->>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goodscart;
@@ -27,13 +24,10 @@ public interface ezs_goodscartMapper {
 
     int updateByPrimaryKey(ezs_goodscart record);
     
-<<<<<<< HEAD
     List<ezs_goodscart> selectBeanByStartEndTime(@Param("startTime")String startTime,@Param("endTime") String endTime);
-=======
     List<ezs_goodscart> selectByDay(String needate1);
     
     List<ezs_goodscart> selectByMonth(String needate2);
     
     List<ezs_goodscart> selectByCustom(String starttime, String endtime);
->>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 }

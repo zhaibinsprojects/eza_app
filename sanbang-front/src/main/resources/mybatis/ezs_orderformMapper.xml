@@ -476,12 +476,9 @@
 	
 	
 	<!--订单详情-->
-<<<<<<< HEAD
 	<!-- <select id="getOrderListByOrderno" resultMap="BaseResultMap"> -->
 	<select id="getOrderListByOrderno" resultType="com.sanbang.bean.ezs_order_info">
-=======
 	<select id="getOrderListByOrderno" resultMap="orderMap">
->>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 	  SELECT
 	   		C.price,
 			C.good_no,
@@ -513,14 +510,11 @@
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
 	WHERE
 		1 = 1
-<<<<<<< HEAD
 		and
 
 	 B.order_no=#{order_no}	
-=======
 	and
 	B.order_no=#{order_no}	
->>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 	</select>
 	
 	<!--订单详细信息-->
