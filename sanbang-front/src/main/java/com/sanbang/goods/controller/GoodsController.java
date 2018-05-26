@@ -102,7 +102,6 @@ public class GoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
-		int n;
 		if(goodId != null){
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
