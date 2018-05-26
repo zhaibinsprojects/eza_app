@@ -146,8 +146,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("用户未登录");
 				return result;
 			}
-//			ezs_user upi = new ezs_user();
-//			upi.setId((long) 22);
 			Long sellerId = upi.getId();
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
