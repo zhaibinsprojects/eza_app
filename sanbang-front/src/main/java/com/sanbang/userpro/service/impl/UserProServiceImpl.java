@@ -1174,6 +1174,7 @@ public class UserProServiceImpl implements UserProService{
 		}
 	}
 	private void companyType(String[] cmtypes,long store){
+		ezs_companyType_dictMapper.delCompanyTypeByStoreId(store);
 		for (String long1 : cmtypes) {
 			ezs_companyType_dictMapper.insert(new ezs_companyType_dict(store, Long.valueOf(long1)) );
 		}
@@ -1436,101 +1437,119 @@ public class UserProServiceImpl implements UserProService{
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(mianIndustrys)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择主营行业");
+			return result;
 		}
 		if (Tools.isEmpty(companyTypes)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择公司类型");
+			return result;
 		}
 		if (Tools.isEmpty(yTurnover)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入年营业额");
-			if (!Tools.isNum(yTurnover)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效年营业额");
-			}
+			return result;
+			
+		}
+		if (!Tools.isNum(yTurnover)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效年营业额");
+			return result;
 		}
 		if (Tools.isEmpty(covered)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入场地面积");
-			if (!Tools.isNum(covered)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效场地面积");
-			}
+			return result;
+		}
+		if (!Tools.isNum(covered)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效场地面积");
+			return result;
 		}
 
 		if (Tools.isEmpty(device_num)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入设备数量");
-			if (!Tools.isNum(device_num)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效设备数量");
-			}
+			return result;
 		}
-
+		if (!Tools.isNum(device_num)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效设备数量");
+			return result;
+		}
 		if (Tools.isEmpty(employee_num)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入员工数量");
-			if (!Tools.isNum(employee_num)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效员工数量");
-			}
+			return result;
+			
+		}
+		if (!Tools.isNum(employee_num)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效员工数量");
+			return result;
 		}
 		if (Tools.isEmpty(assets)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入总资产");
-			if (!Tools.isNum(assets)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效总资产");
-			}
+			return result;
+			
 		}
-
+		if (!Tools.isNum(assets)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效总资产");
+			return result;
+		}
 		if (Tools.isEmpty(fixed_assets)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入固定资产");
-			if (!Tools.isNum(fixed_assets)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效固定资产");
-			}
+			return result;
 		}
-
+		if (!Tools.isNum(fixed_assets)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效固定资产");
+			return result;
+		}
 		if (Tools.isEmpty(obtainYear)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入实际控制人从业年限");
-			if (!Tools.isNum(obtainYear)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效实际控制人从业年限");
-			}
+			return result;
 		}
-
+		if (!Tools.isNum(obtainYear)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效实际控制人从业年限");
+			return result;
+		}
 		if (Tools.isEmpty(rent)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择是否租用");
+			return result;
 		}
 		return result;
 	}

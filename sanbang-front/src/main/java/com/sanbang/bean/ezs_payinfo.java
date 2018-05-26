@@ -1,10 +1,11 @@
 package com.sanbang.bean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class ezs_payinfo {
     private Long id;
-    private String addTime;
+    private Date addTime;
 
     private Boolean deleteStatus;
  // 订单编号
@@ -60,14 +61,16 @@ public class ezs_payinfo {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getAddTime() {
-        return addTime;
-    }
+    
+    public Date getAddTime() {
+		return addTime;
+	}
 
-    public void setAddTime(String addTime) {
-        this.addTime = addTime;
-    }
-    public Boolean getDeleteStatus() {
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public Boolean getDeleteStatus() {
         return deleteStatus;
     }
 

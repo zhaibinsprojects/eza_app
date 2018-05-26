@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.MapUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.log4j.Logger;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ import com.sanbang.dao.ezs_order_canceMapper;
 import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.dao.ezs_pactMapper;
 import com.sanbang.dao.ezs_payinfoMapper;
+import com.sanbang.utils.JsonListUtil;
 import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -53,10 +56,12 @@ import com.sanbang.vo.MapTools;
 import com.sanbang.vo.PagerOrder;
 import com.sanbang.vo.userauth.AuthImageVo;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service("buyerService")
 public class BuyerServiceimpl implements BuyerService {
+	private Logger log =Logger.getLogger(BuyerServiceimpl.class);
 
 	@Value("${config.sign.callbackurl}")
 	private String callbackurl;
@@ -192,16 +197,16 @@ public class BuyerServiceimpl implements BuyerService {
 				return result;
 			}
 			// 先查一下合同的pdf在不在
-			List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
+			//List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
 			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
 			
-			if (pact == null||pact.size()==0) {
+			/*if (pact == null||pact.size()==0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
 				return result;
 
-			}
+			}*/
 			if (orderinfo.getPact_status() == 1) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -211,7 +216,7 @@ public class BuyerServiceimpl implements BuyerService {
 			String url = signbase+"/website/certSign/forh5/showcontentpdf.do";
 			Map<String, Object> mv = new HashMap<>();
 
-			mv.put("orderid", pact.get(0).getOrder_no());
+			mv.put("orderid", orderinfo.getOrder_no());
 			JSONObject callBackRet = null;
 			HttpRequestParam httpParam = new HttpRequestParam();
 			for (Entry<String, Object> en : mv.entrySet()) {
@@ -286,15 +291,12 @@ public class BuyerServiceimpl implements BuyerService {
 		Result result = Result.failure();
 		try {
 
-//			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-//			if (upi == null) {
-//				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//				result.setMsg("用户未登录");
-//				return result;
-//			}
-			ezs_user upi = new ezs_user();
-			upi.setId((long) 22);
-			Long sellerId = upi.getId();
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -309,7 +311,12 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setMsg("订单不存在");
 				return result;
 			}
-
+			if (orderinfo.getOrder_status()!=20) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("合同不在签订状态！");
+				return result;
+			}
 			if (orderinfo.getPact_status() == 1) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -317,7 +324,7 @@ public class BuyerServiceimpl implements BuyerService {
 				return result;
 			}
 			
-			// 先查一下合同的pdf在不在
+			/*// 先查一下合同的pdf在不在
 			List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
 
 			if (pact == null||pact.size()==0) {
@@ -326,7 +333,7 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
 				return result;
 
-			}
+			}*/
 			
 
 			Map<String, Object> mv = new HashMap<>();
@@ -338,7 +345,7 @@ public class BuyerServiceimpl implements BuyerService {
 			String getijingyingshen = upi.getEzs_store().getIdCardNum();
 			String qiyedaimazheng = upi.getEzs_store().getUnifyCode();
 			mv.put("signMemId", upi.getEzs_store().getNumber());
-			mv.put("order_no", order_no);
+			mv.put("orderid", order_no);
 			mv.put("callBackUrl", callbackurl);
 			mv.put("regid", 6);// (企业类型)5为个人 6为 个体和 公司
 			mv.put("company", company);
@@ -375,6 +382,7 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 
 			}
+			log.info("h5请求签章返回："+callBackRet);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -409,6 +417,7 @@ public class BuyerServiceimpl implements BuyerService {
 		return map;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Result getContentList(String member, int temid, int pageno,HttpServletRequest request) {
 		Result result=Result.failure();
@@ -428,10 +437,13 @@ public class BuyerServiceimpl implements BuyerService {
 			}
 			Map<String, Object> map = new HashMap<String, Object>();
 			
-			map.put("member",member);
+			map.put("number",member);
 			map.put("temid", temid);
 			map.put("pageno", pageno);
-
+			map.put("starttime", request.getParameter("starttime"));
+			map.put("endtime", request.getParameter("endtime"));
+			map.put("ordernoOrcontentno", request.getParameter("ordernoOrcontentno"));
+			
 			String url = signbase+"/website/certSign/forh5/contentForOut.do";
 			HttpRequestParam httpParam = new HttpRequestParam();
 			for (Entry<String, Object> en : map.entrySet()) {
@@ -442,7 +454,13 @@ public class BuyerServiceimpl implements BuyerService {
 			com.sanbang.vo.sign.Result  res=(com.sanbang.vo.sign.Result) JSONObject.toBean(callBackRet,com.sanbang.vo.sign.Result.class);
 			if (res.isSuccess()) {
 				map.clear();
-				map.put("pdfurl", res.getContent());
+				List<CertSignInfoBean> list =new ArrayList<>();
+				if(Tools.isEmpty(String.valueOf(res.getContent()))){
+					map.put("list", list);
+				}else{
+					map.put("list", res.getContent());
+				}
+				
 				result.setSuccess(true);
 				result.setMsg("请求成功 ");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -489,15 +507,20 @@ public class BuyerServiceimpl implements BuyerService {
 			return result;
 		}
 		
-		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-		result.setSuccess(false);
-		result.setMsg("订单不存在");
 		
 		ezs_orderform orderinfo = ezs_orderformMapper.selectByorderno(order_no);
 		if(orderinfo==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("订单不存在");
+			return result;
+		}
+		
+		if(orderinfo.getOrder_status()!=10){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请在待签约之前进行关闭订单操作。");
+			return result;
 		}
 		
 		//取消订单记录
@@ -569,6 +592,39 @@ public class BuyerServiceimpl implements BuyerService {
 				return result;
 			}
 			
+			//判断是否在支付状态
+			List<ezs_payinfo>	payresc=ezs_payinfoMapper.getpayinfoByOrderno(order_no);
+			if(orderinfo.getOrder_status()==40){
+				if(payresc.size()==0){
+					orderinfo.setOrder_status(50);
+				}else{
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					// 支付方式（0.全款，1：首款+尾款 ）
+					if(orderinfo.getPay_mode()==0){
+						result.setMsg("您已上传过全款支付凭证,如有疑问请联系客服");
+					}else{
+						result.setMsg("您已上传过首款支付凭证,如有疑问请联系客服");	
+					}
+					return  result;
+				}
+				
+			}else if(orderinfo.getOrder_status()==80){
+				if(payresc.size()>1){
+					orderinfo.setOrder_status(90);
+				}else{
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("您已上传过尾款支付凭证,如有疑问请联系客服");
+					return  result;
+				}
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("不在支付状态");
+				return  result;
+			}
+			
 			//添加图片记录
 			ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 			ezs_accessory.setAddTime(new Date());
@@ -578,12 +634,13 @@ public class BuyerServiceimpl implements BuyerService {
 			ezs_accessory.setInfo(null);
 			ezs_accessory.setName("");
 			ezs_accessory.setPath(vo.getImgurl());
-			ezs_accessory.setSize(null);
-			ezs_accessory.setWidth(null);
+			ezs_accessory.setSize((float) 100);
+			ezs_accessory.setWidth(100);
 			ezs_accessory.setUser_id(upi.getId());
 			ezs_accessoryMapper.insertSelective(ezs_accessory);
 			//upi记录
 			vo.setAccid(ezs_accessory.getId());
+			
 			
 			//票据记录
 			ezs_payinfo payinfo=new ezs_payinfo();
@@ -592,22 +649,27 @@ public class BuyerServiceimpl implements BuyerService {
 			payinfo.setPrice(orderinfo.getFirst_price());
 			payinfo.setDeleteStatus(false);
 			payinfo.setOrder_no(order_no);
+			 // 1.采购单，2.订单
 			payinfo.setOrder_type(2);
 			payinfo.setPay_no(Tools.getH5PayNO());//流水号
 			payinfo.setBill_id(vo.getAccid());//票据id
 			payinfo.setPaymentUser_id(orderinfo.getBuyerid());//支付人id
 			payinfo.setReceUser_id(orderinfo.getSellerid());//收款人id 
+			payinfo.setPay_mode(1);;
 			int status1=ezs_payinfoMapper.insert(payinfo);
 			
-			orderinfo.setOrder_status(40);
+			
+			
+			ezs_orderform orde = ezs_orderformMapper.selectByorderno(order_no);
 			ezs_orderform  order=new ezs_orderform();
 			order.setOrder_no(orderinfo.getOrder_no());
 			order.setOrder_status(orderinfo.getOrder_status());
-			int status=ezs_orderformMapper.updateByPrimaryKey(order);
+			order.setId(orde.getId());
+			int status=ezs_orderformMapper.updateByPrimaryKeySelective(order);
 			result.setSuccess(true);
-			result.setMsg("提交成功");
+			result.setMsg("上传成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			result.setObj(payinfo);//方便修改
+			//result.setObj(payinfo);//方便修改
 			return result;
 		} catch (Exception e) {
 			result.setSuccess(false);
@@ -667,14 +729,18 @@ public class BuyerServiceimpl implements BuyerService {
 			}
 	
 			com.sanbang.bean.ezs_invoice ezs_invoice =	ezs_invoiceMapper.selectInvoiceByOrderNo(order_no);
-
+			
 			if (null == ezs_invoice) {
 				result.setSuccess(false);
 				result.setMsg("暂无发票信息");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				return result;
 			}else{
-				result.setSuccess(false);
+				if(null!=ezs_invoice.getReceipt_id()&&ezs_invoice.getReceipt_id()>0){
+					ezs_accessory accessory=ezs_accessoryMapper.selectByPrimaryKey(ezs_invoice.getReceipt_id());
+					ezs_invoice.setPicurl(accessory.getPath());
+				}
+				result.setSuccess(true);
 				result.setMsg("请求成功");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setObj(ezs_invoice);
@@ -709,7 +775,7 @@ public class BuyerServiceimpl implements BuyerService {
 	
 			ezs_logistics ezs_logistics =	ezs_logisticsMapper.selectByOrderNo(order_no);
 
-			if (null == ezs_logistics) {
+			if (null == ezs_logistics||Tools.isEmpty(ezs_logistics.getCar_no())) {
 				result.setSuccess(false);
 				result.setMsg("暂无物流信息");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -754,6 +820,14 @@ public class BuyerServiceimpl implements BuyerService {
 			return result;
 		}
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		String aa="[{\"signcomFrout\":\"sign0001\",\"signUrl\":\"http://127.0.0.1:8080/file/cert/temp0\\2018\\05\\f96f77af-558a-46e7-9900-e30839e21d38\\1527237148079.pdf\",\"contentno\":\"四十四\",\"orderid\":\"test001\",\"signTime\":1527240253000}]";
+		
+		List<CertSignInfoBean> list=JsonListUtil.jsonToList(aa, CertSignInfoBean.class);
+		
+	
 	}
 
 }

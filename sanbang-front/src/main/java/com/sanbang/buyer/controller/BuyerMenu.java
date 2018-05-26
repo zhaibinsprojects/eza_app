@@ -101,25 +101,32 @@ public class BuyerMenu {
 			return result;
 		}
 
-		if (pageNow < 1) {
-			pageNow = 1;
-		}
-		PagerOrder pager = new PagerOrder();
-		pager.setUserid(upi.getId());
-		pager.setOrder_status(order_status);
-		pager.setOrder_type(order_type);
-		pager.setPageNow(pageNow);
-		List<ezs_order_info> list = buyerService.getOrderListByValue(pager);
-		result.setMeta(new Page(pageNow, pager.getPageSize(), pager.getTotalCount(), pager.getTotalPageCount(), 0, true,
-				true, true, true));
-		if (list.size() == 0) {
-			result.getMeta().setHasFirst(false);
-		}
-		if (pageNow == 1) {
-			result.getMeta().setHasPre(false);
-		}
+		try {
+			if (pageNow < 1) {
+				pageNow = 1;
+			}
+			PagerOrder pager = new PagerOrder();
+			pager.setUserid(upi.getId());
+			pager.setOrder_status(order_status);
+			pager.setOrder_type(order_type);
+			pager.setPageNow(pageNow);
+			List<ezs_order_info> list = buyerService.getOrderListByValue(pager);
+			result.setMeta(new Page(pageNow, pager.getPageSize(), pager.getTotalCount(), pager.getTotalPageCount(), 0, true,
+					true, true, true));
+			if (list.size() == 0) {
+				result.getMeta().setHasFirst(false);
+			}
+			if (pageNow == 1) {
+				result.getMeta().setHasPre(false);
+			}
 
-		result.setObj(list);
+			result.setObj(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 
@@ -146,8 +153,15 @@ public class BuyerMenu {
 			return result;
 		}
 
-		Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
-		result.setObj(map);
+		try {
+			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+			result.setObj(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 
@@ -178,7 +192,14 @@ public class BuyerMenu {
 			return result;
 		}
 
-		result= buyerService.orderclose(request,order_no);
+		try {
+			result= buyerService.orderclose(request,order_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 
@@ -206,7 +227,14 @@ public class BuyerMenu {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		result = buyerService.payconfirm(request,order_no);
+		try {
+			result = buyerService.payconfirm(request,order_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 	
@@ -234,8 +262,20 @@ public class BuyerMenu {
 			return result;
 		}
 
-		Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
-		result.setObj(map);
+		try {
+			result = buyerService.payconfirm(request,order_no);
+			if(!result.getSuccess()){
+				return result;
+			}
+			
+			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+			result.setObj(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 	
@@ -263,7 +303,14 @@ public class BuyerMenu {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		result = buyerService.orderpaysubmit(request, order_no, urlParam);
+		try {
+			result = buyerService.orderpaysubmit(request, order_no, urlParam);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("上传支付凭证失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 	
@@ -284,7 +331,14 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		result = buyerService.showOrderContent(request, order_no);
+		try {
+			result = buyerService.showOrderContent(request, order_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("查看合同失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 
@@ -302,7 +356,15 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		result = buyerService.seller_order_signature(order_no, request, response);
+		try {
+			result = buyerService.seller_order_signature(order_no, request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("签订合同失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
+		}
 		return result;
 	}
 	
@@ -330,7 +392,8 @@ public class BuyerMenu {
 		}
 		
 		try {
-			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 5, pageno, request);
+			//销售合同 6
+			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 6, pageno, request);
 		} catch (Exception e) {
 			result.setMsg("未获取到数据");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -353,7 +416,14 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		result=buyerService.getezs_invoice(request, order_no);
+		try {
+			result=buyerService.getezs_invoice(request, order_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 	
@@ -373,7 +443,14 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		result=buyerService.getezs_logistics(request, order_no);
+		try {
+			result=buyerService.getezs_logistics(request, order_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
 		return result;
 	}
 	
@@ -403,25 +480,32 @@ public class BuyerMenu {
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		map = sellerReceiptService.getInvoiceListById(userId,currentPage);
-		Integer ErrorCode = (Integer)map.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			list = (List<ezs_invoice>) map.get("Obj");
-			page = (Page) map.get("Page");
-			result = Result.success(); 
-			result.setObj(list);
-			result.setMeta(page);
-		}else{
-			result = Result.failure();
-			result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
-			result.setMsg(map.get("Msg").toString());
+		try {
+			map = sellerReceiptService.getInvoiceListById(userId,currentPage);
+			Integer ErrorCode = (Integer)map.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				list = (List<ezs_invoice>) map.get("Obj");
+				page = (Page) map.get("Page");
+				result = Result.success(); 
+				result.setObj(list);
+				result.setMeta(page);
+			}else{
+				result = Result.failure();
+				result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
+				result.setMsg(map.get("Msg").toString());
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		return result;
 	}
 	
 	
 	/**
-	 * 票据详情页面
+	 * 发票查看
 	 * @param orderNo
 	 * @param request
 	 * @param response
@@ -467,4 +551,6 @@ public class BuyerMenu {
 		}
 		return result;
 	}
+	
+	
 }

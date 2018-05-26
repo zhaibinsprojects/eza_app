@@ -22,6 +22,8 @@ public interface ezs_payinfoMapper {
     int updateByPrimaryKey(ezs_payinfo record);
 
 	ezs_payinfo selectByBillId(Long billId);
+	
+	List<ezs_payinfo> getpayinfoByOrderno(String order_no);
 
 	List<ezs_payinfo> selectPayRecordTotal(Map<String, Object> map);
 

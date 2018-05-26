@@ -10,11 +10,15 @@ public class ezs_orderform {
 
     private Boolean deleteStatus;
 
+    private Integer adjust_price;
+
     private BigDecimal all_price;
 
     private String cart_session_id;
 
     private BigDecimal end_price;
+
+    private Date estimateTime;
 
     private Date finishtime;
 
@@ -32,6 +36,10 @@ public class ezs_orderform {
 
     private Integer pay_mode;
 
+    private Integer pay_mode01;
+
+    private Integer pay_mode02;
+
     private Integer sc_status;
 
     private BigDecimal total_price;
@@ -40,19 +48,7 @@ public class ezs_orderform {
 
     private Long user_id;
 
-    private Date end_time;
-
-    private Date firest_time;
-
-    private String pact_no;
-
-    private Long bill_id;
-
-    private Long buyBiil_id;
-
-    private Long invoice_id;
-
-    private Long logistics_id;
+    private Long weAddress_id;
 
     private String msg;
 
@@ -80,6 +76,14 @@ public class ezs_orderform {
         this.deleteStatus = deleteStatus;
     }
 
+    public Integer getAdjust_price() {
+        return adjust_price;
+    }
+
+    public void setAdjust_price(Integer adjust_price) {
+        this.adjust_price = adjust_price;
+    }
+
     public BigDecimal getAll_price() {
         return all_price;
     }
@@ -102,6 +106,14 @@ public class ezs_orderform {
 
     public void setEnd_price(BigDecimal end_price) {
         this.end_price = end_price;
+    }
+
+    public Date getEstimateTime() {
+        return estimateTime;
+    }
+
+    public void setEstimateTime(Date estimateTime) {
+        this.estimateTime = estimateTime;
     }
 
     public Date getFinishtime() {
@@ -168,6 +180,22 @@ public class ezs_orderform {
         this.pay_mode = pay_mode;
     }
 
+    public Integer getPay_mode01() {
+        return pay_mode01;
+    }
+
+    public void setPay_mode01(Integer pay_mode01) {
+        this.pay_mode01 = pay_mode01;
+    }
+
+    public Integer getPay_mode02() {
+        return pay_mode02;
+    }
+
+    public void setPay_mode02(Integer pay_mode02) {
+        this.pay_mode02 = pay_mode02;
+    }
+
     public Integer getSc_status() {
         return sc_status;
     }
@@ -200,60 +228,12 @@ public class ezs_orderform {
         this.user_id = user_id;
     }
 
-    public Date getEnd_time() {
-        return end_time;
+    public Long getWeAddress_id() {
+        return weAddress_id;
     }
 
-    public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
-    }
-
-    public Date getFirest_time() {
-        return firest_time;
-    }
-
-    public void setFirest_time(Date firest_time) {
-        this.firest_time = firest_time;
-    }
-
-    public String getPact_no() {
-        return pact_no;
-    }
-
-    public void setPact_no(String pact_no) {
-        this.pact_no = pact_no == null ? null : pact_no.trim();
-    }
-
-    public Long getBill_id() {
-        return bill_id;
-    }
-
-    public void setBill_id(Long bill_id) {
-        this.bill_id = bill_id;
-    }
-
-    public Long getBuyBiil_id() {
-        return buyBiil_id;
-    }
-
-    public void setBuyBiil_id(Long buyBiil_id) {
-        this.buyBiil_id = buyBiil_id;
-    }
-
-    public Long getInvoice_id() {
-        return invoice_id;
-    }
-
-    public void setInvoice_id(Long invoice_id) {
-        this.invoice_id = invoice_id;
-    }
-
-    public Long getLogistics_id() {
-        return logistics_id;
-    }
-
-    public void setLogistics_id(Long logistics_id) {
-        this.logistics_id = logistics_id;
+    public void setWeAddress_id(Long weAddress_id) {
+        this.weAddress_id = weAddress_id;
     }
 
     public String getMsg() {

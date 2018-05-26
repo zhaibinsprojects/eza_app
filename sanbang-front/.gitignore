@@ -9,6 +9,12 @@ out
 .classpath
 .project
 .settings/
+<<<<<<< HEAD
+/bin/
+/target/
+/.classpath
+/.gitignore
+=======
 
 # Build files
 target/
@@ -27,3 +33,4 @@ Thumbs.db
 *.*~
 ~*.*
 
+>>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
