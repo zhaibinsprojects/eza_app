@@ -33,7 +33,6 @@ import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
-import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 
@@ -63,14 +62,11 @@ public class GoodsController {
 			result.setObj(goods);
 			result.setMsg("查询成功！");
 			result.setSuccess(true);
-			return result;
 		}else{
 			result.setMsg("查询失败！");
 			result.setSuccess(false);
-			return result;
 		}
-		
-		
+		return result;
 	}
 	
 	/**
@@ -83,9 +79,16 @@ public class GoodsController {
 	@ResponseBody
 	public Result listForEvaluate(HttpServletRequest request,Long id){
 		Result result = new Result();
-		List<ezs_dvaluate> list  = new ArrayList();
+		List<ezs_dvaluate> list  = new ArrayList<ezs_dvaluate>();
 		list = goodsService.listForEvaluate(id);
-		result.setObj(list);
+		if(null != list && list.size()>0){
+			result.setObj(list);
+			result.setMsg("查询成功");
+			result.setSuccess(true);
+		}else{
+			result.setMsg("查询失败");
+			result.setSuccess(false);
+		}
 		return result;
 	}
 	
@@ -143,7 +146,11 @@ public class GoodsController {
 		n = goodsService.insertCart(goodsCart);
 		if(n>0){
 			result.setObj(goodsCart);
+			result.setSuccess(true);
 			result.setMsg("添加成功");
+		}else{
+			result.setSuccess(false);
+			result.setMsg("添加失败");
 		}
 		return result;
 	}
@@ -174,6 +181,7 @@ public class GoodsController {
 	public Result queryPrice(String 参数待定){
 		Result r = new Result();
 		
+		
 		return r;
 	}
 	
@@ -186,12 +194,15 @@ public class GoodsController {
 	@RequestMapping("/customizedList")
 	@ResponseBody
 	public Result customizedList(HttpServletRequest request,Long user_id){
-		List<ezs_customized> list = new ArrayList();
+		List<ezs_customized> list = new ArrayList<ezs_customized>();
 		Result result = new Result();
 		list =  goodsService.customizedList(user_id);
-		if(list.size()>0){
+		if(null != list && list.size()>0){
 			result.setObj(list);
+			result.setSuccess(true);
+			result.setMsg("查询成功");
 		}else{
+			result.setSuccess(false);
 			result.setMsg("采购单为空");
 		}
 		return result;
@@ -221,6 +232,14 @@ public class GoodsController {
 			result.setMsg("添加成功");
 			result.setSuccess(true);
 		}
+		if(n > 0 && m <= 0){
+			result.setMsg("添加成功，但记录失败");
+			result.setSuccess(true);
+		}
+		if(n > 0 && m <= 0){
+			result.setMsg("添加失败，但插入了记录");
+			result.setSuccess(false);
+		}
 		return result;
 	}
 	
@@ -237,13 +256,14 @@ public class GoodsController {
 		if(null != goodClass_id){
 			list = goodsService.listForGoods(goodClass_id);
 			result.setObj(list);
+			result.setSuccess(true);
 			result.setMsg("返回成功");
 		}else{
 			result.setMsg("返回失败");
+			result.setSuccess(false);
 		}
 		return result;
 	}
-	
 	
 	/**
 	 * 自营、地区筛选、品类筛选
@@ -256,9 +276,16 @@ public class GoodsController {
 	@ResponseBody
 	public Result listByAreaAndType(HttpServletRequest request,Long area,Long type){
 		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = goodsService.listByAreaAndType(area,type);
-		result.setObj(list);
+		if(null != list && list.size()>0){
+			result.setObj(list);
+			result.setSuccess(true);
+			result.setMsg("筛选成功");
+		}else{
+			result.setSuccess(false);
+			result.setMsg("筛选失败");
+		}
 		return result;
 	}
 	
@@ -277,9 +304,9 @@ public class GoodsController {
 	@ResponseBody
 	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
 		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		//将接收的参数转换成map类型
-		Map mmp = new HashMap();
+		Map<String, Object> mmp = new HashMap<String, Object>();
 		mmp.put("color", color);
 		mmp.put("form", form);
 		mmp.put("purpose", purpose);
@@ -303,7 +330,7 @@ public class GoodsController {
 	@ResponseBody
 	public Result conditionList(HttpServletRequest request){
 		Result result = new Result();
-		List<ezs_dict> list = new ArrayList();
+		List<ezs_dict> list = new ArrayList<ezs_dict>();
 		list = goodsService.conditionList();
 		if(list.size()>0){
 			result.setObj(list);
