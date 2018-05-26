@@ -24,6 +24,7 @@ import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_card_dict;
 import com.sanbang.bean.ezs_paper;
+import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_billMapper;
@@ -105,11 +106,11 @@ public class AuthServiceImpl implements AuthService {
 			String companyName = request.getParameter("companyName");// 企业名称
 			String area_id = request.getParameter("area_id");// 经营地址区县
 			String address = request.getParameter("address");// 经营地址
-			String capitalPrice = request.getParameter("capitalPrice ");// 注册资本
-			String unifyCode = request.getParameter("unifyCode ");// 社会信用代码
+			String capitalPrice = request.getParameter("capitalPrice");// 注册资本
+			String unifyCode = request.getParameter("unifyCode");// 社会信用代码
 			String persion = request.getParameter("persion");// 法人
 			String trueName = request.getParameter("trueName");// 联系人
-
+			
 			upi.getEzs_store().setCompanyName(companyName);
 			upi.getEzs_store().setArea_id(Long.valueOf(area_id));
 			upi.getEzs_store().setAddress(address);
@@ -150,9 +151,9 @@ public class AuthServiceImpl implements AuthService {
 		String companyName = request.getParameter("companyName");// 企业名称
 		String area_id = request.getParameter("area_id");// 经营地址区县
 		String address = request.getParameter("address");// 经营地址
-		String capitalPrice = request.getParameter("capitalPrice ");// 注册资本
-		String unifyCode = request.getParameter("unifyCode ");// 社会信用代码
-		String persion = request.getParameter("persion ");// 法人
+		String capitalPrice = request.getParameter("capitalPrice");// 注册资本
+		String unifyCode = request.getParameter("unifyCode");// 社会信用代码
+		String persion = request.getParameter("persion");// 法人
 		String trueName = request.getParameter("trueName");// 联系人
 		// TODO 有效期至
 		// String unifyCode = request.getParameter("unifyCode ");//社会信用代码
@@ -161,39 +162,48 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 
 		if (Tools.isEmpty(trueName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入联系人");
+			return result;
 		}
 
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(unifyCode)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入社会信用代码");
+			return result;
 		}
 
 		if (Tools.isEmpty(capitalPrice)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入注册资本");
-			if (!Tools.isNum(capitalPrice)) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请输入有效注册资本金额");
-			}
+			return result;
 		}
+		
+		if (!Tools.isNum(capitalPrice)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入有效注册资本金额");
+			return result;
+		}
+		
 		if (Tools.isEmpty(persion)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入法人");
+			return result;
 		}
 
 		return result;
@@ -205,9 +215,9 @@ public class AuthServiceImpl implements AuthService {
 		if (result.getSuccess()) {
 			String companyName = request.getParameter("companyName");// 企业名称
 			String dutyNo = request.getParameter("dutyNo");// 税号
-			String number = request.getParameter("number ");// 开户账号
+			String number = request.getParameter("number");// 开户账号
 			String phone = request.getParameter("phone");// 电话号码
-			String address = request.getParameter("address ");// 单位地址
+			String address = request.getParameter("address");// 单位地址
 			String bank = request.getParameter("bank");// 开户行
 
 
@@ -227,12 +237,14 @@ public class AuthServiceImpl implements AuthService {
 				ezs_bill.setCompanyName(companyName);
 				ezs_bill.setDutyNo(dutyNo);
 				ezs_bill.setNumber(number);
+				ezs_bill.setDeleteStatus(false);
 				ezs_bill.setPhone(phone);
 				ezs_bill.setAddress(address);
 				ezs_bill.setBank(bank);
 				ezs_bill.setUser_id(upi.getId());
 				ezs_bill.setAddTime(new Date());
 				ezs_billMapper.insertSelective(ezs_bill);
+				upi.setEzs_bill(ezs_bill);
 			}
 			
 			//保存类型
@@ -262,40 +274,46 @@ public class AuthServiceImpl implements AuthService {
 
 		String companyName = request.getParameter("companyName");// 企业名称
 		String dutyNo = request.getParameter("dutyNo");// 税号
-		String number = request.getParameter("number ");// 开户账号
+		String number = request.getParameter("number");// 开户账号
 		String phone = request.getParameter("phone");// 电话号码
-		String address = request.getParameter("address ");// 单位地址
+		String address = request.getParameter("address");// 单位地址
 		String bank = request.getParameter("bank");// 开户行
 
 		if (Tools.isEmpty(companyName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(dutyNo)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入税号");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入单位地址");
+			return result;
 		}
 		if (Tools.isEmpty(phone)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入电话号码");
+			return result;
 		}
 		if (Tools.isEmpty(bank)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户行");
+			return result;
 		}
 		if (Tools.isEmpty(bank)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户账号");
+			return result;
 		}
 
 		return result;
@@ -309,19 +327,18 @@ public class AuthServiceImpl implements AuthService {
 			String trueName = request.getParameter("trueName");// 联系人
 			String area_id = request.getParameter("area_id");// 经营地址区县
 			String address = request.getParameter("address");// 经营地址
-			String idCardNum = request.getParameter("idCardNum ");// 经营者省份证号
+			String idCardNum = request.getParameter("idCardNum");// 经营者省份证号
 			String account = request.getParameter("account");// 注册号
-			String persion = request.getParameter("persion ");// 经营者
+			String persion = request.getParameter("persion");// 经营者
 
-			ezs_user uupi = new ezs_user();
-			uupi.getEzs_store().setCompanyName(companyName);
-			uupi.getEzs_store().setArea_id(Long.valueOf(area_id));
-			uupi.getEzs_store().setAddress(address);
-			uupi.getEzs_store().setPerson(persion);
-			uupi.setTrueName(trueName);
-			uupi.getEzs_store().setIdCardNum(idCardNum);
-			uupi.getEzs_store().setAccount(account);
-			uupi.getEzs_store().setAccountType(2);
+			upi.getEzs_store().setCompanyName(companyName);
+			upi.getEzs_store().setArea_id(Long.valueOf(area_id));
+			upi.getEzs_store().setAddress(address);
+			upi.getEzs_store().setPerson(persion);
+			upi.setTrueName(trueName);
+			upi.getEzs_store().setIdCardNum(idCardNum);
+			upi.getEzs_store().setAccount(account);
+			upi.getEzs_store().setAccountType(2);
 
 			//truename
 			upi.setId(upi.getId());
@@ -428,31 +445,37 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(dutyNo)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入税号");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入单位地址");
+			return result;
 		}
 		if (Tools.isEmpty(phone)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入电话号码");
+			return result;
 		}
 		if (Tools.isEmpty(bank)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户行");
+			return result;
 		}
 		if (Tools.isEmpty(number)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入开户账号");
+			return result;
 		}
 
 		return result;
@@ -465,9 +488,9 @@ public class AuthServiceImpl implements AuthService {
 		String trueName = request.getParameter("trueName");// 联系人
 		String area_id = request.getParameter("area_id");// 经营地址区县
 		String address = request.getParameter("address");// 经营地址
-		String idCardNum = request.getParameter("idCardNum ");// 经营者省份证号
+		String idCardNum = request.getParameter("idCardNum");// 经营者省份证号
 		String account = request.getParameter("account");// 注册号
-		String persion = request.getParameter("persion ");// 经营者
+		String persion = request.getParameter("persion");// 经营者
 		// TODO 有效期至
 		// String unifyCode = request.getParameter("unifyCode ");//社会信用代码
 
@@ -475,32 +498,38 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入公司名称");
+			return result;
 		}
 		if (Tools.isEmpty(trueName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入联系人");
+			return result;
 		}
 		if (Tools.isEmpty(address)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(account)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入注册号");
+			return result;
 		}
 
 		if (Tools.isEmpty(idCardNum)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入经营者省份证号");
+			return result;
 		}
 		if (Tools.isEmpty(persion)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入经营者");
+			return result;
 		}
 
 		return result;
@@ -514,6 +543,11 @@ public class AuthServiceImpl implements AuthService {
 		} else {
 			result = saveDivAuth(result, request, upi);
 		}
+		ezs_store store=new ezs_store();
+		store.setStatus(1);
+		store.setId(upi.getEzs_store().getId());
+		store.setAccountType(upi.getEzs_store().getAccountType());
+		ezs_storeMapper.updateByPrimaryKeySelective(store);
 		if(result.getSuccess()){
 			upi=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
 			RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
@@ -531,26 +565,30 @@ public class AuthServiceImpl implements AuthService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善企业基本信息");
+			return result;
 		}
 		//企业信息
 		if(null==upi.getEzs_bill()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善开票信息");
+			return result;
 		}
 		//检查资质信息
 		authPicCash(upi.getAuthimg(), upi);
 		
-		if(upi.isAuthimgstate()){
+		if(!upi.isAuthimgstate()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善资质信息");
+			return result;
 		}
 		
-		if(upi.isAuthorfilestate()){
+		if(!upi.isAuthorfilestate()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善授权信息");
+			return result;
 		}
 		
 		return result;
@@ -576,13 +614,13 @@ public class AuthServiceImpl implements AuthService {
 		//检查资质信息
 		authPicCash(upi.getAuthimg(), upi);
 		
-		if(upi.isAuthimgstate()){
+		if(!upi.isAuthimgstate()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善资质信息");
 		}
 		
-		if(upi.isAuthorfilestate()){
+		if(!upi.isAuthorfilestate()){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善授权信息");
@@ -625,7 +663,7 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("BUSLIC")
+					if(authImageVo.getImgcode().equals("BUSINESS_LICENSE")
 							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
 							||authImageVo.getImgcode().equals("IDCARD_FONT")
 							||authImageVo.getImgcode().equals("IDCARD_BACK")){
@@ -642,8 +680,10 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
-							||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+					if(authImageVo.getImgcode().equals("BUSINESS_LICENSE")
+							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
+							||authImageVo.getImgcode().equals("IDCARD_FONT")
+							||authImageVo.getImgcode().equals("IDCARD_BACK")){
 					i++;	
 					}
 				}
@@ -661,6 +701,27 @@ public class AuthServiceImpl implements AuthService {
 		String zhizhao=request.getParameter("zhizhao");//,
 		String shengfz=request.getParameter("shengfz");//,
 		String qitazz=request.getParameter("qitazz");//; @ ,  type1,url1@name1@data1;type2,url2@name2@data2;  
+		if(Tools.isEmpty(zhizhao)){
+			result.setSuccess(false);
+			result.setMsg("请完善执照信息");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
+		if(upi.getEzs_store().getAccountType()==1){
+			if(Tools.isEmpty(shengfz)){
+				result.setSuccess(false);
+				result.setMsg("请完善法人信息");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);	
+				return result;
+			}
+		}else{
+			if(Tools.isEmpty(shengfz)){
+				result.setSuccess(false);
+				result.setMsg("请完善经营者信息");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				return result;
+			}
+		}
 		
 		List<AuthImageVo> List=new ArrayList<>();
 		try {
@@ -684,8 +745,8 @@ public class AuthServiceImpl implements AuthService {
 					ezs_accessory.setInfo(null);
 					ezs_accessory.setName("");
 					ezs_accessory.setPath(img.getImgurl());
-					ezs_accessory.setSize(null);
-					ezs_accessory.setWidth(null);
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());
 					ezs_accessoryMapper.insertSelective(ezs_accessory);
 					
@@ -703,7 +764,7 @@ public class AuthServiceImpl implements AuthService {
 					ezs_card_dict card=new ezs_card_dict();
 					card.setPaper_id(paper.getId());
 					card.setStore_id(upi.getStore_id());
-					ezs_card_dictMapper.insert(card);
+					ezs_card_dictMapper.insertSelective(card);
 				}
 				}
 			}
@@ -794,6 +855,92 @@ public class AuthServiceImpl implements AuthService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Result saveAuthPicUrl(Result result, HttpServletRequest request, ezs_user upi,
+			HttpServletResponse response) {
+		String shouquan=request.getParameter("shouquan");//,
+		String sfzfyj=request.getParameter("sfzfyj");//,
+		if(Tools.isEmpty(shouquan)){
+			result.setSuccess(false);
+			result.setMsg("请上传授权文件");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
+		if(Tools.isEmpty(sfzfyj)){
+			result.setSuccess(false);
+			result.setMsg("被授权人身份证复印件");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
+		
+		List<AuthImageVo> List=new ArrayList<>();
+		try {
+			List=savepic(shouquan, List);
+			if(null!=List&&List.size()>0){
+			//资质信息
+			for (AuthImageVo img : List) {
+				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
+				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
+						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
+					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
+					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
+				}else{
+					ezs_accessory.setAddTime(new Date());
+					ezs_accessory.setDeleteStatus(false);
+					ezs_accessory.setExt("");
+					ezs_accessory.setHeight(0);
+					ezs_accessory.setInfo(null);
+					ezs_accessory.setName("");
+					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
+					ezs_accessory.setUser_id(upi.getId());
+					ezs_accessoryMapper.insertSelective(ezs_accessory);
+					
+					//upi记录
+					img.setAccid(ezs_accessory.getId());
+					
+					ezs_paper paper=new ezs_paper();
+					paper.setAddTime(new Date());
+					paper.setCertificate_id(ezs_accessory.getId());
+					paper.setDeleteStatus(false);
+					paper.setValidDate(img.getUsetime());
+					paper.setPaperType(img.getImgcode());
+					ezs_paperMapper.insertSelective(paper);
+					
+					ezs_card_dict card=new ezs_card_dict();
+					card.setPaper_id(paper.getId());
+					card.setStore_id(upi.getStore_id());
+					ezs_card_dictMapper.insertSelective(card);
+				}
+				}
+			}
+			//保存类型
+			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
+			
+			upi.setAuthimg(List);;
+			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+					Long.parseLong(redisuserkeyexpir));
+			if (res) {
+				result.setSuccess(true);
+				result.setMsg("保存成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			} else {
+				result.setSuccess(false);
+				result.setMsg("系统错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
 	}
 	
 }

@@ -1,13 +1,10 @@
 package com.sanbang.seller.service;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sanbang.bean.ezs_pact;
 import com.sanbang.utils.Result;
 
 public interface SellerContractService {

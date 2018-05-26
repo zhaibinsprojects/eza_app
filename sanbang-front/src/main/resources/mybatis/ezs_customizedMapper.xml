@@ -351,4 +351,18 @@
       address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 新增 -->
+  <select id="customizedList" resultType="ezs_customized" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_customized
+    where purchaser_id = #{purchaser_id,jdbcType=BIGINT}
+  </select>
+  <select id="getPurchaseByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  	select 
+  	ec.* 
+  	from ezs_customized_record ecr LEFT JOIN ezs_customized ec on ecr.customized_id = ec.id where ecr.purchaser_id = #{userId} 
+  </select>
+  
 </mapper>

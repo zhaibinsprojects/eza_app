@@ -1,47 +1,72 @@
 package com.sanbang.bean;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class ezs_payinfo {
     private Long id;
-
-    private Date addTime;
+    private String addTime;
 
     private Boolean deleteStatus;
-
+ // 订单编号
     private String order_no;
-
+ // 1.采购单，2.订单
     private Integer order_type;
-
+ // 方式 1.线下 2.线上
     private Integer pay_mode;
-
+ // 流水号
     private String pay_no;
-
+ // 金额
     private BigDecimal price;
 
     private Long bill_id;
-
+ // 支付人
     private Long paymentUser_id;
-
+ // 收款人
     private Long receUser_id;
+    
+    private Integer acount;
+	private BigDecimal aprice;
+	private String name;
+	
 
-    public Long getId() {
+	public Integer getAcount() {
+		return acount;
+	}
+
+	public void setAcount(Integer acount) {
+		this.acount = acount;
+	}
+
+	public BigDecimal getAprice() {
+		return aprice;
+	}
+
+	public void setAprice(BigDecimal aprice) {
+		this.aprice = aprice;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Date getAddTime() {
+    public String getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(Date addTime) {
+    public void setAddTime(String addTime) {
         this.addTime = addTime;
     }
-
     public Boolean getDeleteStatus() {
         return deleteStatus;
     }

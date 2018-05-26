@@ -8,8 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goods_cartography;
+import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 public interface SellerGoodsService {
 
@@ -23,8 +26,12 @@ public interface SellerGoodsService {
 
 	Result pullOffShelvesById(Result result, long goodsId);
 
-	Result updateGoodsInfoById(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response);
+	Result updateGoodsInfoById(Result result, long goodsId, ezs_user upi, HttpServletRequest request, HttpServletResponse response);
 
 	Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response);
+
+	List<ezs_accessory> queryCartographyById(Long goodsId);
+	//查询货品属性
+	String getGoodsProperty(Long propertyId);
 
 }

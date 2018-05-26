@@ -55,17 +55,9 @@ public class FileUploadServiceImpl implements FileUploadService {
 	@Value("${consparam.imgs.baseurl}")
 	public String BASEURL;
 
-	// 基础路径path
-	@Value("${consparam.imgs.basepath}")
-	public String BASEPATH;
-
 	// 临时路径
 	@Value("${consparam.imgs.tempsavepath}")
 	public String TEMPSAVEPATH;
-
-	// 真实路径标识
-	@Value("${consparam.imgs.truepathflag}")
-	public String TRUEPATHFLAG;
 
 	// 临时路径标识
 	@Value("${consparam.imgs.tempathflag}")
@@ -658,12 +650,6 @@ public class FileUploadServiceImpl implements FileUploadService {
 		// java+getOutputStream() has already been called for this response
 	}
 
-	public static void main(String[] args) throws Exception {
-		FileUploadServiceImpl fsi = new FileUploadServiceImpl();
-		System.out.println(fsi.getUrl("e:/adsf/tempath/2061/sdkfjk.jpg", fsi.BASEURL, fsi.TEMPATHFLAG));
-		System.out.println(
-				fsi.getPath(fsi.BASEPATH, "localhost:8080/website/userImgs/tempath/2061/sdkfjk.jpg", fsi.TEMPATHFLAG));
-	}
 
 	@Override
 	public Result tempsaveimg(String type, String picurl, HttpServletRequest request) {

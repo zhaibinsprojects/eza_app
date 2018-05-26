@@ -3,6 +3,7 @@ package com.sanbang.setup.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
 import com.sanbang.area.service.AreaService;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
@@ -30,6 +32,7 @@ import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
@@ -45,6 +48,9 @@ public class UserSetupAuthController {
 	
 	@Autowired
 	private UserProService userProService;
+	
+	@Autowired
+	private com.sanbang.dao.ezs_areaMapper ezs_areaMapper;
 	
 	//注册验证码标识
 	@Value("${consparam.mobile.recode}")
@@ -117,10 +123,12 @@ public class UserSetupAuthController {
 			
 			map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			map.put("trueName", upi.getTrueName());// 联系人
-			map.put("area", areaService.getAreaListByParId(	upi.getEzs_store().getArea_id()));// 经营地址区县
-			map.put("address", upi.getEzs_store().getAddress());// 经营地址
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}
+			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
-			if(0!=upi.getEzs_store().getStatus()){
+			if(null!=upi.getEzs_store()){
 				map.put("capitalPrice", upi.getEzs_store().getCapitalPrice());// 注册资本
 				map.put("unifyCode", upi.getEzs_store().getUnifyCode());// 社会信用代码
 				map.put("persion", upi.getEzs_store().getPerson());// 法人
@@ -136,17 +144,17 @@ public class UserSetupAuthController {
 		
 		//资质信息
 		if("zhizhishow".equals(typevalue)){
+			Map<String, Object> imgmap=new HashMap<>();
 			//初始化地址
-			if(null!=upi.getAuthimg()){
+			if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
-					map.put("hashimg", false);
-					map.put(authimg.getImgcode(), authimg.getImgurl());
+					imgmap.put(authimg.getImgcode(), authimg.getImgurl());
 				}
+				map.put("imgmap", imgmap);
+				map.put("hashimg", true);
 			}else{
 				map.put("hashimg", false);
 			}
-			
-			
 			
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -157,17 +165,25 @@ public class UserSetupAuthController {
 		
 		
 		//开票信息
+		Map<String, Object> bill=new HashMap<>();
 		if("comEin".equals(typevalue)){
-			if(0!=upi.getEzs_store().getStatus()){
-				map.put("companyName",upi.getEzs_bill().getCompanyName());
-				map.put("dutyNo",upi.getEzs_bill().getDutyNo());
-				map.put("number",upi.getEzs_bill().getNumber());
-				map.put("phone",upi.getEzs_bill().getPhone());
-				map.put("address", upi.getEzs_bill().getAddress());
-				map.put("bank",upi.getEzs_bill().getBank());
+			if(null!=upi.getEzs_store().getStatus()){
+				if(null!=upi.getEzs_bill()){
+					map.put("companyName",upi.getEzs_bill().getCompanyName());
+					map.put("dutyNo",upi.getEzs_bill().getDutyNo());
+					map.put("number",upi.getEzs_bill().getNumber());
+					map.put("phone",upi.getEzs_bill().getPhone());
+					map.put("address", upi.getEzs_bill().getAddress());
+					map.put("bank",upi.getEzs_bill().getBank());
+					bill.put("hashbill", true);
+				}
+				
+			}else{
+				bill.put("hashbill", false);
 			}
 			
-			result.setObj(map);
+			bill.put("bill", map);
+			result.setObj(bill);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");
 			result.setSuccess(true);
@@ -176,16 +192,22 @@ public class UserSetupAuthController {
 		
 		
 		//授权证书
+		Map<String, Object> auth=new HashMap<>();
 		if("authfile".equals(typevalue)){
+			boolean hashauth=false;
 			//初始化地址
 			if(null!=upi.getAuthimg()){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
-					map.put("hashimg", false);
-					map.put(authimg.getImgcode(), authimg.getImgurl());
+					if(DictionaryCate.LETTER_OF_AUTHORIZATION.equals(authimg.getImgcode())||
+							DictionaryCate.LICENSEE_IDCARD.equals(authimg.getImgcode())){
+						auth.put(authimg.getImgcode(), authimg.getImgurl());
+						hashauth=true;
+					}
 				}
-			}else{
-				map.put("hashimg", false);
+				
 			}
+			map.put("authfile", map);
+			map.put("hashauth", hashauth);
 			map.put("temurl", "https://www.baidu.com");
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -233,11 +255,13 @@ public class UserSetupAuthController {
 			
 			map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			map.put("trueName", upi.getTrueName());// 联系人
-			map.put("area", areaService.getAreaListByParId(	upi.getEzs_store().getArea_id()));// 经营地址区县
-			map.put("address", upi.getEzs_store().getAddress());// 经营地址
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}
+			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
 			
-			if(0!=upi.getEzs_store().getStatus()){
+			if(null!=upi.getEzs_store()){
 				map.put("idCardNum", upi.getEzs_store().getIdCardNum());// 经营者省份证号
 				map.put("account", upi.getEzs_store().getAccount());// 注册号
 				map.put("persion", upi.getEzs_store().getPerson());// 经营者
@@ -253,17 +277,17 @@ public class UserSetupAuthController {
 		
 		//资质信息
 		if("zhizhishow".equals(typevalue)){
+			Map<String, Object> imgmap=new HashMap<>();
 			//初始化地址
-			if(null!=upi.getAuthimg()){
+			if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
-					map.put("hashimg", false);
-					map.put(authimg.getImgcode(), authimg.getImgurl());
+					imgmap.put(authimg.getImgcode(), authimg.getImgurl());
 				}
+				map.put("imgmap", imgmap);
+				map.put("hashimg", true);
 			}else{
 				map.put("hashimg", false);
 			}
-			
-			
 			
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -274,17 +298,25 @@ public class UserSetupAuthController {
 		
 		
 		//开票信息
+		Map<String, Object> bill=new HashMap<>();
 		if("comEin".equals(typevalue)){
-			if(0!=upi.getEzs_store().getStatus()){
-				map.put("companyName",upi.getEzs_bill().getCompanyName());
-				map.put("dutyNo",upi.getEzs_bill().getDutyNo());
-				map.put("number",upi.getEzs_bill().getNumber());
-				map.put("phone",upi.getEzs_bill().getPhone());
-				map.put("address", upi.getEzs_bill().getAddress());
-				map.put("bank",upi.getEzs_bill().getBank());
+			if(null!=upi.getEzs_store().getStatus()){
+				if(null!=upi.getEzs_bill()){
+					map.put("companyName",upi.getEzs_bill().getCompanyName());
+					map.put("dutyNo",upi.getEzs_bill().getDutyNo());
+					map.put("number",upi.getEzs_bill().getNumber());
+					map.put("phone",upi.getEzs_bill().getPhone());
+					map.put("address", upi.getEzs_bill().getAddress());
+					map.put("bank",upi.getEzs_bill().getBank());
+					bill.put("hashbill", true);
+				}
+				
+			}else{
+				bill.put("hashbill", false);
 			}
 			
-			result.setObj(map);
+			bill.put("bill", map);
+			result.setObj(bill);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");
 			result.setSuccess(true);
@@ -293,16 +325,22 @@ public class UserSetupAuthController {
 		
 		
 		//授权证书
+		Map<String, Object> auth=new HashMap<>();
 		if("authfile".equals(typevalue)){
+			boolean hashauth=false;
 			//初始化地址
 			if(null!=upi.getAuthimg()){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
-					map.put("hashimg", false);
-					map.put(authimg.getImgcode(), authimg.getImgurl());
+					if(DictionaryCate.LETTER_OF_AUTHORIZATION.equals(authimg.getImgcode())||
+							DictionaryCate.LICENSEE_IDCARD.equals(authimg.getImgcode())){
+						auth.put(authimg.getImgcode(), authimg.getImgurl());
+						hashauth=true;
+					}
 				}
-			}else{
-				map.put("hashimg", false);
+				
 			}
+			map.put("authfile", auth);
+			map.put("hashauth", hashauth);
 			map.put("temurl", "https://www.baidu.com");
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -427,6 +465,8 @@ public class UserSetupAuthController {
 	 * @param response
 	 * @return
 	 */
+	@ResponseBody
+	@RequestMapping("/upAuthPic")
 	public Result upAuthPic(
 			HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(value="type",required=false) String type){
@@ -524,7 +564,7 @@ public class UserSetupAuthController {
 		}else{
 			upi.getEzs_store().setAccountType(2);
 		}
-		result=authService.savePicUrl(result, request, upi, response);
+		result=authService.saveAuthPicUrl(result, request, upi, response);
 		return result;
 	}
 	
@@ -563,12 +603,11 @@ public class UserSetupAuthController {
 	
 	/**
 	 * 查看认证状态
-	 * authtype company indiv
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/lookAuthstatus")
-	public Result lookAuthstatus(@PathVariable(value="authtype") String authtype,
+	public Result lookAuthstatus(
 			HttpServletRequest request,
 			HttpServletResponse response){
 		Result result=Result.failure();  
@@ -581,11 +620,14 @@ public class UserSetupAuthController {
 		
 
 		Map<String, Object> map=new HashMap<>();
+		Map<String, Object> map1=new HashMap<>();
+		map1.put("status", upi.getEzs_store().getStatus());
 		//初始化地址
-		map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
-		map.put("status", upi.getEzs_store().getStatus());// 0:初始数据无业务 审核状态 1:需要审核 2.审核通过,3审核未通过
 		
-		result.setObj(map);
+		map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
+		map.put("accountType", upi.getEzs_store().getAccountType());
+		map1.put("authinfo", map);
+		result.setObj(map1);
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("获取信息成功");
 		result.setSuccess(true);
@@ -654,6 +696,42 @@ public class UserSetupAuthController {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		long threeinfo = 0;
+		long twoinfo = 0;
+		long oneinfo = 0;
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getId();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo = ezs_threeinfo.getId();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo = ezs_threeinfo.getId();
+				}
+			}
+		}
+		
+		if(threeinfo!=0){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(twoinfo!=0){
+			sb = new StringBuilder().append(twoinfo).append("@").append(threeinfo);
+		}
+		if(oneinfo!=0){
+			sb = new StringBuilder().append(oneinfo).append("@").append(twoinfo).append("@").append(threeinfo);
+		}
+		
+		return sb.toString();
 	}
 	
 }

@@ -41,9 +41,6 @@
     <result column="regAddress" property="regAddress" jdbcType="VARCHAR" />
     <result column="idCardNum" property="idCardNum" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="ezs_store" extends="BaseResultMap" >
-    <result column="location" property="location" jdbcType="BINARY" />
-  </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, account, accountType, address, admin_status, assets, capitalPrice, 
     companyName, covered, creditScore, device_num, employee_num, fixed_assets, location_detail, 
@@ -52,14 +49,9 @@
     cardType_id, customerAudit_id, unifyCode, creditLevel, location_id, regArea_id, regAddress, 
     idCardNum
   </sql>
-<sql id="Blob_Column_List" >
-    location
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from ezs_store
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -80,7 +72,7 @@
       yTurnover, area_id, auditingusertype_id, 
       cardType_id, customerAudit_id, unifyCode, 
       creditLevel, location_id, regArea_id, 
-      regAddress, idCardNum, location
+      regAddress, idCardNum
       )
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{account,jdbcType=VARCHAR}, #{accountType,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
@@ -94,7 +86,7 @@
       #{yTurnover,jdbcType=DOUBLE}, #{area_id,jdbcType=BIGINT}, #{auditingusertype_id,jdbcType=BIGINT}, 
       #{cardType_id,jdbcType=BIGINT}, #{customerAudit_id,jdbcType=BIGINT}, #{unifyCode,jdbcType=VARCHAR}, 
       #{creditLevel,jdbcType=VARCHAR}, #{location_id,jdbcType=BIGINT}, #{regArea_id,jdbcType=BIGINT}, 
-      #{regAddress,jdbcType=VARCHAR}, #{idCardNum,jdbcType=VARCHAR}, #{location,jdbcType=BINARY}
+      #{regAddress,jdbcType=VARCHAR}, #{idCardNum,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_store" >
@@ -452,9 +444,6 @@
       <if test="idCardNum != null" >
         idCardNum = #{idCardNum,jdbcType=VARCHAR},
       </if>
-      <if test="location != null" >
-        location = #{location,jdbcType=BINARY},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -546,8 +535,6 @@
    <select id="getstoreInfoByName" resultMap="BaseResultMap">
    	select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from ezs_store
     where companyName = #{companyName}
    	

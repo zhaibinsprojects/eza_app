@@ -28,10 +28,12 @@ public interface ezs_pactMapper {
 
 	List<ezs_pact> selectPactByOrderNo(String orderno);
 
-	List<ezs_pact> selectPactByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2, @Param("sellerId")Long sellerId,@Param("page")Page page);
+	List<ezs_pact> selectPactByDate(@Param("startTime")String startTime, @Param("endTime")String endTime, @Param("sellerId")Long sellerId,@Param("page")Page page);
 
 	int selectCountById(Long sellerId);
 
-	List<ezs_pact> queryPact(Page page, Long sellerId);
+	List<ezs_pact> queryPact(@Param("page")Page page, @Param("sellerId")Long sellerId);
+
+	List<ezs_pact> selectPactByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2, @Param("sellerId")Long sellerId, @Param("page")Page page);
 
 }

@@ -32,7 +32,7 @@ public class ezs_logistics {
 
     private Integer status;
 
-    private BigDecimal total_price;
+    private BigDecimal total_price;//物流费用
 
     private String order_no;
 

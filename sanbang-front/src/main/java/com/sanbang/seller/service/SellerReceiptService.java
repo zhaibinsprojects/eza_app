@@ -1,11 +1,8 @@
 package com.sanbang.seller.service;
 
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_payinfo;
@@ -16,18 +13,20 @@ public interface SellerReceiptService {
 
 	ezs_bill getBillInfoById(Long userId);
 
-	ezs_invoice getInvoiceInfoById(String orderno);
-
 	ezs_payinfo getPayInfoById(Long billId);
 	
 	ezs_user getUserInfoById(Long paymentUser_id);
 
 	Map<String, Object> getInvoiceListById(Long userId, String currentPage);
-
-	Object queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
-			HttpServletRequest request, HttpServletResponse response);
 	
 	int insertInvoice(ezs_invoice invoice);
+	
 	Map<String, Object> queryInvoiceByIdOrDate(Result result, String orderno, String startTime, String endTime,
 			long userId, String currentPage);
+
+	ezs_invoice queryInvoiceByNo(String orderNo);
+
+	ezs_accessory queryAccessoryById(Long receipt_id);
+
+	ezs_invoice getInvoiceInfoById(String orderno);
 }

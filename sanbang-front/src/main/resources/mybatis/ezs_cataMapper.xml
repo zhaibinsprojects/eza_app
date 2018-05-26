@@ -7,18 +7,18 @@
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
   </resultMap>
   <!-- 查询一级分类 -->
-  <select id="getOnelevelList" resultType="ezs_goods_class" parameterType="java.lang.String" >
-    select * from ezs_goods_class gc where gc.parent_id = ''
+  <select id="getOnelevelList" resultType="ezs_goods_class" >
+    select * from ezs_goods_class gc where gc.parent_id is null
   </select>
   
   <!-- 查询二级分类 -->
   <select id="getTwolevelList" resultType="ezs_goods_class" parameterType="java.lang.Long" >
-    select * from ezs_goods_class gc where gc.parent_id = '1'
+    select * from ezs_goods_class gc where gc.parent_id = #{parent_id, jdbcType=BIGINT}
   </select>
   
   <!-- 查询三级分类 -->
   <select id="getThreelevelList" resultType="ezs_goods_class" parameterType="java.lang.Long" >
-    select * from ezs_goods_class gc where gc.parent_id = '2'
+    select * from ezs_goods_class gc where gc.parent_id =  #{parent_id, jdbcType=BIGINT}
   </select>
   
 </mapper>

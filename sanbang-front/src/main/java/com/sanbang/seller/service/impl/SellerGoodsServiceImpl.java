@@ -1,6 +1,10 @@
 package com.sanbang.seller.service.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,50 +19,75 @@ import org.springframework.stereotype.Service;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_audit_process;
-import com.sanbang.bean.ezs_goods_log;
-import com.sanbang.bean.ezs_purchase_orderform;
+import com.sanbang.bean.ezs_goods_cartography;
+import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
+import com.sanbang.dao.ezs_card_dictMapper;
+import com.sanbang.dao.ezs_dictMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_goods_audit_processMapper;
+import com.sanbang.dao.ezs_goods_cartographyMapper;
 import com.sanbang.dao.ezs_goods_logMapper;
+import com.sanbang.dao.ezs_goods_photoMapper;
+import com.sanbang.dao.ezs_paperMapper;
 import com.sanbang.seller.service.SellerGoodsService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.userauth.AuthImageVo;
+
 @Service
 public class SellerGoodsServiceImpl implements SellerGoodsService {
-	
-	private Logger log=Logger.getLogger(SellerGoodsServiceImpl.class);
-	
+
+	private Logger log = Logger.getLogger(SellerGoodsServiceImpl.class);
+
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	@Autowired
 	ezs_goodsMapper goodsMapper;
-	
+
 	@Autowired
 	ezs_accessoryMapper accessoryMapper;
-	
+
 	@Autowired
-	ezs_goods_logMapper goodsLogMapper; 
-	
+	ezs_goods_logMapper goodsLogMapper;
+
 	@Autowired
 	ezs_goods_audit_processMapper goodsAuditProcessMapper;
+	
+	@Autowired
+	private ezs_accessoryMapper ezs_accessoryMapper;
+	
+	@Autowired
+	private ezs_paperMapper ezs_paperMapper;
+	
+	@Autowired
+	private ezs_card_dictMapper ezs_card_dictMapper;
+	
+	@Autowired
+	ezs_goods_photoMapper photoMapper;
+	
+	@Autowired
+	ezs_goods_cartographyMapper cartographyMapper;
+	
+	@Autowired
+	ezs_dictMapper dictMapper;
 	
 	@Override
 	public Map<String, Object> queryGoodsListBySellerId(Long sellerId, int status, String currentPage) {
 		Map<String, Object> mmp = new HashMap<>();
-		//获取总页数
+		// 获取总页数
 		int totalCount = goodsMapper.selectCount(sellerId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
-		int startPos = 0;
-		page.setStartPos(startPos);
 		page.setPageSize(10);
-		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_goods> list = goodsMapper.selectGoodsListBySellerId(sellerId, status, currentPage);
+		if ((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)) {
+			List<ezs_goods> list = goodsMapper.selectGoodsListBySellerId(sellerId, status, page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", list);
-		}else{
+		} else {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Page", page);
 		}
@@ -67,124 +96,256 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	@Override
 	public ezs_goods queryGoodsInfoById(long id) {
-		
+
 		return goodsMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
 	public List<ezs_accessory> queryPhotoById(Long goodsId) {
-		
-		return accessoryMapper.selectPhotoById(goodsId);
+
+		return ezs_accessoryMapper.selectPhotoById(goodsId);
 	}
 
 	@Override
 	public Result addGoodsInfo(Result result, ezs_user upi, HttpServletRequest request, HttpServletResponse response) {
-		result = checkParam(request);
-		if(result.getSuccess()){
-			String goodClass_id = request.getParameter("goodClass_id");//分类
-			String name = request.getParameter("name");//货品名称
-			String price = request.getParameter("price");//价格
-			String validity = request.getParameter("validity");//有效期
-			String inventory = request.getParameter("inventory");//库存
-			String area_id = request.getParameter("area_id");//库存地区（县市）
-			String addess = request.getParameter("addess");//库存地区详细地址
-			String supply_id = request.getParameter("supply_id");//供应情况（是否稳定供货）
-			String color_id = request.getParameter("color_id");//颜色
-			String form_id = request.getParameter("form_id");//形态
-			String source = request.getParameter("source");//来源
-			String purpose = request.getParameter("purpose");//用途
-			String protection = request.getParameter("protection");//是否环保
-			String density = request.getParameter("density");//密度
-			String cantilever = request.getParameter("cantilever");//悬臂梁缺口冲击
-			String freely = request.getParameter("freely");//简支梁缺口冲击
-			String lipolysis = request.getParameter("lipolysis");//溶指
-			String ash = request.getParameter("ash");//灰份
-			String water = request.getParameter("water");//水分
-			String tensile = request.getParameter("tensile");//拉伸强度
-			String crack = request.getParameter("crack");//断裂伸长率
-			String bending = request.getParameter("bending");//弯曲强度
-			String flexural = request.getParameter("flexural");//弯曲模量
-			String burning = request.getParameter("burning");//燃烧等级
-			String seo_description = request.getParameter("seo_description");//货品详细描述
+		try {
+			result = checkParam(request);
+			//添加商品
+			String goodsurls = request.getParameter("goodsurls");// 商品图片
+			String processgoodsurls = request.getParameter("processgoodsurls");// 商品图片
+			List<AuthImageVo> list = new ArrayList<>();
+			savepic(goodsurls, list);
+			savepic(processgoodsurls, list);
 			
-			ezs_goods goods = new ezs_goods();
-			goods.setGoodClass_id(Long.parseLong(goodClass_id));
-			goods.setName(name);
-			goods.setPrice(new BigDecimal(price));
-			goods.setValidity(Integer.valueOf(validity));
-			goods.setInventory(Double.parseDouble(inventory));
-			goods.setArea_id(Long.parseLong(area_id));
-			goods.setAddess(addess);
-			goods.setSupply_id(Long.parseLong(supply_id));
-			goods.setSupply_id(Long.parseLong(color_id));
-			goods.setSupply_id(Long.parseLong(form_id));
-			goods.setSource(source);
-			if (protection == "0") {
-				goods.setProtection(true);
-			}else if(protection == "1"){
-				goods.setProtection(false);
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("参数错误");
+			if (null != list && list.size() > 0) {
+				
+				//检查保存商品图片是否必填
+				if(!checkIsMustForGoodsAdd("goods", list)){
+					result.setMsg("至少上传一张商品图片");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					return result;
+				};
 			}
-			goods.setDensity(density);
-			goods.setCantilever(cantilever);
-			goods.setFreely(freely);
-			goods.setLipolysis(lipolysis);
-			goods.setAsh(ash);
-			goods.setWater(water);
-			goods.setTensile(tensile);
-			goods.setCrack(crack);
-			goods.setBending(bending);
-			goods.setFlexural(flexural);
-			goods.setBurning(burning);
-			goods.setSeo_description(seo_description);
-			int aa = goodsMapper.insert(goods);
-			if (aa > 0) {
-				result.setSuccess(true);
-				result.setMsg("添加货品成功");
-			} else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("参数错误");
+			
+			if (result.getSuccess()) {
+				String goodClass_id = request.getParameter("goodClass_id");// 分类
+				String name = request.getParameter("name");// 货品名称
+				String price = request.getParameter("price");// 价格
+				String validity = request.getParameter("validity");// 有效期
+				String inventory = request.getParameter("inventory");// 库存
+				String area_id = request.getParameter("area_id");// 库存地区（县市）
+				String addess = request.getParameter("addess");// 库存地区详细地址
+				String supply_id = request.getParameter("supply_id");// 供应情况（是否稳定供货）
+				String color_id = request.getParameter("color_id");// 颜色
+				String form_id = request.getParameter("form_id");// 形态
+				String source = request.getParameter("source");// 来源
+				String purpose = request.getParameter("purpose");// 用途
+				String protection = request.getParameter("protection");// 是否环保
+				String density = request.getParameter("density");// 密度
+				String cantilever = request.getParameter("cantilever");// 悬臂梁缺口冲击
+				String freely = request.getParameter("freely");// 简支梁缺口冲击
+				String lipolysis = request.getParameter("lipolysis");// 溶指
+				String ash = request.getParameter("ash");// 灰份
+				String water = request.getParameter("water");// 水分
+				String tensile = request.getParameter("tensile");// 拉伸强度
+				String crack = request.getParameter("crack");// 断裂伸长率
+				String bending = request.getParameter("bending");// 弯曲强度
+				String flexural = request.getParameter("flexural");// 弯曲模量
+				String burning = request.getParameter("burning");// 燃烧等级
+				String seo_description = request.getParameter("seo_description");// 货品详细描述
+
+				ezs_goods goods = new ezs_goods();
+				goods.setDeleteStatus(true);
+				goods.setAddTime(new Date());
+				goods.setGoodClass_id(Long.valueOf(goodClass_id));
+				goods.setName(name);
+				goods.setPrice(new BigDecimal(price));
+				goods.setValidity(Integer.valueOf(validity));
+				goods.setInventory(Double.valueOf(inventory));
+				goods.setArea_id(Long.valueOf(area_id));
+				goods.setAddess(addess);
+				goods.setSupply_id(Long.valueOf(supply_id));
+				goods.setSupply_id(Long.valueOf(color_id));
+				goods.setSupply_id(Long.valueOf(form_id));
+				goods.setSource(source);
+				goods.setClick(0);
+				goods.setCollect(0);
+				goods.setGoods_salenum(0);
+				goods.setStatus(0);
+				if (protection == "0") {
+					goods.setProtection(true);
+				} else if (protection == "1") {
+					goods.setProtection(false);
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("参数错误");
+				}
+				goods.setDensity(density);
+				goods.setCantilever(cantilever);
+				goods.setFreely(freely);
+				goods.setLipolysis(lipolysis);
+				goods.setAsh(ash);
+				goods.setWater(water);
+				goods.setTensile(tensile);
+				goods.setCrack(crack);
+				goods.setBending(bending);
+				goods.setFlexural(flexural);
+				goods.setBurning(burning);
+				goods.setSeo_description(seo_description);
+				int aa = goodsMapper.insert(goods);
+				long goodsid=goods.getId();
+				if (aa > 0) {
+					result.setSuccess(true);
+					result.setMsg("添加货品成功");
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("参数错误");
+				}
+				// 图片信息
+				ezs_goods_photo goodsPhoto = null ;
+				ezs_goods_cartography  cartography = null;
+				
+				for (AuthImageVo img : list) {
+					ezs_accessory ezs_accessory = new ezs_accessory();
+					ezs_accessory.setAddTime(new Date());
+					ezs_accessory.setDeleteStatus(false);
+					ezs_accessory.setExt("");
+					ezs_accessory.setHeight(0);
+					ezs_accessory.setInfo(null);
+					ezs_accessory.setName("");
+					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
+					ezs_accessory.setUser_id(upi.getId());
+					ezs_accessoryMapper.insertSelective(ezs_accessory);
+					// upi记录
+					img.setAccid(ezs_accessory.getId());
+					//aaa
+					if("goods".equals(img.getImgcode())){
+						goodsPhoto=new ezs_goods_photo();
+						goodsPhoto.setGoods_id(goods.getId());
+						goodsPhoto.setPhoto_id(img.getAccid());
+						photoMapper.insertSelective(goodsPhoto);
+					}else if("process".equals(img.getImgcode())){
+						cartography=new ezs_goods_cartography();
+						cartography.setGoods_id(goods.getId());
+						cartography.setCartography_id(img.getAccid());
+						cartographyMapper.insertSelective(cartography);
+					}
+				}
 			}
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(true);
+			result.setMsg("添加货品成功，请静待审核");
+		} catch (Exception e) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			e.printStackTrace();
 		}
-		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-		result.setSuccess(false);
-		result.setMsg("参数错误");
-		
 		return result;
 	}
 	
-	Result checkParam(HttpServletRequest request){
+	/**
+	 * 检查保存商品图片是否必填
+	 * @param type
+	 * @param list
+	 * @return
+	 */
+	private boolean checkIsMustForGoodsAdd(String type, List<AuthImageVo> list) {
+		Boolean status=false;
+		for (AuthImageVo authImageVo : list) {
+			if(type.equals(authImageVo.getImgcode())){
+				 status=true;
+				 break;
+			}
+		}
+		return status;
+	}
+
+	private long checkisExtId(String type, List<AuthImageVo> list) {
+		long id = 0;
+		for (AuthImageVo authImageVo : list) {
+			if (authImageVo.getImgcode().equals(type)) {
+				id = authImageVo.getAccid();
+				break;
+			}
+		}
+		return id;
+	}
+
+	private static List<AuthImageVo> savepic(String param, List<AuthImageVo> list) throws ParseException {
+		if (!Tools.isEmpty(param)) {
+			String[] aa = param.split(";");
+			if (null == aa || aa.length == 0) {
+				return list;
+			}
+			for (String bb : aa) {
+				String[] cc = bb.split(",");
+				if (null == cc || cc.length < 2) {
+					return list;
+				}
+				AuthImageVo ImageVo = new AuthImageVo();
+				ImageVo.setImgcode(cc[0]);
+
+				if (cc[1].indexOf("@") > 0 && cc[1].split("@").length == 3) {
+					ImageVo.setImgurl(cc[1].split("@")[0]);
+					ImageVo.setName(cc[1].split("@")[1]);
+					ImageVo.setUsetime(sdf.parse(cc[1].split("@")[2]));
+					list.add(ImageVo);
+					System.out.println(ImageVo.toString());
+				} else {
+					ImageVo.setImgurl(cc[1].split("@")[0]);
+					list.add(ImageVo);
+					System.out.println(ImageVo.toString());
+				}
+			}
+		}
+		return list;
+	}
+
+	public static void main(String[] args) {
+		List<AuthImageVo> list = new ArrayList<>();
+		try {
+			savepic("type1,url1@name1@2018-05-06 22:26:00;" + "type2,url2@name2@2018-05-06 22:26:00;" + "type3,url3",
+					list);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	Result checkParam(HttpServletRequest request) {
 		Result result = Result.success();
-		String goodClass_id = request.getParameter("goodClass_id");//分类
-		String name = request.getParameter("name");//货品名称
-		String price = request.getParameter("price");//价格
-		String validity = request.getParameter("validity");//有效期
-		String inventory = request.getParameter("inventory");//库存
-		String area_id = request.getParameter("area_id");//库存地区（县市）
-		String addess = request.getParameter("addess");//库存地区详细地址
-		String supply_id = request.getParameter("supply_id");//供应情况（是否稳定供货）
-		String color_id = request.getParameter("color_id");//颜色
-		String form_id = request.getParameter("form_id");//形态
-		String source = request.getParameter("source");//来源
-		String purpose = request.getParameter("purpose");//用途
-		String protection = request.getParameter("protection");//是否环保
-		//非必填
-		String density = request.getParameter("density");//密度
-		String cantilever = request.getParameter("cantilever");//悬臂梁缺口冲击
-		String freely = request.getParameter("freely");//简支梁缺口冲击
-		String lipolysis = request.getParameter("lipolysis");//溶指
-		String ash = request.getParameter("ash");//灰份
-		String water = request.getParameter("water");//水分
-		String tensile = request.getParameter("tensile");//拉伸强度
-		String crack = request.getParameter("crack");//断裂伸长率
-		String bending = request.getParameter("bending");//弯曲强度
-		String flexural = request.getParameter("flexural");//弯曲模量
-		String burning = request.getParameter("burning");//燃烧等级
-		
+		String goodClass_id = request.getParameter("goodClass_id");// 分类
+		String name = request.getParameter("name");// 货品名称
+		String price = request.getParameter("price");// 价格
+		String validity = request.getParameter("validity");// 有效期
+		String inventory = request.getParameter("inventory");// 库存
+		String area_id = request.getParameter("area_id");// 库存地区（县市）
+		String addess = request.getParameter("addess");// 库存地区详细地址
+		String supply_id = request.getParameter("supply_id");// 供应情况（是否稳定供货）
+		String color_id = request.getParameter("color_id");// 颜色
+		String form_id = request.getParameter("form_id");// 形态
+		String source = request.getParameter("source");// 来源
+		String purpose = request.getParameter("purpose");// 用途
+		String protection = request.getParameter("protection");// 是否环保
+		// 非必填
+		String density = request.getParameter("density");// 密度
+		String cantilever = request.getParameter("cantilever");// 悬臂梁缺口冲击
+		String freely = request.getParameter("freely");// 简支梁缺口冲击
+		String lipolysis = request.getParameter("lipolysis");// 溶指
+		String ash = request.getParameter("ash");// 灰份
+		String water = request.getParameter("water");// 水分
+		String tensile = request.getParameter("tensile");// 拉伸强度
+		String crack = request.getParameter("crack");// 断裂伸长率
+		String bending = request.getParameter("bending");// 弯曲强度
+		String flexural = request.getParameter("flexural");// 弯曲模量
+		String burning = request.getParameter("burning");// 燃烧等级
+
 		if (Tools.isEmpty(goodClass_id)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
@@ -260,137 +421,228 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	@Override
 	public Result pullOffShelvesById(Result result, long goodsId) {
-		
+
 		int aa = 0;
-		
+
 		try {
 			aa = goodsMapper.pullOffShelves(goodsId);
 		} catch (Exception e) {
-			log.info("商品下架操作出错"+e.toString());
+			log.info("商品下架操作出错" + e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
 			result.setMsg("系统错误！");
 		}
-		
-		if (aa <= 0 ) {
+
+		if (aa <= 0) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("下架操作异常");
-		}else{
+		} else {
 			result.setSuccess(true);
 			result.setMsg("操作成功");
 		}
-		return result;	
+		return result;
 	}
 
 	@Override
-	public Result updateGoodsInfoById(Result result, long goodsId, HttpServletRequest request,
+	public Result updateGoodsInfoById(Result result, long goodsId,ezs_user upi, HttpServletRequest request,
 			HttpServletResponse response) {
 		
-		result = checkParam(request);
-		if(result.getSuccess()){
-			ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
-			ezs_goods_log goodsLog = new ezs_goods_log();
-			String goodClass_id = request.getParameter("goodClass_id");//分类
-			String name = request.getParameter("name");//货品名称
-			String price = request.getParameter("price");//价格
-			String validity = request.getParameter("validity");//有效期
-			String inventory = request.getParameter("inventory");//库存
-			String area_id = request.getParameter("area_id");//库存地区（县市）
-			String addess = request.getParameter("addess");//库存地区详细地址
-			String supply_id = request.getParameter("supply_id");//供应情况（是否稳定供货）
-			String color_id = request.getParameter("color_id");//颜色
-			String form_id = request.getParameter("form_id");//形态
-			String source = request.getParameter("source");//来源
-			String purpose = request.getParameter("purpose");//用途
-			String protection = request.getParameter("protection");//是否环保
-			String density = request.getParameter("density");//密度
-			String cantilever = request.getParameter("cantilever");//悬臂梁缺口冲击
-			String freely = request.getParameter("freely");//简支梁缺口冲击
-			String lipolysis = request.getParameter("lipolysis");//溶指
-			String ash = request.getParameter("ash");//灰份
-			String water = request.getParameter("water");//水分
-			String tensile = request.getParameter("tensile");//拉伸强度
-			String crack = request.getParameter("crack");//断裂伸长率
-			String bending = request.getParameter("bending");//弯曲强度
-			String flexural = request.getParameter("flexural");//弯曲模量
-			String burning = request.getParameter("burning");//燃烧等级
-			String seo_description = request.getParameter("seo_description");//货品详细描述
+		try {
+			result = checkParam(request);
+			//添加商品
+			String goodsurls = request.getParameter("goodsurls");// 商品图片
+			String processgoodsurls = request.getParameter("processgoodsurls");// 商品图片
+			List<AuthImageVo> list = new ArrayList<>();
+			savepic(goodsurls, list);
+			savepic(processgoodsurls, list);
 			
-			goods.setGoodClass_id(Long.parseLong(goodClass_id));
-			goods.setName(name);
-			goods.setPrice(new BigDecimal(price));
-			goods.setValidity(Integer.valueOf(validity));
-			goods.setInventory(Double.parseDouble(inventory));
-			goods.setArea_id(Long.parseLong(area_id));
-			goods.setAddess(addess);
-			goods.setSupply_id(Long.parseLong(supply_id));
-			goods.setSupply_id(Long.parseLong(color_id));
-			goods.setSupply_id(Long.parseLong(form_id));
-			goods.setSource(source);
-			if (protection == "0") {
-				goods.setProtection(true);
-			}else if(protection == "1"){
-				goods.setProtection(false);
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("参数错误");
+			if (null != list && list.size() > 0) {
+				
+				//检查保存商品图片是否必填
+				if(!checkIsMustForGoodsAdd("goods", list)){
+					result.setMsg("至少上传一张商品图片");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					return result;
+				};
 			}
-			goods.setDensity(density);
-			goods.setCantilever(cantilever);
-			goods.setFreely(freely);
-			goods.setLipolysis(lipolysis);
-			goods.setAsh(ash);
-			goods.setWater(water);
-			goods.setTensile(tensile);
-			goods.setCrack(crack);
-			goods.setBending(bending);
-			goods.setFlexural(flexural);
-			goods.setBurning(burning);
-			goods.setSeo_description(seo_description);
 			
-			
-			int aa = goodsMapper.updateByPrimaryKey(goods);
-			if (aa > 0) {
-				result.setSuccess(true);
-				result.setMsg("修改货品成功");
-				goodsLog.setGoodsId(goodsId);
-				goodsLogMapper.insert(goodsLog);
-			} else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("参数错误");
+			if (result.getSuccess()) {
+				String goodClass_id = request.getParameter("goodClass_id");// 分类
+				String name = request.getParameter("name");// 货品名称
+				String price = request.getParameter("price");// 价格
+				String validity = request.getParameter("validity");// 有效期
+				String inventory = request.getParameter("inventory");// 库存
+				String area_id = request.getParameter("area_id");// 库存地区（县市）
+				String addess = request.getParameter("addess");// 库存地区详细地址
+				String supply_id = request.getParameter("supply_id");// 供应情况（是否稳定供货）
+				String color_id = request.getParameter("color_id");// 颜色
+				String form_id = request.getParameter("form_id");// 形态
+				String source = request.getParameter("source");// 来源
+				String purpose = request.getParameter("purpose");// 用途
+				String protection = request.getParameter("protection");// 是否环保
+				String density = request.getParameter("density");// 密度
+				String cantilever = request.getParameter("cantilever");// 悬臂梁缺口冲击
+				String freely = request.getParameter("freely");// 简支梁缺口冲击
+				String lipolysis = request.getParameter("lipolysis");// 溶指
+				String ash = request.getParameter("ash");// 灰份
+				String water = request.getParameter("water");// 水分
+				String tensile = request.getParameter("tensile");// 拉伸强度
+				String crack = request.getParameter("crack");// 断裂伸长率
+				String bending = request.getParameter("bending");// 弯曲强度
+				String flexural = request.getParameter("flexural");// 弯曲模量
+				String burning = request.getParameter("burning");// 燃烧等级
+				String seo_description = request.getParameter("seo_description");// 货品详细描述
+
+				ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+				goods.setDeleteStatus(true);
+				goods.setAddTime(new Date());
+				goods.setGoodClass_id(Long.valueOf(goodClass_id));
+				goods.setName(name);
+				goods.setPrice(new BigDecimal(price));
+				goods.setValidity(Integer.valueOf(validity));
+				goods.setInventory(Double.valueOf(inventory));
+				goods.setArea_id(Long.valueOf(area_id));
+				goods.setAddess(addess);
+				goods.setSupply_id(Long.valueOf(supply_id));
+				goods.setSupply_id(Long.valueOf(color_id));
+				goods.setSupply_id(Long.valueOf(form_id));
+				goods.setSource(source);
+				goods.setClick(0);
+				goods.setCollect(0);
+				goods.setGoods_salenum(0);
+				goods.setStatus(0);
+				if (protection == "0") {
+					goods.setProtection(true);
+				} else if (protection == "1") {
+					goods.setProtection(false);
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("参数错误");
+				}
+				goods.setDensity(density);
+				goods.setCantilever(cantilever);
+				goods.setFreely(freely);
+				goods.setLipolysis(lipolysis);
+				goods.setAsh(ash);
+				goods.setWater(water);
+				goods.setTensile(tensile);
+				goods.setCrack(crack);
+				goods.setBending(bending);
+				goods.setFlexural(flexural);
+				goods.setBurning(burning);
+				goods.setSeo_description(seo_description);
+				goods.setLastModifyDate(new Date());
+				int aa = goodsMapper.updateByPrimaryKeySelective(goods);
+				long goodsid=goods.getId();
+				if (aa > 0) {
+					result.setSuccess(true);
+					result.setMsg("修改货品成功");
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("参数错误");
+				}
+				// 图片信息
+				ezs_goods_photo goodsPhoto = null ;
+				ezs_goods_cartography  cartography = null;
+				photoMapper.deleteByGoodsId(goodsId);
+				cartographyMapper.deleteByGoodsId(goodsId);
+				for (AuthImageVo img : list) {
+					ezs_accessory ezs_accessory = new ezs_accessory();
+					ezs_accessory.setAddTime(new Date());
+					ezs_accessory.setDeleteStatus(false);
+					ezs_accessory.setExt("");
+					ezs_accessory.setHeight(0);
+					ezs_accessory.setInfo(null);
+					ezs_accessory.setName("");
+					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
+					ezs_accessory.setUser_id(upi.getId());
+					ezs_accessoryMapper.insertSelective(ezs_accessory);
+					// upi记录
+					img.setAccid(ezs_accessory.getId());
+					//aaa
+					if("goods".equals(img.getImgcode())){
+						goodsPhoto=new ezs_goods_photo();
+						goodsPhoto.setGoods_id(goods.getId());
+						goodsPhoto.setPhoto_id(img.getAccid());
+						photoMapper.insertSelective(goodsPhoto);
+					}else if("process".equals(img.getImgcode())){
+						cartography=new ezs_goods_cartography();
+						cartography.setGoods_id(goods.getId());
+						cartography.setCartography_id(img.getAccid());
+						cartographyMapper.insertSelective(cartography);
+					}
+				}
 			}
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(true);
+			result.setMsg("修改货品成功，请静待审核");
+		} catch (Exception e) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			e.printStackTrace();
 		}
-		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-		result.setSuccess(false);
-		result.setMsg("参数错误");
 		return result;
 	}
 
 	@Override
 	public Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request,
 			HttpServletResponse response) {
-		
-		ezs_goods_audit_process goodsAudit = new ezs_goods_audit_process();
-		
-		goodsAudit.setGoods_id(goodsId);
-		
-		goodsAudit.setStatus(540);
-		
-		int aa = goodsAuditProcessMapper.insertSelective(goodsAudit);
-		
-		if (aa <= 0) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+		if ( null != goods ) {
+			ezs_goods_audit_process goodsAudit = null;
+			goodsAudit = goodsAuditProcessMapper.selectByGoodsId(goodsId);
+			if (null == goodsAudit) {
+				ezs_goods_audit_process newGoodsAudit = new ezs_goods_audit_process();
+				newGoodsAudit.setAddTime(new Date());
+				newGoodsAudit.setGoods_id(goodsId);
+				newGoodsAudit.setSupplyPrice(goods.getPrice());
+				newGoodsAudit.setStatus(540);
+				int aa = goodsAuditProcessMapper.insertSelective(newGoodsAudit);
+				if (aa <= 0) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+				}
+				result.setSuccess(true);
+				result.setMsg("提交审核成功，请静待结果");
+			}else{
+				goodsAudit.setAddTime(new Date());
+				goodsAudit.setGoods_id(goodsId);
+				goodsAudit.setSupplyPrice(goods.getPrice());
+				int aa = goodsAuditProcessMapper.updateByPrimaryKey(goodsAudit);
+				if (aa <= 0) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+				}
+				result.setSuccess(true);
+				result.setMsg("提交审核成功，请静待结果");
+			}
+		}else{
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("系统错误");
 		}
-		
-		result.setSuccess(true);
-		result.setMsg("提交审核成功，请静待结果");
-		
 		return result;
 	}
-}	
 
+	@Override
+	public List<ezs_accessory> queryCartographyById(Long goodsId) {
+		return cartographyMapper.selectCartographyById(goodsId);
+	}
+
+	@Override
+	public String getGoodsProperty(Long propertyId) {
+		
+		return dictMapper.selectPropertyById(propertyId);
+	}
+
+	
+}

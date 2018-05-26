@@ -247,6 +247,7 @@ public class UserProServiceImpl implements UserProService{
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void loginuser(String userName,HttpServletRequest request,HttpServletResponse response,Result result,
 			String userAgent, String pd,String ip,Date date,Integer flag){
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
@@ -294,7 +295,7 @@ public class UserProServiceImpl implements UserProService{
 					}
 					
 					//判断是否启用
-					int tempStatus=userProInfo.getEzs_userinfo().getStatus();
+					boolean tempStatus=userProInfo.getDeleteStatus();
 					
 					//添加缓存 
 					String str32=RandomStr32.getStr32();
@@ -306,7 +307,7 @@ public class UserProServiceImpl implements UserProService{
 					response.addCookie(cookie);
 					
 					try {
-						if(tempStatus==0&&userProInfo.getAddTime().getTime()>1479052799000l){
+						if(!tempStatus&&userProInfo.getAddTime().getTime()>1479052799000l){
 							//首次登陆 应该跳转到 注册联系人资料
 							result.setSuccess(true);
 				    		result.setMsg("登陆成功");
@@ -538,6 +539,7 @@ public class UserProServiceImpl implements UserProService{
 	 * @param mobilesendcodeexpirstr 验证码有效期 单位为 秒
 	 * @param mobileintervalstr   验证码距离下一次点击的时间间隔
 	 * @param mobilesendtimesstr  验证码 获取次数
+	 * flag=1无密登陆
 	 * @return
 	 */
 	@Override
@@ -549,13 +551,16 @@ public class UserProServiceImpl implements UserProService{
 				result.setMsg("格式有误，请输入正确的手机号码");
 				return result;
 		 }else{
-			 
-			 int istrue=ezs_userMapper.checkMobile(phone);
-			 if(istrue==0){
-				 result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
-					result.setSuccess(false);
-					result.setMsg("未找到该手机号码客户");
-					return result;
+			 //无密登陆
+			 if(null!=flag&&flag==1){
+				 List<ezs_user> upis=ezs_userMapper.getUserInfoByUserNameFromBack(phone);
+					if(upis==null||upis.size()==0){
+						//不存在，不能登陆
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
+						result.setSuccess(false);
+						result.setMsg("无该手机号注册信息，请先注册！");
+						return result;
+					}
 			 }
 			 
 			 //先判断发送的次数 和 时间间隔
@@ -583,8 +588,10 @@ public class UserProServiceImpl implements UserProService{
 			 				SendMobileMessage.sendMsg(phone, content);
 			 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 							result.setSuccess(true);
-							result.setObj(new HashMap<>().put("mobile", phone));
+							Map<String, Object> map=new HashMap<>();
+							map.put("mobile", phone);
 							result.setMsg("验证码发送成功");
+							result.setObj(map);
 			 				RedisUtils.set(phone+mobilerecodestr, code, Long.parseLong(mobilesendcodeexpirstr));
 			 				RedisUtils.set(phone+mobilerecodestr+"times", ++codetimes, DateUtils.getTimeValue());
 			 			} catch (Exception e) {
@@ -1395,6 +1402,7 @@ public class UserProServiceImpl implements UserProService{
 				ezs_storeMapper.updateByPrimaryKeySelective(store);
 				upi=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
 				RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setMsg("保存成功");
 			} catch (Exception e) {
 				log.info("h5设置公司资料"+upi.getName()+"错误"+e.toString());

@@ -197,6 +197,15 @@
   	where gph.goods_id=#{goodsId}  )
   </select>
   
+   <!-- 根据货品id 查询制作案例 -->
+  <select id="selectCartographyById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+  	<include refid="Base_Column_List" /> 
+  	from ezs_accessory acc where acc.id in 
+  	(select gph.cartography_id from ezs_goods_cartography gph 
+  	where gph.goods_id=#{goodsId} )
+  </select>
+  
   
    <resultMap id="authimgmap" type="com.sanbang.vo.userauth.AuthImageVo" >
     <result column="paperType" property="imgcode" jdbcType="VARCHAR" />
@@ -218,7 +227,7 @@
 		ezs_card_dict A
 	LEFT JOIN ezs_paper B ON A.paper_id = B.id
 	LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
-	WHERE A.store_id=${storeid}
+	WHERE A.store_id=#{storeid}
   </select>
   
 </mapper>

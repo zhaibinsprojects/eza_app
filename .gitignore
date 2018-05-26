@@ -1,17 +1,40 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /.classpath
 /.gitignore
 /target/
 =======
 #仓库中所有名为.classpath的文件都屏蔽
-.classpath
-#屏蔽target目录
-target/
-#屏蔽.settings目录
-.settings/
-/bin
+=======
+# IntelliJ IDEA Project files
+.idea
+*.iml
+*.ipr
+*.iws
+out
 
-# auto file of mac
+# Eclipse Project files
+>>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
+.classpath
+.project
+.settings/
+.vscode/
+
+# Build files
+target/
+
+bin/
+gen/
+local.properties
+
 .DS_Store
+Thumbs.db
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
 
 >>>>>>> 59d700dca034345d7495bc1830473298449b4dd7

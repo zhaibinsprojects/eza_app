@@ -49,8 +49,6 @@ public class SellerContractServiceImpl implements SellerContractService {
 		//获取总页数
 		int totalCount =ezs_pactMapper.selectCountById(sellerId);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
-		int startPos = 0;
-		page.setStartPos(startPos);
 		page.setPageSize(10);
 		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
 			List<ezs_pact> list = this.ezs_pactMapper.queryPact(page, sellerId);
@@ -107,9 +105,7 @@ public class SellerContractServiceImpl implements SellerContractService {
 		
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
-		int startPos = 0;
-		page.setStartPos(startPos);
-		if(Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+		if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
 			if (Tools.notEmpty(startTime) && Tools.notEmpty(endTime)){
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				Date dt1;
@@ -125,6 +121,8 @@ public class SellerContractServiceImpl implements SellerContractService {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+				
+//				list = ezs_pactMapper.selectPactByDate(startTime, endTime,sellerId,page);
 				map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				map.put("Page", page);
 				map.put("Obj", list);

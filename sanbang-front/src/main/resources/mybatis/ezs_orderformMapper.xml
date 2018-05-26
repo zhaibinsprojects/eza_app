@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_orderformMapper" >
-	<resultMap id="BaseResultMap" type="ezs_orderform" >
+	<resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_orderform" >
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
 		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -378,7 +378,7 @@
 	<!--订单列表-->
 	<resultMap id="orderMap" type="com.sanbang.bean.ezs_order_info" >
 		<id column="good_no" jdbcType="VARCHAR" property="good_no" />
-		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="addTime" property="addTime" jdbcType="VARCHAR" />
 		<result column="count" property="count" jdbcType="DOUBLE" />
 		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
@@ -391,38 +391,42 @@
 		<result column="first_price" property="first_price" jdbcType="DECIMAL" />
 		<result column="all_price" property="all_price" jdbcType="DECIMAL" />
 		<result column="end_price" property="end_price" jdbcType="DECIMAL" />
-		<result column="finishtime" property="finishtime" jdbcType="TIMESTAMP" />
+		<result column="finishtime" property="finishtime" jdbcType="VARCHAR" />
 		<result column="pact_status" property="pact_status" jdbcType="INTEGER" />
 		<result column="address_id" property="address_id" jdbcType="BIGINT" />
 		<result column="order_type" property="order_type" jdbcType="VARCHAR" />
 		<result column="areaName" property="areaName" jdbcType="VARCHAR" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
+		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
 	</resultMap>
   
   
 	<!--订单列表-->
-	<select id="getOrderListByValue" resultMap="BaseResultMap">
+	<select id="getOrderListByValue" resultMap="orderMap">
 	  SELECT
-	   C.price,
-		C.good_no,
-		B.addTime,
-		A.count,
-		C.`name`,
-		C.area_id,
-		C.addess,
-		B.total_price,
-		B.goods_amount,
-		B.order_status,
-		B.first_price,
-		B.end_price,
-		B.all_price,
-		B.pact_status,
-		B.address_id,
-		B.finishtime,
-		B.order_no,
-		B.order_type,
-		B.deleteStatus,
-		D.areaName 
+	  		C.price,
+			C.good_no,
+			date_format(B.addTime, '%Y-%m-%d %H:%i:%S') addTime,
+			A.count,
+			C.`name`,
+			C.area_id,
+			C.addess,
+			B.total_price,
+			B.goods_amount,
+			B.order_status,
+			B.first_price,
+			B.end_price,
+			B.all_price,
+			B.pact_status,
+			B.address_id,
+			date_format(B.finishtime, '%Y-%m-%d %H:%i:%S') finishtime,
+			B.order_no,
+			B.order_type,
+			B.deleteStatus,
+			D.areaName,
+			B.user_id  buyerid,
+      		C.user_id  sellerid
 	FROM
 		ezs_goodscart A
 	LEFT JOIN ezs_orderform B ON A.of_id = B.id
@@ -433,20 +437,21 @@
 		1 = 1
 
 		<if test="pager.order_status!=null and pager.order_status!=-1">
-	 A.order_status=#{pager.order_status}	
+		 and  B.order_status=#{pager.order_status}	
 		</if>
 		<if test="pager.order_status!=null and pager.order_status==-1">
-	 	A.order_status in (10,20,30,40,50,60,70,80,90,130,110)	
+	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,130,110)	
 		</if>
-		<if test="pager.order_type!=null">
-		 A.order_type=#{pager.order_type}	
+		<if test="pager.order_type!=null and pager.order_type!=''">
+		and B.order_type=#{pager.order_type}	
 		</if>
-		limit (#{pager.secount},#{pager.pageSize})
+		AND B.user_id=${pager.userid}
+		limit #{pager.secount},#{pager.pageSize}
 	</select>
 	
 	
 	
-	<select id="getOrderListByValueCount" resultMap="BaseResultMap">
+	<select id="getOrderListByValueCount" resultType="int">
 	  SELECT
 		count(*)
 	FROM
@@ -457,43 +462,49 @@
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
 	WHERE
 		1 = 1
-
 		<if test="pager.order_status!=null and pager.order_status!=-1">
-	 A.order_status=#{pager.order_status}	
+		 and  B.order_status=#{pager.order_status}	
 		</if>
 		<if test="pager.order_status!=null and pager.order_status==-1">
-	 	A.order_status in (10,20,30,40,50,60,70,80,90,130,110)	
+	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,130,110)	
 		</if>
-		<if test="pager.order_type!=null">
-		 A.order_type=#{pager.order_type}	
+		<if test="pager.order_type!=null and pager.order_type!=''">
+		and B.order_type=#{pager.order_type}	
 		</if>
+		AND B.user_id=${pager.userid}
 	</select>
 	
 	
 	<!--订单详情-->
+<<<<<<< HEAD
 	<!-- <select id="getOrderListByOrderno" resultMap="BaseResultMap"> -->
 	<select id="getOrderListByOrderno" resultType="com.sanbang.bean.ezs_order_info">
+=======
+	<select id="getOrderListByOrderno" resultMap="orderMap">
+>>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 	  SELECT
-	    C.price,
-		C.good_no,
-		B.addTime,
-		A.count,
-		C.`name`,
-		C.area_id,
-		C.addess,
-		B.total_price,
-		B.goods_amount,
-		B.order_status,
-		B.first_price,
-		B.end_price,
-		B.all_price,
-		B.pact_status,
-		B.address_id,
-		B.finishtime,
-		B.order_no,
-		B.order_type,
-		B.deleteStatus,
-		D.areaName 
+	   		C.price,
+			C.good_no,
+			date_format(B.addTime, '%Y-%m-%d %H:%i:%S') addTime,
+			A.count,
+			C.`name`,
+			C.area_id,
+			C.addess,
+			B.total_price,
+			B.goods_amount,
+			B.order_status,
+			B.first_price,
+			B.end_price,
+			B.all_price,
+			B.pact_status,
+			B.address_id,
+			date_format(B.finishtime, '%Y-%m-%d %H:%i:%S') finishtime,
+			B.order_no,
+			B.order_type,
+			B.deleteStatus,
+			D.areaName,
+			B.user_id  buyerid,
+      		C.user_id  sellerid
 	FROM
 		ezs_goodscart A
 	LEFT JOIN ezs_orderform B ON A.of_id = B.id
@@ -502,18 +513,20 @@
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
 	WHERE
 		1 = 1
+<<<<<<< HEAD
 		and
 
 	 B.order_no=#{order_no}	
+=======
+	and
+	B.order_no=#{order_no}	
+>>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 	</select>
 	
 	<!--订单详细信息-->
-	<select id="selectByorderno" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-		<include refid="Base_Column_List" /> 
-    ,
-		<include refid="Blob_Column_List" /> 
-    from ezs_orderform
+	<select id="selectByorderno" resultMap="orderMap" parameterType="java.lang.Long" >
+    select * from ezs_orderform 
     where id = #{id,jdbcType=BIGINT}
 	</select>
+	
 </mapper>

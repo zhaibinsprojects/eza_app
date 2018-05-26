@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class ezs_userinfo implements Serializable {
 
+
 	/**
 	 * 
 	 */
@@ -149,6 +150,14 @@ public class ezs_userinfo implements Serializable {
 
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+
+	@Override
+	public String toString() {
+		return "ezs_userinfo [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", email=" + email
+				+ ", enable=" + enable + ", entryTime=" + entryTime + ", phone=" + phone + ", status=" + status
+				+ ", depart_id=" + depart_id + ", position_id=" + position_id + ", sex_id=" + sex_id + ", QQ=" + QQ
+				+ ", updateStatus=" + updateStatus + ", tel=" + tel + "]";
 	}
     
     
