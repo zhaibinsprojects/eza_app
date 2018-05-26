@@ -22,6 +22,8 @@ public class ezs_invoice {
     private Long user_id;
 
     private String order_no;
+    
+    private String picurl;
 
     public Long getId() {
         return id;
@@ -102,4 +104,13 @@ public class ezs_invoice {
     public void setOrder_no(String order_no) {
         this.order_no = order_no == null ? null : order_no.trim();
     }
+
+	public String getPicurl() {
+		return picurl;
+	}
+
+	public void setPicurl(String picurl) {
+		this.picurl = picurl;
+	}
+    
 }

@@ -9,6 +9,10 @@ out
 .classpath
 .project
 .settings/
+/bin/
+/target/
+/.classpath
+/.gitignore
 
 # Build files
 target/
@@ -26,4 +30,3 @@ Thumbs.db
 #.swp
 *.*~
 ~*.*
-

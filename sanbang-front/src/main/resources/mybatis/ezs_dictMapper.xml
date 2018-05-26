@@ -154,6 +154,10 @@
 		and B.deleteStatus=0
   </select>
   
+  <select id="conditionList" resultType="ezs_dict">
+	  	select * from ezs_dict where deleteStatus = '0'
+  </select>
+  
 	<select id="selectPropertyById"  resultType="java.lang.String">
 		select name from ezs_dict where id = #{propertyId}
 	</select>  
@@ -161,6 +165,5 @@
   <select id="selectAuditingById" resultType="java.lang.String">
   	select code from ezs_dict where id = #{auditingusertype_id}
   </select>
-  
   
 </mapper>

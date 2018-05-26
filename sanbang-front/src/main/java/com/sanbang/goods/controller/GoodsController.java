@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +22,19 @@ import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.itextpdf.text.pdf.BaseFont;
+import com.sanbang.bean.ezs_bill;
+import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_customized_record;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
-import com.sanbang.utils.Page;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
-
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -51,11 +56,17 @@ public class GoodsController {
 	@RequestMapping("/goodsDetail")
 	@ResponseBody
 	public Result getGoodsDetail(HttpServletRequest request,Long id){
+		Result result = new Result();
 		ezs_goods goods = goodsService.getGoodsDetail(id);
-		Result result=Result.failure();
-		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
-		result.setObj(goods);
-		return   result;
+		if(null != goods){
+			result.setObj(goods);
+			result.setMsg("查询成功！");
+			result.setSuccess(true);
+		}else{
+			result.setMsg("查询失败！");
+			result.setSuccess(false);
+		}
+		return result;
 	}
 	
 	/**
@@ -68,9 +79,16 @@ public class GoodsController {
 	@ResponseBody
 	public Result listForEvaluate(HttpServletRequest request,Long id){
 		Result result = new Result();
-		List<ezs_dvaluate> list  = new ArrayList();
+		List<ezs_dvaluate> list  = new ArrayList<ezs_dvaluate>();
 		list = goodsService.listForEvaluate(id);
-		result.setObj(list);
+		if(null != list && list.size()>0){
+			result.setObj(list);
+			result.setMsg("查询成功");
+			result.setSuccess(true);
+		}else{
+			result.setMsg("查询失败");
+			result.setSuccess(false);
+		}
 		return result;
 	}
 	
@@ -84,7 +102,6 @@ public class GoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
-		int n;
 		if(goodId != null){
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
@@ -118,12 +135,21 @@ public class GoodsController {
 	@RequestMapping("/insertCart")	//sql
 	@ResponseBody
 	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_bill bill = user.getEzs_bill();
+		if(null != goodsCart){
+			goodsCart.setBill(bill);
+		}
 		Result result = new Result();
 		int n;
 		n = goodsService.insertCart(goodsCart);
 		if(n>0){
 			result.setObj(goodsCart);
+			result.setSuccess(true);
 			result.setMsg("添加成功");
+		}else{
+			result.setSuccess(false);
+			result.setMsg("添加失败");
 		}
 		return result;
 	}
@@ -139,6 +165,10 @@ public class GoodsController {
 	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
 		Result result = new Result();
 		int n;
+		//购买加入订单时校验当前商品的库存量，调用下面的方法就行
+		
+		
+		
 		n = goodsService.insertOrder(order);
 		if(n>0){
 			result.setMsg("添加成功");
@@ -146,41 +176,69 @@ public class GoodsController {
 		return result;
 	}
 	
+	//在添加购物车以及往添加采购单的这些页面需要返回当前商品的单价，用以计算总价格用
+	public Result queryPrice(String 参数待定){
+		Result r = new Result();
+		
+		
+		return r;
+	}
+	
 	/**
-	 * 采购单列表（订单）
+	 * 采购单列表（就是预约定制的列表）
 	 * @param request
 	 * @param user_id
 	 * @return
 	 */
-	@RequestMapping("/orderList")
+	@RequestMapping("/customizedList")
 	@ResponseBody
-	public Result orderList(HttpServletRequest request,Long user_id){
-		List<ezs_orderform> list = new ArrayList();
+	public Result customizedList(HttpServletRequest request,Long user_id){
+		List<ezs_customized> list = new ArrayList<ezs_customized>();
 		Result result = new Result();
-		list =  goodsService.orderList(user_id);
-		if(list.size()>0){
+		list =  goodsService.customizedList(user_id);
+		if(null != list && list.size()>0){
 			result.setObj(list);
+			result.setSuccess(true);
+			result.setMsg("查询成功");
 		}else{
+			result.setSuccess(false);
 			result.setMsg("采购单为空");
 		}
 		return result;
 	}
 	
-	
-	
-	
 	/**
-	 * 预约预定（采购定制，预约定制，同一个接口）
+	 * 预约预定
 	 * @param request
-	 * @param goodsCart	
+	 * @param customized 预约实体类 
 	 * @return
 	 */
-	@RequestMapping("/insertReserveOrder")	
+	@RequestMapping("/insertCustomized")	
 	@ResponseBody
-	public Result insertReserveOrder(HttpServletRequest request,ezs_goodscart goodsCart){
+	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
 		Result result = new Result();
-		
-		
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		//加入预约定制
+		int n = goodsService.insertCustomized(customized);
+		Long id = customized.getId();
+		ezs_customized_record record = new ezs_customized_record();
+		record.setId(id);
+		record.setAddTime(new Date());
+		record.setOperater_id(user.getId());
+		record.setPurchaser_id(user.getId());
+		int m = goodsService.insertCustomizedRecord(record);
+		if(n > 0 && m > 0){
+			result.setMsg("添加成功");
+			result.setSuccess(true);
+		}
+		if(n > 0 && m <= 0){
+			result.setMsg("添加成功，但记录失败");
+			result.setSuccess(true);
+		}
+		if(n > 0 && m <= 0){
+			result.setMsg("添加失败，但插入了记录");
+			result.setSuccess(false);
+		}
 		return result;
 	}
 	
@@ -197,13 +255,14 @@ public class GoodsController {
 		if(null != goodClass_id){
 			list = goodsService.listForGoods(goodClass_id);
 			result.setObj(list);
+			result.setSuccess(true);
 			result.setMsg("返回成功");
 		}else{
 			result.setMsg("返回失败");
+			result.setSuccess(false);
 		}
 		return result;
 	}
-	
 	
 	/**
 	 * 自营、地区筛选、品类筛选
@@ -216,9 +275,16 @@ public class GoodsController {
 	@ResponseBody
 	public Result listByAreaAndType(HttpServletRequest request,Long area,Long type){
 		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = goodsService.listByAreaAndType(area,type);
-		result.setObj(list);
+		if(null != list && list.size()>0){
+			result.setObj(list);
+			result.setSuccess(true);
+			result.setMsg("筛选成功");
+		}else{
+			result.setSuccess(false);
+			result.setMsg("筛选失败");
+		}
 		return result;
 	}
 	
@@ -237,9 +303,9 @@ public class GoodsController {
 	@ResponseBody
 	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
 		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		//将接收的参数转换成map类型
-		Map mmp = new HashMap();
+		Map<String, Object> mmp = new HashMap<String, Object>();
 		mmp.put("color", color);
 		mmp.put("form", form);
 		mmp.put("purpose", purpose);
@@ -250,6 +316,29 @@ public class GoodsController {
 		list = goodsService.listByOthers(mmp);
 		result.setObj(list);
 		result.setMsg("返回成功");
+		
+		return result;
+	}
+	
+	/**
+	 * 返回其他筛选所需的条件
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/conditionList")
+	@ResponseBody
+	public Result conditionList(HttpServletRequest request){
+		Result result = new Result();
+		List<ezs_dict> list = new ArrayList<ezs_dict>();
+		list = goodsService.conditionList();
+		if(list.size()>0){
+			result.setObj(list);
+			result.setMsg("返回的数据");
+			result.setSuccess(true);
+		}else{
+			result.setMsg("略略略略略略略略略");
+			result.setSuccess(false);
+		}
 		
 		return result;
 	}

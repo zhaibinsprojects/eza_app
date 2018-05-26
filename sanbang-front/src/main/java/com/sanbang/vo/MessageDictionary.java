@@ -16,4 +16,9 @@ public class MessageDictionary {
 	public static String upPswCode(String code){
 		return "【易再生网】尊敬的用户您好，您本次修改密码短信验证码为:"+code.toString()+",请勿告诉他人,有效时间为10分钟!";
 	}
+	
+	//设置密保手机
+	public static String securatePhoneCode(StringBuilder code){
+		return "【易再生网】尊敬的用户您好，您本次设置密保手机的短信验证码为:"+code.toString()+",请勿告诉他人,有效时间为10分钟!";
+	}
 }

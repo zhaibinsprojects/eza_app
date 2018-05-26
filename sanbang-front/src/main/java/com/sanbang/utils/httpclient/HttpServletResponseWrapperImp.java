@@ -78,6 +78,8 @@ public class HttpServletResponseWrapperImp extends HttpServletResponseWrapper {
         public byte[] toByteArray() {
             return buffer.toByteArray();
         }
+
+		
     }
 
 }
