@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
+import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
@@ -32,6 +35,8 @@ public class SellerReceiptController {
 	@Autowired
 	SellerReceiptService sellerReceiptService;
 	
+	@Autowired
+	DictService dictService;
 	/**
 	 * 票据管理页面,展示列表
 	 * @param userId
@@ -52,6 +57,18 @@ public class SellerReceiptController {
 			return result;
 		}
 		Long userId = upi.getId();
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		Page page = null;
 		if(currentPage==null){
@@ -95,6 +112,19 @@ public class SellerReceiptController {
 			return result;
 		}
 		Long userId = upi.getId();
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
+		
 	
 		Page page = null;
 		if(currentPage==null){
@@ -135,6 +165,18 @@ public class SellerReceiptController {
 			return result;
 		}
 		Long userId = upi.getId();
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		ezs_invoice invoice = null; 
 		ezs_accessory accessory = null;		

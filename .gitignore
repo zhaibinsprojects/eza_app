@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+/.classpath
+/.gitignore
+/target/
+=======
+#仓库中所有名为.classpath的文件都屏蔽
+=======
 # IntelliJ IDEA Project files
 .idea
 *.iml
@@ -6,6 +14,7 @@
 out
 
 # Eclipse Project files
+>>>>>>> bb047f7edf68605a0eb3d0b0225029ed378460bd
 .classpath
 .project
 .settings/
@@ -28,3 +37,4 @@ Thumbs.db
 *.*~
 ~*.*
 
+>>>>>>> 59d700dca034345d7495bc1830473298449b4dd7

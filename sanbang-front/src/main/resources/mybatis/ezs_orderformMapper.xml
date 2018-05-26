@@ -453,6 +453,7 @@
 	
 	
 	<!--订单详情-->
+	<!-- <select id="getOrderListByOrderno" resultMap="BaseResultMap"> -->
 	<select id="getOrderListByOrderno" resultMap="orderMap">
 	  SELECT
 	   		C.price,
@@ -485,6 +486,9 @@
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
 	WHERE
 		1 = 1
+		and
+
+	 B.order_no=#{order_no}	
 	and
 	B.order_no=#{order_no}	
 	</select>
@@ -493,12 +497,6 @@
 	<select id="selectByorderno" resultMap="BaseResultMap" >
     select * from ezs_orderform 
     where order_no = #{order_no}
-	</select>
-	
-	<!-- 用户的采购单 -->
-	<select id="orderList" resultMap="orderMap" parameterType="java.lang.Long" >
-    select * from ezs_orderform 
-    where user_id = #{user_id,jdbcType=BIGINT}
 	</select>
 	
 </mapper>

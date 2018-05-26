@@ -30,4 +30,11 @@ public interface DictService {
 	 List< ezs_industry_dict> getIndustryByThisId(long storeid);
 	 
 	 List<ezs_companyType_dict> getCompanyTypeByThisId(long storeid);
+
+	 /**
+	  * 查询用户认证/激活 类型
+	  * @param auditingusertype_id
+	  * @return
+	  */
+	String getCodeByAuditingId(Long auditingusertype_id);
 }

@@ -128,7 +128,7 @@
     </trim>
   </insert>
   
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_accessory" useGeneratedKeys="true" keyProperty="id">
+  <update id="updateByPrimaryKeySelective" parameterType="ezs_accessory" >
     update ezs_accessory
     <set >
       <if test="addTime != null" >
