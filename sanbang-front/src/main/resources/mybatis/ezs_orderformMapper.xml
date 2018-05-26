@@ -471,7 +471,8 @@
 	
 	
 	<!--订单详情-->
-	<select id="getOrderListByOrderno" resultMap="BaseResultMap">
+	<!-- <select id="getOrderListByOrderno" resultMap="BaseResultMap"> -->
+	<select id="getOrderListByOrderno" resultType="com.sanbang.bean.ezs_order_info">
 	  SELECT
 	    C.price,
 		C.good_no,
@@ -501,8 +502,9 @@
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
 	WHERE
 		1 = 1
+		and
 
-	 C.good_no=#{order_no}	
+	 B.order_no=#{order_no}	
 	</select>
 	
 	<!--订单详细信息-->

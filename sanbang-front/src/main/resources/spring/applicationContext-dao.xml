@@ -115,7 +115,6 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_dvaluateMapper" />
 	</bean>
-<<<<<<< HEAD
 	
 	<bean id="ezs_goodscartMapper" parent="baseMapper">
 		<property name="mapperInterface"
@@ -127,19 +126,6 @@
 			value="com.sanbang.dao.ezs_orderformMapper" />
 	</bean>
 	
-=======
-	
-	<bean id="ezs_goodscartMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_goodscartMapper" />
-	</bean>
-	
-	<bean id="ezs_orderformMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_orderformMapper" />
-	</bean>
-	
->>>>>>> 59d700dca034345d7495bc1830473298449b4dd7
 	<bean id="ezs_documentshareMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_documentshareMapper" />
@@ -199,25 +185,11 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_card_dictMapper"/>
 	</bean>
-<<<<<<< HEAD
-	<!-- 统计数据接口 -->
-	<bean id="ezs_goodscartMapper" parent="baseMapper">
+	<!-- 撮合退货订单 -->
+	<bean id="ezs_set_return_orderMapper" parent="baseMapper">
 		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_goodscartMapper" />
+			value="com.sanbang.dao.ezs_set_return_orderMapper"/>
 	</bean>
-=======
+   
 	
-<<<<<<< HEAD
-	
-=======
->>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
-	<bean id="ezs_addressMapper" parent="baseMapper">
-		<property name="mapperInterface"
-			value="com.sanbang.dao.ezs_addressMapper"/>
-	</bean>
-<<<<<<< HEAD
-=======
-	
->>>>>>> a3ab1f93d44118d78850813ae7e487e4fff6f602
->>>>>>> 59d700dca034345d7495bc1830473298449b4dd7
 </beans>

@@ -5,31 +5,34 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.util.StringUtils;
 
 public class test {
 
+	private static int num = 100;
 	
 	public static void main(String args[]){
 		System.out.println("xxxx");
-		List<String> list = getLastTwelveMonth();
-		System.out.println(list);
+		System.out.println(getReturnNo("TH"));
 		
 		
 		
 	}
 	
-	private static List<String> getLastTwelveMonth(){
-		List list = new ArrayList<>();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.add(calendar.MONTH, 1);
-		
-		for(int i=0; i < 12 ; i++){
-			calendar.add(calendar.MONTH, -1);
-			list.add(DateFormatUtils.format(calendar.getTime(),"yyyy-MM"));
+	public static synchronized String getReturnNo(String sign) {
+		String temp = "SD";
+		if (sign != null) {
+			if (!StringUtils.isEmpty(sign)) {
+				temp = sign;
+			}
 		}
-		return list;
-		
+		long time = System.currentTimeMillis();
+		String result = temp + time + num;
+		num++;
+		if (num == 1000) {
+			num = 100;
+		}
+		return result;
 	}
 	
 }

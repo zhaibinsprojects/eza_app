@@ -396,7 +396,6 @@
 		    <artifactId>itext-xtra</artifactId>
 		    <version>5.4.5</version>
 		</dependency>
-				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-asian -->
 		
 			 <dependency>   
         <groupId>com.lowagie</groupId>  

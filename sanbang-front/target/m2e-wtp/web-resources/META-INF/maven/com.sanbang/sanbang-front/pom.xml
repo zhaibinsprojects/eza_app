@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.sanbang</groupId>
@@ -208,36 +208,27 @@
 			<artifactId>freemarker</artifactId>
 			<version>${freemarker.version}</version>
 		</dependency>
-		<!-- 解析excel -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml-schemas</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
+			<version>${com.google.zxing}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.xuwei-k</groupId>
 			<artifactId>html2image</artifactId>
+			<version>${com.github.xuwei-k}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-core</artifactId>
+			<artifactId>flying-saucer-pdf</artifactId>
+			<version>9.1.13</version>
 		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-xtra</artifactId>
+			<version>5.4.5</version>
+		</dependency>
+
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
@@ -245,7 +236,6 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			
 		</dependency>
 
 		<!-- Jackson Json处理工具包 -->
@@ -270,6 +260,7 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
+
 		<!-- json -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -277,35 +268,15 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
-    		<groupId>org.apache.maven.plugins</groupId>
-	    	<artifactId>maven-resources-plugin</artifactId>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.4.3</version>
 		</dependency>
-	
-	<dependency>
-		    <groupId>com.lowagie</groupId>
-		    <artifactId>itext</artifactId>
-		</dependency>
-					
-				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-xtra -->
-		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>itext-xtra</artifactId>
-		</dependency>
-				<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-asian -->
-		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>itext-asian</artifactId>
-		</dependency>
-	 <dependency>   
-        <groupId>com.lowagie</groupId>  
-        <artifactId>itext</artifactId>  
-    </dependency>   
-  
-    <!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/core-renderer -->  
-   <dependency>  
-       <groupId>org.xhtmlrenderer</groupId>  
-       <artifactId>core-renderer</artifactId>  
-   </dependency>
 	</dependencies>
-	
+	<repositories>
+		<repository>
+			<id>aliyun</id>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 </project>
