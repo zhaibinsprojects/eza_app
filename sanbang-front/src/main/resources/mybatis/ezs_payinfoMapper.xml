@@ -165,4 +165,12 @@
   <select id="selectByBillId" resultMap="BaseResultMap">
   	select * from ezs_payinfo where bill_id = #{billId}
   </select>
+  
+  <!--根据订单编号的到支付记录-->
+  <select id="getpayinfoByOrderno" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from ezs_payinfo
+    where order_no = #{order_no} and deleteStatus=0
+  </select>
 </mapper>

@@ -30,7 +30,7 @@
   </insert>
   
   <delete id="delCompanyTypeByStoreId">
-  	delete from  ezs_companyType_dict where cType_id=${storeid}
+  	delete from  ezs_companyType_dict where cType_id=#{storeid}
   </delete>
   
   <select id="getCompanyTypeByThisId" resultMap="BaseResultMap">

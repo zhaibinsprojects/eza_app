@@ -1,328 +1,309 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_orderformMapper" >
-	<resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_orderform" >
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-		<result column="all_price" property="all_price" jdbcType="DECIMAL" />
-		<result column="cart_session_id" property="cart_session_id" jdbcType="VARCHAR" />
-		<result column="end_price" property="end_price" jdbcType="DECIMAL" />
-		<result column="finishtime" property="finishtime" jdbcType="TIMESTAMP" />
-		<result column="first_price" property="first_price" jdbcType="DECIMAL" />
-		<result column="goods_amount" property="goods_amount" jdbcType="DECIMAL" />
-		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
-		<result column="order_status" property="order_status" jdbcType="INTEGER" />
-		<result column="order_type" property="order_type" jdbcType="VARCHAR" />
-		<result column="pact_status" property="pact_status" jdbcType="INTEGER" />
-		<result column="pay_mode" property="pay_mode" jdbcType="INTEGER" />
-		<result column="sc_status" property="sc_status" jdbcType="INTEGER" />
-		<result column="total_price" property="total_price" jdbcType="DECIMAL" />
-		<result column="address_id" property="address_id" jdbcType="BIGINT" />
-		<result column="user_id" property="user_id" jdbcType="BIGINT" />
-		<result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
-		<result column="firest_time" property="firest_time" jdbcType="TIMESTAMP" />
-		<result column="pact_no" property="pact_no" jdbcType="VARCHAR" />
-		<result column="bill_id" property="bill_id" jdbcType="BIGINT" />
-		<result column="buyBiil_id" property="buyBiil_id" jdbcType="BIGINT" />
-		<result column="invoice_id" property="invoice_id" jdbcType="BIGINT" />
-		<result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
-	</resultMap>
-	<resultMap id="ResultMapWithBLOBs" type="ezs_orderform" extends="BaseResultMap" >
-		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
-	</resultMap>
-	<sql id="Base_Column_List" >
-    id, addTime, deleteStatus, all_price, cart_session_id, end_price, finishtime, first_price, 
-    goods_amount, order_no, order_status, order_type, pact_status, pay_mode, sc_status, 
-    total_price, address_id, user_id, end_time, firest_time, pact_no, bill_id, buyBiil_id, 
-    invoice_id, logistics_id
-	</sql>
-	<sql id="Blob_Column_List" >
+<resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_orderform" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="adjust_price" property="adjust_price" jdbcType="INTEGER" />
+    <result column="all_price" property="all_price" jdbcType="DECIMAL" />
+    <result column="cart_session_id" property="cart_session_id" jdbcType="VARCHAR" />
+    <result column="end_price" property="end_price" jdbcType="DECIMAL" />
+    <result column="estimateTime" property="estimateTime" jdbcType="TIMESTAMP" />
+    <result column="finishtime" property="finishtime" jdbcType="TIMESTAMP" />
+    <result column="first_price" property="first_price" jdbcType="DECIMAL" />
+    <result column="goods_amount" property="goods_amount" jdbcType="DECIMAL" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="order_status" property="order_status" jdbcType="INTEGER" />
+    <result column="order_type" property="order_type" jdbcType="VARCHAR" />
+    <result column="pact_status" property="pact_status" jdbcType="INTEGER" />
+    <result column="pay_mode" property="pay_mode" jdbcType="INTEGER" />
+    <result column="pay_mode01" property="pay_mode01" jdbcType="INTEGER" />
+    <result column="pay_mode02" property="pay_mode02" jdbcType="INTEGER" />
+    <result column="sc_status" property="sc_status" jdbcType="INTEGER" />
+    <result column="total_price" property="total_price" jdbcType="DECIMAL" />
+    <result column="address_id" property="address_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="weAddress_id" property="weAddress_id" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_orderform" extends="BaseResultMap" >
+    <result column="msg" property="msg" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, adjust_price, all_price, cart_session_id, end_price, estimateTime, 
+    finishtime, first_price, goods_amount, order_no, order_status, order_type, pact_status, 
+    pay_mode, pay_mode01, pay_mode02, sc_status, total_price, address_id, user_id, weAddress_id
+  </sql>
+  <sql id="Blob_Column_List" >
     msg
-	</sql>
-	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
     select 
-		<include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />
     ,
-		<include refid="Blob_Column_List" />
+    <include refid="Blob_Column_List" />
     from ezs_orderform
     where id = #{id,jdbcType=BIGINT}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_orderform
     where id = #{id,jdbcType=BIGINT}
-	</delete>
-	<insert id="insert" parameterType="ezs_orderform" >
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_orderform" >
     insert into ezs_orderform (id, addTime, deleteStatus, 
-      all_price, cart_session_id, end_price, 
-      finishtime, first_price, goods_amount, 
-      order_no, order_status, order_type, 
-      pact_status, pay_mode, sc_status, 
-      total_price, address_id, user_id, 
-      end_time, firest_time, pact_no, 
-      bill_id, buyBiil_id, invoice_id, 
-      logistics_id, msg)
+      adjust_price, all_price, cart_session_id, 
+      end_price, estimateTime, finishtime, 
+      first_price, goods_amount, order_no, 
+      order_status, order_type, pact_status, 
+      pay_mode, pay_mode01, pay_mode02, 
+      sc_status, total_price, address_id, 
+      user_id, weAddress_id, msg
+      )
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{all_price,jdbcType=DECIMAL}, #{cart_session_id,jdbcType=VARCHAR}, #{end_price,jdbcType=DECIMAL}, 
-      #{finishtime,jdbcType=TIMESTAMP}, #{first_price,jdbcType=DECIMAL}, #{goods_amount,jdbcType=DECIMAL}, 
-      #{order_no,jdbcType=VARCHAR}, #{order_status,jdbcType=INTEGER}, #{order_type,jdbcType=VARCHAR}, 
-      #{pact_status,jdbcType=INTEGER}, #{pay_mode,jdbcType=INTEGER}, #{sc_status,jdbcType=INTEGER}, 
-      #{total_price,jdbcType=DECIMAL}, #{address_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
-      #{end_time,jdbcType=TIMESTAMP}, #{firest_time,jdbcType=TIMESTAMP}, #{pact_no,jdbcType=VARCHAR}, 
-      #{bill_id,jdbcType=BIGINT}, #{buyBiil_id,jdbcType=BIGINT}, #{invoice_id,jdbcType=BIGINT}, 
-      #{logistics_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR})
-	</insert>
-	<insert id="insertSelective" parameterType="ezs_orderform" >
+      #{adjust_price,jdbcType=INTEGER}, #{all_price,jdbcType=DECIMAL}, #{cart_session_id,jdbcType=VARCHAR}, 
+      #{end_price,jdbcType=DECIMAL}, #{estimateTime,jdbcType=TIMESTAMP}, #{finishtime,jdbcType=TIMESTAMP}, 
+      #{first_price,jdbcType=DECIMAL}, #{goods_amount,jdbcType=DECIMAL}, #{order_no,jdbcType=VARCHAR}, 
+      #{order_status,jdbcType=INTEGER}, #{order_type,jdbcType=VARCHAR}, #{pact_status,jdbcType=INTEGER}, 
+      #{pay_mode,jdbcType=INTEGER}, #{pay_mode01,jdbcType=INTEGER}, #{pay_mode02,jdbcType=INTEGER}, 
+      #{sc_status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, #{address_id,jdbcType=BIGINT}, 
+      #{user_id,jdbcType=BIGINT}, #{weAddress_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_orderform" >
     insert into ezs_orderform
-		<trim prefix="(" suffix=")" suffixOverrides="," >
-			<if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
-			</if>
-			<if test="addTime != null" >
+      </if>
+      <if test="addTime != null" >
         addTime,
-			</if>
-			<if test="deleteStatus != null" >
+      </if>
+      <if test="deleteStatus != null" >
         deleteStatus,
-			</if>
-			<if test="all_price != null" >
+      </if>
+      <if test="adjust_price != null" >
+        adjust_price,
+      </if>
+      <if test="all_price != null" >
         all_price,
-			</if>
-			<if test="cart_session_id != null" >
+      </if>
+      <if test="cart_session_id != null" >
         cart_session_id,
-			</if>
-			<if test="end_price != null" >
+      </if>
+      <if test="end_price != null" >
         end_price,
-			</if>
-			<if test="finishtime != null" >
+      </if>
+      <if test="estimateTime != null" >
+        estimateTime,
+      </if>
+      <if test="finishtime != null" >
         finishtime,
-			</if>
-			<if test="first_price != null" >
+      </if>
+      <if test="first_price != null" >
         first_price,
-			</if>
-			<if test="goods_amount != null" >
+      </if>
+      <if test="goods_amount != null" >
         goods_amount,
-			</if>
-			<if test="order_no != null" >
+      </if>
+      <if test="order_no != null" >
         order_no,
-			</if>
-			<if test="order_status != null" >
+      </if>
+      <if test="order_status != null" >
         order_status,
-			</if>
-			<if test="order_type != null" >
+      </if>
+      <if test="order_type != null" >
         order_type,
-			</if>
-			<if test="pact_status != null" >
+      </if>
+      <if test="pact_status != null" >
         pact_status,
-			</if>
-			<if test="pay_mode != null" >
+      </if>
+      <if test="pay_mode != null" >
         pay_mode,
-			</if>
-			<if test="sc_status != null" >
+      </if>
+      <if test="pay_mode01 != null" >
+        pay_mode01,
+      </if>
+      <if test="pay_mode02 != null" >
+        pay_mode02,
+      </if>
+      <if test="sc_status != null" >
         sc_status,
-			</if>
-			<if test="total_price != null" >
+      </if>
+      <if test="total_price != null" >
         total_price,
-			</if>
-			<if test="address_id != null" >
+      </if>
+      <if test="address_id != null" >
         address_id,
-			</if>
-			<if test="user_id != null" >
+      </if>
+      <if test="user_id != null" >
         user_id,
-			</if>
-			<if test="end_time != null" >
-        end_time,
-			</if>
-			<if test="firest_time != null" >
-        firest_time,
-			</if>
-			<if test="pact_no != null" >
-        pact_no,
-			</if>
-			<if test="bill_id != null" >
-        bill_id,
-			</if>
-			<if test="buyBiil_id != null" >
-        buyBiil_id,
-			</if>
-			<if test="invoice_id != null" >
-        invoice_id,
-			</if>
-			<if test="logistics_id != null" >
-        logistics_id,
-			</if>
-			<if test="msg != null" >
+      </if>
+      <if test="weAddress_id != null" >
+        weAddress_id,
+      </if>
+      <if test="msg != null" >
         msg,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides="," >
-			<if test="id != null" >
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=BIGINT},
-			</if>
-			<if test="addTime != null" >
+      </if>
+      <if test="addTime != null" >
         #{addTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="deleteStatus != null" >
+      </if>
+      <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
-			</if>
-			<if test="all_price != null" >
+      </if>
+      <if test="adjust_price != null" >
+        #{adjust_price,jdbcType=INTEGER},
+      </if>
+      <if test="all_price != null" >
         #{all_price,jdbcType=DECIMAL},
-			</if>
-			<if test="cart_session_id != null" >
+      </if>
+      <if test="cart_session_id != null" >
         #{cart_session_id,jdbcType=VARCHAR},
-			</if>
-			<if test="end_price != null" >
+      </if>
+      <if test="end_price != null" >
         #{end_price,jdbcType=DECIMAL},
-			</if>
-			<if test="finishtime != null" >
+      </if>
+      <if test="estimateTime != null" >
+        #{estimateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finishtime != null" >
         #{finishtime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="first_price != null" >
+      </if>
+      <if test="first_price != null" >
         #{first_price,jdbcType=DECIMAL},
-			</if>
-			<if test="goods_amount != null" >
+      </if>
+      <if test="goods_amount != null" >
         #{goods_amount,jdbcType=DECIMAL},
-			</if>
-			<if test="order_no != null" >
+      </if>
+      <if test="order_no != null" >
         #{order_no,jdbcType=VARCHAR},
-			</if>
-			<if test="order_status != null" >
+      </if>
+      <if test="order_status != null" >
         #{order_status,jdbcType=INTEGER},
-			</if>
-			<if test="order_type != null" >
+      </if>
+      <if test="order_type != null" >
         #{order_type,jdbcType=VARCHAR},
-			</if>
-			<if test="pact_status != null" >
+      </if>
+      <if test="pact_status != null" >
         #{pact_status,jdbcType=INTEGER},
-			</if>
-			<if test="pay_mode != null" >
+      </if>
+      <if test="pay_mode != null" >
         #{pay_mode,jdbcType=INTEGER},
-			</if>
-			<if test="sc_status != null" >
+      </if>
+      <if test="pay_mode01 != null" >
+        #{pay_mode01,jdbcType=INTEGER},
+      </if>
+      <if test="pay_mode02 != null" >
+        #{pay_mode02,jdbcType=INTEGER},
+      </if>
+      <if test="sc_status != null" >
         #{sc_status,jdbcType=INTEGER},
-			</if>
-			<if test="total_price != null" >
+      </if>
+      <if test="total_price != null" >
         #{total_price,jdbcType=DECIMAL},
-			</if>
-			<if test="address_id != null" >
+      </if>
+      <if test="address_id != null" >
         #{address_id,jdbcType=BIGINT},
-			</if>
-			<if test="user_id != null" >
+      </if>
+      <if test="user_id != null" >
         #{user_id,jdbcType=BIGINT},
-			</if>
-			<if test="end_time != null" >
-        #{end_time,jdbcType=TIMESTAMP},
-			</if>
-			<if test="firest_time != null" >
-        #{firest_time,jdbcType=TIMESTAMP},
-			</if>
-			<if test="pact_no != null" >
-        #{pact_no,jdbcType=VARCHAR},
-			</if>
-			<if test="bill_id != null" >
-        #{bill_id,jdbcType=BIGINT},
-			</if>
-			<if test="buyBiil_id != null" >
-        #{buyBiil_id,jdbcType=BIGINT},
-			</if>
-			<if test="invoice_id != null" >
-        #{invoice_id,jdbcType=BIGINT},
-			</if>
-			<if test="logistics_id != null" >
-        #{logistics_id,jdbcType=BIGINT},
-			</if>
-			<if test="msg != null" >
+      </if>
+      <if test="weAddress_id != null" >
+        #{weAddress_id,jdbcType=BIGINT},
+      </if>
+      <if test="msg != null" >
         #{msg,jdbcType=LONGVARCHAR},
-			</if>
-		</trim>
-	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="ezs_orderform" >
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_orderform" >
     update ezs_orderform
-		<set >
-			<if test="addTime != null" >
+    <set >
+      <if test="addTime != null" >
         addTime = #{addTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="deleteStatus != null" >
+      </if>
+      <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
-			</if>
-			<if test="all_price != null" >
+      </if>
+      <if test="adjust_price != null" >
+        adjust_price = #{adjust_price,jdbcType=INTEGER},
+      </if>
+      <if test="all_price != null" >
         all_price = #{all_price,jdbcType=DECIMAL},
-			</if>
-			<if test="cart_session_id != null" >
+      </if>
+      <if test="cart_session_id != null" >
         cart_session_id = #{cart_session_id,jdbcType=VARCHAR},
-			</if>
-			<if test="end_price != null" >
+      </if>
+      <if test="end_price != null" >
         end_price = #{end_price,jdbcType=DECIMAL},
-			</if>
-			<if test="finishtime != null" >
+      </if>
+      <if test="estimateTime != null" >
+        estimateTime = #{estimateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finishtime != null" >
         finishtime = #{finishtime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="first_price != null" >
+      </if>
+      <if test="first_price != null" >
         first_price = #{first_price,jdbcType=DECIMAL},
-			</if>
-			<if test="goods_amount != null" >
+      </if>
+      <if test="goods_amount != null" >
         goods_amount = #{goods_amount,jdbcType=DECIMAL},
-			</if>
-			<if test="order_no != null" >
+      </if>
+      <if test="order_no != null" >
         order_no = #{order_no,jdbcType=VARCHAR},
-			</if>
-			<if test="order_status != null" >
+      </if>
+      <if test="order_status != null" >
         order_status = #{order_status,jdbcType=INTEGER},
-			</if>
-			<if test="order_type != null" >
+      </if>
+      <if test="order_type != null" >
         order_type = #{order_type,jdbcType=VARCHAR},
-			</if>
-			<if test="pact_status != null" >
+      </if>
+      <if test="pact_status != null" >
         pact_status = #{pact_status,jdbcType=INTEGER},
-			</if>
-			<if test="pay_mode != null" >
+      </if>
+      <if test="pay_mode != null" >
         pay_mode = #{pay_mode,jdbcType=INTEGER},
-			</if>
-			<if test="sc_status != null" >
+      </if>
+      <if test="pay_mode01 != null" >
+        pay_mode01 = #{pay_mode01,jdbcType=INTEGER},
+      </if>
+      <if test="pay_mode02 != null" >
+        pay_mode02 = #{pay_mode02,jdbcType=INTEGER},
+      </if>
+      <if test="sc_status != null" >
         sc_status = #{sc_status,jdbcType=INTEGER},
-			</if>
-			<if test="total_price != null" >
+      </if>
+      <if test="total_price != null" >
         total_price = #{total_price,jdbcType=DECIMAL},
-			</if>
-			<if test="address_id != null" >
+      </if>
+      <if test="address_id != null" >
         address_id = #{address_id,jdbcType=BIGINT},
-			</if>
-			<if test="user_id != null" >
+      </if>
+      <if test="user_id != null" >
         user_id = #{user_id,jdbcType=BIGINT},
-			</if>
-			<if test="end_time != null" >
-        end_time = #{end_time,jdbcType=TIMESTAMP},
-			</if>
-			<if test="firest_time != null" >
-        firest_time = #{firest_time,jdbcType=TIMESTAMP},
-			</if>
-			<if test="pact_no != null" >
-        pact_no = #{pact_no,jdbcType=VARCHAR},
-			</if>
-			<if test="bill_id != null" >
-        bill_id = #{bill_id,jdbcType=BIGINT},
-			</if>
-			<if test="buyBiil_id != null" >
-        buyBiil_id = #{buyBiil_id,jdbcType=BIGINT},
-			</if>
-			<if test="invoice_id != null" >
-        invoice_id = #{invoice_id,jdbcType=BIGINT},
-			</if>
-			<if test="logistics_id != null" >
-        logistics_id = #{logistics_id,jdbcType=BIGINT},
-			</if>
-			<if test="msg != null" >
+      </if>
+      <if test="weAddress_id != null" >
+        weAddress_id = #{weAddress_id,jdbcType=BIGINT},
+      </if>
+      <if test="msg != null" >
         msg = #{msg,jdbcType=LONGVARCHAR},
-			</if>
-		</set>
+      </if>
+    </set>
     where id = #{id,jdbcType=BIGINT}
-	</update>
-	<update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_orderform" >
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_orderform" >
     update ezs_orderform
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      adjust_price = #{adjust_price,jdbcType=INTEGER},
       all_price = #{all_price,jdbcType=DECIMAL},
       cart_session_id = #{cart_session_id,jdbcType=VARCHAR},
       end_price = #{end_price,jdbcType=DECIMAL},
+      estimateTime = #{estimateTime,jdbcType=TIMESTAMP},
       finishtime = #{finishtime,jdbcType=TIMESTAMP},
       first_price = #{first_price,jdbcType=DECIMAL},
       goods_amount = #{goods_amount,jdbcType=DECIMAL},
@@ -331,27 +312,25 @@
       order_type = #{order_type,jdbcType=VARCHAR},
       pact_status = #{pact_status,jdbcType=INTEGER},
       pay_mode = #{pay_mode,jdbcType=INTEGER},
+      pay_mode01 = #{pay_mode01,jdbcType=INTEGER},
+      pay_mode02 = #{pay_mode02,jdbcType=INTEGER},
       sc_status = #{sc_status,jdbcType=INTEGER},
       total_price = #{total_price,jdbcType=DECIMAL},
       address_id = #{address_id,jdbcType=BIGINT},
       user_id = #{user_id,jdbcType=BIGINT},
-      end_time = #{end_time,jdbcType=TIMESTAMP},
-      firest_time = #{firest_time,jdbcType=TIMESTAMP},
-      pact_no = #{pact_no,jdbcType=VARCHAR},
-      bill_id = #{bill_id,jdbcType=BIGINT},
-      buyBiil_id = #{buyBiil_id,jdbcType=BIGINT},
-      invoice_id = #{invoice_id,jdbcType=BIGINT},
-      logistics_id = #{logistics_id,jdbcType=BIGINT},
+      weAddress_id = #{weAddress_id,jdbcType=BIGINT},
       msg = #{msg,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="ezs_orderform" >
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_orderform" >
     update ezs_orderform
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      adjust_price = #{adjust_price,jdbcType=INTEGER},
       all_price = #{all_price,jdbcType=DECIMAL},
       cart_session_id = #{cart_session_id,jdbcType=VARCHAR},
       end_price = #{end_price,jdbcType=DECIMAL},
+      estimateTime = #{estimateTime,jdbcType=TIMESTAMP},
       finishtime = #{finishtime,jdbcType=TIMESTAMP},
       first_price = #{first_price,jdbcType=DECIMAL},
       goods_amount = #{goods_amount,jdbcType=DECIMAL},
@@ -360,20 +339,15 @@
       order_type = #{order_type,jdbcType=VARCHAR},
       pact_status = #{pact_status,jdbcType=INTEGER},
       pay_mode = #{pay_mode,jdbcType=INTEGER},
+      pay_mode01 = #{pay_mode01,jdbcType=INTEGER},
+      pay_mode02 = #{pay_mode02,jdbcType=INTEGER},
       sc_status = #{sc_status,jdbcType=INTEGER},
       total_price = #{total_price,jdbcType=DECIMAL},
       address_id = #{address_id,jdbcType=BIGINT},
       user_id = #{user_id,jdbcType=BIGINT},
-      end_time = #{end_time,jdbcType=TIMESTAMP},
-      firest_time = #{firest_time,jdbcType=TIMESTAMP},
-      pact_no = #{pact_no,jdbcType=VARCHAR},
-      bill_id = #{bill_id,jdbcType=BIGINT},
-      buyBiil_id = #{buyBiil_id,jdbcType=BIGINT},
-      invoice_id = #{invoice_id,jdbcType=BIGINT},
-      logistics_id = #{logistics_id,jdbcType=BIGINT}
+      weAddress_id = #{weAddress_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
-	</update>
-  
+  </update>
   
 	<!--订单列表-->
 	<resultMap id="orderMap" type="com.sanbang.bean.ezs_order_info" >
@@ -399,6 +373,9 @@
 		<result column="price" property="price" jdbcType="DECIMAL" />
 		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
+		 <!--物流信息-->
+         <association property="ezs_logistics" column="order_no" select="com.sanbang.dao.ezs_logisticsMapper.selectByOrderNo">
+         </association>
 	</resultMap>
   
   
@@ -513,9 +490,9 @@
 	</select>
 	
 	<!--订单详细信息-->
-	<select id="selectByorderno" resultMap="orderMap" parameterType="java.lang.Long" >
+	<select id="selectByorderno" resultMap="BaseResultMap" >
     select * from ezs_orderform 
-    where id = #{id,jdbcType=BIGINT}
+    where order_no = #{order_no}
 	</select>
 	
 	<!-- 用户的采购单 -->

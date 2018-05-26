@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_payinfo;
@@ -19,4 +21,6 @@ public interface ezs_payinfoMapper {
     int updateByPrimaryKey(ezs_payinfo record);
 
 	ezs_payinfo selectByBillId(Long billId);
+	
+	List<ezs_payinfo> getpayinfoByOrderno(String order_no);
 }
