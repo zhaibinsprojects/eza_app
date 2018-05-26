@@ -57,11 +57,20 @@ public class GoodsController {
 	@RequestMapping("/goodsDetail")
 	@ResponseBody
 	public Result getGoodsDetail(HttpServletRequest request,Long id){
+		Result result = new Result();
 		ezs_goods goods = goodsService.getGoodsDetail(id);
-		Result result=Result.failure();
-		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
-		result.setObj(goods);
-		return   result;
+		if(null != goods){
+			result.setObj(goods);
+			result.setMsg("查询成功！");
+			result.setSuccess(true);
+			return result;
+		}else{
+			result.setMsg("查询失败！");
+			result.setSuccess(false);
+			return result;
+		}
+		
+		
 	}
 	
 	/**
