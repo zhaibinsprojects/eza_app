@@ -33,4 +33,6 @@ public interface ezs_purchase_orderformMapper {
 	List<ezs_order_info> getOrderListByValue(@Param("pager")PagerOrder pager);
 
 	ezs_order_info getOrderListByOrderno(String order_no);
+
+	ezs_purchase_orderform selectByOrderNo(String order_no);
 }

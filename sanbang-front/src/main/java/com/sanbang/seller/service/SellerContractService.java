@@ -12,7 +12,7 @@ public interface SellerContractService {
 
 	Object queryContractInfo(Long pactId, Result result, HttpServletRequest request, HttpServletResponse response);
 
-	Map<String, Object> contractManage(String currentPage, Long sellerId);
+//	Map<String, Object> contractManage(String currentPage, Long sellerId);
 
 	Map<String, Object> queryContractByIdOrDate(String orderno, String startTime, String endTime, String currentPage,
 			Long sellerId);

@@ -419,7 +419,7 @@ public class BuyerServiceimpl implements BuyerService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result getContentList(String member, int temid, int pageno,HttpServletRequest request) {
+	public Result getContentList(String member, int temid, int currentPage,HttpServletRequest request) {
 		Result result=Result.failure();
 		try {
 			if (Tools.isEmpty(member)) {
@@ -439,7 +439,7 @@ public class BuyerServiceimpl implements BuyerService {
 			
 			map.put("number",member);
 			map.put("temid", temid);
-			map.put("pageno", pageno);
+			map.put("currentPage", currentPage);
 			map.put("starttime", request.getParameter("starttime"));
 			map.put("endtime", request.getParameter("endtime"));
 			map.put("ordernoOrcontentno", request.getParameter("ordernoOrcontentno"));
