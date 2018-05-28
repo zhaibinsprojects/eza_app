@@ -219,4 +219,31 @@
 			value="com.sanbang.dao.ezs_goods_cartographyMapper"/>
 	</bean>
 	
+	<!--退货物流信息-->
+	<bean id="ezs_return_logisticsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_return_logisticsMapper"/>
+	</bean>
+	
+	<!--退货附件表-->
+	<bean id="ezs_return_attachMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_return_attachMapper"/>
+	</bean>
+	
+	<!--新平台数据导入-->
+	<bean id="destoon_memberMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.destoon_memberMapper"/>
+	</bean>
+	<bean id="destoon_areaMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.destoon_areaMapper"/>
+	</bean>
+	<bean id="ezs_user_roleMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_user_roleMapper"/>
+	</bean>
+	
+	
 </beans>

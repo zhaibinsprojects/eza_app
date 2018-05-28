@@ -10,15 +10,31 @@ public class ezs_set_return_order {
 
     private Boolean deleteStatus;
 
-    private BigDecimal account_receivable;
+    private String finshtime;
 
-    private String applyReturn_reason;
+    private String guanliremark;
 
-    private Date paid_time;
+    private BigDecimal guanliwuliumoeny;
 
-    private BigDecimal real_received;
+    private BigDecimal num;
 
-    private BigDecimal real_refund_account;
+    private Integer orderType;
+
+    private Integer order_status_store;
+
+    private String prodectname;
+
+    private BigDecimal realReturnMoeny;
+
+    private String remark;
+
+    private String returnAddress;
+
+    private String returnReason;
+
+    private BigDecimal returnTotal;
+
+    private Integer returnType;
 
     private String set_return_no;
 
@@ -26,21 +42,23 @@ public class ezs_set_return_order {
 
     private String state2;
 
+    private Integer status;
+
     private BigDecimal tmoney;
 
     private BigDecimal tnum;
 
-    private Long logistics_id;
+    private String updatetime;
+
+    private Long good_id;
 
     private Long orderForm_id;
 
-    private String bank;
+    private Long porderForm_id;
 
-    private String bankCode;
+    private Long upoper_id;
 
-    private String msg;
-
-    private Long bill_id;
+    private Long userseller_id;
 
     public Long getId() {
         return id;
@@ -66,44 +84,108 @@ public class ezs_set_return_order {
         this.deleteStatus = deleteStatus;
     }
 
-    public BigDecimal getAccount_receivable() {
-        return account_receivable;
+    public String getFinshtime() {
+        return finshtime;
     }
 
-    public void setAccount_receivable(BigDecimal account_receivable) {
-        this.account_receivable = account_receivable;
+    public void setFinshtime(String finshtime) {
+        this.finshtime = finshtime == null ? null : finshtime.trim();
     }
 
-    public String getApplyReturn_reason() {
-        return applyReturn_reason;
+    public String getGuanliremark() {
+        return guanliremark;
     }
 
-    public void setApplyReturn_reason(String applyReturn_reason) {
-        this.applyReturn_reason = applyReturn_reason == null ? null : applyReturn_reason.trim();
+    public void setGuanliremark(String guanliremark) {
+        this.guanliremark = guanliremark == null ? null : guanliremark.trim();
     }
 
-    public Date getPaid_time() {
-        return paid_time;
+    public BigDecimal getGuanliwuliumoeny() {
+        return guanliwuliumoeny;
     }
 
-    public void setPaid_time(Date paid_time) {
-        this.paid_time = paid_time;
+    public void setGuanliwuliumoeny(BigDecimal guanliwuliumoeny) {
+        this.guanliwuliumoeny = guanliwuliumoeny;
     }
 
-    public BigDecimal getReal_received() {
-        return real_received;
+    public BigDecimal getNum() {
+        return num;
     }
 
-    public void setReal_received(BigDecimal real_received) {
-        this.real_received = real_received;
+    public void setNum(BigDecimal num) {
+        this.num = num;
     }
 
-    public BigDecimal getReal_refund_account() {
-        return real_refund_account;
+    public Integer getOrderType() {
+        return orderType;
     }
 
-    public void setReal_refund_account(BigDecimal real_refund_account) {
-        this.real_refund_account = real_refund_account;
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
+
+    public Integer getOrder_status_store() {
+        return order_status_store;
+    }
+
+    public void setOrder_status_store(Integer order_status_store) {
+        this.order_status_store = order_status_store;
+    }
+
+    public String getProdectname() {
+        return prodectname;
+    }
+
+    public void setProdectname(String prodectname) {
+        this.prodectname = prodectname == null ? null : prodectname.trim();
+    }
+
+    public BigDecimal getRealReturnMoeny() {
+        return realReturnMoeny;
+    }
+
+    public void setRealReturnMoeny(BigDecimal realReturnMoeny) {
+        this.realReturnMoeny = realReturnMoeny;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getReturnAddress() {
+        return returnAddress;
+    }
+
+    public void setReturnAddress(String returnAddress) {
+        this.returnAddress = returnAddress == null ? null : returnAddress.trim();
+    }
+
+    public String getReturnReason() {
+        return returnReason;
+    }
+
+    public void setReturnReason(String returnReason) {
+        this.returnReason = returnReason == null ? null : returnReason.trim();
+    }
+
+    public BigDecimal getReturnTotal() {
+        return returnTotal;
+    }
+
+    public void setReturnTotal(BigDecimal returnTotal) {
+        this.returnTotal = returnTotal;
+    }
+
+    public Integer getReturnType() {
+        return returnType;
+    }
+
+    public void setReturnType(Integer returnType) {
+        this.returnType = returnType;
     }
 
     public String getSet_return_no() {
@@ -130,6 +212,14 @@ public class ezs_set_return_order {
         this.state2 = state2 == null ? null : state2.trim();
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public BigDecimal getTmoney() {
         return tmoney;
     }
@@ -146,12 +236,20 @@ public class ezs_set_return_order {
         this.tnum = tnum;
     }
 
-    public Long getLogistics_id() {
-        return logistics_id;
+    public String getUpdatetime() {
+        return updatetime;
     }
 
-    public void setLogistics_id(Long logistics_id) {
-        this.logistics_id = logistics_id;
+    public void setUpdatetime(String updatetime) {
+        this.updatetime = updatetime == null ? null : updatetime.trim();
+    }
+
+    public Long getGood_id() {
+        return good_id;
+    }
+
+    public void setGood_id(Long good_id) {
+        this.good_id = good_id;
     }
 
     public Long getOrderForm_id() {
@@ -162,35 +260,27 @@ public class ezs_set_return_order {
         this.orderForm_id = orderForm_id;
     }
 
-    public String getBank() {
-        return bank;
+    public Long getPorderForm_id() {
+        return porderForm_id;
     }
 
-    public void setBank(String bank) {
-        this.bank = bank == null ? null : bank.trim();
+    public void setPorderForm_id(Long porderForm_id) {
+        this.porderForm_id = porderForm_id;
     }
 
-    public String getBankCode() {
-        return bankCode;
+    public Long getUpoper_id() {
+        return upoper_id;
     }
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode == null ? null : bankCode.trim();
+    public void setUpoper_id(Long upoper_id) {
+        this.upoper_id = upoper_id;
     }
 
-    public String getMsg() {
-        return msg;
+    public Long getUserseller_id() {
+        return userseller_id;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg == null ? null : msg.trim();
-    }
-
-    public Long getBill_id() {
-        return bill_id;
-    }
-
-    public void setBill_id(Long bill_id) {
-        this.bill_id = bill_id;
+    public void setUserseller_id(Long userseller_id) {
+        this.userseller_id = userseller_id;
     }
 }

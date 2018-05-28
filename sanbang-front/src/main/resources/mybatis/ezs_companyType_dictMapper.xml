@@ -6,11 +6,11 @@
     <result column="dict_id" property="dict_id" jdbcType="BIGINT" />
   </resultMap>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_companyType_dict" >
-    insert into ezs_companyType_dict (cType_id, dict_id)
+    insert into ezs_companytype_dict (cType_id, dict_id)
     values (#{cType_id,jdbcType=BIGINT}, #{dict_id,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_companyType_dict" >
-    insert into ezs_companyType_dict
+    insert into ezs_companytype_dict
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="cType_id != null" >
         cType_id,
@@ -30,10 +30,10 @@
   </insert>
   
   <delete id="delCompanyTypeByStoreId">
-  	delete from  ezs_companyType_dict where cType_id=#{storeid}
+  	delete from  ezs_companytype_dict where cType_id=#{storeid}
   </delete>
   
   <select id="getCompanyTypeByThisId" resultMap="BaseResultMap">
-  	select * from ezs_companyType_dict where  cType_id=${storeid}
+  	select * from ezs_companytype_dict where  cType_id=${storeid}
   </select>
 </mapper>

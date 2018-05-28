@@ -89,7 +89,7 @@ public class BuyerMenu {
 	@ResponseBody
 	public Result orderinit(@RequestParam(name = "order_status", defaultValue = "-1") int order_status,
 			@RequestParam(name = "order_type", defaultValue = "") String order_type,
-			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow, HttpServletRequest request) {
+			@RequestParam(name = "pageNo", defaultValue = "1") int pageNow, HttpServletRequest request) {
 
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -493,6 +493,7 @@ public class BuyerMenu {
 				result = Result.failure();
 				result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
 				result.setMsg(map.get("Msg").toString());
+				result.setObj(list);
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

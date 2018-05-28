@@ -206,10 +206,12 @@ public class UserRegistController {
 			String trueName, int sex_id, String tel, String email,
 			HttpSession session) throws Exception{
 		Result result=Result.failure();
-		result=userProService.userAddInfo(result, request, userRole, companyName, address, area_id, mianIndustry_id, companyType_id, trueName, sex_id, tel, email);
+		// 获取上一步用户注册信息
+		ezs_user user = RedisUserSession.getRegistUserInfo(request);
+		result=userProService.userAddInfo(result, request, userRole, companyName, address, area_id, mianIndustry_id, companyType_id, trueName, sex_id, tel, email,user);
 		return result;
 	}
-	
+		
 	
 	
 	

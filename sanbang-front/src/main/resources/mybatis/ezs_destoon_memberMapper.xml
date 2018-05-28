@@ -1,0 +1,1619 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.destoon_memberMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.destoon_member" >
+    <id column="userid" property="userid" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="passport" property="passport" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="payword" property="payword" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="message" property="message" jdbcType="SMALLINT" />
+    <result column="chat" property="chat" jdbcType="SMALLINT" />
+    <result column="sound" property="sound" jdbcType="BIT" />
+    <result column="online" property="online" jdbcType="BIT" />
+    <result column="avatar" property="avatar" jdbcType="BIT" />
+    <result column="gender" property="gender" jdbcType="BIT" />
+    <result column="truename" property="truename" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="msn" property="msn" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="ali" property="ali" jdbcType="VARCHAR" />
+    <result column="skype" property="skype" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="career" property="career" jdbcType="VARCHAR" />
+    <result column="admin" property="admin" jdbcType="BIT" />
+    <result column="role" property="role" jdbcType="VARCHAR" />
+    <result column="aid" property="aid" jdbcType="INTEGER" />
+    <result column="groupid" property="groupid" jdbcType="SMALLINT" />
+    <result column="regid" property="regid" jdbcType="SMALLINT" />
+    <result column="areaid" property="areaid" jdbcType="INTEGER" />
+    <result column="sms" property="sms" jdbcType="INTEGER" />
+    <result column="credit" property="credit" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="locking" property="locking" jdbcType="DECIMAL" />
+    <result column="bank" property="bank" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="edittime" property="edittime" jdbcType="INTEGER" />
+    <result column="regip" property="regip" jdbcType="VARCHAR" />
+    <result column="regtime" property="regtime" jdbcType="INTEGER" />
+    <result column="loginip" property="loginip" jdbcType="VARCHAR" />
+    <result column="logintime" property="logintime" jdbcType="INTEGER" />
+    <result column="logintimes" property="logintimes" jdbcType="INTEGER" />
+    <result column="black" property="black" jdbcType="VARCHAR" />
+    <result column="send" property="send" jdbcType="BIT" />
+    <result column="auth" property="auth" jdbcType="VARCHAR" />
+    <result column="authvalue" property="authvalue" jdbcType="VARCHAR" />
+    <result column="authtime" property="authtime" jdbcType="INTEGER" />
+    <result column="vemail" property="vemail" jdbcType="BIT" />
+    <result column="vmobile" property="vmobile" jdbcType="BIT" />
+    <result column="vtruename" property="vtruename" jdbcType="BIT" />
+    <result column="vbank" property="vbank" jdbcType="BIT" />
+    <result column="vcompany" property="vcompany" jdbcType="BIT" />
+    <result column="vtrade" property="vtrade" jdbcType="BIT" />
+    <result column="trade" property="trade" jdbcType="VARCHAR" />
+    <result column="support" property="support" jdbcType="VARCHAR" />
+    <result column="inviter" property="inviter" jdbcType="VARCHAR" />
+    <result column="recommended" property="recommended" jdbcType="INTEGER" />
+    <result column="registration" property="registration" jdbcType="INTEGER" />
+    <result column="companyas" property="companyas" jdbcType="VARCHAR" />
+    <result column="guser" property="guser" jdbcType="VARCHAR" />
+    <result column="gdianhua" property="gdianhua" jdbcType="VARCHAR" />
+    <result column="ghaoma" property="ghaoma" jdbcType="VARCHAR" />
+    <result column="gmeun" property="gmeun" jdbcType="INTEGER" />
+    <result column="gshenz" property="gshenz" jdbcType="VARCHAR" />
+    <result column="gshenf" property="gshenf" jdbcType="VARCHAR" />
+    <result column="getizihao" property="getizihao" jdbcType="VARCHAR" />
+    <result column="getijingyinguser" property="getijingyinguser" jdbcType="VARCHAR" />
+    <result column="getijingyingshen" property="getijingyingshen" jdbcType="VARCHAR" />
+    <result column="getimeun" property="getimeun" jdbcType="INTEGER" />
+    <result column="getizhuhao" property="getizhuhao" jdbcType="VARCHAR" />
+    <result column="getichangsuo" property="getichangsuo" jdbcType="VARCHAR" />
+    <result column="getijiguan" property="getijiguan" jdbcType="VARCHAR" />
+    <result column="getileixing" property="getileixing" jdbcType="VARCHAR" />
+    <result column="getisuser" property="getisuser" jdbcType="VARCHAR" />
+    <result column="getilianxi" property="getilianxi" jdbcType="VARCHAR" />
+    <result column="getizhizhao" property="getizhizhao" jdbcType="VARCHAR" />
+    <result column="qiyename" property="qiyename" jdbcType="VARCHAR" />
+    <result column="qiyereh" property="qiyereh" jdbcType="VARCHAR" />
+    <result column="zhusuo" property="zhusuo" jdbcType="VARCHAR" />
+    <result column="farend" property="farend" jdbcType="VARCHAR" />
+    <result column="farenss" property="farenss" jdbcType="INTEGER" />
+    <result column="qiyeziben" property="qiyeziben" jdbcType="VARCHAR" />
+    <result column="zibentrue" property="zibentrue" jdbcType="INTEGER" />
+    <result column="qiyejiguan" property="qiyejiguan" jdbcType="VARCHAR" />
+    <result column="qiyedaima" property="qiyedaima" jdbcType="VARCHAR" />
+    <result column="qiyeuser" property="qiyeuser" jdbcType="VARCHAR" />
+    <result column="qiyelianxi" property="qiyelianxi" jdbcType="VARCHAR" />
+    <result column="qiyezhizhao" property="qiyezhizhao" jdbcType="VARCHAR" />
+    <result column="qiyedaimazheng" property="qiyedaimazheng" jdbcType="VARCHAR" />
+    <result column="xiazaishu" property="xiazaishu" jdbcType="INTEGER" />
+    <result column="userxiazaijifen" property="userxiazaijifen" jdbcType="INTEGER" />
+    <result column="shifourenzheng" property="shifourenzheng" jdbcType="VARCHAR" />
+    <result column="zhengchang" property="zhengchang" jdbcType="INTEGER" />
+    <result column="shoujis" property="shoujis" jdbcType="VARCHAR" />
+    <result column="iphone" property="iphone" jdbcType="VARCHAR" />
+    <result column="shouquan" property="shouquan" jdbcType="VARCHAR" />
+    <result column="bname" property="bname" jdbcType="VARCHAR" />
+    <result column="sname" property="sname" jdbcType="INTEGER" />
+    <result column="payname" property="payname" jdbcType="VARCHAR" />
+    <result column="receiverCardNo" property="receiverCardNo" jdbcType="VARCHAR" />
+    <result column="receiverCardName" property="receiverCardName" jdbcType="VARCHAR" />
+    <result column="bankName" property="bankName" jdbcType="VARCHAR" />
+    <result column="bankCode" property="bankCode" jdbcType="VARCHAR" />
+    <result column="bankProvince" property="bankProvince" jdbcType="VARCHAR" />
+    <result column="bankCity" property="bankCity" jdbcType="VARCHAR" />
+    <result column="payeeBankLinesNo" property="payeeBankLinesNo" jdbcType="VARCHAR" />
+    <result column="refundTicket" property="refundTicket" jdbcType="VARCHAR" />
+    <result column="customerType" property="customerType" jdbcType="VARCHAR" />
+    <result column="speregion" property="speregion" jdbcType="VARCHAR" />
+    <result column="fixphone" property="fixphone" jdbcType="VARCHAR" />
+    <result column="gusersex" property="gusersex" jdbcType="SMALLINT" />
+    <result column="certexpire" property="certexpire" jdbcType="VARCHAR" />
+    <result column="farendphone" property="farendphone" jdbcType="VARCHAR" />
+    <result column="farencardid" property="farencardid" jdbcType="VARCHAR" />
+    <result column="taxurl" property="taxurl" jdbcType="VARCHAR" />
+    <result column="taxreg" property="taxreg" jdbcType="VARCHAR" />
+    <result column="operareaid" property="operareaid" jdbcType="INTEGER" />
+    <result column="opersperegion" property="opersperegion" jdbcType="VARCHAR" />
+    <result column="opersecname" property="opersecname" jdbcType="VARCHAR" />
+    <result column="secname" property="secname" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="isopenshop" property="isopenshop" jdbcType="INTEGER" />
+    <result column="shopname" property="shopname" jdbcType="VARCHAR" />
+    <result column="shopintroduce" property="shopintroduce" jdbcType="VARCHAR" />
+    <result column="firstreceiveraddr" property="firstreceiveraddr" jdbcType="VARCHAR" />
+    <result column="business" property="business" jdbcType="VARCHAR" />
+    <result column="iscms" property="iscms" jdbcType="INTEGER" />
+    <result column="iself" property="iself" jdbcType="INTEGER" />
+    <result column="oper" property="oper" jdbcType="VARCHAR" />
+    <result column="cmseditime" property="cmseditime" jdbcType="INTEGER" />
+    <result column="authremark" property="authremark" jdbcType="VARCHAR" />
+    <result column="pbankno" property="pbankno" jdbcType="VARCHAR" />
+    <result column="authorizurl" property="authorizurl" jdbcType="VARCHAR" />
+    <result column="addway" property="addway" jdbcType="SMALLINT" />
+    <result column="licensemark" property="licensemark" jdbcType="VARCHAR" />
+    <result column="authpasstime" property="authpasstime" jdbcType="INTEGER" />
+    <result column="companyproperty" property="companyproperty" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    userid, username, passport, company, password, payword, email, message, chat, sound, 
+    online, avatar, gender, truename, mobile, msn, qq, ali, skype, department, career, 
+    admin, role, aid, groupid, regid, areaid, sms, credit, money, locking, bank, account, 
+    edittime, regip, regtime, loginip, logintime, logintimes, black, send, auth, authvalue, 
+    authtime, vemail, vmobile, vtruename, vbank, vcompany, vtrade, trade, support, inviter, 
+    recommended, registration, companyas, guser, gdianhua, ghaoma, gmeun, gshenz, gshenf, 
+    getizihao, getijingyinguser, getijingyingshen, getimeun, getizhuhao, getichangsuo, 
+    getijiguan, getileixing, getisuser, getilianxi, getizhizhao, qiyename, qiyereh, zhusuo, 
+    farend, farenss, qiyeziben, zibentrue, qiyejiguan, qiyedaima, qiyeuser, qiyelianxi, 
+    qiyezhizhao, qiyedaimazheng, xiazaishu, userxiazaijifen, shifourenzheng, zhengchang, 
+    shoujis, iphone, shouquan, bname, sname, payname, receiverCardNo, receiverCardName, 
+    bankName, bankCode, bankProvince, bankCity, payeeBankLinesNo, refundTicket, customerType, 
+    speregion, fixphone, gusersex, certexpire, farendphone, farencardid, taxurl, taxreg, 
+    operareaid, opersperegion, opersecname, secname, status, isopenshop, shopname, shopintroduce, 
+    firstreceiveraddr, business, iscms, iself, oper, cmseditime, authremark, pbankno, 
+    authorizurl, addway, licensemark, authpasstime, companyproperty
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from destoon_member
+    where userid = #{userid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from destoon_member
+    where userid = #{userid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.destoon_member" >
+    insert into destoon_member (userid, username, passport, 
+      company, password, payword, 
+      email, message, chat, 
+      sound, online, avatar, gender, 
+      truename, mobile, msn, 
+      qq, ali, skype, department, 
+      career, admin, role, aid, 
+      groupid, regid, areaid, 
+      sms, credit, money, 
+      locking, bank, account, 
+      edittime, regip, regtime, 
+      loginip, logintime, logintimes, 
+      black, send, auth, authvalue, 
+      authtime, vemail, vmobile, 
+      vtruename, vbank, vcompany, vtrade, 
+      trade, support, inviter, 
+      recommended, registration, companyas, 
+      guser, gdianhua, ghaoma, 
+      gmeun, gshenz, gshenf, 
+      getizihao, getijingyinguser, getijingyingshen, 
+      getimeun, getizhuhao, getichangsuo, 
+      getijiguan, getileixing, getisuser, 
+      getilianxi, getizhizhao, qiyename, 
+      qiyereh, zhusuo, farend, 
+      farenss, qiyeziben, zibentrue, 
+      qiyejiguan, qiyedaima, qiyeuser, 
+      qiyelianxi, qiyezhizhao, qiyedaimazheng, 
+      xiazaishu, userxiazaijifen, shifourenzheng, 
+      zhengchang, shoujis, iphone, 
+      shouquan, bname, sname, 
+      payname, receiverCardNo, receiverCardName, 
+      bankName, bankCode, bankProvince, 
+      bankCity, payeeBankLinesNo, refundTicket, 
+      customerType, speregion, fixphone, 
+      gusersex, certexpire, farendphone, 
+      farencardid, taxurl, taxreg, 
+      operareaid, opersperegion, opersecname, 
+      secname, status, isopenshop, 
+      shopname, shopintroduce, firstreceiveraddr, 
+      business, iscms, iself, 
+      oper, cmseditime, authremark, 
+      pbankno, authorizurl, addway, 
+      licensemark, authpasstime, companyproperty
+      )
+    values (#{userid,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{passport,jdbcType=VARCHAR}, 
+      #{company,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{payword,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{message,jdbcType=SMALLINT}, #{chat,jdbcType=SMALLINT}, 
+      #{sound,jdbcType=BIT}, #{online,jdbcType=BIT}, #{avatar,jdbcType=BIT}, #{gender,jdbcType=BIT}, 
+      #{truename,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{msn,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{ali,jdbcType=VARCHAR}, #{skype,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, 
+      #{career,jdbcType=VARCHAR}, #{admin,jdbcType=BIT}, #{role,jdbcType=VARCHAR}, #{aid,jdbcType=INTEGER}, 
+      #{groupid,jdbcType=SMALLINT}, #{regid,jdbcType=SMALLINT}, #{areaid,jdbcType=INTEGER}, 
+      #{sms,jdbcType=INTEGER}, #{credit,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, 
+      #{locking,jdbcType=DECIMAL}, #{bank,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{edittime,jdbcType=INTEGER}, #{regip,jdbcType=VARCHAR}, #{regtime,jdbcType=INTEGER}, 
+      #{loginip,jdbcType=VARCHAR}, #{logintime,jdbcType=INTEGER}, #{logintimes,jdbcType=INTEGER}, 
+      #{black,jdbcType=VARCHAR}, #{send,jdbcType=BIT}, #{auth,jdbcType=VARCHAR}, #{authvalue,jdbcType=VARCHAR}, 
+      #{authtime,jdbcType=INTEGER}, #{vemail,jdbcType=BIT}, #{vmobile,jdbcType=BIT}, 
+      #{vtruename,jdbcType=BIT}, #{vbank,jdbcType=BIT}, #{vcompany,jdbcType=BIT}, #{vtrade,jdbcType=BIT}, 
+      #{trade,jdbcType=VARCHAR}, #{support,jdbcType=VARCHAR}, #{inviter,jdbcType=VARCHAR}, 
+      #{recommended,jdbcType=INTEGER}, #{registration,jdbcType=INTEGER}, #{companyas,jdbcType=VARCHAR}, 
+      #{guser,jdbcType=VARCHAR}, #{gdianhua,jdbcType=VARCHAR}, #{ghaoma,jdbcType=VARCHAR}, 
+      #{gmeun,jdbcType=INTEGER}, #{gshenz,jdbcType=VARCHAR}, #{gshenf,jdbcType=VARCHAR}, 
+      #{getizihao,jdbcType=VARCHAR}, #{getijingyinguser,jdbcType=VARCHAR}, #{getijingyingshen,jdbcType=VARCHAR}, 
+      #{getimeun,jdbcType=INTEGER}, #{getizhuhao,jdbcType=VARCHAR}, #{getichangsuo,jdbcType=VARCHAR}, 
+      #{getijiguan,jdbcType=VARCHAR}, #{getileixing,jdbcType=VARCHAR}, #{getisuser,jdbcType=VARCHAR}, 
+      #{getilianxi,jdbcType=VARCHAR}, #{getizhizhao,jdbcType=VARCHAR}, #{qiyename,jdbcType=VARCHAR}, 
+      #{qiyereh,jdbcType=VARCHAR}, #{zhusuo,jdbcType=VARCHAR}, #{farend,jdbcType=VARCHAR}, 
+      #{farenss,jdbcType=INTEGER}, #{qiyeziben,jdbcType=VARCHAR}, #{zibentrue,jdbcType=INTEGER}, 
+      #{qiyejiguan,jdbcType=VARCHAR}, #{qiyedaima,jdbcType=VARCHAR}, #{qiyeuser,jdbcType=VARCHAR}, 
+      #{qiyelianxi,jdbcType=VARCHAR}, #{qiyezhizhao,jdbcType=VARCHAR}, #{qiyedaimazheng,jdbcType=VARCHAR}, 
+      #{xiazaishu,jdbcType=INTEGER}, #{userxiazaijifen,jdbcType=INTEGER}, #{shifourenzheng,jdbcType=VARCHAR}, 
+      #{zhengchang,jdbcType=INTEGER}, #{shoujis,jdbcType=VARCHAR}, #{iphone,jdbcType=VARCHAR}, 
+      #{shouquan,jdbcType=VARCHAR}, #{bname,jdbcType=VARCHAR}, #{sname,jdbcType=INTEGER}, 
+      #{payname,jdbcType=VARCHAR}, #{receiverCardNo,jdbcType=VARCHAR}, #{receiverCardName,jdbcType=VARCHAR}, 
+      #{bankName,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{bankProvince,jdbcType=VARCHAR}, 
+      #{bankCity,jdbcType=VARCHAR}, #{payeeBankLinesNo,jdbcType=VARCHAR}, #{refundTicket,jdbcType=VARCHAR}, 
+      #{customerType,jdbcType=VARCHAR}, #{speregion,jdbcType=VARCHAR}, #{fixphone,jdbcType=VARCHAR}, 
+      #{gusersex,jdbcType=SMALLINT}, #{certexpire,jdbcType=VARCHAR}, #{farendphone,jdbcType=VARCHAR}, 
+      #{farencardid,jdbcType=VARCHAR}, #{taxurl,jdbcType=VARCHAR}, #{taxreg,jdbcType=VARCHAR}, 
+      #{operareaid,jdbcType=INTEGER}, #{opersperegion,jdbcType=VARCHAR}, #{opersecname,jdbcType=VARCHAR}, 
+      #{secname,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{isopenshop,jdbcType=INTEGER}, 
+      #{shopname,jdbcType=VARCHAR}, #{shopintroduce,jdbcType=VARCHAR}, #{firstreceiveraddr,jdbcType=VARCHAR}, 
+      #{business,jdbcType=VARCHAR}, #{iscms,jdbcType=INTEGER}, #{iself,jdbcType=INTEGER}, 
+      #{oper,jdbcType=VARCHAR}, #{cmseditime,jdbcType=INTEGER}, #{authremark,jdbcType=VARCHAR}, 
+      #{pbankno,jdbcType=VARCHAR}, #{authorizurl,jdbcType=VARCHAR}, #{addway,jdbcType=SMALLINT}, 
+      #{licensemark,jdbcType=VARCHAR}, #{authpasstime,jdbcType=INTEGER}, #{companyproperty,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.destoon_member" >
+    insert into destoon_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="passport != null" >
+        passport,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="payword != null" >
+        payword,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="chat != null" >
+        chat,
+      </if>
+      <if test="sound != null" >
+        sound,
+      </if>
+      <if test="online != null" >
+        online,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="truename != null" >
+        truename,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="msn != null" >
+        msn,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="ali != null" >
+        ali,
+      </if>
+      <if test="skype != null" >
+        skype,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="career != null" >
+        career,
+      </if>
+      <if test="admin != null" >
+        admin,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="groupid != null" >
+        groupid,
+      </if>
+      <if test="regid != null" >
+        regid,
+      </if>
+      <if test="areaid != null" >
+        areaid,
+      </if>
+      <if test="sms != null" >
+        sms,
+      </if>
+      <if test="credit != null" >
+        credit,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="locking != null" >
+        locking,
+      </if>
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="edittime != null" >
+        edittime,
+      </if>
+      <if test="regip != null" >
+        regip,
+      </if>
+      <if test="regtime != null" >
+        regtime,
+      </if>
+      <if test="loginip != null" >
+        loginip,
+      </if>
+      <if test="logintime != null" >
+        logintime,
+      </if>
+      <if test="logintimes != null" >
+        logintimes,
+      </if>
+      <if test="black != null" >
+        black,
+      </if>
+      <if test="send != null" >
+        send,
+      </if>
+      <if test="auth != null" >
+        auth,
+      </if>
+      <if test="authvalue != null" >
+        authvalue,
+      </if>
+      <if test="authtime != null" >
+        authtime,
+      </if>
+      <if test="vemail != null" >
+        vemail,
+      </if>
+      <if test="vmobile != null" >
+        vmobile,
+      </if>
+      <if test="vtruename != null" >
+        vtruename,
+      </if>
+      <if test="vbank != null" >
+        vbank,
+      </if>
+      <if test="vcompany != null" >
+        vcompany,
+      </if>
+      <if test="vtrade != null" >
+        vtrade,
+      </if>
+      <if test="trade != null" >
+        trade,
+      </if>
+      <if test="support != null" >
+        support,
+      </if>
+      <if test="inviter != null" >
+        inviter,
+      </if>
+      <if test="recommended != null" >
+        recommended,
+      </if>
+      <if test="registration != null" >
+        registration,
+      </if>
+      <if test="companyas != null" >
+        companyas,
+      </if>
+      <if test="guser != null" >
+        guser,
+      </if>
+      <if test="gdianhua != null" >
+        gdianhua,
+      </if>
+      <if test="ghaoma != null" >
+        ghaoma,
+      </if>
+      <if test="gmeun != null" >
+        gmeun,
+      </if>
+      <if test="gshenz != null" >
+        gshenz,
+      </if>
+      <if test="gshenf != null" >
+        gshenf,
+      </if>
+      <if test="getizihao != null" >
+        getizihao,
+      </if>
+      <if test="getijingyinguser != null" >
+        getijingyinguser,
+      </if>
+      <if test="getijingyingshen != null" >
+        getijingyingshen,
+      </if>
+      <if test="getimeun != null" >
+        getimeun,
+      </if>
+      <if test="getizhuhao != null" >
+        getizhuhao,
+      </if>
+      <if test="getichangsuo != null" >
+        getichangsuo,
+      </if>
+      <if test="getijiguan != null" >
+        getijiguan,
+      </if>
+      <if test="getileixing != null" >
+        getileixing,
+      </if>
+      <if test="getisuser != null" >
+        getisuser,
+      </if>
+      <if test="getilianxi != null" >
+        getilianxi,
+      </if>
+      <if test="getizhizhao != null" >
+        getizhizhao,
+      </if>
+      <if test="qiyename != null" >
+        qiyename,
+      </if>
+      <if test="qiyereh != null" >
+        qiyereh,
+      </if>
+      <if test="zhusuo != null" >
+        zhusuo,
+      </if>
+      <if test="farend != null" >
+        farend,
+      </if>
+      <if test="farenss != null" >
+        farenss,
+      </if>
+      <if test="qiyeziben != null" >
+        qiyeziben,
+      </if>
+      <if test="zibentrue != null" >
+        zibentrue,
+      </if>
+      <if test="qiyejiguan != null" >
+        qiyejiguan,
+      </if>
+      <if test="qiyedaima != null" >
+        qiyedaima,
+      </if>
+      <if test="qiyeuser != null" >
+        qiyeuser,
+      </if>
+      <if test="qiyelianxi != null" >
+        qiyelianxi,
+      </if>
+      <if test="qiyezhizhao != null" >
+        qiyezhizhao,
+      </if>
+      <if test="qiyedaimazheng != null" >
+        qiyedaimazheng,
+      </if>
+      <if test="xiazaishu != null" >
+        xiazaishu,
+      </if>
+      <if test="userxiazaijifen != null" >
+        userxiazaijifen,
+      </if>
+      <if test="shifourenzheng != null" >
+        shifourenzheng,
+      </if>
+      <if test="zhengchang != null" >
+        zhengchang,
+      </if>
+      <if test="shoujis != null" >
+        shoujis,
+      </if>
+      <if test="iphone != null" >
+        iphone,
+      </if>
+      <if test="shouquan != null" >
+        shouquan,
+      </if>
+      <if test="bname != null" >
+        bname,
+      </if>
+      <if test="sname != null" >
+        sname,
+      </if>
+      <if test="payname != null" >
+        payname,
+      </if>
+      <if test="receiverCardNo != null" >
+        receiverCardNo,
+      </if>
+      <if test="receiverCardName != null" >
+        receiverCardName,
+      </if>
+      <if test="bankName != null" >
+        bankName,
+      </if>
+      <if test="bankCode != null" >
+        bankCode,
+      </if>
+      <if test="bankProvince != null" >
+        bankProvince,
+      </if>
+      <if test="bankCity != null" >
+        bankCity,
+      </if>
+      <if test="payeeBankLinesNo != null" >
+        payeeBankLinesNo,
+      </if>
+      <if test="refundTicket != null" >
+        refundTicket,
+      </if>
+      <if test="customerType != null" >
+        customerType,
+      </if>
+      <if test="speregion != null" >
+        speregion,
+      </if>
+      <if test="fixphone != null" >
+        fixphone,
+      </if>
+      <if test="gusersex != null" >
+        gusersex,
+      </if>
+      <if test="certexpire != null" >
+        certexpire,
+      </if>
+      <if test="farendphone != null" >
+        farendphone,
+      </if>
+      <if test="farencardid != null" >
+        farencardid,
+      </if>
+      <if test="taxurl != null" >
+        taxurl,
+      </if>
+      <if test="taxreg != null" >
+        taxreg,
+      </if>
+      <if test="operareaid != null" >
+        operareaid,
+      </if>
+      <if test="opersperegion != null" >
+        opersperegion,
+      </if>
+      <if test="opersecname != null" >
+        opersecname,
+      </if>
+      <if test="secname != null" >
+        secname,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isopenshop != null" >
+        isopenshop,
+      </if>
+      <if test="shopname != null" >
+        shopname,
+      </if>
+      <if test="shopintroduce != null" >
+        shopintroduce,
+      </if>
+      <if test="firstreceiveraddr != null" >
+        firstreceiveraddr,
+      </if>
+      <if test="business != null" >
+        business,
+      </if>
+      <if test="iscms != null" >
+        iscms,
+      </if>
+      <if test="iself != null" >
+        iself,
+      </if>
+      <if test="oper != null" >
+        oper,
+      </if>
+      <if test="cmseditime != null" >
+        cmseditime,
+      </if>
+      <if test="authremark != null" >
+        authremark,
+      </if>
+      <if test="pbankno != null" >
+        pbankno,
+      </if>
+      <if test="authorizurl != null" >
+        authorizurl,
+      </if>
+      <if test="addway != null" >
+        addway,
+      </if>
+      <if test="licensemark != null" >
+        licensemark,
+      </if>
+      <if test="authpasstime != null" >
+        authpasstime,
+      </if>
+      <if test="companyproperty != null" >
+        companyproperty,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="passport != null" >
+        #{passport,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="payword != null" >
+        #{payword,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=SMALLINT},
+      </if>
+      <if test="chat != null" >
+        #{chat,jdbcType=SMALLINT},
+      </if>
+      <if test="sound != null" >
+        #{sound,jdbcType=BIT},
+      </if>
+      <if test="online != null" >
+        #{online,jdbcType=BIT},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=BIT},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=BIT},
+      </if>
+      <if test="truename != null" >
+        #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="msn != null" >
+        #{msn,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="ali != null" >
+        #{ali,jdbcType=VARCHAR},
+      </if>
+      <if test="skype != null" >
+        #{skype,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null" >
+        #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null" >
+        #{admin,jdbcType=BIT},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="groupid != null" >
+        #{groupid,jdbcType=SMALLINT},
+      </if>
+      <if test="regid != null" >
+        #{regid,jdbcType=SMALLINT},
+      </if>
+      <if test="areaid != null" >
+        #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="sms != null" >
+        #{sms,jdbcType=INTEGER},
+      </if>
+      <if test="credit != null" >
+        #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="locking != null" >
+        #{locking,jdbcType=DECIMAL},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="edittime != null" >
+        #{edittime,jdbcType=INTEGER},
+      </if>
+      <if test="regip != null" >
+        #{regip,jdbcType=VARCHAR},
+      </if>
+      <if test="regtime != null" >
+        #{regtime,jdbcType=INTEGER},
+      </if>
+      <if test="loginip != null" >
+        #{loginip,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        #{logintime,jdbcType=INTEGER},
+      </if>
+      <if test="logintimes != null" >
+        #{logintimes,jdbcType=INTEGER},
+      </if>
+      <if test="black != null" >
+        #{black,jdbcType=VARCHAR},
+      </if>
+      <if test="send != null" >
+        #{send,jdbcType=BIT},
+      </if>
+      <if test="auth != null" >
+        #{auth,jdbcType=VARCHAR},
+      </if>
+      <if test="authvalue != null" >
+        #{authvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="authtime != null" >
+        #{authtime,jdbcType=INTEGER},
+      </if>
+      <if test="vemail != null" >
+        #{vemail,jdbcType=BIT},
+      </if>
+      <if test="vmobile != null" >
+        #{vmobile,jdbcType=BIT},
+      </if>
+      <if test="vtruename != null" >
+        #{vtruename,jdbcType=BIT},
+      </if>
+      <if test="vbank != null" >
+        #{vbank,jdbcType=BIT},
+      </if>
+      <if test="vcompany != null" >
+        #{vcompany,jdbcType=BIT},
+      </if>
+      <if test="vtrade != null" >
+        #{vtrade,jdbcType=BIT},
+      </if>
+      <if test="trade != null" >
+        #{trade,jdbcType=VARCHAR},
+      </if>
+      <if test="support != null" >
+        #{support,jdbcType=VARCHAR},
+      </if>
+      <if test="inviter != null" >
+        #{inviter,jdbcType=VARCHAR},
+      </if>
+      <if test="recommended != null" >
+        #{recommended,jdbcType=INTEGER},
+      </if>
+      <if test="registration != null" >
+        #{registration,jdbcType=INTEGER},
+      </if>
+      <if test="companyas != null" >
+        #{companyas,jdbcType=VARCHAR},
+      </if>
+      <if test="guser != null" >
+        #{guser,jdbcType=VARCHAR},
+      </if>
+      <if test="gdianhua != null" >
+        #{gdianhua,jdbcType=VARCHAR},
+      </if>
+      <if test="ghaoma != null" >
+        #{ghaoma,jdbcType=VARCHAR},
+      </if>
+      <if test="gmeun != null" >
+        #{gmeun,jdbcType=INTEGER},
+      </if>
+      <if test="gshenz != null" >
+        #{gshenz,jdbcType=VARCHAR},
+      </if>
+      <if test="gshenf != null" >
+        #{gshenf,jdbcType=VARCHAR},
+      </if>
+      <if test="getizihao != null" >
+        #{getizihao,jdbcType=VARCHAR},
+      </if>
+      <if test="getijingyinguser != null" >
+        #{getijingyinguser,jdbcType=VARCHAR},
+      </if>
+      <if test="getijingyingshen != null" >
+        #{getijingyingshen,jdbcType=VARCHAR},
+      </if>
+      <if test="getimeun != null" >
+        #{getimeun,jdbcType=INTEGER},
+      </if>
+      <if test="getizhuhao != null" >
+        #{getizhuhao,jdbcType=VARCHAR},
+      </if>
+      <if test="getichangsuo != null" >
+        #{getichangsuo,jdbcType=VARCHAR},
+      </if>
+      <if test="getijiguan != null" >
+        #{getijiguan,jdbcType=VARCHAR},
+      </if>
+      <if test="getileixing != null" >
+        #{getileixing,jdbcType=VARCHAR},
+      </if>
+      <if test="getisuser != null" >
+        #{getisuser,jdbcType=VARCHAR},
+      </if>
+      <if test="getilianxi != null" >
+        #{getilianxi,jdbcType=VARCHAR},
+      </if>
+      <if test="getizhizhao != null" >
+        #{getizhizhao,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyename != null" >
+        #{qiyename,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyereh != null" >
+        #{qiyereh,jdbcType=VARCHAR},
+      </if>
+      <if test="zhusuo != null" >
+        #{zhusuo,jdbcType=VARCHAR},
+      </if>
+      <if test="farend != null" >
+        #{farend,jdbcType=VARCHAR},
+      </if>
+      <if test="farenss != null" >
+        #{farenss,jdbcType=INTEGER},
+      </if>
+      <if test="qiyeziben != null" >
+        #{qiyeziben,jdbcType=VARCHAR},
+      </if>
+      <if test="zibentrue != null" >
+        #{zibentrue,jdbcType=INTEGER},
+      </if>
+      <if test="qiyejiguan != null" >
+        #{qiyejiguan,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyedaima != null" >
+        #{qiyedaima,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyeuser != null" >
+        #{qiyeuser,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyelianxi != null" >
+        #{qiyelianxi,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyezhizhao != null" >
+        #{qiyezhizhao,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyedaimazheng != null" >
+        #{qiyedaimazheng,jdbcType=VARCHAR},
+      </if>
+      <if test="xiazaishu != null" >
+        #{xiazaishu,jdbcType=INTEGER},
+      </if>
+      <if test="userxiazaijifen != null" >
+        #{userxiazaijifen,jdbcType=INTEGER},
+      </if>
+      <if test="shifourenzheng != null" >
+        #{shifourenzheng,jdbcType=VARCHAR},
+      </if>
+      <if test="zhengchang != null" >
+        #{zhengchang,jdbcType=INTEGER},
+      </if>
+      <if test="shoujis != null" >
+        #{shoujis,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null" >
+        #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="shouquan != null" >
+        #{shouquan,jdbcType=VARCHAR},
+      </if>
+      <if test="bname != null" >
+        #{bname,jdbcType=VARCHAR},
+      </if>
+      <if test="sname != null" >
+        #{sname,jdbcType=INTEGER},
+      </if>
+      <if test="payname != null" >
+        #{payname,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCardNo != null" >
+        #{receiverCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCardName != null" >
+        #{receiverCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankProvince != null" >
+        #{bankProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCity != null" >
+        #{bankCity,jdbcType=VARCHAR},
+      </if>
+      <if test="payeeBankLinesNo != null" >
+        #{payeeBankLinesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundTicket != null" >
+        #{refundTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null" >
+        #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="speregion != null" >
+        #{speregion,jdbcType=VARCHAR},
+      </if>
+      <if test="fixphone != null" >
+        #{fixphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gusersex != null" >
+        #{gusersex,jdbcType=SMALLINT},
+      </if>
+      <if test="certexpire != null" >
+        #{certexpire,jdbcType=VARCHAR},
+      </if>
+      <if test="farendphone != null" >
+        #{farendphone,jdbcType=VARCHAR},
+      </if>
+      <if test="farencardid != null" >
+        #{farencardid,jdbcType=VARCHAR},
+      </if>
+      <if test="taxurl != null" >
+        #{taxurl,jdbcType=VARCHAR},
+      </if>
+      <if test="taxreg != null" >
+        #{taxreg,jdbcType=VARCHAR},
+      </if>
+      <if test="operareaid != null" >
+        #{operareaid,jdbcType=INTEGER},
+      </if>
+      <if test="opersperegion != null" >
+        #{opersperegion,jdbcType=VARCHAR},
+      </if>
+      <if test="opersecname != null" >
+        #{opersecname,jdbcType=VARCHAR},
+      </if>
+      <if test="secname != null" >
+        #{secname,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="isopenshop != null" >
+        #{isopenshop,jdbcType=INTEGER},
+      </if>
+      <if test="shopname != null" >
+        #{shopname,jdbcType=VARCHAR},
+      </if>
+      <if test="shopintroduce != null" >
+        #{shopintroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="firstreceiveraddr != null" >
+        #{firstreceiveraddr,jdbcType=VARCHAR},
+      </if>
+      <if test="business != null" >
+        #{business,jdbcType=VARCHAR},
+      </if>
+      <if test="iscms != null" >
+        #{iscms,jdbcType=INTEGER},
+      </if>
+      <if test="iself != null" >
+        #{iself,jdbcType=INTEGER},
+      </if>
+      <if test="oper != null" >
+        #{oper,jdbcType=VARCHAR},
+      </if>
+      <if test="cmseditime != null" >
+        #{cmseditime,jdbcType=INTEGER},
+      </if>
+      <if test="authremark != null" >
+        #{authremark,jdbcType=VARCHAR},
+      </if>
+      <if test="pbankno != null" >
+        #{pbankno,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizurl != null" >
+        #{authorizurl,jdbcType=VARCHAR},
+      </if>
+      <if test="addway != null" >
+        #{addway,jdbcType=SMALLINT},
+      </if>
+      <if test="licensemark != null" >
+        #{licensemark,jdbcType=VARCHAR},
+      </if>
+      <if test="authpasstime != null" >
+        #{authpasstime,jdbcType=INTEGER},
+      </if>
+      <if test="companyproperty != null" >
+        #{companyproperty,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.destoon_member" >
+    update destoon_member
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="passport != null" >
+        passport = #{passport,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="payword != null" >
+        payword = #{payword,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=SMALLINT},
+      </if>
+      <if test="chat != null" >
+        chat = #{chat,jdbcType=SMALLINT},
+      </if>
+      <if test="sound != null" >
+        sound = #{sound,jdbcType=BIT},
+      </if>
+      <if test="online != null" >
+        online = #{online,jdbcType=BIT},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=BIT},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=BIT},
+      </if>
+      <if test="truename != null" >
+        truename = #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="msn != null" >
+        msn = #{msn,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="ali != null" >
+        ali = #{ali,jdbcType=VARCHAR},
+      </if>
+      <if test="skype != null" >
+        skype = #{skype,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null" >
+        career = #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null" >
+        admin = #{admin,jdbcType=BIT},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="aid != null" >
+        aid = #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="groupid != null" >
+        groupid = #{groupid,jdbcType=SMALLINT},
+      </if>
+      <if test="regid != null" >
+        regid = #{regid,jdbcType=SMALLINT},
+      </if>
+      <if test="areaid != null" >
+        areaid = #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="sms != null" >
+        sms = #{sms,jdbcType=INTEGER},
+      </if>
+      <if test="credit != null" >
+        credit = #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="locking != null" >
+        locking = #{locking,jdbcType=DECIMAL},
+      </if>
+      <if test="bank != null" >
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="edittime != null" >
+        edittime = #{edittime,jdbcType=INTEGER},
+      </if>
+      <if test="regip != null" >
+        regip = #{regip,jdbcType=VARCHAR},
+      </if>
+      <if test="regtime != null" >
+        regtime = #{regtime,jdbcType=INTEGER},
+      </if>
+      <if test="loginip != null" >
+        loginip = #{loginip,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        logintime = #{logintime,jdbcType=INTEGER},
+      </if>
+      <if test="logintimes != null" >
+        logintimes = #{logintimes,jdbcType=INTEGER},
+      </if>
+      <if test="black != null" >
+        black = #{black,jdbcType=VARCHAR},
+      </if>
+      <if test="send != null" >
+        send = #{send,jdbcType=BIT},
+      </if>
+      <if test="auth != null" >
+        auth = #{auth,jdbcType=VARCHAR},
+      </if>
+      <if test="authvalue != null" >
+        authvalue = #{authvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="authtime != null" >
+        authtime = #{authtime,jdbcType=INTEGER},
+      </if>
+      <if test="vemail != null" >
+        vemail = #{vemail,jdbcType=BIT},
+      </if>
+      <if test="vmobile != null" >
+        vmobile = #{vmobile,jdbcType=BIT},
+      </if>
+      <if test="vtruename != null" >
+        vtruename = #{vtruename,jdbcType=BIT},
+      </if>
+      <if test="vbank != null" >
+        vbank = #{vbank,jdbcType=BIT},
+      </if>
+      <if test="vcompany != null" >
+        vcompany = #{vcompany,jdbcType=BIT},
+      </if>
+      <if test="vtrade != null" >
+        vtrade = #{vtrade,jdbcType=BIT},
+      </if>
+      <if test="trade != null" >
+        trade = #{trade,jdbcType=VARCHAR},
+      </if>
+      <if test="support != null" >
+        support = #{support,jdbcType=VARCHAR},
+      </if>
+      <if test="inviter != null" >
+        inviter = #{inviter,jdbcType=VARCHAR},
+      </if>
+      <if test="recommended != null" >
+        recommended = #{recommended,jdbcType=INTEGER},
+      </if>
+      <if test="registration != null" >
+        registration = #{registration,jdbcType=INTEGER},
+      </if>
+      <if test="companyas != null" >
+        companyas = #{companyas,jdbcType=VARCHAR},
+      </if>
+      <if test="guser != null" >
+        guser = #{guser,jdbcType=VARCHAR},
+      </if>
+      <if test="gdianhua != null" >
+        gdianhua = #{gdianhua,jdbcType=VARCHAR},
+      </if>
+      <if test="ghaoma != null" >
+        ghaoma = #{ghaoma,jdbcType=VARCHAR},
+      </if>
+      <if test="gmeun != null" >
+        gmeun = #{gmeun,jdbcType=INTEGER},
+      </if>
+      <if test="gshenz != null" >
+        gshenz = #{gshenz,jdbcType=VARCHAR},
+      </if>
+      <if test="gshenf != null" >
+        gshenf = #{gshenf,jdbcType=VARCHAR},
+      </if>
+      <if test="getizihao != null" >
+        getizihao = #{getizihao,jdbcType=VARCHAR},
+      </if>
+      <if test="getijingyinguser != null" >
+        getijingyinguser = #{getijingyinguser,jdbcType=VARCHAR},
+      </if>
+      <if test="getijingyingshen != null" >
+        getijingyingshen = #{getijingyingshen,jdbcType=VARCHAR},
+      </if>
+      <if test="getimeun != null" >
+        getimeun = #{getimeun,jdbcType=INTEGER},
+      </if>
+      <if test="getizhuhao != null" >
+        getizhuhao = #{getizhuhao,jdbcType=VARCHAR},
+      </if>
+      <if test="getichangsuo != null" >
+        getichangsuo = #{getichangsuo,jdbcType=VARCHAR},
+      </if>
+      <if test="getijiguan != null" >
+        getijiguan = #{getijiguan,jdbcType=VARCHAR},
+      </if>
+      <if test="getileixing != null" >
+        getileixing = #{getileixing,jdbcType=VARCHAR},
+      </if>
+      <if test="getisuser != null" >
+        getisuser = #{getisuser,jdbcType=VARCHAR},
+      </if>
+      <if test="getilianxi != null" >
+        getilianxi = #{getilianxi,jdbcType=VARCHAR},
+      </if>
+      <if test="getizhizhao != null" >
+        getizhizhao = #{getizhizhao,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyename != null" >
+        qiyename = #{qiyename,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyereh != null" >
+        qiyereh = #{qiyereh,jdbcType=VARCHAR},
+      </if>
+      <if test="zhusuo != null" >
+        zhusuo = #{zhusuo,jdbcType=VARCHAR},
+      </if>
+      <if test="farend != null" >
+        farend = #{farend,jdbcType=VARCHAR},
+      </if>
+      <if test="farenss != null" >
+        farenss = #{farenss,jdbcType=INTEGER},
+      </if>
+      <if test="qiyeziben != null" >
+        qiyeziben = #{qiyeziben,jdbcType=VARCHAR},
+      </if>
+      <if test="zibentrue != null" >
+        zibentrue = #{zibentrue,jdbcType=INTEGER},
+      </if>
+      <if test="qiyejiguan != null" >
+        qiyejiguan = #{qiyejiguan,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyedaima != null" >
+        qiyedaima = #{qiyedaima,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyeuser != null" >
+        qiyeuser = #{qiyeuser,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyelianxi != null" >
+        qiyelianxi = #{qiyelianxi,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyezhizhao != null" >
+        qiyezhizhao = #{qiyezhizhao,jdbcType=VARCHAR},
+      </if>
+      <if test="qiyedaimazheng != null" >
+        qiyedaimazheng = #{qiyedaimazheng,jdbcType=VARCHAR},
+      </if>
+      <if test="xiazaishu != null" >
+        xiazaishu = #{xiazaishu,jdbcType=INTEGER},
+      </if>
+      <if test="userxiazaijifen != null" >
+        userxiazaijifen = #{userxiazaijifen,jdbcType=INTEGER},
+      </if>
+      <if test="shifourenzheng != null" >
+        shifourenzheng = #{shifourenzheng,jdbcType=VARCHAR},
+      </if>
+      <if test="zhengchang != null" >
+        zhengchang = #{zhengchang,jdbcType=INTEGER},
+      </if>
+      <if test="shoujis != null" >
+        shoujis = #{shoujis,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null" >
+        iphone = #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="shouquan != null" >
+        shouquan = #{shouquan,jdbcType=VARCHAR},
+      </if>
+      <if test="bname != null" >
+        bname = #{bname,jdbcType=VARCHAR},
+      </if>
+      <if test="sname != null" >
+        sname = #{sname,jdbcType=INTEGER},
+      </if>
+      <if test="payname != null" >
+        payname = #{payname,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCardNo != null" >
+        receiverCardNo = #{receiverCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCardName != null" >
+        receiverCardName = #{receiverCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bankName = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        bankCode = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankProvince != null" >
+        bankProvince = #{bankProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCity != null" >
+        bankCity = #{bankCity,jdbcType=VARCHAR},
+      </if>
+      <if test="payeeBankLinesNo != null" >
+        payeeBankLinesNo = #{payeeBankLinesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundTicket != null" >
+        refundTicket = #{refundTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null" >
+        customerType = #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="speregion != null" >
+        speregion = #{speregion,jdbcType=VARCHAR},
+      </if>
+      <if test="fixphone != null" >
+        fixphone = #{fixphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gusersex != null" >
+        gusersex = #{gusersex,jdbcType=SMALLINT},
+      </if>
+      <if test="certexpire != null" >
+        certexpire = #{certexpire,jdbcType=VARCHAR},
+      </if>
+      <if test="farendphone != null" >
+        farendphone = #{farendphone,jdbcType=VARCHAR},
+      </if>
+      <if test="farencardid != null" >
+        farencardid = #{farencardid,jdbcType=VARCHAR},
+      </if>
+      <if test="taxurl != null" >
+        taxurl = #{taxurl,jdbcType=VARCHAR},
+      </if>
+      <if test="taxreg != null" >
+        taxreg = #{taxreg,jdbcType=VARCHAR},
+      </if>
+      <if test="operareaid != null" >
+        operareaid = #{operareaid,jdbcType=INTEGER},
+      </if>
+      <if test="opersperegion != null" >
+        opersperegion = #{opersperegion,jdbcType=VARCHAR},
+      </if>
+      <if test="opersecname != null" >
+        opersecname = #{opersecname,jdbcType=VARCHAR},
+      </if>
+      <if test="secname != null" >
+        secname = #{secname,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="isopenshop != null" >
+        isopenshop = #{isopenshop,jdbcType=INTEGER},
+      </if>
+      <if test="shopname != null" >
+        shopname = #{shopname,jdbcType=VARCHAR},
+      </if>
+      <if test="shopintroduce != null" >
+        shopintroduce = #{shopintroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="firstreceiveraddr != null" >
+        firstreceiveraddr = #{firstreceiveraddr,jdbcType=VARCHAR},
+      </if>
+      <if test="business != null" >
+        business = #{business,jdbcType=VARCHAR},
+      </if>
+      <if test="iscms != null" >
+        iscms = #{iscms,jdbcType=INTEGER},
+      </if>
+      <if test="iself != null" >
+        iself = #{iself,jdbcType=INTEGER},
+      </if>
+      <if test="oper != null" >
+        oper = #{oper,jdbcType=VARCHAR},
+      </if>
+      <if test="cmseditime != null" >
+        cmseditime = #{cmseditime,jdbcType=INTEGER},
+      </if>
+      <if test="authremark != null" >
+        authremark = #{authremark,jdbcType=VARCHAR},
+      </if>
+      <if test="pbankno != null" >
+        pbankno = #{pbankno,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizurl != null" >
+        authorizurl = #{authorizurl,jdbcType=VARCHAR},
+      </if>
+      <if test="addway != null" >
+        addway = #{addway,jdbcType=SMALLINT},
+      </if>
+      <if test="licensemark != null" >
+        licensemark = #{licensemark,jdbcType=VARCHAR},
+      </if>
+      <if test="authpasstime != null" >
+        authpasstime = #{authpasstime,jdbcType=INTEGER},
+      </if>
+      <if test="companyproperty != null" >
+        companyproperty = #{companyproperty,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userid = #{userid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.destoon_member" >
+    update destoon_member
+    set username = #{username,jdbcType=VARCHAR},
+      passport = #{passport,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      payword = #{payword,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      message = #{message,jdbcType=SMALLINT},
+      chat = #{chat,jdbcType=SMALLINT},
+      sound = #{sound,jdbcType=BIT},
+      online = #{online,jdbcType=BIT},
+      avatar = #{avatar,jdbcType=BIT},
+      gender = #{gender,jdbcType=BIT},
+      truename = #{truename,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      msn = #{msn,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      ali = #{ali,jdbcType=VARCHAR},
+      skype = #{skype,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      career = #{career,jdbcType=VARCHAR},
+      admin = #{admin,jdbcType=BIT},
+      role = #{role,jdbcType=VARCHAR},
+      aid = #{aid,jdbcType=INTEGER},
+      groupid = #{groupid,jdbcType=SMALLINT},
+      regid = #{regid,jdbcType=SMALLINT},
+      areaid = #{areaid,jdbcType=INTEGER},
+      sms = #{sms,jdbcType=INTEGER},
+      credit = #{credit,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL},
+      locking = #{locking,jdbcType=DECIMAL},
+      bank = #{bank,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      edittime = #{edittime,jdbcType=INTEGER},
+      regip = #{regip,jdbcType=VARCHAR},
+      regtime = #{regtime,jdbcType=INTEGER},
+      loginip = #{loginip,jdbcType=VARCHAR},
+      logintime = #{logintime,jdbcType=INTEGER},
+      logintimes = #{logintimes,jdbcType=INTEGER},
+      black = #{black,jdbcType=VARCHAR},
+      send = #{send,jdbcType=BIT},
+      auth = #{auth,jdbcType=VARCHAR},
+      authvalue = #{authvalue,jdbcType=VARCHAR},
+      authtime = #{authtime,jdbcType=INTEGER},
+      vemail = #{vemail,jdbcType=BIT},
+      vmobile = #{vmobile,jdbcType=BIT},
+      vtruename = #{vtruename,jdbcType=BIT},
+      vbank = #{vbank,jdbcType=BIT},
+      vcompany = #{vcompany,jdbcType=BIT},
+      vtrade = #{vtrade,jdbcType=BIT},
+      trade = #{trade,jdbcType=VARCHAR},
+      support = #{support,jdbcType=VARCHAR},
+      inviter = #{inviter,jdbcType=VARCHAR},
+      recommended = #{recommended,jdbcType=INTEGER},
+      registration = #{registration,jdbcType=INTEGER},
+      companyas = #{companyas,jdbcType=VARCHAR},
+      guser = #{guser,jdbcType=VARCHAR},
+      gdianhua = #{gdianhua,jdbcType=VARCHAR},
+      ghaoma = #{ghaoma,jdbcType=VARCHAR},
+      gmeun = #{gmeun,jdbcType=INTEGER},
+      gshenz = #{gshenz,jdbcType=VARCHAR},
+      gshenf = #{gshenf,jdbcType=VARCHAR},
+      getizihao = #{getizihao,jdbcType=VARCHAR},
+      getijingyinguser = #{getijingyinguser,jdbcType=VARCHAR},
+      getijingyingshen = #{getijingyingshen,jdbcType=VARCHAR},
+      getimeun = #{getimeun,jdbcType=INTEGER},
+      getizhuhao = #{getizhuhao,jdbcType=VARCHAR},
+      getichangsuo = #{getichangsuo,jdbcType=VARCHAR},
+      getijiguan = #{getijiguan,jdbcType=VARCHAR},
+      getileixing = #{getileixing,jdbcType=VARCHAR},
+      getisuser = #{getisuser,jdbcType=VARCHAR},
+      getilianxi = #{getilianxi,jdbcType=VARCHAR},
+      getizhizhao = #{getizhizhao,jdbcType=VARCHAR},
+      qiyename = #{qiyename,jdbcType=VARCHAR},
+      qiyereh = #{qiyereh,jdbcType=VARCHAR},
+      zhusuo = #{zhusuo,jdbcType=VARCHAR},
+      farend = #{farend,jdbcType=VARCHAR},
+      farenss = #{farenss,jdbcType=INTEGER},
+      qiyeziben = #{qiyeziben,jdbcType=VARCHAR},
+      zibentrue = #{zibentrue,jdbcType=INTEGER},
+      qiyejiguan = #{qiyejiguan,jdbcType=VARCHAR},
+      qiyedaima = #{qiyedaima,jdbcType=VARCHAR},
+      qiyeuser = #{qiyeuser,jdbcType=VARCHAR},
+      qiyelianxi = #{qiyelianxi,jdbcType=VARCHAR},
+      qiyezhizhao = #{qiyezhizhao,jdbcType=VARCHAR},
+      qiyedaimazheng = #{qiyedaimazheng,jdbcType=VARCHAR},
+      xiazaishu = #{xiazaishu,jdbcType=INTEGER},
+      userxiazaijifen = #{userxiazaijifen,jdbcType=INTEGER},
+      shifourenzheng = #{shifourenzheng,jdbcType=VARCHAR},
+      zhengchang = #{zhengchang,jdbcType=INTEGER},
+      shoujis = #{shoujis,jdbcType=VARCHAR},
+      iphone = #{iphone,jdbcType=VARCHAR},
+      shouquan = #{shouquan,jdbcType=VARCHAR},
+      bname = #{bname,jdbcType=VARCHAR},
+      sname = #{sname,jdbcType=INTEGER},
+      payname = #{payname,jdbcType=VARCHAR},
+      receiverCardNo = #{receiverCardNo,jdbcType=VARCHAR},
+      receiverCardName = #{receiverCardName,jdbcType=VARCHAR},
+      bankName = #{bankName,jdbcType=VARCHAR},
+      bankCode = #{bankCode,jdbcType=VARCHAR},
+      bankProvince = #{bankProvince,jdbcType=VARCHAR},
+      bankCity = #{bankCity,jdbcType=VARCHAR},
+      payeeBankLinesNo = #{payeeBankLinesNo,jdbcType=VARCHAR},
+      refundTicket = #{refundTicket,jdbcType=VARCHAR},
+      customerType = #{customerType,jdbcType=VARCHAR},
+      speregion = #{speregion,jdbcType=VARCHAR},
+      fixphone = #{fixphone,jdbcType=VARCHAR},
+      gusersex = #{gusersex,jdbcType=SMALLINT},
+      certexpire = #{certexpire,jdbcType=VARCHAR},
+      farendphone = #{farendphone,jdbcType=VARCHAR},
+      farencardid = #{farencardid,jdbcType=VARCHAR},
+      taxurl = #{taxurl,jdbcType=VARCHAR},
+      taxreg = #{taxreg,jdbcType=VARCHAR},
+      operareaid = #{operareaid,jdbcType=INTEGER},
+      opersperegion = #{opersperegion,jdbcType=VARCHAR},
+      opersecname = #{opersecname,jdbcType=VARCHAR},
+      secname = #{secname,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      isopenshop = #{isopenshop,jdbcType=INTEGER},
+      shopname = #{shopname,jdbcType=VARCHAR},
+      shopintroduce = #{shopintroduce,jdbcType=VARCHAR},
+      firstreceiveraddr = #{firstreceiveraddr,jdbcType=VARCHAR},
+      business = #{business,jdbcType=VARCHAR},
+      iscms = #{iscms,jdbcType=INTEGER},
+      iself = #{iself,jdbcType=INTEGER},
+      oper = #{oper,jdbcType=VARCHAR},
+      cmseditime = #{cmseditime,jdbcType=INTEGER},
+      authremark = #{authremark,jdbcType=VARCHAR},
+      pbankno = #{pbankno,jdbcType=VARCHAR},
+      authorizurl = #{authorizurl,jdbcType=VARCHAR},
+      addway = #{addway,jdbcType=SMALLINT},
+      licensemark = #{licensemark,jdbcType=VARCHAR},
+      authpasstime = #{authpasstime,jdbcType=INTEGER},
+      companyproperty = #{companyproperty,jdbcType=VARCHAR}
+    where userid = #{userid,jdbcType=BIGINT}
+  </update>
+  
+   <select id="selectdestoon_memberList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from destoon_member A   WHERE A.status=4 AND A.groupid=6
+    limit #{num},1
+  </select>
+  
+</mapper>
