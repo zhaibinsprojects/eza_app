@@ -43,8 +43,6 @@ public class GoodsServiceImpl implements GoodsService{
 	private com.sanbang.dao.ezs_dictMapper ezs_dictMapper;
 	
 	
-	
-	
 	/**
 	 * 查询单个货品详情
 	 * @param id
@@ -58,7 +56,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public List<ezs_dvaluate> listForEvaluate(Long id){
-		List<ezs_dvaluate> list = new ArrayList();
+		List<ezs_dvaluate> list = new ArrayList<ezs_dvaluate>();
 		list  = ezs_dvaluateMapper.listForEvaluate(id);
 		return list;
 	}
@@ -71,7 +69,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public int updateCollect(Long id,Boolean status){
-		Map mmp = new HashMap();
+		Map<String,Object> mmp = new HashMap<String,Object>();
 		mmp.put("good_id", id);
 		mmp.put("house", status);
 		int n = ezs_documentshareMapper.updateCollect(mmp);
@@ -96,35 +94,35 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public List<ezs_goods> listForGoods(Long goodClass_id){
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = ezs_goodsMapper.listForGoods(goodClass_id);
 		return list;
 	}
 	
-	public List listByAreaAndType(Long area,Long type){
-		Map mmp = new HashMap();
+	public List<ezs_goods> listByAreaAndType(Long area,Long type){
+		Map<String,Long> mmp = new HashMap<String,Long>();
 		mmp.put("area_id",area);
 		mmp.put("goodClass_id",type);
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = ezs_goodsMapper.listByAreaAndType(mmp);
 		return list;
 	}
 	
-	public List listByOthers(Map map){
-		List<ezs_goods> list = new ArrayList();
+	public List<ezs_goods> listByOthers(Map<String,Object> map){
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = ezs_goodsMapper.listByOthers(map);
 		return list;
 	}
 	
-	public List conditionList(){
-		List<ezs_dict> list = new ArrayList();
+	public List<ezs_dict> conditionList(){
+		List<ezs_dict> list = new ArrayList<ezs_dict>();
 		list = ezs_dictMapper.conditionList();
 		return list;
 	}
 	
 	
 	public List<ezs_customized> customizedList(Long user_id){
-		List<ezs_customized> list = new ArrayList();
+		List<ezs_customized> list = new ArrayList<ezs_customized>();
 		list = ezs_customizedMapper.customizedList(user_id);
 		return list;
 	}

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -68,7 +69,7 @@ public interface GoodsService {
 	 * @param area
 	 * @param type
 	 */
-	public List listByAreaAndType(Long area,Long type);
+	public List<ezs_goods> listByAreaAndType(Long area,Long type);
 	/**
 	 * 多条件查询
 	 * @param color	颜色
@@ -79,13 +80,13 @@ public interface GoodsService {
 	 * @param isProtection 是否环保
 	 * @return
 	 */
-	public List listByOthers(Map map);
+	public List<ezs_goods> listByOthers(Map<String,Object> map);
 	
 	/**
 	 * 然后多条件查询所需的查询条件
 	 * @return
 	 */
-	public List conditionList();
+	public List<ezs_dict> conditionList();
 	
 	public ezs_documentshare getCollect(Long id);
 	

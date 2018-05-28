@@ -24,7 +24,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 	private ezs_storeMapper ezs_storeMapper;
 	
 	@Override
-	public Result addActivateInfo(Result result, String companyName, String yTurnover, String covered, String rent,
+	public Result addActivateInfo(Result result, ezs_user upi,String companyName, String yTurnover, String covered, String rent,
 			String device_num, String employee_num, String assets, String obtainYear, String open_bank_name, String openBankNo,
 			String open_branch_name, String open_branch_no, String location_detail, HttpServletRequest request, HttpServletResponse response) {
 		log.info("供应商激活参数：companyName" + companyName + "&yTurnover" + yTurnover + "covered" +"。。。。。。。。。。。。。。。。");
@@ -35,12 +35,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 		if (!result.getSuccess()) {
 			return result;
 		}
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
+		
 //		ezs_user upi = new ezs_user(); 
 //		upi.setStore_id((long)2);
 		if (upi != null) {

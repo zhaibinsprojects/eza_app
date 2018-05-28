@@ -17,6 +17,7 @@ import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerOrderService;
 import com.sanbang.utils.Page;
@@ -38,6 +39,9 @@ public class SellerOrderContorller {
 	
 	@Autowired
 	DictService dictService;
+
+	@Autowired
+	private BuyerService buyerService;
 	/**
 	 * 分页查询订单列表
 	 * @param orderType
@@ -216,13 +220,88 @@ public class SellerOrderContorller {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setMsg("用户未激活，没有卖家权限。");
 			return result;
+		}	
+		
+		try {
+			result = sellerOrderService.seller_order_signature(order_no, request, response);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setMsg("请求成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("签订合同失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
 		}
-
-		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-		result.setMsg("请求成功");
-		result = sellerOrderService.buyer_order_signature(order_no, request, response);
 		return result;
 	}
 	
+	/**
+	 * 样品订单发货
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/sampleDelivery")
+	@ResponseBody
+	public Object sampleDelivery(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.failure();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}	
+		
+		result = sellerOrderService.sampleDelivery(result, order_no, request, response);
+		
+		return result;
+	}
+	
+	/**
+	 * 货品订单发货
+	 */
+	@RequestMapping("/goodsDelivery")
+	@ResponseBody
+	public Object goodsDelivery(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.failure();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}	
+		
+		result = sellerOrderService.goodsDelivery(result, order_no, request, response);
+		
+		return result;
+	}
 	
 }

@@ -1,6 +1,8 @@
 package com.sanbang.seller.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,9 @@ import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_pact;
+import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.impl.BuyerServiceimpl;
 import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_invoiceMapper;
@@ -40,6 +45,8 @@ import net.sf.json.JSONObject;
 @Service
 public class SellerOrderServiceImpl implements SellerOrderService {
 	
+	private Logger log =Logger.getLogger(SellerOrderServiceImpl.class);
+	
 	@Value("${config.sign.callbackurl}")
 	private String callbackurl;
 
@@ -58,6 +65,9 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	ezs_addressMapper ezs_addressMapper;
 	@Autowired
 	ezs_pactMapper ezs_pactMapper; 
+	
+	@Autowired
+	ezs_logisticsMapper ezs_logisticsMapper;
 	
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
@@ -136,7 +146,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	}
 
 	@Override
-	public Result buyer_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response) {
+	public Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response) {
 		Result result = Result.failure();
 		try {
 
@@ -146,9 +156,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("用户未登录");
 				return result;
 			}
-//			ezs_user upi = new ezs_user();
-//			upi.setId((long) 22);
-			Long sellerId = upi.getId();
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -163,7 +170,12 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("订单不存在");
 				return result;
 			}
-
+			if (orderinfo.getOrder_status()!=20) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("合同不在签订状态！");
+				return result;
+			}
 			if (orderinfo.getPact_status() == 1) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -171,7 +183,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				return result;
 			}
 			
-			// 先查一下合同的pdf在不在
+			/*// 先查一下合同的pdf在不在
 			List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
 
 			if (pact == null||pact.size()==0) {
@@ -180,7 +192,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
 				return result;
 
-			}
+			}*/
 			
 
 			Map<String, Object> mv = new HashMap<>();
@@ -192,7 +204,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			String getijingyingshen = upi.getEzs_store().getIdCardNum();
 			String qiyedaimazheng = upi.getEzs_store().getUnifyCode();
 			mv.put("signMemId", upi.getEzs_store().getNumber());
-			mv.put("order_no", order_no);
+			mv.put("orderid", order_no);
 			mv.put("callBackUrl", callbackurl);
 			mv.put("regid", 6);// (企业类型)5为个人 6为 个体和 公司
 			mv.put("company", company);
@@ -229,6 +241,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 
 			}
+			log.info("h5请求签章返回："+callBackRet);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -236,6 +249,96 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 
+		return result;
+	}
+
+	@Override
+	public Result sampleDelivery(Result result, String order_no, HttpServletRequest request, HttpServletResponse response) {
+		
+		String logistics_name = request.getParameter("logistics_name");//运输公司
+		String logistics_no = request.getParameter("logistics_no");//物流单号or运单号？
+		String proples = request.getParameter("proples");//司机姓名
+		String phone = request.getParameter("phone");//司机电话
+		String car_no = request.getParameter("car_no");//车牌号
+		String service_time = request.getParameter("service_time");//预计送达时间
+		
+		ezs_logistics logistics = new ezs_logistics();
+		//根据order_no 获取相应采购订单
+		ezs_purchase_orderform purOrder = purchaseOrderformMapper.selectByOrderNo(order_no);
+		Long orderId = purOrder.getId();
+
+		logistics.setAddTime(new Date());
+		logistics.setDeleteStatus(false);
+		logistics.setCar_no(car_no);
+		logistics.setLogistics_name(logistics_name);
+		logistics.setLogistics_no(logistics_no);
+		logistics.setPhone(phone);
+		logistics.setProples(proples);
+		if(null != service_time && !"".equals(service_time)){
+			try {
+				logistics.setService_time(sdf.parse(service_time));
+			} catch (ParseException e) {
+				result.setSuccess(false);
+				result.setMsg("预计送达时间格式错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				e.printStackTrace();
+			}
+		}
+		logistics.setStatus(0);
+		logistics.setOrder_no(order_no);
+		int aa = 0;
+		try {
+			aa = ezs_logisticsMapper.insertSelective(logistics);
+			if(aa <= 0){
+				result.setSuccess(false);
+				result.setMsg("参数错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}else{
+				//更改采购订单发货状态并存库
+				purOrder.setOrder_status(70);
+				purchaseOrderformMapper.updateByPrimaryKeySelective(purOrder);
+				
+				result.setSuccess(true);
+				result.setMsg("样品订单发货 ");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
+
+	@Override
+	public Result goodsDelivery(Result result, String order_no, HttpServletRequest request,
+			HttpServletResponse response) {
+		//根据order_no 获取相应采购订单
+		ezs_purchase_orderform purOrder = purchaseOrderformMapper.selectByOrderNo(order_no);
+		Long orderId = purOrder.getId();
+		//更改采购订单发货状态并存库
+		purOrder.setOrder_status(70);
+		int aa = 0;
+		
+		try {
+			aa = purchaseOrderformMapper.updateByPrimaryKeySelective(purOrder);
+			if(aa <= 0){
+				result.setSuccess(false);
+				result.setMsg("参数错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}else{
+				result.setSuccess(true);
+				result.setMsg("货品订单发货 ");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		
 		return result;
 	}
 	
