@@ -19,7 +19,7 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.ExPage;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/app/home")
 public class AppHomeIndustryInfoController {
 	@Autowired
 	private IndustryInfoService industryInfoService;

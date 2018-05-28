@@ -26,7 +26,7 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsInfo;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/app/home")
 public class AppHomeGoodsMessController {
 	@Autowired
 	private RecommendGoodsService recommendGoodsService;

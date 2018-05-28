@@ -21,7 +21,7 @@ import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.UserInfoMess;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/app/home")
 public class AppHomeCustomerController {
 	@Autowired
 	private CustomerService customerService;

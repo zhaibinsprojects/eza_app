@@ -24,7 +24,7 @@ import com.sanbang.vo.ExPage;
 import com.sanbang.vo.PriceTrendIfo;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/app/home")
 public class AppHomePriceConditionController {
 	@Autowired
 	private PriceConditionService priceConditionService;

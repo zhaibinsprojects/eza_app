@@ -25,7 +25,7 @@ import com.sanbang.vo.HotProvince;
  *
  */
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/app/home")
 public class AppHomeProvinceMessController {
 	@Autowired
 	private AddressService addressService;
