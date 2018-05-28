@@ -69,15 +69,21 @@ public class BuyCenterController {
 	 * @param request
 	 * @param response
 	 * @param gId
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/removeFromCollection")
 	@ResponseBody
-	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId,Long userId){
+	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		mmp = this.goodsCollectionService.removeGoodFromCollect(gId,userId);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsCollectionService.removeGoodFromCollect(gId,upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -93,16 +99,22 @@ public class BuyCenterController {
 	 * 获取收藏夹中该用户下的所有商品
 	 * @param request
 	 * @param response
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/getGoodsFromCollection")
 	@ResponseBody
-	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response,Long userId){
+	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
 		List<Object> glist = null;
-		mmp = this.goodsCollectionService.getCollectGoodsByUser(userId);
+		mmp = this.goodsCollectionService.getCollectGoodsByUser(upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			glist = (List<Object>)mmp.get("Obj");
@@ -172,16 +184,22 @@ public class BuyCenterController {
 	 * 获取用户票据信息
 	 * @param request
 	 * @param response
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/getGoodsInvoiceByUser")
 	@ResponseBody
-	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response,Long userId){
+	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		List<InvoiceInfo> iList = null;
-		mmp = this.goodsInvoiceService.getInvoiceByUser(userId);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsInvoiceService.getInvoiceByUser(upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			iList = (List<InvoiceInfo>) mmp.get("Obj");
@@ -258,14 +276,13 @@ public class BuyCenterController {
 		Map<String, Object> mmp = null;
 		Map<String , Object> mmpImg= null;
 		Result rs = null;
-		ezs_user user =RedisUserSession.getLoginUserInfo(request);
-		if(user==null){
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
 			rs = Result.failure();
-			rs.setMsg("用户未登录");
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
 			return rs;
 		}
-		
 		//
 		//需要再此添加图片与评论的映射表记录
 		//ezs_dvaluate_accessory
