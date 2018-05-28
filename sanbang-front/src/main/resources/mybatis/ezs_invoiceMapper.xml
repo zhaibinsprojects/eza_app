@@ -246,7 +246,7 @@
   </select>
  	<!-- 根据uesrId查询invoice数量 -->
  	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
- 		select count(*) from ezs_invoice where user_id = #{userId}
+ 		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' 
  	</select>
  	
 </mapper>

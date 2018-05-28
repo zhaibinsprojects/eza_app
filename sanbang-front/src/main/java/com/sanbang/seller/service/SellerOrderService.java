@@ -22,7 +22,7 @@ public interface SellerOrderService {
 
 	ezs_invoice queryInvoiceByNo(String orderNo);
 
-	Result buyer_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response);
+	Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response);
 
 	Result sampleDelivery(Result result, String order_no, HttpServletRequest request, HttpServletResponse response);
 

@@ -223,7 +223,7 @@ public class SellerOrderContorller {
 		}	
 		
 		try {
-			result = buyerService.seller_order_signature(order_no, request, response);
+			result = sellerOrderService.seller_order_signature(order_no, request, response);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("请求成功");
 		} catch (Exception e) {

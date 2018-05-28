@@ -110,7 +110,7 @@ public class UserProController {
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
-					request, response,null);
+					request, response,null,"h5");
 		return result;
 	}
 	
@@ -135,7 +135,7 @@ public class UserProController {
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
-					request, response,1);
+					request, response,1,"h5");
 		return result;
 	}
 	

@@ -36,7 +36,7 @@
     delete from ezs_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_user" >
+  <insert id="insert" parameterType="ezs_user"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_user (id, addTime, deleteStatus, 
       lastLoginDate, lastLoginIp, loginCount, 
       loginDate, loginIp, name, 
@@ -50,7 +50,7 @@
       #{parent_id,jdbcType=BIGINT}, #{store_id,jdbcType=BIGINT}, #{userInfo_id,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_user" >
+  <insert id="insertSelective" parameterType="ezs_user"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.impl.BuyerServiceimpl;
 import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_invoiceMapper;
@@ -42,6 +44,8 @@ import com.sanbang.vo.PagerOrder;
 import net.sf.json.JSONObject;
 @Service
 public class SellerOrderServiceImpl implements SellerOrderService {
+	
+	private Logger log =Logger.getLogger(SellerOrderServiceImpl.class);
 	
 	@Value("${config.sign.callbackurl}")
 	private String callbackurl;
@@ -142,7 +146,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	}
 
 	@Override
-	public Result buyer_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response) {
+	public Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response) {
 		Result result = Result.failure();
 		try {
 
@@ -152,7 +156,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("用户未登录");
 				return result;
 			}
-			Long sellerId = upi.getId();
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -167,7 +170,12 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("订单不存在");
 				return result;
 			}
-
+			if (orderinfo.getOrder_status()!=20) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("合同不在签订状态！");
+				return result;
+			}
 			if (orderinfo.getPact_status() == 1) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -175,7 +183,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				return result;
 			}
 			
-			// 先查一下合同的pdf在不在
+			/*// 先查一下合同的pdf在不在
 			List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
 
 			if (pact == null||pact.size()==0) {
@@ -184,7 +192,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
 				return result;
 
-			}
+			}*/
 			
 
 			Map<String, Object> mv = new HashMap<>();
@@ -196,7 +204,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			String getijingyingshen = upi.getEzs_store().getIdCardNum();
 			String qiyedaimazheng = upi.getEzs_store().getUnifyCode();
 			mv.put("signMemId", upi.getEzs_store().getNumber());
-			mv.put("order_no", order_no);
+			mv.put("orderid", order_no);
 			mv.put("callBackUrl", callbackurl);
 			mv.put("regid", 6);// (企业类型)5为个人 6为 个体和 公司
 			mv.put("company", company);
@@ -233,6 +241,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 
 			}
+			log.info("h5请求签章返回："+callBackRet);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

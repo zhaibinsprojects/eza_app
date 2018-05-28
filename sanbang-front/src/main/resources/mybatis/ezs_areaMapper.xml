@@ -170,4 +170,11 @@
     select  a1.*
     from ezs_area a1,ezs_area a2 where a1.id = a2.parent_id and a2.id = #{id,jdbcType=BIGINT}
   </select>
+  
+  <select id="selectParentByareaname" resultMap="BaseResultMap">
+  	SELECT
+  	 A.id, A.areaName
+  	FROM ezs_area A WHERE A.areaName=#{areaName}
+  </select>
+  
 </mapper>

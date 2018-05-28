@@ -71,8 +71,9 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 		page.setPageSize(10);
 		int startPos = 0;
 		page.setStartPos(startPos);
+		List<ezs_invoice> glist=new ArrayList<>();
 		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
-			List<ezs_invoice> glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
+			 glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);
@@ -80,6 +81,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
 			mmp.put("Msg", "页码越界");
 			mmp.put("Page", page);
+			mmp.put("Obj", glist);
 		}
 		return mmp;
 	}
