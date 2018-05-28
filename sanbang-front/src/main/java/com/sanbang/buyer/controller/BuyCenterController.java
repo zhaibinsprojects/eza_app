@@ -11,8 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_accessory;
+import com.sanbang.bean.ezs_dvaluate;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.buyer.service.GoodsInvoiceService;
+import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.InvoiceInfo;
@@ -29,6 +35,10 @@ public class BuyCenterController {
 	private GoodsCollectionService goodsCollectionService;
 	@Autowired
 	private GoodsInvoiceService goodsInvoiceService;
+	@Autowired
+	private OrderEvaluateService orderEvaluateService;
+	@Autowired
+	private FileUploadService fileUploadService; 
 	/**
 	 * 添加商品到收藏夹（不启用）
 	 * @param request
@@ -227,6 +237,71 @@ public class BuyCenterController {
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
 			rs.setMsg("修改成功");
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 订单评价
+	 * @param request
+	 * @param response
+	 * @param dvaluate
+	 * @param accessory
+	 * @return
+	 */
+	@RequestMapping("/evaluateAboutOrder")
+	@ResponseBody
+	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,ezs_dvaluate dvaluate,ezs_accessory accessory){
+		Map<String, Object> mmp = null;
+		Map<String , Object> mmpImg= null;
+		Result rs = null;
+		ezs_user user =RedisUserSession.getLoginUserInfo(request);
+		if(user==null){
+			rs = Result.failure();
+			rs.setMsg("用户未登录");
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return rs;
+		}
+		
+		//
+		//需要再此添加图片与评论的映射表记录
+		//ezs_dvaluate_accessory
+		/**
+		 * 一、首先进行图片上传（如果有图片）
+		 * 二、进行图片记录的存储（ezs_accessory）并返回评论图片ID数组
+		 * 三、评论记录的入库并返回评论记录ID
+		 * 四、根据图片ID数组和评论记录ID生成相应的映射记录（ezs_dualvate_accessory）
+		 */
+		//图片上传
+		try {
+			//
+			//需要再此添加图片与评论的映射表记录
+			//ezs_dvaluate_accessory
+			mmpImg = this.fileUploadService.uploadFile(request, accessory.getWidth(), accessory.getHeight(), Long.valueOf(accessory.getSize().toString()));
+			if(!"000".equals(mmpImg.get("code"))){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				rs.setMsg("上传失败");
+				return rs;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setMsg("上传失败");
+			return rs;
+		}
+		
+		//数据入库
+		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));

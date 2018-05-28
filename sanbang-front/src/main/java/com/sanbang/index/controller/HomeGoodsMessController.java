@@ -129,12 +129,12 @@ public class HomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
-			,ezs_customized customized,ezs_user user) throws Exception{
+			,ezs_customized customized) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if (upi == null) {
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
