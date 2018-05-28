@@ -288,6 +288,27 @@ public class Tools {
 	}
 	
 	/**
+	 * 产生退货编号
+	 * 
+	 * @return
+	 */
+	public static synchronized String getReturnNo(String sign) {
+		String temp = "SD";
+		if (sign != null) {
+			if (!StringUtils.isEmpty(sign)) {
+				temp = sign;
+			}
+		}
+		long time = System.currentTimeMillis();
+		String result = temp + time + num;
+		num++;
+		if (num == 1000) {
+			num = 100;
+		}
+		return result;
+	}
+	
+	/**
 	 * 交易保支付 批次号 类型:String,长度:不超过32位  交易保专用 保证金
 	 * 
 	 * @return

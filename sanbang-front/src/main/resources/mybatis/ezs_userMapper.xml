@@ -20,27 +20,6 @@
   </resultMap>
   
   
-  <resultMap id="userinfoMap" type="ezs_user" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="lastLoginDate" property="lastLoginDate" jdbcType="TIMESTAMP" />
-    <result column="lastLoginIp" property="lastLoginIp" jdbcType="VARCHAR" />
-    <result column="loginCount" property="loginCount" jdbcType="INTEGER" />
-    <result column="loginDate" property="loginDate" jdbcType="TIMESTAMP" />
-    <result column="loginIp" property="loginIp" jdbcType="VARCHAR" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="trueName" property="trueName" jdbcType="VARCHAR" />
-    <result column="userRole" property="userRole" jdbcType="VARCHAR" />
-    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
-    <result column="store_id" property="store_id" jdbcType="BIGINT" />
-    <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
-    
-   <association property="userInfo_id" column="id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey"></association>
-    
-  </resultMap>
-  
   
   
   <sql id="Base_Column_List" >
@@ -57,7 +36,7 @@
     delete from ezs_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_user" >
+  <insert id="insert" parameterType="ezs_user"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_user (id, addTime, deleteStatus, 
       lastLoginDate, lastLoginIp, loginCount, 
       loginDate, loginIp, name, 
@@ -71,7 +50,7 @@
       #{parent_id,jdbcType=BIGINT}, #{store_id,jdbcType=BIGINT}, #{userInfo_id,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_user" >
+  <insert id="insertSelective" parameterType="ezs_user"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -255,28 +234,15 @@
          
          <!--用户详情-->
          <association property="ezs_userinfo" column="userInfo_id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey">
-			    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-			    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-			    <result column="email" property="email" jdbcType="VARCHAR" />
-			    <result column="enable" property="enable" jdbcType="BIT" />
-			    <result column="entryTime" property="entryTime" jdbcType="TIMESTAMP" />
-			    <result column="phone" property="phone" jdbcType="VARCHAR" />
-			    <result column="status" property="status" jdbcType="INTEGER" />
-			    <result column="depart_id" property="depart_id" jdbcType="BIGINT" />
-			    <result column="position_id" property="position_id" jdbcType="BIGINT" />
-			    <result column="sex_id" property="sex_id" jdbcType="BIGINT" />
-			    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
-			    <result column="tel" property="tel" jdbcType="VARCHAR" />
-			    <result column="updateStatus" property="updateStatus" jdbcType="INTEGER" />
          </association>
           <!--商城-->
          <association property="ezs_store" column="store_id" select="com.sanbang.dao.ezs_storeMapper.selectByPrimaryKey">
          </association>
          <!--联系人-->
-          <association property="ezs_bill" column="user_id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
+          <association property="ezs_bill" column="id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
          </association>
          <!--资质-->
-         <collection property="authimg" column="user_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
+         <collection property="authimg" column="store_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
   </resultMap>
   
 	<!--查询用户手机号-->

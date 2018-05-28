@@ -62,6 +62,8 @@
     goods_main_photo_id, logistics_id, quality_id, region_id, supply_id, user_id, util_id, 
     addess2
   </sql>
+  
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

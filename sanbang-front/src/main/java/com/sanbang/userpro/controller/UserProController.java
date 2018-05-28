@@ -83,7 +83,7 @@ public class UserProController {
         Result result = Result.failure();
       //无密登录
 		content = MessageDictionary.loginCode(code.toString());
-		result=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60",sendtimes,null,content);
+		result=userProService.sendCode(mobile,code.toString(),"MOBILELOGINFLAG", "1800","60",sendtimes,1,content);
         return result;
     }  
 
@@ -110,7 +110,7 @@ public class UserProController {
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
-					request, response,null);
+					request, response,null,"h5");
 		return result;
 	}
 	
@@ -135,7 +135,7 @@ public class UserProController {
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
-					request, response,1);
+					request, response,1,"h5");
 		return result;
 	}
 	

@@ -3,6 +3,9 @@ package com.sanbang.goods.service;
 import java.util.List;
 import java.util.Map;
 
+import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_customized_record;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -66,9 +69,9 @@ public interface GoodsService {
 	 * @param area
 	 * @param type
 	 */
-	public List listByAreaAndType(Long area,Long type);
+	public List<ezs_goods> listByAreaAndType(Long area,Long type);
 	/**
-	 * 
+	 * 多条件查询
 	 * @param color	颜色
 	 * @param form 形态
 	 * @param purpose 用途
@@ -77,8 +80,13 @@ public interface GoodsService {
 	 * @param isProtection 是否环保
 	 * @return
 	 */
-	public List listByOthers(Map map);
+	public List<ezs_goods> listByOthers(Map<String,Object> map);
 	
+	/**
+	 * 然后多条件查询所需的查询条件
+	 * @return
+	 */
+	public List<ezs_dict> conditionList();
 	
 	public ezs_documentshare getCollect(Long id);
 	
@@ -87,7 +95,20 @@ public interface GoodsService {
 	 * @param user_id	用户id
 	 * @return
 	 */
-	public List<ezs_orderform> orderList(Long user_id);
+	public List<ezs_customized> customizedList(Long user_id);
 	
+	/**
+	 * 添加预约定制
+	 * @param customized	定制实体
+	 * @return
+	 */
+	public int insertCustomized(ezs_customized customized);
+	
+	/**
+	 * 预约定制记录表
+	 * @param customizedRecord	采购记录
+	 * @return
+	 */
+	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
 	
 }

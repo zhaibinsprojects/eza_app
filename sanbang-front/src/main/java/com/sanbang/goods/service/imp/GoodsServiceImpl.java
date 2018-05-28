@@ -8,6 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_customized_record;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -32,6 +35,12 @@ public class GoodsServiceImpl implements GoodsService{
 	private com.sanbang.dao.ezs_documentshareMapper ezs_documentshareMapper;
 	@Autowired
 	private com.sanbang.dao.ezs_orderformMapper ezs_orderformMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_customizedMapper ezs_customizedMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_customized_recordMapper ezs_customized_recordMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_dictMapper ezs_dictMapper;
 	
 	
 	/**
@@ -47,7 +56,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public List<ezs_dvaluate> listForEvaluate(Long id){
-		List<ezs_dvaluate> list = new ArrayList();
+		List<ezs_dvaluate> list = new ArrayList<ezs_dvaluate>();
 		list  = ezs_dvaluateMapper.listForEvaluate(id);
 		return list;
 	}
@@ -60,7 +69,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public int updateCollect(Long id,Boolean status){
-		Map mmp = new HashMap();
+		Map<String,Object> mmp = new HashMap<String,Object>();
 		mmp.put("good_id", id);
 		mmp.put("house", status);
 		int n = ezs_documentshareMapper.updateCollect(mmp);
@@ -85,30 +94,47 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public List<ezs_goods> listForGoods(Long goodClass_id){
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = ezs_goodsMapper.listForGoods(goodClass_id);
 		return list;
 	}
 	
-	public List listByAreaAndType(Long area,Long type){
-		Map mmp = new HashMap();
+	public List<ezs_goods> listByAreaAndType(Long area,Long type){
+		Map<String,Long> mmp = new HashMap<String,Long>();
 		mmp.put("area_id",area);
 		mmp.put("goodClass_id",type);
-		List<ezs_goods> list = new ArrayList();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = ezs_goodsMapper.listByAreaAndType(mmp);
 		return list;
 	}
 	
-	public List listByOthers(Map map){
-		List<ezs_goods> list = new ArrayList();
+	public List<ezs_goods> listByOthers(Map<String,Object> map){
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		list = ezs_goodsMapper.listByOthers(map);
 		return list;
 	}
 	
-	public List<ezs_orderform> orderList(Long user_id){
-		List<ezs_orderform> list = new ArrayList();
-		list = ezs_orderformMapper.orderList(user_id);
+	public List<ezs_dict> conditionList(){
+		List<ezs_dict> list = new ArrayList<ezs_dict>();
+		list = ezs_dictMapper.conditionList();
 		return list;
+	}
+	
+	
+	public List<ezs_customized> customizedList(Long user_id){
+		List<ezs_customized> list = new ArrayList<ezs_customized>();
+		list = ezs_customizedMapper.customizedList(user_id);
+		return list;
+	}
+	
+	public int insertCustomized(ezs_customized customized){
+		int n = ezs_customizedMapper.insert(customized);
+		return n;
+	}
+	
+	public int insertCustomizedRecord(ezs_customized_record customizedRecord){
+		int n = ezs_customized_recordMapper.insert(customizedRecord);
+		return n;
 	}
 	
 }

@@ -5,7 +5,6 @@ import java.util.Date;
 
 public class ezs_payinfo {
     private Long id;
-
     private Date addTime;
 
     private Boolean deleteStatus;
@@ -13,7 +12,7 @@ public class ezs_payinfo {
     private String order_no;
  // 1.采购单，2.订单
     private Integer order_type;
-
+ // 方式 1.线下 2.线上
     private Integer pay_mode;
  // 流水号
     private String pay_no;
@@ -25,24 +24,53 @@ public class ezs_payinfo {
     private Long paymentUser_id;
  // 收款人
     private Long receUser_id;
+    
+    private Integer acount;
+	private BigDecimal aprice;
+	private String name;
+	
 
-    public Long getId() {
+	public Integer getAcount() {
+		return acount;
+	}
+
+	public void setAcount(Integer acount) {
+		this.acount = acount;
+	}
+
+	public BigDecimal getAprice() {
+		return aprice;
+	}
+
+	public void setAprice(BigDecimal aprice) {
+		this.aprice = aprice;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public Date getAddTime() {
-        return addTime;
-    }
+		return addTime;
+	}
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
 
-    public Boolean getDeleteStatus() {
+	public Boolean getDeleteStatus() {
         return deleteStatus;
     }
 

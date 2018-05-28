@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.destoon_areaMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.destoon_area" >
+    <id column="areaid" property="areaid" jdbcType="INTEGER" />
+    <result column="areaname" property="areaname" jdbcType="VARCHAR" />
+    <result column="parentid" property="parentid" jdbcType="INTEGER" />
+    <result column="arrparentid" property="arrparentid" jdbcType="VARCHAR" />
+    <result column="child" property="child" jdbcType="BIT" />
+    <result column="listorder" property="listorder" jdbcType="SMALLINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.destoon_area" extends="BaseResultMap" >
+    <result column="arrchildid" property="arrchildid" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    areaid, areaname, parentid, arrparentid, child, listorder
+  </sql>
+  <sql id="Blob_Column_List" >
+    arrchildid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from destoon_area
+    where areaid = #{areaid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from destoon_area
+    where areaid = #{areaid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.destoon_area" >
+    insert into destoon_area (areaid, areaname, parentid, 
+      arrparentid, child, listorder, 
+      arrchildid)
+    values (#{areaid,jdbcType=INTEGER}, #{areaname,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}, 
+      #{arrparentid,jdbcType=VARCHAR}, #{child,jdbcType=BIT}, #{listorder,jdbcType=SMALLINT}, 
+      #{arrchildid,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.destoon_area" >
+    insert into destoon_area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="areaid != null" >
+        areaid,
+      </if>
+      <if test="areaname != null" >
+        areaname,
+      </if>
+      <if test="parentid != null" >
+        parentid,
+      </if>
+      <if test="arrparentid != null" >
+        arrparentid,
+      </if>
+      <if test="child != null" >
+        child,
+      </if>
+      <if test="listorder != null" >
+        listorder,
+      </if>
+      <if test="arrchildid != null" >
+        arrchildid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="areaid != null" >
+        #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="areaname != null" >
+        #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="arrparentid != null" >
+        #{arrparentid,jdbcType=VARCHAR},
+      </if>
+      <if test="child != null" >
+        #{child,jdbcType=BIT},
+      </if>
+      <if test="listorder != null" >
+        #{listorder,jdbcType=SMALLINT},
+      </if>
+      <if test="arrchildid != null" >
+        #{arrchildid,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.destoon_area" >
+    update destoon_area
+    <set >
+      <if test="areaname != null" >
+        areaname = #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="arrparentid != null" >
+        arrparentid = #{arrparentid,jdbcType=VARCHAR},
+      </if>
+      <if test="child != null" >
+        child = #{child,jdbcType=BIT},
+      </if>
+      <if test="listorder != null" >
+        listorder = #{listorder,jdbcType=SMALLINT},
+      </if>
+      <if test="arrchildid != null" >
+        arrchildid = #{arrchildid,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where areaid = #{areaid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.destoon_area" >
+    update destoon_area
+    set areaname = #{areaname,jdbcType=VARCHAR},
+      parentid = #{parentid,jdbcType=INTEGER},
+      arrparentid = #{arrparentid,jdbcType=VARCHAR},
+      child = #{child,jdbcType=BIT},
+      listorder = #{listorder,jdbcType=SMALLINT},
+      arrchildid = #{arrchildid,jdbcType=LONGVARCHAR}
+    where areaid = #{areaid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.destoon_area" >
+    update destoon_area
+    set areaname = #{areaname,jdbcType=VARCHAR},
+      parentid = #{parentid,jdbcType=INTEGER},
+      arrparentid = #{arrparentid,jdbcType=VARCHAR},
+      child = #{child,jdbcType=BIT},
+      listorder = #{listorder,jdbcType=SMALLINT}
+    where areaid = #{areaid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,3 +1,7 @@
+/.classpath
+/.gitignore
+/target/
+#仓库中所有名为.classpath的文件都屏蔽
 # IntelliJ IDEA Project files
 .idea
 *.iml
@@ -27,4 +31,3 @@ Thumbs.db
 #.swp
 *.*~
 ~*.*
-

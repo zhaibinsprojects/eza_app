@@ -55,6 +55,11 @@ public class DictServiceImpl implements DictService {
 		return ezs_companyType_dictMapper.getCompanyTypeByThisId(storeid);
 	}
 
+	@Override
+	public String getCodeByAuditingId(Long auditingusertype_id) {
+		return ezs_dictMapper.selectAuditingById(auditingusertype_id);
+	}
+
 	
 	
 }

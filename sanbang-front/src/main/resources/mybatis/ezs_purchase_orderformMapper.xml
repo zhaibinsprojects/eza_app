@@ -435,7 +435,7 @@
 	</select>
 	
 	<!-- 订单列表 -->
-	<select id="getOrderListByValue" parameterType="com.sanbang.vo.PagerOrder" resultMap="BaseResultMap">
+	<select id="getOrderListByValue" parameterType="com.sanbang.vo.PagerOrder" resultMap="orderMap">
 	  SELECT
 	   C.price,
 		C.good_no,
@@ -479,7 +479,7 @@
 	</select>
 	
 	<!-- 订单详情 -->
-	<select id="getOrderListByOrderno" resultMap="BaseResultMap">
+	<select id="getOrderListByOrderno" resultMap="orderMap">
 	  SELECT
 	    C.price,
 		C.good_no,
@@ -520,5 +520,40 @@
     from ezs_purchase_orderform
     where id = #{id,jdbcType=BIGINT}
 	</select>
+	
+	<!--订单列表-->
+	<resultMap id="orderMap" type="com.sanbang.bean.ezs_order_info" >
+		<id column="good_no" jdbcType="VARCHAR" property="good_no" />
+		<result column="addTime" property="addTime" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="DOUBLE" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="addess" jdbcType="VARCHAR" property="addess" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="area_id" property="area_id" jdbcType="BIGINT" />
+		<result column="total_price" property="total_price" jdbcType="DECIMAL" />
+		<result column="goods_amount" property="goods_amount" jdbcType="DECIMAL" />
+		<result column="order_status" property="order_status" jdbcType="INTEGER" />
+		<result column="first_price" property="first_price" jdbcType="DECIMAL" />
+		<result column="all_price" property="all_price" jdbcType="DECIMAL" />
+		<result column="end_price" property="end_price" jdbcType="DECIMAL" />
+		<result column="finishtime" property="finishtime" jdbcType="VARCHAR" />
+		<result column="pact_status" property="pact_status" jdbcType="INTEGER" />
+		<result column="address_id" property="address_id" jdbcType="BIGINT" />
+		<result column="order_type" property="order_type" jdbcType="VARCHAR" />
+		<result column="areaName" property="areaName" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
+		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
+	</resultMap>
+	
+	<select id="selectByOrderNo" resultMap="BaseResultMap">
+		select 
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	    from ezs_purchase_orderform
+	    where order_no = #{order_no}
+	</select>	
 	
 </mapper>

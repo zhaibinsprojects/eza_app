@@ -40,5 +40,8 @@ public interface ezs_areaMapper {
     ezs_area selectParentByChildKey(Long pId);
     
     
+    ezs_area selectParentByareaname(String areaName);
+    
+    
     
 }
