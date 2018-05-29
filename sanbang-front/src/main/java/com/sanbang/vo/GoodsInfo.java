@@ -11,6 +11,11 @@ public class GoodsInfo extends ezs_goods{
     private String formName;
     private String areaName;
     private String goodClassName;
+    //照片相关的
+    private String pictureSuffix;	//图片后缀名
+    private String pictureName;	//图片名称
+    private String picturePath;	//图片路径
+    
 	
 	public String getColorName() {
 		return colorName;
@@ -49,4 +54,23 @@ public class GoodsInfo extends ezs_goods{
 	public GoodsInfo() {
 		super();
 	}
+	public String getPictureSuffix() {
+		return pictureSuffix;
+	}
+	public void setPictureSuffix(String pictureSuffix) {
+		this.pictureSuffix = pictureSuffix;
+	}
+	public String getPictureName() {
+		return pictureName;
+	}
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
+	}
+	public String getPicturePath() {
+		return picturePath;
+	}
+	public void setPicturePath(String picturePath) {
+		this.picturePath = picturePath;
+	}
+	
 }
