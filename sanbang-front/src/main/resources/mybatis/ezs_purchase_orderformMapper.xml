@@ -546,4 +546,14 @@
 		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
 	</resultMap>
+	
+	<select id="selectByOrderNo" resultMap="BaseResultMap">
+		select 
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	    from ezs_purchase_orderform
+	    where order_no = #{order_no}
+	</select>	
+	
 </mapper>

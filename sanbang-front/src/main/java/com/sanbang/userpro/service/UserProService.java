@@ -31,7 +31,7 @@ public interface UserProService {
 
 	Result login(String userName, String pd, String code,
 			String userAgent, String ip, HttpServletRequest request,
-			HttpServletResponse response, Integer flag) throws Exception;
+			HttpServletResponse response, Integer flag,String h5orapp) throws Exception;
 
 	/**
 	 * 检查公司名称
@@ -186,7 +186,7 @@ public interface UserProService {
 			String companyName, String address,
 			String area_id, String mianIndustry_id, String companyType_id,
 			String trueName, long sex_id, String tel,
-			String email);
+			String email,ezs_user user );
 
 	/**
 	 * 个人资料修改

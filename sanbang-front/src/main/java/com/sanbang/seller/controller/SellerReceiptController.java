@@ -11,12 +11,14 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
@@ -37,6 +39,9 @@ public class SellerReceiptController {
 	
 	@Autowired
 	DictService dictService;
+	
+	@Autowired
+	private BuyerService buyerService;
 	/**
 	 * 票据管理页面,展示列表
 	 * @param userId
@@ -202,6 +207,81 @@ public class SellerReceiptController {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
 			result.setMsg("系统错误");
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * 查看合同
+	 * 
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+//	@RequestMapping("/showordercontent")
+//	@ResponseBody
+//	public Result showOrderContent(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+//			HttpServletRequest request) {
+//
+//		Result result = Result.success();
+//		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+//		result.setMsg("请求成功");
+//		try {
+//			result = buyerService.showOrderContent(request, order_no);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result.setSuccess(false);
+//			result.setMsg("查看合同失败");
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+//		}
+//		return result;
+//	}
+
+	
+	
+	
+	/**
+	 * 获取合同列表
+	 * @param order_no
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getContentList")
+	@ResponseBody
+	public Result getContentList(@RequestParam(name = "pageno", defaultValue = "1") int pageno,
+			HttpServletRequest request, HttpServletResponse response) {
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
+		
+		try {
+			//采购合同 5，销售合同 6
+			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 5, pageno, request);
+		} catch (Exception e) {
+			result.setMsg("未获取到数据");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
 		}
 		return result;
 	}

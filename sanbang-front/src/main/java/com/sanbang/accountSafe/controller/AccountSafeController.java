@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.accountSafe.service.AccountSafeService;
+import com.sanbang.bean.ezs_user;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MessageDictionary;
@@ -51,7 +53,13 @@ public class AccountSafeController {
 		Result result = Result.success();
 		
 		try {
-			result = accountSafeService.checkAccountStatus(request);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result = accountSafeService.checkAccountStatus(request, upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -74,7 +82,14 @@ public class AccountSafeController {
 		Result result = Result.success();
 		
 		try {
-			result = accountSafeService.getSecuratePhone(request);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			
+			result = accountSafeService.getSecuratePhone(request, upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -106,7 +121,13 @@ public class AccountSafeController {
 	public Result setOrUpdateSecuratePhone(@RequestParam(value="mobile",required=true) String mobile,@RequestParam(value="code",required=true) String code,HttpServletRequest request){
 		Result result = Result.success();
 		
-		result = accountSafeService.setOrUpdateSecuratePhone(mobile,code,request);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		result = accountSafeService.setOrUpdateSecuratePhone(mobile,code,request,upi);
 		return result;
 		
 	}

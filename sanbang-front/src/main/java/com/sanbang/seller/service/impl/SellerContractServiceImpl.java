@@ -42,25 +42,25 @@ public class SellerContractServiceImpl implements SellerContractService {
 	/**
 	 * 供应商合同列表展示
 	 */
-	@Override
-	public Map<String, Object> contractManage(String currentPage, Long sellerId) {
-		log.info("合同管理**************************");
-		Map<String, Object> mmp = new HashMap<>();
-		//获取总页数
-		int totalCount =ezs_pactMapper.selectCountById(sellerId);
-		Page page = new Page(totalCount, Integer.valueOf(currentPage));
-		page.setPageSize(10);
-		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
-			List<ezs_pact> list = this.ezs_pactMapper.queryPact(page, sellerId);
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Page", page);
-			mmp.put("Obj", list);
-		}else{
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Page", page);
-		}
-		return mmp;
-	}
+//	@Override
+//	public Map<String, Object> contractManage(String currentPage, Long sellerId) {
+//		log.info("合同管理**************************");
+//		Map<String, Object> mmp = new HashMap<>();
+//		//获取总页数
+//		int totalCount =ezs_pactMapper.selectCountById(sellerId);
+//		Page page = new Page(totalCount, Integer.valueOf(currentPage));
+//		page.setPageSize(10);
+//		if(Integer.valueOf(currentPage)>=1||Integer.valueOf(currentPage)<=page.getTotalPageCount()){
+//			List<ezs_pact> list = this.ezs_pactMapper.queryPact(page, sellerId);
+//			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+//			mmp.put("Page", page);
+//			mmp.put("Obj", list);
+//		}else{
+//			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			mmp.put("Page", page);
+//		}
+//		return mmp;
+//	}
 	/**
 	 * 供应商合同详情查看
 	 */

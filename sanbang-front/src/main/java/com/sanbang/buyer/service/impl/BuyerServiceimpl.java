@@ -183,12 +183,12 @@ public class BuyerServiceimpl implements BuyerService {
 	public Result showOrderContent(HttpServletRequest request, String order_no) {
 		Result result = Result.failure();
 		try {
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
+//			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+//			if (upi == null) {
+//				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//				result.setMsg("用户未登录");
+//				return result;
+//			}
 
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -419,7 +419,7 @@ public class BuyerServiceimpl implements BuyerService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result getContentList(String member, int temid, int pageno,HttpServletRequest request) {
+	public Result getContentList(String member, int temid, int currentPage,HttpServletRequest request) {
 		Result result=Result.failure();
 		try {
 			if (Tools.isEmpty(member)) {
@@ -439,7 +439,7 @@ public class BuyerServiceimpl implements BuyerService {
 			
 			map.put("number",member);
 			map.put("temid", temid);
-			map.put("pageno", pageno);
+			map.put("currentPage", currentPage);
 			map.put("starttime", request.getParameter("starttime"));
 			map.put("endtime", request.getParameter("endtime"));
 			map.put("ordernoOrcontentno", request.getParameter("ordernoOrcontentno"));

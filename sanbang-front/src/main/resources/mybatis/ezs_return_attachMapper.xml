@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_return_attachMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_return_attach" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="fileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="urlpath" property="urlpath" jdbcType="VARCHAR" />
+    <result column="setorder_id" property="setorder_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, fileName, remark, type, urlpath, setorder_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_return_attach
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_return_attach
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_return_attach" >
+    insert into ezs_return_attach (id, addTime, deleteStatus, 
+      fileName, remark, type, 
+      urlpath, setorder_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{fileName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{urlpath,jdbcType=VARCHAR}, #{setorder_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_return_attach" >
+    insert into ezs_return_attach
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="fileName != null" >
+        fileName,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="urlpath != null" >
+        urlpath,
+      </if>
+      <if test="setorder_id != null" >
+        setorder_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="urlpath != null" >
+        #{urlpath,jdbcType=VARCHAR},
+      </if>
+      <if test="setorder_id != null" >
+        #{setorder_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_return_attach" >
+    update ezs_return_attach
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="fileName != null" >
+        fileName = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="urlpath != null" >
+        urlpath = #{urlpath,jdbcType=VARCHAR},
+      </if>
+      <if test="setorder_id != null" >
+        setorder_id = #{setorder_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_return_attach" >
+    update ezs_return_attach
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      fileName = #{fileName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      urlpath = #{urlpath,jdbcType=VARCHAR},
+      setorder_id = #{setorder_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

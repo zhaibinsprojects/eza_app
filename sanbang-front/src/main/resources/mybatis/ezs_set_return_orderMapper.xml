@@ -1,259 +1,494 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_set_return_orderMapper" >
-  <resultMap id="BaseResultMap" type="ezs_set_return_order" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="account_receivable" property="account_receivable" jdbcType="DECIMAL" />
-    <result column="applyReturn_reason" property="applyReturn_reason" jdbcType="VARCHAR" />
-    <result column="paid_time" property="paid_time" jdbcType="TIMESTAMP" />
-    <result column="real_received" property="real_received" jdbcType="DECIMAL" />
-    <result column="real_refund_account" property="real_refund_account" jdbcType="DECIMAL" />
-    <result column="set_return_no" property="set_return_no" jdbcType="VARCHAR" />
-    <result column="state1" property="state1" jdbcType="VARCHAR" />
-    <result column="state2" property="state2" jdbcType="VARCHAR" />
-    <result column="tmoney" property="tmoney" jdbcType="DECIMAL" />
-    <result column="tnum" property="tnum" jdbcType="DECIMAL" />
-    <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
-    <result column="orderForm_id" property="orderForm_id" jdbcType="BIGINT" />
-    <result column="bank" property="bank" jdbcType="VARCHAR" />
-    <result column="bankCode" property="bankCode" jdbcType="VARCHAR" />
-    <result column="msg" property="msg" jdbcType="VARCHAR" />
-    <result column="bill_id" property="bill_id" jdbcType="BIGINT" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, account_receivable, applyReturn_reason, paid_time, real_received, 
-    real_refund_account, set_return_no, state1, state2, tmoney, tnum, logistics_id, orderForm_id, 
-    bank, bankCode, msg, bill_id
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	<resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_set_return_order" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="finshtime" property="finshtime" jdbcType="VARCHAR" />
+		<result column="guanliremark" property="guanliremark" jdbcType="VARCHAR" />
+		<result column="guanliwuliumoeny" property="guanliwuliumoeny" jdbcType="DECIMAL" />
+		<result column="num" property="num" jdbcType="DECIMAL" />
+		<result column="orderType" property="orderType" jdbcType="INTEGER" />
+		<result column="order_status_store" property="order_status_store" jdbcType="INTEGER" />
+		<result column="prodectname" property="prodectname" jdbcType="VARCHAR" />
+		<result column="realReturnMoeny" property="realReturnMoeny" jdbcType="DECIMAL" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="returnAddress" property="returnAddress" jdbcType="VARCHAR" />
+		<result column="returnReason" property="returnReason" jdbcType="VARCHAR" />
+		<result column="returnTotal" property="returnTotal" jdbcType="DECIMAL" />
+		<result column="returnType" property="returnType" jdbcType="INTEGER" />
+		<result column="set_return_no" property="set_return_no" jdbcType="VARCHAR" />
+		<result column="state1" property="state1" jdbcType="VARCHAR" />
+		<result column="state2" property="state2" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="tmoney" property="tmoney" jdbcType="DECIMAL" />
+		<result column="tnum" property="tnum" jdbcType="DECIMAL" />
+		<result column="updatetime" property="updatetime" jdbcType="VARCHAR" />
+		<result column="good_id" property="good_id" jdbcType="BIGINT" />
+		<result column="orderForm_id" property="orderForm_id" jdbcType="BIGINT" />
+		<result column="porderForm_id" property="porderForm_id" jdbcType="BIGINT" />
+		<result column="upoper_id" property="upoper_id" jdbcType="BIGINT" />
+		<result column="userseller_id" property="userseller_id" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    id, addTime, deleteStatus, finshtime, guanliremark, guanliwuliumoeny, num, orderType, 
+    order_status_store, prodectname, realReturnMoeny, remark, returnAddress, returnReason, 
+    returnTotal, returnType, set_return_no, state1, state2, status, tmoney, tnum, updatetime, 
+    good_id, orderForm_id, porderForm_id, upoper_id, userseller_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
-    <include refid="Base_Column_List" />
+		<include refid="Base_Column_List" />
     from ezs_set_return_order
     where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_set_return_order
     where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="ezs_set_return_order" >
+	</delete>
+	<insert id="insert" parameterType="com.sanbang.bean.ezs_set_return_order" >
     insert into ezs_set_return_order (id, addTime, deleteStatus, 
-      account_receivable, applyReturn_reason, 
-      paid_time, real_received, real_refund_account, 
-      set_return_no, state1, state2, 
-      tmoney, tnum, logistics_id, 
-      orderForm_id, bank, bankCode, 
-      msg, bill_id)
+      finshtime, guanliremark, guanliwuliumoeny, 
+      num, orderType, order_status_store, 
+      prodectname, realReturnMoeny, remark, 
+      returnAddress, returnReason, returnTotal, 
+      returnType, set_return_no, state1, 
+      state2, status, tmoney, 
+      tnum, updatetime, good_id, 
+      orderForm_id, porderForm_id, upoper_id, 
+      userseller_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{account_receivable,jdbcType=DECIMAL}, #{applyReturn_reason,jdbcType=VARCHAR}, 
-      #{paid_time,jdbcType=TIMESTAMP}, #{real_received,jdbcType=DECIMAL}, #{real_refund_account,jdbcType=DECIMAL}, 
-      #{set_return_no,jdbcType=VARCHAR}, #{state1,jdbcType=VARCHAR}, #{state2,jdbcType=VARCHAR}, 
-      #{tmoney,jdbcType=DECIMAL}, #{tnum,jdbcType=DECIMAL}, #{logistics_id,jdbcType=BIGINT}, 
-      #{orderForm_id,jdbcType=BIGINT}, #{bank,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, 
-      #{msg,jdbcType=VARCHAR}, #{bill_id,jdbcType=BIGINT})
-  </insert>
-  <insert id="insertSelective" parameterType="ezs_set_return_order" >
+      #{finshtime,jdbcType=VARCHAR}, #{guanliremark,jdbcType=VARCHAR}, #{guanliwuliumoeny,jdbcType=DECIMAL}, 
+      #{num,jdbcType=DECIMAL}, #{orderType,jdbcType=INTEGER}, #{order_status_store,jdbcType=INTEGER}, 
+      #{prodectname,jdbcType=VARCHAR}, #{realReturnMoeny,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{returnAddress,jdbcType=VARCHAR}, #{returnReason,jdbcType=VARCHAR}, #{returnTotal,jdbcType=DECIMAL}, 
+      #{returnType,jdbcType=INTEGER}, #{set_return_no,jdbcType=VARCHAR}, #{state1,jdbcType=VARCHAR}, 
+      #{state2,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{tmoney,jdbcType=DECIMAL}, 
+      #{tnum,jdbcType=DECIMAL}, #{updatetime,jdbcType=VARCHAR}, #{good_id,jdbcType=BIGINT}, 
+      #{orderForm_id,jdbcType=BIGINT}, #{porderForm_id,jdbcType=BIGINT}, #{upoper_id,jdbcType=BIGINT}, 
+      #{userseller_id,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_set_return_order" >
     insert into ezs_set_return_order
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
         id,
-      </if>
-      <if test="addTime != null" >
+			</if>
+			<if test="addTime != null" >
         addTime,
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         deleteStatus,
-      </if>
-      <if test="account_receivable != null" >
-        account_receivable,
-      </if>
-      <if test="applyReturn_reason != null" >
-        applyReturn_reason,
-      </if>
-      <if test="paid_time != null" >
-        paid_time,
-      </if>
-      <if test="real_received != null" >
-        real_received,
-      </if>
-      <if test="real_refund_account != null" >
-        real_refund_account,
-      </if>
-      <if test="set_return_no != null" >
+			</if>
+			<if test="finshtime != null" >
+        finshtime,
+			</if>
+			<if test="guanliremark != null" >
+        guanliremark,
+			</if>
+			<if test="guanliwuliumoeny != null" >
+        guanliwuliumoeny,
+			</if>
+			<if test="num != null" >
+        num,
+			</if>
+			<if test="orderType != null" >
+        orderType,
+			</if>
+			<if test="order_status_store != null" >
+        order_status_store,
+			</if>
+			<if test="prodectname != null" >
+        prodectname,
+			</if>
+			<if test="realReturnMoeny != null" >
+        realReturnMoeny,
+			</if>
+			<if test="remark != null" >
+        remark,
+			</if>
+			<if test="returnAddress != null" >
+        returnAddress,
+			</if>
+			<if test="returnReason != null" >
+        returnReason,
+			</if>
+			<if test="returnTotal != null" >
+        returnTotal,
+			</if>
+			<if test="returnType != null" >
+        returnType,
+			</if>
+			<if test="set_return_no != null" >
         set_return_no,
-      </if>
-      <if test="state1 != null" >
+			</if>
+			<if test="state1 != null" >
         state1,
-      </if>
-      <if test="state2 != null" >
+			</if>
+			<if test="state2 != null" >
         state2,
-      </if>
-      <if test="tmoney != null" >
+			</if>
+			<if test="status != null" >
+        status,
+			</if>
+			<if test="tmoney != null" >
         tmoney,
-      </if>
-      <if test="tnum != null" >
+			</if>
+			<if test="tnum != null" >
         tnum,
-      </if>
-      <if test="logistics_id != null" >
-        logistics_id,
-      </if>
-      <if test="orderForm_id != null" >
+			</if>
+			<if test="updatetime != null" >
+        updatetime,
+			</if>
+			<if test="good_id != null" >
+        good_id,
+			</if>
+			<if test="orderForm_id != null" >
         orderForm_id,
-      </if>
-      <if test="bank != null" >
-        bank,
-      </if>
-      <if test="bankCode != null" >
-        bankCode,
-      </if>
-      <if test="msg != null" >
-        msg,
-      </if>
-      <if test="bill_id != null" >
-        bill_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+			</if>
+			<if test="porderForm_id != null" >
+        porderForm_id,
+			</if>
+			<if test="upoper_id != null" >
+        upoper_id,
+			</if>
+			<if test="userseller_id != null" >
+        userseller_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
         #{id,jdbcType=BIGINT},
-      </if>
-      <if test="addTime != null" >
+			</if>
+			<if test="addTime != null" >
         #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="account_receivable != null" >
-        #{account_receivable,jdbcType=DECIMAL},
-      </if>
-      <if test="applyReturn_reason != null" >
-        #{applyReturn_reason,jdbcType=VARCHAR},
-      </if>
-      <if test="paid_time != null" >
-        #{paid_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="real_received != null" >
-        #{real_received,jdbcType=DECIMAL},
-      </if>
-      <if test="real_refund_account != null" >
-        #{real_refund_account,jdbcType=DECIMAL},
-      </if>
-      <if test="set_return_no != null" >
+			</if>
+			<if test="finshtime != null" >
+        #{finshtime,jdbcType=VARCHAR},
+			</if>
+			<if test="guanliremark != null" >
+        #{guanliremark,jdbcType=VARCHAR},
+			</if>
+			<if test="guanliwuliumoeny != null" >
+        #{guanliwuliumoeny,jdbcType=DECIMAL},
+			</if>
+			<if test="num != null" >
+        #{num,jdbcType=DECIMAL},
+			</if>
+			<if test="orderType != null" >
+        #{orderType,jdbcType=INTEGER},
+			</if>
+			<if test="order_status_store != null" >
+        #{order_status_store,jdbcType=INTEGER},
+			</if>
+			<if test="prodectname != null" >
+        #{prodectname,jdbcType=VARCHAR},
+			</if>
+			<if test="realReturnMoeny != null" >
+        #{realReturnMoeny,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="returnAddress != null" >
+        #{returnAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="returnReason != null" >
+        #{returnReason,jdbcType=VARCHAR},
+			</if>
+			<if test="returnTotal != null" >
+        #{returnTotal,jdbcType=DECIMAL},
+			</if>
+			<if test="returnType != null" >
+        #{returnType,jdbcType=INTEGER},
+			</if>
+			<if test="set_return_no != null" >
         #{set_return_no,jdbcType=VARCHAR},
-      </if>
-      <if test="state1 != null" >
+			</if>
+			<if test="state1 != null" >
         #{state1,jdbcType=VARCHAR},
-      </if>
-      <if test="state2 != null" >
+			</if>
+			<if test="state2 != null" >
         #{state2,jdbcType=VARCHAR},
-      </if>
-      <if test="tmoney != null" >
+			</if>
+			<if test="status != null" >
+        #{status,jdbcType=INTEGER},
+			</if>
+			<if test="tmoney != null" >
         #{tmoney,jdbcType=DECIMAL},
-      </if>
-      <if test="tnum != null" >
+			</if>
+			<if test="tnum != null" >
         #{tnum,jdbcType=DECIMAL},
-      </if>
-      <if test="logistics_id != null" >
-        #{logistics_id,jdbcType=BIGINT},
-      </if>
-      <if test="orderForm_id != null" >
+			</if>
+			<if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+			</if>
+			<if test="good_id != null" >
+        #{good_id,jdbcType=BIGINT},
+			</if>
+			<if test="orderForm_id != null" >
         #{orderForm_id,jdbcType=BIGINT},
-      </if>
-      <if test="bank != null" >
-        #{bank,jdbcType=VARCHAR},
-      </if>
-      <if test="bankCode != null" >
-        #{bankCode,jdbcType=VARCHAR},
-      </if>
-      <if test="msg != null" >
-        #{msg,jdbcType=VARCHAR},
-      </if>
-      <if test="bill_id != null" >
-        #{bill_id,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_set_return_order" >
+			</if>
+			<if test="porderForm_id != null" >
+        #{porderForm_id,jdbcType=BIGINT},
+			</if>
+			<if test="upoper_id != null" >
+        #{upoper_id,jdbcType=BIGINT},
+			</if>
+			<if test="userseller_id != null" >
+        #{userseller_id,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_set_return_order" >
     update ezs_set_return_order
-    <set >
-      <if test="addTime != null" >
+		<set >
+			<if test="addTime != null" >
         addTime = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="account_receivable != null" >
-        account_receivable = #{account_receivable,jdbcType=DECIMAL},
-      </if>
-      <if test="applyReturn_reason != null" >
-        applyReturn_reason = #{applyReturn_reason,jdbcType=VARCHAR},
-      </if>
-      <if test="paid_time != null" >
-        paid_time = #{paid_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="real_received != null" >
-        real_received = #{real_received,jdbcType=DECIMAL},
-      </if>
-      <if test="real_refund_account != null" >
-        real_refund_account = #{real_refund_account,jdbcType=DECIMAL},
-      </if>
-      <if test="set_return_no != null" >
+			</if>
+			<if test="finshtime != null" >
+        finshtime = #{finshtime,jdbcType=VARCHAR},
+			</if>
+			<if test="guanliremark != null" >
+        guanliremark = #{guanliremark,jdbcType=VARCHAR},
+			</if>
+			<if test="guanliwuliumoeny != null" >
+        guanliwuliumoeny = #{guanliwuliumoeny,jdbcType=DECIMAL},
+			</if>
+			<if test="num != null" >
+        num = #{num,jdbcType=DECIMAL},
+			</if>
+			<if test="orderType != null" >
+        orderType = #{orderType,jdbcType=INTEGER},
+			</if>
+			<if test="order_status_store != null" >
+        order_status_store = #{order_status_store,jdbcType=INTEGER},
+			</if>
+			<if test="prodectname != null" >
+        prodectname = #{prodectname,jdbcType=VARCHAR},
+			</if>
+			<if test="realReturnMoeny != null" >
+        realReturnMoeny = #{realReturnMoeny,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="returnAddress != null" >
+        returnAddress = #{returnAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="returnReason != null" >
+        returnReason = #{returnReason,jdbcType=VARCHAR},
+			</if>
+			<if test="returnTotal != null" >
+        returnTotal = #{returnTotal,jdbcType=DECIMAL},
+			</if>
+			<if test="returnType != null" >
+        returnType = #{returnType,jdbcType=INTEGER},
+			</if>
+			<if test="set_return_no != null" >
         set_return_no = #{set_return_no,jdbcType=VARCHAR},
-      </if>
-      <if test="state1 != null" >
+			</if>
+			<if test="state1 != null" >
         state1 = #{state1,jdbcType=VARCHAR},
-      </if>
-      <if test="state2 != null" >
+			</if>
+			<if test="state2 != null" >
         state2 = #{state2,jdbcType=VARCHAR},
-      </if>
-      <if test="tmoney != null" >
+			</if>
+			<if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="tmoney != null" >
         tmoney = #{tmoney,jdbcType=DECIMAL},
-      </if>
-      <if test="tnum != null" >
+			</if>
+			<if test="tnum != null" >
         tnum = #{tnum,jdbcType=DECIMAL},
-      </if>
-      <if test="logistics_id != null" >
-        logistics_id = #{logistics_id,jdbcType=BIGINT},
-      </if>
-      <if test="orderForm_id != null" >
+			</if>
+			<if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=VARCHAR},
+			</if>
+			<if test="good_id != null" >
+        good_id = #{good_id,jdbcType=BIGINT},
+			</if>
+			<if test="orderForm_id != null" >
         orderForm_id = #{orderForm_id,jdbcType=BIGINT},
-      </if>
-      <if test="bank != null" >
-        bank = #{bank,jdbcType=VARCHAR},
-      </if>
-      <if test="bankCode != null" >
-        bankCode = #{bankCode,jdbcType=VARCHAR},
-      </if>
-      <if test="msg != null" >
-        msg = #{msg,jdbcType=VARCHAR},
-      </if>
-      <if test="bill_id != null" >
-        bill_id = #{bill_id,jdbcType=BIGINT},
-      </if>
-    </set>
+			</if>
+			<if test="porderForm_id != null" >
+        porderForm_id = #{porderForm_id,jdbcType=BIGINT},
+			</if>
+			<if test="upoper_id != null" >
+        upoper_id = #{upoper_id,jdbcType=BIGINT},
+			</if>
+			<if test="userseller_id != null" >
+        userseller_id = #{userseller_id,jdbcType=BIGINT},
+			</if>
+		</set>
     where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_set_return_order" >
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_set_return_order" >
     update ezs_set_return_order
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
-      account_receivable = #{account_receivable,jdbcType=DECIMAL},
-      applyReturn_reason = #{applyReturn_reason,jdbcType=VARCHAR},
-      paid_time = #{paid_time,jdbcType=TIMESTAMP},
-      real_received = #{real_received,jdbcType=DECIMAL},
-      real_refund_account = #{real_refund_account,jdbcType=DECIMAL},
+      finshtime = #{finshtime,jdbcType=VARCHAR},
+      guanliremark = #{guanliremark,jdbcType=VARCHAR},
+      guanliwuliumoeny = #{guanliwuliumoeny,jdbcType=DECIMAL},
+      num = #{num,jdbcType=DECIMAL},
+      orderType = #{orderType,jdbcType=INTEGER},
+      order_status_store = #{order_status_store,jdbcType=INTEGER},
+      prodectname = #{prodectname,jdbcType=VARCHAR},
+      realReturnMoeny = #{realReturnMoeny,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      returnAddress = #{returnAddress,jdbcType=VARCHAR},
+      returnReason = #{returnReason,jdbcType=VARCHAR},
+      returnTotal = #{returnTotal,jdbcType=DECIMAL},
+      returnType = #{returnType,jdbcType=INTEGER},
       set_return_no = #{set_return_no,jdbcType=VARCHAR},
       state1 = #{state1,jdbcType=VARCHAR},
       state2 = #{state2,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
       tmoney = #{tmoney,jdbcType=DECIMAL},
       tnum = #{tnum,jdbcType=DECIMAL},
-      logistics_id = #{logistics_id,jdbcType=BIGINT},
+      updatetime = #{updatetime,jdbcType=VARCHAR},
+      good_id = #{good_id,jdbcType=BIGINT},
       orderForm_id = #{orderForm_id,jdbcType=BIGINT},
-      bank = #{bank,jdbcType=VARCHAR},
-      bankCode = #{bankCode,jdbcType=VARCHAR},
-      msg = #{msg,jdbcType=VARCHAR},
-      bill_id = #{bill_id,jdbcType=BIGINT}
+      porderForm_id = #{porderForm_id,jdbcType=BIGINT},
+      upoper_id = #{upoper_id,jdbcType=BIGINT},
+      userseller_id = #{userseller_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
-  </update>
+	</update>
+  
+	<!--买家退货查询-->
+	<resultMap id="returnbuymap" type="com.sanbang.vo.returnorder.ReturnOrderVO" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="orderForm_id" property="orderForm_id" jdbcType="BIGINT" />
+		<result column="state1" property="state1" jdbcType="VARCHAR" />
+		<result column="state2" property="state2" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="set_return_no" property="set_return_no" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="prodectname" property="prodectname" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="DECIMAL" />
+		<result column="good_id" property="good_id" jdbcType="BIGINT" />
+		<result column="returnTotal" property="returnTotal" jdbcType="DECIMAL" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="userseller_id" property="userseller_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="returnReason" property="returnReason" jdbcType="VARCHAR" />
+		<result column="finshtime" property="finshtime" jdbcType="VARCHAR" />
+		<result column="orderType" property="orderType" jdbcType="INTEGER" />
+		<result column="returnType" property="returnType" jdbcType="INTEGER" />
+		<!--采购订单列表-->
+		<result column="porderForm_id" property="porderForm_id" jdbcType="BIGINT" />
+	</resultMap>
+  
+	<!--买家退货订单列表-->
+	<select id="returnOrderListforBuyer" resultMap="returnbuymap">
+  	SELECT
+	    A.id,
+		A.orderForm_id,
+		A.addTime,
+		A.state1,
+		A.state2,
+		A.`status`,
+		A.deleteStatus,
+		A.set_return_no,
+		A.returnType,
+		A.returnReason,
+		A.remark,
+		B.order_no,
+		A.prodectname,
+		A.num,
+		A.good_id,
+		A.returnTotal,
+		C.price,
+		A.userseller_id,
+		B.user_id,
+	  	A.finshtime,
+	 	B.order_type
+	FROM
+		ezs_set_return_order A
+	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
+	LEFT JOIN ezs_goods C ON A.good_id = C.id
+	
+	WHERE  1=1
+  	and  B.user_id=#{userid}
+  	limit #{totalpage},10
+  	
+	</select>
+	
+	<!--卖家退货订单列表-->
+	<select id="returnOrderListforSeller" resultMap="returnbuymap">
+  	SELECT
+	    A.id,
+		A.orderForm_id,
+		A.addTime,
+		A.state1,
+		A.state2,
+		A.`status`,
+		A.deleteStatus,
+		A.set_return_no,
+		A.returnType,
+		A.returnReason,
+		A.remark,
+		B.order_no,
+		A.prodectname,
+		A.num,
+		A.good_id,
+		A.returnTotal,
+		C.price,
+		A.userseller_id,
+		B.user_id,
+	  	A.finshtime,
+	 	B.order_type
+	FROM
+		ezs_set_return_order A
+	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
+	LEFT JOIN ezs_goods C ON A.good_id = C.id
+	
+	WHERE  1=1
+  	and  B.user_id=#{userid}
+  	limit #{totalpage},10
+  	
+	</select>
+	
+	<!--退货订单详情-->
+	<select id="returnOrderinfoforBuyer" resultMap="returnbuymap">
+  	SELECT
+	   A.id,
+		A.orderForm_id,
+		A.addTime,
+		A.state1,
+		A.state2,
+		A.`status`,
+		A.deleteStatus,
+		A.set_return_no,
+		A.returnType,
+		A.returnReason,
+		A.remark,
+		B.order_no,
+		A.prodectname,
+		A.num,
+		A.good_id,
+		A.returnTotal,
+		C.price,
+		A.userseller_id,
+		B.user_id,
+	    A.finshtime,
+	    B.order_type
+	FROM
+		ezs_set_return_order A
+	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
+	LEFT JOIN ezs_goods C ON A.good_id = C.id
+	WHERE  1=1
+  	and  A.id=#{returnid}
+	</select>
 </mapper>
