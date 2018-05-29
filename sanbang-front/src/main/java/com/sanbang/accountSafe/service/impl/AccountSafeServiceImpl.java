@@ -41,18 +41,10 @@ public class AccountSafeServiceImpl implements AccountSafeService {
 	
 	
 	@Override
-	public Result checkAccountStatus(HttpServletRequest request) {
+	public Result checkAccountStatus(HttpServletRequest request,ezs_user upi) {
 
 		Result result = Result.success();
 		Map<String, Object> map = new HashMap<>();
-		
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if(upi == null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			result.setSuccess(false);
-			return result;
-		}
 		
 		//检查是否实名认证
 		ezs_store store = upi.getEzs_store();
@@ -79,18 +71,10 @@ public class AccountSafeServiceImpl implements AccountSafeService {
      * 获取到密保手机
      */
 	@Override
-	public Result getSecuratePhone(HttpServletRequest request) {
+	public Result getSecuratePhone(HttpServletRequest request, ezs_user upi) {
 		
 		Result result = Result.success();
 		Map<String,Object> map = new HashMap<>();
-		
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if(upi == null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			result.setSuccess(false);
-			return result;
-		}
 		
 		//密保手机显示 ezs_userinfo 中的phone 字段，如果没有显示 ezs_user 中的 name 字段 还没有 显示 “”
 		ezs_userinfo userInfo = upi.getEzs_userinfo();
@@ -184,7 +168,7 @@ public class AccountSafeServiceImpl implements AccountSafeService {
 	 * 设置或者修改密保手机号码
 	 */
 	@Override
-	public Result setOrUpdateSecuratePhone(String mobile, String code, HttpServletRequest request) {
+	public Result setOrUpdateSecuratePhone(String mobile, String code, HttpServletRequest request, ezs_user upi) {
 		Result result = Result.success();
 		
 		if(StringUtils.isEmpty(mobile)||!Tools.paramValidate(mobile, 1)){
@@ -200,14 +184,6 @@ public class AccountSafeServiceImpl implements AccountSafeService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("短信验证码错误");
 			}else{
-				//判断登录拿用户信息
-				ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-				if(upi == null){
-					result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-					result.setMsg("用户未登录");
-					result.setSuccess(false);
-					return result;
-				}
 				
 				try {
 					//密保手机显示 ezs_userinfo 中的phone 字段，如果没有显示 ezs_user 中的 name 字段 还没有 显示 “”
