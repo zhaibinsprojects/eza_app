@@ -35,7 +35,7 @@ public class HomeCustomerController {
 	@ResponseBody
 	public Object getUserMess(HttpServletRequest request,HttpServletResponse response){
 		//获取缓存中已登录用户信息
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		Result rs = null;
 		if(upi!=null){
 			//用户已登录

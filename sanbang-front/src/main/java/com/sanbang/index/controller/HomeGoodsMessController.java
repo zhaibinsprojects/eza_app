@@ -133,7 +133,7 @@ public class HomeGoodsMessController {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
-		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

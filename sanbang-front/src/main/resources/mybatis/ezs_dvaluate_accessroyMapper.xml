@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_dvaluate_accessroyMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_dvaluate_accessroy" >
+    <id column="dvaluate_id" property="dvaluate_id" jdbcType="BIGINT" />
+    <result column="accessroy_id" property="accessroy_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    dvaluate_id, accessroy_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_dvaluate_accessroy
+    where dvaluate_id = #{dvaluate_id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_dvaluate_accessroy
+    where dvaluate_id = #{dvaluate_id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_dvaluate_accessroy" >
+    insert into ezs_dvaluate_accessroy (dvaluate_id, accessroy_id)
+    values (#{dvaluate_id,jdbcType=BIGINT}, #{accessroy_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_dvaluate_accessroy" >
+    insert into ezs_dvaluate_accessroy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dvaluate_id != null" >
+        dvaluate_id,
+      </if>
+      <if test="accessroy_id != null" >
+        accessroy_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dvaluate_id != null" >
+        #{dvaluate_id,jdbcType=BIGINT},
+      </if>
+      <if test="accessroy_id != null" >
+        #{accessroy_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_dvaluate_accessroy" >
+    update ezs_dvaluate_accessroy
+    <set >
+      <if test="accessroy_id != null" >
+        accessroy_id = #{accessroy_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where dvaluate_id = #{dvaluate_id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_dvaluate_accessroy" >
+    update ezs_dvaluate_accessroy
+    set accessroy_id = #{accessroy_id,jdbcType=BIGINT}
+    where dvaluate_id = #{dvaluate_id,jdbcType=BIGINT}
+  </update>
+</mapper>
