@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.PagerOrder;
 
@@ -22,7 +23,7 @@ public interface SellerOrderService {
 
 	ezs_invoice queryInvoiceByNo(String orderNo);
 
-	Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response);
+	Result seller_order_signature(ezs_user upi, String order_no, HttpServletRequest request, HttpServletResponse response);
 
 	Result sampleDelivery(Result result, String order_no, HttpServletRequest request, HttpServletResponse response);
 
