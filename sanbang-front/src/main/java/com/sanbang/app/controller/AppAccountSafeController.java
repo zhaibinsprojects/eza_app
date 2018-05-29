@@ -1,4 +1,4 @@
-package com.sanbang.accountSafe.controller;
+package com.sanbang.app.controller;
 
 import java.util.Random;
 
@@ -19,8 +19,8 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MessageDictionary;
 
 @Controller
-@RequestMapping("/accountSafe")
-public class AccountSafeController {
+@RequestMapping("/app/accountSafe")
+public class AppAccountSafeController {
 
 	@Autowired
 	private AccountSafeService  accountSafeService; 
