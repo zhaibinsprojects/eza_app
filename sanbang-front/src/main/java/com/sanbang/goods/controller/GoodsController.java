@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,15 +33,18 @@ import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
+import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
+import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCode;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-
 
 @Controller
 @RequestMapping("/goods")
@@ -46,9 +52,13 @@ public class GoodsController {
 	
 	@Autowired
 	private GoodsService goodsService;
+	@Resource(name="fileUploadService")
+	private FileUploadService fileUploadService;
+	// 日志
+	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 
 	/**
-	 * 查询货品详情（描述说明也走这方法）
+	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
 	 * @param request
 	 * @param id 货品id
 	 * @return
@@ -102,7 +112,7 @@ public class GoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
-		if(goodId != null){
+		if(null != goodId){
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
 				if(share.getDeleteStatus().equals(true)){
@@ -132,7 +142,7 @@ public class GoodsController {
 	 * @param goodsCart
 	 * @return
 	 */
-	@RequestMapping("/insertCart")	//sql
+	@RequestMapping("/insertCart")
 	@ResponseBody
 	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -163,25 +173,14 @@ public class GoodsController {
 	@RequestMapping("/insertOrder")
 	@ResponseBody
 	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
-		Result result = new Result();
+		Result result = Result.failure();
 		int n;
-		//购买加入订单时校验当前商品的库存量，调用下面的方法就行
-		
-		
-		
 		n = goodsService.insertOrder(order);
 		if(n>0){
 			result.setMsg("添加成功");
+			result.setSuccess(true);
 		}
 		return result;
-	}
-	
-	//在添加购物车以及往添加采购单的这些页面需要返回当前商品的单价，用以计算总价格用
-	public Result queryPrice(String 参数待定){
-		Result r = new Result();
-		
-		
-		return r;
 	}
 	
 	/**
@@ -333,10 +332,10 @@ public class GoodsController {
 		list = goodsService.conditionList();
 		if(list.size()>0){
 			result.setObj(list);
-			result.setMsg("返回的数据");
+			result.setMsg("返回查询条件");
 			result.setSuccess(true);
 		}else{
-			result.setMsg("略略略略略略略略略");
+			result.setMsg("插叙失败");
 			result.setSuccess(false);
 		}
 		
@@ -399,4 +398,57 @@ public class GoodsController {
 //		map.put("AcapAmount", "bb");
 //		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
 //	}
+	
+	
+	/**
+	 * 上传发票图片，返回url
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/uploadinvoice",produces="text/html;charset=UTF-8")
+	@ResponseBody
+	public Result uploadImg(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		Result result=Result.failure();
+		try {
+			Map<String , Object> map=fileUploadService.uploadFile(request,0,0,10*1024*1024l);
+			if("000".equals(map.get("code"))){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setMsg("上传图片成功");
+				Map<String, Object> map1=new HashMap<>();
+				map1.put("url", map.get("url"));	//返回前台上传的图片路径
+				result.setSuccess(true);
+				result.setObj(map1);
+				return result;
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("上传图片失败");
+				result.setObj("");
+				result.setSuccess(false);
+				return result;
+			}
+		} catch (Exception e) {
+			log.info("文件：上传接口调用失败"+e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("上传图片失败");
+			result.setObj("");
+			result.setSuccess(false);
+			return result;
+		} 
+	}
+	
+	/**
+	 * 插入发票信息
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/insertinvoice")
+	@ResponseBody
+	public Result insertinvoice(HttpServletRequest request,ezs_invoice invoice) {
+		Result result = new Result();
+		//关于发票图片的处理暂时不确定，所以暂时，暂时，先放这儿
+		
+		
+		return result;
+	}
 }

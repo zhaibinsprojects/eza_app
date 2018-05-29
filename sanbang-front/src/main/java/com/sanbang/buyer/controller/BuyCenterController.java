@@ -1,5 +1,7 @@
 package com.sanbang.buyer.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -266,38 +268,28 @@ public class BuyCenterController {
 	 * 订单评价
 	 * @param request
 	 * @param response
-	 * @param dvaluate
-	 * @param accessory
+	 * @param dvaluate 评论
+	 * @param aList 图片列表
 	 * @return
 	 */
 	@RequestMapping("/evaluateAboutOrder")
 	@ResponseBody
-	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,ezs_dvaluate dvaluate,ezs_accessory accessory){
+	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,ezs_dvaluate dvaluate){
 		Map<String, Object> mmp = null;
 		Map<String , Object> mmpImg= null;
+		List<ezs_accessory> aList = new ArrayList<>();
 		Result rs = null;
-		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		//
-		//需要再此添加图片与评论的映射表记录
-		//ezs_dvaluate_accessory
-		/**
-		 * 一、首先进行图片上传（如果有图片）
-		 * 二、进行图片记录的存储（ezs_accessory）并返回评论图片ID数组
-		 * 三、评论记录的入库并返回评论记录ID
-		 * 四、根据图片ID数组和评论记录ID生成相应的映射记录（ezs_dualvate_accessory）
-		 */
 		//图片上传
 		try {
-			//
 			//需要再此添加图片与评论的映射表记录
-			//ezs_dvaluate_accessory
-			mmpImg = this.fileUploadService.uploadFile(request, accessory.getWidth(), accessory.getHeight(), Long.valueOf(accessory.getSize().toString()));
+			mmpImg = this.fileUploadService.uploadFile(request,0,0,10*1024*1024l);
 			if(!"000".equals(mmpImg.get("code"))){
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -312,9 +304,16 @@ public class BuyCenterController {
 			rs.setMsg("上传失败");
 			return rs;
 		}
-		
+		//获取图片信息
+		int imgs = 0;
+		for(int i=0;i<imgs;i++){
+			ezs_accessory accessory = new ezs_accessory();
+			accessory.setName("");
+			accessory.setPath("");
+			aList.add(accessory);
+		}
 		//数据入库
-		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
+		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,aList,user);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();

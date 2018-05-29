@@ -41,7 +41,7 @@ public class SendMobileMessage {
 		String result = null;
 		try {
 			result = Result.success().toString();
-			//HttpRemoteRequestUtils.doPostToString(url, httpParam);
+			HttpRemoteRequestUtils.doPostToString(url, httpParam);
 		} catch (Exception e) {
 			log.error("短信发送失败");
 			log.error(e.toString());
