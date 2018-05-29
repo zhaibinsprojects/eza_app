@@ -11,8 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_accessory;
+import com.sanbang.bean.ezs_dvaluate;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.buyer.service.GoodsInvoiceService;
+import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.InvoiceInfo;
@@ -29,6 +35,10 @@ public class BuyCenterController {
 	private GoodsCollectionService goodsCollectionService;
 	@Autowired
 	private GoodsInvoiceService goodsInvoiceService;
+	@Autowired
+	private OrderEvaluateService orderEvaluateService;
+	@Autowired
+	private FileUploadService fileUploadService; 
 	/**
 	 * 添加商品到收藏夹（不启用）
 	 * @param request
@@ -59,15 +69,21 @@ public class BuyCenterController {
 	 * @param request
 	 * @param response
 	 * @param gId
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/removeFromCollection")
 	@ResponseBody
-	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId,Long userId){
+	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		mmp = this.goodsCollectionService.removeGoodFromCollect(gId,userId);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsCollectionService.removeGoodFromCollect(gId,upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -83,16 +99,22 @@ public class BuyCenterController {
 	 * 获取收藏夹中该用户下的所有商品
 	 * @param request
 	 * @param response
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/getGoodsFromCollection")
 	@ResponseBody
-	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response,Long userId){
+	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
 		List<Object> glist = null;
-		mmp = this.goodsCollectionService.getCollectGoodsByUser(userId);
+		mmp = this.goodsCollectionService.getCollectGoodsByUser(upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			glist = (List<Object>)mmp.get("Obj");
@@ -162,16 +184,22 @@ public class BuyCenterController {
 	 * 获取用户票据信息
 	 * @param request
 	 * @param response
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/getGoodsInvoiceByUser")
 	@ResponseBody
-	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response,Long userId){
+	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		List<InvoiceInfo> iList = null;
-		mmp = this.goodsInvoiceService.getInvoiceByUser(userId);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsInvoiceService.getInvoiceByUser(upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			iList = (List<InvoiceInfo>) mmp.get("Obj");
@@ -227,6 +255,70 @@ public class BuyCenterController {
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
 			rs.setMsg("修改成功");
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 订单评价
+	 * @param request
+	 * @param response
+	 * @param dvaluate
+	 * @param accessory
+	 * @return
+	 */
+	@RequestMapping("/evaluateAboutOrder")
+	@ResponseBody
+	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,ezs_dvaluate dvaluate,ezs_accessory accessory){
+		Map<String, Object> mmp = null;
+		Map<String , Object> mmpImg= null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		//
+		//需要再此添加图片与评论的映射表记录
+		//ezs_dvaluate_accessory
+		/**
+		 * 一、首先进行图片上传（如果有图片）
+		 * 二、进行图片记录的存储（ezs_accessory）并返回评论图片ID数组
+		 * 三、评论记录的入库并返回评论记录ID
+		 * 四、根据图片ID数组和评论记录ID生成相应的映射记录（ezs_dualvate_accessory）
+		 */
+		//图片上传
+		try {
+			//
+			//需要再此添加图片与评论的映射表记录
+			//ezs_dvaluate_accessory
+			mmpImg = this.fileUploadService.uploadFile(request, accessory.getWidth(), accessory.getHeight(), Long.valueOf(accessory.getSize().toString()));
+			if(!"000".equals(mmpImg.get("code"))){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				rs.setMsg("上传失败");
+				return rs;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setMsg("上传失败");
+			return rs;
+		}
+		
+		//数据入库
+		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));

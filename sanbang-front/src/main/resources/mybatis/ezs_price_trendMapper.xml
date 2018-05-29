@@ -522,8 +522,7 @@
   <select id="selectByCondition" resultMap="PriceConditionResultMap">
     select 
     <include refid="PriceConditionColumnList" />
-    from ezs_price_trend g,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' 
-	and  g.goodClass_id = gc.id and g.color_id = e1.id and g.form_id = e2.id
+    from ezs_price_trend g,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where g.goodClass_id = gc.id and g.color_id = e1.id and g.form_id = e2.id
 	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
       <if test="countryType != null" >
         g.type = #{countryType}
