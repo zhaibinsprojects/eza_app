@@ -22,7 +22,7 @@ import com.sanbang.vo.DictionaryCode;
  *
  */
 @Controller
-@RequestMapping("/buyer/returnOrder")
+@RequestMapping("/buyer/returnOrder/")
 public class BuyerReturnOrderController {
 
 	@Autowired
@@ -35,7 +35,7 @@ public class BuyerReturnOrderController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("orderlist")
+	@RequestMapping("/orderlist")
 	public Result returnOrderList(HttpServletRequest request,
 			@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
 		Result result = Result.failure();
@@ -56,7 +56,7 @@ public class BuyerReturnOrderController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("returnOrderinfo")
+	@RequestMapping("/returnOrderinfo")
 	public Result returnOrderinfoforBuyer(HttpServletRequest request,
 			@RequestParam(name = "returnid", defaultValue = "1") int returnid) {
 		Result result = Result.failure();

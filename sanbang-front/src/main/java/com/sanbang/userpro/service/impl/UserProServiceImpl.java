@@ -267,7 +267,7 @@ public class UserProServiceImpl implements UserProService {
 				result.setSuccess(true);
 				result.setMsg("登陆成功");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			} else {
+ 			} else {
 				result.setSuccess(false);
 				result.setMsg("登陆失败用户未启用");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -308,14 +308,16 @@ public class UserProServiceImpl implements UserProService {
 					boolean tempStatus = userProInfo.getDeleteStatus();
 
 					String str32 = RandomStr32.getStr32();
-					String userKey = userProInfo.getName() + userProInfo.getEzs_userinfo().getPhone() + str32;
+					String userKey =""; 
 					if(h5orapp.equals("h5")){
+						userKey="h5"+userProInfo.getName() + userProInfo.getEzs_userinfo().getPhone() + str32;
 						// 添加缓存
 						Cookie cookie = new Cookie(cookieuserkey, userKey);
 						cookie.setMaxAge(Integer.parseInt(cookieuserkeyexpir));
 						cookie.setPath("/");
 						response.addCookie(cookie);
 					}else{
+						userKey="app"+userProInfo.getName() + userProInfo.getEzs_userinfo().getPhone() + str32;
 						Map<String, Object> map=new HashMap<>();
 						map.put("token", userKey);
 						result.setObj(map);

@@ -1,6 +1,7 @@
 package com.sanbang.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class ezs_area {
     private Long id;
@@ -20,6 +21,7 @@ public class ezs_area {
     private Boolean common;
 
     private String belongsArea;
+    
 
     public Long getId() {
         return id;
