@@ -183,12 +183,12 @@ public class BuyerServiceimpl implements BuyerService {
 	public Result showOrderContent(HttpServletRequest request, String order_no) {
 		Result result = Result.failure();
 		try {
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
+//			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+//			if (upi == null) {
+//				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//				result.setMsg("用户未登录");
+//				return result;
+//			}
 
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);

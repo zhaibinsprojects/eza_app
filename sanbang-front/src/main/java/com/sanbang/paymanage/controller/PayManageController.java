@@ -46,11 +46,13 @@ public class PayManageController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		if(Tools.compare_date(starttime, endtime)!=1){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("请选择正确的时间");
-			result.setSuccess(false);
-			return result;
+		if(starttime!=null&&endtime!=null){
+			if(Tools.compare_date(starttime, endtime)!=1){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("请选择正确的时间");
+				result.setSuccess(false);
+				return result;
+			}
 		}
 		Map<String,Object> map = new HashMap<>();
 		map.put("deleteStatus", false);
