@@ -17,7 +17,6 @@ import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerOrderService;
 import com.sanbang.utils.Page;
@@ -40,8 +39,6 @@ public class SellerOrderContorller {
 	@Autowired
 	DictService dictService;
 
-	@Autowired
-	private BuyerService buyerService;
 	/**
 	 * 分页查询订单列表
 	 * @param orderType
@@ -63,6 +60,7 @@ public class SellerOrderContorller {
 		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setSuccess(false);
 			result.setMsg("用户未登录");
 			return result;
 		}
@@ -223,7 +221,7 @@ public class SellerOrderContorller {
 		}	
 		
 		try {
-			result = sellerOrderService.seller_order_signature(order_no, request, response);
+			result = sellerOrderService.seller_order_signature(upi, order_no, request, response);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("请求成功");
 		} catch (Exception e) {

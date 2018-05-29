@@ -146,16 +146,10 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	}
 
 	@Override
-	public Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response) {
+	public Result seller_order_signature(ezs_user upi, String order_no, HttpServletRequest request, HttpServletResponse response) {
 		Result result = Result.failure();
 		try {
 
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);

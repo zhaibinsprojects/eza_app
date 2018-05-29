@@ -36,11 +36,8 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			return result;
 		}
 		
-//		ezs_user upi = new ezs_user(); 
-//		upi.setStore_id((long)2);
 		if (upi != null) {
 			Long store_id = upi.getStore_id();
-//			ezs_store store = ezs_storeMapper.selectById(store_id);
 			ezs_store store = ezs_storeMapper.selectByPrimaryKey(store_id);
 			store.setCompanyName(companyName);
 			store.setyTurnover(Double.valueOf(yTurnover));
