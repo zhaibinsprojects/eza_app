@@ -40,7 +40,7 @@ public class PurchaseController {
 		Map<String, Object> mmp = null;
 		List<ezs_customized> elist = null;
 		Result rs = null;
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

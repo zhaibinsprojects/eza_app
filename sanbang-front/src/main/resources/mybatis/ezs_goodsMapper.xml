@@ -792,12 +792,14 @@
 	<!-- 查询商品详情，颜色，形态...做关联 -->
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
-		a.areaName areaName,gc.name goodClassName  
+		a.areaName areaName,gc.name goodClassName,ac.ext pictureSuffix,
+		ac.name pictureName,ac.path picturePath 
 		from ezs_goods g 
 		left join ezs_dict d1 on g.color_id = d1.id 
 		left join ezs_dict d2 on g.form_id = d2.id 
 		left join ezs_area a on g.area_id = a.id 
 		left join ezs_goods_class gc on g.goodClass_id = gc.id 
+		left join ezs_accessory ac on g.goods_main_photo_id = ac.id 
     	where g.id = #{id, jdbcType=BIGINT}
 	</select>
 </mapper>

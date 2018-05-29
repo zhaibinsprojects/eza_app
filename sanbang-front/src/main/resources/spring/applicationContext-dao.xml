@@ -244,6 +244,9 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_user_roleMapper"/>
 	</bean>
-	
-	
+	<!-- 评论图片映射表 -->
+	<bean id="ezs_dvaluate_accessroyMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_dvaluate_accessroyMapper"/>
+	</bean>
 </beans>
