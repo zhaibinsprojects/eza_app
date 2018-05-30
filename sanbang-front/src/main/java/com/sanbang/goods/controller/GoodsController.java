@@ -112,6 +112,7 @@ public class GoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if(null != goodId){
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
@@ -124,7 +125,7 @@ public class GoodsController {
 				}
 			}else{
 				try{
-					goodsService.insertCollect(goodId);
+					goodsService.insertCollect(goodId,user.getId());
 					result.setMsg("收藏成功");
 				}catch(Exception e){
 					e.printStackTrace();
