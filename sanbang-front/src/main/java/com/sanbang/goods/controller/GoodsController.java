@@ -126,7 +126,7 @@ public class GoodsController {
 			}else{
 				try{
 					goodsService.insertCollect(goodId,user.getId());
-					result.setMsg("收藏成功");
+					result.setMsg("已收藏");
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -150,6 +150,10 @@ public class GoodsController {
 		ezs_bill bill = user.getEzs_bill();
 		if(null != goodsCart){
 			goodsCart.setBill(bill);
+			goodsCart.setAddTime(new Date());
+			goodsCart.setDeleteStatus(false);
+			//goodsCart.setOf_id(null);
+			//goodsCart.setSc_id(null);
 		}
 		Result result = new Result();
 		int n;
