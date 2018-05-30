@@ -180,6 +180,8 @@ public class GoodsController {
 	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
 		Result result = Result.failure();
 		int n;
+		order.setAddTime(new Date());
+		order.setDeleteStatus(false);
 		n = goodsService.insertOrder(order);
 		if(n>0){
 			result.setMsg("添加成功");
@@ -228,6 +230,7 @@ public class GoodsController {
 		ezs_customized_record record = new ezs_customized_record();
 		record.setId(id);
 		record.setAddTime(new Date());
+		record.setDeleteStatus(false);
 		record.setOperater_id(user.getId());
 		record.setPurchaser_id(user.getId());
 		int m = goodsService.insertCustomizedRecord(record);
