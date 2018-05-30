@@ -152,16 +152,6 @@ public class AppUserRegistController {
 			result.setSuccess(true);
 			result.setMsg("请求成功");
 			
-			// 获取上一步用户注册信息
-			ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-			
-			if(user==null){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请先输入用户名密码");
-				return result;
-				}
-			
 			Map<String, Object> map=new HashMap<>();
 			//主营行业
 			map.put("industrydic", dictService.getDictByParentId(DictionaryCate.EZS_INDUSTRY));
