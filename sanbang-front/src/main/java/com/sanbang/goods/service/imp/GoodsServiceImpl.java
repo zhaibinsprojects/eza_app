@@ -76,9 +76,11 @@ public class GoodsServiceImpl implements GoodsService{
 		return n;
 	}
 	
-	public int insertCollect(Long id){
+	public int insertCollect(Long id,Long userId){
 		ezs_documentshare share = new ezs_documentshare();
 		share.setGood_id(id);
+		share.setDeleteStatus(false);
+		share.setUser_id(userId);
 		int n = ezs_documentshareMapper.insert(share);
 		return n;
 	}
