@@ -173,9 +173,7 @@
   <!-- 根据商品id查询评价列表 -->
   <select id="listForEvaluate" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
     select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+    <include refid="Base_Column_List" /> 
     from ezs_dvaluate
     where goods_id = #{goods_id,jdbcType=BIGINT}
   </select>

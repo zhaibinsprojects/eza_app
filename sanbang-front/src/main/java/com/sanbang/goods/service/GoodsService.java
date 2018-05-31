@@ -49,7 +49,7 @@ public interface GoodsService {
 	 * @param share
 	 * @return
 	 */
-	public int insertCollect(Long id);
+	public int insertCollect(Long id,Long userId);
 	
 	/**
 	 * 加入订单

@@ -113,6 +113,7 @@ public class GoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if(null != goodId){
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
@@ -125,8 +126,8 @@ public class GoodsController {
 				}
 			}else{
 				try{
-					goodsService.insertCollect(goodId);
-					result.setMsg("收藏成功");
+					goodsService.insertCollect(goodId,user.getId());
+					result.setMsg("已收藏");
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -158,6 +159,10 @@ public class GoodsController {
 		ezs_bill bill = user.getEzs_bill();
 		if(null != goodsCart){
 			goodsCart.setBill(bill);
+			goodsCart.setAddTime(new Date());
+			goodsCart.setDeleteStatus(false);
+			//goodsCart.setOf_id(null);
+			//goodsCart.setSc_id(null);
 		}
 		int n;
 		n = goodsService.insertCart(goodsCart);
@@ -184,6 +189,8 @@ public class GoodsController {
 	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
 		Result result = Result.failure();
 		int n;
+		order.setAddTime(new Date());
+		order.setDeleteStatus(false);
 		n = goodsService.insertOrder(order);
 		if(n>0){
 			result.setMsg("添加成功");
@@ -232,6 +239,7 @@ public class GoodsController {
 		ezs_customized_record record = new ezs_customized_record();
 		record.setId(id);
 		record.setAddTime(new Date());
+		record.setDeleteStatus(false);
 		record.setOperater_id(user.getId());
 		record.setPurchaser_id(user.getId());
 		int m = goodsService.insertCustomizedRecord(record);

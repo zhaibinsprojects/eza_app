@@ -77,4 +77,35 @@ public class HomeCustomerController {
 		}
 		return rs;
 	}
+	/**
+	 * 根据已登录用户信息获取用户相关信息
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping("/getLoginUserInfo")
+	@ResponseBody
+	public Object getLoginUserInfo(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			rs = Result.failure();
+			rs.setMsg("未登录用户");
+			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_UN_LOGIN);
+		}
+		mmp = this.customerService.getUserMessByUser(upi);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			UserInfoMess uim = (UserInfoMess) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(uim);
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
 }

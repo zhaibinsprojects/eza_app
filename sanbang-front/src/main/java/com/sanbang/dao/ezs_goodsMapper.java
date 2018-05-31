@@ -2,7 +2,6 @@ package com.sanbang.dao;
 
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goods;
