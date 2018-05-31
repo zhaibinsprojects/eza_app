@@ -37,6 +37,7 @@ public class Page implements Serializable {
     private boolean hasLast;// 是否有最后一页  
       
     
+    public Page(){}
     
     /**
      * 
