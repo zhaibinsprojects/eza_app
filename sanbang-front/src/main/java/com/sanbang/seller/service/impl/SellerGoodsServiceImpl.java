@@ -133,6 +133,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String name = request.getParameter("name");// 货品名称
 				String price = request.getParameter("price");// 价格
 				String validity = request.getParameter("validity");// 有效期
+				String cncl_num = request.getParameter("cncl_num");//样品库存数量
 				String inventory = request.getParameter("inventory");// 库存
 				String area_id = request.getParameter("area_id");// 库存地区（县市）
 				String addess = request.getParameter("addess");// 库存地区详细地址
@@ -161,10 +162,14 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
+				if (null == cncl_num) {
+					goods.setCncl_num((double) 0);
+				}
 				goods.setValidity(Integer.valueOf(validity));
 				goods.setInventory(Double.valueOf(inventory));
 				goods.setArea_id(Long.valueOf(area_id));
 				goods.setAddess(addess);
+				goods.setPurpose(purpose);
 				goods.setSupply_id(Long.valueOf(supply_id));
 				goods.setSupply_id(Long.valueOf(color_id));
 				goods.setSupply_id(Long.valueOf(form_id));
@@ -174,9 +179,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
 				if (protection == "0") {
-					goods.setProtection(true);
-				} else if (protection == "1") {
 					goods.setProtection(false);
+				} else if (protection == "1") {
+					goods.setProtection(true);
 				} else {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);
@@ -496,6 +501,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String name = request.getParameter("name");// 货品名称
 				String price = request.getParameter("price");// 价格
 				String validity = request.getParameter("validity");// 有效期
+				String cncl_num = request.getParameter("cncl_num");//样品库存数量
 				String inventory = request.getParameter("inventory");// 库存
 				String area_id = request.getParameter("area_id");// 库存地区（县市）
 				String addess = request.getParameter("addess");// 库存地区详细地址
@@ -524,6 +530,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
+				if (null == cncl_num) {
+					goods.setCncl_num((double) 0);
+				}
 				goods.setValidity(Integer.valueOf(validity));
 				goods.setInventory(Double.valueOf(inventory));
 				goods.setArea_id(Long.valueOf(area_id));
@@ -537,9 +546,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
 				if (protection == "0") {
-					goods.setProtection(true);
-				} else if (protection == "1") {
 					goods.setProtection(false);
+				} else if (protection == "1") {
+					goods.setProtection(true);
 				} else {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);

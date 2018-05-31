@@ -439,7 +439,7 @@
 	  SELECT
 	   C.price,
 		C.good_no,
-		B.addTime,
+		date_format(B.addTime, '%Y-%m-%d' ) addTime,
 		A.count,
 		C.`name`,
 		C.area_id,
@@ -452,17 +452,19 @@
 		B.all_price,
 		B.pact_status,
 		B.address_id,
-		B.finishtime,
+		date_format(B.finishtime, '%Y-%m-%d %H:%i:%S') finishtime,
 		B.order_no,
 		B.order_type,
 		B.deleteStatus,
-		D.areaName 
+		D.areaName,
+		F.path
 	FROM
 		ezs_goodscart A
 	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
 	LEFT JOIN ezs_goods C ON C.id = A.goods_id
 	LEFT JOIN ezs_area D ON D.id = B.address_id
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
+	LEFT JOIN ezs_accessory F ON C.goods_main_photo_id=F.id
 	WHERE
 		1 = 1
 

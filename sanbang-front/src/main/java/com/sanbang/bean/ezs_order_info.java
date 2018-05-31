@@ -86,7 +86,11 @@ public class ezs_order_info implements Serializable {
 
 	// 运费信息
 	private ezs_logistics ezs_logistics;
-
+	
+	//图片信息
+	private String path;
+	
+	
 	public String getGood_no() {
 		return good_no;
 	}
@@ -313,7 +317,23 @@ public class ezs_order_info implements Serializable {
 				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
 				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
 				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
-				+ ezs_logistics + "]";
+				+ ezs_logistics + ", path=" + path + "]";
 	}
+	
+
+	
+
+//	@Override
+//	public String toString() {
+//		return "ezs_order_info [good_no=" + good_no + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
+//				+ ", price=" + price + ", count=" + count + ", order_no=" + order_no + ", name=" + name + ", addess="
+//				+ addess + ", areaName=" + areaName + ", area_id=" + area_id + ", order_type=" + order_type
+//				+ ", total_price=" + total_price + ", goods_amount=" + goods_amount + ", order_status=" + order_status
+//				+ ", first_price=" + first_price + ", end_price=" + end_price + ", all_price=" + all_price
+//				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
+//				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
+//				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
+//				+ ezs_logistics + "]";
+//	}
 
 }
