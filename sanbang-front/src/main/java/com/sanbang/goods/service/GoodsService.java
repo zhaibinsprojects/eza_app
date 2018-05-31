@@ -3,6 +3,8 @@ package com.sanbang.goods.service;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.CORBA.OBJ_ADAPTER;
+
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_dict;

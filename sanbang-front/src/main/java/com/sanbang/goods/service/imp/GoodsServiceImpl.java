@@ -16,6 +16,9 @@ import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
+import com.sanbang.bean.ezs_storecart;
+import com.sanbang.dao.ezs_storeMapper;
+import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.goods.service.GoodsService;
 
 /**
@@ -41,6 +44,8 @@ public class GoodsServiceImpl implements GoodsService{
 	private com.sanbang.dao.ezs_customized_recordMapper ezs_customized_recordMapper;
 	@Autowired
 	private com.sanbang.dao.ezs_dictMapper ezs_dictMapper;
+	@Autowired
+	private ezs_storecartMapper storecartMapper;
 	
 	
 	/**
@@ -60,12 +65,23 @@ public class GoodsServiceImpl implements GoodsService{
 		list  = ezs_dvaluateMapper.listForEvaluate(id);
 		return list;
 	}
-	
+	/**
+	 * 添加购物车
+	 * @param goodsCart
+	 * @return
+	 */
 	public int insertCart(ezs_goodscart goodsCart){
 		int n ;
-		n = ezs_goodscartMapper.insert(goodsCart);
+		ezs_storecart storecart = null; 
+		try{
+			storecart = this.storecartMapper.selectByPrimaryKey(Long.valueOf(1));
+			n = ezs_goodscartMapper.insert(goodsCart);
+			this.storecartMapper.insert(storecart);
+		}catch(Exception e){
+			e.printStackTrace();
+			n = 0;
+		}
 		return n;
-		
 	}
 	
 	public int updateCollect(Long id,Boolean status){

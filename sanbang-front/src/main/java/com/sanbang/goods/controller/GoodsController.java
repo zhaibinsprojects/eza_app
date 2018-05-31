@@ -52,6 +52,7 @@ public class GoodsController {
 	
 	@Autowired
 	private GoodsService goodsService;
+	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
 	// 日志
@@ -144,21 +145,29 @@ public class GoodsController {
 	 */
 	@RequestMapping("/insertCart")
 	@ResponseBody
-	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
+	public Result insertCart(HttpServletRequest request,HttpServletResponse response,ezs_goodscart goodsCart){
+		Result result = null;
+		//modify start by zhaibin 2018/05/31
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if(user==null){
+			result = Result.failure();
+			result.setMsg("用户未登录");
+			return result;
+		}
+		//modify end by zhaibin 2018/05/31
 		ezs_bill bill = user.getEzs_bill();
 		if(null != goodsCart){
 			goodsCart.setBill(bill);
 		}
-		Result result = new Result();
 		int n;
 		n = goodsService.insertCart(goodsCart);
 		if(n>0){
+			result = Result.success();
 			result.setObj(goodsCart);
 			result.setSuccess(true);
 			result.setMsg("添加成功");
 		}else{
-			result.setSuccess(false);
+			result = Result.failure();
 			result.setMsg("添加失败");
 		}
 		return result;
