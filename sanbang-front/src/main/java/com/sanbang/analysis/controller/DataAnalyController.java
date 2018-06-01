@@ -17,7 +17,7 @@ import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/goodscart")
+@RequestMapping("/app/goodscart")
 public class DataAnalyController {
 	
 	@Autowired

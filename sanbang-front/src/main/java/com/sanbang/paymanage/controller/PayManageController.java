@@ -20,7 +20,7 @@ import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/paymanager")
+@RequestMapping("/app/paymanager")
 public class PayManageController {
 	
 	@Autowired
