@@ -77,8 +77,9 @@ public class AddressController {
 		if (pageNow == 1) {
 			result.getMeta().setHasPre(false);
 		}
-		if(pageNow>=page.getTotalCount()){
+		if(pageNow>=page.getTotalPageCount()){
 			result.getMeta().setHasNext(false);
+			result.getMeta().setHasLast(false);
 		}
 		
 	

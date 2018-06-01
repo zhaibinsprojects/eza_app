@@ -40,7 +40,7 @@ public class PayManageController {
 			@RequestParam(value="order_type",required=false)Integer order_type,
 			@RequestParam(value="pay_mode",required=false)Integer pay_mode,HttpServletRequest request){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
