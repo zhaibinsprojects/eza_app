@@ -30,6 +30,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsClass;
 
 @Controller
 @RequestMapping("/app/seller")
@@ -217,7 +218,7 @@ public class APPSellerGoodsController {
 			//地址
 			map.put("area", areaService.getAreaParentList());
 			//分类
-			map.put("cata",cataService.getOnelevelList());
+			map.put("cata",cataService.getFirstList());
  			result.setObj(map);
 		};
 		
@@ -229,7 +230,7 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Result getCataListByparid(HttpServletRequest request,long parentsId){
 		Result result=Result.success();
-		List<ezs_goods_class> list = cataService.getTwolevelList(parentsId);
+		List<GoodsClass> list = cataService.getChildList();
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
 		result.setObj(list);
 		return result;
