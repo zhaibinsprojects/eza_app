@@ -374,6 +374,7 @@
 		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
 		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="photoName" property="photoName" jdbcType="VARCHAR" />
 		 <!--物流信息-->
          <association property="ezs_logistics" column="order_no" select="com.sanbang.dao.ezs_logisticsMapper.selectByOrderNo">
          </association>
@@ -405,7 +406,9 @@
 			D.areaName,
 			B.user_id  buyerid,
       		C.user_id  sellerid,
-      		F.path
+      		F.path,
+      		F.name photoName
+      		
 	FROM
 		ezs_goodscart A
 	LEFT JOIN ezs_orderform B ON A.of_id = B.id

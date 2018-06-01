@@ -90,6 +90,7 @@ public class ezs_order_info implements Serializable {
 	//图片信息
 	private String path;
 	
+	private String photoName;
 	
 	public String getGood_no() {
 		return good_no;
@@ -306,6 +307,23 @@ public class ezs_order_info implements Serializable {
 	public void setEzs_logistics(ezs_logistics ezs_logistics) {
 		this.ezs_logistics = ezs_logistics;
 	}
+	
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
+	public String getPhotoName() {
+		return photoName;
+	}
+
+	public void setPhotoName(String photoName) {
+		this.photoName = photoName;
+	}
 
 	@Override
 	public String toString() {
@@ -317,9 +335,8 @@ public class ezs_order_info implements Serializable {
 				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
 				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
 				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
-				+ ezs_logistics + ", path=" + path + "]";
+				+ ezs_logistics + ", path=" + path + ", photoName=" + photoName + "]";
 	}
-	
 
 	
 

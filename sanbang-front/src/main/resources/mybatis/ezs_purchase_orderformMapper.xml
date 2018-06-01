@@ -457,7 +457,8 @@
 		B.order_type,
 		B.deleteStatus,
 		D.areaName,
-		F.path
+		F.path,
+		F.name photoName
 	FROM
 		ezs_goodscart A
 	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
@@ -547,6 +548,8 @@
 		<result column="price" property="price" jdbcType="DECIMAL" />
 		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="photoName" property="photoName" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<select id="selectByOrderNo" resultMap="BaseResultMap">

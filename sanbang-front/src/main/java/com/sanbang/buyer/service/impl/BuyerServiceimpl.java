@@ -104,9 +104,8 @@ public class BuyerServiceimpl implements BuyerService {
 		pager.setSecount(pager.getPageSize() * pager.getPageNow());
 		int totalcount = ezs_orderformMapper.getOrderListByValueCount(pager);
 		pager.setTotalCount(totalcount);
-		 
-				List<ezs_order_info> orderListByValue = ezs_orderformMapper.getOrderListByValue(pager);
-				return orderListByValue;
+		return ezs_orderformMapper.getOrderListByValue(pager);
+				
 	}
 
 	@Override
