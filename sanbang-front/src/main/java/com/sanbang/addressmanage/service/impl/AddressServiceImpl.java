@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.utils.DateUtils;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
@@ -93,8 +96,19 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public List<ezs_address> findAddressByUserId(Long id) {
-		return ezs_addressMapper.selectByUserId(id);
+	public List<ezs_address> findAddressByUserId(Long id,Page page) {
+		
+		page.setStartPos(page.getPageNow());
+		int totalcount = ezs_addressMapper.getCountAddressByUserId(id);
+		
+		page.setTotalCount(totalcount);
+		Map<String,Object> map = new HashMap<>();
+		
+		map.put("userid", id);
+		map.put("startPos", page.getStartPos());
+		map.put("pageSize", page.getPageSize());
+		
+		return ezs_addressMapper.selectByUserId(map);
 	}
 
 	@Override

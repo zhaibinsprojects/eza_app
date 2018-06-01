@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
+
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
+import com.sanbang.vo.GoodsClass;
 
 /**
  * 品类相关处理
@@ -20,9 +23,9 @@ public class CataServiceImpl implements CataService{
 	/**
 	 * 一级
 	 */
-	public List getOnelevelList(){
-		List<ezs_goods_class> list = new ArrayList();
-		list = ezs_cataMapper.getOnelevelList();
+	public List<ezs_goods_class> getFirstList(){
+		List<ezs_goods_class> list = new ArrayList<ezs_goods_class>();
+		list = ezs_cataMapper.getFirstList();
 		return list;
 	}
 	/**
@@ -30,20 +33,9 @@ public class CataServiceImpl implements CataService{
 	 * @param parentId	父id
 	 * @return
 	 */
-	public List getTwolevelList(long parentId){
-		List<ezs_goods_class> list = new ArrayList();
-		list = ezs_cataMapper.getTwolevelList(parentId);
+	public List<GoodsClass> getChildList(){
+		List<GoodsClass> list = new ArrayList<GoodsClass>();
+		list = ezs_cataMapper.getChildList();
 		return list;
 	}
-	/**
-	 * 三级
-	 * @param parentId	父id
-	 * @return
-	 */
-	public List getThreelevelList(long parentId){
-		List<ezs_goods_class> list = new ArrayList();
-		list = ezs_cataMapper.getThreelevelList(parentId);
-		return list;
-	}
-	
 }
