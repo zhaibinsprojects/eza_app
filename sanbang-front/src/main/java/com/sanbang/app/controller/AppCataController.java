@@ -37,7 +37,6 @@ public class AppCataController {
 	/**
 	 * 二级三级列表
 	 * @param request
-	 * @param parentsId
 	 * @return
 	 */
 	@RequestMapping("/childList")

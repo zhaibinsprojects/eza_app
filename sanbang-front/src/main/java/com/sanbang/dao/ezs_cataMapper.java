@@ -16,8 +16,6 @@ public interface ezs_cataMapper {
 	List<ezs_goods_class> getFirstList();
 	/**
 	 * 查询二级、三级分类
-	 * @param parentId
-	 * @return
 	 */
 	List<GoodsClass> getChildList();
 	

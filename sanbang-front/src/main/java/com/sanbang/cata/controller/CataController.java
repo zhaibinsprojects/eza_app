@@ -21,6 +21,7 @@ public class CataController {
 	@Autowired
 	private CataService cataService;
 	
+	//一级
 	@RequestMapping("/firstList")
 	@ResponseBody
 	public Result getFirstList(HttpServletRequest request){
@@ -30,7 +31,7 @@ public class CataController {
 		return   result;
 	}
 	
-	//查询二级分类列表
+	//二级三级
 	@RequestMapping("/childList")
 	@ResponseBody
 	public Result getChildList(HttpServletRequest request){

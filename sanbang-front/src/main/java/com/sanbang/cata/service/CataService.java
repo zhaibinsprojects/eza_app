@@ -11,12 +11,8 @@ import com.sanbang.vo.GoodsClass;
  * 2018年05月11日
  */
 public interface CataService {
-	/**
-	 * 查询一级分类
-	 */
+	//一级
 	public List<ezs_goods_class> getFirstList();
-	/**
-	 * @param parentId
-	 */
+	//二级三级
 	public List<GoodsClass> getChildList();
 }
