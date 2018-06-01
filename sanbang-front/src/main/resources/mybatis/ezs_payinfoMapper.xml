@@ -192,9 +192,10 @@
   		group by order_type
   </select>
   <select id="selectPayRecord" resultType="com.sanbang.bean.ezs_payinfo">
-  	select a.addTime,a.pay_mode,a.order_type,a.price,c.name from ezs_payinfo a 
-  	left join ezs_dvaluate b on a.order_no = b.id 
-  	left join ezs_goods c on b.goods_id = c.id 
+  	select a.addTime,a.pay_mode,a.order_type,a.price,d.name from ezs_payinfo a   	
+  	left join ezs_orderform b on a.order_no = b.order_no
+	left join ezs_goodscart c on b.id = c.of_id
+  	left join ezs_goods d on c.goods_id = d.id 
   	where a.deleteStatus = #{deleteStatus}
   		<if test="starttime!=null and starttime!=''">
   			and a.addTime &gt;=#{starttime,jdbcType=VARCHAR}
@@ -208,7 +209,24 @@
   		<if test="pay_mode!=null and pay_mode!=''">
   			and a.pay_mode = #{pay_mode,jdbcType=INTEGER}
   		</if> 	
-  		order by a.addTime desc
+  		order by a.addTime desc limit ${startPos},${pageSize}
   </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+  	select count(*) from ezs_payinfo where deleteStatus = #{deleteStatus} 
+  	<if test="starttime!=null and starttime!=''">
+  			and a.addTime &gt;=#{starttime,jdbcType=VARCHAR}
+  		</if>
+  		<if test="endtime!=null and endtime!=''">
+  			and a.addTime &lt;=#{endtime,jdbcType=VARCHAR}
+  		</if>
+  		<if test="order_type!=null and order_type!=''">
+  			and a.order_type = #{order_type,jdbcType=INTEGER}
+  		</if>
+  		<if test="pay_mode!=null and pay_mode!=''">
+  			and a.pay_mode = #{pay_mode,jdbcType=INTEGER}
+  		</if> 
+  
+  </select>
+  
   
 </mapper>

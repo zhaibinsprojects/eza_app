@@ -471,12 +471,12 @@ public class UserSetupAuthController {
 			HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(value="type",required=false) String type){
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		/*ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("请重新登陆！");
 			return result;
-		}
+		}*/
 		/*
 		//检查上传类型
 		result=checkuptype(type);*/
@@ -496,7 +496,7 @@ public class UserSetupAuthController {
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("上传失败");
-				result.setObj("");
+				result.setObj(new HashMap<>());
 				result.setSuccess(false);
 			}
 		} catch (Exception e) {

@@ -28,4 +28,6 @@ public interface ezs_payinfoMapper {
 	List<ezs_payinfo> selectPayRecordTotal(Map<String, Object> map);
 
 	List<ezs_payinfo> selectPayRecord(Map<String, Object> map);
+
+	int selectCount(Map<String, Object> map);
 }

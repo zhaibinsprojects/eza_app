@@ -708,6 +708,8 @@ public class UserProServiceImpl implements UserProService {
 				result.setMsg("未找到该手机号码客户");
 				return result;
 			}
+			
+			
 			// 先判断发送的次数 和 时间间隔
 			Long totalcodetimes = Long.parseLong(mobilesendtimes);
 			// 这里需要改
@@ -1357,7 +1359,7 @@ public class UserProServiceImpl implements UserProService {
 		upuser.setId(ezsuser.getEzs_userinfo().getId());
 
 		ezs_user uupi = new ezs_user();
-
+		uupi.setId(ezsuser.getEzs_userinfo().getId());
 		switch (typeval) {
 		case "truename":
 			if (Tools.isEmpty(linkvo.getTruename()) && !Tools.paramValidate(linkvo.getTruename(), 3)) {
@@ -1370,6 +1372,30 @@ public class UserProServiceImpl implements UserProService {
 			}
 
 			break;
+		case "username":
+			if(uupi.getEzs_userinfo().getUpdateStatus()==1){
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("您已经修改过一次,只有一次修改机会");
+				return  result;
+			}
+			
+			
+			if (Tools.isEmpty(linkvo.getTruename()) && !Tools.paramValidate(linkvo.getTruename(), 3)) {
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("登陆名称不正确！");
+			} else {
+				ezs_userinfo upuser1 = new ezs_userinfo();
+				upuser.setId(ezsuser.getEzs_userinfo().getId());
+				upuser.setUpdateStatus(1);
+				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser1);
+				
+				uupi.setName(linkvo.getUsername());
+				ezs_userMapper.updateByPrimaryKeySelective(uupi);
+			}
+
+			break;	
 		case "sex":
 			upuser.setSex_id(linkvo.getSex());
 			ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
@@ -1427,7 +1453,7 @@ public class UserProServiceImpl implements UserProService {
 		}
 		try {
 			ezsuser = ezs_userMapper.getUserInfoByUserNameFromBack(ezsuser.getName()).get(0);
-			RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), ezsuser,
+			RedisUserSession.updateUserInfo(ezsuser.getUserkey(), ezsuser,
 					Long.parseLong(redisuserkeyexpir));
 		} catch (NumberFormatException e) {
 			log.info("h5设置个人资料" + ezsuser.getName() + "错误" + e.toString());
@@ -1653,17 +1679,19 @@ public class UserProServiceImpl implements UserProService {
 				String temCode = ftcode.getResult();
 				if (temCode.trim().equals(code.trim())) {
 					// 正确 进入下一步
-					ezs_user uupi = new ezs_user();
-					uupi.setName(mobile);
-					uupi.setId(upi.getId());
+//					ezs_user uupi = new ezs_user();
+//					uupi.setName(mobile);
+//					uupi.setId(upi.getId());
 					ezs_userinfo info = new ezs_userinfo();
 					info.setPhone(mobile);
+					info.setPhoneStatus(1);
 					info.setId(upi.getEzs_userinfo().getId());
 					int temaa = ezs_userinfoMapper.updateByPrimaryKeySelective(info);
-					int temaa1 = ezs_userMapper.updateByPrimaryKeySelective(uupi);
+				
+//					int temaa1 = ezs_userMapper.updateByPrimaryKeySelective(uupi);
 					if (temaa == 1) {
 						// 更新缓存
-						upi.setName(mobile);
+						//upi.setName(mobile);
 						upi.getEzs_userinfo().setPhone(mobile);
 						RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi,
 								Long.parseLong(redisuserkeyexpir));

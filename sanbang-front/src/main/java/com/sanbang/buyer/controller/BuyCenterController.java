@@ -78,7 +78,7 @@ public class BuyCenterController {
 	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -108,7 +108,7 @@ public class BuyCenterController {
 	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -194,7 +194,7 @@ public class BuyCenterController {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		List<InvoiceInfo> iList = null;
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

@@ -63,7 +63,7 @@ public class GoodsServiceImpl implements GoodsService{
 	
 	public int insertCart(ezs_goodscart goodsCart){
 		int n ;
-		n = ezs_goodscartMapper.insert(goodsCart);
+		n = ezs_goodscartMapper.insertSelective(goodsCart);
 		return n;
 		
 	}
@@ -76,10 +76,12 @@ public class GoodsServiceImpl implements GoodsService{
 		return n;
 	}
 	
-	public int insertCollect(Long id){
+	public int insertCollect(Long id,Long userId){
 		ezs_documentshare share = new ezs_documentshare();
 		share.setGood_id(id);
-		int n = ezs_documentshareMapper.insert(share);
+		share.setDeleteStatus(false);
+		share.setUser_id(userId);
+		int n = ezs_documentshareMapper.insertSelective(share);
 		return n;
 	}
 	
@@ -89,7 +91,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public int insertOrder(ezs_orderform order){
-		int n = ezs_orderformMapper.insert(order);
+		int n = ezs_orderformMapper.insertSelective(order);
 		return n;
 	}
 	
@@ -128,12 +130,12 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	public int insertCustomized(ezs_customized customized){
-		int n = ezs_customizedMapper.insert(customized);
+		int n = ezs_customizedMapper.insertSelective(customized);
 		return n;
 	}
 	
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord){
-		int n = ezs_customized_recordMapper.insert(customizedRecord);
+		int n = ezs_customized_recordMapper.insertSelective(customizedRecord);
 		return n;
 	}
 	

@@ -2,10 +2,12 @@ package com.sanbang.dao;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.sanbang.bean.ezs_address;
+import com.sanbang.utils.Page;
 
 
 public interface ezs_addressMapper {
@@ -21,11 +23,15 @@ public interface ezs_addressMapper {
 
     ezs_address findByAreaidAndAreainfoAnduserid(@Param("area_id")Long areaid, @Param("area_info")String areainfo, @Param("user_id")Long userid);
 
-	List<ezs_address> selectByUserId(Long userid);
+    List<ezs_address> selectByUserId(Map<String, Object> map);
 
 
 
     int updateByPrimaryKey(ezs_address record);
     
     List<ezs_address> getAddressByUserId(Long userId);
+
+	int getCountAddressByUserId(Long userid);
+
+	
 }
