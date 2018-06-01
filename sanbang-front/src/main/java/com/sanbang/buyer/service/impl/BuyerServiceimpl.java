@@ -439,7 +439,7 @@ public class BuyerServiceimpl implements BuyerService {
 			
 			map.put("number",member);
 			map.put("temid", temid);
-			map.put("currentPage", currentPage);
+			map.put("pageno", currentPage);
 			map.put("starttime", request.getParameter("starttime"));
 			map.put("endtime", request.getParameter("endtime"));
 			map.put("ordernoOrcontentno", request.getParameter("ordernoOrcontentno"));

@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -23,6 +22,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_companyType_dict;
 import com.sanbang.bean.ezs_industry_dict;
 import com.sanbang.bean.ezs_position;
@@ -175,7 +175,13 @@ public class UserProServiceImpl implements UserProService {
 		sbd.append(userName).append("请求登陆，passwd=").append(pd).append(" &userAgent=").append(userAgent).append(" &ip=")
 				.append(ip).append(" &登录,时间:").append(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
 		log.info(sbd.toString());
-		String useridcard = RedisUserSession.getUserKey(USERIDCARD, request);
+		String  useridcard="";
+		if("app".equals(h5orapp)){
+			 useridcard = request.getParameter("token");
+		}else{
+			 useridcard = RedisUserSession.getUserKey(USERIDCARD, request);
+		}
+		
 		result = loginParam(userName, pd, code, useridcard, request, flag);
 		if (result.getSuccess()) {
 			loginuser(userName, request, response, result, userAgent, pd, ip, date, flag,h5orapp);
@@ -260,7 +266,13 @@ public class UserProServiceImpl implements UserProService {
 	@SuppressWarnings("unchecked")
 	public void loginuser(String userName, HttpServletRequest request, HttpServletResponse response, Result result,
 			String userAgent, String pd, String ip, Date date, Integer flag,String h5orapp) {
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=null;
+		if(Tools.isEmpty(request.getParameter("token"))){
+			 upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		}else{
+			 upi = RedisUserSession.getLoginUserInfo(request);
+		}
+		
 		if (upi != null && upi.getName().equals(userName.trim())) {
 			Boolean tempStatus = upi.getDeleteStatus();
 			if (!tempStatus) {
@@ -286,6 +298,14 @@ public class UserProServiceImpl implements UserProService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			} else {
 				userProInfo = userProInfolist.get(0);
+				try {
+					ezs_bill bill=userProInfo.getEzs_bill();
+					if(null==bill){
+						userProInfo.setEzs_bill(new ezs_bill());
+					}
+				} catch (Exception e1) {
+					userProInfo.setEzs_bill(new ezs_bill());
+				}
 				boolean b = false;
 				if (flag == null) {
 					b = MD5Util.md5Encode(pd).toLowerCase().equals(userProInfo.getPassword());
@@ -382,7 +402,7 @@ public class UserProServiceImpl implements UserProService {
 	public Result userAdd(String username, String passwd, String passwdA, String mobile, String code, String myip,
 			Integer flag, HttpSession session, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		log.info("新用户注册 参数：username=" + username + " &passwd=" + passwd + " &mobile=" + mobile + " &code=" + code);
+		log.info("新用户注册 参数：username=" + username + " &passwd=" + passwd + " &mobile=" + mobile + " &code=" + code+"&passwdA=" + passwdA);
 		Result result = Result.failure();
 
 		// 用户名为手机号
@@ -394,12 +414,13 @@ public class UserProServiceImpl implements UserProService {
 		} else {
 			// 其他注册方式 flag 为4qq注册 5微信注册
 			// 生成用户名密码
+			result = userAddParam(result, username, passwd, passwdA, mobile, code, request);
 			if (flag == 4) {
 				username = "qq_" + RandomStr32.getStrDefined(7);
 			} else if (flag == 5) {
 				username = "wx_" + RandomStr32.getStrDefined(7);
 			}
-			passwd = MD5Util.md5Encode(randpasswd).toLowerCase();
+			//passwd = MD5Util.md5Encode(passwd).toLowerCase();
 		}
 		if (result.getSuccess()) {
 			if (flag == null) {
@@ -412,6 +433,7 @@ public class UserProServiceImpl implements UserProService {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	Result userAddParam(Result result, String username, String passwd, String passwdA, String mobile, String code,
 			HttpServletRequest request) {
 
@@ -614,6 +636,7 @@ public class UserProServiceImpl implements UserProService {
 
 			// 先判断发送的次数 和 时间间隔
 			Long totalcodetimes = Long.parseLong(mobilesendtimesstr);
+			@SuppressWarnings("unchecked")
 			RedisResult<Integer> rrtin = (RedisResult<Integer>) RedisUtils.get(phone + mobilerecodestr + "times",
 					Integer.class);
 			Integer codetimes = 0;

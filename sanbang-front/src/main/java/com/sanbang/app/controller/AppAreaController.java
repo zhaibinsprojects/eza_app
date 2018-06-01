@@ -1,4 +1,5 @@
-package com.sanbang.userpro.controller;
+package com.sanbang.app.controller;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,31 +8,57 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.area.service.AreaService;
 import com.sanbang.bean.ezs_area;
-import com.sanbang.userpro.service.TestService;
 import com.sanbang.utils.JsonUtils;
+import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/adduser")
-public class MyTestController {
-	
+@RequestMapping("/app/area")
+public class AppAreaController {
+
 	@Autowired
 	private AreaService areaService;
 	
-	@Autowired
-	private TestService test;
+	/**
+	 * 得到一级数据
+	 * @return
+	 */
+	@RequestMapping(value="/getAreaParentList")
+	@ResponseBody
+	public Result getAreaParentList(){
+		Result result=Result.failure();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result.setSuccess(true);
+		result.setObj(areaService.getAreaParentList());
+		return result;
+	}
 	
-	@RequestMapping("/tuser")
-	public void test(int num){
-	 test.addUserInfo(num);
- }
+	/**
+	 * 得到子子级数据
+	 * @param areaid
+	 * @return
+	 */
+	@RequestMapping(value="/getAreaListByParId")
+	@ResponseBody
+	public Result getAreaListByParId(@RequestParam(required=true,value="areaid")long areaid){
+		Result result=Result.failure();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result.setSuccess(true);
+		result.setObj(areaService.getAreaListByParId(areaid));
+		return result;
+	}
 	
 	@ResponseBody
-	@RequestMapping("/areaToJson")
+	@RequestMapping( value="/areaToJson", produces = "text/html;charset=UTF-8")
 	public Object areaToJson(){
 		List<Map<String, Object>> list=new ArrayList<>();
 		List<ezs_area> listp=	areaService.getAreaParentList();
@@ -42,7 +69,6 @@ public class MyTestController {
 			map.put("cities", getarraytwo(ezs_area));
 			list.add(map);
 		}
-		 System.err.println(JsonUtils.jsonOut(list));
 		return JsonUtils.jsonOut(list); 
 	}
 	

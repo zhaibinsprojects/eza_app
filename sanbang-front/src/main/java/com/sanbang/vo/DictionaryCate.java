@@ -405,5 +405,13 @@ public class DictionaryCate {
     
     //形态
     public final static String EZS_FORM="EZS_FORM";
+    
+    //订单类型
+    //货品订单
+    public final static String ORDER_MATCH_GOOD="ORDER_MATCH_GOOD";
+    public final static String ORDER_SELF_GOOD="ORDER_SELF_GOOD";
+   
+    //样品订单
+    public final static String ORDER_SAMPLE_GOOD="ORDER_SAMPLE_GOOD";
 
 }

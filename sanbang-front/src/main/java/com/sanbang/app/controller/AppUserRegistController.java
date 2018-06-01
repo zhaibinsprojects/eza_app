@@ -32,7 +32,6 @@ import com.sanbang.vo.MessageDictionary;
 public class AppUserRegistController {
 
 	
-	private  static final String view="/memberuser/regist/";
 	
 	@Autowired
 	private UserProService userProService;
@@ -120,7 +119,7 @@ public class AppUserRegistController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@RequestMapping(value="/userAdd")
+	@RequestMapping(value="/userAdd",produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public Result userAdd(
 			@RequestParam(value="passwd",required=false) String passwd,
