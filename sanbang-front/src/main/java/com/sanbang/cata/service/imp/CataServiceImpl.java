@@ -20,19 +20,13 @@ import com.sanbang.vo.GoodsClass;
 public class CataServiceImpl implements CataService{
 	@Resource(name="ezs_cataMapper")
 	private com.sanbang.dao.ezs_cataMapper ezs_cataMapper;
-	/**
-	 * 一级
-	 */
+	//二级三级
 	public List<ezs_goods_class> getFirstList(){
 		List<ezs_goods_class> list = new ArrayList<ezs_goods_class>();
 		list = ezs_cataMapper.getFirstList();
 		return list;
 	}
-	/**
-	 * 二级
-	 * @param parentId	父id
-	 * @return
-	 */
+	//二级三级
 	public List<GoodsClass> getChildList(){
 		List<GoodsClass> list = new ArrayList<GoodsClass>();
 		list = ezs_cataMapper.getChildList();
