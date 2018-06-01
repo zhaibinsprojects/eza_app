@@ -172,7 +172,7 @@
   	select 
   	<include refid="Base_Column_List" />
   	from ezs_address 
-  	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0 limit ${pageNow},${pageSize}
+  	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0 limit ${startPos},${pageSize}
   </select>
   <select id="getCountAddressByUserId"  resultType="java.lang.Integer">
   	select count(*) from ezs_address where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0

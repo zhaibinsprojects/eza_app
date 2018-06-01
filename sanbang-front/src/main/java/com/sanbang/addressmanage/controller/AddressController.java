@@ -52,7 +52,7 @@ public class AddressController {
 	 */
 	@RequestMapping("/getAddressListByUserId")
 	@ResponseBody
-	public Result getAddressListByUserId(@RequestParam(name = "pageNo", defaultValue = "1") int pageNow){
+	public Result getAddressListByUserId(@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
@@ -63,7 +63,7 @@ public class AddressController {
 		Page page = new Page();
 		page.setPageNow(pageNow);
 		
-		List<ezs_address> addressList = addressService.findAddressByUserId((long)6,page);
+		List<ezs_address> addressList = addressService.findAddressByUserId(upi.getId(),page);
 		
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);

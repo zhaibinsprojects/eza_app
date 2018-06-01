@@ -105,7 +105,7 @@ public class AddressServiceImpl implements AddressService {
 		Map<String,Object> map = new HashMap<>();
 		
 		map.put("userid", id);
-		map.put("pageNow", page.getPageNow());
+		map.put("startPos", page.getStartPos());
 		map.put("pageSize", page.getPageSize());
 		
 		return ezs_addressMapper.selectByUserId(map);
