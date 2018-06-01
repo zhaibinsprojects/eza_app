@@ -217,7 +217,7 @@ public class SellerGoodsController {
 			//地址
 			map.put("area", areaService.getAreaParentList());
 			//分类
-			map.put("cata",cataService.getOnelevelList());
+			map.put("cata",cataService.getFirstList());
  			result.setObj(map);
 		};
 		
