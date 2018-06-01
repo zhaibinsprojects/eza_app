@@ -1,5 +1,5 @@
 #货品（GoodsController中）
-    @RequestMapping("/goods")
+    @RequestMapping("/app/goods")
 ##查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
 ##参数：货品id
     @RequestMapping("/goodsDetail")
@@ -83,7 +83,7 @@
 
 
 #品类（CataController中）
-    @RequestMapping("/cata")
+    @RequestMapping("/app/cata")
 ##一级分类列表
 ##参数：无
     @RequestMapping("/firstList")
