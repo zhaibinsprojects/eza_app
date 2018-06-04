@@ -131,7 +131,7 @@ public class SellerReturnOrderServiceImpl implements SellerReturnOrderService {
 				result.setMsg("只能上传一张图片");
 				return result;
 			}
-
+			//sql 遗漏  还未写
 			List<ezs_return_attach> hasreturnAttash = ezs_return_attachMapper.getEzsReturnAttachByReturnId(returnid);
 
 			if (null != hasreturnAttash && hasreturnAttash.size() > 0) {
