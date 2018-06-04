@@ -132,7 +132,7 @@ public class AddressServiceImpl implements AddressService {
 		Result result = addressValidation(ezs_address);
 		if(result.getSuccess()){
 			//查询新地址是否已存在
-			ezs_address address = ezs_addressMapper.findByAreaidAndAreainfoAnduserid(ezs_address.getArea_id(),ezs_address.getArea_info(),(long)40);
+			ezs_address address = ezs_addressMapper.findByAreaidAndAreainfoAnduserid(ezs_address.getArea_id(),ezs_address.getArea_info(),upi.getId());
 			if(address!=null){
 				result.setMsg("该地址已存在");				
 				return result;

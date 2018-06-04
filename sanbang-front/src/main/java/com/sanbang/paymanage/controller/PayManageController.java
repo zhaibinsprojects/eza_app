@@ -48,7 +48,7 @@ public class PayManageController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		if(starttime!=null&&endtime!=null){
+		if(!Tools.isEmpty(starttime)&&!Tools.isEmpty(endtime)){
 			if(Tools.compare_date(starttime, endtime)!=1){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("请选择正确的时间");
@@ -61,6 +61,8 @@ public class PayManageController {
 		page.setPageNow(pageNow);
 		
 		Map<String,Object> map = new HashMap<>();
+		map.put("paymentUser_id", upi.getId());
+		map.put("receUser_id", upi.getId());
 		map.put("deleteStatus", false);
 		map.put("starttime", starttime);
 		map.put("endtime", endtime);
