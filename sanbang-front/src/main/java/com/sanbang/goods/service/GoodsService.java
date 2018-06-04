@@ -13,6 +13,7 @@ import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
+import com.sanbang.bean.ezs_user;
 
 /**
  * 货品相关业务处理
@@ -35,7 +36,7 @@ public interface GoodsService {
 	 * 加入采购单（添加购物车）
 	 * @param goodsCart 购物车实体
 	 */
-	public int insertCart(ezs_goodscart goodsCart);	
+	public int insertCart(ezs_goodscart goodsCartList);	
 	
 	/**
 	 * 更新收藏状态
@@ -112,5 +113,26 @@ public interface GoodsService {
 	 * @return
 	 */
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
+	
+	/**
+	 * 添加商品到购物车
+	 * @param goodscartList
+	 * @param user
+	 * @return
+	 */
+	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList,ezs_user user);
+	/**
+	 * 直接下订单
+	 * @param orderForm
+	 * @param user
+	 * @return
+	 */
+	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user);
+	/**
+	 * 由购物车下订单
+	 * @param user
+	 * @return
+	 */
+	public Map<String, Object> addOrderFromGoodCar(ezs_user user);
 	
 }

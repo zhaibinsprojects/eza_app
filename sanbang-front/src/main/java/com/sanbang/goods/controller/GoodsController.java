@@ -141,12 +141,12 @@ public class GoodsController {
 	/**
 	 * 加入采购单（加入购物车）
 	 * @param request
-	 * @param goodsCart
+	 * @param goodsCartList
 	 * @return
 	 */
 	@RequestMapping("/insertCart")
 	@ResponseBody
-	public Result insertCart(HttpServletRequest request,HttpServletResponse response,ezs_goodscart goodsCart){
+	public Result insertCart(HttpServletRequest request,HttpServletResponse response,ezs_goodscart goodscart){
 		Result result = null;
 		//modify start by zhaibin 2018/05/31
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -157,19 +157,10 @@ public class GoodsController {
 		}
 		//modify end by zhaibin 2018/05/31
 		ezs_bill bill = user.getEzs_bill();
-		if(null != goodsCart){
-			goodsCart.setBill(bill);
-			goodsCart.setAddTime(new Date());
-			goodsCart.setDeleteStatus(false);
-			//goodsCart.setOf_id(null);
-			//goodsCart.setSc_id(null);
-		}
 		int n;
-		n = goodsService.insertCart(goodsCart);
+		n = goodsService.insertCart(goodscart);
 		if(n>0){
 			result = Result.success();
-			result.setObj(goodsCart);
-			result.setSuccess(true);
 			result.setMsg("添加成功");
 		}else{
 			result = Result.failure();
@@ -186,19 +177,27 @@ public class GoodsController {
 	 */
 	@RequestMapping("/insertOrder")
 	@ResponseBody
-	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
-		Result result = Result.failure();
+	public Result insertOrder(HttpServletRequest request,HttpServletResponse response,ezs_orderform order){
+		Result result = null;
 		int n;
+		// modify start by zhaibin 2018/05/31
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			result = Result.failure();
+			result.setMsg("用户未登录");
+			return result;
+		}
+		// modify end by zhaibin 2018/05/31
 		order.setAddTime(new Date());
 		order.setDeleteStatus(false);
 		n = goodsService.insertOrder(order);
 		if(n>0){
+			result = Result.success();
 			result.setMsg("添加成功");
 			result.setSuccess(true);
 		}
 		return result;
 	}
-	
 	/**
 	 * 采购单列表（就是预约定制的列表）
 	 * @param request
@@ -467,5 +466,118 @@ public class GoodsController {
 		
 		
 		return result;
+	}
+	/**
+	 * 添加购物车
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param goodCarList
+	 * @return
+	 */
+	@RequestMapping("/addToGoodCar")
+	@ResponseBody
+	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,List<ezs_goodscart> goodCarList){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			mmp = this.goodsService.addGoodsCart(goodCarList, user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+	/**
+	 * 直接下订单（同时添加购物车和订单）
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param goodCarList
+	 * @return
+	 */
+	@RequestMapping("/directAddToOrderForm")
+	@ResponseBody
+	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,List<ezs_goodscart> goodCarList){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			mmp = this.goodsService.addOrderForm(goodCarList, user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+	/**
+	 * 由购物车下订单
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/addOrderFromGoodCar")
+	@ResponseBody
+	public Object addOrderFromGoodCar(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			mmp = this.goodsService.addOrderFromGoodCar(user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
 	}
 }
