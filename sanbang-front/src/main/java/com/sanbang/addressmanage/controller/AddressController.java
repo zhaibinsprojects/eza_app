@@ -19,7 +19,7 @@ import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/app/address")
+@RequestMapping("/address")
 public class AddressController {
 	
 	@Autowired
