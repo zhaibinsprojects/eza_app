@@ -1,10 +1,12 @@
 package com.sanbang.setup.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,13 @@ import com.sanbang.app.controller.AppUserSetupLinkController;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
+import com.sanbang.utils.ImageUrlUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
-import com.sanbang.utils.Tools;
-import com.sanbang.utils.javaMail.Mail;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 @Controller
 @RequestMapping("/setup/linkuser/")
@@ -56,6 +58,9 @@ public class UserSetupLinkController {
 
 	@Autowired
 	private DictService dictService;
+	
+	@Autowired
+	private com.sanbang.setup.service.AuthService authService;
 
 	/**
 	 * 设置注册联系人资料
@@ -77,7 +82,7 @@ public class UserSetupLinkController {
 			}
 			Map<String, Object> map=new HashMap<>();
 			if (null != upi.getEzs_userinfo()) {
-				map.put("Link", new LinkUserVo("headimg", upi.getName(), upi.getEzs_userinfo().getPhone(),
+				map.put("Link", new LinkUserVo(ImageUrlUtil.geturl(DictionaryCate.USER_ICON, upi.getAuthimg()), upi.getName(), upi.getEzs_userinfo().getPhone(),
 						upi.getTrueName(), upi.getEzs_userinfo().getSex_id(),
 						(upi.getEzs_userinfo().getSex_id() != null && upi.getEzs_userinfo().getSex_id() != 0)
 								? dictService.getDictByThisId(upi.getEzs_userinfo().getSex_id()).getName() : "",
@@ -107,6 +112,8 @@ public class UserSetupLinkController {
 		return result;
 	}
 
+	
+	
 	/**
 	 * 原来手机号发送验证码
 	 * 
@@ -277,37 +284,28 @@ public class UserSetupLinkController {
 	}
 	
 	
+	
 	/**
-	 * 邮箱验证
-	 * @param request
+	 * 添加用户头像
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/sendEmail")
-	public  Result sendEmail(HttpServletRequest request){
-		Result result = Result.failure();
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if (upi == null) {
+	@RequestMapping("/headimg")
+	public Result saveshouq(
+			HttpServletRequest request,
+			HttpServletResponse response){
+		Result result=Result.failure();  
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("请重新登陆！");
 			return result;
 		}
-		log.info("给" + upi.getName() + "发送评标邮件>>>>>>>");
-		
-		if(Tools.isEmpty(upi.getEzs_userinfo().getEmail())){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("您还未填写邮箱！");
-			return result;
-		}
-		String  secondHtml="请点击以下链接进行操作";
-		Mail secondmail = new Mail(upi.getEzs_userinfo().getEmail(), "易再生网", secondHtml);
-		secondmail.setSubject("邮箱验证:" + upi.getName() == null ? ""
-				: upi.getName() + "关于修改邮箱-易再生网");
-		log.info("评标邮件内容>>>>>>>" + secondHtml);
-		result.setSuccess(true);
-		result.setMsg("发送成功");
+		result=authService.saveHeadPicUrl(result, request, upi, response);
 		return result;
 	}
-	
 
+	
+	
+	
 }

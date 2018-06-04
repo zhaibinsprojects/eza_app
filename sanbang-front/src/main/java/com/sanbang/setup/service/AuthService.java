@@ -50,4 +50,9 @@ public interface AuthService {
 	 */
 	public Result saveAuthPicUrl(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
 	
+	
+	/**
+	 * 头像
+	 */
+	public Result saveHeadPicUrl(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response);
 }

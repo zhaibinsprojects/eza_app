@@ -2,6 +2,11 @@ package com.sanbang.vo;
 
 public class DictionaryCate {
 	
+	
+	/**
+     * 头像
+     */
+    public static final String USER_ICON = "USER_ICON";
 	/**
      * 企业类型
      */
