@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_user;
 import com.sanbang.paymanage.service.PayManageService;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/paymanager")
+@RequestMapping("/app/paymanager")
 public class PayManageController {
 	
 	@Autowired
@@ -38,9 +39,10 @@ public class PayManageController {
 	public Result getPayManage(@RequestParam(value="starttime",required=false)String starttime,
 			@RequestParam(value="endtime",required=false)String endtime,
 			@RequestParam(value="order_type",required=false)Integer order_type,
-			@RequestParam(value="pay_mode",required=false)Integer pay_mode,HttpServletRequest request){
+			@RequestParam(value="pay_mode",required=false)Integer pay_mode,
+			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow,HttpServletRequest request){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -54,14 +56,20 @@ public class PayManageController {
 				return result;
 			}
 		}
+		Page page = new Page();
+		page.setStartPos(pageNow);
+		page.setPageNow(pageNow);
+		
 		Map<String,Object> map = new HashMap<>();
 		map.put("deleteStatus", false);
 		map.put("starttime", starttime);
 		map.put("endtime", endtime);
 		map.put("order_type", order_type);
 		map.put("pay_mode", pay_mode);
+		map.put("startPos", page.getStartPos());
+		map.put("pageSize", page.getPageSize());
 		
-		result = payManageService.selectPayInfoByParam(map);
+		result = payManageService.selectPayInfoByParam(map,page);
 		
 		return result;
 	}

@@ -36,7 +36,7 @@ public class SellerReturnOrderController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("orderlist")
+	@RequestMapping("/orderlist")
 	public Result returnOrderList(HttpServletRequest request,
 			@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
 			@RequestParam(name = "order_type", defaultValue = "") int order_type,
@@ -59,7 +59,7 @@ public class SellerReturnOrderController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("returnOrderinfo")
+	@RequestMapping("/returnOrderinfo")
 	public Result returnOrderinfoforBuyer(HttpServletRequest request,
 			@RequestParam(name = "returnid", defaultValue = "1") int returnid) {
 		Result result = Result.failure();
