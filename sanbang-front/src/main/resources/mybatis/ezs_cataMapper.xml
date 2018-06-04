@@ -9,7 +9,7 @@
     <result column="thirdId" property="thirdId" jdbcType="BIGINT" />
   </resultMap>
   <!-- 查询一级分类 -->
-  <select id="getOnelevelList" resultType="ezs_goods_class" >
+  <select id="getFirstList" resultType="ezs_goods_class" >
     select * from ezs_goods_class gc where gc.parent_id is null
   </select>
   
