@@ -249,4 +249,9 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_dvaluate_accessroyMapper"/>
 	</bean>
+	<!-- storecartMapper -->
+	<bean id="ezs_storecartMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_storecartMapper"/>
+	</bean>
 </beans>
