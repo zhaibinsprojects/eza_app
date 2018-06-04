@@ -392,7 +392,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 
 		map.put("code", "000");
 		map.put("message", "操作成功");
-		map.put("url", url);
+		if(null!=map.get("url")){
+			String url1=String.valueOf(map.get("url"));
+			map.put("url", new StringBuffer().append(url1).append(",").append(url).toString());
+		}else{
+			map.put("url", url);
+		}
+		
 	}
 
 	/**

@@ -26,6 +26,7 @@ import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
@@ -82,7 +83,7 @@ public class AppUserSetupCompanyInfoController {
 	@ResponseBody
 	public Object upCompanyInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -127,7 +128,12 @@ public class AppUserSetupCompanyInfoController {
 			//公司类型
 			map.put("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
 			//地址
-			map.put("area", areaService.getAreaParentList());
+			map.put("initarea", areaService.getAreaParentList());
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}else{
+				map.put("area","");// 经营地址
+			}
  			result.setObj(map);
 		};
 		
@@ -165,30 +171,30 @@ public class AppUserSetupCompanyInfoController {
 	 */
 	private String getaddressinfo(long areaid) {
 		StringBuilder sb = new StringBuilder();
-		long threeinfo = 0;
-		long twoinfo = 0;
-		long oneinfo = 0;
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
 		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
 		if (ezs_threeinfo != null) {
-			threeinfo = ezs_threeinfo.getId();
+			threeinfo = ezs_threeinfo.getAreaName();
 			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
 			if (ezs_twoinfo != null) {
-				twoinfo = ezs_threeinfo.getId();
+				twoinfo =  ezs_twoinfo.getAreaName();
 				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
 				if (ezs_oneinfo != null) {
-					oneinfo = ezs_threeinfo.getId();
+					oneinfo =  ezs_oneinfo.getAreaName();
 				}
 			}
 		}
 		
-		if(threeinfo!=0){
+		if(!Tools.isEmpty(threeinfo)){
 			sb = new StringBuilder().append(threeinfo);	
 		}
-		if(twoinfo!=0){
-			sb = new StringBuilder().append(twoinfo).append("@").append(threeinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
 		}
-		if(oneinfo!=0){
-			sb = new StringBuilder().append(oneinfo).append("@").append(twoinfo).append("@").append(threeinfo);
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
 		
 		return sb.toString();

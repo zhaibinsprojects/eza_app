@@ -67,11 +67,12 @@ public class AppHomeGoodsMessController {
 	 * @param request
 	 * @param response
 	 * @param currentPage 当前页面[1,00]
+	 * @param addressId 当前地址编码
 	 * @return 
 	 */
 	@RequestMapping("/goodsIntroduce")
 	@ResponseBody
-	public Object allGoodsDetail(HttpServletRequest request,HttpServletResponse response,String currentPage){
+	public Object allGoodsDetail(HttpServletRequest request,HttpServletResponse response,String currentPage,String addressId){
 		Map<String, Object> mmp = null;
 		List<GoodsInfo> glist = null;
 		Result rs = null;

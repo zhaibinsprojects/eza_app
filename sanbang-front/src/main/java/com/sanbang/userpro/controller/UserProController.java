@@ -152,7 +152,7 @@ public class UserProController {
 	public Result userLogot(HttpServletRequest request) throws Exception {
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		userProService.userLogot(upi,RedisUserSession.getUserKey(cookieuserkey, request));
+		userProService.userLogot(upi,upi.getUserkey());
 		result.setSuccess(true);
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("退出成功");
