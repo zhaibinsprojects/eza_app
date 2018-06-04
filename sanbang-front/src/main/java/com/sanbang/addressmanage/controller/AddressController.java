@@ -95,11 +95,11 @@ public class AddressController {
 	public Result getAddressById(@RequestParam("id")Long id){
 		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
-		if(upi==null){
+		/*if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
-		}
+		}*/
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("请求成功");
@@ -117,11 +117,11 @@ public class AddressController {
 	public Result updateAddressById(ezs_address ezs_address){
 		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
-		if(upi==null){
+		/*if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
-		}
+		}*/
 	
 		return addressService.updateAddressById(ezs_address,upi);
 	}
