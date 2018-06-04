@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.GoodsClass;
@@ -28,7 +29,7 @@ public class AppCataController {
 	@RequestMapping("/firstList")
 	@ResponseBody
 	public Result getFirstList(HttpServletRequest request){
-		List list = cataService.getFirstList();
+		List<ezs_goods_class> list = cataService.getFirstList();
 		Result result=Result.failure();
 		result.setObj(list);
 		return   result;

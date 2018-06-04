@@ -125,4 +125,12 @@
       setorder_id = #{setorder_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="getEzsReturnAttachByReturnId" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from ezs_return_attach
+    where setorder_id=#{returnid}
+  </select>
+  
 </mapper>

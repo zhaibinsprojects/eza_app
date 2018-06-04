@@ -471,42 +471,31 @@ public class AppUserSetupAuthController {
 			HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(value="type",required=false) String type){
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
-		/*
-		//检查上传类型
-		result=checkuptype(type);*/
-		
-		/*if(!result.getSuccess()){
-			return result;
-		}*/
-		
+
+		Map<String, Object> map1=new HashMap<>();
 		try {
 			Map<String , Object> map=fileUploadService.uploadFile(request,0,0,10*1024*1024l);
 			if("000".equals(map.get("code"))){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setMsg("上传成功");
-				result.setObj(new HashMap<>().put("picurl", map.get("url")));
-				result.setSuccess(false);
+				map1.put("picurl",  map.get("url"));
+				result.setObj(map1);
+				result.setSuccess(true);
 				return result;
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setObj(map1);
 				result.setMsg("上传失败");
-				result.setObj("");
 				result.setSuccess(false);
 			}
 		} catch (Exception e) {
 			log.info("文件：上传接口调用失败"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("上传失败");
-			result.setObj("");
+			result.setObj(map1);
 			result.setSuccess(false);
 		} 
-		
+		result.setObj(new HashMap<>());
 		
 		return result;
 	}
