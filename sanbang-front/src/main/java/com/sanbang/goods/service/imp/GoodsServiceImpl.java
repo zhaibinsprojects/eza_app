@@ -265,25 +265,35 @@ public class GoodsServiceImpl implements GoodsService{
 			this.ezs_orderformMapper.insert(orderForm);
 			//已购商品按store分类
 			List<ezs_storecart> storeCarList = this.storecartMapper.getByUserId(queryCondition);
-			for (ezs_storecart storecart : storeCarList) {
-				totalMoney += storecart.getTotal_price().doubleValue();
-				//更新商铺记录状态
-				storecart.setDeleteStatus(true);
-				this.storecartMapper.updateByPrimaryKey(storecart);
-				//更新商品购物车
-				QueryCondition queryCondition01 = new QueryCondition();
-				queryCondition01.setUserId(user.getId());
-				queryCondition01.setStoreCarId(storecart.getId());
-				List<ezs_goodscart> goodsCarList = this.ezs_goodscartMapper.selectByStoreCarId(queryCondition01);
-				for (ezs_goodscart goodscart : goodsCarList) {
-					goodscart.setDeleteStatus(true);
-					goodscart.setOf_id(orderForm.getId());
-					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+			if(storeCarList!=null&&storeCarList.size()>0){
+				for (ezs_storecart storecart : storeCarList) {
+					totalMoney += storecart.getTotal_price().doubleValue();
+					//更新商铺记录状态
+					storecart.setDeleteStatus(true);
+					this.storecartMapper.updateByPrimaryKey(storecart);
+					//更新商品购物车
+					QueryCondition queryCondition01 = new QueryCondition();
+					queryCondition01.setUserId(user.getId());
+					queryCondition01.setStoreCarId(storecart.getId());
+					List<ezs_goodscart> goodsCarList = this.ezs_goodscartMapper.selectByStoreCarId(queryCondition01);
+					for (ezs_goodscart goodscart : goodsCarList) {
+						goodscart.setDeleteStatus(true);
+						goodscart.setOf_id(orderForm.getId());
+						this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+					}
 				}
+				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
+				orderForm.setCart_session_id(storeCarList.get(0).getCart_session_id());
+				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "订单添加成功");
+				
+			}else{
+				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "购物车无数据");
 			}
-			orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
-			orderForm.setCart_session_id(storeCarList.get(0).getCart_session_id());
-			this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
