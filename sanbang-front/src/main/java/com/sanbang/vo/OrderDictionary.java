@@ -15,3 +15,4 @@ public class OrderDictionary {
 	public static final String order_sample_good = "ORDER_SAMPLE_GOOD";// 样品商品订单
 	
 }
+
