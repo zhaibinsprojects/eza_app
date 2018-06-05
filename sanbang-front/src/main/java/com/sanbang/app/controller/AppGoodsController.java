@@ -269,6 +269,7 @@ public class AppGoodsController {
 	 * @param request
 	 * @param area	地区id
 	 * @param type	类别id
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/areaAndType")
@@ -336,7 +337,7 @@ public class AppGoodsController {
 			result.setMsg("返回查询条件");
 			result.setSuccess(true);
 		}else{
-			result.setMsg("插叙失败");
+			result.setMsg("查询失败");
 			result.setSuccess(false);
 		}
 		
