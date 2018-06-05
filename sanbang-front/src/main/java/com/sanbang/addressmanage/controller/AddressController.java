@@ -53,7 +53,7 @@ public class AddressController {
 	@RequestMapping("/getAddressListByUserId")
 	@ResponseBody
 	public Result getAddressListByUserId(@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
-		Result result = new Result();
+		Result result = new Result().failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
