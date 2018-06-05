@@ -127,7 +127,7 @@ public interface GoodsService {
 	 * @param user
 	 * @return
 	 */
-	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user,String sessionId);
+	public Map<String, Object> addOrderForm(ezs_orderform orderForm,ezs_user user,String sessionId);
 	/**
 	 * 由购物车下订单
 	 * @param user

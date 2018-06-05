@@ -130,4 +130,9 @@
   	<include refid="Base_Column_List" />
   	 from ezs_storecart a where a.user_id = #{userId} and a.deleteStatus = '0' and a.store_id = #{storeId}
   </select>
+  <select id="getByUserId" resultMap="BaseResultMap" parameterType="com.sanbang.vo.QueryCondition">
+  	select 
+  	<include refid="Base_Column_List" />
+  	 from ezs_storecart a where a.user_id = #{userId} and a.deleteStatus = '0'
+  </select>
 </mapper>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.alibaba.druid.stat.TableStat.Condition;
 import com.sanbang.bean.ezs_storecart;
 import com.sanbang.vo.QueryCondition;
 
@@ -22,4 +23,6 @@ public interface ezs_storecartMapper {
     int updateByPrimaryKey(ezs_storecart record);
     
     List<ezs_storecart> getByCondition(QueryCondition queryCondition);
+    
+    List<ezs_storecart> getByUserId(QueryCondition queryCondition);
 }
