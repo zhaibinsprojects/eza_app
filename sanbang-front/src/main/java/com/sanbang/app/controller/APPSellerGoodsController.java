@@ -230,7 +230,7 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Result getCataListByparid(HttpServletRequest request,long parentsId){
 		Result result=Result.success();
-		List<GoodsClass> list = cataService.getChildList();
+		List<GoodsClass> list = cataService.getChildList(parentsId);
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
 		result.setObj(list);
 		return result;

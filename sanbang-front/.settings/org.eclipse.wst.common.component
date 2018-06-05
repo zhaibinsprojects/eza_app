@@ -2,12 +2,9 @@
     <wb-module deploy-name="sanbang-front">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-<<<<<<< HEAD
-=======
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
->>>>>>> f3dbc25d5e2fe95a67c3b5e8d0adec8a4da346ff
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <property name="context-root" value="front"/>
         <property name="java-output-path" value="/sanbang-front/target/classes"/>
     </wb-module>

@@ -521,14 +521,15 @@ public class GoodsController {
 	 * @author zhaibin
 	 * @param request
 	 * @param response
-	 * @param goodCarList
+	 * @param goodCarList(List<ezs_goodscart>类型的JSON串)
 	 * @return
 	 */
 	@RequestMapping("/directAddToOrderForm")
 	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,List<ezs_goodscart> goodCarList){
+	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String goodCarList){
 		String sessionId = request.getSession().getId();
 		Map<String, Object> mmp = null;
+		List<ezs_goodscart> tGoodCarList = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (user == null) {
@@ -537,8 +538,11 @@ public class GoodsController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
+		if(goodCarList!=null&&!goodCarList.trim().equals("")){
+			tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
+		}
 		try {
-			mmp = this.goodsService.addOrderForm(goodCarList, user,sessionId);
+			mmp = this.goodsService.addOrderForm(tGoodCarList, user,sessionId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
