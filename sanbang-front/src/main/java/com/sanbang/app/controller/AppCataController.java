@@ -16,6 +16,7 @@ import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.GoodsClass;
+import com.sanbang.vo.GoodsClass2;
 
 @Controller
 @RequestMapping("/app/cata")
@@ -32,10 +33,14 @@ public class AppCataController {
 	@RequestMapping("/firstList")
 	@ResponseBody
 	public Result getFirstList(HttpServletRequest request){
+		Result result = new Result();
 		List<ezs_goods_class> list = cataService.getFirstList();
-		Result result=Result.failure();
-		result.setObj(list);
-		return   result;
+		if(null != list && list.size()>0){
+			result.setObj(list);
+			result.setSuccess(true);
+			result.setMsg("查询成功");
+		}
+		return result;
 	}
 	
 	/**
@@ -48,8 +53,8 @@ public class AppCataController {
 	@ResponseBody
 	public Result getChildList(HttpServletRequest request,Long id){
 		Result result=Result.failure();
-		List secondList = cataService.getSecondList(id);
-		List thirdList = new ArrayList();
+		List<GoodsClass> secondList = cataService.getSecondList(id);
+		List<GoodsClass2> thirdList = new ArrayList<GoodsClass2>();
 		Map map2 = new HashMap();	//用map拼前端的json
 		List transList = new ArrayList();
 		for(int n=0; n < secondList.size(); n++){

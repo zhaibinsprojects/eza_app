@@ -16,6 +16,7 @@ import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.GoodsClass;
+import com.sanbang.vo.GoodsClass2;
 
 @Controller
 @RequestMapping("/cata")
@@ -52,6 +53,7 @@ public class CataController {
 			Map map = new HashMap();
 			GoodsClass gc = (GoodsClass)secondList.get(n);
 			thirdList = cataService.getThirdList(gc.getSecondId());
+			
 			map.put("third", thirdList);	//为符合前端要求的层级结构
 			map.put("secondName", gc.getSecondName());
 			transList.add(map);
