@@ -4,12 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ezs_userinfo implements Serializable {
-
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5881163343819974853L;
+	private static final long serialVersionUID = -3600809631699327484L;
 
 	private Long id;
 
@@ -17,7 +12,11 @@ public class ezs_userinfo implements Serializable {
 
     private Boolean deleteStatus;
 
+    private String QQ;
+
     private String email;
+
+    private Integer emailStatus;
 
     private Boolean enable;
 
@@ -25,7 +24,13 @@ public class ezs_userinfo implements Serializable {
 
     private String phone;
 
+    private Integer phoneStatus;
+
     private Integer status;
+
+    private String tel;
+
+    private Integer updateStatus;
 
     private Long depart_id;
 
@@ -33,14 +38,7 @@ public class ezs_userinfo implements Serializable {
 
     private Long sex_id;
 
-    private String QQ;
-
-    private Integer updateStatus;
-    
-    private String tel;
-    
-
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -64,12 +62,28 @@ public class ezs_userinfo implements Serializable {
         this.deleteStatus = deleteStatus;
     }
 
+    public String getQQ() {
+        return QQ;
+    }
+
+    public void setQQ(String QQ) {
+        this.QQ = QQ == null ? null : QQ.trim();
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
+    }
+
+    public Integer getEmailStatus() {
+        return emailStatus;
+    }
+
+    public void setEmailStatus(Integer emailStatus) {
+        this.emailStatus = emailStatus;
     }
 
     public Boolean getEnable() {
@@ -96,12 +110,36 @@ public class ezs_userinfo implements Serializable {
         this.phone = phone == null ? null : phone.trim();
     }
 
+    public Integer getPhoneStatus() {
+        return phoneStatus;
+    }
+
+    public void setPhoneStatus(Integer phoneStatus) {
+        this.phoneStatus = phoneStatus;
+    }
+
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel == null ? null : tel.trim();
+    }
+
+    public Integer getUpdateStatus() {
+        return updateStatus;
+    }
+
+    public void setUpdateStatus(Integer updateStatus) {
+        this.updateStatus = updateStatus;
     }
 
     public Long getDepart_id() {
@@ -128,38 +166,13 @@ public class ezs_userinfo implements Serializable {
         this.sex_id = sex_id;
     }
 
-    public String getQQ() {
-        return QQ;
-    }
-
-    public void setQQ(String QQ) {
-        this.QQ = QQ == null ? null : QQ.trim();
-    }
-
-    public Integer getUpdateStatus() {
-        return updateStatus;
-    }
-
-    public void setUpdateStatus(Integer updateStatus) {
-        this.updateStatus = updateStatus;
-    }
-
-	public String getTel() {
-		return tel;
-	}
-
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-
 	@Override
 	public String toString() {
-		return "ezs_userinfo [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", email=" + email
-				+ ", enable=" + enable + ", entryTime=" + entryTime + ", phone=" + phone + ", status=" + status
-				+ ", depart_id=" + depart_id + ", position_id=" + position_id + ", sex_id=" + sex_id + ", QQ=" + QQ
-				+ ", updateStatus=" + updateStatus + ", tel=" + tel + "]";
+		return "ezs_userinfo [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", QQ=" + QQ
+				+ ", email=" + email + ", emailStatus=" + emailStatus + ", enable=" + enable + ", entryTime="
+				+ entryTime + ", phone=" + phone + ", phoneStatus=" + phoneStatus + ", status=" + status + ", tel="
+				+ tel + ", updateStatus=" + updateStatus + ", depart_id=" + depart_id + ", position_id=" + position_id
+				+ ", sex_id=" + sex_id + "]";
 	}
-    
-    
     
 }

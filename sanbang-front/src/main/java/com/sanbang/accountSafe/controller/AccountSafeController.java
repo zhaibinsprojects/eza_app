@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.accountSafe.service.AccountSafeService;
+import com.sanbang.app.controller.AppUserSetupLinkController;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
+import com.sanbang.utils.javaMail.Mail;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MessageDictionary;
 
@@ -41,7 +45,7 @@ public class AccountSafeController {
 	//#短信验证码发送的次数
 	@Value("${consparam.mobile.sendtimes}")
 	private String mobilesendtimes;
-	
+	private Logger log = Logger.getLogger(AccountSafeController.class);
 	/**
 	 * 查看用户的账号安全状态，包括：实名认证，密保手机，邮箱认证 等情况
 	 * @param request
@@ -132,4 +136,36 @@ public class AccountSafeController {
 		
 	}
 	
+	
+	/**
+	 * 邮箱验证
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/sendEmail")
+	public  Result sendEmail(HttpServletRequest request){
+		Result result = Result.failure();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		log.info("给" + upi.getName() + "发送评标邮件>>>>>>>");
+		
+		if(Tools.isEmpty(upi.getEzs_userinfo().getEmail())){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("您还未填写邮箱！");
+			return result;
+		}
+		String  secondHtml="请点击以下链接进行操作";
+		Mail secondmail = new Mail(upi.getEzs_userinfo().getEmail(), "易再生网", secondHtml);
+		secondmail.setSubject("邮箱验证:" + upi.getName() == null ? ""
+				: upi.getName() + "关于修改邮箱-易再生网");
+		log.info("评标邮件内容>>>>>>>" + secondHtml);
+		result.setSuccess(true);
+		result.setMsg("发送成功");
+		return result;
+	}
 }

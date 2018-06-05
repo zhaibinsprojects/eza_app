@@ -1,8 +1,11 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_storecart;
+import com.sanbang.vo.QueryCondition;
 
 @Repository
 public interface ezs_storecartMapper {
@@ -17,4 +20,6 @@ public interface ezs_storecartMapper {
     int updateByPrimaryKeySelective(ezs_storecart record);
 
     int updateByPrimaryKey(ezs_storecart record);
+    
+    List<ezs_storecart> getByCondition(QueryCondition queryCondition);
 }

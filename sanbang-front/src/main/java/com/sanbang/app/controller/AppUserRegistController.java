@@ -32,7 +32,6 @@ import com.sanbang.vo.MessageDictionary;
 public class AppUserRegistController {
 
 	
-	private  static final String view="/memberuser/regist/";
 	
 	@Autowired
 	private UserProService userProService;
@@ -120,7 +119,7 @@ public class AppUserRegistController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@RequestMapping(value="/userAdd")
+	@RequestMapping(value="/userAdd",produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public Result userAdd(
 			@RequestParam(value="passwd",required=false) String passwd,
@@ -151,16 +150,6 @@ public class AppUserRegistController {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setSuccess(true);
 			result.setMsg("请求成功");
-			
-			// 获取上一步用户注册信息
-			ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-			
-			if(user==null){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("请先输入用户名密码");
-				return result;
-				}
 			
 			Map<String, Object> map=new HashMap<>();
 			//主营行业

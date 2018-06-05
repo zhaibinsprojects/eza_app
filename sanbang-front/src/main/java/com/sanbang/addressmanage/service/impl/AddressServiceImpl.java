@@ -61,35 +61,45 @@ public class AddressServiceImpl implements AddressService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入收货人姓名");
+			return result;
 		}
-		if(Tools.isEmpty(ezs_address.getArea_id().toString())){//首行“请选择”默认为0
+		if(Tools.isEmpty(ezs_address.getArea_id()+"")){//首行“请选择”默认为0
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择收货地址");
+			return result;
 		}
 		if(Tools.isEmpty(ezs_address.getArea_info())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细收货地址");
+			return result;
 		}
 		if(Tools.isEmpty(ezs_address.getMobile())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入手机号码");
-			if(Tools.isMobile(ezs_address.getMobile())){
+			return result;	
+		}else{
+			if(!Tools.isMobile(ezs_address.getMobile())){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效的手机号码");
+				return result;
 			}
 		}
 		if(Tools.isEmpty(ezs_address.getTelephone())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入电话号码");
-			if(Tools.isMobileAndPhone(ezs_address.getTelephone())){
+			return result;
+			
+		}else{
+			if(!Tools.isMobileAndPhone(ezs_address.getTelephone())){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效的电话号码");
+				return result;
 			}
 		}
 		return result;

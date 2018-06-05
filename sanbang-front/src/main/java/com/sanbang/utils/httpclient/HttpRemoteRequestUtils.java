@@ -166,6 +166,7 @@ public class HttpRemoteRequestUtils {
             	return null;
             }
 		} catch(Exception e){
+			e.printStackTrace();
 			log.error("----------------调用接口出错doPost方法！---");
 			 return null;
 		}finally {
@@ -339,7 +340,7 @@ public static JSONObject doGetJsonToString(String URL,Object json,Header header)
 //		SendMobileMessage.sendMsg(Dictionary.getProperties("systemErrorAdvice"), "Post请求失败,原因:"+e.toString());
 		return null;
 	}finally {
-		httpclient.getConnectionManager().shutdown();
+		httpclient.getConnectionManager().shutdown(); 
 	}
 }
 }

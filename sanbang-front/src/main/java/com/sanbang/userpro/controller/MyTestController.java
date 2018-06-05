@@ -49,12 +49,11 @@ public class MyTestController {
 	private  List<Map<String, Object>>   getarraytwo(ezs_area arae){
 		List<Map<String, Object>> list=new ArrayList<>();
 		List<ezs_area> listp=	areaService.getAreaListByParId(arae.getId());
-		System.out.println("two"+JsonUtils.jsonOut(listp));
 		for (ezs_area ezs_area : listp) {
 			Map<String, Object> map=new HashMap<>();
 			map.put("areaId", ezs_area.getId());
 			map.put("areaName", ezs_area.getAreaName());
-			map.put("counties", getarraythree(arae));
+			map.put("counties", getarraythree(ezs_area));
 			list.add(map);
 		}
 		
@@ -66,7 +65,6 @@ public class MyTestController {
 	private  List<Map<String, Object>>   getarraythree(ezs_area arae){
 		List<Map<String, Object>> list=new ArrayList<>();
 		List<ezs_area> listp1=	areaService.getAreaListByParId(arae.getId());
-		System.out.println("three"+JsonUtils.jsonOut(listp1));
 		for (ezs_area ezs_area : listp1) {
 			Map<String, Object> map=new HashMap<>();
 			map.put("areaName", ezs_area.getAreaName());

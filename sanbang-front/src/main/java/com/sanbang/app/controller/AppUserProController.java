@@ -24,6 +24,7 @@ import com.sanbang.utils.IpUtils;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MessageDictionary;
 
@@ -152,7 +153,7 @@ public class AppUserProController {
 	public Result userLogot(HttpServletRequest request) throws Exception {
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
-		userProService.userLogot(upi,RedisUserSession.getUserKey(cookieuserkey, request));
+		userProService.userLogot(upi,upi.getUserkey());
 		result.setSuccess(true);
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("退出成功");

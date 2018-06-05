@@ -940,5 +940,85 @@ public class AuthServiceImpl implements AuthService {
 		
 		return result;
 	}
+
+	@Override
+	public Result saveHeadPicUrl(Result result, HttpServletRequest request, ezs_user upi,
+			HttpServletResponse response) {
+		String shouquan=request.getParameter("headimg");//,
+		if(Tools.isEmpty(shouquan)){
+			result.setSuccess(false);
+			result.setMsg("请上传头像图片");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
+		
+		
+		List<AuthImageVo> List=new ArrayList<>();
+		try {
+			List=savepic(shouquan, List);
+			if(null!=List&&List.size()>0){
+			//资质信息
+			for (AuthImageVo img : List) {
+				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
+				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
+						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
+					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
+					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
+				}else{
+					ezs_accessory.setAddTime(new Date());
+					ezs_accessory.setDeleteStatus(false);
+					ezs_accessory.setExt("");
+					ezs_accessory.setHeight(0);
+					ezs_accessory.setInfo(null);
+					ezs_accessory.setName("");
+					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setSize((float) 100);
+					ezs_accessory.setWidth(100);
+					ezs_accessory.setUser_id(upi.getId());
+					ezs_accessoryMapper.insertSelective(ezs_accessory);
+					
+					//upi记录
+					img.setAccid(ezs_accessory.getId());
+					
+					ezs_paper paper=new ezs_paper();
+					paper.setAddTime(new Date());
+					paper.setCertificate_id(ezs_accessory.getId());
+					paper.setDeleteStatus(false);
+					paper.setValidDate(img.getUsetime());
+					paper.setPaperType(img.getImgcode());
+					ezs_paperMapper.insertSelective(paper);
+					
+					ezs_card_dict card=new ezs_card_dict();
+					card.setPaper_id(paper.getId());
+					card.setStore_id(upi.getStore_id());
+					ezs_card_dictMapper.insertSelective(card);
+				}
+				}
+			}
+			//保存类型
+			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
+			
+			upi.setAuthimg(List);;
+			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+					Long.parseLong(redisuserkeyexpir));
+			if (res) {
+				result.setSuccess(true);
+				result.setMsg("保存成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			} else {
+				result.setSuccess(false);
+				result.setMsg("系统错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
 	
 }
