@@ -83,7 +83,7 @@ public class AppUserSetupCompanyInfoController {
 	@ResponseBody
 	public Object upCompanyInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -98,7 +98,7 @@ public class AppUserSetupCompanyInfoController {
 			Map<String,Object> map1=new HashMap<>();
 			map1.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			if(null!=upi.getEzs_store().getArea_id()){
-				map.put("area_id",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址区县
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
 			}else{
 				map.put("area_id",0);// 经营地址区县
 			}

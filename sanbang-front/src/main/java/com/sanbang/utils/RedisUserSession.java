@@ -129,7 +129,6 @@ public class RedisUserSession {
 					//缓存中已经存在了  说明该用户已经登陆了
 					ezs_user result = tempCached.getResult();
 					result.setUserkey(userKey);;
-					log.debug("获取用户信息,userKey为:"+userKey);
 					return result;
 				}
 			} catch (Exception e) {

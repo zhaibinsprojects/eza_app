@@ -265,6 +265,14 @@ public class UserSetupAuthController {
 			map.put("trueName", upi.getTrueName());// 联系人
 			if(null!=upi.getEzs_store().getArea_id()){
 				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}else{
+				map.put("area","");// 经营地址
+			}
+			
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
+			}else{
+				map.put("area_id",0);// 经营地址区县
 			}
 			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
