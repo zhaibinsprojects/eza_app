@@ -111,16 +111,16 @@ public class SellerContractController {
 		Long sellerId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
@@ -157,16 +157,16 @@ public class SellerContractController {
 		Long sellerId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		Page page = null;
 		if(currentPage==null){
