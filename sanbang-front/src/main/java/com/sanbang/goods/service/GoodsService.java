@@ -120,14 +120,14 @@ public interface GoodsService {
 	 * @param user
 	 * @return
 	 */
-	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList,ezs_user user);
+	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList,ezs_user user,String sessionId);
 	/**
 	 * 直接下订单
 	 * @param orderForm
 	 * @param user
 	 * @return
 	 */
-	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user);
+	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user,String sessionId);
 	/**
 	 * 由购物车下订单
 	 * @param user
