@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goodscart;
+import com.sanbang.vo.QueryCondition;
 
 @Repository
 public interface ezs_goodscartMapper {
@@ -25,4 +26,6 @@ public interface ezs_goodscartMapper {
     List<ezs_goodscart> selectByMonth(String needate2);
     
     List<ezs_goodscart> selectByCustom(String starttime, String endtime);
+    
+    List<ezs_goodscart> selectByCondition(QueryCondition queryCondition);
 }
