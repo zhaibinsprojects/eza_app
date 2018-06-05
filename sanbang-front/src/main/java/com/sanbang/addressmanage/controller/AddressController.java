@@ -58,6 +58,7 @@ public class AddressController {
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
+			result.setSuccess(false);
 			return result;
 		}
 		Page page = new Page();
@@ -93,7 +94,7 @@ public class AddressController {
 	@RequestMapping("/getAddressById")
 	@ResponseBody
 	public Result getAddressById(@RequestParam("id")Long id){
-		Result result = new Result();
+		Result result = new Result().failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -115,7 +116,7 @@ public class AddressController {
 	@RequestMapping("/updateAddressById")
 	@ResponseBody
 	public Result updateAddressById(ezs_address ezs_address){
-		Result result = new Result();
+		Result result = new Result().failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -133,7 +134,7 @@ public class AddressController {
 	@RequestMapping("/deleteAddressById")
 	@ResponseBody
 	public Result deleteAddressById(@RequestParam("id") Long id){
-		Result result = new Result();
+		Result result = new Result().failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
