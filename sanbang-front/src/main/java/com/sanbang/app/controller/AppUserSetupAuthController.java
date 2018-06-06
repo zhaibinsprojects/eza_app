@@ -26,6 +26,7 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
+import com.sanbang.setup.controller.UserSetupAuthController;
 import com.sanbang.setup.service.AuthService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.userpro.service.UserProService;
@@ -42,7 +43,7 @@ import com.sanbang.vo.userauth.AuthImageVo;
 @RequestMapping("/app/setup/auth/")
 public class AppUserSetupAuthController {
 
-	private Logger log=Logger.getLogger(AppUserSetupAuthController.class);
+	private Logger log=Logger.getLogger(UserSetupAuthController.class);
 	
 	private  static final String view="/memberuser/regist/";
 	
@@ -265,6 +266,14 @@ public class AppUserSetupAuthController {
 			map.put("trueName", upi.getTrueName());// 联系人
 			if(null!=upi.getEzs_store().getArea_id()){
 				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}else{
+				map.put("area","");// 经营地址
+			}
+			
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
+			}else{
+				map.put("area_id",0);// 经营地址区县
 			}
 			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			

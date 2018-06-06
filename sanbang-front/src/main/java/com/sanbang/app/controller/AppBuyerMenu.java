@@ -103,6 +103,7 @@ public class AppBuyerMenu {
 		try {
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
+			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
