@@ -483,7 +483,6 @@ public class GoodsController {
 			return rs;
 		}
 		List<ezs_goodscart> tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
-		//List<ezs_goodscart> tGoodCarList = new ArrayList<ezs_goodscart>(); 
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -492,6 +491,48 @@ public class GoodsController {
 		}
 		try {
 			mmp = this.goodsService.addGoodsCart(tGoodCarList, user,sessionId);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+	/**
+	 * 添加购物车
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param goodsId
+	 * @param count
+	 * @return
+	 */
+	@RequestMapping(value="/addToSelfGoodCar")
+	@ResponseBody
+	public Object addToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		ezs_goodscart goodsCart = new ezs_goodscart();
+		goodsCart.setCount(count);
+		goodsCart.setGoods_id(goodsId);
+		try {
+			mmp = this.goodsService.addGoodsCartFunc(goodsCart, user);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -552,15 +593,16 @@ public class GoodsController {
 		return rs;
 	}
 	/**
-	 * 由购物车下订单
+	 * 直接下订单（添加订单）
 	 * @author zhaibin
 	 * @param request
 	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
 	 * @return
 	 */
-	@RequestMapping("/addOrderFromGoodCar")
+	@RequestMapping("/addToSelfOrderForm")
 	@ResponseBody
-	public Object addOrderFromGoodCar(HttpServletRequest request,HttpServletResponse response){
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -571,7 +613,9 @@ public class GoodsController {
 			return rs;
 		}
 		try {
-			mmp = this.goodsService.addOrderFromGoodCar(user);
+			JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();

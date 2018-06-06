@@ -135,4 +135,11 @@ public interface GoodsService {
 	 */
 	public Map<String, Object> addOrderFromGoodCar(ezs_user user);
 	
+	
+	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
+	
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user);
+	
+	
+	
 }
