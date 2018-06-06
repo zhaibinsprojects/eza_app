@@ -10,6 +10,15 @@ public class QueryCondition {
 	
 	private Long storeCarId;
 	
+	private Integer storeCarStatus;
+	
+	
+	public Integer getStoreCarStatus() {
+		return storeCarStatus;
+	}
+	public void setStoreCarStatus(Integer storeCarStatus) {
+		this.storeCarStatus = storeCarStatus;
+	}
 	public Long getStoreCarId() {
 		return storeCarId;
 	}

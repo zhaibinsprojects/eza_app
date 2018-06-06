@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -218,7 +219,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional
-	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList, ezs_user user,String sessionId) {
+	public synchronized Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList, ezs_user user,String sessionId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
@@ -256,15 +257,14 @@ public class GoodsServiceImpl implements GoodsService{
 					storeCart.setDeleteStatus(false);
 					storeCart.setAddTime(new Date());
 					storeCart.setUser_id(user.getId());
-					storeCart.setSc_status(0);
+					storeCart.setSc_status(1);
 					storeCart.setCart_session_id(sessionId);
 					this.storecartMapper.insert(storeCart);	
 					
-					goodscart.setSc_id(tSeller.getStore_id());
+					goodscart.setSc_id(storeCart.getId());
 					goodscart.setAddTime(new Date());
 					goodscart.setDeleteStatus(false);
 					totalMoney = goodscart.getCount()*goodscart.getPrice().doubleValue();
-					goodscart.setSc_id(storeCart.getId());
 					this.ezs_goodscartMapper.insert(goodscart);
 					
 					storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
@@ -287,7 +287,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional
-	public Map<String, Object> addOrderForm(ezs_orderform orderForm,ezs_user user,String sessionId) {
+	public synchronized Map<String, Object> addOrderForm(ezs_orderform orderForm,ezs_user user,String sessionId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		double totalMoney = 0.0;
@@ -342,35 +342,147 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return mmp;
 	}
-	/**
-	 * 由购物车下订单
-	 */
+
 	@Override
 	public Map<String, Object> addOrderFromGoodCar(ezs_user user) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * 添加购物车（逐个商品进行添加）
+	 * @param goodsCart
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart, ezs_user user) {
+		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
-		ezs_goodscart goodscart = null;
-		ezs_orderform orderform = new ezs_orderform();
+		ezs_storecart storeCart = new ezs_storecart();
+		//初始化查询条件
+		QueryCondition queryCondition = new QueryCondition();
+		queryCondition.setGoodId(goodsCart.getGoods_id());
+		queryCondition.setUserId(user.getId());
+		//商品类型 金额
+		double totalMoney = 0.0;
+		//查询该商品是否在表内
+		ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
+		List<ezs_goodscart> goodsCartList = this.ezs_goodscartMapper.selectByCondition(queryCondition);
 		
 		try {
-			goodscart = this.ezs_goodscartMapper.selectByPrimaryKey(Long.getLong(""));
-
-			orderform.setAddTime(new Date());
-			orderform.setDeleteStatus(false);
-			//orderform.setOrder_no("");
-			orderform.setUser_id(user.getId());
-			orderform.setPact_status(2);
-			this.ezs_orderformMapper.insert(orderform);
 			
-			goodscart.setOf_id(orderform.getId());
-			this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+			if(goodsCartList!=null&&goodsCartList.size()>0){
+				double tCount = goodsCartList.get(0).getCount()+goodsCart.getCount();
+				if(tCount>good.getInventory()){
+					mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					mmp.put("Msg", "商品数量不足");
+					return mmp;
+				}
+			}
+			
+			
+			if(goodsCartList!=null&&goodsCartList.size()>0){
+				//若存在
+				ezs_goodscart goodsCartTemp = goodsCartList.get(0);
+				goodsCartTemp.setCount(goodsCartTemp.getCount()+goodsCart.getCount());
+				this.ezs_goodscartMapper.updateByPrimaryKey(goodsCartTemp);
+				//更新店铺购物车
+				QueryCondition queryConditionTemp = new QueryCondition();
+				queryConditionTemp.setStoreId(user.getStore_id());
+				queryConditionTemp.setUserId(user.getId());
+				queryConditionTemp.setStoreCarStatus(0);
+				List<ezs_storecart> eslist = this.storecartMapper.getByCondition(queryConditionTemp);
+				storeCart = eslist.get(0);
+				storeCart.setTotal_price(BigDecimal.valueOf(goodsCartTemp.getCount()*good.getPrice().doubleValue()));
+				this.storecartMapper.updateByPrimaryKey(storeCart);
+				good.setInventory(good.getInventory()-goodsCartTemp.getCount()-goodsCart.getCount());
+				this.ezs_goodsMapper.updateByPrimaryKey(good);
+			}else{
+				//商铺Id
+				storeCart.setStore_id(user.getStore_id());
+				storeCart.setDeleteStatus(false);
+				storeCart.setAddTime(new Date());
+				storeCart.setUser_id(user.getId());
+				storeCart.setSc_status(0);
+				this.storecartMapper.insert(storeCart);	
+				
+				goodsCart.setSc_id(storeCart.getId());
+				goodsCart.setAddTime(new Date());
+				goodsCart.setDeleteStatus(false);
+				goodsCart.setPrice(good.getPrice());
+				totalMoney = goodsCart.getCount()*good.getPrice().doubleValue();
+				this.ezs_goodscartMapper.insert(goodsCart);
+				
+				storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
+				this.storecartMapper.updateByPrimaryKey(storeCart);
+				good.setInventory(good.getInventory()-goodsCart.getCount());
+				this.ezs_goodsMapper.updateByPrimaryKey(good);
+			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "");
+			mmp.put("Msg", "购物车添加成功");
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Msg", "");
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+		
+	}
+
+	@Override
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		double totalMoney = 0.0;
+		//生成订单号码
+		String orderFormNo = UUID.randomUUID().toString();
+		try {
+			//orderForm.setAddTime(new Date());
+			orderForm.setOrder_no(orderFormNo);
+			orderForm.setDeleteStatus(false);
+			orderForm.setUser_id(user.getId());
+			orderForm.setPact_status(2);
+			this.ezs_orderformMapper.insert(orderForm);
+			//已购商品按store分类
+			//获取购物车信息
+			QueryCondition queryCondition = new QueryCondition();
+			queryCondition.setUserId(user.getId());
+			queryCondition.setStoreCarStatus(0);
+			List<ezs_storecart> storeCarList = this.storecartMapper.getByUserId(queryCondition);
+			if(storeCarList!=null&&storeCarList.size()>0){
+				ezs_storecart storeCartTemp = storeCarList.get(0);
+				totalMoney += storeCartTemp.getTotal_price().doubleValue();
+				//更新商铺记录状态
+				storeCartTemp.setSc_status(1);//暂设定1标志 表示已生成订单
+				this.storecartMapper.updateByPrimaryKey(storeCartTemp);
+				//更新商品购物车
+				QueryCondition queryCondition01 = new QueryCondition();
+				queryCondition01.setUserId(user.getId());
+				queryCondition01.setStoreCarId(storeCartTemp.getId());
+				List<ezs_goodscart> goodsCarList = this.ezs_goodscartMapper.selectByStoreCarId(queryCondition01);
+				for (ezs_goodscart goodscart : goodsCarList) {
+					//goodscart.setDeleteStatus(true);
+					goodscart.setOf_id(orderForm.getId());
+					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+				}
+				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
+				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "订单添加成功");
+				
+			}else{
+				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "购物车无数据");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;
 	}
