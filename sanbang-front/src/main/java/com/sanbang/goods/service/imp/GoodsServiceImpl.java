@@ -13,20 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
-import com.sanbang.bean.ezs_stock;
 import com.sanbang.bean.ezs_storecart;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_stockMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
+import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.QueryCondition;
 
@@ -61,6 +61,10 @@ public class GoodsServiceImpl implements GoodsService{
 	private ezs_stockMapper stockMapper;
 	@Autowired
 	private ezs_userMapper userMapper;
+	@Autowired
+	private ezs_areaMapper areaMapper;
+	
+	
 	
 	
 	/**
@@ -135,27 +139,63 @@ public class GoodsServiceImpl implements GoodsService{
 		return list;
 	}
 	
-	public List<ezs_goods> listByAreaAndType(Long area,Long type){
-		Map<String,Long> mmp = new HashMap<String,Long>();
-		mmp.put("area_id",area);
-		mmp.put("goodClass_id",type);
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String[] colorIds,String[] formIds,
+			String source,String purpose,String importantParam,String isProtection,String goodsName){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = ezs_goodsMapper.listByAreaAndType(mmp);
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Long> typeList = new ArrayList<Long>();
+		List<Long> colorList = new ArrayList<Long>();
+		List<Long> formList = new ArrayList<Long>();
+		if(null != typeIds){
+			for(int n = 0; n < typeIds.length; n++){
+				typeList.add(Long.valueOf(typeIds[n]));
+			}
+		}
+		if(null != colorIds){
+			for(int n = 0; n < colorIds.length; n++){
+				colorList.add(Long.valueOf(colorIds[n]));
+			}
+		}
+		if(null != formIds){
+			for(int n = 0; n < formIds.length; n++){
+				formList.add(Long.valueOf(formIds[n]));
+			}
+		}
+		map.put("area_id", area);
+		map.put("typeList", typeList);
+		map.put("colorList", colorList);
+		map.put("formList", formList);
+		map.put("source", source);
+		map.put("purpose", purpose);
+		//map.put("importantParam", importantParam);	//重要参数暂时先搁这儿
+		map.put("protection", isProtection);
+		map.put("name", goodsName);
+		list = ezs_goodsMapper.queryGoodsList(map);
+		
 		return list;
 	}
-	
-	public List<ezs_goods> listByOthers(Map<String,Object> map){
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = ezs_goodsMapper.listByOthers(map);
-		return list;
+	/**
+	 * 根据地区名称返回id
+	 */
+	public Long areaToId(String areaName){
+		return areaMapper.areaToId(areaName);
 	}
 	
-	public List<ezs_dict> conditionList(){
-		List<ezs_dict> list = new ArrayList<ezs_dict>();
-		list = ezs_dictMapper.conditionList();
-		return list;
+	//查询颜色
+	public List<CurrencyClass> colorList(){
+		List<CurrencyClass> map = new ArrayList<CurrencyClass>();
+		map = ezs_dictMapper.colorList();
+		return map;
+		
 	}
-	
+	//查询形态
+	public List<CurrencyClass> formList(){
+		List<CurrencyClass> map = new ArrayList<CurrencyClass>();
+		map = ezs_dictMapper.formList();
+		return map;
+		
+	}
 	
 	public List<ezs_customized> customizedList(Long user_id){
 		List<ezs_customized> list = new ArrayList<ezs_customized>();
