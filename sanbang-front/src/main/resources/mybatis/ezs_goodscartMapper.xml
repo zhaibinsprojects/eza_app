@@ -169,4 +169,9 @@
 	(select 1 from ezs_storecart s where s.user_id = #{userId} and s.deleteStatus = '0' and s.id = g.sc_id) 
 	and g.goods_id = #{goodId} and g.deleteStatus = '0' AND g.of_id IS NULL
   </select>
+   <select id="selectByStoreCarId" resultMap="BaseResultMap" parameterType="com.sanbang.vo.QueryCondition">
+  	select
+  	<include refid="Base_Column_List" />
+  	 from ezs_goodscart a where a.deleteStatus = '0' and a.sc_id = #{storeCarId};
+  </select>
 </mapper>

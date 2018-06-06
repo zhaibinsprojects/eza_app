@@ -246,66 +246,54 @@ public class GoodsServiceImpl implements GoodsService{
 	 * 直接下订单(传入goodscartList为空时可以通过购物车生成订单)
 	 */
 	@Override
-	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user,String sessionId) {
+	@Transactional
+	public Map<String, Object> addOrderForm(ezs_orderform orderForm,ezs_user user,String sessionId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
-		ezs_storecart storeCart = new ezs_storecart();
 		double totalMoney = 0.0;
-		if(goodscartList==null){
-			//根据用户查询当前购物车中的有效商品
-			
-			
-			
-			
-		}else{
-			
-			
-		}
+		//生成订单号码
+		String orderFormNo = "no123456789";
 		try {
-			for (ezs_goodscart goodscart : goodscartList) {
-				//通过商品查询商铺Id
-				ezs_goods goods = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
-				ezs_user tSeller = this.userMapper.selectByPrimaryKey(goods.getUser_id());
-				
-				//查询该商铺下该商品是否存在购物车中
-				QueryCondition queryCondition = new QueryCondition(goodscart.getGoods_id(), user.getId());
-				List<ezs_goodscart> glist = this.ezs_goodscartMapper.selectByCondition(queryCondition);
-				if(glist!=null&&glist.size()>0){
-					//若存在
-					ezs_goodscart goodsCartTemp = glist.get(0);
-					goodsCartTemp.setCount(goodsCartTemp.getCount()+goodscart.getCount());
-					this.ezs_goodscartMapper.updateByPrimaryKey(goodsCartTemp);
-					//更新店铺购物车
-					QueryCondition queryConditionTemp = new QueryCondition();
-					queryConditionTemp.setStoreId(tSeller.getStore_id());
-					queryConditionTemp.setUserId(user.getId());
-					List<ezs_storecart> eslist = this.storecartMapper.getByCondition(queryConditionTemp);
-					storeCart = eslist.get(0);
-					storeCart.setTotal_price(BigDecimal.valueOf(goodsCartTemp.getCount()*goodsCartTemp.getPrice().doubleValue()));
-					this.storecartMapper.updateByPrimaryKey(storeCart);
-				}else{
-					//商铺Id
-					storeCart.setStore_id(tSeller.getStore_id());
-					storeCart.setDeleteStatus(false);
-					storeCart.setAddTime(new Date());
-					storeCart.setUser_id(user.getId());
-					storeCart.setSc_status(0);
-					storeCart.setCart_session_id(sessionId);
-					this.storecartMapper.insert(storeCart);	
-					
-					goodscart.setSc_id(tSeller.getStore_id());
-					goodscart.setAddTime(new Date());
-					goodscart.setDeleteStatus(false);
-					totalMoney = goodscart.getCount()*goodscart.getPrice().doubleValue();
-					goodscart.setSc_id(storeCart.getId());
-					this.ezs_goodscartMapper.insert(goodscart);
-					
-					storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
-					this.storecartMapper.updateByPrimaryKey(storeCart);
+			//获取购物车信息
+			QueryCondition queryCondition = new QueryCondition();
+			queryCondition.setUserId(user.getId());
+			//orderForm.setAddTime(new Date());
+			orderForm.setOrder_no(orderFormNo);
+			orderForm.setDeleteStatus(false);
+			orderForm.setUser_id(user.getId());
+			orderForm.setPact_status(2);
+			this.ezs_orderformMapper.insert(orderForm);
+			//已购商品按store分类
+			List<ezs_storecart> storeCarList = this.storecartMapper.getByUserId(queryCondition);
+			if(storeCarList!=null&&storeCarList.size()>0){
+				for (ezs_storecart storecart : storeCarList) {
+					totalMoney += storecart.getTotal_price().doubleValue();
+					//更新商铺记录状态
+					storecart.setDeleteStatus(true);
+					this.storecartMapper.updateByPrimaryKey(storecart);
+					//更新商品购物车
+					QueryCondition queryCondition01 = new QueryCondition();
+					queryCondition01.setUserId(user.getId());
+					queryCondition01.setStoreCarId(storecart.getId());
+					List<ezs_goodscart> goodsCarList = this.ezs_goodscartMapper.selectByStoreCarId(queryCondition01);
+					for (ezs_goodscart goodscart : goodsCarList) {
+						goodscart.setDeleteStatus(true);
+						goodscart.setOf_id(orderForm.getId());
+						this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+					}
 				}
+				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
+				orderForm.setCart_session_id(storeCarList.get(0).getCart_session_id());
+				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "订单添加成功");
+				
+			}else{
+				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "购物车无数据");
 			}
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -329,8 +317,9 @@ public class GoodsServiceImpl implements GoodsService{
 
 			orderform.setAddTime(new Date());
 			orderform.setDeleteStatus(false);
-			orderform.setOrder_no("");
+			//orderform.setOrder_no("");
 			orderform.setUser_id(user.getId());
+			orderform.setPact_status(2);
 			this.ezs_orderformMapper.insert(orderform);
 			
 			goodscart.setOf_id(orderform.getId());

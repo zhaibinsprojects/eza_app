@@ -61,6 +61,11 @@ public class AppCataController {
 			Map map = new HashMap();
 			GoodsClass gc = (GoodsClass)secondList.get(n);
 			thirdList = cataService.getThirdList(gc.getSecondId());
+			for(int m =0; m<thirdList.size();m++){	//根据前端app要求，如果名字为空，则将这条移除
+				if(null == thirdList.get(m).getThirdName()){
+					thirdList.remove(m);
+				}
+			}
 			map.put("third", thirdList);	//为符合前端要求的层级结构
 			map.put("secondName", gc.getSecondName());
 			transList.add(map);

@@ -8,6 +8,14 @@ public class QueryCondition {
 	
 	private Long storeId;
 	
+	private Long storeCarId;
+	
+	public Long getStoreCarId() {
+		return storeCarId;
+	}
+	public void setStoreCarId(Long storeCarId) {
+		this.storeCarId = storeCarId;
+	}
 	public Long getStoreId() {
 		return storeId;
 	}

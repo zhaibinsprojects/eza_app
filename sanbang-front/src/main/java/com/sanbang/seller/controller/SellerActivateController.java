@@ -61,16 +61,16 @@ public class SellerActivateController {
 		}
 		
 		//验证用户是否认证，拥有买家资质
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未认证，不能申请卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未认证，不能申请卖家权限。");
+//			return result;
+//		}
 		
 		result = activateService.addActivateInfo(result, upi,companyName, yTurnover, covered, rent, device_num, employee_num, assets, 
 				obtainYear, open_bank_name, openBankNo, open_branch_name, open_branch_no, location_detail, request, response);
@@ -97,15 +97,15 @@ public class SellerActivateController {
 		
 		//验证用户是否认证，拥有买家资质
 		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未认证，不能申请卖家权限。");
-			return result;
-		}
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未认证，不能申请卖家权限。");
+//			return result;
+//		}
 		
 		if (store.getStatus() != 3) {
 			result.setSuccess(false);

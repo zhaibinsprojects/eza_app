@@ -28,4 +28,6 @@ public interface ezs_goodscartMapper {
     List<ezs_goodscart> selectByCustom(String starttime, String endtime);
     
     List<ezs_goodscart> selectByCondition(QueryCondition queryCondition);
+    
+    List<ezs_goodscart> selectByStoreCarId(QueryCondition queryCondition);
 }
