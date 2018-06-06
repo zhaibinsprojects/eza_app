@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -396,12 +397,8 @@ public class GoodsServiceImpl implements GoodsService{
 		Map<String, Object> mmp = new HashMap<>();
 		double totalMoney = 0.0;
 		//生成订单号码
-		String orderFormNo = "no123456789";
+		String orderFormNo = UUID.randomUUID().toString();
 		try {
-			//获取购物车信息
-			QueryCondition queryCondition = new QueryCondition();
-			queryCondition.setUserId(user.getId());
-			queryCondition.setStoreCarStatus(0);
 			//orderForm.setAddTime(new Date());
 			orderForm.setOrder_no(orderFormNo);
 			orderForm.setDeleteStatus(false);
@@ -409,12 +406,16 @@ public class GoodsServiceImpl implements GoodsService{
 			orderForm.setPact_status(2);
 			this.ezs_orderformMapper.insert(orderForm);
 			//已购商品按store分类
+			//获取购物车信息
+			QueryCondition queryCondition = new QueryCondition();
+			queryCondition.setUserId(user.getId());
+			queryCondition.setStoreCarStatus(0);
 			List<ezs_storecart> storeCarList = this.storecartMapper.getByUserId(queryCondition);
 			if(storeCarList!=null&&storeCarList.size()>0){
 				ezs_storecart storeCartTemp = storeCarList.get(0);
 				totalMoney += storeCartTemp.getTotal_price().doubleValue();
 				//更新商铺记录状态
-				//storecart.setDeleteStatus(true);
+				storeCartTemp.setSc_status(1);//暂设定1标志 表示已生成订单
 				this.storecartMapper.updateByPrimaryKey(storeCartTemp);
 				//更新商品购物车
 				QueryCondition queryCondition01 = new QueryCondition();
