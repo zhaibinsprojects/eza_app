@@ -18,5 +18,4 @@ public class GoodsClass2 {
 	public void setThirdId(Long thirdId) {
 		this.thirdId = thirdId;
 	}
-	
 }

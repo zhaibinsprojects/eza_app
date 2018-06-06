@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,14 +18,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.itextpdf.text.pdf.BaseFont;
+import com.jcraft.jsch.Session;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
@@ -39,6 +48,7 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
@@ -407,15 +417,6 @@ public class GoodsController {
 		
 	}
 	
-//	public static void main(String[] args) {
-//		GoodsController  aa=new GoodsController();
-//		Map<String, Object> map=new HashMap<>();
-//		map.put("orderAmount", "aaa");
-//		map.put("AcapAmount", "bb");
-//		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
-//	}
-	
-	
 	/**
 	 * 上传发票图片，返回url
 	 * @param request
@@ -472,15 +473,24 @@ public class GoodsController {
 	 * @author zhaibin
 	 * @param request
 	 * @param response
-	 * @param goodCarList
+	 * @param goodCarList(List<ezs_goodscart>类型的JSON串)
 	 * @return
 	 */
-	@RequestMapping("/addToGoodCar")
+	@RequestMapping(value="/addToGoodCar",method=RequestMethod.POST)
 	@ResponseBody
-	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,List<ezs_goodscart> goodCarList){
+	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,String goodCarList){
+		String sessionId = request.getSession().getId();
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if(goodCarList==null||goodCarList.trim().equals("")){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("请选择商品");
+			return rs;
+		}
+		List<ezs_goodscart> tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
+		//List<ezs_goodscart> tGoodCarList = new ArrayList<ezs_goodscart>(); 
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -488,7 +498,7 @@ public class GoodsController {
 			return rs;
 		}
 		try {
-			mmp = this.goodsService.addGoodsCart(goodCarList, user);
+			mmp = this.goodsService.addGoodsCart(tGoodCarList, user,sessionId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -510,13 +520,15 @@ public class GoodsController {
 	 * @author zhaibin
 	 * @param request
 	 * @param response
-	 * @param goodCarList
+	 * @param goodCarList(List<ezs_goodscart>类型的JSON串)
 	 * @return
 	 */
 	@RequestMapping("/directAddToOrderForm")
 	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,List<ezs_goodscart> goodCarList){
+	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String goodCarList){
+		String sessionId = request.getSession().getId();
 		Map<String, Object> mmp = null;
+		List<ezs_goodscart> tGoodCarList = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (user == null) {
@@ -525,8 +537,11 @@ public class GoodsController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
+		if(goodCarList!=null&&!goodCarList.trim().equals("")){
+			tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
+		}
 		try {
-			mmp = this.goodsService.addOrderForm(goodCarList, user);
+			mmp = this.goodsService.addOrderForm(tGoodCarList, user,sessionId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();

@@ -49,7 +49,7 @@
     delete from ezs_orderform
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_orderform" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_orderform" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_orderform (id, addTime, deleteStatus, 
       adjust_price, all_price, cart_session_id, 
       end_price, estimateTime, finishtime, 
@@ -69,7 +69,7 @@
       #{user_id,jdbcType=BIGINT}, #{weAddress_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_orderform" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_orderform" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_orderform
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

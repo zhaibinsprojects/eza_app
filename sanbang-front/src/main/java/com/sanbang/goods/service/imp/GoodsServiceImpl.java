@@ -1,5 +1,6 @@
 package com.sanbang.goods.service.imp;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,13 +19,16 @@ import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
+import com.sanbang.bean.ezs_stock;
 import com.sanbang.bean.ezs_storecart;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_stockMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_storecartMapper;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
-import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.QueryCondition;
 
 /**
  * 货品相关处理
@@ -53,6 +57,10 @@ public class GoodsServiceImpl implements GoodsService{
 	private ezs_storecartMapper storecartMapper;
 	@Autowired
 	private ezs_storeMapper storeMapper; 
+	@Autowired
+	private ezs_stockMapper stockMapper;
+	@Autowired
+	private ezs_userMapper userMapper;
 	
 	
 	/**
@@ -169,40 +177,62 @@ public class GoodsServiceImpl implements GoodsService{
 	 * 添加购物车
 	 */
 	@Override
-	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList, ezs_user user) {
+	@Transactional
+	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList, ezs_user user,String sessionId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
+		double totalMoney = 0.0;
 		if(goodscartList.size()<=0){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Msg", "参数传递有误");
+			mmp.put("Msg", "请选择添加购物车的商品！");
 			return mmp;
 		}
-		//同步数据
-		for (ezs_goodscart goodscart : goodscartList) {
-			double goodAccount = goodscart.getAcount();
-			
-			
-		}
-		
-		
 		try {
-			storeCart.setStore_id(user.getStore_id());
-			storeCart.setDeleteStatus(false);
-			storeCart.setAddTime(new Date());
-			storeCart.setUser_id(user.getId());
-			storeCart.setSc_status(0);
-			//storeCart.setCart_session_id();
-			this.storecartMapper.insert(storeCart);
 			for (ezs_goodscart goodscart : goodscartList) {
-				goodscart.setSc_id(user.getStore_id());
-				goodscart.setAddTime(new Date());
-				goodscart.setDeleteStatus(false);
-				goodscart.setSc_id(storeCart.getId());
-				this.ezs_goodscartMapper.insert(goodscart);
+				//通过商品查询商铺Id
+				ezs_goods goods = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
+				ezs_user tSeller = this.userMapper.selectByPrimaryKey(goods.getUser_id());
+				
+				//查询该商铺下该商品是否存在购物车中
+				QueryCondition queryCondition = new QueryCondition(goodscart.getGoods_id(), user.getId());
+				List<ezs_goodscart> glist = this.ezs_goodscartMapper.selectByCondition(queryCondition);
+				if(glist!=null&&glist.size()>0){
+					//若存在
+					ezs_goodscart goodsCartTemp = glist.get(0);
+					goodsCartTemp.setCount(goodsCartTemp.getCount()+goodscart.getCount());
+					this.ezs_goodscartMapper.updateByPrimaryKey(goodsCartTemp);
+					//更新店铺购物车
+					QueryCondition queryConditionTemp = new QueryCondition();
+					queryConditionTemp.setStoreId(tSeller.getStore_id());
+					queryConditionTemp.setUserId(user.getId());
+					List<ezs_storecart> eslist = this.storecartMapper.getByCondition(queryConditionTemp);
+					storeCart = eslist.get(0);
+					storeCart.setTotal_price(BigDecimal.valueOf(goodsCartTemp.getCount()*goodsCartTemp.getPrice().doubleValue()));
+					this.storecartMapper.updateByPrimaryKey(storeCart);
+				}else{
+					//商铺Id
+					storeCart.setStore_id(tSeller.getStore_id());
+					storeCart.setDeleteStatus(false);
+					storeCart.setAddTime(new Date());
+					storeCart.setUser_id(user.getId());
+					storeCart.setSc_status(0);
+					storeCart.setCart_session_id(sessionId);
+					this.storecartMapper.insert(storeCart);	
+					
+					goodscart.setSc_id(tSeller.getStore_id());
+					goodscart.setAddTime(new Date());
+					goodscart.setDeleteStatus(false);
+					totalMoney = goodscart.getCount()*goodscart.getPrice().doubleValue();
+					goodscart.setSc_id(storeCart.getId());
+					this.ezs_goodscartMapper.insert(goodscart);
+					
+					storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
+					this.storecartMapper.updateByPrimaryKey(storeCart);
+				}
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "");
+			mmp.put("Msg", "购物车添加成功");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -213,52 +243,74 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	/**
 	 * add by zhaibin
-	 * 直接下订单
+	 * 直接下订单(传入goodscartList为空时可以通过购物车生成订单)
 	 */
 	@Override
-	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user) {
+	public Map<String, Object> addOrderForm(List<ezs_goodscart> goodscartList,ezs_user user,String sessionId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
-		ezs_orderform orderForm = new ezs_orderform(); 
-		if(goodscartList.size()<=0){
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Msg", "参数传递有误");
-			return mmp;
+		double totalMoney = 0.0;
+		if(goodscartList==null){
+			//根据用户查询当前购物车中的有效商品
+			
+			
+			
+			
+		}else{
+			
+			
 		}
 		try {
-			storeCart.setStore_id(user.getStore_id());
-			storeCart.setDeleteStatus(false);
-			storeCart.setAddTime(new Date());
-			storeCart.setUser_id(user.getId());
-			storeCart.setSc_status(0);
-			//storeCart.setCart_session_id();
-			this.storecartMapper.insert(storeCart);
-			
-			orderForm.setAddTime(new Date());
-			orderForm.setDeleteStatus(false);
-			orderForm.setOrder_no("");
-			orderForm.setUser_id(user.getId());
-			this.ezs_orderformMapper.insert(orderForm);
-			
 			for (ezs_goodscart goodscart : goodscartList) {
-				goodscart.setSc_id(user.getStore_id());
-				goodscart.setAddTime(new Date());
-				goodscart.setDeleteStatus(false);
-				//外键01
-				goodscart.setSc_id(storeCart.getId());
-				//外键02
-				goodscart.setOf_id(orderForm.getId());
-				this.ezs_goodscartMapper.insert(goodscart);
+				//通过商品查询商铺Id
+				ezs_goods goods = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
+				ezs_user tSeller = this.userMapper.selectByPrimaryKey(goods.getUser_id());
+				
+				//查询该商铺下该商品是否存在购物车中
+				QueryCondition queryCondition = new QueryCondition(goodscart.getGoods_id(), user.getId());
+				List<ezs_goodscart> glist = this.ezs_goodscartMapper.selectByCondition(queryCondition);
+				if(glist!=null&&glist.size()>0){
+					//若存在
+					ezs_goodscart goodsCartTemp = glist.get(0);
+					goodsCartTemp.setCount(goodsCartTemp.getCount()+goodscart.getCount());
+					this.ezs_goodscartMapper.updateByPrimaryKey(goodsCartTemp);
+					//更新店铺购物车
+					QueryCondition queryConditionTemp = new QueryCondition();
+					queryConditionTemp.setStoreId(tSeller.getStore_id());
+					queryConditionTemp.setUserId(user.getId());
+					List<ezs_storecart> eslist = this.storecartMapper.getByCondition(queryConditionTemp);
+					storeCart = eslist.get(0);
+					storeCart.setTotal_price(BigDecimal.valueOf(goodsCartTemp.getCount()*goodsCartTemp.getPrice().doubleValue()));
+					this.storecartMapper.updateByPrimaryKey(storeCart);
+				}else{
+					//商铺Id
+					storeCart.setStore_id(tSeller.getStore_id());
+					storeCart.setDeleteStatus(false);
+					storeCart.setAddTime(new Date());
+					storeCart.setUser_id(user.getId());
+					storeCart.setSc_status(0);
+					storeCart.setCart_session_id(sessionId);
+					this.storecartMapper.insert(storeCart);	
+					
+					goodscart.setSc_id(tSeller.getStore_id());
+					goodscart.setAddTime(new Date());
+					goodscart.setDeleteStatus(false);
+					totalMoney = goodscart.getCount()*goodscart.getPrice().doubleValue();
+					goodscart.setSc_id(storeCart.getId());
+					this.ezs_goodscartMapper.insert(goodscart);
+					
+					storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
+					this.storecartMapper.updateByPrimaryKey(storeCart);
+				}
 			}
-			
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Msg", "");
+			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;
 	}
