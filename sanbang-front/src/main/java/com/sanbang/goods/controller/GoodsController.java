@@ -563,40 +563,20 @@ public class GoodsController {
 	@RequestMapping(value="/addToGoodCar",method=RequestMethod.POST)
 	@ResponseBody
 	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,String goodCarList){
-		String sessionId = request.getSession().getId();
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if(goodCarList==null||goodCarList.trim().equals("")){
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("请选择商品");
-			return rs;
-		}
-		List<ezs_goodscart> tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		try {
-			mmp = this.goodsService.addGoodsCart(tGoodCarList, user,sessionId);
-			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				rs = Result.success();
-				rs.setMsg(mmp.get("Msg").toString());
-			}else{
-				rs = Result.failure();
-				rs.setMsg(mmp.get("Msg").toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			rs = Result.failure();
-			rs.setMsg("数据传递有误");
-		}
-		return rs;
+		return null;
+	}
+	/**
+	 * 直接下订单（添加订单）
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @return
+	 */
+	@RequestMapping("/addToOrderForm")
+	@ResponseBody
+	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+		return null;
 	}
 	/**
 	 * 添加购物车
@@ -624,49 +604,6 @@ public class GoodsController {
 		goodsCart.setGoods_id(goodsId);
 		try {
 			mmp = this.goodsService.addGoodsCartFunc(goodsCart, user);
-			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				rs = Result.success();
-				rs.setMsg(mmp.get("Msg").toString());
-			}else{
-				rs = Result.failure();
-				rs.setMsg(mmp.get("Msg").toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			rs = Result.failure();
-			rs.setMsg("数据传递有误");
-		}
-		return rs;
-	}
-	/**
-	 * 直接下订单（添加订单）
-	 * @author zhaibin
-	 * @param request
-	 * @param response
-	 * @param orderForm(ezs_orderform类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping("/addToOrderForm")
-	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
-		String sessionId = request.getSession().getId();
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		try {
-			
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			
-			mmp = this.goodsService.addOrderForm(tOrderForm, user,sessionId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
