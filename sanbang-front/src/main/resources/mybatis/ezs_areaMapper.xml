@@ -177,4 +177,8 @@
   	FROM ezs_area A WHERE A.areaName=#{areaName}
   </select>
   
+  <!-- 根据地区名称返回id，add by han -->
+  <select id="areaToId" resultType="java.lang.Long" parameterType="string" >
+  	SELECT distinct id FROM ezs_area WHERE areaName like '%${_parameter}%'
+  </select>
 </mapper>

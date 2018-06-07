@@ -21,17 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.alibaba.fastjson.JSONArray;
-import net.sf.json.JSONObject;
 import com.itextpdf.text.pdf.BaseFont;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -42,12 +41,15 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/goods")
@@ -283,81 +285,124 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 自营、地区筛选、品类筛选
+	 * 商品多条件查询，地区，品类（字符数组），默认排序：添加时间降序，库存量：从大到小，筛选：颜色（字符数组），形态（字符数组），来源，重要参数，是否环保，搜索框输入条件
 	 * @param request
-	 * @param area	地区id
-	 * @param type	类别id
+	 * @param areaId	地区id
+	 * @param typeId	品类id字符数组
+	 * @param colorId	颜色id字符数组
+	 * @param formId	形态id字符数组
+	 * @param source	来源
+	 * @param purpose	用途
+	 * @param importantParam	重要参数
+	 * @param isProtection	是否环保
+	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	@RequestMapping("/areaAndType")
+	@RequestMapping("/queryGoodsList")
 	@ResponseBody
-	public Result listByAreaAndType(HttpServletRequest request,Long area,Long type){
-		Result result=Result.success();
+	public Result queryGoodsList(HttpServletRequest request,
+			@RequestParam(name = "areaId",required=true)String areaId,
+			@RequestParam(name = "typeId",required=false)String typeId,
+			@RequestParam(name = "colorId",required=false)String colorId,
+			@RequestParam(name = "formId",required=false)String formId,
+			@RequestParam(name = "source",required=false)String source,
+			@RequestParam(name = "purpose",required=false)String purpose,
+			@RequestParam(name = "importantParam",required=false)String importantParam,
+			@RequestParam(name = "isProtection",required=false)String isProtection,
+			@RequestParam(name = "goodsName",required=false)String goodsName,
+			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
+		Result result = Result.failure();
+		Long area = Long.valueOf(areaId);
+		String[] typeIds = null;
+		String[] colorIds = null;
+		String[] formIds = null;
+		if(null != typeId){
+			typeIds = typeId.split(",");
+		}
+		if(null != colorId){
+			colorIds = colorId.split(",");
+		}
+		if(null != formId){
+			formIds = formId.split(",");
+		}
+//		分页先搁这儿
+//		Page page = new Page();
+//		page.setStartPos(pageNow);
+//		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.listByAreaAndType(area,type);
-		if(null != list && list.size()>0){
-			result.setObj(list);
+		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,importantParam,isProtection,goodsName);
+		if(null != list && list.size() > 0){
+			result.setMsg("查询成功");
 			result.setSuccess(true);
-			result.setMsg("筛选成功");
-		}else{
-			result.setSuccess(false);
-			result.setMsg("筛选失败");
+			result.setObj(list);
 		}
 		return result;
 	}
 	
 	/**
-	 * 其他筛选
+	 * 返回重要参数条件列表
 	 * @param request
-	 * @param color	颜色
-	 * @param form 形状
-	 * @param purpose 用途
-	 * @param source 来源
-	 * @param burning 燃烧等级
-	 * @param protection 是否环保
 	 * @return
 	 */
-	@RequestMapping("/others")
-	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
-		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		//将接收的参数转换成map类型
-		Map<String, Object> mmp = new HashMap<String, Object>();
-		mmp.put("color", color);
-		mmp.put("form", form);
-		mmp.put("purpose", purpose);
-		mmp.put("source", source);
-		mmp.put("burning", burning);
-		mmp.put("protection", protection);
+	public Result parameterList(HttpServletRequest request){
+		Result result = Result.failure();
 		
-		list = goodsService.listByOthers(mmp);
-		result.setObj(list);
-		result.setMsg("返回成功");
+				
+		
+		
 		
 		return result;
 	}
 	
 	/**
-	 * 返回其他筛选所需的条件
+	 * 根据地区名返回id
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/conditionList")
+	@RequestMapping("/areaToId")
 	@ResponseBody
-	public Result conditionList(HttpServletRequest request){
-		Result result = new Result();
-		List<ezs_dict> list = new ArrayList<ezs_dict>();
-		list = goodsService.conditionList();
-		if(list.size()>0){
-			result.setObj(list);
-			result.setMsg("返回查询条件");
+	public Result areaToId(HttpServletRequest request,String areaName){
+		Result result = Result.failure();
+		Long id = goodsService.areaToId(areaName);
+		if(null != id){
 			result.setSuccess(true);
-		}else{
-			result.setMsg("插叙失败");
-			result.setSuccess(false);
+			result.setObj(id);
+			result.setMsg("返回的id为："+id);
 		}
-		
+		return result;
+	}
+	
+	/**
+	 * 返回其他筛选所需的条件:颜色 形态
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/colorAndFormList")
+	@ResponseBody
+	public Result colorAndFormList(HttpServletRequest request){
+		Result result = Result.failure();
+		//颜色 
+		List<CurrencyClass> colorList = goodsService.colorList();
+		//形态
+		List<CurrencyClass> formList = goodsService.formList();
+		Map<String,List<CurrencyClass>> map = new HashMap<String,List<CurrencyClass>>();
+		map.put("color", colorList);
+		map.put("form", formList);
+		if(colorList.size() > 0 && null == formList){
+			result.setMsg("颜色有值，形态为空");
+			result.setObj(map);
+			result.setSuccess(true);
+		}
+		if(null == colorList && formList.size()>0){
+			result.setMsg("形态有值，颜色为空");
+			result.setObj(map);
+			result.setSuccess(true);
+		}
+		if(formList.size()>0 && colorList.size() > 0){
+			result.setMsg("颜色形态都有值");
+			result.setObj(map);
+			result.setSuccess(true);
+		}
 		return result;
 	}
 	
