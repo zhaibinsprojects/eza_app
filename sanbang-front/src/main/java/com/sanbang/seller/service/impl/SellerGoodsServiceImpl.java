@@ -436,6 +436,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setSuccess(false);
 			result.setMsg("请选择货品是否环保");
 		}
+		result.setSuccess(true);
 		return result;
 	}
 
