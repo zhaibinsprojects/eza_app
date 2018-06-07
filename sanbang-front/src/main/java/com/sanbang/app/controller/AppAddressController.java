@@ -1,4 +1,4 @@
-package com.sanbang.addressmanage.controller;
+package com.sanbang.app.controller;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/address")
-public class AddressController {
+@RequestMapping("/app/address")
+public class AppAddressController {
 	
 	@Autowired
 	private AddressService addressService;
@@ -58,12 +58,11 @@ public class AddressController {
 	@RequestMapping("/getAddressListByUserId")
 	@ResponseBody
 	public Result getAddressListByUserId(@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
-		Result result = new Result().failure();
+		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
-			result.setSuccess(false);
 			return result;
 		}
 		Page page = new Page();
@@ -102,7 +101,7 @@ public class AddressController {
 	@RequestMapping("/getAddressById")
 	@ResponseBody
 	public Result getAddressById(@RequestParam("id")Long id){
-		Result result = new Result().failure();
+		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -126,7 +125,7 @@ public class AddressController {
 	@RequestMapping("/updateAddressById")
 	@ResponseBody
 	public Result updateAddressById(ezs_address ezs_address){
-		Result result = new Result().failure();
+		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -144,7 +143,7 @@ public class AddressController {
 	@RequestMapping("/deleteAddressById")
 	@ResponseBody
 	public Result deleteAddressById(@RequestParam("id") Long id){
-		Result result = new Result().failure();
+		Result result = new Result();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

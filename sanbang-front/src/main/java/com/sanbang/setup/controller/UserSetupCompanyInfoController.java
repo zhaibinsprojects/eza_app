@@ -98,7 +98,7 @@ public class UserSetupCompanyInfoController {
 			Map<String,Object> map1=new HashMap<>();
 			map1.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			if(null!=upi.getEzs_store().getArea_id()){
-				map.put("area_id",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址区县
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
 			}else{
 				map.put("area_id",0);// 经营地址区县
 			}

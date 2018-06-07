@@ -30,6 +30,8 @@ public class ezs_address {
     private Long area_id;
 
     private Long user_id;
+    
+    private String area;
 
     public Long getId() {
         return id;
@@ -118,4 +120,13 @@ public class ezs_address {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+    
 }

@@ -277,7 +277,7 @@ public class AppGoodsController {
 	public Result listByAreaAndType(HttpServletRequest request,Long area,Long type){
 		Result result=Result.success();
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.listByAreaAndType(area,type);
+		//list = goodsService.listByAreaAndType(area,type);
 		if(null != list && list.size()>0){
 			result.setObj(list);
 			result.setSuccess(true);
@@ -314,7 +314,7 @@ public class AppGoodsController {
 		mmp.put("burning", burning);
 		mmp.put("protection", protection);
 		
-		list = goodsService.listByOthers(mmp);
+		//list = goodsService.listByOthers(mmp);
 		result.setObj(list);
 		result.setMsg("返回成功");
 		
@@ -331,7 +331,7 @@ public class AppGoodsController {
 	public Result conditionList(HttpServletRequest request){
 		Result result = new Result();
 		List<ezs_dict> list = new ArrayList<ezs_dict>();
-		list = goodsService.conditionList();
+		//list = goodsService.conditionList();
 		if(list.size()>0){
 			result.setObj(list);
 			result.setMsg("返回查询条件");

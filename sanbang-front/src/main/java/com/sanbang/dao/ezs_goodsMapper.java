@@ -39,20 +39,11 @@ public interface ezs_goodsMapper {
 	 * @param id 级别id
 	 * @return
 	 */
-
 	List<ezs_goods> listForGoods(Long goodClass_id);
 
 	
 	List<ezs_goods> getGoodsFromCollection(Long userId);
-
 	
-	/**
-	 * 自营，地区、类别筛选
-	 * @param area 地区
-	 * @param type 类别
-	 * @return
-	 */
-	List<ezs_goods> listByAreaAndType(Map mmp);
 
     List<GoodsInfo> selectByGoodsName(String name);
 	/**
@@ -60,12 +51,27 @@ public interface ezs_goodsMapper {
 	 * @param map 查询条件
 	 * @return
 	 */
-	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);
-
-	List<ezs_goods> listByOthers(Map map);
+	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);	
 	
 	int selectCount(Long sellerId);
 
 	List<ezs_goods> queryGoods(@Param("page")Page page, @Param("sellerId")Long sellerId, @Param("status")int status);
+	
+	
+	/**
+	 * 多条件查询
+	 * @param area	地区
+	 * @param typeIds 类别
+	 * @param colorIds
+	 * @param formIds
+	 * @param source
+	 * @param purpose
+	 * @param importantParam
+	 * @param isProtection
+	 * @param goodsName
+	 * @return
+	 */
+	List<ezs_goods> queryGoodsList(Map map);
+	
 
 }
