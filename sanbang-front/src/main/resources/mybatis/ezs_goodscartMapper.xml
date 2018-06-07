@@ -174,4 +174,38 @@
   	<include refid="Base_Column_List" />
   	 from ezs_goodscart a where a.deleteStatus = '0' and a.sc_id = #{storeCarId};
   </select>
+  <!-- 根据用户查询购物车表-->
+  <resultMap id="GoodCarInfoResultMap" type="com.sanbang.vo.GoodsCarInfo">
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="cart_type" property="cart_type" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="DOUBLE" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
+    <result column="of_id" property="of_id" jdbcType="BIGINT" />
+    <result column="sc_id" property="sc_id" jdbcType="BIGINT" />
+    <association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
+    	<result column="pName" property="name"/>
+    	<result column="pPath" property="path"/>
+    </association>
+    <result column="gname" property="goodName" jdbcType="BIGINT" />
+    <result column="inventory" property="inventory" jdbcType="BIGINT" />
+    <result column="gAreaId" property="areaId" jdbcType="BIGINT" />
+    <result column="utilName" property="utilName" jdbcType="BIGINT" />
+  </resultMap>
+  <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
+  	SELECT 
+  		g.*,
+		(select CONCAT(d1.`name`,d2.`name`,a.`name`) name from ezs_goods a,ezs_dict d1,ezs_dict d2 where a.color_id = d1.id and a.form_id = d2.id and a.id = g.goods_id) gname,
+		gs.inventory,
+		gs.area_id gAreaId,
+		ga.name pName,
+		ga.path pPath, 
+		d.name utilName
+  	 FROM ezs_goodscart g,ezs_goods gs,ezs_accessory ga,ezs_dict d WHERE g.goods_id = gs.id and gs.goods_main_photo_id = ga.id and gs.util_id = d.id and 
+	EXISTS 
+	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
+	 AND g.deleteStatus = '0' and g.of_id IS NULL;
+  </select>
 </mapper>

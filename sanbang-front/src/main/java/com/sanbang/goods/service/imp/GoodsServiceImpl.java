@@ -29,6 +29,7 @@ import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
 
 /**
@@ -446,5 +447,30 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return mmp;
 	}
-	
+
+	@Override
+	public Map<String, Object> getGoodCarFunc(ezs_user user) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<GoodsCarInfo> goodCarInfoList = null;
+		QueryCondition queryCondition = new QueryCondition();
+		queryCondition.setUserId(user.getId());
+		try {
+			goodCarInfoList = this.ezs_goodscartMapper.selectByUserId(queryCondition);
+			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Obj", goodCarInfoList);
+				mmp.put("Msg", "查询成功");
+			}else{
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "购物车没有数据");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
 }
