@@ -3,10 +3,8 @@ package com.sanbang.app.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,29 +12,24 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
 import com.sanbang.area.service.AreaService;
 import com.sanbang.bean.ezs_area;
-import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.setup.controller.UserSetupAuthController;
 import com.sanbang.setup.service.AuthService;
 import com.sanbang.upload.sevice.FileUploadService;
-import com.sanbang.userpro.service.UserProService;
+import com.sanbang.utils.ImageUrlUtil;
 import com.sanbang.utils.RedisUserSession;
-import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.LinkUserVo;
 import com.sanbang.vo.userauth.AuthImageVo;
 
 @Controller
@@ -44,11 +37,6 @@ import com.sanbang.vo.userauth.AuthImageVo;
 public class AppUserSetupAuthController {
 
 	private Logger log=Logger.getLogger(UserSetupAuthController.class);
-	
-	private  static final String view="/memberuser/regist/";
-	
-	@Autowired
-	private UserProService userProService;
 	
 	@Autowired
 	private com.sanbang.dao.ezs_areaMapper ezs_areaMapper;
@@ -86,6 +74,41 @@ public class AppUserSetupAuthController {
 	private FileUploadService fileUploadService;
 	
 	
+	/**
+	 * 买家会员中心
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/menuinit")
+	@ResponseBody
+	public Result cataInit(HttpServletRequest request) {
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		Map<String, Object> map=new HashMap<>();
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			result.setSuccess(false);
+			map.put("userimg", "");
+			map.put("name", "");
+			map.put("status", 0);
+			map.put("auditingusertype_id","");
+			result.setObj(map);
+			return result;
+		}else{
+			map.put("userimg", ImageUrlUtil.geturl(DictionaryCate.USER_ICON, upi.getAuthimg()));
+			map.put("name", upi.getName());
+			map.put("status", upi.getEzs_store().getStatus());
+			map.put("auditingusertype_id",dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id())==null?"":
+				dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id()).getCode());
+			result.setObj(map);
+		}
+		return result;
+	}
 	
 
 	/**
@@ -157,8 +180,15 @@ public class AppUserSetupAuthController {
 			//初始化地址
 			if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
-					imgmap.put(authimg.getImgcode(), authimg.getImgurl());
+					if(DictionaryCate.IDCARD_FONT.equals(authimg.getImgcode())||
+							DictionaryCate.IDCARD_BACK.equals(authimg.getImgcode())||
+							DictionaryCate.ACCOUNT_OPENING_LICENSE.equals(authimg.getImgcode())||
+							DictionaryCate.OTHER_QUALIFICATIONS.equals(authimg.getImgcode())||
+							DictionaryCate.BUSINESS_LICENSE.equals(authimg.getImgcode())){
+						imgmap.put(authimg.getImgcode(), authimg.getImgurl());
+					}
 				}
+				
 				map.put("imgmap", imgmap);
 				map.put("hashimg", true);
 			}else{
@@ -208,14 +238,16 @@ public class AppUserSetupAuthController {
 			if(null!=upi.getAuthimg()){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
 					if(DictionaryCate.LETTER_OF_AUTHORIZATION.equals(authimg.getImgcode())||
-							DictionaryCate.LICENSEE_IDCARD.equals(authimg.getImgcode())){
+							DictionaryCate.LICENSEE_IDCARD.equals(authimg.getImgcode())||
+							DictionaryCate.SHENGMING.equals(authimg.getImgcode())){
 						auth.put(authimg.getImgcode(), authimg.getImgurl());
 						hashauth=true;
 					}
 				}
 				
 			}
-			map.put("authfile", map);
+		
+			map.put("authfile", auth);
 			map.put("hashauth", hashauth);
 			map.put("temurl", "https://www.baidu.com");
 			result.setObj(map);
@@ -284,7 +316,6 @@ public class AppUserSetupAuthController {
 				map.put("persion", upi.getEzs_store().getPerson());// 经营者
 				
 			}
-			
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");
@@ -296,16 +327,18 @@ public class AppUserSetupAuthController {
 		if("zhizhishow".equals(typevalue)){
 			Map<String, Object> imgmap=new HashMap<>();
 			//初始化地址
-			if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0){
+			if(null!=upi.getAuthimg()){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
-					imgmap.put(authimg.getImgcode(), authimg.getImgurl());
+					if(DictionaryCate.IDCARD_FONT.equals(authimg.getImgcode())||
+							DictionaryCate.IDCARD_BACK.equals(authimg.getImgcode())||
+							DictionaryCate.ACCOUNT_OPENING_LICENSE.equals(authimg.getImgcode())||
+							DictionaryCate.OTHER_QUALIFICATIONS.equals(authimg.getImgcode())||
+							DictionaryCate.BUSINESS_LICENSE.equals(authimg.getImgcode())){
+						imgmap.put(authimg.getImgcode(), authimg.getImgurl());
+					}
 				}
-				map.put("imgmap", imgmap);
-				map.put("hashimg", true);
-			}else{
-				map.put("hashimg", false);
 			}
-			
+			map.put("imgmap", imgmap);
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");
@@ -349,13 +382,15 @@ public class AppUserSetupAuthController {
 			if(null!=upi.getAuthimg()){
 				for (AuthImageVo authimg : upi.getAuthimg()) {
 					if(DictionaryCate.LETTER_OF_AUTHORIZATION.equals(authimg.getImgcode())||
-							DictionaryCate.LICENSEE_IDCARD.equals(authimg.getImgcode())){
+							DictionaryCate.LICENSEE_IDCARD.equals(authimg.getImgcode())||
+							DictionaryCate.SHENGMING.equals(authimg.getImgcode())){
 						auth.put(authimg.getImgcode(), authimg.getImgurl());
 						hashauth=true;
 					}
 				}
 				
 			}
+			
 			map.put("authfile", auth);
 			map.put("hashauth", hashauth);
 			map.put("temurl", "https://www.baidu.com");

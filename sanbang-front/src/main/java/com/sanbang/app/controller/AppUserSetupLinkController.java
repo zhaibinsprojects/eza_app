@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_positionMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
+import com.sanbang.utils.ImageUrlUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCate;
@@ -53,6 +56,12 @@ public class AppUserSetupLinkController {
 
 	@Autowired
 	private DictService dictService;
+	
+	@Autowired
+	private ezs_positionMapper ezs_positionMapper;
+	
+	@Autowired
+	private com.sanbang.setup.service.AuthService authService;
 
 	/**
 	 * 设置注册联系人资料
@@ -74,7 +83,7 @@ public class AppUserSetupLinkController {
 			}
 			Map<String, Object> map=new HashMap<>();
 			if (null != upi.getEzs_userinfo()) {
-				map.put("Link", new LinkUserVo("headimg", upi.getName(), upi.getEzs_userinfo().getPhone(),
+				map.put("Link", new LinkUserVo(ImageUrlUtil.geturl(DictionaryCate.USER_ICON, upi.getAuthimg()), upi.getName(), upi.getEzs_userinfo().getPhone(),
 						upi.getTrueName(), upi.getEzs_userinfo().getSex_id(),
 						(upi.getEzs_userinfo().getSex_id() != null && upi.getEzs_userinfo().getSex_id() != 0)
 								? dictService.getDictByThisId(upi.getEzs_userinfo().getSex_id()).getName() : "",
@@ -82,14 +91,14 @@ public class AppUserSetupLinkController {
 						upi.getEzs_userinfo().getPosition_id() != null ? upi.getEzs_userinfo().getPosition_id() : 0,
 
 						(upi.getEzs_userinfo().getPosition_id() != null && upi.getEzs_userinfo().getPosition_id() != 0)
-								? dictService.getDictByThisId(upi.getEzs_userinfo().getPosition_id()).getName() : "",
+								? ezs_positionMapper.selectByPrimaryKey(upi.getEzs_userinfo().getPosition_id()).getName() : "",
 
 						upi.getEzs_userinfo().getTel(), upi.getEzs_userinfo().getPhone(),
 						upi.getEzs_userinfo().getEmail(), upi.getEzs_userinfo().getQQ()));
 			};
 			
 			//公司类型
-			map.put("area", dictService.getDictByParentId(DictionaryCate.EZS_SEX));
+			map.put("SEX", dictService.getDictByParentId(DictionaryCate.EZS_SEX));
 			result.setObj(map);
 			result.setSuccess(true);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -121,10 +130,15 @@ public class AppUserSetupLinkController {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
+		if(!upi.getEzs_userinfo().getPhone().equals(mobile)){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("手机号码有误！");
+			return result;
+		}
 		
 		//查看手机号是否修改过
-		if(upi.getEzs_userinfo().getPhoneStatus()==1){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+		if(null!=upi.getEzs_userinfo().getPhoneStatus()&&upi.getEzs_userinfo().getPhoneStatus()==1){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setMsg("已经修改过一次不可更改！");
 			return result;
 		}
@@ -192,6 +206,14 @@ public class AppUserSetupLinkController {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
+		
+		if(null!=upi.getEzs_userinfo().getPhoneStatus()&&upi.getEzs_userinfo().getPhoneStatus()==1){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("只有一次修改机会");
+			return result;
+		}
+		
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  
 		// 6位验证码  
@@ -243,7 +265,7 @@ public class AppUserSetupLinkController {
 	 * 修改其他信息
 	 * 
 	 * @param request
-	 * @return typeval truename sex tel email qq  username
+	 * @return position truename sex tel email qq  username
 	 * 
 	 */
 	@ResponseBody
@@ -273,7 +295,26 @@ public class AppUserSetupLinkController {
 		return result;
 	}
 	
-	
+
+	/**
+	 * 添加用户头像
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/headimg")
+	public Result saveshouq(
+			HttpServletRequest request,
+			HttpServletResponse response){
+		Result result=Result.failure();  
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		result=authService.saveHeadPicUrl(result, request, upi, response);
+		return result;
+	}
 	
 
 }

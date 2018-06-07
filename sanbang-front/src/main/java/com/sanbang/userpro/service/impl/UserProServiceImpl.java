@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -30,6 +31,7 @@ import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_user_role;
 import com.sanbang.bean.ezs_userinfo;
+import com.sanbang.dao.ezs_dictMapper;
 import com.sanbang.dao.ezs_industry_dictMapper;
 import com.sanbang.dao.ezs_positionMapper;
 import com.sanbang.dao.ezs_storeMapper;
@@ -46,6 +48,7 @@ import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.SendMobileMessage;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
 import com.sanbang.vo.MessageDictionary;
@@ -87,6 +90,9 @@ public class UserProServiceImpl implements UserProService {
 
 	@Resource(name = "ezs_user_roleMapper")
 	private com.sanbang.dao.ezs_user_roleMapper ezs_user_roleMapper;
+	
+	@Autowired
+	private ezs_dictMapper ezs_dictMapper;
 
 	@Value("${consparam.cookie.useridcard}")
 	private String USERIDCARD;
@@ -291,7 +297,16 @@ public class UserProServiceImpl implements UserProService {
 			// 根据用户名查询用户的信息
 			ezs_user userProInfo = null;
 			List<ezs_user> userProInfolist = null;
-			userProInfolist = ezs_userMapper.getUserInfoByUserNameFromBack(userName.trim());
+			if(null==flag){
+				if(Tools.isMobile(userName.trim())){
+					userProInfolist = ezs_userMapper.getUserInfoByUserNameFromPhone(userName.trim());
+				}else{
+					userProInfolist = ezs_userMapper.getUserInfoByUserNameFromBack(userName.trim());
+				}
+			}else{
+				userProInfolist = ezs_userMapper.getUserInfoByUserNameFromPhone(userName.trim());
+			}
+			
 			if (userProInfolist == null || userProInfolist.size() == 0) {
 				result.setSuccess(false);
 				result.setMsg("用户不存在");
@@ -624,8 +639,8 @@ public class UserProServiceImpl implements UserProService {
 		} else {
 			// 无密登陆
 			if (null != flag && flag == 1) {
-				List<ezs_user> upis = ezs_userMapper.getUserInfoByUserNameFromBack(phone);
-				if (upis == null || upis.size() == 0) {
+				int count = ezs_userMapper.checkMobile(phone);
+				if (count== 0) {
 					// 不存在，不能登陆
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
 					result.setSuccess(false);
@@ -1193,6 +1208,7 @@ public class UserProServiceImpl implements UserProService {
 			story.setStatus(0);
 			story.setyTurnover(0.0);
 			story.setAdmin_status(0);
+			story.setAuditingusertype_id(ezs_dictMapper.getDictById(DictionaryCate.CRM_USR_TYPE_REGISTER).getId());
 
 			// 用户详情
 			ezs_userinfo userinfo = new ezs_userinfo();
@@ -1203,6 +1219,7 @@ public class UserProServiceImpl implements UserProService {
 			userinfo.setSex_id(sex_id);
 			userinfo.setStatus(0);
 			userinfo.setUpdateStatus(0);
+			userinfo.setPhoneStatus(0);
 
 			String[] Industrys = mianIndustry_id.split(",");
 			String[] cmtypes = companyType_id.split(",");
@@ -1218,7 +1235,7 @@ public class UserProServiceImpl implements UserProService {
 				companyType(cmtypes, storyid);
 
 				long userinfoid = ezs_userinfoMapper.insert(userinfo);
-				user.setUserInfo_id(userinfoid);
+				user.setUserInfo_id(userinfo.getId());
 				user.setStore_id(storyid);
 				user.setUserRole(userRole);
 				user.setTrueName(trueName);
@@ -1237,6 +1254,8 @@ public class UserProServiceImpl implements UserProService {
 			}
 
 			if (aa > 0) {
+				ezs_user upi=ezs_userMapper.getUserInfoByUserNameFromBack(user.getName()).get(0);
+				RedisUserSession.updateUserInfo(user.getUserkey(), upi, Long.parseLong(redisuserkeyexpir));
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
 				result.setSuccess(true);
 				result.setMsg("注册成功");
@@ -1359,10 +1378,11 @@ public class UserProServiceImpl implements UserProService {
 		upuser.setId(ezsuser.getEzs_userinfo().getId());
 
 		ezs_user uupi = new ezs_user();
-		uupi.setId(ezsuser.getEzs_userinfo().getId());
+		uupi.setId(ezsuser.getId());
+		uupi.setName(ezsuser.getName());
 		switch (typeval) {
 		case "truename":
-			if (Tools.isEmpty(linkvo.getTruename()) && !Tools.paramValidate(linkvo.getTruename(), 3)) {
+			if (Tools.isEmpty(linkvo.getTruename()) || !Tools.paramValidate(linkvo.getTruename(), 3)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("真实姓名格式不正确！");
@@ -1373,7 +1393,7 @@ public class UserProServiceImpl implements UserProService {
 
 			break;
 		case "username":
-			if(uupi.getEzs_userinfo().getUpdateStatus()==1){
+			if(null!=ezsuser.getEzs_userinfo().getUpdateStatus()&&ezsuser.getEzs_userinfo().getUpdateStatus()==1){
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("您已经修改过一次,只有一次修改机会");
@@ -1381,14 +1401,14 @@ public class UserProServiceImpl implements UserProService {
 			}
 			
 			
-			if (Tools.isEmpty(linkvo.getTruename()) && !Tools.paramValidate(linkvo.getTruename(), 3)) {
+			if (Tools.isEmpty(linkvo.getUsername()) || !Tools.paramValidate(linkvo.getUsername(), 0)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setMsg("登陆名称不正确！");
+				result.setMsg("登陆名称格式不正确！");
 			} else {
 				ezs_userinfo upuser1 = new ezs_userinfo();
-				upuser.setId(ezsuser.getEzs_userinfo().getId());
-				upuser.setUpdateStatus(1);
+				upuser1.setId(ezsuser.getEzs_userinfo().getId());
+				upuser1.setUpdateStatus(1);
 				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser1);
 				
 				uupi.setName(linkvo.getUsername());
@@ -1414,9 +1434,13 @@ public class UserProServiceImpl implements UserProService {
 				ezsposition.setName(linkvo.getPositionval());
 				ezs_positionMapper.updateByPrimaryKeySelective(ezsposition);
 			}
+			ezs_userinfo userinfo=new ezs_userinfo();
+			userinfo.setId(ezsuser.getEzs_userinfo().getId());
+			userinfo.setPosition_id(ezsposition.getId());
+			ezs_userinfoMapper.updateByPrimaryKeySelective(userinfo);
 			break;
 		case "tel":
-			if (Tools.isEmpty(linkvo.getTel()) && !Tools.paramValidate(linkvo.getTel(), 1)) {
+			if (Tools.isEmpty(linkvo.getTel()) || !Tools.paramValidate(linkvo.getTel(), 4)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("电话号格式不正确！");
@@ -1426,22 +1450,22 @@ public class UserProServiceImpl implements UserProService {
 			}
 			break;
 		case "email":
-			if (Tools.isEmpty(linkvo.getEmail()) && !Tools.paramValidate(linkvo.getEmail(), 2)) {
+			if (Tools.isEmpty(linkvo.getEmail()) || !Tools.paramValidate(linkvo.getEmail(), 2)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("邮箱格式不正确！");
 			} else {
-				upuser.setTel(linkvo.getEmail());
+				upuser.setEmail(linkvo.getEmail());
 				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
 			}
 			break;
 		case "qq":
-			if (Tools.isEmpty(linkvo.getQq()) && !Tools.paramValidate(linkvo.getQq(), 6)) {
+			if (Tools.isEmpty(linkvo.getQq()) || !Tools.paramValidate(linkvo.getQq(), 6)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("qq号格式不正确！");
 			} else {
-				upuser.setTel(linkvo.getQq());
+				upuser.setQQ(linkvo.getQq());
 				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
 			}
 			break;
@@ -1452,10 +1476,12 @@ public class UserProServiceImpl implements UserProService {
 			break;
 		}
 		try {
-			ezsuser = ezs_userMapper.getUserInfoByUserNameFromBack(ezsuser.getName()).get(0);
-			RedisUserSession.updateUserInfo(ezsuser.getUserkey(), ezsuser,
+			String userkey=ezsuser.getUserkey();
+			ezsuser = ezs_userMapper.getUserInfoByUserNameFromBack(uupi.getName()).get(0);
+			RedisUserSession.updateUserInfo(userkey, ezsuser,
 					Long.parseLong(redisuserkeyexpir));
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			log.info("h5设置个人资料" + ezsuser.getName() + "错误" + e.toString());
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -1511,7 +1537,7 @@ public class UserProServiceImpl implements UserProService {
 
 				ezs_storeMapper.updateByPrimaryKeySelective(store);
 				upi = ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
-				RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi,
+				RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
 						Long.parseLong(redisuserkeyexpir));
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setMsg("保存成功");
@@ -1538,10 +1564,21 @@ public class UserProServiceImpl implements UserProService {
 		String obtainYear = request.getParameter("obtainYear");// 实际控制人从业年限
 		String rent = request.getParameter("rent");// 租用
 		String yTurnover = request.getParameter("yTurnover");//// 年营业额
-
 		String companyTypes = request.getParameter("companyType_id");// 公司类型
 		String mianIndustrys = request.getParameter("mianIndustry_id");// 主营行业
 
+		log.info("保存企业资料：address："+address+"==assets"+assets
+				+"==companyName"+companyName
+				+"==covered"+covered
+				+"==device_num"+device_num
+				+"==employee_num"+employee_num
+				+"==fixed_assets"+fixed_assets
+				+"==obtainYear"+obtainYear
+				+"==rent"+rent
+				+"==yTurnover"+yTurnover
+				+"==companyTypes"+companyTypes
+				+"==mianIndustrys"+mianIndustrys);
+		
 		if (Tools.isEmpty(companyName)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
@@ -1682,6 +1719,9 @@ public class UserProServiceImpl implements UserProService {
 //					ezs_user uupi = new ezs_user();
 //					uupi.setName(mobile);
 //					uupi.setId(upi.getId());
+					
+					
+					
 					ezs_userinfo info = new ezs_userinfo();
 					info.setPhone(mobile);
 					info.setPhoneStatus(1);
@@ -1693,7 +1733,7 @@ public class UserProServiceImpl implements UserProService {
 						// 更新缓存
 						//upi.setName(mobile);
 						upi.getEzs_userinfo().setPhone(mobile);
-						RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi,
+						RedisUserSession.updateUserInfo(upi.getAuthkey(), upi,
 								Long.parseLong(redisuserkeyexpir));
 						result.setSuccess(true);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -1731,7 +1771,7 @@ public class UserProServiceImpl implements UserProService {
 			result.setMsg("手机号码格式错误");
 		} else {
 			int istrue = ezs_userMapper.checkMobile(phone);
-			if (istrue == 0) {
+			if (istrue >0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
 				result.setSuccess(false);
 				result.setMsg("手机号码已存在,请输入其他号码");

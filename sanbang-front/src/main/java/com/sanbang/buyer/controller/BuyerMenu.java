@@ -39,27 +39,7 @@ public class BuyerMenu {
 	
   Logger log=Logger.getLogger(BuyerMenu.class);  
 
-	/**
-	 * 买家会员中心
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/menuinit")
-	@ResponseBody
-	public Result cataInit(HttpServletRequest request) {
-		Result result = Result.success();
-		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-		result.setMsg("请求成功");
-
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if (upi == null) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
-		return result;
-	}
+	
 
 	/**
 	 * 订单中心

@@ -550,7 +550,7 @@ public class AuthServiceImpl implements AuthService {
 		ezs_storeMapper.updateByPrimaryKeySelective(store);
 		if(result.getSuccess()){
 			upi=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
-			RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
+			RedisUserSession.updateUserInfo(upi.getUserkey(), upi, Long.parseLong(redisuserkeyexpir));
 		}
 		return result;
 	}
@@ -646,11 +646,12 @@ public class AuthServiceImpl implements AuthService {
 			int i=0;
 			for (AuthImageVo authImageVo : list) {
 				if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
-						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")
+						||authImageVo.getImgcode().equals("SHENGMING")){
 				i++;	
 				}
 			}
-			if(i==2){
+			if(i==3){
 				authupi.setAuthorfilestate(true);
 			}
 		}
@@ -790,6 +791,10 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("系统错误");
 		}
 		
+		List<AuthImageVo> list=ezs_accessoryMapper.getAuthImgListByStoreid(upi.getStore_id());
+		upi.setAuthimg(list);
+		RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+				Long.parseLong(redisuserkeyexpir));
 		return result;
 	}
 
@@ -860,6 +865,7 @@ public class AuthServiceImpl implements AuthService {
 			HttpServletResponse response) {
 		String shouquan=request.getParameter("shouquan");//,
 		String sfzfyj=request.getParameter("sfzfyj");//,
+		String shengming=request.getParameter("shengming");
 		if(Tools.isEmpty(shouquan)){
 			result.setSuccess(false);
 			result.setMsg("请上传授权文件");
@@ -868,14 +874,21 @@ public class AuthServiceImpl implements AuthService {
 		}
 		if(Tools.isEmpty(sfzfyj)){
 			result.setSuccess(false);
-			result.setMsg("被授权人身份证复印件");
+			result.setMsg("请上传被授权人身份证复印件");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			return result;
 		}
-		
+		if(Tools.isEmpty(shengming)){
+			result.setSuccess(false);
+			result.setMsg("请上传声明文件");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
 		List<AuthImageVo> List=new ArrayList<>();
 		try {
 			List=savepic(shouquan, List);
+			List=savepic(sfzfyj, List);
+			List=savepic(shengming, List);
 			if(null!=List&&List.size()>0){
 			//资质信息
 			for (AuthImageVo img : List) {

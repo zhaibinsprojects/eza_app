@@ -105,13 +105,13 @@ public class UserSetupCompanyInfoController {
 			if (null != upi.getEzs_store().getCompanyType_id() && upi.getEzs_store().getCompanyType_id() > 0) {
 				map1.put("companyType_id",getezs_companyType_dict( ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId())));// 公司类型
 			}else{
-				map1.put("companyType_id",0);
+				map1.put("companyType_id","");
 			}
 			
 			if (null != upi.getEzs_store().getMianIndustry_id() && upi.getEzs_store().getMianIndustry_id() > 0) {
 				map1.put("mianIndustry_id", getezs_industry_dict(ezs_industry_dictMapper.getIndustryByThisId(upi.getEzs_store().getId())));// 公司类型
 			}else{
-				map1.put("mianIndustry_id",0);
+				map1.put("mianIndustry_id","");
 			}
 			map1.put("address", upi.getEzs_store().getAddress());// 经营地址
 			map1.put("yTurnover", upi.getEzs_store().getyTurnover());//// 年营业额
@@ -121,6 +121,7 @@ public class UserSetupCompanyInfoController {
 			map1.put("employee_num", upi.getEzs_store().getEmployee_num());// 员工数量
 			map1.put("fixed_assets", upi.getEzs_store().getFixed_assets());// 固定资产
 			map1.put("obtainYear", upi.getEzs_store().getObtainYear());// 实际控制人从业年限
+			map1.put("assets", upi.getEzs_store().getAssets());// 总资产
 			
 			map.put("cominfo", map1);
 			//主营行业
@@ -202,7 +203,7 @@ public class UserSetupCompanyInfoController {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < list.size(); i++) {
 			if(i!=0||i!=list.size()-1){
-				sb.append("@");
+				sb.append(",");
 			}
 			sb.append(list.get(i).getDict_id());
 		}
@@ -217,7 +218,7 @@ public class UserSetupCompanyInfoController {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < list.size(); i++) {
 			if(i!=0||i!=list.size()-1){
-				sb.append("@");
+				sb.append(",");
 			}
 			sb.append(list.get(i).getDict_id());
 		}
