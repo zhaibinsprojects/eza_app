@@ -409,11 +409,22 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
-		Long id = goodsService.areaToId(areaName);
-		if(null != id){
+		//直辖市
+		if(areaName.equals("北京市")||areaName.equals("重庆市")||areaName.equals("天津市")||areaName.equals("上海市")){
+			List<Long> ids = goodsService.areaToId(areaName);
+			if(ids.get(0)<ids.get(1)){
+				result.setObj(ids.get(0));
+				result.setMsg("返回的id为："+ids.get(0));
+			}else{
+				result.setObj(ids.get(1));
+				result.setMsg("返回的id为："+ids.get(1));
+			}
 			result.setSuccess(true);
-			result.setObj(id);
-			result.setMsg("返回的id为："+id);
+		}else{
+			List<Long> id = goodsService.areaToId(areaName);
+			result.setObj(id.get(0));
+			result.setSuccess(true);
+			result.setMsg("返回的id为："+id.get(0));
 		}
 		return result;
 	}

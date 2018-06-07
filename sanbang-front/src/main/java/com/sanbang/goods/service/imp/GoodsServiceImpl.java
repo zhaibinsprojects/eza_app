@@ -269,7 +269,7 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 根据地区名称返回id
 	 */
-	public Long areaToId(String areaName){
+	public List<Long> areaToId(String areaName){
 		return areaMapper.areaToId(areaName);
 	}
 	
