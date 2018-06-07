@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goodscart;
+import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
 
 @Repository
@@ -30,4 +31,6 @@ public interface ezs_goodscartMapper {
     List<ezs_goodscart> selectByCondition(QueryCondition queryCondition);
     
     List<ezs_goodscart> selectByStoreCarId(QueryCondition queryCondition);
+    
+    List<GoodsCarInfo> selectByUserId(QueryCondition queryCondition);
 }

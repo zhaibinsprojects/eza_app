@@ -329,9 +329,15 @@ public class AppGoodsController {
 //		page.setStartPos(pageNow);
 //		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
+<<<<<<< HEAD
 		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,importantParam,isProtection,goodsName);
 		if(null != list && list.size() > 0){
 			result.setMsg("查询成功");
+=======
+		//list = goodsService.listByAreaAndType(area,type);
+		if(null != list && list.size()>0){
+			result.setObj(list);
+>>>>>>> e8d835952a33d65527a1852452be5890187ced84
 			result.setSuccess(true);
 			result.setObj(list);
 		}
@@ -349,6 +355,12 @@ public class AppGoodsController {
 				
 		
 		
+<<<<<<< HEAD
+=======
+		//list = goodsService.listByOthers(mmp);
+		result.setObj(list);
+		result.setMsg("返回成功");
+>>>>>>> e8d835952a33d65527a1852452be5890187ced84
 		
 		return result;
 	}
@@ -360,6 +372,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/areaToId")
 	@ResponseBody
+<<<<<<< HEAD
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
 		Long id = goodsService.areaToId(areaName);
@@ -400,6 +413,15 @@ public class AppGoodsController {
 		if(formList.size()>0 && colorList.size() > 0){
 			result.setMsg("颜色形态都有值");
 			result.setObj(map);
+=======
+	public Result conditionList(HttpServletRequest request){
+		Result result = new Result();
+		List<ezs_dict> list = new ArrayList<ezs_dict>();
+		//list = goodsService.conditionList();
+		if(list.size()>0){
+			result.setObj(list);
+			result.setMsg("返回查询条件");
+>>>>>>> e8d835952a33d65527a1852452be5890187ced84
 			result.setSuccess(true);
 		}
 		return result;

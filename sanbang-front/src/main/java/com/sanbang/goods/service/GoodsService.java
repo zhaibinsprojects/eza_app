@@ -158,6 +158,8 @@ public interface GoodsService {
 	
 	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user);
 	
+	public Map<String, Object> getGoodCarFunc(ezs_user user);
+	
 	
 	
 }
