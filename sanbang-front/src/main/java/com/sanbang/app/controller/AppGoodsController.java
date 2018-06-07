@@ -699,4 +699,43 @@ public class AppGoodsController {
 		}
 		return rs;
 	}
+	/**
+	 * 获取购物车数据
+	 * @author zhaibin 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getGoodCar")
+	@ResponseBody
+	public Object getGoodCar(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			mmp = this.goodsService.getGoodCarFunc(user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				List<ezs_goodscart> goodCarList = (List<ezs_goodscart>) mmp.get("Obj");
+				rs = Result.success();
+				rs.setObj(goodCarList);
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
 }
