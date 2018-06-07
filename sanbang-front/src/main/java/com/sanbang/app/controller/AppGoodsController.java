@@ -291,7 +291,7 @@ public class AppGoodsController {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	@RequestMapping("/areaAndType")
+	@RequestMapping("/queryGoodsList")
 	@ResponseBody
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
