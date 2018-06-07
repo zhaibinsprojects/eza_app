@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -73,13 +72,24 @@ public interface GoodsService {
 	 * @param formIds	形态id字符数组
 	 * @param source	来源
 	 * @param purpose	用途
-	 * @param importantParam	重要参数
+	 * @param densitys	密度
+	 * @param cantilevers	悬臂梁缺口冲击
+	 * @param freelys	简支梁缺口冲击
+	 * @param lipolysises	熔融指数（溶脂）
+	 * @param ashs	灰分
+	 * @param waters	水分
+	 * @param tensiles	拉伸强度
+	 * @param cracks	断裂伸长率
+	 * @param bending	弯曲强度
+	 * @param flexural	弯曲模量
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
 	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String[] colorIds,String[] formIds,
-			String source,String purpose,String importantParam,String isProtection,String goodsName);
+			String source,String purpose,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
+			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
+			String isProtection,String goodsName);
 	
 	/**
 	 * 根据地区名称返回id

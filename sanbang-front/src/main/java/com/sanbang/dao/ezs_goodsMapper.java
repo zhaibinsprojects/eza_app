@@ -72,5 +72,6 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	List<ezs_goods> queryGoodsList(Map map);
+	
 
 }

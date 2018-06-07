@@ -288,12 +288,21 @@ public class GoodsController {
 	 * 商品多条件查询，地区，品类（字符数组），默认排序：添加时间降序，库存量：从大到小，筛选：颜色（字符数组），形态（字符数组），来源，重要参数，是否环保，搜索框输入条件
 	 * @param request
 	 * @param areaId	地区id
-	 * @param typeId	品类id字符数组
-	 * @param colorId	颜色id字符数组
-	 * @param formId	形态id字符数组
+	 * @param typeId	品类id字符串数组
+	 * @param colorId	颜色id字符串数组
+	 * @param formId	形态id字符串数组
 	 * @param source	来源
 	 * @param purpose	用途
-	 * @param importantParam	重要参数
+	 * @param density	密度字符串数组
+	 * @param cantilever	悬臂梁缺口冲击字符串数组
+	 * @param freely	简支梁缺口冲击字符串数组
+	 * @param lipolysis	熔融指数（溶脂）字符串数组
+	 * @param ash	灰分字符串数组
+	 * @param water	水分字符串数组
+	 * @param tensile	拉伸强度字符串数组
+	 * @param crack	断裂伸长率字符串数组
+	 * @param bending	弯曲强度字符串数组
+	 * @param flexural	弯曲模量字符串数组
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
@@ -307,7 +316,16 @@ public class GoodsController {
 			@RequestParam(name = "formId",required=false)String formId,
 			@RequestParam(name = "source",required=false)String source,
 			@RequestParam(name = "purpose",required=false)String purpose,
-			@RequestParam(name = "importantParam",required=false)String importantParam,
+			@RequestParam(name = "density",required=false)String density,	//密度
+			@RequestParam(name = "cantilever",required=false)String cantilever,	//悬臂梁缺口冲击
+			@RequestParam(name = "freely",required=false)String freely,	//简支梁缺口冲击
+			@RequestParam(name = "lipolysis",required=false)String lipolysis,	//熔融指数（溶脂）
+			@RequestParam(name = "ash",required=false)String ash,	//灰分
+			@RequestParam(name = "water",required=false)String water,	//水分
+			@RequestParam(name = "tensile",required=false)String tensile,	//拉伸强度
+			@RequestParam(name = "crack",required=false)String crack,	//断裂伸长率
+			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
+			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "isProtection",required=false)String isProtection,
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
@@ -316,6 +334,17 @@ public class GoodsController {
 		String[] typeIds = null;
 		String[] colorIds = null;
 		String[] formIds = null;
+		//重要参数
+		String[] densitys = null;
+		String[] cantilevers = null;
+		String[] freelys = null;
+		String[] lipolysises = null;
+		String[] ashs = null;
+		String[] waters = null;
+		String[] tensiles = null;
+		String[] cracks = null;
+		String[] bendings = null;
+		String[] flexurals = null;
 		if(null != typeId){
 			typeIds = typeId.split(",");
 		}
@@ -325,32 +354,49 @@ public class GoodsController {
 		if(null != formId){
 			formIds = formId.split(",");
 		}
+		//重要参数
+		if(null != density){
+			densitys = density.split(",");
+		}
+		if(null != cantilever){
+			cantilevers = cantilever.split(",");
+		}
+		if(null != freely){
+			freelys = freely.split(",");
+		}
+		if(null != lipolysis){
+			lipolysises = lipolysis.split(",");
+		}
+		if(null != ash){
+			ashs = ash.split(",");
+		}
+		if(null != water){
+			waters = water.split(",");
+		}
+		if(null != tensile){
+			tensiles = tensile.split(",");
+		}
+		if(null != crack){
+			cracks = crack.split(",");
+		}
+		if(null != bending){
+			bendings = bending.split(",");
+		}
+		if(null != flexural){
+			flexurals = flexural.split(",");
+		}
 //		分页先搁这儿
 //		Page page = new Page();
 //		page.setStartPos(pageNow);
 //		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,importantParam,isProtection,goodsName);
+		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
+				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
 		if(null != list && list.size() > 0){
 			result.setMsg("查询成功");
 			result.setSuccess(true);
 			result.setObj(list);
 		}
-		return result;
-	}
-	
-	/**
-	 * 返回重要参数条件列表
-	 * @param request
-	 * @return
-	 */
-	public Result parameterList(HttpServletRequest request){
-		Result result = Result.failure();
-		
-				
-		
-		
-		
 		return result;
 	}
 	
