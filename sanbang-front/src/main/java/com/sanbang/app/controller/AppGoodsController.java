@@ -388,44 +388,12 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 其他筛选
-	 * @param request
-	 * @param color	颜色
-	 * @param form 形状
-	 * @param purpose 用途
-	 * @param source 来源
-	 * @param burning 燃烧等级
-	 * @param protection 是否环保
-	 * @return
-	 */
-	@RequestMapping("/others")
-	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
-		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		//将接收的参数转换成map类型
-		Map<String, Object> mmp = new HashMap<String, Object>();
-		mmp.put("color", color);
-		mmp.put("form", form);
-		mmp.put("purpose", purpose);
-		mmp.put("source", source);
-		mmp.put("burning", burning);
-		mmp.put("protection", protection);
-		
-		//list = goodsService.listByOthers(mmp);
-		result.setObj(list);
-		result.setMsg("返回成功");
-		
-		return result;
-	}
-	
-	/**
 	 * 返回其他筛选所需的条件
 	 * 根据地区名返回id
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/conditionList")
+	@RequestMapping("/areaToId")
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
