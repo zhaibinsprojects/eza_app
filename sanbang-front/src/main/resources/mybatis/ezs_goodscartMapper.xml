@@ -185,14 +185,14 @@
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="of_id" property="of_id" jdbcType="BIGINT" />
     <result column="sc_id" property="sc_id" jdbcType="BIGINT" />
-    <association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
-    	<result column="pName" property="name"/>
-    	<result column="pPath" property="path"/>
-    </association>
-    <result column="gname" property="goodName" jdbcType="BIGINT" />
+    <result column="gname" property="goodName" jdbcType="VARCHAR" />
     <result column="inventory" property="inventory" jdbcType="BIGINT" />
     <result column="gAreaId" property="areaId" jdbcType="BIGINT" />
-    <result column="utilName" property="utilName" jdbcType="BIGINT" />
+    <result column="utilName" property="utilName" jdbcType="VARCHAR" />
+    <association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
+    	<result column="pName" property="name" jdbcType="VARCHAR"/>
+    	<result column="pPath" property="path" jdbcType="VARCHAR"/>
+    </association>
   </resultMap>
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
@@ -205,7 +205,7 @@
 		d.name utilName
   	 FROM ezs_goodscart g,ezs_goods gs,ezs_accessory ga,ezs_dict d WHERE g.goods_id = gs.id and gs.goods_main_photo_id = ga.id and gs.util_id = d.id and 
 	EXISTS 
-	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
-	 AND g.deleteStatus = '0' and g.of_id IS NULL;
+	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
+	 AND g.deleteStatus = '0' and g.of_id IS NULL
   </select>
 </mapper>
