@@ -45,4 +45,7 @@ public interface ezs_orderformMapper {
      */
     ezs_orderform  selectByorderno(String order_no);
     
+    //獲取當日訂單數量
+    public Integer selectOrderNumByDate();
+    
 }
