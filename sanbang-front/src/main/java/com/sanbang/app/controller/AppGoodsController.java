@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.alibaba.fastjson.JSONArray;
 import com.itextpdf.text.pdf.BaseFont;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
@@ -41,7 +40,6 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
-import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
@@ -49,6 +47,7 @@ import com.sanbang.vo.DictionaryCode;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -57,7 +56,6 @@ public class AppGoodsController {
 	
 	@Autowired
 	private GoodsService goodsService;
-	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
 	// 日志
@@ -132,7 +130,7 @@ public class AppGoodsController {
 			}else{
 				try{
 					goodsService.insertCollect(goodId,user.getId());
-					result.setMsg("已收藏");
+					result.setMsg("收藏成功");
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -146,29 +144,26 @@ public class AppGoodsController {
 	/**
 	 * 加入采购单（加入购物车）
 	 * @param request
-	 * @param goodsCartList
+	 * @param goodsCart
 	 * @return
 	 */
 	@RequestMapping("/insertCart")
 	@ResponseBody
-	public Result insertCart(HttpServletRequest request,HttpServletResponse response,ezs_goodscart goodscart){
-		Result result = null;
-		//modify start by zhaibin 2018/05/31
+	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if(user==null){
-			result = Result.failure();
-			result.setMsg("用户未登录");
-			return result;
-		}
-		//modify end by zhaibin 2018/05/31
 		ezs_bill bill = user.getEzs_bill();
+		if(null != goodsCart){
+			goodsCart.setBill(bill);
+		}
+		Result result = new Result();
 		int n;
-		n = goodsService.insertCart(goodscart);
+		n = goodsService.insertCart(goodsCart);
 		if(n>0){
-			result = Result.success();
+			result.setObj(goodsCart);
+			result.setSuccess(true);
 			result.setMsg("添加成功");
 		}else{
-			result = Result.failure();
+			result.setSuccess(false);
 			result.setMsg("添加失败");
 		}
 		return result;
@@ -182,27 +177,17 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/insertOrder")
 	@ResponseBody
-	public Result insertOrder(HttpServletRequest request,HttpServletResponse response,ezs_orderform order){
-		Result result = null;
+	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
+		Result result = Result.failure();
 		int n;
-		// modify start by zhaibin 2018/05/31
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (user == null) {
-			result = Result.failure();
-			result.setMsg("用户未登录");
-			return result;
-		}
-		// modify end by zhaibin 2018/05/31
-		order.setAddTime(new Date());
-		order.setDeleteStatus(false);
 		n = goodsService.insertOrder(order);
 		if(n>0){
-			result = Result.success();
 			result.setMsg("添加成功");
 			result.setSuccess(true);
 		}
 		return result;
 	}
+	
 	/**
 	 * 采购单列表（就是预约定制的列表）
 	 * @param request
@@ -243,7 +228,6 @@ public class AppGoodsController {
 		ezs_customized_record record = new ezs_customized_record();
 		record.setId(id);
 		record.setAddTime(new Date());
-		record.setDeleteStatus(false);
 		record.setOperater_id(user.getId());
 		record.setPurchaser_id(user.getId());
 		int m = goodsService.insertCustomizedRecord(record);
@@ -285,7 +269,7 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 商品多条件查询，地区，品类（字符数组），默认排序：添加时间降序，库存量：从大到小，筛选：颜色（字符数组），形态（字符数组），来源，重要参数，是否环保，搜索框输入条件
+	 * 自营、地区筛选、品类筛选
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id字符串数组
@@ -307,7 +291,7 @@ public class AppGoodsController {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	@RequestMapping("/queryGoodsList")
+	@RequestMapping("/areaAndType")
 	@ResponseBody
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
@@ -395,17 +379,53 @@ public class AppGoodsController {
 		if(null != list && list.size() > 0){
 			result.setMsg("查询成功");
 			result.setSuccess(true);
-			result.setObj(list);
+			result.setMsg("筛选成功");
+		}else{
+			result.setSuccess(false);
+			result.setMsg("筛选失败");
 		}
 		return result;
 	}
 	
 	/**
+	 * 其他筛选
+	 * @param request
+	 * @param color	颜色
+	 * @param form 形状
+	 * @param purpose 用途
+	 * @param source 来源
+	 * @param burning 燃烧等级
+	 * @param protection 是否环保
+	 * @return
+	 */
+	@RequestMapping("/others")
+	@ResponseBody
+	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
+		Result result=Result.success();
+		List<ezs_goods> list = new ArrayList<ezs_goods>();
+		//将接收的参数转换成map类型
+		Map<String, Object> mmp = new HashMap<String, Object>();
+		mmp.put("color", color);
+		mmp.put("form", form);
+		mmp.put("purpose", purpose);
+		mmp.put("source", source);
+		mmp.put("burning", burning);
+		mmp.put("protection", protection);
+		
+		//list = goodsService.listByOthers(mmp);
+		result.setObj(list);
+		result.setMsg("返回成功");
+		
+		return result;
+	}
+	
+	/**
+	 * 返回其他筛选所需的条件
 	 * 根据地区名返回id
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/areaToId")
+	@RequestMapping("/conditionList")
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
@@ -459,7 +479,11 @@ public class AppGoodsController {
 			result.setMsg("颜色形态都有值");
 			result.setObj(map);
 			result.setSuccess(true);
+		}else{
+			result.setMsg("查询失败");
+			result.setSuccess(false);
 		}
+		
 		return result;
 	}
 	
@@ -512,6 +536,15 @@ public class AppGoodsController {
 		
 	}
 	
+//	public static void main(String[] args) {
+//		GoodsController  aa=new GoodsController();
+//		Map<String, Object> map=new HashMap<>();
+//		map.put("orderAmount", "aaa");
+//		map.put("AcapAmount", "bb");
+//		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
+//	}
+	
+	
 	/**
 	 * 上传发票图片，返回url
 	 * @param request
@@ -563,53 +596,7 @@ public class AppGoodsController {
 		
 		return result;
 	}
-	/**
-	 * 添加购物车
-	 * @author zhaibin
-	 * @param request
-	 * @param response
-	 * @param goodCarList(List<ezs_goodscart>类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping(value="/addToGoodCar",method=RequestMethod.POST)
-	@ResponseBody
-	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,String goodCarList){
-		String sessionId = request.getSession().getId();
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if(goodCarList==null||goodCarList.trim().equals("")){
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("请选择商品");
-			return rs;
-		}
-		List<ezs_goodscart> tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		try {
-			mmp = this.goodsService.addGoodsCart(tGoodCarList, user,sessionId);
-			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				rs = Result.success();
-				rs.setMsg(mmp.get("Msg").toString());
-			}else{
-				rs = Result.failure();
-				rs.setMsg(mmp.get("Msg").toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			rs = Result.failure();
-			rs.setMsg("数据传递有误");
-		}
-		return rs;
-	}
-	/**
+/**
 	 * 添加购物车
 	 * @author zhaibin
 	 * @param request
@@ -635,49 +622,6 @@ public class AppGoodsController {
 		goodsCart.setGoods_id(goodsId);
 		try {
 			mmp = this.goodsService.addGoodsCartFunc(goodsCart, user);
-			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				rs = Result.success();
-				rs.setMsg(mmp.get("Msg").toString());
-			}else{
-				rs = Result.failure();
-				rs.setMsg(mmp.get("Msg").toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			rs = Result.failure();
-			rs.setMsg("数据传递有误");
-		}
-		return rs;
-	}
-	/**
-	 * 直接下订单（添加订单）
-	 * @author zhaibin
-	 * @param request
-	 * @param response
-	 * @param orderForm(ezs_orderform类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping("/addToOrderForm")
-	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
-		String sessionId = request.getSession().getId();
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		try {
-			
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			
-			mmp = this.goodsService.addOrderForm(tOrderForm, user,sessionId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();

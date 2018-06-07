@@ -93,7 +93,14 @@ public class SellerGoodsController {
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		map = sellerGoodsService.queryGoodsListBySellerId(useId, status, currentPage);
+		try {
+			map = sellerGoodsService.queryGoodsListBySellerId(useId, status, currentPage);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("查询失败");
+		}
 		
 		list = (List<ezs_goods>)map.get("Obj");
 		
@@ -102,6 +109,8 @@ public class SellerGoodsController {
 		page = (Page) map.get("page");
 		result.setObj(list);
 		result.setMeta(page);
+		result.setSuccess(true);
+		result.setMsg("查询成功");
 		result.setErrorcode(errorCode);
 		
 		return result;
@@ -138,26 +147,38 @@ public class SellerGoodsController {
 //		}
 		
 		
-		ezs_goods goods = sellerGoodsService.queryGoodsInfoById(id);
-		
-		Long goodsId = goods.getId();
-		List<ezs_accessory> photoList = sellerGoodsService.queryPhotoById(goodsId);
-		List<ezs_accessory> cartographyList = sellerGoodsService.queryCartographyById(goodsId);
-		
-		
-		Long color_id = goods.getColor_id();
-		String color = sellerGoodsService.getGoodsProperty(color_id);
-		Long form_id = goods.getForm_id();
-		String form = sellerGoodsService.getGoodsProperty(form_id);
-		
-		
-		
-		map.put("goods", goods);
-		map.put("photoList", photoList);
-		map.put("cartographyList", cartographyList);
-		
-		map.put("color", color);
-		map.put("form",form);
+		ezs_goods goods;
+		List<ezs_accessory> photoList;
+		List<ezs_accessory> cartographyList;
+		String color;
+		String form;
+		try {
+			goods = sellerGoodsService.queryGoodsInfoById(id);
+			
+			Long goodsId = goods.getId();
+			photoList = sellerGoodsService.queryPhotoById(goodsId);
+			cartographyList = sellerGoodsService.queryCartographyById(goodsId);
+			
+			
+			Long color_id = goods.getColor_id();
+			color = sellerGoodsService.getGoodsProperty(color_id);
+			Long form_id = goods.getForm_id();
+			form = sellerGoodsService.getGoodsProperty(form_id);
+			map.put("goods", goods);
+			map.put("photoList", photoList);
+			map.put("cartographyList", cartographyList);
+			
+			map.put("color", color);
+			map.put("form",form);
+			result.setObj(map);
+			result.setSuccess(true);
+			result.setMsg("查询成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("查询失败");
+		}
 		//		//颜色
 //		map.put("EZS_COLOR", dictService.getDictByParentId(DictionaryCate.EZS_COLOR));
 		
@@ -169,11 +190,6 @@ public class SellerGoodsController {
 //		map.put("area", areaService.getAreaParentList());
 //		//分类
 //		map.put("cata",cataService.getOnelevelList());
-		
-		
-		
-		result.setObj(map);
-		
 		return result;
 	}
 
@@ -220,6 +236,7 @@ public class SellerGoodsController {
 			//分类
 			map.put("cata",cataService.getFirstList());
  			result.setObj(map);
+ 			result.setSuccess(true);
 		};
 		
 		return result;

@@ -184,6 +184,8 @@ public class SellerContractController {
 		page = (Page) map.get("page");
 		result.setObj(list);
 		result.setMeta(page);
+		result.setSuccess(true);
+		result.setMsg("查询成功");
 		result.setErrorcode(errorCode);
 		
 		return result;
