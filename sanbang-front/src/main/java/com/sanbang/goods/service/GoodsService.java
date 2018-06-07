@@ -1,5 +1,6 @@
 package com.sanbang.goods.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -122,27 +123,6 @@ public interface GoodsService {
 	 */
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
 	
-	/**
-	 * 添加商品到购物车
-	 * @param goodscartList
-	 * @param user
-	 * @return
-	 */
-	public Map<String, Object> addGoodsCart(List<ezs_goodscart> goodscartList,ezs_user user,String sessionId);
-	/**
-	 * 直接下订单
-	 * @param orderForm
-	 * @param user
-	 * @return
-	 */
-	public Map<String, Object> addOrderForm(ezs_orderform orderForm,ezs_user user,String sessionId);
-	/**
-	 * 由购物车下订单
-	 * @param user
-	 * @return
-	 */
-	public Map<String, Object> addOrderFromGoodCar(ezs_user user);
-	
 	
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
 	
@@ -150,6 +130,7 @@ public interface GoodsService {
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
 	
-	
+	//创建订单号码
+	public String createOrderNo(ezs_goods goods);
 	
 }
