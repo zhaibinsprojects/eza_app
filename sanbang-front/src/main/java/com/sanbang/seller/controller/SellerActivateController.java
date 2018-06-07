@@ -56,6 +56,7 @@ public class SellerActivateController {
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setSuccess(false);
 			result.setMsg("请重新登陆！");
 			return result;
 		}
@@ -91,6 +92,7 @@ public class SellerActivateController {
 		Map<String, Object> map = new HashMap<>();
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setSuccess(false);
 			result.setMsg("请重新登陆！");
 			return result;
 		}
