@@ -140,8 +140,12 @@ public class GoodsServiceImpl implements GoodsService{
 		return list;
 	}
 	
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String[] colorIds,String[] formIds,
-			String source,String purpose,String importantParam,String isProtection,String goodsName){
+	/**
+	 * 多条件查询
+	 */
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String[] colorIds,String[] formIds,String source,String purpose,
+			String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,String[] tensiles,
+			String[] cracks,String[] bendings,String[] flexurals,String isProtection,String goodsName){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -163,17 +167,97 @@ public class GoodsServiceImpl implements GoodsService{
 				formList.add(Long.valueOf(formIds[n]));
 			}
 		}
+		String density1 = null;	//值1
+		String density2 = null;	//值2
+		if(null != densitys){
+			density1 = densitys[0];
+			density2 = densitys[1];
+		}
+		String cantilever1 = null;
+		String cantilever2 = null;
+		if(null != cantilevers){
+			cantilever1 = cantilevers[0];
+			cantilever2 = cantilevers[1];
+		}
+		String freely1 = null;
+		String freely2 = null;
+		if(null != freelys){
+			freely1 = freelys[0];
+			freely2 = freelys[1];
+		}
+		String lipolysis1 = null;
+		String lipolysis2 = null;
+		if(null != lipolysises){
+			lipolysis1 = lipolysises[0];
+			lipolysis2 = lipolysises[1];
+		}
+		String ash1 = null;
+		String ash2 = null;
+		if(null != ashs){
+			ash1 = ashs[0];
+			ash2 = ashs[1];
+		}
+		String water1 = null;
+		String water2 = null;
+		if(null != waters){
+			water1 = waters[0];
+			water2 = waters[1];
+		}
+		String tensile1 = null;
+		String tensile2 = null;
+		if(null != tensiles){
+			tensile1 = tensiles[0];
+			tensile2 = tensiles[1];
+		}
+		String crack1 = null;
+		String crack2 = null;
+		if(null != cracks){
+			crack1 = cracks[0];
+			crack2 = cracks[1];
+		}
+		String bending1 = null;
+		String bending2 = null;
+		if(null != bendings){
+			bending1 = bendings[0];
+			bending2 = bendings[1];
+			
+		}
+		String flexural1 = null;
+		String flexural2 = null;
+		if(null != flexurals){
+			flexural1 = flexurals[0];
+			flexural2 = flexurals[1];
+		}
 		map.put("area_id", area);
 		map.put("typeList", typeList);
 		map.put("colorList", colorList);
 		map.put("formList", formList);
 		map.put("source", source);
 		map.put("purpose", purpose);
-		//map.put("importantParam", importantParam);	//重要参数暂时先搁这儿
+		//重要参数（区间查询）
+		map.put("density1", density1);
+		map.put("density2", density2);
+		map.put("cantilever1", cantilever1);
+		map.put("cantilever2", cantilever2);
+		map.put("freely1", freely1);
+		map.put("freely2", freely2);
+		map.put("lipolysis1", lipolysis1);
+		map.put("lipolysis2", lipolysis2);
+		map.put("ash1", ash1);
+		map.put("ash2", ash2);
+		map.put("water1", water1);
+		map.put("water2", water2);
+		map.put("tensile1", tensile1);
+		map.put("tensile2", tensile2);
+		map.put("crack1", crack1);
+		map.put("crack2", crack2);
+		map.put("bending1", bending1);
+		map.put("bending2", bending2);
+		map.put("flexural1", flexural1);
+		map.put("flexural2", flexural2);
 		map.put("protection", isProtection);
 		map.put("name", goodsName);
 		list = ezs_goodsMapper.queryGoodsList(map);
-		
 		return list;
 	}
 	/**
