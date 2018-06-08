@@ -312,6 +312,8 @@ public class GoodsController {
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
 			@RequestParam(name = "typeId",required=false)String typeId,
+			@RequestParam(name = "addTime",required=false)String addTime,	//默认值（添加时间）
+			@RequestParam(name = "inventory",required=false)String inventory,	//库存量
 			@RequestParam(name = "colorId",required=false)String colorId,
 			@RequestParam(name = "formId",required=false)String formId,
 			@RequestParam(name = "source",required=false)String source,
@@ -390,7 +392,7 @@ public class GoodsController {
 //		page.setStartPos(pageNow);
 //		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
+		list = goodsService.queryGoodsList(area,typeIds,addTime,inventory,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
 				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
 		if(null != list && list.size() > 0){
 			result.setMsg("查询成功");
