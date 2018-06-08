@@ -788,16 +788,16 @@
 	        </foreach>
         </if>
         <if test="source != null">
-	        and source like '%#{source,jdbcType=VARCHAR}%' 
+	        and source like '%${source,jdbcType=VARCHAR}%' 
 	    </if>
         <if test="purpose != null">
-	        and purpose like '%#{purpose,jdbcType=VARCHAR}%' 
+	        and purpose like '%${purpose,jdbcType=VARCHAR}%' 
 	    </if>
 	    <if test="protection != null">
-	        and protection like '%#{purpose,jdbcType=VARCHAR}%' 
+	        and protection like '%${protection,jdbcType=VARCHAR}%' 
 	    </if>
 	    <if test="name != null">
-	        and name like '%#{name,jdbcType=VARCHAR}%' 
+	        and name like '%${name,jdbcType=VARCHAR}%' 
 	    </if>
 	    <!-- 重要参数的区间查询 -->
 	    <if test="density1 != null and density1 != ''">
