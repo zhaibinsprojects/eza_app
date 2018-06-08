@@ -96,7 +96,7 @@ public interface GoodsService {
 	 * @param areaName
 	 * @return
 	 */
-	public Long areaToId(String areaName);
+	public List<Long> areaToId(String areaName);
 	
 	/**
 	 * 查询颜色

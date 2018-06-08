@@ -291,7 +291,7 @@ public class AppGoodsController {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	@RequestMapping("/areaAndType")
+	@RequestMapping("/queryGoodsList")
 	@ResponseBody
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
@@ -388,52 +388,31 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 其他筛选
-	 * @param request
-	 * @param color	颜色
-	 * @param form 形状
-	 * @param purpose 用途
-	 * @param source 来源
-	 * @param burning 燃烧等级
-	 * @param protection 是否环保
-	 * @return
-	 */
-	@RequestMapping("/others")
-	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
-		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		//将接收的参数转换成map类型
-		Map<String, Object> mmp = new HashMap<String, Object>();
-		mmp.put("color", color);
-		mmp.put("form", form);
-		mmp.put("purpose", purpose);
-		mmp.put("source", source);
-		mmp.put("burning", burning);
-		mmp.put("protection", protection);
-		
-		//list = goodsService.listByOthers(mmp);
-		result.setObj(list);
-		result.setMsg("返回成功");
-		
-		return result;
-	}
-	
-	/**
 	 * 返回其他筛选所需的条件
 	 * 根据地区名返回id
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/conditionList")
+	@RequestMapping("/areaToId")
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
-		Long id = goodsService.areaToId(areaName);
-		if(null != id){
+		//直辖市
+		if(areaName.equals("北京市")||areaName.equals("重庆市")||areaName.equals("天津市")||areaName.equals("上海市")){
+			List<Long> ids = goodsService.areaToId(areaName);
+			if(ids.get(0)<ids.get(1)){
+				result.setObj(ids.get(0));
+				result.setMsg("返回的id为："+ids.get(0));
+			}else{
+				result.setObj(ids.get(1));
+				result.setMsg("返回的id为："+ids.get(1));
+			}
 			result.setSuccess(true);
-			result.setObj(id);
-			result.setMsg("返回的id为："+id);
+		}else{
+			List<Long> id = goodsService.areaToId(areaName);
+			result.setObj(id.get(0));
+			result.setSuccess(true);
+			result.setMsg("返回的id为："+id.get(0));
 		}
 		return result;
 	}
