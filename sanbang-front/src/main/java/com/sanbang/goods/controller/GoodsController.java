@@ -450,22 +450,28 @@ public class GoodsController {
 		List<CurrencyClass> colorList = goodsService.colorList();
 		//形态
 		List<CurrencyClass> formList = goodsService.formList();
-		Map<String,List<CurrencyClass>> map = new HashMap<String,List<CurrencyClass>>();
-		map.put("color", colorList);
-		map.put("form", formList);
+		HashMap<String, Object> map1 = new HashMap<String,Object>();
+		HashMap<String,Object> map2 = new HashMap<String,Object>();
+		map1.put("second", colorList);
+		map1.put("type", "颜色");
+		map2.put("second", formList);
+		map2.put("type", "形态");
+		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		list.add(map1);
+		list.add(map2);
 		if(colorList.size() > 0 && null == formList){
 			result.setMsg("颜色有值，形态为空");
-			result.setObj(map);
+			result.setObj(list);
 			result.setSuccess(true);
 		}
 		if(null == colorList && formList.size()>0){
 			result.setMsg("形态有值，颜色为空");
-			result.setObj(map);
+			result.setObj(list);
 			result.setSuccess(true);
 		}
 		if(formList.size()>0 && colorList.size() > 0){
 			result.setMsg("颜色形态都有值");
-			result.setObj(map);
+			result.setObj(list);
 			result.setSuccess(true);
 		}
 		return result;
