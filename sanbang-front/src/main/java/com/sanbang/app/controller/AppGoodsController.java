@@ -273,6 +273,8 @@ public class AppGoodsController {
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id字符串数组
+	 * 默认
+	 * 库存
 	 * @param colorId	颜色id字符串数组
 	 * @param formId	形态id字符串数组
 	 * @param source	来源
@@ -377,18 +379,16 @@ public class AppGoodsController {
 		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
 				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
 		if(null != list && list.size() > 0){
-			result.setMsg("查询成功");
 			result.setSuccess(true);
 			result.setMsg("筛选成功");
 		}else{
 			result.setSuccess(false);
-			result.setMsg("筛选失败");
+			result.setMsg("数据为空");
 		}
 		return result;
 	}
 	
 	/**
-	 * 返回其他筛选所需的条件
 	 * 根据地区名返回id
 	 * @param request
 	 * @return
