@@ -414,20 +414,26 @@ public class GoodsController {
 		//直辖市
 		if(areaName.equals("北京市")||areaName.equals("重庆市")||areaName.equals("天津市")||areaName.equals("上海市")){
 			List<Long> ids = goodsService.areaToId(areaName);
-			if(ids.get(0)<ids.get(1)){
-				result.setObj(ids.get(0));
-				result.setMsg("返回的id为："+ids.get(0));
+			try{
+				if(null != ids && ids.get(0)<ids.get(1)){
+					result.setObj(ids.get(0));
+					result.setMsg("返回的id为："+ids.get(0));
+				}else if(null != ids){
+					result.setObj(ids.get(1));
+					result.setMsg("返回的id为："+ids.get(1));
+				}
+				result.setSuccess(true);
+			
+				
+			}catch(Exception e){
+				e.getStackTrace();
+				}
 			}else{
-				result.setObj(ids.get(1));
-				result.setMsg("返回的id为："+ids.get(1));
-			}
-			result.setSuccess(true);
-		}else{
-			List<Long> id = goodsService.areaToId(areaName);
-			result.setObj(id.get(0));
-			result.setSuccess(true);
-			result.setMsg("返回的id为："+id.get(0));
-		}
+				List<Long> id = goodsService.areaToId(areaName);
+				result.setObj(id.get(0));
+				result.setSuccess(true);
+				result.setMsg("返回的id为："+id.get(0));
+				}
 		return result;
 	}
 	
