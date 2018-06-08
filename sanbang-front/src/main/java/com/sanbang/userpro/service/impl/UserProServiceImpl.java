@@ -13,6 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.tools.Tool;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -133,8 +134,6 @@ public class UserProServiceImpl implements UserProService {
 	@Value("${consparam.cookie.userstaticidcard}")
 	private String cookieuserstaticidcard;
 
-	@Value("${consparam.reg.passwd}")
-	private String randpasswd;
 
 	// 注册阶段标识
 	@Value("${consparam.cookie.registcard}")
@@ -1209,7 +1208,7 @@ public class UserProServiceImpl implements UserProService {
 			story.setyTurnover(0.0);
 			story.setAdmin_status(0);
 			story.setAuditingusertype_id(ezs_dictMapper.getDictById(DictionaryCate.CRM_USR_TYPE_REGISTER).getId());
-
+			story.setCreditScore(0);
 			// 用户详情
 			ezs_userinfo userinfo = new ezs_userinfo();
 			userinfo.setAddTime(new Date());
@@ -1276,6 +1275,9 @@ public class UserProServiceImpl implements UserProService {
 	private void Industry(String[] Industrys, long store) {
 		ezs_industry_dictMapper.delIndustryDictByStoreId(store);
 		for (String long1 : Industrys) {
+			if(Tools.isEmpty(long1)){
+				continue;
+			}
 			ezs_industry_dictMapper.insert(new ezs_industry_dict(store, Long.valueOf(long1)));
 		}
 	}
@@ -1283,6 +1285,9 @@ public class UserProServiceImpl implements UserProService {
 	private void companyType(String[] cmtypes, long store) {
 		ezs_companyType_dictMapper.delCompanyTypeByStoreId(store);
 		for (String long1 : cmtypes) {
+			if(Tools.isEmpty(long1)){
+				continue;
+			}
 			ezs_companyType_dictMapper.insert(new ezs_companyType_dict(store, Long.valueOf(long1)));
 		}
 
@@ -1511,7 +1516,7 @@ public class UserProServiceImpl implements UserProService {
 
 			String companyTypes = request.getParameter("companyType_id");// 公司类型
 			String mianIndustrys = request.getParameter("mianIndustry_id");// 主营行业
-
+		
 			String[] Industrys = mianIndustrys.split(",");
 			String[] cmtypes = companyTypes.split(",");
 
@@ -1536,8 +1541,8 @@ public class UserProServiceImpl implements UserProService {
 				store.setRent(Boolean.valueOf(rent));
 
 				ezs_storeMapper.updateByPrimaryKeySelective(store);
-				upi = ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
-				RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+				ezs_user upi1 = ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+				RedisUserSession.updateUserInfo(upi.getUserkey(), upi1,
 						Long.parseLong(redisuserkeyexpir));
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setMsg("保存成功");

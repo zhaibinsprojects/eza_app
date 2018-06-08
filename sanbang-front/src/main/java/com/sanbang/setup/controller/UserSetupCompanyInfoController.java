@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.app.controller.AppUserSetupCompanyInfoController;
 import com.sanbang.area.service.AreaService;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_companyType_dict;
@@ -22,6 +23,7 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_companyType_dictMapper;
 import com.sanbang.dao.ezs_industry_dictMapper;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
@@ -34,7 +36,7 @@ import com.sanbang.vo.DictionaryCode;
 @RequestMapping("/setup/companyinfo/")
 public class UserSetupCompanyInfoController {
 
-	private Logger log=Logger.getLogger(UserSetupCompanyInfoController.class);
+	private Logger log=Logger.getLogger(AppUserSetupCompanyInfoController.class);
 	
 	
 	@Autowired
@@ -59,6 +61,10 @@ public class UserSetupCompanyInfoController {
 	@Value("${consparam.mobile.sendtimes}")
 	private String mobilesendtimes;
 	
+	// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
+	
 	@Autowired
 	private  DictService dictService;
 	
@@ -70,6 +76,9 @@ public class UserSetupCompanyInfoController {
 	
 	@Autowired
 	private ezs_companyType_dictMapper ezs_companyType_dictMapper;
+	
+	@Autowired
+	private ezs_userMapper ezs_userMapper;
 	
 	
 	
@@ -83,7 +92,7 @@ public class UserSetupCompanyInfoController {
 	@ResponseBody
 	public Object upCompanyInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -102,13 +111,14 @@ public class UserSetupCompanyInfoController {
 			}else{
 				map.put("area_id",0);// 经营地址区县
 			}
-			if (null != upi.getEzs_store().getCompanyType_id() && upi.getEzs_store().getCompanyType_id() > 0) {
+			List<ezs_companyType_dict>  aa=	ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId());
+			if (ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId()).size()>0) {
 				map1.put("companyType_id",getezs_companyType_dict( ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId())));// 公司类型
 			}else{
 				map1.put("companyType_id","");
 			}
 			
-			if (null != upi.getEzs_store().getMianIndustry_id() && upi.getEzs_store().getMianIndustry_id() > 0) {
+			if (ezs_industry_dictMapper.getIndustryByThisId(upi.getEzs_store().getId()).size()>0) {
 				map1.put("mianIndustry_id", getezs_industry_dict(ezs_industry_dictMapper.getIndustryByThisId(upi.getEzs_store().getId())));// 公司类型
 			}else{
 				map1.put("mianIndustry_id","");
@@ -129,7 +139,12 @@ public class UserSetupCompanyInfoController {
 			//公司类型
 			map.put("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
 			//地址
-			map.put("area", areaService.getAreaParentList());
+			map.put("initarea", areaService.getAreaParentList());
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}else{
+				map.put("area","");// 经营地址
+			}
  			result.setObj(map);
 		};
 		
@@ -146,7 +161,7 @@ public class UserSetupCompanyInfoController {
 	@ResponseBody
 	public Object upCompanyOperat(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -155,6 +170,11 @@ public class UserSetupCompanyInfoController {
 		
 		if(null!=upi.getEzs_userinfo()){
 			result=userProService.upStoreInfo(request, upi.getEzs_store(), upi);
+			if(result.getSuccess()){
+				upi = ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+				RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+						Long.parseLong(redisuserkeyexpir));
+			}
 		};
 		
 		return result;
@@ -175,10 +195,10 @@ public class UserSetupCompanyInfoController {
 			threeinfo = ezs_threeinfo.getAreaName();
 			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
 			if (ezs_twoinfo != null) {
-				twoinfo =  ezs_threeinfo.getAreaName();
+				twoinfo =  ezs_twoinfo.getAreaName();
 				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
 				if (ezs_oneinfo != null) {
-					oneinfo =  ezs_threeinfo.getAreaName();
+					oneinfo =  ezs_oneinfo.getAreaName();
 				}
 			}
 		}
@@ -187,10 +207,10 @@ public class UserSetupCompanyInfoController {
 			sb = new StringBuilder().append(threeinfo);	
 		}
 		if(!Tools.isEmpty(twoinfo)){
-			sb = new StringBuilder().append(twoinfo).append(threeinfo);
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
 		}
 		if(!Tools.isEmpty(oneinfo)){
-			sb = new StringBuilder().append(oneinfo).append(twoinfo).append(threeinfo);
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
 		
 		return sb.toString();

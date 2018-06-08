@@ -61,6 +61,10 @@ public class AppUserSetupAuthController {
 	@Value("${consparam.cookie.userauthcard}")
 	private String userauthcard;
 	
+	//授权url
+	@Value("${config.shouquan.url}")
+	private String shouquanurl;
+	
 	@Autowired
 	private  DictService dictService;
 	
@@ -249,7 +253,7 @@ public class AppUserSetupAuthController {
 		
 			map.put("authfile", auth);
 			map.put("hashauth", hashauth);
-			map.put("temurl", "https://www.baidu.com");
+			map.put("temurl", shouquanurl);
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");
@@ -393,7 +397,7 @@ public class AppUserSetupAuthController {
 			
 			map.put("authfile", auth);
 			map.put("hashauth", hashauth);
-			map.put("temurl", "https://www.baidu.com");
+			map.put("temurl", shouquanurl);
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");

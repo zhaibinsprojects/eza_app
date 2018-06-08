@@ -102,13 +102,14 @@ public class AppUserSetupCompanyInfoController {
 			}else{
 				map.put("area_id",0);// 经营地址区县
 			}
-			if (null != upi.getEzs_store().getCompanyType_id() && upi.getEzs_store().getCompanyType_id() > 0) {
+			List<ezs_companyType_dict>  aa=	ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId());
+			if (ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId()).size()>0) {
 				map1.put("companyType_id",getezs_companyType_dict( ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId())));// 公司类型
 			}else{
 				map1.put("companyType_id","");
 			}
 			
-			if (null != upi.getEzs_store().getMianIndustry_id() && upi.getEzs_store().getMianIndustry_id() > 0) {
+			if (ezs_industry_dictMapper.getIndustryByThisId(upi.getEzs_store().getId()).size()>0) {
 				map1.put("mianIndustry_id", getezs_industry_dict(ezs_industry_dictMapper.getIndustryByThisId(upi.getEzs_store().getId())));// 公司类型
 			}else{
 				map1.put("mianIndustry_id","");
