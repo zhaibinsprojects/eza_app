@@ -29,39 +29,30 @@ public class CustomizedServiceImpl implements CustomizedService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Map<String, Object> addCustomized(ezs_user user, ezs_customized customized,
 			ezs_customized_record customizedRecord) {
 		// TODO Auto-generated method stub
-		int insertFlag01 = 0;
-		int insertFlag02 = 0;
 		Map<String, Object> mmp = new HashMap<>();
 		try {
 			customized.setAddTime(new Date());
 			customized.setPurchaser_id(user.getId());
 			customized.setDeleteStatus(false);
-			insertFlag01 = this.customizedMapper.insert(customized);
+			this.customizedMapper.insert(customized);
 			customizedRecord.setCustomized_id(customized.getId());
 			customizedRecord.setAddTime(new Date());
 			customizedRecord.setOperater_id(user.getId());
 			customizedRecord.setPurchaser_id(user.getId());
 			customizedRecord.setDeleteStatus(false);
-			insertFlag02 = this.customizedRecordMapper.insert(customizedRecord);
+			this.customizedRecordMapper.insert(customizedRecord);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "定制采购添加成功");
-			if(insertFlag02<1){
-				this.customizedMapper.deleteByPrimaryKey(customized.getId());
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				mmp.put("Msg", "参数传递有误");
-			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			if(insertFlag01>0&&insertFlag02<1){
-				this.customizedMapper.deleteByPrimaryKey(customized.getId());
-			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
+			throw e;
 		}
 		return mmp;
 	}

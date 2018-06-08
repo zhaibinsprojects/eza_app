@@ -791,13 +791,83 @@
 	        and source like '%#{source,jdbcType=VARCHAR}%' 
 	    </if>
         <if test="purpose != null">
-	        and purpose like '%#{purpose,jdbcType=VARCHAR}%'
+	        and purpose like '%#{purpose,jdbcType=VARCHAR}%' 
 	    </if>
 	    <if test="protection != null">
-	        and protection like '%#{purpose,jdbcType=VARCHAR}%'
+	        and protection like '%#{purpose,jdbcType=VARCHAR}%' 
 	    </if>
 	    <if test="name != null">
-	        and name like '%#{name,jdbcType=VARCHAR}%'
+	        and name like '%#{name,jdbcType=VARCHAR}%' 
+	    </if>
+	    <!-- 重要参数的区间查询 -->
+	    <if test="density1 != null and density1 != ''">
+	        and density &gt; '#{density1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="density2 != null and density2 != ''">
+	        and density &lt; '#{density2,jdbcType=VARCHAR}' 
+	    </if>
+	    
+	    <if test="cantilever1 != null">
+	        and cantilever &gt; '#{cantilever1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="cantilever2 != null">
+	        and cantilever &lt; '#{cantilever2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="freely1 != null">
+	        and freely &gt; '#{freely1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="freely2 != null">
+	        and freely &lt; '#{freely2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="lipolysis1 != null">
+	        and lipolysis &gt; '#{lipolysis1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="lipolysis2 != null">
+	        and lipolysis &lt; '#{lipolysis2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="ash1 != null">
+	        and ash &gt; '#{ash1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="ash2 != null">
+	        and ash &lt; '#{ash2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="water1 != null">
+	        and water &gt; '#{water1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="water2 != null">
+	        and water &lt; '#{water2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="tensile1 != null">
+	        and tensile &gt; '#{tensile1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="tensile2 != null">
+	        and tensile &lt; '#{tensile2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="crack1 != null">
+	        and crack &gt; '#{crack1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="crack2 != null">
+	        and crack &lt; '#{crack2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="bending1 != null">
+	        and bending &gt; '#{bending1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="bending2 != null">
+	        and bending &lt; '#{bending2,jdbcType=VARCHAR}'
+	    </if>
+	    
+	    <if test="flexural1 != null">
+	        and flexural &gt; '#{flexural1,jdbcType=VARCHAR}'
+	    </if>
+	    <if test="flexural2 != null">
+	        and flexural &lt; '#{flexural2,jdbcType=VARCHAR}'
 	    </if>
 	</select>
 	

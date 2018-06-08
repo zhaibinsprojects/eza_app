@@ -532,4 +532,8 @@
     where order_no = #{order_no}
 	</select>
 	
+	<select id="selectOrderNumByDate" resultType="java.lang.Integer">
+		select count(1) as num from ezs_orderform where to_days(addTime) = to_days(now())	
+	</select>
+	
 </mapper>

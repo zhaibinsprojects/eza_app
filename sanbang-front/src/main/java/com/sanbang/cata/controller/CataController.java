@@ -16,7 +16,6 @@ import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.GoodsClass;
-import com.sanbang.vo.GoodsClass2;
 
 @Controller
 @RequestMapping("/cata")

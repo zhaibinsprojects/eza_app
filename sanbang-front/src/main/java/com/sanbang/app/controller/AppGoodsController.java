@@ -20,6 +20,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -28,7 +30,6 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -41,10 +42,13 @@ import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/app/goods")
@@ -267,74 +271,181 @@ public class AppGoodsController {
 	/**
 	 * 自营、地区筛选、品类筛选
 	 * @param request
-	 * @param area	地区id
-	 * @param type	类别id
-	 * 
+	 * @param areaId	地区id
+	 * @param typeId	品类id字符串数组
+	 * 默认
+	 * 库存
+	 * @param colorId	颜色id字符串数组
+	 * @param formId	形态id字符串数组
+	 * @param source	来源
+	 * @param purpose	用途
+	 * @param density	密度字符串数组
+	 * @param cantilever	悬臂梁缺口冲击字符串数组
+	 * @param freely	简支梁缺口冲击字符串数组
+	 * @param lipolysis	熔融指数（溶脂）字符串数组
+	 * @param ash	灰分字符串数组
+	 * @param water	水分字符串数组
+	 * @param tensile	拉伸强度字符串数组
+	 * @param crack	断裂伸长率字符串数组
+	 * @param bending	弯曲强度字符串数组
+	 * @param flexural	弯曲模量字符串数组
+	 * @param isProtection	是否环保
+	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	@RequestMapping("/areaAndType")
+	@RequestMapping("/queryGoodsList")
 	@ResponseBody
-	public Result listByAreaAndType(HttpServletRequest request,Long area,Long type){
-		Result result=Result.success();
+	public Result queryGoodsList(HttpServletRequest request,
+			@RequestParam(name = "areaId",required=true)String areaId,
+			@RequestParam(name = "typeId",required=false)String typeId,
+			@RequestParam(name = "colorId",required=false)String colorId,
+			@RequestParam(name = "formId",required=false)String formId,
+			@RequestParam(name = "source",required=false)String source,
+			@RequestParam(name = "purpose",required=false)String purpose,
+			@RequestParam(name = "density",required=false)String density,	//密度
+			@RequestParam(name = "cantilever",required=false)String cantilever,	//悬臂梁缺口冲击
+			@RequestParam(name = "freely",required=false)String freely,	//简支梁缺口冲击
+			@RequestParam(name = "lipolysis",required=false)String lipolysis,	//熔融指数（溶脂）
+			@RequestParam(name = "ash",required=false)String ash,	//灰分
+			@RequestParam(name = "water",required=false)String water,	//水分
+			@RequestParam(name = "tensile",required=false)String tensile,	//拉伸强度
+			@RequestParam(name = "crack",required=false)String crack,	//断裂伸长率
+			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
+			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
+			@RequestParam(name = "isProtection",required=false)String isProtection,
+			@RequestParam(name = "goodsName",required=false)String goodsName,
+			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
+		Result result = Result.failure();
+		Long area = Long.valueOf(areaId);
+		String[] typeIds = null;
+		String[] colorIds = null;
+		String[] formIds = null;
+		//重要参数
+		String[] densitys = null;
+		String[] cantilevers = null;
+		String[] freelys = null;
+		String[] lipolysises = null;
+		String[] ashs = null;
+		String[] waters = null;
+		String[] tensiles = null;
+		String[] cracks = null;
+		String[] bendings = null;
+		String[] flexurals = null;
+		if(null != typeId){
+			typeIds = typeId.split(",");
+		}
+		if(null != colorId){
+			colorIds = colorId.split(",");
+		}
+		if(null != formId){
+			formIds = formId.split(",");
+		}
+		//重要参数
+		if(null != density){
+			densitys = density.split(",");
+		}
+		if(null != cantilever){
+			cantilevers = cantilever.split(",");
+		}
+		if(null != freely){
+			freelys = freely.split(",");
+		}
+		if(null != lipolysis){
+			lipolysises = lipolysis.split(",");
+		}
+		if(null != ash){
+			ashs = ash.split(",");
+		}
+		if(null != water){
+			waters = water.split(",");
+		}
+		if(null != tensile){
+			tensiles = tensile.split(",");
+		}
+		if(null != crack){
+			cracks = crack.split(",");
+		}
+		if(null != bending){
+			bendings = bending.split(",");
+		}
+		if(null != flexural){
+			flexurals = flexural.split(",");
+		}
+//		分页先搁这儿
+//		Page page = new Page();
+//		page.setStartPos(pageNow);
+//		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		//list = goodsService.listByAreaAndType(area,type);
-		if(null != list && list.size()>0){
-			result.setObj(list);
+		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
+				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
+		if(null != list && list.size() > 0){
 			result.setSuccess(true);
 			result.setMsg("筛选成功");
 		}else{
 			result.setSuccess(false);
-			result.setMsg("筛选失败");
+			result.setMsg("数据为空");
 		}
 		return result;
 	}
 	
 	/**
-	 * 其他筛选
+	 * 根据地区名返回id
 	 * @param request
-	 * @param color	颜色
-	 * @param form 形状
-	 * @param purpose 用途
-	 * @param source 来源
-	 * @param burning 燃烧等级
-	 * @param protection 是否环保
 	 * @return
 	 */
-	@RequestMapping("/others")
+	@RequestMapping("/areaToId")
 	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
-		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		//将接收的参数转换成map类型
-		Map<String, Object> mmp = new HashMap<String, Object>();
-		mmp.put("color", color);
-		mmp.put("form", form);
-		mmp.put("purpose", purpose);
-		mmp.put("source", source);
-		mmp.put("burning", burning);
-		mmp.put("protection", protection);
-		
-		//list = goodsService.listByOthers(mmp);
-		result.setObj(list);
-		result.setMsg("返回成功");
-		
+	public Result areaToId(HttpServletRequest request,String areaName){
+		Result result = Result.failure();
+		//直辖市
+		if(areaName.equals("北京市")||areaName.equals("重庆市")||areaName.equals("天津市")||areaName.equals("上海市")){
+			List<Long> ids = goodsService.areaToId(areaName);
+			if(ids.get(0)<ids.get(1)){
+				result.setObj(ids.get(0));
+				result.setMsg("返回的id为："+ids.get(0));
+			}else{
+				result.setObj(ids.get(1));
+				result.setMsg("返回的id为："+ids.get(1));
+			}
+			result.setSuccess(true);
+		}else{
+			List<Long> id = goodsService.areaToId(areaName);
+			result.setObj(id.get(0));
+			result.setSuccess(true);
+			result.setMsg("返回的id为："+id.get(0));
+		}
 		return result;
 	}
 	
 	/**
-	 * 返回其他筛选所需的条件
+	 * 返回其他筛选所需的条件:颜色 形态
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/conditionList")
+	@RequestMapping("/colorAndFormList")
 	@ResponseBody
-	public Result conditionList(HttpServletRequest request){
-		Result result = new Result();
-		List<ezs_dict> list = new ArrayList<ezs_dict>();
-		//list = goodsService.conditionList();
-		if(list.size()>0){
-			result.setObj(list);
-			result.setMsg("返回查询条件");
+	public Result colorAndFormList(HttpServletRequest request){
+		Result result = Result.failure();
+		//颜色 
+		List<CurrencyClass> colorList = goodsService.colorList();
+		//形态
+		List<CurrencyClass> formList = goodsService.formList();
+		Map<String,List<CurrencyClass>> map = new HashMap<String,List<CurrencyClass>>();
+		map.put("color", colorList);
+		map.put("form", formList);
+		if(colorList.size() > 0 && null == formList){
+			result.setMsg("颜色有值，形态为空");
+			result.setObj(map);
+			result.setSuccess(true);
+		}
+		if(null == colorList && formList.size()>0){
+			result.setMsg("形态有值，颜色为空");
+			result.setObj(map);
+			result.setSuccess(true);
+		}
+		if(formList.size()>0 && colorList.size() > 0){
+			result.setMsg("颜色形态都有值");
+			result.setObj(map);
 			result.setSuccess(true);
 		}else{
 			result.setMsg("查询失败");
@@ -452,5 +563,126 @@ public class AppGoodsController {
 		
 		
 		return result;
+	}
+	/**
+	 * 添加购物车
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param goodsId
+	 * @param count
+	 * @return
+	 */
+	@RequestMapping(value="/addToSelfGoodCar")
+	@ResponseBody
+	public Object addToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		ezs_goodscart goodsCart = new ezs_goodscart();
+		goodsCart.setCount(count);
+		goodsCart.setGoods_id(goodsId);
+		try {
+			mmp = this.goodsService.addGoodsCartFunc(goodsCart, user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+	/**
+	 * 直接下订单（添加订单）
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @return
+	 */
+	@RequestMapping("/addToSelfOrderForm")
+	@ResponseBody
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+	/**
+	 * 获取购物车数据
+	 * @author zhaibin 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getGoodCar")
+	@ResponseBody
+	public Object getGoodCar(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			mmp = this.goodsService.getGoodCarFunc(user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				List<ezs_goodscart> goodCarList = (List<ezs_goodscart>) mmp.get("Obj");
+				rs = Result.success();
+				rs.setObj(goodCarList);
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
 	}
 }

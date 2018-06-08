@@ -288,12 +288,21 @@ public class GoodsController {
 	 * 商品多条件查询，地区，品类（字符数组），默认排序：添加时间降序，库存量：从大到小，筛选：颜色（字符数组），形态（字符数组），来源，重要参数，是否环保，搜索框输入条件
 	 * @param request
 	 * @param areaId	地区id
-	 * @param typeId	品类id字符数组
-	 * @param colorId	颜色id字符数组
-	 * @param formId	形态id字符数组
+	 * @param typeId	品类id字符串数组
+	 * @param colorId	颜色id字符串数组
+	 * @param formId	形态id字符串数组
 	 * @param source	来源
 	 * @param purpose	用途
-	 * @param importantParam	重要参数
+	 * @param density	密度字符串数组
+	 * @param cantilever	悬臂梁缺口冲击字符串数组
+	 * @param freely	简支梁缺口冲击字符串数组
+	 * @param lipolysis	熔融指数（溶脂）字符串数组
+	 * @param ash	灰分字符串数组
+	 * @param water	水分字符串数组
+	 * @param tensile	拉伸强度字符串数组
+	 * @param crack	断裂伸长率字符串数组
+	 * @param bending	弯曲强度字符串数组
+	 * @param flexural	弯曲模量字符串数组
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
@@ -307,7 +316,16 @@ public class GoodsController {
 			@RequestParam(name = "formId",required=false)String formId,
 			@RequestParam(name = "source",required=false)String source,
 			@RequestParam(name = "purpose",required=false)String purpose,
-			@RequestParam(name = "importantParam",required=false)String importantParam,
+			@RequestParam(name = "density",required=false)String density,	//密度
+			@RequestParam(name = "cantilever",required=false)String cantilever,	//悬臂梁缺口冲击
+			@RequestParam(name = "freely",required=false)String freely,	//简支梁缺口冲击
+			@RequestParam(name = "lipolysis",required=false)String lipolysis,	//熔融指数（溶脂）
+			@RequestParam(name = "ash",required=false)String ash,	//灰分
+			@RequestParam(name = "water",required=false)String water,	//水分
+			@RequestParam(name = "tensile",required=false)String tensile,	//拉伸强度
+			@RequestParam(name = "crack",required=false)String crack,	//断裂伸长率
+			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
+			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "isProtection",required=false)String isProtection,
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
@@ -316,6 +334,17 @@ public class GoodsController {
 		String[] typeIds = null;
 		String[] colorIds = null;
 		String[] formIds = null;
+		//重要参数
+		String[] densitys = null;
+		String[] cantilevers = null;
+		String[] freelys = null;
+		String[] lipolysises = null;
+		String[] ashs = null;
+		String[] waters = null;
+		String[] tensiles = null;
+		String[] cracks = null;
+		String[] bendings = null;
+		String[] flexurals = null;
 		if(null != typeId){
 			typeIds = typeId.split(",");
 		}
@@ -325,32 +354,49 @@ public class GoodsController {
 		if(null != formId){
 			formIds = formId.split(",");
 		}
+		//重要参数
+		if(null != density){
+			densitys = density.split(",");
+		}
+		if(null != cantilever){
+			cantilevers = cantilever.split(",");
+		}
+		if(null != freely){
+			freelys = freely.split(",");
+		}
+		if(null != lipolysis){
+			lipolysises = lipolysis.split(",");
+		}
+		if(null != ash){
+			ashs = ash.split(",");
+		}
+		if(null != water){
+			waters = water.split(",");
+		}
+		if(null != tensile){
+			tensiles = tensile.split(",");
+		}
+		if(null != crack){
+			cracks = crack.split(",");
+		}
+		if(null != bending){
+			bendings = bending.split(",");
+		}
+		if(null != flexural){
+			flexurals = flexural.split(",");
+		}
 //		分页先搁这儿
 //		Page page = new Page();
 //		page.setStartPos(pageNow);
 //		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,importantParam,isProtection,goodsName);
+		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
+				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
 		if(null != list && list.size() > 0){
 			result.setMsg("查询成功");
 			result.setSuccess(true);
 			result.setObj(list);
 		}
-		return result;
-	}
-	
-	/**
-	 * 返回重要参数条件列表
-	 * @param request
-	 * @return
-	 */
-	public Result parameterList(HttpServletRequest request){
-		Result result = Result.failure();
-		
-				
-		
-		
-		
 		return result;
 	}
 	
@@ -363,11 +409,22 @@ public class GoodsController {
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
-		Long id = goodsService.areaToId(areaName);
-		if(null != id){
+		//直辖市
+		if(areaName.equals("北京市")||areaName.equals("重庆市")||areaName.equals("天津市")||areaName.equals("上海市")){
+			List<Long> ids = goodsService.areaToId(areaName);
+			if(ids.get(0)<ids.get(1)){
+				result.setObj(ids.get(0));
+				result.setMsg("返回的id为："+ids.get(0));
+			}else{
+				result.setObj(ids.get(1));
+				result.setMsg("返回的id为："+ids.get(1));
+			}
 			result.setSuccess(true);
-			result.setObj(id);
-			result.setMsg("返回的id为："+id);
+		}else{
+			List<Long> id = goodsService.areaToId(areaName);
+			result.setObj(id.get(0));
+			result.setSuccess(true);
+			result.setMsg("返回的id为："+id.get(0));
 		}
 		return result;
 	}
@@ -517,40 +574,20 @@ public class GoodsController {
 	@RequestMapping(value="/addToGoodCar",method=RequestMethod.POST)
 	@ResponseBody
 	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,String goodCarList){
-		String sessionId = request.getSession().getId();
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if(goodCarList==null||goodCarList.trim().equals("")){
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("请选择商品");
-			return rs;
-		}
-		List<ezs_goodscart> tGoodCarList = (List<ezs_goodscart>)JSONArray.parseArray(goodCarList, ezs_goodscart.class);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		try {
-			mmp = this.goodsService.addGoodsCart(tGoodCarList, user,sessionId);
-			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				rs = Result.success();
-				rs.setMsg(mmp.get("Msg").toString());
-			}else{
-				rs = Result.failure();
-				rs.setMsg(mmp.get("Msg").toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			rs = Result.failure();
-			rs.setMsg("数据传递有误");
-		}
-		return rs;
+		return null;
+	}
+	/**
+	 * 直接下订单（添加订单）
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @return
+	 */
+	@RequestMapping("/addToOrderForm")
+	@ResponseBody
+	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+		return null;
 	}
 	/**
 	 * 添加购物车
@@ -578,49 +615,6 @@ public class GoodsController {
 		goodsCart.setGoods_id(goodsId);
 		try {
 			mmp = this.goodsService.addGoodsCartFunc(goodsCart, user);
-			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				rs = Result.success();
-				rs.setMsg(mmp.get("Msg").toString());
-			}else{
-				rs = Result.failure();
-				rs.setMsg(mmp.get("Msg").toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			rs = Result.failure();
-			rs.setMsg("数据传递有误");
-		}
-		return rs;
-	}
-	/**
-	 * 直接下订单（添加订单）
-	 * @author zhaibin
-	 * @param request
-	 * @param response
-	 * @param orderForm(ezs_orderform类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping("/addToOrderForm")
-	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
-		String sessionId = request.getSession().getId();
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		try {
-			
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			
-			mmp = this.goodsService.addOrderForm(tOrderForm, user,sessionId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();

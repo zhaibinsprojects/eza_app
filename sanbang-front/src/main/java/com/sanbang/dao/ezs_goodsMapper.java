@@ -57,20 +57,12 @@ public interface ezs_goodsMapper {
 
 	List<ezs_goods> queryGoods(@Param("page")Page page, @Param("sellerId")Long sellerId, @Param("status")int status);
 	
-	
 	/**
-	 * 多条件查询
-	 * @param area	地区
-	 * @param typeIds 类别
-	 * @param colorIds
-	 * @param formIds
-	 * @param source
-	 * @param purpose
-	 * @param importantParam
-	 * @param isProtection
-	 * @param goodsName
+	 * 多条件筛选
+	 * @param map
 	 * @return
 	 */
 	List<ezs_goods> queryGoodsList(Map map);
+	
 
 }
