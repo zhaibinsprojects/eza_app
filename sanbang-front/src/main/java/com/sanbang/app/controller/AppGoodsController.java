@@ -585,7 +585,7 @@ public class AppGoodsController {
 		
 		return result;
 	}
-/**
+	/**
 	 * 添加购物车
 	 * @author zhaibin
 	 * @param request

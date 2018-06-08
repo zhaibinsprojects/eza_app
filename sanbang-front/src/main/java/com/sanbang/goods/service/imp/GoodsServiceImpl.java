@@ -310,7 +310,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @return
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart, ezs_user user) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
@@ -347,8 +347,8 @@ public class GoodsServiceImpl implements GoodsService{
 				storeCart = eslist.get(0);
 				storeCart.setTotal_price(BigDecimal.valueOf(goodsCartTemp.getCount()*good.getPrice().doubleValue()));
 				this.storecartMapper.updateByPrimaryKey(storeCart);
-				good.setInventory(good.getInventory()-goodsCartTemp.getCount()-goodsCart.getCount());
-				this.ezs_goodsMapper.updateByPrimaryKey(good);
+				//good.setInventory(good.getInventory()-goodsCartTemp.getCount()-goodsCart.getCount());
+				//this.ezs_goodsMapper.updateByPrimaryKey(good);
 			}else{
 				//商铺Id
 				queryCondition.setUserId(user.getId());
@@ -371,14 +371,14 @@ public class GoodsServiceImpl implements GoodsService{
 				goodsCart.setDeleteStatus(false);
 				goodsCart.setPrice(good.getPrice());
 				if(storeCart.getTotal_price()==null)
-					totalMoney = goodsCart.getCount()*good.getPrice().doubleValue();
+					totalMoney = goodsCart.getCount()*good.getPrice().doubleValue(); 
 				else
 					totalMoney = goodsCart.getCount()*good.getPrice().doubleValue()+storeCart.getTotal_price().doubleValue();
 				this.ezs_goodscartMapper.insert(goodsCart);
 				storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
 				this.storecartMapper.updateByPrimaryKey(storeCart);
-				good.setInventory(good.getInventory()-goodsCart.getCount());
-				this.ezs_goodsMapper.updateByPrimaryKey(good);
+				//good.setInventory(good.getInventory()-goodsCart.getCount());
+				//this.ezs_goodsMapper.updateByPrimaryKey(good);
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "购物车添加成功");
@@ -388,12 +388,17 @@ public class GoodsServiceImpl implements GoodsService{
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
+			//事务控制须抛出异常
+			throw e;
 		}
 		return mmp;
 	}
-
+	/**
+	 * 生成订单
+	 * @author zhaibin
+	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
@@ -433,6 +438,10 @@ public class GoodsServiceImpl implements GoodsService{
 					//goodscart.setDeleteStatus(true);
 					goodscart.setOf_id(orderForm.getId());
 					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+					//更新库存
+					ezs_goods tGood = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
+					tGood.setInventory(tGood.getInventory()-goodscart.getCount());
+					this.ezs_goodsMapper.updateByPrimaryKey(tGood);
 				}
 				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
 				orderForm.setOrder_no(orderFormNo);
@@ -440,7 +449,6 @@ public class GoodsServiceImpl implements GoodsService{
 				
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "订单添加成功");
-				
 			}else{
 				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -451,6 +459,8 @@ public class GoodsServiceImpl implements GoodsService{
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
+			//事务控制须抛出异常
+			throw e;
 		}
 		return mmp;
 	}
@@ -499,7 +509,7 @@ public class GoodsServiceImpl implements GoodsService{
 		StringBuffer orderNo = new StringBuffer("EM");
 		orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
 		orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
-		orderNo.append(CommUtil.getNumber(folwnum, "00000"));
+		orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
 		return orderNo.toString();
 	}
 	/**
