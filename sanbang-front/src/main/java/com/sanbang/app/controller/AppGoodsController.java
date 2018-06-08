@@ -333,44 +333,44 @@ public class AppGoodsController {
 		String[] cracks = null;
 		String[] bendings = null;
 		String[] flexurals = null;
-		if(null != typeId){
+		if(null != typeId && "" != typeId){
 			typeIds = typeId.split(",");
 		}
-		if(null != colorId){
+		if(null != colorId && "" != colorId){
 			colorIds = colorId.split(",");
 		}
-		if(null != formId){
+		if(null != formId && "" != formId){
 			formIds = formId.split(",");
 		}
 		//重要参数
-		if(null != density){
+		if(null != density  && "" != density){
 			densitys = density.split(",");
 		}
-		if(null != cantilever){
+		if(null != cantilever && "" != cantilever){
 			cantilevers = cantilever.split(",");
 		}
-		if(null != freely){
+		if(null != freely && "" != freely){
 			freelys = freely.split(",");
 		}
-		if(null != lipolysis){
+		if(null != lipolysis && "" != lipolysis){
 			lipolysises = lipolysis.split(",");
 		}
-		if(null != ash){
+		if(null != ash && "" != ash){
 			ashs = ash.split(",");
 		}
-		if(null != water){
+		if(null != water && "" != water){
 			waters = water.split(",");
 		}
-		if(null != tensile){
+		if(null != tensile && "" != tensile){
 			tensiles = tensile.split(",");
 		}
-		if(null != crack){
+		if(null != crack && "" != crack){
 			cracks = crack.split(",");
 		}
-		if(null != bending){
+		if(null != bending && "" != bending){
 			bendings = bending.split(",");
 		}
-		if(null != flexural){
+		if(null != flexural && "" != flexural){
 			flexurals = flexural.split(",");
 		}
 //		分页先搁这儿
