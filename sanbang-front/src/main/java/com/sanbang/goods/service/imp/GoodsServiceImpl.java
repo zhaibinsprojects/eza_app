@@ -152,9 +152,9 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String[] colorIds,String[] formIds,String source,String purpose,
-			String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,String[] tensiles,
-			String[] cracks,String[] bendings,String[] flexurals,String isProtection,String goodsName){
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String addTime,String inventory,String[] colorIds,String[] formIds,String source,
+			String purpose,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
+			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String isProtection,String goodsName){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -239,6 +239,8 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		map.put("area_id", area);
 		map.put("typeList", typeList);
+		map.put("addTime", addTime);	//默认
+		map.put("inventory", inventory);	//库存量
 		map.put("colorList", colorList);
 		map.put("formList", formList);
 		map.put("source", source);
