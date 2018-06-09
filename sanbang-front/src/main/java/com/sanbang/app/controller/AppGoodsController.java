@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
@@ -47,7 +46,6 @@ import com.sanbang.vo.DictionaryCode;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
