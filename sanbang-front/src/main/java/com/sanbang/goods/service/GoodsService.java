@@ -140,7 +140,4 @@ public interface GoodsService {
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
 	
-	//创建订单号码
-	public String createOrderNo(ezs_goods goods);
-	
 }
