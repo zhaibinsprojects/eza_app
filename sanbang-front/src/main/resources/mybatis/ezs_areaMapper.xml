@@ -181,4 +181,5 @@
   <select id="areaToId" resultType="java.lang.Long" parameterType="string" >
   	SELECT distinct id FROM ezs_area WHERE areaName like '%${_parameter}%'
   </select>
+  
 </mapper>

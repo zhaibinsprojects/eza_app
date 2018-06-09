@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
@@ -47,7 +46,6 @@ import com.sanbang.vo.DictionaryCode;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -269,10 +267,12 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 自营、地区筛选、品类筛选
+	 * 多条件查询
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id字符串数组
+	 * @param addTime	默认
+	 * @param inventory	库存
 	 * @param colorId	颜色id字符串数组
 	 * @param formId	形态id字符串数组
 	 * @param source	来源
@@ -291,11 +291,13 @@ public class AppGoodsController {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	@RequestMapping("/areaAndType")
+	@RequestMapping("/queryGoodsList")
 	@ResponseBody
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
 			@RequestParam(name = "typeId",required=false)String typeId,
+			@RequestParam(name = "addTime",required=false)String addTime,	//默认值（添加时间）
+			@RequestParam(name = "inventory",required=false)String inventory,	//库存量
 			@RequestParam(name = "colorId",required=false)String colorId,
 			@RequestParam(name = "formId",required=false)String formId,
 			@RequestParam(name = "source",required=false)String source,
@@ -329,44 +331,44 @@ public class AppGoodsController {
 		String[] cracks = null;
 		String[] bendings = null;
 		String[] flexurals = null;
-		if(null != typeId){
+		if(null != typeId && "" != typeId){
 			typeIds = typeId.split(",");
 		}
-		if(null != colorId){
+		if(null != colorId && "" != colorId){
 			colorIds = colorId.split(",");
 		}
-		if(null != formId){
+		if(null != formId && "" != formId){
 			formIds = formId.split(",");
 		}
 		//重要参数
-		if(null != density){
+		if(null != density  && "" != density){
 			densitys = density.split(",");
 		}
-		if(null != cantilever){
+		if(null != cantilever && "" != cantilever){
 			cantilevers = cantilever.split(",");
 		}
-		if(null != freely){
+		if(null != freely && "" != freely){
 			freelys = freely.split(",");
 		}
-		if(null != lipolysis){
+		if(null != lipolysis && "" != lipolysis){
 			lipolysises = lipolysis.split(",");
 		}
-		if(null != ash){
+		if(null != ash && "" != ash){
 			ashs = ash.split(",");
 		}
-		if(null != water){
+		if(null != water && "" != water){
 			waters = water.split(",");
 		}
-		if(null != tensile){
+		if(null != tensile && "" != tensile){
 			tensiles = tensile.split(",");
 		}
-		if(null != crack){
+		if(null != crack && "" != crack){
 			cracks = crack.split(",");
 		}
-		if(null != bending){
+		if(null != bending && "" != bending){
 			bendings = bending.split(",");
 		}
-		if(null != flexural){
+		if(null != flexural && "" != flexural){
 			flexurals = flexural.split(",");
 		}
 //		分页先搁这儿
@@ -374,66 +376,46 @@ public class AppGoodsController {
 //		page.setStartPos(pageNow);
 //		page.setPageNow(pageNow);
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.queryGoodsList(area,typeIds,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
+		list = goodsService.queryGoodsList(area,typeIds,addTime,inventory,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
 				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
 		if(null != list && list.size() > 0){
-			result.setMsg("查询成功");
 			result.setSuccess(true);
 			result.setMsg("筛选成功");
 		}else{
 			result.setSuccess(false);
-			result.setMsg("筛选失败");
+			result.setMsg("数据为空");
 		}
 		return result;
 	}
 	
 	/**
-	 * 其他筛选
-	 * @param request
-	 * @param color	颜色
-	 * @param form 形状
-	 * @param purpose 用途
-	 * @param source 来源
-	 * @param burning 燃烧等级
-	 * @param protection 是否环保
-	 * @return
-	 */
-	@RequestMapping("/others")
-	@ResponseBody
-	public Result listByOthers(HttpServletRequest request,Long color,Long form,String purpose,String source,String burning,String protection){
-		Result result=Result.success();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		//将接收的参数转换成map类型
-		Map<String, Object> mmp = new HashMap<String, Object>();
-		mmp.put("color", color);
-		mmp.put("form", form);
-		mmp.put("purpose", purpose);
-		mmp.put("source", source);
-		mmp.put("burning", burning);
-		mmp.put("protection", protection);
-		
-		//list = goodsService.listByOthers(mmp);
-		result.setObj(list);
-		result.setMsg("返回成功");
-		
-		return result;
-	}
-	
-	/**
-	 * 返回其他筛选所需的条件
 	 * 根据地区名返回id
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/conditionList")
+	@RequestMapping("/areaToId")
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
-		Long id = goodsService.areaToId(areaName);
-		if(null != id){
+		//直辖市
+		List<Long> ids = goodsService.areaToId(areaName);
+		if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
+			if(null != ids && ids.size()==2){
+				Long id1 = ids.get(0);
+				Long id2 = ids.get(1);
+				if(id1<id2){
+					result.setObj(id1);
+					result.setMsg("返回的id为："+id1);
+				}else{
+					result.setObj(id2);
+					result.setMsg("返回的id为："+id2);
+				}
+			}
 			result.setSuccess(true);
-			result.setObj(id);
-			result.setMsg("返回的id为："+id);
+		}else{
+			result.setObj(ids.get(0));
+			result.setSuccess(true);
+			result.setMsg("返回的id为："+ids.get(0));
 		}
 		return result;
 	}
@@ -451,28 +433,30 @@ public class AppGoodsController {
 		List<CurrencyClass> colorList = goodsService.colorList();
 		//形态
 		List<CurrencyClass> formList = goodsService.formList();
-		Map<String,List<CurrencyClass>> map = new HashMap<String,List<CurrencyClass>>();
-		map.put("color", colorList);
-		map.put("form", formList);
+		HashMap<String, Object> map1 = new HashMap<String,Object>();
+		HashMap<String,Object> map2 = new HashMap<String,Object>();
+		map1.put("second", colorList);
+		map1.put("type", "颜色");
+		map2.put("second", formList);
+		map2.put("type", "形态");
+		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		list.add(map1);
+		list.add(map2);
 		if(colorList.size() > 0 && null == formList){
 			result.setMsg("颜色有值，形态为空");
-			result.setObj(map);
+			result.setObj(list);
 			result.setSuccess(true);
 		}
 		if(null == colorList && formList.size()>0){
 			result.setMsg("形态有值，颜色为空");
-			result.setObj(map);
+			result.setObj(list);
 			result.setSuccess(true);
 		}
 		if(formList.size()>0 && colorList.size() > 0){
 			result.setMsg("颜色形态都有值");
-			result.setObj(map);
+			result.setObj(list);
 			result.setSuccess(true);
-		}else{
-			result.setMsg("查询失败");
-			result.setSuccess(false);
 		}
-		
 		return result;
 	}
 	
@@ -590,19 +574,6 @@ public class AppGoodsController {
 	 * @author zhaibin
 	 * @param request
 	 * @param response
-	 * @param goodCarList(List<ezs_goodscart>类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping(value="/addToGoodCar",method=RequestMethod.POST)
-	@ResponseBody
-	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,String goodCarList){
-		return null;
-	}
-/**
-	 * 添加购物车
-	 * @author zhaibin
-	 * @param request
-	 * @param response
 	 * @param goodsId
 	 * @param count
 	 * @return
@@ -639,19 +610,6 @@ public class AppGoodsController {
 			rs.setMsg("数据传递有误");
 		}
 		return rs;
-	}
-	/**
-	 * 直接下订单（添加订单）
-	 * @author zhaibin
-	 * @param request
-	 * @param response
-	 * @param orderForm(ezs_orderform类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping("/addToOrderForm")
-	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
-		return null;
 	}
 	/**
 	 * 直接下订单（添加订单）

@@ -86,7 +86,7 @@ public interface GoodsService {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String[] colorIds,String[] formIds,
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String addTime,String inventory,String[] colorIds,String[] formIds,
 			String source,String purpose,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
 			String isProtection,String goodsName);
@@ -96,7 +96,7 @@ public interface GoodsService {
 	 * @param areaName
 	 * @return
 	 */
-	public Long areaToId(String areaName);
+	public List<Long> areaToId(String areaName);
 	
 	/**
 	 * 查询颜色
@@ -139,8 +139,5 @@ public interface GoodsService {
 	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user);
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
-	
-	//创建订单号码
-	public String createOrderNo(ezs_goods goods);
 	
 }
