@@ -289,6 +289,8 @@ public class GoodsController {
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id字符串数组
+	 * @param addTime	默认
+	 * @param inventory	库存量
 	 * @param colorId	颜色id字符串数组
 	 * @param formId	形态id字符串数组
 	 * @param source	来源
@@ -412,28 +414,25 @@ public class GoodsController {
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
 		//直辖市
-		if(areaName.equals("北京市")||areaName.equals("重庆市")||areaName.equals("天津市")||areaName.equals("上海市")){
-			List<Long> ids = goodsService.areaToId(areaName);
-			try{
-				if(null != ids && ids.get(0)<ids.get(1)){
-					result.setObj(ids.get(0));
-					result.setMsg("返回的id为："+ids.get(0));
-				}else if(null != ids){
-					result.setObj(ids.get(1));
-					result.setMsg("返回的id为："+ids.get(1));
+		List<Long> ids = goodsService.areaToId(areaName);
+		if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
+			if(null != ids && ids.size()==2){
+				Long id1 = ids.get(0);
+				Long id2 = ids.get(1);
+				if(id1<id2){
+					result.setObj(id1);
+					result.setMsg("返回的id为："+id1);
+				}else{
+					result.setObj(id2);
+					result.setMsg("返回的id为："+id2);
 				}
-				result.setSuccess(true);
-			
-				
-			}catch(Exception e){
-				e.getStackTrace();
-				}
-			}else{
-				List<Long> id = goodsService.areaToId(areaName);
-				result.setObj(id.get(0));
-				result.setSuccess(true);
-				result.setMsg("返回的id为："+id.get(0));
-				}
+			}
+			result.setSuccess(true);
+		}else{
+			result.setObj(ids.get(0));
+			result.setSuccess(true);
+			result.setMsg("返回的id为："+ids.get(0));
+		}
 		return result;
 	}
 	
