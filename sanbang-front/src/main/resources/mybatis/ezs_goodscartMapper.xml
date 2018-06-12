@@ -203,7 +203,7 @@
 		ga.name pName,
 		ga.path pPath, 
 		d.name utilName
-  	 FROM ezs_goodscart g,ezs_goods gs,ezs_accessory ga,ezs_dict d WHERE g.goods_id = gs.id and gs.goods_main_photo_id = ga.id and gs.util_id = d.id and 
+	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id WHERE 
 	EXISTS 
 	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
 	 AND g.deleteStatus = '0' and g.of_id IS NULL

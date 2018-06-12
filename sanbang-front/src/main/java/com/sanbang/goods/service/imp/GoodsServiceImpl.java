@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,11 +34,11 @@ import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.CommUtil;
+import com.sanbang.utils.StockHelper;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
-import com.sanbang.utils.StockHelper;
 
 /**
  * 货品相关处理
@@ -46,6 +47,9 @@ import com.sanbang.utils.StockHelper;
  */
 @Service("goodsService")
 public class GoodsServiceImpl implements GoodsService{
+	// 日志
+	private static Logger log = Logger.getLogger(GoodsServiceImpl.class);
+	
 	@Autowired
 	private com.sanbang.dao.ezs_goodsMapper ezs_goodsMapper;
 	@Autowired
@@ -329,6 +333,7 @@ public class GoodsServiceImpl implements GoodsService{
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart, ezs_user user) {
 		// TODO Auto-generated method stub
+		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = null;
 		//初始化查询条件
@@ -346,11 +351,13 @@ public class GoodsServiceImpl implements GoodsService{
 				if(tCount>good.getInventory()){
 					mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					mmp.put("Msg", "商品数量不足");
+					log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"商品数量不足...");
 					return mmp;
 				}
 			}
 			if(goodsCartList!=null&&goodsCartList.size()>0){
 				//若存在
+				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车存在选购商品记录--修改记录beginning");
 				ezs_goodscart goodsCartTemp = goodsCartList.get(0);
 				goodsCartTemp.setCount(goodsCartTemp.getCount()+goodsCart.getCount());
 				this.ezs_goodscartMapper.updateByPrimaryKey(goodsCartTemp);
@@ -365,7 +372,9 @@ public class GoodsServiceImpl implements GoodsService{
 				this.storecartMapper.updateByPrimaryKey(storeCart);
 				//good.setInventory(good.getInventory()-goodsCartTemp.getCount()-goodsCart.getCount());
 				//this.ezs_goodsMapper.updateByPrimaryKey(good);
+				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车存在选购商品记录--修改记录end");
 			}else{
+				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车不存在选购商品记录--添加记录beginning");
 				//商铺Id
 				queryCondition.setUserId(user.getId());
 				queryCondition.setStoreCarStatus(0);
@@ -401,6 +410,7 @@ public class GoodsServiceImpl implements GoodsService{
 				this.storecartMapper.updateByPrimaryKey(storeCart);
 				//good.setInventory(good.getInventory()-goodsCart.getCount());
 				//this.ezs_goodsMapper.updateByPrimaryKey(good);
+				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车不存在选购商品记录--添加记录end");
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "购物车添加成功");
@@ -408,6 +418,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车异常");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 			//事务控制须抛出异常
@@ -426,6 +437,7 @@ public class GoodsServiceImpl implements GoodsService{
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType) {
 		// TODO Auto-generated method stub
+		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
 		double totalMoney = 0.0;
 		//生成订单号码
@@ -434,6 +446,7 @@ public class GoodsServiceImpl implements GoodsService{
 		if(orderType==null){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "订单类型不能为null");
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单类型不能为null");
 			return mmp;
 		}
 		try {
@@ -447,6 +460,7 @@ public class GoodsServiceImpl implements GoodsService{
 			orderForm.setOrder_status(1);
 			
 			this.ezs_orderformMapper.insert(orderForm);
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录生成...");
 			//已购商品按store分类
 			//获取购物车信息
 			QueryCondition queryCondition = new QueryCondition();
@@ -478,15 +492,18 @@ public class GoodsServiceImpl implements GoodsService{
 					boolean goodCountCheckFlag = false;
 					try {
 						goodCountCheckFlag = checkGoods(goodscart,tGood);
+						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
 					} catch (Exception e) {
 						// TODO: handle exception
 						System.out.println("同步库存异常");
+						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
 						e.printStackTrace();
 						throw e;
 					}
 					if(goodCountCheckFlag==true){
 						//锁库记录并更新本地库存
 						addStockRecord(goodscart,tGood,orderFormNo);
+						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存成功...");
 					}
 					//更新设置订单外键
 					goodscart.setOf_id(orderForm.getId());
@@ -500,6 +517,7 @@ public class GoodsServiceImpl implements GoodsService{
 					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
 					//构建实时成交价
 					savePriceTrend(goodscart,tGood,user);
+					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
 				}
 				//订单类型：10.自营商品订单 20.撮合商品订单
 				//判断是否为自营：true-自营，false-非自营
@@ -513,6 +531,7 @@ public class GoodsServiceImpl implements GoodsService{
 				orderForm.setOrder_no(orderFormNo);
 				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
 				
+				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "订单添加成功");
 			}else{
@@ -523,11 +542,13 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 			//事务控制须抛出异常
 			throw e;
 		}
+		log.info("添加订单完成");
 		return mmp;
 	}
 	/**
@@ -575,6 +596,7 @@ public class GoodsServiceImpl implements GoodsService{
 		orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
 		orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
 		orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
+		log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
 		return orderNo.toString();
 	}
 	/**
