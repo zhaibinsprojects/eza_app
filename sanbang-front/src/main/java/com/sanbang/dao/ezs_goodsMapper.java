@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.GoodsInfo;
+import com.sanbang.vo.goods.GoodsVo;
 
 @Repository
 public interface ezs_goodsMapper {
@@ -63,6 +64,15 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	List<ezs_goods> queryGoodsList(Map map);
+	
+	
+	/**
+	 * @author langjf
+	 * app订单详情  
+	 * @param goodsid
+	 * @return
+	 */
+	GoodsVo  getgoodsinfo(long goodsid);
 	
 
 }

@@ -17,7 +17,7 @@ import com.sanbang.bean.ezs_user;
  * @author 刘恒福
  *
  */
-public class Goods  {
+public class GoodsVo  {
 
     private Date lastModifyDate;// 商品更新日期，即最近一次修改商品信息的日期
 
@@ -106,9 +106,7 @@ public class Goods  {
 
     private ezs_goods_class goodClass;// 商品分类
 
-    private ezs_quality quality;// 质检
-
-    private ezs_accessory goods_main_photo;// 主图片
+    private List<ezs_quality> quality;// 质检
 
     private boolean memberLook;// 是否会员查看
 
@@ -118,13 +116,13 @@ public class Goods  {
 
     private boolean lockStatus;// 锁定：true b'1'，解锁:false b'0000'标识
 
+    //商品图片
     private List<ezs_accessory> goods_photos;
     
     //制作过程
     private List<ezs_accessory> cartographys ;
-    
 
-    public Date getLastModifyDate() {
+	public Date getLastModifyDate() {
 		return lastModifyDate;
 	}
 
@@ -444,20 +442,12 @@ public class Goods  {
 		this.goodClass = goodClass;
 	}
 
-	public ezs_quality getQuality() {
+	public List<ezs_quality> getQuality() {
 		return quality;
 	}
 
-	public void setQuality(ezs_quality quality) {
+	public void setQuality(List<ezs_quality> quality) {
 		this.quality = quality;
-	}
-
-	public ezs_accessory getGoods_main_photo() {
-		return goods_main_photo;
-	}
-
-	public void setGoods_main_photo(ezs_accessory goods_main_photo) {
-		this.goods_main_photo = goods_main_photo;
 	}
 
 	public boolean isMemberLook() {
@@ -507,5 +497,8 @@ public class Goods  {
 	public void setCartographys(List<ezs_accessory> cartographys) {
 		this.cartographys = cartographys;
 	}
+    
+
+   
   
 }

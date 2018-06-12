@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,6 +44,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.goods.GoodsVo;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -54,6 +56,7 @@ public class AppGoodsController {
 	
 	@Autowired
 	private GoodsService goodsService;
+	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
 	// 日志
@@ -63,14 +66,17 @@ public class AppGoodsController {
 	
 	
 	/**
-	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
+	 * @author langjf
+	 * forapp 
+	 * 查询货品详情
 	 * @param request
 	 * @param id 货品id
 	 * @return
 	 */
 	@RequestMapping("/toGoodsShow")
-	public String toGoodsShow(HttpServletRequest request,Long id){
-		
+	public String toGoodsShow(HttpServletRequest request,Long id,Model model){
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}
 	
@@ -525,15 +531,6 @@ public class AppGoodsController {
 		
 	}
 	
-//	public static void main(String[] args) {
-//		GoodsController  aa=new GoodsController();
-//		Map<String, Object> map=new HashMap<>();
-//		map.put("orderAmount", "aaa");
-//		map.put("AcapAmount", "bb");
-//		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
-//	}
-	
-	
 	/**
 	 * 上传发票图片，返回url
 	 * @param request
@@ -585,6 +582,49 @@ public class AppGoodsController {
 		
 		return result;
 	}
+	
+	
+	/**
+	 * 样品下订单
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @return
+	 */
+	@RequestMapping("/addToSelfSampleOrderForm")
+	@ResponseBody
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE" );
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+
 	/**
 	 * 添加购物车
 	 * @author zhaibin
@@ -599,7 +639,7 @@ public class AppGoodsController {
 	public Object addToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -640,7 +680,7 @@ public class AppGoodsController {
 	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -650,7 +690,7 @@ public class AppGoodsController {
 		try {
 			JSONObject jsonObject = JSONObject.fromObject(orderForm);
 			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS" );
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -674,12 +714,13 @@ public class AppGoodsController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodCar")
 	@ResponseBody
 	public Object getGoodCar(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

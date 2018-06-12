@@ -13,6 +13,7 @@ import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.vo.CurrencyClass;
+import com.sanbang.vo.goods.GoodsVo;
 
 /**
  * 货品相关业务处理
@@ -136,8 +137,22 @@ public interface GoodsService {
 	
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
 	
-	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user);
+	/**
+	 * 生成订单
+	 * @author zhaibin
+	 * @param orderForm 订单对象
+	 * @param orderType 订单类型 ： GOODS 商品订单；SAMPLE 样品订单
+	 */
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType);
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
+	
+	
+	/**
+	 * app订单详情
+	 * @param goodsid
+	 * @return
+	 */
+	GoodsVo  getgoodsinfo(long goodsid);
 	
 }
