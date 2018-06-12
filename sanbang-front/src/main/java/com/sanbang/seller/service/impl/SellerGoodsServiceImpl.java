@@ -116,7 +116,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			List<AuthImageVo> list = new ArrayList<>();
 			savepic(goodsurls, list);
 			savepic(processgoodsurls, list);
-			
+			long mainAccid = 0 ;
 			if (null != list && list.size() > 0) {
 				
 				//检查保存商品图片是否必填
@@ -126,6 +126,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					return result;
 				};
+				
 			}
 			
 			if (result.getSuccess()) {
@@ -154,8 +155,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String bending = request.getParameter("bending");// 弯曲强度
 				String flexural = request.getParameter("flexural");// 弯曲模量
 				String burning = request.getParameter("burning");// 燃烧等级
-				String seo_description = request.getParameter("seo_description");// 货品详细描述
-
+				String seo_description = request.getParameter("seo_description");// 货品详细描述（武汉方面设计，这个字段没有使用）
+				String content = request.getParameter("content");// 货品详细描述（PC端含有富文本编辑器，手机端只接收纯文字使用，不考虑图片相关信息）
+					
 				ezs_goods goods = new ezs_goods();
 				goods.setDeleteStatus(true);
 				goods.setAddTime(new Date());
@@ -170,6 +172,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setArea_id(Long.valueOf(area_id));
 				goods.setAddess(addess);
 				goods.setPurpose(purpose);
+				goods.setUtil_id((long) 23);
 				goods.setSupply_id(Long.valueOf(supply_id));
 				goods.setSupply_id(Long.valueOf(color_id));
 				goods.setSupply_id(Long.valueOf(form_id));
@@ -178,9 +181,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
-				if (protection == "0") {
+				if (protection.equals("0")) {
 					goods.setProtection(false);
-				} else if (protection == "1") {
+				} else if (protection.equals("1")) {
 					goods.setProtection(true);
 				} else {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -199,6 +202,13 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setFlexural(flexural);
 				goods.setBurning(burning);
 				goods.setSeo_description(seo_description);
+				goods.setRecommend(false);
+				goods.setGood_self(false);
+				goods.setColor_id(Long.valueOf(color_id));
+				goods.setForm_id(Long.valueOf(form_id));
+				goods.setContent(content);
+				goods.setPurpose(purpose);
+				goods.setUser_id(upi.getId());
 				int goodsId = 0;
 				try {
 					goodsId = goodsMapper.insert(goods);
@@ -256,6 +266,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 						cartographyMapper.insertSelective(cartography);
 					}
 				}
+				mainAccid = list.get(0).getAccid();
+				goods.setGoods_main_photo_id(mainAccid);
+				goodsMapper.updateByPrimaryKeySelective(goods);
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
@@ -470,6 +483,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			HttpServletResponse response) {
 		ezs_goods_audit_process goodsAudit = goodsAuditProcessMapper.selectByGoodsId(goodsId); 
 		Integer status = goodsAudit.getStatus();
+		long mainAccid = 0 ;
 		if ( status != 544 ) {
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -495,6 +509,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					return result;
 				};
+				mainAccid = list.get(0).getAccid();
 			}
 			
 			if (result.getSuccess()) {
@@ -523,8 +538,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String bending = request.getParameter("bending");// 弯曲强度
 				String flexural = request.getParameter("flexural");// 弯曲模量
 				String burning = request.getParameter("burning");// 燃烧等级
-				String seo_description = request.getParameter("seo_description");// 货品详细描述
-
+				String seo_description = request.getParameter("seo_description");// 货品详细描述（武汉方面设计，这个字段没有使用）
+				String content = request.getParameter("content");// 货品详细描述（PC端含有富文本编辑器，手机端只接收纯文字使用，不考虑图片相关信息）
+				
 				ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 				goods.setDeleteStatus(true);
 				goods.setAddTime(new Date());
@@ -546,9 +562,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
-				if (protection == "0") {
+				if (protection.equals("0")) {
 					goods.setProtection(false);
-				} else if (protection == "1") {
+				} else if (protection.equals("1")) {
 					goods.setProtection(true);
 				} else {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -566,8 +582,16 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setBending(bending);
 				goods.setFlexural(flexural);
 				goods.setBurning(burning);
+				goods.setRecommend(false);
+				goods.setGood_self(false);
+				goods.setColor_id(Long.valueOf(color_id));
+				goods.setForm_id(Long.valueOf(form_id));
+				goods.setContent(content);
 				goods.setSeo_description(seo_description);
 				goods.setLastModifyDate(new Date());
+				goods.setPurpose(purpose);
+				goods.setUtil_id((long) 23);
+				goods.setUser_id(upi.getId());
 				int aa = goodsMapper.updateByPrimaryKeySelective(goods);
 				
 				if (aa > 0) {
@@ -611,6 +635,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 						cartographyMapper.insertSelective(cartography);
 					}
 				}
+				mainAccid = list.get(0).getAccid();
+				goods.setGoods_main_photo_id(mainAccid);
+				goodsMapper.updateByPrimaryKeySelective(goods);
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);

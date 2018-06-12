@@ -53,9 +53,9 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setLocation_detail(location_detail);
 			store.setUserType("SELLER");
 			store.setStatus(1); // 0 初始值， 1 待审核 ， 2 审核通过， 3 审核不通过
-			if (rent == "0") {
+			if (rent.equals("0")) {
 				store.setRent(false);//非租用
-			}else if(rent == "1"){
+			}else if(rent.equals("1")){
 				store.setRent(true);//租用
 			}
 			

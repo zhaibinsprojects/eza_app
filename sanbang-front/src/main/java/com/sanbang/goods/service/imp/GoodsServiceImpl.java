@@ -242,12 +242,20 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		map.put("area_id", area);
 		map.put("typeList", typeList);
-		map.put("addTime", addTime);	//默认
-		map.put("inventory", inventory);	//库存量
+		if(null != addTime && "" != addTime){
+			map.put("addTime", addTime);	//默认
+		}
+		if(null != inventory && "" != inventory){
+			map.put("inventory", inventory);	//库存量
+		}
 		map.put("colorList", colorList);
 		map.put("formList", formList);
-		map.put("source", source);
-		map.put("purpose", purpose);
+		if(null != source && "" != source){
+			map.put("source", source);
+		}
+		if(null != purpose && "" != purpose){
+			map.put("purpose", purpose);
+		}
 		//重要参数（区间查询）
 		map.put("density1", density1);
 		map.put("density2", density2);
