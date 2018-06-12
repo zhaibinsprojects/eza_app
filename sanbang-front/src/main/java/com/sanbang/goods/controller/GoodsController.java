@@ -417,12 +417,6 @@ public class GoodsController {
 		return result;
 	}
 	
-	public static void main(String[] args){
-		String aa = ",a";
-		String[] bb = aa.split(",");
-		System.out.println(bb[0]);
-	}
-	
 	/**
 	 * 根据地区名返回id
 	 * @param request
