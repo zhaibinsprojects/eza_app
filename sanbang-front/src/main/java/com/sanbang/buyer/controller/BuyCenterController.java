@@ -103,6 +103,7 @@ public class BuyCenterController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodsFromCollection")
 	@ResponseBody
 	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response){
