@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_cataMapper" >
-  <resultMap id="BaseResultMap" type="ezs_goods_class" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+  <resultMap id="BaseResultMap" type="com.sanbang.vo.GoodsClass" >
+    <result column="secondName" property="secondName" jdbcType="VARCHAR" />
+    <result column="secondId" property="secondId" jdbcType="BIGINT" />
   </resultMap>
+  
+  <resultMap id="BaseResultMap2" type="com.sanbang.vo.GoodsClass2" >
+    <result column="thirdName" property="thirdName" jdbcType="VARCHAR" />
+    <result column="thirdId" property="thirdId" jdbcType="BIGINT" />
+  </resultMap>
+  
   <!-- 查询一级分类 -->
-  <select id="getOnelevelList" resultType="ezs_goods_class" >
+  <select id="getFirstList" resultType="ezs_goods_class" >
     select * from ezs_goods_class gc where gc.parent_id is null
   </select>
   
-  <!-- 查询二级分类 -->
-  <select id="getTwolevelList" resultType="ezs_goods_class" parameterType="java.lang.Long" >
-    select * from ezs_goods_class gc where gc.parent_id = #{parent_id, jdbcType=BIGINT}
+  <!-- 根据一级分类查询二级三级分类，此sql暂时舍弃，因为app的需求变更 -->
+  <select id="getChildList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  select gc1.name secondName,gc1.id secondId,gc2.name thirdName,gc2.id thirdId from ezs_goods_class gc1 ,
+  ezs_goods_class gc2 where gc2.parent_id = gc1.id and gc1.parent_id=#{id,jdbcType=BIGINT} and EXISTS 
+  (select 1 from ezs_goods_class g where g.id = gc1.parent_id)
   </select>
   
-  <!-- 查询三级分类 -->
-  <select id="getThreelevelList" resultType="ezs_goods_class" parameterType="java.lang.Long" >
-    select * from ezs_goods_class gc where gc.parent_id =  #{parent_id, jdbcType=BIGINT}
+  <!-- 根据一级id查询二级分类 -->
+  <select id="getSecondList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  	select gc.name secondName,gc.id secondId from ezs_goods_class gc where gc.parent_id = #{id,jdbcType=BIGINT}
+  </select>
+  <!-- 根据二级id查询三级分类 -->
+  
+  <select id="getThirdList" resultMap="BaseResultMap2" parameterType="java.lang.Long" >
+  	select gc.name thirdName,gc.id thirdId from ezs_goods_class gc where gc.parent_id = #{id,jdbcType=BIGINT}
   </select>
   
 </mapper>

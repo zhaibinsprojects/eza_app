@@ -26,6 +26,7 @@ import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
@@ -97,7 +98,7 @@ public class UserSetupCompanyInfoController {
 			Map<String,Object> map1=new HashMap<>();
 			map1.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
 			if(null!=upi.getEzs_store().getArea_id()){
-				map.put("area_id",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址区县
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
 			}else{
 				map.put("area_id",0);// 经营地址区县
 			}
@@ -165,30 +166,30 @@ public class UserSetupCompanyInfoController {
 	 */
 	private String getaddressinfo(long areaid) {
 		StringBuilder sb = new StringBuilder();
-		long threeinfo = 0;
-		long twoinfo = 0;
-		long oneinfo = 0;
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
 		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
 		if (ezs_threeinfo != null) {
-			threeinfo = ezs_threeinfo.getId();
+			threeinfo = ezs_threeinfo.getAreaName();
 			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
 			if (ezs_twoinfo != null) {
-				twoinfo = ezs_threeinfo.getId();
+				twoinfo =  ezs_threeinfo.getAreaName();
 				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
 				if (ezs_oneinfo != null) {
-					oneinfo = ezs_threeinfo.getId();
+					oneinfo =  ezs_threeinfo.getAreaName();
 				}
 			}
 		}
 		
-		if(threeinfo!=0){
+		if(!Tools.isEmpty(threeinfo)){
 			sb = new StringBuilder().append(threeinfo);	
 		}
-		if(twoinfo!=0){
-			sb = new StringBuilder().append(twoinfo).append("@").append(threeinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append(threeinfo);
 		}
-		if(oneinfo!=0){
-			sb = new StringBuilder().append(oneinfo).append("@").append(twoinfo).append("@").append(threeinfo);
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append(twoinfo).append(threeinfo);
 		}
 		
 		return sb.toString();

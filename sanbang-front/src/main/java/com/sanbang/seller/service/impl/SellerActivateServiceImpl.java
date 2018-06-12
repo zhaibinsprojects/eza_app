@@ -51,10 +51,11 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setOpen_branch_name(open_branch_name);
 			store.setOpen_branch_no(open_branch_no);
 			store.setLocation_detail(location_detail);
-			store.setStatus(1);
-			if (rent == "0") {
+			store.setUserType("SELLER");
+			store.setStatus(1); // 0 初始值， 1 待审核 ， 2 审核通过， 3 审核不通过
+			if (rent.equals("0")) {
 				store.setRent(false);//非租用
-			}else if(rent == "1"){
+			}else if(rent.equals("1")){
 				store.setRent(true);//租用
 			}
 			

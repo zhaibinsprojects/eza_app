@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_order_info;
+import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PagerOrder;
 
@@ -36,8 +39,11 @@ public class AppBuyerMenu {
 	@Autowired
 	private SellerReceiptService sellerReceiptService;
 	
+	@Autowired
+	private DictService dictService;
 	
-  Logger log=Logger.getLogger(AppBuyerMenu.class);  
+	
+	private Logger log=Logger.getLogger(AppBuyerMenu.class);  
 
 	/**
 	 * 买家会员中心
@@ -94,14 +100,15 @@ public class AppBuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
+		try {
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
+			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
 		}
-
-		try {
+	
 			if (pageNow < 1) {
 				pageNow = 1;
 			}
@@ -145,7 +152,7 @@ public class AppBuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-
+		try {
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -153,7 +160,7 @@ public class AppBuyerMenu {
 			return result;
 		}
 
-		try {
+		
 			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
 			result.setObj(map);
 		} catch (Exception e) {
@@ -376,7 +383,7 @@ public class AppBuyerMenu {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/getContentList")
+	@RequestMapping(value="/getContentList" , produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public Result getContentList(@RequestParam(name = "pageno", defaultValue = "1") int pageno,
 			HttpServletRequest request, HttpServletResponse response) {

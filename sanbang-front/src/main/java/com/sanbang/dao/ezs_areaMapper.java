@@ -42,6 +42,7 @@ public interface ezs_areaMapper {
     
     ezs_area selectParentByareaname(String areaName);
     
-    
+    //根据地区名称返回id   add by han
+    List<Long> areaToId(String areaName);
     
 }

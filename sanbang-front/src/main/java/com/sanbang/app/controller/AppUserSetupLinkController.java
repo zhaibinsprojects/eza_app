@@ -105,7 +105,7 @@ public class AppUserSetupLinkController {
 	}
 
 	/**
-	 * 修改登陆手机号
+	 * 原来手机号发送验证码
 	 * 
 	 * @param request
 	 * @return
@@ -121,6 +121,14 @@ public class AppUserSetupLinkController {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
+		
+		//查看手机号是否修改过
+		if(upi.getEzs_userinfo().getPhoneStatus()==1){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("已经修改过一次不可更改！");
+			return result;
+		}
+		
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  
 		// 6位验证码  
@@ -138,7 +146,7 @@ public class AppUserSetupLinkController {
 	}
 
 	/**
-	 * 修改登陆手机号
+	 * 检验原来手机号验证码
 	 * 
 	 * @param request
 	 * @return
@@ -168,7 +176,7 @@ public class AppUserSetupLinkController {
 	
 	
 	/**
-	 * 修改登陆手机号的验证码
+	 * 修改手机号新手机号验证码
 	 * 
 	 * @param request
 	 * @return
@@ -203,7 +211,7 @@ public class AppUserSetupLinkController {
 	
 	
 	/**
-	 * 修改登陆手机号
+	 * 修改登陆手机号为新手机号
 	 * 
 	 * @param request
 	 * @return
@@ -235,7 +243,7 @@ public class AppUserSetupLinkController {
 	 * 修改其他信息
 	 * 
 	 * @param request
-	 * @return typeval truename sex tel email qq
+	 * @return typeval truename sex tel email qq  username
 	 * 
 	 */
 	@ResponseBody

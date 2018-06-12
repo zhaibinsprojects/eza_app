@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.utils.DateUtils;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
@@ -58,43 +61,64 @@ public class AddressServiceImpl implements AddressService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入收货人姓名");
+			return result;
 		}
-		if(Tools.isEmpty(ezs_address.getArea_id().toString())){//首行“请选择”默认为0
+		if(Tools.isEmpty(ezs_address.getArea_id()+"")){//首行“请选择”默认为0
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择收货地址");
+			return result;
 		}
 		if(Tools.isEmpty(ezs_address.getArea_info())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入详细收货地址");
+			return result;
 		}
 		if(Tools.isEmpty(ezs_address.getMobile())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入手机号码");
-			if(Tools.isMobile(ezs_address.getMobile())){
+			return result;	
+		}else{
+			if(!Tools.isMobile(ezs_address.getMobile())){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效的手机号码");
+				return result;
 			}
 		}
 		if(Tools.isEmpty(ezs_address.getTelephone())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入电话号码");
-			if(Tools.isMobileAndPhone(ezs_address.getTelephone())){
+			return result;
+			
+		}else{
+			if(!Tools.isMobileAndPhone(ezs_address.getTelephone())){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效的电话号码");
+				return result;
 			}
 		}
 		return result;
 	}
 
 	@Override
-	public List<ezs_address> findAddressByUserId(Long id) {
-		return ezs_addressMapper.selectByUserId(id);
+	public List<ezs_address> findAddressByUserId(Long id,Page page) {
+		
+		page.setStartPos(page.getPageNow());
+		int totalcount = ezs_addressMapper.getCountAddressByUserId(id);
+		
+		page.setTotalCount(totalcount);
+		Map<String,Object> map = new HashMap<>();
+		
+		map.put("userid", id);
+		map.put("startPos", page.getStartPos());
+		map.put("pageSize", page.getPageSize());
+		
+		return ezs_addressMapper.selectByUserId(map);
 	}
 
 	@Override

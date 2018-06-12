@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.sanbang.bean.ezs_dict;
+import com.sanbang.vo.CurrencyClass;
 
 public interface ezs_dictMapper {
     int deleteByPrimaryKey(Long id);
@@ -33,8 +34,10 @@ public interface ezs_dictMapper {
 	  */
 	 List<ezs_dict>  getDictByParentId(@Param("code")String code);
 	 
-
-	 List<ezs_dict> conditionList();
+	 
+	 List<CurrencyClass> colorList();
+	 
+	 List<CurrencyClass> formList();
 
 	 /**
 	  * 通过商品id或的属性
@@ -46,4 +49,5 @@ public interface ezs_dictMapper {
 	 * @return
 	 */
 	String selectAuditingById(Long auditingusertype_id);
+	
 }

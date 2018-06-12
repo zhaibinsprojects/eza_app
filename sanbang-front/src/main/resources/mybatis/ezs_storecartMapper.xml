@@ -24,7 +24,7 @@
     delete from ezs_storecart
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_storecart" >
+  <insert id="insert" parameterType="ezs_storecart" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_storecart (id, addTime, deleteStatus, 
       cart_session_id, sc_status, total_price, 
       store_id, user_id)
@@ -32,7 +32,7 @@
       #{cart_session_id,jdbcType=VARCHAR}, #{sc_status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, 
       #{store_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_storecart" >
+  <insert id="insertSelective" parameterType="ezs_storecart" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_storecart
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -125,4 +125,14 @@
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="com.sanbang.vo.QueryCondition">
+  	select 
+  	<include refid="Base_Column_List" />
+  	 from ezs_storecart a where a.user_id = #{userId} and a.deleteStatus = '0' and a.sc_status = #{storeCarStatus} and a.store_id = #{storeId}
+  </select>
+  <select id="getByUserId" resultMap="BaseResultMap" parameterType="com.sanbang.vo.QueryCondition">
+  	select 
+  	<include refid="Base_Column_List" />
+  	 from ezs_storecart a where a.user_id = #{userId} and a.deleteStatus = '0' and a.sc_status = #{storeCarStatus}
+  </select>
 </mapper>

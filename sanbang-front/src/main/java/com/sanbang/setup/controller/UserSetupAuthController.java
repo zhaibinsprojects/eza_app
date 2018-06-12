@@ -106,7 +106,7 @@ public class UserSetupAuthController {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 		result.setMsg("参数错误");
 		
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -125,6 +125,14 @@ public class UserSetupAuthController {
 			map.put("trueName", upi.getTrueName());// 联系人
 			if(null!=upi.getEzs_store().getArea_id()){
 				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}else{
+				map.put("area","");// 经营地址
+			}
+			
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
+			}else{
+				map.put("area_id",0);// 经营地址区县
 			}
 			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
@@ -257,6 +265,14 @@ public class UserSetupAuthController {
 			map.put("trueName", upi.getTrueName());// 联系人
 			if(null!=upi.getEzs_store().getArea_id()){
 				map.put("area",getaddressinfo(upi.getEzs_store().getArea_id()));// 经营地址
+			}else{
+				map.put("area","");// 经营地址
+			}
+			
+			if(null!=upi.getEzs_store().getArea_id()){
+				map.put("area_id",upi.getEzs_store().getArea_id());// 经营地址区县
+			}else{
+				map.put("area_id",0);// 经营地址区县
 			}
 			map.put("address", upi.getEzs_store().getAddress());// 详细地址
 			
@@ -471,42 +487,31 @@ public class UserSetupAuthController {
 			HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(value="type",required=false) String type){
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
-		/*
-		//检查上传类型
-		result=checkuptype(type);*/
-		
-		/*if(!result.getSuccess()){
-			return result;
-		}*/
-		
+
+		Map<String, Object> map1=new HashMap<>();
 		try {
 			Map<String , Object> map=fileUploadService.uploadFile(request,0,0,10*1024*1024l);
 			if("000".equals(map.get("code"))){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setMsg("上传成功");
-				result.setObj(new HashMap<>().put("picurl", map.get("url")));
-				result.setSuccess(false);
+				map1.put("picurl",  map.get("url"));
+				result.setObj(map1);
+				result.setSuccess(true);
 				return result;
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setObj(map1);
 				result.setMsg("上传失败");
-				result.setObj("");
 				result.setSuccess(false);
 			}
 		} catch (Exception e) {
 			log.info("文件：上传接口调用失败"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("上传失败");
-			result.setObj("");
+			result.setObj(map1);
 			result.setSuccess(false);
 		} 
-		
+		result.setObj(new HashMap<>());
 		
 		return result;
 	}
@@ -705,30 +710,30 @@ public class UserSetupAuthController {
 	 */
 	private String getaddressinfo(long areaid) {
 		StringBuilder sb = new StringBuilder();
-		long threeinfo = 0;
-		long twoinfo = 0;
-		long oneinfo = 0;
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
 		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
 		if (ezs_threeinfo != null) {
-			threeinfo = ezs_threeinfo.getId();
+			threeinfo = ezs_threeinfo.getAreaName();
 			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
 			if (ezs_twoinfo != null) {
-				twoinfo = ezs_threeinfo.getId();
+				twoinfo =  ezs_twoinfo.getAreaName();
 				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
 				if (ezs_oneinfo != null) {
-					oneinfo = ezs_threeinfo.getId();
+					oneinfo =  ezs_oneinfo.getAreaName();
 				}
 			}
 		}
 		
-		if(threeinfo!=0){
+		if(!Tools.isEmpty(threeinfo)){
 			sb = new StringBuilder().append(threeinfo);	
 		}
-		if(twoinfo!=0){
-			sb = new StringBuilder().append(twoinfo).append("@").append(threeinfo);
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
 		}
-		if(oneinfo!=0){
-			sb = new StringBuilder().append(oneinfo).append("@").append(twoinfo).append("@").append(threeinfo);
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
 		
 		return sb.toString();

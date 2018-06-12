@@ -1,10 +1,12 @@
 package com.sanbang.setup.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.app.controller.AppUserSetupLinkController;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.UserProService;
+import com.sanbang.utils.ImageUrlUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.LinkUserVo;
+import com.sanbang.vo.userauth.AuthImageVo;
 
 @Controller
 @RequestMapping("/setup/linkuser/")
 public class UserSetupLinkController {
 
-	private Logger log = Logger.getLogger(UserSetupLinkController.class);
+	private Logger log = Logger.getLogger(AppUserSetupLinkController.class);
 
 
 	@Autowired
@@ -53,6 +58,9 @@ public class UserSetupLinkController {
 
 	@Autowired
 	private DictService dictService;
+	
+	@Autowired
+	private com.sanbang.setup.service.AuthService authService;
 
 	/**
 	 * 设置注册联系人资料
@@ -74,7 +82,7 @@ public class UserSetupLinkController {
 			}
 			Map<String, Object> map=new HashMap<>();
 			if (null != upi.getEzs_userinfo()) {
-				map.put("Link", new LinkUserVo("headimg", upi.getName(), upi.getEzs_userinfo().getPhone(),
+				map.put("Link", new LinkUserVo(ImageUrlUtil.geturl(DictionaryCate.USER_ICON, upi.getAuthimg()), upi.getName(), upi.getEzs_userinfo().getPhone(),
 						upi.getTrueName(), upi.getEzs_userinfo().getSex_id(),
 						(upi.getEzs_userinfo().getSex_id() != null && upi.getEzs_userinfo().getSex_id() != 0)
 								? dictService.getDictByThisId(upi.getEzs_userinfo().getSex_id()).getName() : "",
@@ -104,8 +112,10 @@ public class UserSetupLinkController {
 		return result;
 	}
 
+	
+	
 	/**
-	 * 修改登陆手机号
+	 * 原来手机号发送验证码
 	 * 
 	 * @param request
 	 * @return
@@ -121,6 +131,14 @@ public class UserSetupLinkController {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
+		
+		//查看手机号是否修改过
+		if(upi.getEzs_userinfo().getPhoneStatus()==1){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("已经修改过一次不可更改！");
+			return result;
+		}
+		
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  
 		// 6位验证码  
@@ -138,7 +156,7 @@ public class UserSetupLinkController {
 	}
 
 	/**
-	 * 修改登陆手机号
+	 * 检验原来手机号验证码
 	 * 
 	 * @param request
 	 * @return
@@ -168,7 +186,7 @@ public class UserSetupLinkController {
 	
 	
 	/**
-	 * 修改登陆手机号的验证码
+	 * 修改手机号新手机号验证码
 	 * 
 	 * @param request
 	 * @return
@@ -203,7 +221,7 @@ public class UserSetupLinkController {
 	
 	
 	/**
-	 * 修改登陆手机号
+	 * 修改登陆手机号为新手机号
 	 * 
 	 * @param request
 	 * @return
@@ -235,7 +253,7 @@ public class UserSetupLinkController {
 	 * 修改其他信息
 	 * 
 	 * @param request
-	 * @return typeval truename sex tel email qq
+	 * @return typeval truename sex tel email qq  username
 	 * 
 	 */
 	@ResponseBody
@@ -267,5 +285,27 @@ public class UserSetupLinkController {
 	
 	
 	
+	/**
+	 * 添加用户头像
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/headimg")
+	public Result saveshouq(
+			HttpServletRequest request,
+			HttpServletResponse response){
+		Result result=Result.failure();  
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		result=authService.saveHeadPicUrl(result, request, upi, response);
+		return result;
+	}
 
+	
+	
+	
 }

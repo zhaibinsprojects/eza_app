@@ -11,6 +11,13 @@
     <result column="sequence" property="sequence" jdbcType="INTEGER" />
     <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
   </resultMap>
+  
+  <resultMap id="ResultMapList" type="com.sanbang.vo.CurrencyClass" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="BIGINT" />
+  </resultMap>
+  
+  
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, code, content, name, sequence, parent_id
   </sql>
@@ -158,9 +165,19 @@
 	  	select * from ezs_dict where deleteStatus = '0'
   </select>
   
-	<select id="selectPropertyById"  resultType="java.lang.String">
-		select name from ezs_dict where id = #{propertyId}
-	</select>  
+  <!-- 查询颜色 -->
+  <select id="colorList" resultMap="ResultMapList">
+	  	select d.name,d.id from ezs_dict d where d.deleteStatus = '0' and d.code like '%EZS_COLOR_%'
+  </select>
+  
+  <!-- 查询形态 -->
+  <select id="formList" resultMap="ResultMapList">
+	  	select d.name,d.id from ezs_dict d where d.deleteStatus = '0' and d.code like '%EZS_FORM_%'
+  </select>
+  
+  <select id="selectPropertyById"  resultType="java.lang.String">
+	   select name from ezs_dict where id = #{propertyId}
+  </select>  
   
   <select id="selectAuditingById" resultType="java.lang.String">
   	select code from ezs_dict where id = #{auditingusertype_id}

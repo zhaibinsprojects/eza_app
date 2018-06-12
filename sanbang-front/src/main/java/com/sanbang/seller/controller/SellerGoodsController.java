@@ -30,6 +30,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsClass;
 
 @Controller
 @RequestMapping("/seller")
@@ -77,22 +78,29 @@ public class SellerGoodsController {
 		Long useId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		map = sellerGoodsService.queryGoodsListBySellerId(useId, status, currentPage);
+		try {
+			map = sellerGoodsService.queryGoodsListBySellerId(useId, status, currentPage);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("查询失败");
+		}
 		
 		list = (List<ezs_goods>)map.get("Obj");
 		
@@ -101,6 +109,8 @@ public class SellerGoodsController {
 		page = (Page) map.get("page");
 		result.setObj(list);
 		result.setMeta(page);
+		result.setSuccess(true);
+		result.setMsg("查询成功");
 		result.setErrorcode(errorCode);
 		
 		return result;
@@ -125,38 +135,50 @@ public class SellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
+		
+		
+		ezs_goods goods;
+		List<ezs_accessory> photoList;
+		List<ezs_accessory> cartographyList;
+		String color;
+		String form;
+		try {
+			goods = sellerGoodsService.queryGoodsInfoById(id);
+			
+			Long goodsId = goods.getId();
+			photoList = sellerGoodsService.queryPhotoById(goodsId);
+			cartographyList = sellerGoodsService.queryCartographyById(goodsId);
+			
+			
+			Long color_id = goods.getColor_id();
+			color = sellerGoodsService.getGoodsProperty(color_id);
+			Long form_id = goods.getForm_id();
+			form = sellerGoodsService.getGoodsProperty(form_id);
+			map.put("goods", goods);
+			map.put("photoList", photoList);
+			map.put("cartographyList", cartographyList);
+			
+			map.put("color", color);
+			map.put("form",form);
+			result.setObj(map);
+			result.setSuccess(true);
+			result.setMsg("查询成功");
+		} catch (Exception e) {
+			e.printStackTrace();
 			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("查询失败");
 		}
-		
-		
-		ezs_goods goods = sellerGoodsService.queryGoodsInfoById(id);
-		
-		Long goodsId = goods.getId();
-		List<ezs_accessory> photoList = sellerGoodsService.queryPhotoById(goodsId);
-		List<ezs_accessory> cartographyList = sellerGoodsService.queryCartographyById(goodsId);
-		
-		
-		Long color_id = goods.getColor_id();
-		String color = sellerGoodsService.getGoodsProperty(color_id);
-		Long form_id = goods.getForm_id();
-		String form = sellerGoodsService.getGoodsProperty(form_id);
-		
-		
-		
-		map.put("goods", goods);
-		map.put("photoList", photoList);
-		map.put("cartographyList", cartographyList);
-		
-		map.put("color", color);
-		map.put("form",form);
 		//		//颜色
 //		map.put("EZS_COLOR", dictService.getDictByParentId(DictionaryCate.EZS_COLOR));
 		
@@ -168,11 +190,6 @@ public class SellerGoodsController {
 //		map.put("area", areaService.getAreaParentList());
 //		//分类
 //		map.put("cata",cataService.getOnelevelList());
-		
-		
-		
-		result.setObj(map);
-		
 		return result;
 	}
 
@@ -194,16 +211,16 @@ public class SellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		
 		if(null!=upi.getEzs_userinfo()){
@@ -217,8 +234,9 @@ public class SellerGoodsController {
 			//地址
 			map.put("area", areaService.getAreaParentList());
 			//分类
-			map.put("cata",cataService.getOnelevelList());
+			map.put("cata",cataService.getFirstList());
  			result.setObj(map);
+ 			result.setSuccess(true);
 		};
 		
 		return result;
@@ -229,7 +247,7 @@ public class SellerGoodsController {
 	@ResponseBody
 	public Result getCataListByparid(HttpServletRequest request,long parentsId){
 		Result result=Result.success();
-		List<ezs_goods_class> list = cataService.getTwolevelList(parentsId);
+		List<GoodsClass> list = cataService.getChildList(parentsId);
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
 		result.setObj(list);
 		return result;
@@ -255,16 +273,16 @@ public class SellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		try {
 			result = sellerGoodsService.addGoodsInfo(result, upi, request,response);
@@ -296,16 +314,16 @@ public class SellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		result = sellerGoodsService.pullOffShelvesById(result, goodsId);
 		return result;
@@ -332,16 +350,16 @@ public class SellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		result = sellerGoodsService.updateGoodsInfoById(result, goodsId,upi, request,response);
 		
@@ -367,16 +385,16 @@ public class SellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-		ezs_store store = upi.getEzs_store();
-		Integer storeStatus = store.getStatus();
-		Long auditingusertype_id = store.getAuditingusertype_id();
-		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("用户未激活，没有卖家权限。");
-			return result;
-		}
+//		ezs_store store = upi.getEzs_store();
+//		Integer storeStatus = store.getStatus();
+//		Long auditingusertype_id = store.getAuditingusertype_id();
+//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+//			result.setSuccess(false);
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+//			result.setMsg("用户未激活，没有卖家权限。");
+//			return result;
+//		}
 		
 		
 		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	

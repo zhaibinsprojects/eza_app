@@ -729,7 +729,7 @@
     from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
   </select>
   
-  <!-- 查询同类货品 -->
+  <!-- 查询同类货品，han -->
   <select id="listForGoods" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
     <include refid="Base_Column_List" />
@@ -742,46 +742,6 @@
   <select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select g.* from ezs_goods g where EXISTS (select 1 from ezs_documentshare e where e.good_id = g.id and e.deleteStatus = '0' and e.house = '1' and e.user_id = #{userId})
   </select>
-  <!-- 自营，地区、品类筛选 -->
-  <!-- 关联表：ezs_area，area_id:商品库存区县 -->
-  <!-- 关联表：ezs_goods_class，goodClass_id:商品分类 -->
-  <!-- mybatis会自动封装到实体类中，忽略联合查询的多余字段 -->
-  <select id="listByAreaAndType" resultType="ezs_goods" parameterType="java.util.Map" >
-  
-    select * from ezs_goods g where 1 = 1
-    <if test="areaName !=null and areaName != '' ">
-        and g.area_id = #{area_id, jdbcType=BIGINT}
-    </if>
-    <if test="name !=null and name != '' ">
-        and g.goodClass_id = #{goodClass_id, jdbcType=BIGINT}
-    </if> 
-  </select>
-  <select id="listByOthers" resultType="ezs_goods" parameterType="map" >
-    select * from ezs_goods goods where 1 = 1 
-    <if test="color_id !=null and color_id != '' ">  
-        and goods.color_id = #{color_id, jdbcType=BIGINT}
-    </if>
-    <if test="form_id !=null and form_id != '' ">  
-        and goods.form_id = #{form_id, jdbcType=BIGINT}   
-    </if>
-    <if test="purpose !=null and purpose != '' ">  
-        and goods.purpose = #{purpose, jdbcType=VARCHAR}   
-    </if>
-    <if test="source !=null and source != '' ">  
-        and goods.source = #{source, jdbcType=VARCHAR}   
-    </if>
-    <if test="burning !=null and burning != '' ">  
-        and goods.burning = #{burning, jdbcType=VARCHAR}   
-    </if>
-    <if test="protection !=null and protection != '' ">  
-        and goods.protection = #{protection, jdbcType=BIT}
-    </if>
-    <!-- 下面的是重要参数信息，是一个范围值 -->
-    <if test="ash !=null and ash != '' "> 
-        and goods.ash &gt;= #{ash1, jdbcType=BIGINT} and goods.ash &lt;= #{ash2, jdbcType=BIGINT} 
-    </if>
-    order by lastModifyDate desc
-  </select>
 
   <!-- 根据id查询订单总数 -->
 	<select id="selectCount" resultType="java.lang.Integer">
@@ -789,7 +749,7 @@
 		ezs_goods
     	where user_id = #{sellerId}
 	</select>
-	<!-- 查询商品详情，颜色，形态...做关联 -->
+	<!-- 查询商品详情，颜色，形态...做关联，han -->
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
 		a.areaName areaName,gc.name goodClassName,ac.ext pictureSuffix,
@@ -802,4 +762,128 @@
 		left join ezs_accessory ac on g.goods_main_photo_id = ac.id 
     	where g.id = #{id, jdbcType=BIGINT}
 	</select>
+	
+	<!-- 多条件查询，han -->
+	<select id="queryGoodsList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select * from ezs_goods where 1 = 1 
+		<if test="area_id != null">
+	        and area_id = #{area_id,jdbcType=BIGINT} 
+	    </if>
+   		<if test="typeList.size>0">
+   			and goodClass_id IN 
+	        <foreach collection="typeList" item="goodsClass" open="(" separator="," close=")">
+	        	#{goodsClass}
+	        </foreach>
+        </if>
+        <if test="colorList.size>0">
+   			and color_id IN 
+	        <foreach collection="colorList" item="colorId" open="(" separator="," close=")">
+	        	#{colorId}
+	        </foreach>
+        </if>
+        <if test="formList.size>0">
+   			and form_id IN 
+	        <foreach collection="formList" item="formId" open="(" separator="," close=")">
+	        	#{formId}
+	        </foreach>
+        </if>
+        <if test="source != null">
+	        and source like '%${source,jdbcType=VARCHAR}%' 
+	    </if>
+        <if test="purpose != null">
+	        and purpose like '%${purpose,jdbcType=VARCHAR}%' 
+	    </if>
+	    <if test="protection != null">
+	        and protection like '%${protection,jdbcType=VARCHAR}%' 
+	    </if>
+	    <if test="name != null">
+	        and name like '%${name,jdbcType=VARCHAR}%' 
+	    </if>
+	    <!-- 重要参数的区间查询 -->
+	    <if test="density1 != null and density1 != ''">
+	        and density &gt;= #{density1,jdbcType=VARCHAR} 
+	    </if>
+	    <if test="density2 != null and density2 != ''">
+	        and density &lt;= #{density2,jdbcType=VARCHAR} 
+	    </if>
+	    
+	    <if test="cantilever1 != null">
+	        and cantilever &gt;= #{cantilever1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="cantilever2 != null">
+	        and cantilever &lt;= #{cantilever2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="freely1 != null">
+	        and freely &gt;= #{freely1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="freely2 != null">
+	        and freely &lt;= #{freely2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="lipolysis1 != null">
+	        and lipolysis &gt;= #{lipolysis1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="lipolysis2 != null">
+	        and lipolysis &lt;= #{lipolysis2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="ash1 != null">
+	        and ash &gt;= #{ash1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="ash2 != null">
+	        and ash &lt;= #{ash2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="water1 != null">
+	        and water &gt;= #{water1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="water2 != null">
+	        and water &lt;= #{water2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="tensile1 != null">
+	        and tensile &gt;= #{tensile1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="tensile2 != null">
+	        and tensile &lt;= #{tensile2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="crack1 != null">
+	        and crack &gt;= #{crack1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="crack2 != null">
+	        and crack &lt;= #{crack2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="bending1 != null">
+	        and bending &gt;= #{bending1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="bending2 != null">
+	        and bending &lt;= #{bending2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="flexural1 != null">
+	        and flexural &gt;= #{flexural1,jdbcType=VARCHAR}
+	    </if>
+	    <if test="flexural2 != null">
+	        and flexural &lt;= #{flexural2,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <!-- 默认：排序按照添加顺序降序排列，库存量：排序按照多到少排列 -->
+	    <if test="addTime != null and addTime == 0">
+	        ORDER BY addTime desc
+	    </if>
+	    <if test="addTime != null and addTime == 1">
+	        ORDER BY addTime asc
+	    </if>
+	    <if test="inventory != null and inventory == 0">
+	        ORDER BY inventory desc
+	    </if>
+	    <if test="inventory != null and inventory == 1">
+	        ORDER BY inventory asc
+	    </if>
+	    
+	</select>
+	
 </mapper>

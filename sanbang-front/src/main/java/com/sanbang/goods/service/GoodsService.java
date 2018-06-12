@@ -1,16 +1,18 @@
 package com.sanbang.goods.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
+import com.sanbang.bean.ezs_user;
+import com.sanbang.vo.CurrencyClass;
 
 /**
  * 货品相关业务处理
@@ -33,7 +35,7 @@ public interface GoodsService {
 	 * 加入采购单（添加购物车）
 	 * @param goodsCart 购物车实体
 	 */
-	public int insertCart(ezs_goodscart goodsCart);	
+	public int insertCart(ezs_goodscart goodsCartList);	
 	
 	/**
 	 * 更新收藏状态
@@ -47,7 +49,7 @@ public interface GoodsService {
 	 * @param share
 	 * @return
 	 */
-	public int insertCollect(Long id);
+	public int insertCollect(Long id,Long userId);
 	
 	/**
 	 * 加入订单
@@ -63,30 +65,50 @@ public interface GoodsService {
 	 */
 	public List<ezs_goods> listForGoods(Long goodClass_id);
 	
-	
 	/**
-	 * 自营，地区、品类筛选
-	 * @param area
-	 * @param type
-	 */
-	public List<ezs_goods> listByAreaAndType(Long area,Long type);
-	/**
-	 * 多条件查询
-	 * @param color	颜色
-	 * @param form 形态
-	 * @param purpose 用途
-	 * @param source 来源
-	 * @param burning 燃烧级别
-	 * @param isProtection 是否环保
+	 * @param areaId	地区id
+	 * @param typeIds	品类id字符数组
+	 * @param colorIds	颜色id字符数组
+	 * @param formIds	形态id字符数组
+	 * @param source	来源
+	 * @param purpose	用途
+	 * @param densitys	密度
+	 * @param cantilevers	悬臂梁缺口冲击
+	 * @param freelys	简支梁缺口冲击
+	 * @param lipolysises	熔融指数（溶脂）
+	 * @param ashs	灰分
+	 * @param waters	水分
+	 * @param tensiles	拉伸强度
+	 * @param cracks	断裂伸长率
+	 * @param bending	弯曲强度
+	 * @param flexural	弯曲模量
+	 * @param isProtection	是否环保
+	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	public List<ezs_goods> listByOthers(Map<String,Object> map);
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String addTime,String inventory,String[] colorIds,String[] formIds,
+			String source,String purpose,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
+			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
+			String isProtection,String goodsName);
 	
 	/**
-	 * 然后多条件查询所需的查询条件
+	 * 根据地区名称返回id
+	 * @param areaName
 	 * @return
 	 */
-	public List<ezs_dict> conditionList();
+	public List<Long> areaToId(String areaName);
+	
+	/**
+	 * 查询颜色
+	 * @return
+	 */
+	public List<CurrencyClass> colorList();
+	
+	/**
+	 * 查询形态
+	 * @return
+	 */
+	public List<CurrencyClass> formList();
 	
 	public ezs_documentshare getCollect(Long id);
 	
@@ -110,5 +132,12 @@ public interface GoodsService {
 	 * @return
 	 */
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
+	
+	
+	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
+	
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user);
+	
+	public Map<String, Object> getGoodCarFunc(ezs_user user);
 	
 }

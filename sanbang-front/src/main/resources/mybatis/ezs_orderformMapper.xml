@@ -49,7 +49,7 @@
     delete from ezs_orderform
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_orderform" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_orderform" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_orderform (id, addTime, deleteStatus, 
       adjust_price, all_price, cart_session_id, 
       end_price, estimateTime, finishtime, 
@@ -69,7 +69,7 @@
       #{user_id,jdbcType=BIGINT}, #{weAddress_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_orderform" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_orderform" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_orderform
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -373,6 +373,8 @@
 		<result column="price" property="price" jdbcType="DECIMAL" />
 		<result column="buyerid" property="buyerid" jdbcType="BIGINT" />
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="photoName" property="photoName" jdbcType="VARCHAR" />
 		 <!--物流信息-->
          <association property="ezs_logistics" column="order_no" select="com.sanbang.dao.ezs_logisticsMapper.selectByOrderNo">
          </association>
@@ -384,7 +386,7 @@
 	  SELECT
 	  		C.price,
 			C.good_no,
-			date_format(B.addTime, '%Y-%m-%d %H:%i:%S') addTime,
+			date_format(B.addTime, '%Y-%m-%d' ) addTime,
 			A.count,
 			C.`name`,
 			C.area_id,
@@ -403,13 +405,17 @@
 			B.deleteStatus,
 			D.areaName,
 			B.user_id  buyerid,
-      		C.user_id  sellerid
+      		C.user_id  sellerid,
+      		F.path,
+      		F.name photoName
+      		
 	FROM
 		ezs_goodscart A
 	LEFT JOIN ezs_orderform B ON A.of_id = B.id
 	LEFT JOIN ezs_goods C ON C.id = A.goods_id
 	LEFT JOIN ezs_area D ON D.id = B.address_id
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
+	LEFT JOIN ezs_accessory F ON C.goods_main_photo_id=F.id
 	WHERE
 		1 = 1
 
@@ -420,11 +426,11 @@
 	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,130,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
-		and B.order_type=#{pager.order_type}	
+		and B.order_type in (${pager.order_type})	
 		</if>
 		AND B.user_id=${pager.userid}
 		limit #{pager.secount},#{pager.pageSize}
-	</select>
+ 	</select>
 	
 	
 	
@@ -446,7 +452,7 @@
 	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,130,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
-		and B.order_type=#{pager.order_type}	
+		and B.order_type in (#{pager.order_type})	
 		</if>
 		AND B.user_id=${pager.userid}
 	</select>
@@ -497,6 +503,10 @@
 	<select id="selectByorderno" resultMap="BaseResultMap" >
     select * from ezs_orderform 
     where order_no = #{order_no}
+	</select>
+	
+	<select id="selectOrderNumByDate" resultType="java.lang.Integer">
+		select count(1) as num from ezs_orderform where to_days(addTime) = to_days(now())	
 	</select>
 	
 </mapper>

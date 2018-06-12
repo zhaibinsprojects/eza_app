@@ -2,24 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_userinfoMapper" >
   <resultMap id="BaseResultMap" type="ezs_userinfo" >
-    <id column="id" property="id" jdbcType="BIGINT" />
+   <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="emailStatus" property="emailStatus" jdbcType="INTEGER" />
     <result column="enable" property="enable" jdbcType="BIT" />
     <result column="entryTime" property="entryTime" jdbcType="TIMESTAMP" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="phoneStatus" property="phoneStatus" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="updateStatus" property="updateStatus" jdbcType="INTEGER" />
     <result column="depart_id" property="depart_id" jdbcType="BIGINT" />
     <result column="position_id" property="position_id" jdbcType="BIGINT" />
     <result column="sex_id" property="sex_id" jdbcType="BIGINT" />
-    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
-    <result column="tel" property="tel" jdbcType="VARCHAR" />
-    <result column="updateStatus" property="updateStatus" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, email, enable, entryTime, phone, status, depart_id, position_id, 
-    sex_id, QQ, updateStatus,tel
+     id, addTime, deleteStatus, QQ, email, emailStatus, enable, entryTime, phone, phoneStatus, 
+    status, tel, updateStatus, depart_id, position_id, sex_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -33,18 +35,20 @@
   </delete>
   <!--新增商铺-->
   <insert id="insert" parameterType="ezs_userinfo"  useGeneratedKeys="true" keyProperty="id">
-    insert into ezs_userinfo (id, addTime, deleteStatus, 
-      email, enable, entryTime, 
-      phone, status, depart_id, 
-      position_id, sex_id, QQ, 
-      updateStatus,tel)
-    values (null, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{email,jdbcType=VARCHAR}, #{enable,jdbcType=BIT}, #{entryTime,jdbcType=TIMESTAMP}, 
-      #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{depart_id,jdbcType=BIGINT}, 
-      #{position_id,jdbcType=BIGINT}, #{sex_id,jdbcType=BIGINT}, #{QQ,jdbcType=VARCHAR}, 
-      #{updateStatus,jdbcType=INTEGER},#{tel})
+   insert into ezs_userinfo (id, addTime, deleteStatus, 
+      QQ, email, emailStatus, 
+      enable, entryTime, phone, 
+      phoneStatus, status, tel, 
+      updateStatus, depart_id, position_id, 
+      sex_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{QQ,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{emailStatus,jdbcType=INTEGER}, 
+      #{enable,jdbcType=BIT}, #{entryTime,jdbcType=TIMESTAMP}, #{phone,jdbcType=VARCHAR}, 
+      #{phoneStatus,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{tel,jdbcType=VARCHAR}, 
+      #{updateStatus,jdbcType=INTEGER}, #{depart_id,jdbcType=BIGINT}, #{position_id,jdbcType=BIGINT}, 
+      #{sex_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_userinfo"  >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_userinfo" >
     insert into ezs_userinfo
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -56,8 +60,14 @@
       <if test="deleteStatus != null" >
         deleteStatus,
       </if>
+      <if test="QQ != null" >
+        QQ,
+      </if>
       <if test="email != null" >
         email,
+      </if>
+      <if test="emailStatus != null" >
+        emailStatus,
       </if>
       <if test="enable != null" >
         enable,
@@ -68,8 +78,17 @@
       <if test="phone != null" >
         phone,
       </if>
+      <if test="phoneStatus != null" >
+        phoneStatus,
+      </if>
       <if test="status != null" >
         status,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="updateStatus != null" >
+        updateStatus,
       </if>
       <if test="depart_id != null" >
         depart_id,
@@ -79,12 +98,6 @@
       </if>
       <if test="sex_id != null" >
         sex_id,
-      </if>
-      <if test="QQ != null" >
-        QQ,
-      </if>
-      <if test="updateStatus != null" >
-        updateStatus,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -97,8 +110,14 @@
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
       </if>
+      <if test="QQ != null" >
+        #{QQ,jdbcType=VARCHAR},
+      </if>
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailStatus != null" >
+        #{emailStatus,jdbcType=INTEGER},
       </if>
       <if test="enable != null" >
         #{enable,jdbcType=BIT},
@@ -109,8 +128,17 @@
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
       </if>
+      <if test="phoneStatus != null" >
+        #{phoneStatus,jdbcType=INTEGER},
+      </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStatus != null" >
+        #{updateStatus,jdbcType=INTEGER},
       </if>
       <if test="depart_id != null" >
         #{depart_id,jdbcType=BIGINT},
@@ -121,15 +149,9 @@
       <if test="sex_id != null" >
         #{sex_id,jdbcType=BIGINT},
       </if>
-      <if test="QQ != null" >
-        #{QQ,jdbcType=VARCHAR},
-      </if>
-      <if test="updateStatus != null" >
-        #{updateStatus,jdbcType=INTEGER},
-      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_userinfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_userinfo" >
     update ezs_userinfo
     <set >
       <if test="addTime != null" >
@@ -138,8 +160,14 @@
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
       </if>
+      <if test="QQ != null" >
+        QQ = #{QQ,jdbcType=VARCHAR},
+      </if>
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailStatus != null" >
+        emailStatus = #{emailStatus,jdbcType=INTEGER},
       </if>
       <if test="enable != null" >
         enable = #{enable,jdbcType=BIT},
@@ -150,8 +178,17 @@
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
       </if>
+      <if test="phoneStatus != null" >
+        phoneStatus = #{phoneStatus,jdbcType=INTEGER},
+      </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStatus != null" >
+        updateStatus = #{updateStatus,jdbcType=INTEGER},
       </if>
       <if test="depart_id != null" >
         depart_id = #{depart_id,jdbcType=BIGINT},
@@ -162,29 +199,26 @@
       <if test="sex_id != null" >
         sex_id = #{sex_id,jdbcType=BIGINT},
       </if>
-      <if test="QQ != null" >
-        QQ = #{QQ,jdbcType=VARCHAR},
-      </if>
-      <if test="updateStatus != null" >
-        updateStatus = #{updateStatus,jdbcType=INTEGER},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_userinfo" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_userinfo" >
     update ezs_userinfo
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      QQ = #{QQ,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
+      emailStatus = #{emailStatus,jdbcType=INTEGER},
       enable = #{enable,jdbcType=BIT},
       entryTime = #{entryTime,jdbcType=TIMESTAMP},
       phone = #{phone,jdbcType=VARCHAR},
+      phoneStatus = #{phoneStatus,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
+      tel = #{tel,jdbcType=VARCHAR},
+      updateStatus = #{updateStatus,jdbcType=INTEGER},
       depart_id = #{depart_id,jdbcType=BIGINT},
       position_id = #{position_id,jdbcType=BIGINT},
-      sex_id = #{sex_id,jdbcType=BIGINT},
-      QQ = #{QQ,jdbcType=VARCHAR},
-      updateStatus = #{updateStatus,jdbcType=INTEGER}
+      sex_id = #{sex_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   
