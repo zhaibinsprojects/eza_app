@@ -96,6 +96,16 @@ public class ezs_order_info implements Serializable {
 	
 	//是否评价 0 1
 	private long ispg;
+	//是否可退货
+	private  long ist;
+
+	public long getIst() {
+		return ist;
+	}
+
+	public void setIst(long ist) {
+		this.ist = ist;
+	}
 
 	public String getGood_no() {
 		return good_no;

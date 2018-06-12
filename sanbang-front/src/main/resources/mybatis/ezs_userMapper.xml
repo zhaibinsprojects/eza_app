@@ -269,26 +269,26 @@
   <!--查看用户是否已存在 phone-->
     <select id="getUserInfoByUserNameFromPhone" resultMap="userinfomap">	    
 	    SELECT
-			A.id,
-			A.addTime,
-			A.deleteStatus,
-			A.lastLoginDate,
-			A.lastLoginIp,
-			A.loginCount,
-			A.loginDate,
-			A.loginIp,
-			A.NAME,
-			A.PASSWORD,
-			A.trueName,
-			A.userRole,
-			A.parent_id,
-			A.store_id,
-			A.userInfo_id
-		FROM
-			ezs_user A
-		LEFT JOIN ezs_userinfo B ON A.userInfo_id = B.id
-		WHERE
-			b.phone =#{phone}
+	A.id,
+	A.addTime,
+	A.deleteStatus,
+	A.lastLoginDate,
+	A.lastLoginIp,
+	A.loginCount,
+	A.loginDate,
+	A.loginIp,
+	A.NAME,
+	A.PASSWORD,
+	A.trueName,
+	A.userRole,
+	A.parent_id,
+	A.store_id,
+	A.userInfo_id
+FROM
+	ezs_user A
+LEFT JOIN ezs_userinfo B ON A.userInfo_id = B.id
+WHERE
+	b.phone =#{phone}
      </select>
   
 </mapper>

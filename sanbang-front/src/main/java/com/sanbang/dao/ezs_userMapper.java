@@ -64,6 +64,8 @@ public interface ezs_userMapper {
 	int checkMobile(String mobile);
 
 	String getUserMessage(String username);
+	
+	public ezs_user getUserInfoByUserId(Long userId);
 
 	
 

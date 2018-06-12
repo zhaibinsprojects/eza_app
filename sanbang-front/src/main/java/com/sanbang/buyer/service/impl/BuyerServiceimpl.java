@@ -118,10 +118,12 @@ public class BuyerServiceimpl implements BuyerService {
 		long addressid = orderinfo.getWeAddress_id();
 		if(addressid>0){
 			ezs_address  address=addressService.findAddressById(addressid);
-			sb.append(getaddressinfo(address.getArea_id())).append("   ").append(address.getMobile());
+			sb.append(getaddressinfo(address.getArea_id()));
+			map.put("phone", address.getMobile());// 联系电话
+			map.put("rname", address.getTrueName());// 联系人姓名
 		}
 		
-
+		
 		map.put("address", sb.toString());// 收货地址
 		map.put("name", orderinfo.getName());//商品名称
 		map.put("price", orderinfo.getPrice());//单价
@@ -137,20 +139,20 @@ public class BuyerServiceimpl implements BuyerService {
 			//首付款
 			if(orderinfo.getOrder_status()==40){
 				map.put("paytype","首付款");
-				map.put("yunfei", orderinfo.getEzs_logistics().getTotal_price());
+				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getFirst_price());
 				map.put("pay_price", orderinfo.getFirst_price());
 			//尾款	
 			}else if(orderinfo.getOrder_status()==80){
 				map.put("paytype","尾款");
-				map.put("yunfei", orderinfo.getEzs_logistics().getTotal_price());
+				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getEnd_price());
 				map.put("pay_price", orderinfo.getEnd_price());
 			}
 		}else{
 			//首付款
 			map.put("paytype","全款");
-			map.put("yunfei", orderinfo.getEzs_logistics().getTotal_price());
+			map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 			map.put("small_price", orderinfo.getTotal_price());
 			map.put("pay_price", orderinfo.getTotal_price());
 		}

@@ -67,7 +67,7 @@ public class BuyerMenu {
 	 */
 	@RequestMapping("/orderinit")
 	@ResponseBody
-	public Result orderinit(@RequestParam(name = "order_status", defaultValue = "-1") int order_status,
+	public Result orderinit(@RequestParam(name = "order_status", defaultValue = "-1") String order_status,
 			@RequestParam(name = "order_type", defaultValue = "") String order_type,
 			@RequestParam(name = "pageNo", defaultValue = "1") int pageNow, HttpServletRequest request) {
 
