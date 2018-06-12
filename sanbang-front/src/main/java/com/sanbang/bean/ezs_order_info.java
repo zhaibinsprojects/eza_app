@@ -11,8 +11,7 @@ import java.math.BigDecimal;
  */
 public class ezs_order_info implements Serializable {
 
-
-	private static final long serialVersionUID = 5024357524788189125L;
+	private static final long serialVersionUID = 4369774318700408375L;
 
 	private String good_no;// 商品编号
 
@@ -86,12 +85,28 @@ public class ezs_order_info implements Serializable {
 
 	// 运费信息
 	private ezs_logistics ezs_logistics;
-	
-	//图片信息
+
+	// 图片信息
 	private String path;
-	
+
 	private String photoName;
+
+	// 收货地址
+	private Long weAddress_id;
 	
+	//是否评价 0 1
+	private long ispg;
+	//是否可退货
+	private  long ist;
+
+	public long getIst() {
+		return ist;
+	}
+
+	public void setIst(long ist) {
+		this.ist = ist;
+	}
+
 	public String getGood_no() {
 		return good_no;
 	}
@@ -307,8 +322,7 @@ public class ezs_order_info implements Serializable {
 	public void setEzs_logistics(ezs_logistics ezs_logistics) {
 		this.ezs_logistics = ezs_logistics;
 	}
-	
-	
+
 	public String getPath() {
 		return path;
 	}
@@ -316,13 +330,30 @@ public class ezs_order_info implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	public String getPhotoName() {
 		return photoName;
 	}
 
 	public void setPhotoName(String photoName) {
 		this.photoName = photoName;
+	}
+
+	public Long getWeAddress_id() {
+		return weAddress_id;
+	}
+
+	public void setWeAddress_id(Long weAddress_id) {
+		this.weAddress_id = weAddress_id;
+	}
+
+	
+	public long getIspg() {
+		return ispg;
+	}
+
+	public void setIspg(long ispg) {
+		this.ispg = ispg;
 	}
 
 	@Override
@@ -335,22 +366,8 @@ public class ezs_order_info implements Serializable {
 				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
 				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
 				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
-				+ ezs_logistics + ", path=" + path + ", photoName=" + photoName + "]";
+				+ ezs_logistics + ", path=" + path + ", photoName=" + photoName + ", weAddress_id=" + weAddress_id
+				+ "]";
 	}
-
-	
-
-//	@Override
-//	public String toString() {
-//		return "ezs_order_info [good_no=" + good_no + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
-//				+ ", price=" + price + ", count=" + count + ", order_no=" + order_no + ", name=" + name + ", addess="
-//				+ addess + ", areaName=" + areaName + ", area_id=" + area_id + ", order_type=" + order_type
-//				+ ", total_price=" + total_price + ", goods_amount=" + goods_amount + ", order_status=" + order_status
-//				+ ", first_price=" + first_price + ", end_price=" + end_price + ", all_price=" + all_price
-//				+ ", pact_status=" + pact_status + ", finishtime=" + finishtime + ", address_id=" + address_id
-//				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
-//				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
-//				+ ezs_logistics + "]";
-//	}
 
 }

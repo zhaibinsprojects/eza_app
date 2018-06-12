@@ -892,4 +892,98 @@
 	    limit #{pageStart},#{pageSize}
 	</select>
 	
+	<!--商品详情 app-->
+	<resultMap id="goodvomap" type="com.sanbang.vo.goods.GoodsVo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
+    <result column="addess" jdbcType="VARCHAR" property="addess" />
+    <result column="ash" jdbcType="VARCHAR" property="ash" />
+    <result column="bending" jdbcType="VARCHAR" property="bending" />
+    <result column="burning" jdbcType="VARCHAR" property="burning" />
+    <result column="cantilever" jdbcType="VARCHAR" property="cantilever" />
+    <result column="click" jdbcType="INTEGER" property="click" />
+    <result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+    <result column="collect" jdbcType="INTEGER" property="collect" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="crack" jdbcType="VARCHAR" property="crack" />
+    <result column="density" jdbcType="VARCHAR" property="density" />
+    <result column="flexural" jdbcType="VARCHAR" property="flexural" />
+    <result column="freely" jdbcType="VARCHAR" property="freely" />
+    <result column="good_no" jdbcType="VARCHAR" property="good_no" />
+    <result column="good_self" jdbcType="BIT" property="good_self" />
+    <result column="goods_salenum" jdbcType="INTEGER" property="goods_salenum" />
+    <result column="inventory" jdbcType="DOUBLE" property="inventory" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="lastModifyDate" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="lipolysis" jdbcType="VARCHAR" property="lipolysis" />
+    <result column="lockStatus" jdbcType="BIT" property="lockStatus" />
+    <result column="memberLook" jdbcType="BIT" property="memberLook" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="protection" jdbcType="BIT" property="protection" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+    <result column="recommend" jdbcType="BIT" property="recommend" />
+    <result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
+    <result column="seo_description" jdbcType="VARCHAR" property="seo_description" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="tensile" jdbcType="VARCHAR" property="tensile" />
+    <result column="validity" jdbcType="INTEGER" property="validity" />
+    <result column="water" jdbcType="VARCHAR" property="water" />
+    <result column="area_id" jdbcType="BIGINT" property="area_id" />
+    <result column="classOfFinish_id" jdbcType="BIGINT" property="classOfFinish_id" />
+    <result column="color_id" jdbcType="BIGINT" property="color_id" />
+    <result column="form_id" jdbcType="BIGINT" property="form_id" />
+    <result column="goodClass_id" jdbcType="BIGINT" property="goodClass_id" />
+    <result column="goods_main_photo_id" jdbcType="BIGINT" property="goods_main_photo_id" />
+    <result column="logistics_id" jdbcType="BIGINT" property="logistics_id" />
+    <result column="quality_id" jdbcType="BIGINT" property="quality_id" />
+    <result column="region_id" jdbcType="BIGINT" property="region_id" />
+    <result column="supply_id" jdbcType="BIGINT" property="supply_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+    <result column="util_id" jdbcType="BIGINT" property="util_id" />
+    <result column="addess2" jdbcType="VARCHAR" property="addess2" />
+     <!--单位-->
+     <association property="util" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+     
+      <!--物流方式-->
+     <association property="logistics" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--供应情况-->
+     <association property="supply" column="supply_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--颜色-->
+     <association property="color" column="color_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--形态-->
+     <association property="form" column="form_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--加工级别-->
+     <association property="classOfFinish" column="classOfFinish_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--地区-->
+     <association property="region" column="region_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     </association>
+      <!--主图片-->
+     <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoByPhoto_id">
+     </collection>
+      <!--商品图片-->
+     <collection property="goods_photos" column="id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoBygoods_id">
+     </collection>
+      <!--制作过程图片-->
+     <collection property="cartographys" column="id" select="com.sanbang.dao.ezs_goods_cartographyMapper.selectcartinfoBygoods_id">
+     </collection>
+  </resultMap>
+	
+	
+	<!--商品详情展示-->
+	<select id="getgoodsinfo" resultMap="goodvomap">
+	 select 
+    <include refid="Base_Column_List" />
+    from ezs_goods
+    where id = #{goodsid,jdbcType=BIGINT}	
+	</select>
+	
 </mapper>

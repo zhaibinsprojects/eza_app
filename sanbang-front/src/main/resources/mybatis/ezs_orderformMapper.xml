@@ -375,6 +375,10 @@
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
 		<result column="path" property="path" jdbcType="VARCHAR" />
 		<result column="photoName" property="photoName" jdbcType="VARCHAR" />
+		<result column="weAddress_id" property="weAddress_id" jdbcType="BIGINT" />
+		<result column="ispg" property="ispg" jdbcType="BIGINT" />
+		<result column="ist" property="ist" jdbcType="BIGINT" />
+		
 		 <!--物流信息-->
          <association property="ezs_logistics" column="order_no" select="com.sanbang.dao.ezs_logisticsMapper.selectByOrderNo">
          </association>
@@ -383,10 +387,10 @@
   
 	<!--订单列表-->
 	<select id="getOrderListByValue" resultMap="orderMap">
-	  SELECT
-	  		C.price,
+	 SELECT
+			C.price,
 			C.good_no,
-			date_format(B.addTime, '%Y-%m-%d' ) addTime,
+			date_format(B.addTime, '%Y-%m-%d') addTime,
 			A.count,
 			C.`name`,
 			C.area_id,
@@ -399,34 +403,48 @@
 			B.all_price,
 			B.pact_status,
 			B.address_id,
-			date_format(B.finishtime, '%Y-%m-%d %H:%i:%S') finishtime,
+			date_format(
+				B.finishtime,
+				'%Y-%m-%d %H:%i:%S'
+			) finishtime,
 			B.order_no,
 			B.order_type,
 			B.deleteStatus,
 			D.areaName,
-			B.user_id  buyerid,
-      		C.user_id  sellerid,
-      		F.path,
-      		F.name photoName
-      		
-	FROM
-		ezs_goodscart A
-	LEFT JOIN ezs_orderform B ON A.of_id = B.id
-	LEFT JOIN ezs_goods C ON C.id = A.goods_id
-	LEFT JOIN ezs_area D ON D.id = B.address_id
-	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	LEFT JOIN ezs_accessory F ON C.goods_main_photo_id=F.id
-	WHERE
+			B.user_id buyerid,
+			C.user_id sellerid,
+			F.path,
+			F. NAME photoName,
+			IF(ISNULL(G.id), 0, 1) ispg,
+			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
+			B.weAddress_id
+		FROM
+			ezs_goodscart A
+		LEFT JOIN ezs_orderform B ON A.of_id = B.id
+		LEFT JOIN ezs_goods C ON C.id = A.goods_id
+		LEFT JOIN ezs_area D ON D.id = B.address_id
+		LEFT JOIN ezs_storecart E ON E.id = A.sc_id
+		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
+		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+		where
 		1 = 1
 
-		<if test="pager.order_status!=null and pager.order_status!=-1">
-		 and  B.order_status=#{pager.order_status}	
+		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status!='200' and pager.order_status!='110'">
+		 and  B.order_status in (#{pager.order_status})	
 		</if>
-		<if test="pager.order_status!=null and pager.order_status==-1">
-	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,130,110)	
+		<if test="pager.order_status!=null and pager.order_status=='-1'">
+	    and	B.order_status in (10,20,30,40,50,60,70,80,90,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
 		and B.order_type in (${pager.order_type})	
+		</if>
+		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status=='200'">
+		and	B.order_status in (90,110)	
+		and IF(ISNULL(G.id), 0, 1) =0
+		</if>
+		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status=='110'">
+		and	B.order_status in (90,110)	
+		and IF(ISNULL(G.id), 0, 1) =1
 		</if>
 		AND B.user_id=${pager.userid}
 		limit #{pager.secount},#{pager.pageSize}
@@ -443,16 +461,26 @@
 	LEFT JOIN ezs_goods C ON C.id = A.goods_id
 	LEFT JOIN ezs_address D ON D.id = B.address_id
 	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	WHERE
+	LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+	where
 		1 = 1
-		<if test="pager.order_status!=null and pager.order_status!=-1">
-		 and  B.order_status=#{pager.order_status}	
+
+		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status!='200' and pager.order_status!='110'">
+		 and  B.order_status in (#{pager.order_status})
 		</if>
-		<if test="pager.order_status!=null and pager.order_status==-1">
-	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,130,110)	
+		<if test="pager.order_status!=null and pager.order_status=='-1'">
+	    and	B.order_status in (10,20,30,40,50,60,70,80,90,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
-		and B.order_type in (#{pager.order_type})	
+		and B.order_type in (${pager.order_type})	
+		</if>
+		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status=='200'">
+		and	B.order_status in (90,110)	
+		and IF(ISNULL(G.id), 0, 1) =0
+		</if>
+		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status=='110'">
+		and	B.order_status in (90,110)	
+		and IF(ISNULL(G.id), 0, 1) =1
 		</if>
 		AND B.user_id=${pager.userid}
 	</select>
@@ -483,20 +511,22 @@
 			B.deleteStatus,
 			D.areaName,
 			B.user_id  buyerid,
-      		C.user_id  sellerid
-	FROM
-		ezs_goodscart A
-	LEFT JOIN ezs_orderform B ON A.of_id = B.id
-	LEFT JOIN ezs_goods C ON C.id = A.goods_id
-	LEFT JOIN ezs_area D ON D.id = B.address_id
-	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	WHERE
-		1 = 1
+      		C.user_id  sellerid,
+			IF(ISNULL(G.id), 0, 1) ispg,
+			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
+			B.weAddress_id
+			FROM
+				ezs_goodscart A
+			LEFT JOIN ezs_orderform B ON A.of_id = B.id
+			LEFT JOIN ezs_goods C ON C.id = A.goods_id
+			LEFT JOIN ezs_area D ON D.id = B.address_id
+			LEFT JOIN ezs_storecart E ON E.id = A.sc_id
+			LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
+			LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+			where
+			1 = 1
 		and
-
 	 B.order_no=#{order_no}	
-	and
-	B.order_no=#{order_no}	
 	</select>
 	
 	<!--订单详细信息-->

@@ -220,8 +220,9 @@ public class AuthServiceImpl implements AuthService {
 			String address = request.getParameter("address");// 单位地址
 			String bank = request.getParameter("bank");// 开户行
 
-
-			if (null != upi.getEzs_bill()) {
+			ezs_bill ezs_bill=new com.sanbang.bean.ezs_bill();
+			if (null != upi.getEzs_bill()&&!Tools.isEmpty(upi.getEzs_bill().getBank())) {
+				upi.getEzs_bill().setId(upi.getEzs_bill().getId());
 				upi.getEzs_bill().setUser_id(upi.getId());
 				upi.getEzs_bill().setCompanyName(companyName);
 				upi.getEzs_bill().setDutyNo(dutyNo);
@@ -232,7 +233,6 @@ public class AuthServiceImpl implements AuthService {
 				upi.getEzs_store().setAccountType(1);
 				ezs_billMapper.updateByPrimaryKeySelective(upi.getEzs_bill());
 			} else {
-				ezs_bill ezs_bill=new com.sanbang.bean.ezs_bill();
 				ezs_bill.setUser_id(upi.getId());
 				ezs_bill.setCompanyName(companyName);
 				ezs_bill.setDutyNo(dutyNo);
@@ -249,6 +249,7 @@ public class AuthServiceImpl implements AuthService {
 			
 			//保存类型
 			upi.getEzs_store().setAccountType(1);
+			//upi.setEzs_bill(ezs_bill);
 			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
 			
 				boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
@@ -371,21 +372,14 @@ public class AuthServiceImpl implements AuthService {
 		if (result.getSuccess()) {
 			String companyName = request.getParameter("companyName");// 企业名称
 			String dutyNo = request.getParameter("dutyNo");// 税号
-			String number = request.getParameter("number ");// 开户账号
+			String number = request.getParameter("number");// 开户账号
 			String phone = request.getParameter("phone");// 电话号码
 			String address = request.getParameter("address");// 单位地址
 			String bank = request.getParameter("bank");// 开户行
 
-			ezs_user uupi = new ezs_user();
-			uupi.getEzs_bill().setCompanyName(companyName);
-			uupi.getEzs_bill().setDutyNo(dutyNo);
-			uupi.getEzs_bill().setNumber(number);
-			uupi.getEzs_bill().setPhone(phone);
-			uupi.getEzs_bill().setAddress(address);
-			uupi.getEzs_bill().setBank(bank);
-			uupi.getEzs_store().setAccountType(2);
-
-			if (null != upi.getEzs_bill()) {
+			ezs_bill ezs_bill=new com.sanbang.bean.ezs_bill();
+			if (null != upi.getEzs_bill()&&!Tools.isEmpty(upi.getEzs_bill().getBank())) {
+				upi.getEzs_bill().setId(upi.getEzs_bill().getId());
 				upi.getEzs_bill().setUser_id(upi.getId());
 				upi.getEzs_bill().setCompanyName(companyName);
 				upi.getEzs_bill().setDutyNo(dutyNo);
@@ -396,21 +390,23 @@ public class AuthServiceImpl implements AuthService {
 				upi.getEzs_store().setAccountType(1);
 				ezs_billMapper.updateByPrimaryKeySelective(upi.getEzs_bill());
 			} else {
-				ezs_bill ezs_bill=new com.sanbang.bean.ezs_bill();
 				ezs_bill.setUser_id(upi.getId());
 				ezs_bill.setCompanyName(companyName);
 				ezs_bill.setDutyNo(dutyNo);
 				ezs_bill.setNumber(number);
+				ezs_bill.setDeleteStatus(false);
 				ezs_bill.setPhone(phone);
 				ezs_bill.setAddress(address);
 				ezs_bill.setBank(bank);
 				ezs_bill.setUser_id(upi.getId());
 				ezs_bill.setAddTime(new Date());
 				ezs_billMapper.insertSelective(ezs_bill);
+				upi.setEzs_bill(ezs_bill);
 			}
-
+			
 			//保存类型
-			upi.getEzs_store().setAccountType(1);
+			upi.getEzs_store().setAccountType(2);
+			//upi.setEzs_bill(ezs_bill);
 			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
 			
 				boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
@@ -425,8 +421,7 @@ public class AuthServiceImpl implements AuthService {
 					result.setMsg("系统错误");
 					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 				}
-
-		}
+			}
 		return result;
 	}
 
@@ -436,9 +431,9 @@ public class AuthServiceImpl implements AuthService {
 
 		String companyName = request.getParameter("companyName");// 企业名称
 		String dutyNo = request.getParameter("dutyNo");// 税号
-		String number = request.getParameter("number ");// 开户账号
+		String number = request.getParameter("number");// 开户账号
 		String phone = request.getParameter("phone");// 电话号码
-		String address = request.getParameter("address ");// 单位地址
+		String address = request.getParameter("address");// 单位地址
 		String bank = request.getParameter("bank");// 开户行
 
 		if (Tools.isEmpty(companyName)) {
@@ -549,8 +544,8 @@ public class AuthServiceImpl implements AuthService {
 		store.setAccountType(upi.getEzs_store().getAccountType());
 		ezs_storeMapper.updateByPrimaryKeySelective(store);
 		if(result.getSuccess()){
-			upi=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
-			RedisUserSession.updateUserInfo(RedisUserSession.getUserKey(cookieuserkey, request), upi, Long.parseLong(redisuserkeyexpir));
+			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+			RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
 		}
 		return result;
 	}
@@ -600,10 +595,10 @@ public class AuthServiceImpl implements AuthService {
 		result.setMsg("提交成功");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		//个体信息
-		if(!Tools.isEmpty(upi.getEzs_store().getAccount())){
+		if(Tools.isEmpty(upi.getEzs_store().getAccount())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
-			result.setMsg("请完善企业基本信息");
+			result.setMsg("请完善个体基本信息");
 		}
 		//个体执照信息
 		if(null==upi.getEzs_bill()){
@@ -646,11 +641,12 @@ public class AuthServiceImpl implements AuthService {
 			int i=0;
 			for (AuthImageVo authImageVo : list) {
 				if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
-						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")){
+						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")
+						||authImageVo.getImgcode().equals("SHENGMING")){
 				i++;	
 				}
 			}
-			if(i==2){
+			if(i==3){
 				authupi.setAuthorfilestate(true);
 			}
 		}
@@ -771,7 +767,8 @@ public class AuthServiceImpl implements AuthService {
 			//保存类型
 			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
 			
-			upi.setAuthimg(List);;
+			List<AuthImageVo> imglist=ezs_accessoryMapper.getAuthImgListByStoreid(upi.getStore_id());
+			upi.setAuthimg(imglist);
 			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
 					Long.parseLong(redisuserkeyexpir));
 			if (res) {
@@ -790,6 +787,10 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("系统错误");
 		}
 		
+		List<AuthImageVo> list=ezs_accessoryMapper.getAuthImgListByStoreid(upi.getStore_id());
+		upi.setAuthimg(list);
+		RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+				Long.parseLong(redisuserkeyexpir));
 		return result;
 	}
 
@@ -860,6 +861,7 @@ public class AuthServiceImpl implements AuthService {
 			HttpServletResponse response) {
 		String shouquan=request.getParameter("shouquan");//,
 		String sfzfyj=request.getParameter("sfzfyj");//,
+		String shengming=request.getParameter("shengming");
 		if(Tools.isEmpty(shouquan)){
 			result.setSuccess(false);
 			result.setMsg("请上传授权文件");
@@ -868,14 +870,21 @@ public class AuthServiceImpl implements AuthService {
 		}
 		if(Tools.isEmpty(sfzfyj)){
 			result.setSuccess(false);
-			result.setMsg("被授权人身份证复印件");
+			result.setMsg("请上传被授权人身份证复印件");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			return result;
 		}
-		
+		if(Tools.isEmpty(shengming)){
+			result.setSuccess(false);
+			result.setMsg("请上传声明文件");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
 		List<AuthImageVo> List=new ArrayList<>();
 		try {
 			List=savepic(shouquan, List);
+			List=savepic(sfzfyj, List);
+			List=savepic(shengming, List);
 			if(null!=List&&List.size()>0){
 			//资质信息
 			for (AuthImageVo img : List) {
@@ -918,8 +927,8 @@ public class AuthServiceImpl implements AuthService {
 			}
 			//保存类型
 			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
-			
-			upi.setAuthimg(List);;
+			List<AuthImageVo> imglist=ezs_accessoryMapper.getAuthImgListByStoreid(upi.getStore_id());
+			upi.setAuthimg(imglist);
 			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
 					Long.parseLong(redisuserkeyexpir));
 			if (res) {
@@ -998,8 +1007,8 @@ public class AuthServiceImpl implements AuthService {
 			}
 			//保存类型
 			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
-			
-			upi.setAuthimg(List);;
+			List<AuthImageVo> imglist=ezs_accessoryMapper.getAuthImgListByStoreid(upi.getStore_id());
+			upi.setAuthimg(imglist);
 			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
 					Long.parseLong(redisuserkeyexpir));
 			if (res) {

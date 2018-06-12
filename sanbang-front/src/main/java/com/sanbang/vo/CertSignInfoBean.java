@@ -20,7 +20,7 @@ public class CertSignInfoBean implements Serializable{
 	
 	private String orderid;//银行预留手机号
     
-	private Date signTime;//返回状态信息
+	private String signTime;//返回状态信息
 
 	public String getSigncomFrout() {
 		return signcomFrout;
@@ -54,11 +54,11 @@ public class CertSignInfoBean implements Serializable{
 		this.orderid = orderid;
 	}
 
-	public Date getSignTime() {
+	public String getSignTime() {
 		return signTime;
 	}
 
-	public void setSignTime(Date signTime) {
+	public void setSignTime(String signTime) {
 		this.signTime = signTime;
 	}
 

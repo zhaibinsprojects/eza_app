@@ -50,7 +50,7 @@ public class APPSellerOrderContorller {
 	 */
 	@RequestMapping("/queryOrderList")
 	@ResponseBody
-	public Object queryOrderList(@RequestParam(name = "order_status", defaultValue = "-1") int order_status,
+	public Object queryOrderList(@RequestParam(name = "order_status", defaultValue = "-1") String order_status,
 			@RequestParam(name = "order_type", defaultValue = "") String order_type,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow, HttpServletRequest request) {
 

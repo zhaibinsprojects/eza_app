@@ -21,13 +21,13 @@
     delete from ezs_position
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_position" >
+  <insert id="insert" parameterType="ezs_position"   useGeneratedKeys="true" keyProperty="id">
     insert into ezs_position (id, addTime, deleteStatus, 
       name, store_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{name,jdbcType=VARCHAR}, #{store_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_position" >
+  <insert id="insertSelective" parameterType="ezs_position"   useGeneratedKeys="true" keyProperty="id">
     insert into ezs_position
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

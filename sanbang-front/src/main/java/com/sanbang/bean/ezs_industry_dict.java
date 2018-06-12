@@ -20,7 +20,9 @@ public class ezs_industry_dict {
     public void setDict_id(Long dict_id) {
         this.dict_id = dict_id;
     }
-
+	public ezs_industry_dict() {
+		// TODO Auto-generated constructor stub
+	}
 	public ezs_industry_dict(Long industry_id, Long dict_id) {
 		super();
 		this.industry_id = industry_id;

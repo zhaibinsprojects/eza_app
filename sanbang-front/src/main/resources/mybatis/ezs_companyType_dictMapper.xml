@@ -33,7 +33,7 @@
   	delete from  ezs_companytype_dict where cType_id=#{storeid}
   </delete>
   
-  <select id="getCompanyTypeByThisId" resultMap="BaseResultMap">
-  	select * from ezs_companytype_dict where  cType_id=${storeid}
+  <select id="getCompanyTypeByThisId" resultType="com.sanbang.bean.ezs_companyType_dict">
+  	select * from ezs_companytype_dict where  cType_id=#{storeid}
   </select>
 </mapper>

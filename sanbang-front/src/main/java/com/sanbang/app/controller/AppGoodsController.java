@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,6 +49,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.goods.GoodsVo;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -59,11 +61,31 @@ public class AppGoodsController {
 	
 	@Autowired
 	private GoodsService goodsService;
+	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
-
+	private static final String view="/goods/";
+	
+	
+	
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询货品详情
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@RequestMapping("/toGoodsShow")
+	public String toGoodsShow(HttpServletRequest request,Long id,Model model){
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+		model.addAttribute("good", goodsvo);
+		return view+"goodsshow";
+	}
+	
+	
 	/**
 	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
 	 * @param request

@@ -39,6 +39,8 @@ import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
+import com.sanbang.vo.goods.GoodsVo;
+import com.sanbang.utils.StockHelper;
 
 /**
  * 货品相关处理
@@ -770,6 +772,12 @@ public class GoodsServiceImpl implements GoodsService{
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	@Override
+	public GoodsVo getgoodsinfo(long goodsid) {
+		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid);
+		return goodsVo;
 	}
 	
 	
