@@ -12,11 +12,9 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -31,7 +30,6 @@ import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_cance;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_orderform;
-import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_payinfo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
@@ -52,7 +50,6 @@ import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
 import com.sanbang.utils.httpclient.HttpRequestParam;
 import com.sanbang.vo.CertSignInfoBean;
 import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.MapTools;
 import com.sanbang.vo.PagerOrder;
 import com.sanbang.vo.userauth.AuthImageVo;
 
@@ -95,6 +92,9 @@ public class BuyerServiceimpl implements BuyerService {
 	
 	@Autowired
 	private ezs_order_canceMapper ezs_order_canceMapper;
+	
+	@Autowired
+	private AddressService addressService;
 
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 
@@ -114,41 +114,45 @@ public class BuyerServiceimpl implements BuyerService {
 		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
 
 		// 收货地址处理
-		long addressid = orderinfo.getAddress_id();
-		ezs_address ezs_address = ezs_addressMapper.selectByPrimaryKey(addressid);
-		if (null != ezs_address) {
-			String str = getaddressinfo(ezs_address.getArea_id());
-			ezs_address.setArea_info(str += ezs_address.getArea_info());
+		StringBuffer sb=new StringBuffer();
+		long addressid = orderinfo.getWeAddress_id();
+		if(addressid>0){
+			ezs_address  address=addressService.findAddressById(addressid);
+			sb.append(getaddressinfo(address.getArea_id()));
+			map.put("phone", address.getMobile());// 联系电话
+			map.put("rname", address.getTrueName());// 联系人姓名
 		}
-
-		map.put("address", ezs_address);// 收货地址
+		
+		
+		map.put("address", sb.toString());// 收货地址
 		map.put("name", orderinfo.getName());//商品名称
 		map.put("price", orderinfo.getPrice());//单价
-		map.put("goods_amount", orderinfo.getGoods_amount());//数量
+		map.put("goods_amount", (orderinfo.getGoods_amount()==null)?0:orderinfo.getGoods_amount());//数量
 		map.put("order_no", orderinfo.getOrder_no());//订单号
 		map.put("addTime", orderinfo.getAddTime());//下单时间
 		map.put("order_status", orderinfo.getOrder_status());
 		map.put("total_price", orderinfo.getTotal_price());//总价 
+		map.put("ispg", orderinfo.getIspg());//是否为待评价 
 		
 		// 支付方式（0.全款，1：首款+尾款 ）
 		if(orderinfo.getPay_mode()==1){
 			//首付款
 			if(orderinfo.getOrder_status()==40){
 				map.put("paytype","首付款");
-				map.put("yunfei", orderinfo.getEzs_logistics().getTotal_price());
+				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getFirst_price());
 				map.put("pay_price", orderinfo.getFirst_price());
 			//尾款	
 			}else if(orderinfo.getOrder_status()==80){
 				map.put("paytype","尾款");
-				map.put("yunfei", orderinfo.getEzs_logistics().getTotal_price());
+				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getEnd_price());
 				map.put("pay_price", orderinfo.getEnd_price());
 			}
 		}else{
 			//首付款
 			map.put("paytype","全款");
-			map.put("yunfei", orderinfo.getEzs_logistics().getTotal_price());
+			map.put("yunfei", orderinfo.getEzs_logistics()==null?0:(orderinfo.getEzs_logistics().getTotal_price()==null?0:orderinfo.getEzs_logistics().getTotal_price()));
 			map.put("small_price", orderinfo.getTotal_price());
 			map.put("pay_price", orderinfo.getTotal_price());
 		}
@@ -156,6 +160,11 @@ public class BuyerServiceimpl implements BuyerService {
 		return map;
 	}
 
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
 	private String getaddressinfo(long areaid) {
 		StringBuilder sb = new StringBuilder();
 		String threeinfo = "";
@@ -166,17 +175,24 @@ public class BuyerServiceimpl implements BuyerService {
 			threeinfo = ezs_threeinfo.getAreaName();
 			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
 			if (ezs_twoinfo != null) {
-				twoinfo = ezs_twoinfo.getAreaName();
+				twoinfo =  ezs_twoinfo.getAreaName();
 				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
 				if (ezs_oneinfo != null) {
-					oneinfo = ezs_twoinfo.getAreaName();
+					oneinfo =  ezs_oneinfo.getAreaName();
 				}
 			}
 		}
-
-		sb.append(oneinfo);
-		sb.append(twoinfo);
-		sb.append(threeinfo);
+		
+		if(!Tools.isEmpty(threeinfo)){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
+		}
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
+		}
+		
 		return sb.toString();
 	}
 
@@ -418,7 +434,6 @@ public class BuyerServiceimpl implements BuyerService {
 		return map;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Result getContentList(String member, int temid, int currentPage,HttpServletRequest request) {
 		Result result=Result.failure();
@@ -459,7 +474,20 @@ public class BuyerServiceimpl implements BuyerService {
 				if(Tools.isEmpty(String.valueOf(res.getContent()))){
 					map.put("list", list);
 				}else{
-					map.put("list", res.getContent());
+					String content=String.valueOf(res.getContent());
+					content=content.substring(1, content.length()-1);
+					JSONArray array=JSONArray.fromObject(content);
+					for (Object object : array) {
+						JSONObject json=JSONObject.fromObject(object);
+						CertSignInfoBean sign=new CertSignInfoBean();
+						sign.setContentno(String.valueOf(json.get("contentno")));
+						sign.setOrderid(String.valueOf(json.get("orderid")));
+						sign.setSigncomFrout(String.valueOf(json.get("signcomFrout")));
+						sign.setSignTime(DateFormatUtils.format(new Date(Long.valueOf(String.valueOf(json.get("signTime")))),"yyyy-MM-dd HH:mm:ss"));
+						sign.setSignUrl(String.valueOf(json.get("signUrl")));
+						list.add(sign);
+					}
+					map.put("list", JsonUtils.jsonOut(list));
 				}
 				
 				result.setSuccess(true);

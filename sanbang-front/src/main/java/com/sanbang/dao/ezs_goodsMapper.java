@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.GoodsInfo;
+import com.sanbang.vo.goods.GoodsVo;
 
 @Repository
 public interface ezs_goodsMapper {
@@ -34,11 +35,6 @@ public interface ezs_goodsMapper {
 
 	int pullOffShelves(long goodsId);
 	
-	/**
-	 * 同类货品
-	 * @param id 级别id
-	 * @return
-	 */
 	List<ezs_goods> listForGoods(Long goodClass_id);
 
 	
@@ -46,11 +42,7 @@ public interface ezs_goodsMapper {
 	
 
     List<GoodsInfo> selectByGoodsName(String name);
-	/**
-	 * 其他筛选
-	 * @param map 查询条件
-	 * @return
-	 */
+	
 	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);	
 	
 	int selectCount(Long sellerId);
@@ -63,6 +55,15 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	List<ezs_goods> queryGoodsList(Map map);
+	
+	
+	/**
+	 * @author langjf
+	 * app订单详情  
+	 * @param goodsid
+	 * @return
+	 */
+	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid);
 	
 
 }

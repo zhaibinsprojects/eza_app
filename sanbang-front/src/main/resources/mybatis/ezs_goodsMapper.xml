@@ -787,18 +787,26 @@
 	        	#{formId}
 	        </foreach>
         </if>
-        <if test="source != null">
+        <if test="source != null and source != ''">
 	        and source like '%${source,jdbcType=VARCHAR}%' 
 	    </if>
-        <if test="purpose != null">
+        <if test="purpose != null and purpose != ''">
 	        and purpose like '%${purpose,jdbcType=VARCHAR}%' 
 	    </if>
-	    <if test="protection != null">
+	    <if test="protection != null and protection != ''">
 	        and protection like '%${protection,jdbcType=VARCHAR}%' 
 	    </if>
-	    <if test="name != null">
+	    <if test="name != null and name != ''">
 	        and name like '%${name,jdbcType=VARCHAR}%' 
 	    </if>
+	    <!-- 价格 -->
+	    <if test="price1 != null and price1 != ''">
+	        and price &gt;= #{price1,jdbcType=VARCHAR} 
+	    </if>
+	    <if test="price2 != null and price2 != ''">
+	        and price &lt;= #{price2,jdbcType=VARCHAR} 
+	    </if>
+	    
 	    <!-- 重要参数的区间查询 -->
 	    <if test="density1 != null and density1 != ''">
 	        and density &gt;= #{density1,jdbcType=VARCHAR} 
@@ -807,83 +815,175 @@
 	        and density &lt;= #{density2,jdbcType=VARCHAR} 
 	    </if>
 	    
-	    <if test="cantilever1 != null">
+	    <if test="cantilever1 != null and cantilever1 != ''">
 	        and cantilever &gt;= #{cantilever1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="cantilever2 != null">
+	    <if test="cantilever2 != null and cantilever2 != ''">
 	        and cantilever &lt;= #{cantilever2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="freely1 != null">
+	    <if test="freely1 != null and freely1 != ''">
 	        and freely &gt;= #{freely1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="freely2 != null">
+	    <if test="freely2 != null and freely2 != ''">
 	        and freely &lt;= #{freely2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="lipolysis1 != null">
+	    <if test="lipolysis1 != null and lipolysis1 != ''">
 	        and lipolysis &gt;= #{lipolysis1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="lipolysis2 != null">
+	    <if test="lipolysis2 != null and lipolysis2 != ''">
 	        and lipolysis &lt;= #{lipolysis2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="ash1 != null">
+	    <if test="ash1 != null and ash1 != ''">
 	        and ash &gt;= #{ash1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="ash2 != null">
+	    <if test="ash2 != null and ash2 != ''">
 	        and ash &lt;= #{ash2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="water1 != null">
+	    <if test="water1 != null and water1 != ''">
 	        and water &gt;= #{water1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="water2 != null">
+	    <if test="water2 != null and water2 != ''">
 	        and water &lt;= #{water2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="tensile1 != null">
+	    <if test="tensile1 != null and tensile1 != ''">
 	        and tensile &gt;= #{tensile1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="tensile2 != null">
+	    <if test="tensile2 != null and tensile2 != ''">
 	        and tensile &lt;= #{tensile2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="crack1 != null">
+	    <if test="crack1 != null and crack1 != ''">
 	        and crack &gt;= #{crack1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="crack2 != null">
+	    <if test="crack2 != null and crack2 != ''">
 	        and crack &lt;= #{crack2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="bending1 != null">
+	    <if test="bending1 != null and bending1 != ''">
 	        and bending &gt;= #{bending1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="bending2 != null">
+	    <if test="bending2 != null and bending2 != ''">
 	        and bending &lt;= #{bending2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <if test="flexural1 != null">
+	    <if test="flexural1 != null and flexural1 != ''">
 	        and flexural &gt;= #{flexural1,jdbcType=VARCHAR}
 	    </if>
-	    <if test="flexural2 != null">
+	    <if test="flexural2 != null and flexural2 != ''">
 	        and flexural &lt;= #{flexural2,jdbcType=VARCHAR}
 	    </if>
 	    
-	    <!-- 默认：排序按照添加顺序降序排列，库存量：排序按照多到少排列 -->
-	    <if test="addTime != null and addTime == 0">
+	    <!-- 默认：传值0，按照添加时间降序排列 -->
+	    <if test="defaultId != null and addTime == 0">
 	        ORDER BY addTime desc
 	    </if>
-	    <if test="addTime != null and addTime == 1">
-	        ORDER BY addTime asc
-	    </if>
+	    <!-- 库存量 -->
 	    <if test="inventory != null and inventory == 0">
 	        ORDER BY inventory desc
 	    </if>
 	    <if test="inventory != null and inventory == 1">
 	        ORDER BY inventory asc
 	    </if>
-	    
+	    limit #{pageStart},#{pageSize}
+	</select>
+	
+	<!--商品详情 app-->
+	<resultMap id="goodvomap" type="com.sanbang.vo.goods.GoodsVo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
+    <result column="addess" jdbcType="VARCHAR" property="addess" />
+    <result column="ash" jdbcType="VARCHAR" property="ash" />
+    <result column="bending" jdbcType="VARCHAR" property="bending" />
+    <result column="burning" jdbcType="VARCHAR" property="burning" />
+    <result column="cantilever" jdbcType="VARCHAR" property="cantilever" />
+    <result column="click" jdbcType="INTEGER" property="click" />
+    <result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+    <result column="collect" jdbcType="INTEGER" property="collect" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="crack" jdbcType="VARCHAR" property="crack" />
+    <result column="density" jdbcType="VARCHAR" property="density" />
+    <result column="flexural" jdbcType="VARCHAR" property="flexural" />
+    <result column="freely" jdbcType="VARCHAR" property="freely" />
+    <result column="good_no" jdbcType="VARCHAR" property="good_no" />
+    <result column="good_self" jdbcType="BIT" property="good_self" />
+    <result column="goods_salenum" jdbcType="INTEGER" property="goods_salenum" />
+    <result column="inventory" jdbcType="DOUBLE" property="inventory" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="lastModifyDate" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="lipolysis" jdbcType="VARCHAR" property="lipolysis" />
+    <result column="lockStatus" jdbcType="BIT" property="lockStatus" />
+    <result column="memberLook" jdbcType="BIT" property="memberLook" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="protection" jdbcType="BIT" property="protection" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+    <result column="recommend" jdbcType="BIT" property="recommend" />
+    <result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
+    <result column="seo_description" jdbcType="VARCHAR" property="seo_description" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="tensile" jdbcType="VARCHAR" property="tensile" />
+    <result column="validity" jdbcType="INTEGER" property="validity" />
+    <result column="water" jdbcType="VARCHAR" property="water" />
+    <result column="area_id" jdbcType="BIGINT" property="area_id" />
+    <result column="classOfFinish_id" jdbcType="BIGINT" property="classOfFinish_id" />
+    <result column="color_id" jdbcType="BIGINT" property="color_id" />
+    <result column="form_id" jdbcType="BIGINT" property="form_id" />
+    <result column="goodClass_id" jdbcType="BIGINT" property="goodClass_id" />
+    <result column="goods_main_photo_id" jdbcType="BIGINT" property="goods_main_photo_id" />
+    <result column="logistics_id" jdbcType="BIGINT" property="logistics_id" />
+    <result column="quality_id" jdbcType="BIGINT" property="quality_id" />
+    <result column="region_id" jdbcType="BIGINT" property="region_id" />
+    <result column="supply_id" jdbcType="BIGINT" property="supply_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+    <result column="util_id" jdbcType="BIGINT" property="util_id" />
+    <result column="addess2" jdbcType="VARCHAR" property="addess2" />
+     <!--单位-->
+     <association property="util" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+     
+      <!--物流方式-->
+     <association property="logistics" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--供应情况-->
+     <association property="supply" column="supply_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--颜色-->
+     <association property="color" column="color_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--形态-->
+     <association property="form" column="form_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--加工级别-->
+     <association property="classOfFinish" column="classOfFinish_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     </association>
+      <!--地区-->
+     <association property="region" column="region_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     </association>
+      <!--主图片-->
+     <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoByPhoto_id">
+     </collection>
+      <!--商品图片-->
+     <collection property="goods_photos" column="id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoBygoods_id">
+     </collection>
+      <!--制作过程图片-->
+     <collection property="cartographys" column="id" select="com.sanbang.dao.ezs_goods_cartographyMapper.selectcartinfoBygoods_id">
+     </collection>
+  </resultMap>
+	
+	
+	<!--商品详情展示-->
+	<select id="getgoodsinfo" resultMap="goodvomap">
+	 select 
+    <include refid="Base_Column_List" />
+    from ezs_goods
+    where id = #{goodsid,jdbcType=BIGINT}	
 	</select>
 	
 </mapper>

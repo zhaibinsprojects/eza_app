@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.redis.RedisConstants;
@@ -167,6 +168,14 @@ public class RedisUserSession {
 	@SuppressWarnings("unchecked")
 	public static boolean updateUserInfo(String userKey,ezs_user upi,Long timeOut){
 		RedisResult<String> rrt;
+		try {
+			if(null==upi.getEzs_bill()){
+				upi.setEzs_bill(new ezs_bill());
+			}
+		} catch (Exception e) {
+			ezs_bill ezs_bill=	new ezs_bill();
+			upi.setEzs_bill(ezs_bill);
+		}
 		rrt=(RedisResult<String>) RedisUtils.set(userKey,upi, timeOut);
 		if(rrt.getCode()==RedisConstants.SUCCESS){
 			log.debug("用户"+upi.getName()+"：userKey保存到redis成功执行");

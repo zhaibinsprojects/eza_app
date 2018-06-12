@@ -127,7 +127,7 @@ public class AppUserProController {
 	@RequestMapping(value = "/userLoginPhone")
 	@ResponseBody
 	public Result userLogin(
-			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "mobile", required = false) String userName,
 			@RequestParam(value = "passwd", required = false) String passwd,
 			@RequestParam(value = "code", required = false) String code,
 			HttpSession httpSession, HttpServletRequest request,

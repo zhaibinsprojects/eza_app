@@ -939,4 +939,9 @@ public class Tools {
 			}
 			return result;
 		}
+		
+		public static void main(String[] args) {
+			System.out.println(Tools.isNum(""));
+			
+		}
 }

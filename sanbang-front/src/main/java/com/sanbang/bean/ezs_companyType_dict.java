@@ -21,6 +21,9 @@ public class ezs_companyType_dict {
         this.dict_id = dict_id;
     }
 
+    public ezs_companyType_dict() {
+		// TODO Auto-generated constructor stub
+	}
 	public ezs_companyType_dict(Long cType_id, Long dict_id) {
 		super();
 		this.cType_id = cType_id;

@@ -176,7 +176,7 @@ public class DictionaryCate {
      */
     public final static int ACCOUNTTYPETWO = 2;
 
-    /*
+    /**
      * 身份证，正面
      */
     public static final String IDCARD_FONT = "IDCARD_FONT";
@@ -195,6 +195,11 @@ public class DictionaryCate {
      * 企业授权证书
      */
     public static final String LETTER_OF_AUTHORIZATION = "LETTER_OF_AUTHORIZATION";
+    
+    /**
+     * 声明
+     */
+    public static final String SHENGMING = "SHENGMING";
 
     /**
      * 其他资质

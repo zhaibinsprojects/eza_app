@@ -4,6 +4,9 @@
   <resultMap id="BaseResultMap" type="ezs_goods_photo" >
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="photo_id" property="photo_id" jdbcType="BIGINT" />
+    <!--图片记录-->
+     <collection property="photo" column="photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
+     </collection>
   </resultMap>
   <insert id="insert" parameterType="ezs_goods_photo" >
     insert into ezs_goods_photo (goods_id, photo_id)
@@ -37,4 +40,12 @@
   <delete id="deleteByGoodsId">
   	delete from ezs_goods_photo where goods_id =#{goodsId}
   </delete>
+  
+  <!--商品详情后加-->
+  <select id="selectPhotoinfoBygoods_id" resultMap="BaseResultMap">
+  	select * from ezs_goods_photo where  goods_id = #{goodsId}
+  </select>
+  <select id="selectPhotoinfoByPhoto_id" resultMap="BaseResultMap">
+  	select * from ezs_goods_photo where  photo_id = #{photoId}
+  </select>
 </mapper>

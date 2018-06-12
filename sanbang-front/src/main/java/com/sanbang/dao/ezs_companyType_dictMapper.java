@@ -2,6 +2,8 @@ package com.sanbang.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sanbang.bean.ezs_companyType_dict;
 
 public interface ezs_companyType_dictMapper {
@@ -11,5 +13,5 @@ public interface ezs_companyType_dictMapper {
     
     int delCompanyTypeByStoreId(long storeid);
     
-    List<ezs_companyType_dict> getCompanyTypeByThisId(long storeid);
+    List<ezs_companyType_dict> getCompanyTypeByThisId(@Param("storeid")long storeid);
 }

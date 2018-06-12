@@ -39,6 +39,8 @@ import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
+import com.sanbang.vo.goods.GoodsVo;
+import com.sanbang.utils.StockHelper;
 
 /**
  * 货品相关处理
@@ -159,9 +161,9 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String addTime,String inventory,String[] colorIds,String[] formIds,String source,
-			String purpose,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
-			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String isProtection,String goodsName){
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
+			String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
+			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,String isProtection,String goodsName,int pageStart){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -240,26 +242,40 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		String flexural1 = null;
 		String flexural2 = null;
-		if(null != flexurals){
+		if(null != flexurals && !"".equals(flexurals)){
 			flexural1 = flexurals[0];
 			flexural2 = flexurals[1];
 		}
+		String burning1 = null;
+		String burning2 = null;
+		if(null != burnings && !"".equals(burnings)){
+			burning1 = burnings[0];
+			burning2 = burnings[1];
+		}
 		map.put("area_id", area);
 		map.put("typeList", typeList);
-		if(null != addTime && "" != addTime){
-			map.put("addTime", addTime);	//默认
+		if(null != defaultId && !"".equals(defaultId)){
+			map.put("addTime", defaultId);	//默认
 		}
-		if(null != inventory && "" != inventory){
+		if(null != inventory && !"".equals(inventory)){
 			map.put("inventory", inventory);	//库存量
 		}
 		map.put("colorList", colorList);
 		map.put("formList", formList);
-		if(null != source && "" != source){
+		if(null != source && !"".equals(source)){
 			map.put("source", source);
 		}
-		if(null != purpose && "" != purpose){
+		if(null != purpose && !"".equals(purpose)){
 			map.put("purpose", purpose);
 		}
+		String price1 = null;
+		String price2 = null;
+		if(null != prices && !"".equals(prices)){
+			price1 = prices[0];
+			price2 = prices[1];
+		}
+		map.put("price1", price1);
+		map.put("price2", price2);
 		//重要参数（区间查询）
 		map.put("density1", density1);
 		map.put("density2", density2);
@@ -281,8 +297,12 @@ public class GoodsServiceImpl implements GoodsService{
 		map.put("bending2", bending2);
 		map.put("flexural1", flexural1);
 		map.put("flexural2", flexural2);
+		map.put("burning1", burning1);
+		map.put("burning2", burning2);
 		map.put("protection", isProtection);
 		map.put("name", goodsName);
+		map.put("pageStart", pageStart);	//起始页
+		map.put("pageSize", 10);	//每页10条
 		list = ezs_goodsMapper.queryGoodsList(map);
 		return list;
 	}
@@ -774,6 +794,12 @@ public class GoodsServiceImpl implements GoodsService{
 			log.error("FunctionName:"+"addStockRecord "+",context:"+"发生异常："+e.toString());
 			throw e;
 		}
+	}
+
+	@Override
+	public GoodsVo getgoodsinfo(long goodsid) {
+		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid);
+		return goodsVo;
 	}
 	
 	

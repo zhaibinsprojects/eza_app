@@ -126,7 +126,7 @@ public class UserProController {
 	@RequestMapping(value = "/userLoginPhone")
 	@ResponseBody
 	public Result userLogin(
-			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "mobile", required = false) String userName,
 			@RequestParam(value = "passwd", required = false) String passwd,
 			@RequestParam(value = "code", required = false) String code,
 			HttpSession httpSession, HttpServletRequest request,
@@ -134,6 +134,7 @@ public class UserProController {
 		Result result=Result.failure();
 		String userAgent = request.getHeader("User-Agent");
 		String ip = IpUtils.getIpAddr(request);
+		
 		result = userProService.login(userName, passwd, code, userAgent, ip,
 					request, response,1,"h5");
 		return result;

@@ -30,6 +30,14 @@ public interface ezs_userMapper {
 	 * @return
 	 */
 	List<ezs_user>     getUserInfoByUserNameFromBack(String username);
+	
+	
+	/**
+	 * 查询用户是否存在
+	 * @param username
+	 * @return
+	 */
+	List<ezs_user>     getUserInfoByUserNameFromPhone(String phone);
 	 /**
      * 用户信息
      * @param username
