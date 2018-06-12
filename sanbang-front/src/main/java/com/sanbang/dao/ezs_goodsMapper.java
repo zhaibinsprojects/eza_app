@@ -34,11 +34,6 @@ public interface ezs_goodsMapper {
 
 	int pullOffShelves(long goodsId);
 	
-	/**
-	 * 同类货品
-	 * @param id 级别id
-	 * @return
-	 */
 	List<ezs_goods> listForGoods(Long goodClass_id);
 
 	
@@ -46,11 +41,7 @@ public interface ezs_goodsMapper {
 	
 
     List<GoodsInfo> selectByGoodsName(String name);
-	/**
-	 * 其他筛选
-	 * @param map 查询条件
-	 * @return
-	 */
+	
 	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);	
 	
 	int selectCount(Long sellerId);
