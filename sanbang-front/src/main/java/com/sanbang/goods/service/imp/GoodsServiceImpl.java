@@ -187,73 +187,131 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		String density1 = null;	//值1
 		String density2 = null;	//值2
-		if(null != densitys){
-			density1 = densitys[0];
-			density2 = densitys[1];
+		if(null != densitys && !"".equals(densitys)){
+			if(densitys.length == 1){	//当只有最小值时候，前端传过来的是：值1,
+				density1 = densitys[0];
+			}else{
+				density1 = densitys[0];
+				density2 = densitys[1];
+			}
+			
 		}
 		String cantilever1 = null;
 		String cantilever2 = null;
-		if(null != cantilevers){
-			cantilever1 = cantilevers[0];
-			cantilever2 = cantilevers[1];
+		if(null != cantilevers && !"".equals(cantilevers)){
+			if(cantilevers.length == 1){
+				cantilever1 = cantilevers[0];
+			}else{
+				cantilever1 = cantilevers[0];
+				cantilever2 = cantilevers[1];
+			}
+			
 		}
 		String freely1 = null;
 		String freely2 = null;
-		if(null != freelys){
-			freely1 = freelys[0];
-			freely2 = freelys[1];
+		if(null != freelys && !"".equals(freelys)){
+			if(freelys.length == 1){
+				freely1 = freelys[0];
+			}else{
+				freely1 = freelys[0];
+				freely2 = freelys[1];
+			}
+			
 		}
 		String lipolysis1 = null;
 		String lipolysis2 = null;
-		if(null != lipolysises){
-			lipolysis1 = lipolysises[0];
-			lipolysis2 = lipolysises[1];
+		if(null != lipolysises && !"".equals(lipolysises)){
+			if(lipolysises.length == 1){
+				lipolysis1 = lipolysises[0];
+			}else{
+				lipolysis1 = lipolysises[0];
+				lipolysis2 = lipolysises[1];
+			}
+			
 		}
 		String ash1 = null;
 		String ash2 = null;
-		if(null != ashs){
-			ash1 = ashs[0];
-			ash2 = ashs[1];
+		if(null != ashs && !"".equals(ashs)){
+			if(ashs.length == 1){
+				ash1 = ashs[0];
+			}else{
+				ash1 = ashs[0];
+				ash2 = ashs[1];
+			}
+			
 		}
 		String water1 = null;
 		String water2 = null;
-		if(null != waters){
-			water1 = waters[0];
-			water2 = waters[1];
+		if(null != waters && !"".equals(waters)){
+			if(waters.length == 1){
+				water1 = waters[0];
+			}else{
+				water1 = waters[0];
+				water2 = waters[1];
+			}
+			
 		}
 		String tensile1 = null;
 		String tensile2 = null;
-		if(null != tensiles){
-			tensile1 = tensiles[0];
-			tensile2 = tensiles[1];
+		if(null != tensiles && !"".equals(tensiles)){
+			if(tensiles.length == 1){
+				tensile1 = tensiles[0];
+			}else{
+				tensile1 = tensiles[0];
+				tensile2 = tensiles[1];
+			}
+			
 		}
 		String crack1 = null;
 		String crack2 = null;
-		if(null != cracks){
-			crack1 = cracks[0];
-			crack2 = cracks[1];
+		if(null != cracks && !"".equals(cracks)){
+			if(cracks.length == 1){
+				crack1 = cracks[0];
+			}else{
+				crack1 = cracks[0];
+				crack2 = cracks[1];
+			}
 		}
 		String bending1 = null;
 		String bending2 = null;
-		if(null != bendings){
-			bending1 = bendings[0];
-			bending2 = bendings[1];
-			
+		if(null != bendings && !"".equals(bendings)){
+			if(bendings.length == 1){
+				bending1 = bendings[0];
+			}else{
+				bending1 = bendings[0];
+				bending2 = bendings[1];
+			}
 		}
 		String flexural1 = null;
 		String flexural2 = null;
 		if(null != flexurals && !"".equals(flexurals)){
-			flexural1 = flexurals[0];
-			flexural2 = flexurals[1];
+			if(flexurals.length == 1){
+				flexural1 = flexurals[0];
+			}else{
+				flexural1 = flexurals[0];
+				flexural2 = flexurals[1];
+			}
 		}
 		String burning1 = null;
 		String burning2 = null;
 		if(null != burnings && !"".equals(burnings)){
-			burning1 = burnings[0];
-			burning2 = burnings[1];
+			if(burnings.length == 1){
+				burning1 = burnings[0];
+			}else{
+				burning1 = burnings[0];
+				burning2 = burnings[1];
+			}
 		}
-		map.put("area_id", area);
-		map.put("typeList", typeList);
+		String price1 = null;
+		String price2 = null;
+		if(null != prices && !"".equals(prices)){
+			if(prices.length == 1){		//当只有最小值时候，前端传过来的是：值1,
+				price1 = prices[0];
+			}else{
+				price1 = prices[0];
+				price2 = prices[1];
+			}
+		}
 		if(null != defaultId && !"".equals(defaultId)){
 			map.put("addTime", defaultId);	//默认
 		}
@@ -268,12 +326,8 @@ public class GoodsServiceImpl implements GoodsService{
 		if(null != purpose && !"".equals(purpose)){
 			map.put("purpose", purpose);
 		}
-		String price1 = null;
-		String price2 = null;
-		if(null != prices && !"".equals(prices)){
-			price1 = prices[0];
-			price2 = prices[1];
-		}
+		map.put("area_id", area);
+		map.put("typeList", typeList);
 		map.put("price1", price1);
 		map.put("price2", price2);
 		//重要参数（区间查询）
