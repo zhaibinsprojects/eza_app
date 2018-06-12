@@ -576,6 +576,7 @@ public class GoodsServiceImpl implements GoodsService{
 					}
 					if(goodCountCheckFlag==true){
 						//锁库记录并更新本地库存
+						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存开始...");
 						addStockRecord(goodscart,tGood,orderFormNo);
 						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存成功...");
 					}
@@ -653,6 +654,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.error("ErrorMessage:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
@@ -666,14 +668,21 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	public String createOrderNo(ezs_goods goods) {
 		// TODO Auto-generated method stub
-		int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
-		Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
-		StringBuffer orderNo = new StringBuffer("EM");
-		orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
-		orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
-		orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
-		log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
-		return orderNo.toString();
+		try {
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
+			int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
+			Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
+			StringBuffer orderNo = new StringBuffer("EM");
+			orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
+			orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
+			orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号成功");
+			return orderNo.toString();
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("生成订单号失败："+e.toString());
+			throw e;
+		}
 	}
 	/**
 	 * 循环获取最高级商品种类ID
@@ -734,6 +743,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.error("FunctionName:"+"savePriceTrend "+",context:"+e.toString());
 			throw e;
 		}
         
@@ -745,27 +755,36 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @return
 	 */
 	public boolean checkGoods(ezs_goodscart goodCar,ezs_goods good) {
+		log.info("获取商品实际库存。。。。。");
 		double account = goodCar.getCount();// 购买量
 		boolean bool = false;
-		if (goodCar != null && good.getGood_self().equals(true)) {
-			// 自营平台锁库
-			// 获取真实库存
-			JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
-			if (object != null) {
-				// 现有真实库存量
-				double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
-				if (xaccount > account) {
+		try {
+			if (goodCar != null && good.getGood_self().equals(true)) {
+				// 自营平台锁库
+				// 获取真实库存
+				log.info("自营商品。。。。。。。。。");
+				JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
+				if (object != null) {
+					// 现有真实库存量
+					log.info("实际库存。。。。。。。。。");
+					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+					if (xaccount > account) {
+						// 加入锁库库存
+						bool = true;
+					}
+				}
+			} else {
+				// 供应商锁库
+				log.info("非自营商品，不访问U8库存信息。。。。。。。。。");
+				double xaccount = StorkNumber(good, good.getInventory());
+				if (xaccount >= account) {
 					// 加入锁库库存
 					bool = true;
 				}
 			}
-		} else {
-			// 供应商锁库
-			double xaccount = StorkNumber(good, good.getInventory());
-			if (xaccount >= account) {
-				// 加入锁库库存
-				bool = true;
-			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
 		}
 		return bool;
 	}
@@ -778,6 +797,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	public double StorkNumber(ezs_goods goods, double iQuantity) {
 		// 定义锁库量
+		log.info("本地库存信息更新。。。。。。。。。");
 		try {
 			//上次购买量
 			double stock_num = 0.0;
@@ -793,9 +813,10 @@ public class GoodsServiceImpl implements GoodsService{
 			return CommUtil.subtract(iQuantity, stock_num);
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("本地库存信息更新异常信息："+e.toString());
+			throw e;
 			//logger.debug("计算现有库存量异常");
 		}
-		return 0;
 	}
 	/**
 	 * 添加锁表记录
@@ -824,6 +845,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.error("FunctionName:"+"addStockRecord "+",context:"+"发生异常："+e.toString());
 			throw e;
 		}
 	}

@@ -245,6 +245,14 @@
          <collection property="authimg" column="store_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
   </resultMap>
   
+  	<!--查看用户是否已存在 别删除了-->
+     <select id="getUserInfoByUserId" resultMap="userinfomap" parameterType="java.lang.Long">
+     	select 
+    	<include refid="Base_Column_List" />
+	    from ezs_user
+	    where id = #{userId}
+     </select> 
+  
 	<!--查询用户手机号-->
 	<select  id="checkMobile" resultType="int">
   	 select 
@@ -260,12 +268,12 @@
 	    from ezs_user
 	    where name = #{username}
      </select> 
-  
+    
    <!--修改密码-->
     <update id="modifyPassword">
     	update ezs_user A set A.password=#{password} where A.name=#{userName}
     </update>
-  
+
   <!--查看用户是否已存在 phone-->
     <select id="getUserInfoByUserNameFromPhone" resultMap="userinfomap">	    
 	    SELECT
@@ -290,5 +298,4 @@ LEFT JOIN ezs_userinfo B ON A.userInfo_id = B.id
 WHERE
 	b.phone =#{phone}
      </select>
-  
 </mapper>
