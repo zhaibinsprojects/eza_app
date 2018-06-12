@@ -887,7 +887,7 @@
 	</select>
 	
 	<!--商品详情 app-->
-	 <resultMap id="goodvomap" type="com.sanbang.vo.goods.GoodsVo">
+	<resultMap id="goodvomap" type="com.sanbang.vo.goods.GoodsVo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
     <result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
@@ -946,29 +946,29 @@
      <association property="logistics" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
      </association>
       <!--供应情况-->
-     <association property="supply" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     <association property="supply" column="supply_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
      </association>
       <!--颜色-->
-     <association property="color" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     <association property="color" column="color_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
      </association>
       <!--形态-->
-     <association property="form" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     <association property="form" column="form_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
      </association>
       <!--加工级别-->
-     <association property="classOfFinish" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+     <association property="classOfFinish" column="classOfFinish_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
      </association>
       <!--地区-->
      <association property="region" column="region_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
      </association>
-     
-      <!--用户详情-->
-     <association property="user" column="userInfo_id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey">
-     </association>
-     
-      <!--用户详情-->
-     <association property="ezs_userinfo" column="userInfo_id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey">
-     </association>
-    
+      <!--主图片-->
+     <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoByPhoto_id">
+     </collection>
+      <!--商品图片-->
+     <collection property="goods_photos" column="id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoBygoods_id">
+     </collection>
+      <!--制作过程图片-->
+     <collection property="cartographys" column="id" select="com.sanbang.dao.ezs_goods_cartographyMapper.selectcartinfoBygoods_id">
+     </collection>
   </resultMap>
 	
 	
@@ -977,7 +977,7 @@
 	 select 
     <include refid="Base_Column_List" />
     from ezs_goods
-    where id = #{id,jdbcType=BIGINT}	
+    where id = #{goodsid,jdbcType=BIGINT}	
 	</select>
 	
 </mapper>

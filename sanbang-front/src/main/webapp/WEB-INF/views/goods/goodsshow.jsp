@@ -11,9 +11,9 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
 <link rel="stylesheet" href="resource/css/ezsm.css?v=1" />
-<script type="text/javascript" src="resource/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="resource/js/ezsm.js?v=1"></script>
-<script type="text/javascript" src="resource/js/highcharts.js"></script>
+ <script type="text/javascript" src="resource/js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="resource/js/jquery.touchSlider.js"></script>
+    <script type="text/javascript" src="resource/js/ezsm.js?v=1"></script>
 <script type="text/javascript">
 		$(function(){
 			$(".ezsm-normal-top-nav li").click(function(){
@@ -64,7 +64,7 @@
 		<div onclick="javascript:history.go(-1);"></div>
 		<div>
 			<ul class="ezsm-normal-top-nav">
-				<li onclick="window.location.href='M04-品类-货品详情.html'" class="ezsm-normal-top-nav-sel"><span>货品</span></li>
+				<li onclick="window.location.href='${baseurl}app/goods/toGoodsShow.htm?id=${good.id}'" class="ezsm-normal-top-nav-sel"><span>货品</span></li>
 				<li onclick="window.location.href='M04-品类-评价.html'"><span>评价</span></li></a>
 			</ul>
 		</div>
@@ -80,45 +80,52 @@
 			</div>
 			<div class="ezsm-shopdetail-picbox-main-image">
 				<ul> 
-					<li><img src="images/file_004.jpg"/></li>
-					<li><img src="images/file_004.jpg"/></li>
-					<li><img src="images/file_004.jpg"/></li>
+				 <c:forEach items="${good.mainphoto}" var="mainphoto">
+				 <li><img src="${mainphoto.photo.path}"/></li>
+				 </c:forEach>
+				 <c:forEach items="${good.goods_photos}" var="goods_photos">
+				 <li><img src="${goods_photos.photo.path}"/></li>
+				 </c:forEach>
 				</ul>
 				<a href="javascript:;" id="btn_prev"></a>
 				<a href="javascript:;" id="btn_next"></a>
 			</div>
 		</div>
 	</div>
-	<div class="ezsm-shopdetail-tit">白色xxxxxxxxxxx废塑料<div onclick="window.location.href='M06-品类-立即购买-试样.html'">试样</div></div>
+	<div class="ezsm-shopdetail-tit">${good.name}<div onclick="window.location.href='M06-品类-立即购买-试样.html'">试样</div></div>
 	<div class="ezsm-shopdetail-param">
 		<table cellspacing="0">
-			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥2000</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
-			<tr> <td>库存</td> <td>10000吨</td> </tr>
-			<tr> <td>库存地</td> <td>河北-保定-蠡县-1号库</td> </tr>
-			<tr> <td>颜色</td> <td>白色</td> </tr>
-			<tr> <td>形态</td> <td>片状</td> </tr>
-			<tr> <td>原料来源</td> <td></td> </tr>
-			<tr> <td>用途</td> <td></td> </tr>
-			<tr> <td>物流方式</td> <td>送货上门</td> </tr>
+			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.price}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
+			<tr> <td>库存</td> <td>${good.inventory}吨</td> </tr>
+			<tr> <td>库存地</td> <td>${good.addess}</td> </tr>
+			<tr> <td>颜色</td> <td>${good.color.name}</td> </tr>
+			<tr> <td>形态</td> <td>${good.form.name}</td> </tr>
+			<tr> <td>原料来源</td> <td>${good.source}</td> </tr>
+			<tr> <td>用途</td> <td>${good.purpose}</td> </tr>
+			<tr> <td>物流方式</td> <td>${good.logistics.name}</td> </tr>
 			<tr> <td>上批货品质检结果</td> <td><span class="colorgreen" style="margin-right:20px;">高分子质检报告</span><span class="colorgreen">含杂率质检报告</span></td> </tr>
-			<tr> <td>推荐度</td> <td><span class="colororange" style="font-size:15px;">96%</span></td> </tr>
+			<tr> <td>推荐度</td> <td><span class="colororange" style="font-size:15px;"> 98%</span></td> </tr>
 		</table>
 	</div>
 	<div class="blank10"></div>
 	<div class="ezsm-shopdetail-desctit">
 		描述说明<a href="M04-品类-描述说明.html"><div></div></a>
 	</div>
-	<div class="ezsm-shopdetail-desc">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+	<div class="ezsm-shopdetail-desc">${good.content}</div>
 	
 	<div class="blank70"></div>
 	<div class="ezsm-normal-bottombtnB-box">
 		<div class="ezsm-shopdetail-bottombtnbox">
-			<div onclick="window.location.href='M06-采购单.html'"><img src="img/micon_039.png"/><br>采购单</div>
-			<div><img src="img/micon_041.png"/><br>收藏</div>
-			<div><img src="img/micon_043.png"/><br>电话</div>
-			<div><img src="img/micon_045.png"/><br>客服</div>
+			<div onclick="window.location.href='M06-采购单.html'"><img src="resource/img/micon_039.png"/><br>采购单</div>
+			<div><img src="resource/img/micon_041.png"/><br>收藏</div>
+			<div><img src="resource/img/micon_043.png"/><br>电话</div>
+			<div><img src="resource/img/micon_045.png"/><br><a href="https://webchat.7moor.com/wapchat.html?accessId=77ad4f10-fa6f-11e7-b5e9-3f25a985904b&amp;fromUrl=&amp;urlTitle=" style="color: #333333;">客服</a></div>
 		</div>
+		<c:choose>
+		
+		</c:choose>
 		<div class="ezsm-normal-bottombtnB2">预约预定</div>
+		<div class="ezsm-normal-bottombtnB1">预约预定</div>
 	</div>
 </body>
 </html>

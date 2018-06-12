@@ -17,110 +17,152 @@ import com.sanbang.bean.ezs_user;
  * @author 刘恒福
  *
  */
-public class GoodsVo  {
+public class GoodsVo {
 
-    private Date lastModifyDate;// 商品更新日期，即最近一次修改商品信息的日期
+	private Long id;
 
-    private String good_no;// 商品编号
+	private Date lastModifyDate;// 商品更新日期，即最近一次修改商品信息的日期
 
-    private String name;// 商品名称
+	private String good_no;// 商品编号
 
-    private BigDecimal price;// 商品单价
+	private String name;// 商品名称
 
-    private int validity;// 商品有效期
+	private BigDecimal price;// 商品单价
 
-    private double inventory;// 商品库存量
+	private int validity;// 商品有效期
 
-    private ezs_area area;// 商品库存区县
+	private double inventory;// 商品库存量
 
-    private String addess;// 库存所在地
+	private ezs_area area;// 商品库存区县
 
-    private String seo_description;// 商品SEO描述
+	private String addess;// 库存所在地
 
-    private String keyword;// 商品搜索关键字
+	private String seo_description;// 商品SEO描述
 
-    private ezs_dict util;// 单位
+	private String keyword;// 商品搜索关键字
 
-    private boolean recommend;// 是否推荐
+	private ezs_dict util;// 单位
 
-    private Date recommend_time;// 推荐日期
+	private boolean recommend;// 是否推荐
 
-    private int click;// 商品点击量
+	private Date recommend_time;// 推荐日期
 
-    private int collect;// 商品收藏量
+	private int click;// 商品点击量
 
-    /**
-     * 1.下架 <br/>
-     * 2.正常上架<br/>
-     * 3.定制中的商品<br/>
-     * <br/>
-     * add By YanL
-     */
-    private int status;// 商品状态1.下架 2.正常上架
+	private int collect;// 商品收藏量
 
-    private ezs_dict logistics;// 物流方式
+	/**
+	 * 1.下架 <br/>
+	 * 2.正常上架<br/>
+	 * 3.定制中的商品<br/>
+	 * <br/>
+	 * add By YanL
+	 */
+	private int status;// 商品状态1.下架 2.正常上架
 
-    private ezs_dict supply;// 供应情况
+	private ezs_dict logistics;// 物流方式
 
-    private ezs_dict color;// 颜色
+	private ezs_dict supply;// 供应情况
 
-    private ezs_area region;// 地区
+	private ezs_dict color;// 颜色
 
-    private ezs_dict form;// 形态
+	private ezs_area region;// 地区
 
-    private ezs_dict classOfFinish;// 加工级别
+	private ezs_dict form;// 形态
 
-    private String source;// 来源
+	private ezs_dict classOfFinish;// 加工级别
 
-    private String purpose;// 商品用途
+	private String source;// 来源
 
-    private String density;// 商品密度
+	private String purpose;// 商品用途
 
-    private String cantilever;// 悬臂梁缺口冲击
+	private String density;// 商品密度
 
-    private String lipolysis;// 溶脂
+	private String cantilever;// 悬臂梁缺口冲击
 
-    private String ash;// 灰分
+	private String lipolysis;// 溶脂
 
-    private String freely;// j简支梁渠口冲击
+	private String ash;// 灰分
 
-    private String water;// 水分
+	private String freely;// j简支梁渠口冲击
 
-    private String tensile;// 拉伸强度
+	private String water;// 水分
 
-    private String crack;// 断裂伸长率
+	private String tensile;// 拉伸强度
 
-    private String bending;// 弯曲强度
+	private String crack;// 断裂伸长率
 
-    private String flexural;// 弯曲模量
+	private String bending;// 弯曲强度
 
-    private String burning;// 燃烧等级
+	private String flexural;// 弯曲模量
 
-    private boolean protection;// 是否环保
+	private String burning;// 燃烧等级
 
-    private String content;// 描述
+	private boolean protection;// 是否环保
 
-    private double cncl_num;// 样品库存
+	private String content;// 描述
 
-    private ezs_user user;// 发布人
+	private double cncl_num;// 样品库存
 
-    private ezs_goods_class goodClass;// 商品分类
+	private ezs_user user;// 发布人
 
-    private List<ezs_quality> quality;// 质检
+	private ezs_goods_class goodClass;// 商品分类
 
-    private boolean memberLook;// 是否会员查看
+	private List<ezs_quality> quality;// 质检
 
-    private int goods_salenum;// 销量数
+	private boolean memberLook;// 是否会员查看
 
-    private boolean good_self;// 是否自营商品
+	private int goods_salenum;// 销量数
 
-    private boolean lockStatus;// 锁定：true b'1'，解锁:false b'0000'标识
+	private boolean good_self;// 是否自营商品
 
-    //商品图片
-    private List<ezs_accessory> goods_photos;
-    
-    //制作过程
-    private List<ezs_accessory> cartographys ;
+	private boolean lockStatus;// 锁定：true b'1'，解锁:false b'0000'标识
+
+	private Long goods_main_photo_id;
+
+	// 商品图片
+	private List<ezs_accessory> mainphoto;
+
+	// 商品图片
+	private List<ezs_accessory> goods_photos;
+
+	// 制作过程
+	private List<ezs_accessory> cartographys;
+	private Date addTime;
+
+	private Boolean deleteStatus;
+
+	private Long area_id;
+
+	private Long classOfFinish_id;
+
+	private Long color_id;
+
+	private Long form_id;
+
+	private Long goodClass_id;
+
+	private Long logistics_id;
+
+	private Long quality_id;
+
+	private Long region_id;
+
+	private Long supply_id;
+
+	private Long user_id;
+
+	private Long util_id;
+
+	private String addess2;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Date getLastModifyDate() {
 		return lastModifyDate;
@@ -482,6 +524,22 @@ public class GoodsVo  {
 		this.lockStatus = lockStatus;
 	}
 
+	public Long getGoods_main_photo_id() {
+		return goods_main_photo_id;
+	}
+
+	public void setGoods_main_photo_id(Long goods_main_photo_id) {
+		this.goods_main_photo_id = goods_main_photo_id;
+	}
+
+	public List<ezs_accessory> getMainphoto() {
+		return mainphoto;
+	}
+
+	public void setMainphoto(List<ezs_accessory> mainphoto) {
+		this.mainphoto = mainphoto;
+	}
+
 	public List<ezs_accessory> getGoods_photos() {
 		return goods_photos;
 	}
@@ -497,8 +555,121 @@ public class GoodsVo  {
 	public void setCartographys(List<ezs_accessory> cartographys) {
 		this.cartographys = cartographys;
 	}
-    
 
-   
-  
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public Boolean getDeleteStatus() {
+		return deleteStatus;
+	}
+
+	public void setDeleteStatus(Boolean deleteStatus) {
+		this.deleteStatus = deleteStatus;
+	}
+
+	public Long getArea_id() {
+		return area_id;
+	}
+
+	public void setArea_id(Long area_id) {
+		this.area_id = area_id;
+	}
+
+	public Long getClassOfFinish_id() {
+		return classOfFinish_id;
+	}
+
+	public void setClassOfFinish_id(Long classOfFinish_id) {
+		this.classOfFinish_id = classOfFinish_id;
+	}
+
+	public Long getColor_id() {
+		return color_id;
+	}
+
+	public void setColor_id(Long color_id) {
+		this.color_id = color_id;
+	}
+
+	public Long getForm_id() {
+		return form_id;
+	}
+
+	public void setForm_id(Long form_id) {
+		this.form_id = form_id;
+	}
+
+	public Long getGoodClass_id() {
+		return goodClass_id;
+	}
+
+	public void setGoodClass_id(Long goodClass_id) {
+		this.goodClass_id = goodClass_id;
+	}
+
+	public Long getLogistics_id() {
+		return logistics_id;
+	}
+
+	public void setLogistics_id(Long logistics_id) {
+		this.logistics_id = logistics_id;
+	}
+
+	public Long getQuality_id() {
+		return quality_id;
+	}
+
+	public void setQuality_id(Long quality_id) {
+		this.quality_id = quality_id;
+	}
+
+	public Long getRegion_id() {
+		return region_id;
+	}
+
+	public void setRegion_id(Long region_id) {
+		this.region_id = region_id;
+	}
+
+	public Long getSupply_id() {
+		return supply_id;
+	}
+
+	public void setSupply_id(Long supply_id) {
+		this.supply_id = supply_id;
+	}
+
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	public Long getUtil_id() {
+		return util_id;
+	}
+
+	public void setUtil_id(Long util_id) {
+		this.util_id = util_id;
+	}
+
+	public String getAddess2() {
+		return addess2;
+	}
+
+	public void setAddess2(String addess2) {
+		this.addess2 = addess2;
+	}
+
+	public GoodsVo() {
+		// TODO Auto-generated constructor stub
+	}
+
 }

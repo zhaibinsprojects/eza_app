@@ -127,7 +127,7 @@ public class BuyerServiceimpl implements BuyerService {
 		map.put("address", sb.toString());// 收货地址
 		map.put("name", orderinfo.getName());//商品名称
 		map.put("price", orderinfo.getPrice());//单价
-		map.put("goods_amount", orderinfo.getGoods_amount());//数量
+		map.put("goods_amount", (orderinfo.getGoods_amount()==null)?0:orderinfo.getGoods_amount());//数量
 		map.put("order_no", orderinfo.getOrder_no());//订单号
 		map.put("addTime", orderinfo.getAddTime());//下单时间
 		map.put("order_status", orderinfo.getOrder_status());
@@ -152,7 +152,7 @@ public class BuyerServiceimpl implements BuyerService {
 		}else{
 			//首付款
 			map.put("paytype","全款");
-			map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
+			map.put("yunfei", orderinfo.getEzs_logistics()==null?0:(orderinfo.getEzs_logistics().getTotal_price()==null?0:orderinfo.getEzs_logistics().getTotal_price()));
 			map.put("small_price", orderinfo.getTotal_price());
 			map.put("pay_price", orderinfo.getTotal_price());
 		}

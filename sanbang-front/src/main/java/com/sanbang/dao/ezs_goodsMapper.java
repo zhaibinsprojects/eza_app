@@ -72,7 +72,7 @@ public interface ezs_goodsMapper {
 	 * @param goodsid
 	 * @return
 	 */
-	GoodsVo  getgoodsinfo(long goodsid);
+	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid);
 	
 
 }

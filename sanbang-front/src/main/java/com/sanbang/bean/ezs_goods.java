@@ -503,4 +503,5 @@ public class ezs_goods {
     public void setAddess2(String addess2) {
         this.addess2 = addess2 == null ? null : addess2.trim();
     }
+    
 }

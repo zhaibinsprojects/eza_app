@@ -6,6 +6,8 @@ public class ezs_goods_photo {
 
     private Long photo_id;
     
+    private ezs_accessory photo;
+    
 
     public Long getGoods_id() {
         return goods_id;
@@ -23,7 +25,13 @@ public class ezs_goods_photo {
         this.photo_id = photo_id;
     }
 
-	
-	
+	public ezs_accessory getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(ezs_accessory photo) {
+		this.photo = photo;
+	}
+
     
 }
