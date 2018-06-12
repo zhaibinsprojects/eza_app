@@ -35,14 +35,6 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 		Result result = Result.success();
 		
 		try {
-			//校验用户是否登录
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				result.setSuccess(false);
-				return result;
-			}
 			
 			ezs_set_return_orderMapper.insertSelective(returnOrder);
 		} catch (Exception e) {
