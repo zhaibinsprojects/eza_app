@@ -542,7 +542,9 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
+			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
+			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.getMessage());
+			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 			//事务控制须抛出异常
