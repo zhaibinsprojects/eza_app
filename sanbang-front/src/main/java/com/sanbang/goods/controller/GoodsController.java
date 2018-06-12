@@ -20,13 +20,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.alibaba.fastjson.JSONArray;
 import com.itextpdf.text.pdf.BaseFont;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
@@ -39,9 +37,9 @@ import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
+import com.sanbang.goods.service.imp.GoodsServiceImpl;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
-import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
@@ -54,15 +52,14 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
+	// 日志
+	private static Logger log = Logger.getLogger(GoodsServiceImpl.class);
 	
 	@Autowired
 	private GoodsService goodsService;
 	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
-	// 日志
-	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
-
 	/**
 	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
 	 * @param request
@@ -592,35 +589,59 @@ public class GoodsController {
 	public Result insertinvoice(HttpServletRequest request,ezs_invoice invoice) {
 		Result result = new Result();
 		//关于发票图片的处理暂时不确定，所以暂时，暂时，先放这儿
-		
-		
 		return result;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	/**
-	 * 添加购物车
-	 * @author zhaibin
-	 * @param request
-	 * @param response
-	 * @param goodCarList(List<ezs_goodscart>类型的JSON串)
-	 * @return
-	 */
-	@RequestMapping(value="/addToGoodCar",method=RequestMethod.POST)
-	@ResponseBody
-	public Object addToGoodCar(HttpServletRequest request,HttpServletResponse response,String goodCarList){
-		return null;
-	}
-	/**
-	 * 直接下订单（添加订单）
+	 * 样品下订单
 	 * @author zhaibin
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
 	 * @return
 	 */
-	@RequestMapping("/addToOrderForm")
+	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object directAddToOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
-		return null;
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		try {
+			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
+			JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE" );
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 处理异常...");
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+		}
+		return rs;
 	}
 	/**
 	 * 添加购物车
@@ -675,6 +696,7 @@ public class GoodsController {
 	@RequestMapping("/addToSelfOrderForm")
 	@ResponseBody
 	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+		log.info("添加订单beginning...........................");
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -687,7 +709,7 @@ public class GoodsController {
 		try {
 			JSONObject jsonObject = JSONObject.fromObject(orderForm);
 			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS" );
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -711,6 +733,7 @@ public class GoodsController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodCar")
 	@ResponseBody
 	public Object getGoodCar(HttpServletRequest request,HttpServletResponse response){
