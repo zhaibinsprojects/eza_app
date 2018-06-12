@@ -508,15 +508,6 @@ public class AppGoodsController {
 		
 	}
 	
-//	public static void main(String[] args) {
-//		GoodsController  aa=new GoodsController();
-//		Map<String, Object> map=new HashMap<>();
-//		map.put("orderAmount", "aaa");
-//		map.put("AcapAmount", "bb");
-//		aa.exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
-//	}
-	
-	
 	/**
 	 * 上传发票图片，返回url
 	 * @param request
@@ -633,7 +624,7 @@ public class AppGoodsController {
 		try {
 			JSONObject jsonObject = JSONObject.fromObject(orderForm);
 			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user,"GOODS");
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -657,6 +648,7 @@ public class AppGoodsController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodCar")
 	@ResponseBody
 	public Object getGoodCar(HttpServletRequest request,HttpServletResponse response){

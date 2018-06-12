@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -20,6 +21,7 @@ import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_price_trend;
+import com.sanbang.bean.ezs_stock;
 import com.sanbang.bean.ezs_storecart;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_areaMapper;
@@ -35,6 +37,7 @@ import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
+import com.sanbang.utils.StockHelper;
 
 /**
  * 货品相关处理
@@ -374,6 +377,13 @@ public class GoodsServiceImpl implements GoodsService{
 				goodsCart.setAddTime(new Date());
 				goodsCart.setDeleteStatus(false);
 				goodsCart.setPrice(good.getPrice());
+				//判断购物车类型 0-自营商品 ， 1-非自营商品
+				//不在此处设置购物车类型，生成订单时设置
+				/*if("0".equals(good.getGood_self())){
+					goodsCart.setCart_type(CommUtil.order_self_good);
+				}else{
+					goodsCart.setCart_type(CommUtil.match_goods);
+				}*/
 				if(storeCart.getTotal_price()==null)
 					totalMoney = goodsCart.getCount()*good.getPrice().doubleValue(); 
 				else
@@ -400,16 +410,24 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 生成订单
 	 * @author zhaibin
+	 * @param orderForm 订单对象
+	 * @param orderType 订单类型 ： GOODS 商品订单；SAMPLE 样品订单
+	 * @throws Exception 
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public synchronized Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user) {
+	public synchronized Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		double totalMoney = 0.0;
 		//生成订单号码
 		String orderFormNo = null;
 		//createOrderNo();
+		if(orderType==null){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "订单类型不能为null");
+			return mmp;
+		}
 		try {
 			//orderForm.setOrder_no(orderFormNo);
 			orderForm.setAddTime(new Date());
@@ -443,18 +461,46 @@ public class GoodsServiceImpl implements GoodsService{
 				ezs_goods goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCarList.get(0).getGoods_id());
 				orderFormNo = createOrderNo(goodTemp);
 				for (ezs_goodscart goodscart : goodsCarList) {
-					//goodscart.setDeleteStatus(true);
-					goodscart.setOf_id(orderForm.getId());
-					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
 					//更新库存
 					ezs_goods tGood = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
-					tGood.setInventory(tGood.getInventory()-goodscart.getCount());
-					this.ezs_goodsMapper.updateByPrimaryKey(tGood);
+					//tGood.setInventory(tGood.getInventory()-goodscart.getCount());
+					//this.ezs_goodsMapper.updateByPrimaryKey(tGood);
+					
+					//同步U8库存
+					boolean goodCountCheckFlag = false;
+					try {
+						goodCountCheckFlag = checkGoods(goodscart,tGood);
+					} catch (Exception e) {
+						// TODO: handle exception
+						System.out.println("同步库存异常");
+						e.printStackTrace();
+						throw e;
+					}
+					if(goodCountCheckFlag==true){
+						//锁库记录并更新本地库存
+						addStockRecord(goodscart,tGood,orderFormNo);
+					}
+					//更新设置订单外键
+					goodscart.setOf_id(orderForm.getId());
+					//更新设置购物车类型
+					if(orderType.trim().equals("GOODS")){
+						goodscart.setCart_type((tGood.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
+					}else if(orderType.trim().equals("SAMPLE")){
+						//样品
+						goodscart.setCart_type(CommUtil.sample_goods);
+					}
+					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
 					//构建实时成交价
 					savePriceTrend(goodscart,tGood,user);
 				}
 				//订单类型：10.自营商品订单 20.撮合商品订单
-				orderForm.setOrder_type(CommUtil.order_sample_good);
+				//判断是否为自营：true-自营，false-非自营
+				if(orderType.trim().equals("GOODS")){
+					orderForm.setOrder_type((goodTemp.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
+				}else if(orderType.trim().equals("SAMPLE")){
+					//样品订单
+					orderForm.setOrder_type(CommUtil.order_sample_good);
+				}
 				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
 				orderForm.setOrder_no(orderFormNo);
 				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
@@ -513,7 +559,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @param goods
 	 * @return
 	 */
-	public synchronized String createOrderNo(ezs_goods goods) {
+	public String createOrderNo(ezs_goods goods) {
 		// TODO Auto-generated method stub
 		int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
 		Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
@@ -586,4 +632,95 @@ public class GoodsServiceImpl implements GoodsService{
 		}
         
 	}
+	
+	/**
+	 * 获取实际库存并校验
+	 * @param cartid
+	 * @return
+	 */
+	public boolean checkGoods(ezs_goodscart goodCar,ezs_goods good) {
+		double account = goodCar.getCount();// 购买量
+		boolean bool = false;
+		if (goodCar != null && good.getGood_self().equals(true)) {
+			// 自营平台锁库
+			// 获取真实库存
+			JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
+			if (object != null) {
+				// 现有真实库存量
+				double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+				if (xaccount > account) {
+					// 加入锁库库存
+					bool = true;
+				}
+			}
+		} else {
+			// 供应商锁库
+			double xaccount = StorkNumber(good, good.getInventory());
+			if (xaccount >= account) {
+				// 加入锁库库存
+				bool = true;
+			}
+		}
+		return bool;
+	}
+
+	/**
+	 * 更新现有商品库存量
+	 * @param goods	商品
+	 * @param iQuantity 商品库存量
+	 * @return 返回 商品剩余量（真是库存）
+	 */
+	public double StorkNumber(ezs_goods goods, double iQuantity) {
+		// 定义锁库量
+		try {
+			//上次购买量
+			double stock_num = 0.0;
+			int cktype = 1;
+			if (goods.getGood_self().equals(true)) {
+				cktype = 2;
+			}
+			//获取该商品的购买量（不含本次的购买量）（在添加订单时添加锁表记录）
+			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
+			for (ezs_stock stock : stocks) {
+				stock_num += CommUtil.add(stock.getBuyNum(), stock_num);
+			}
+			return CommUtil.subtract(iQuantity, stock_num);
+		} catch (Exception e) {
+			e.printStackTrace();
+			//logger.debug("计算现有库存量异常");
+		}
+		return 0;
+	}
+	/**
+	 * 添加锁表记录
+	 * @param goodCar
+	 * @param good
+	 */
+	private void addStockRecord(ezs_goodscart goodCar,ezs_goods good,String orderFormNo) {
+		try {
+			ezs_stock stock = new ezs_stock();
+			stock.setDeleteStatus(false);
+			stock.setAddTime(new Date());
+			stock.setBuyNum(goodCar.getCount());
+			stock.setGoods_id(good.getId());
+			//状态位：
+			stock.setStatus(0);
+			stock.setGoodid(good.getId());
+			//存储商品类型：是否是自营商品,2-自营；1-非自营
+			stock.setGoodClass(good.getGood_self().equals(true)?2:1);
+			stock.setiQuantity(CommUtil.subtract(good.getInventory(), goodCar.getCount()));
+			stock.setmQuantity(stock.getiQuantity());
+			stock.setOrderNo(orderFormNo);
+			stockMapper.insert(stock);
+			good.setInventory(stock.getiQuantity());
+			ezs_goodsMapper.updateByPrimaryKey(good);
+			//修改商品库存
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
 }
