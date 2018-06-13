@@ -1,13 +1,13 @@
 package com.sanbang.buyer.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +20,7 @@ import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
@@ -33,6 +34,9 @@ import com.sanbang.vo.PriceTrendIfo;
 @Controller
 @RequestMapping("/buy")
 public class BuyCenterController {
+	// 日志
+	private static Logger log = Logger.getLogger(BuyCenterController.class);
+	
 	@Autowired
 	private GoodsCollectionService goodsCollectionService;
 	@Autowired
@@ -164,6 +168,7 @@ public class BuyCenterController {
 	 * @param gId 商品ID
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/goodPriceChanges")
 	@ResponseBody
 	public Object goodPriceChanges(HttpServletRequest request,HttpServletResponse response,Long gId){
@@ -267,18 +272,26 @@ public class BuyCenterController {
 	}
 	/**
 	 * 订单评价
-	 * @param request
-	 * @param response
-	 * @param dvaluate 评论
-	 * @param aList 图片列表
+	 * @author zhaibin
+	 * @param logistice 物流速度
+	 * @param goodQuality 商品质量
+	 * @param serviceQuality 服务态度
+	 * @param orderNo 订单号
+	 * @param goodId 商品Id
+	 * @param path 图片路径
+	 * @param imgName 图片名称(不支持多张图片)
 	 * @return
 	 */
 	@RequestMapping("/evaluateAboutOrder")
 	@ResponseBody
-	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,ezs_dvaluate dvaluate){
+	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,
+			Double logistice,Double goodQuality,Double serviceQuality,String orderNo,Long goodId,String content,
+			String path,String imgName){
+		
 		Map<String, Object> mmp = null;
-		Map<String , Object> mmpImg= null;
 		List<ezs_accessory> aList = new ArrayList<>();
+		ezs_dvaluate dvaluate = new ezs_dvaluate();
+		ezs_accessory accessory = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (user == null) {
@@ -287,34 +300,27 @@ public class BuyCenterController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		//图片上传
-		try {
-			//需要再此添加图片与评论的映射表记录
-			mmpImg = this.fileUploadService.uploadFile(request,0,0,10*1024*1024l);
-			if(!"000".equals(mmpImg.get("code"))){
-				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				rs.setMsg("上传失败");
-				return rs;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//参数设置
+		if((orderNo!=null&&!orderNo.trim().equals(""))&&(goodId!=null)){
+			dvaluate.setConttent(content);
+			dvaluate.setLogistics(logistice);
+			dvaluate.setGoodQuality(goodQuality);
+			dvaluate.setServiceQuality(goodQuality);
+			dvaluate.setOrder_no(orderNo);
+			dvaluate.setGoods_id(goodId);
+		}else{
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			rs.setMsg("上传失败");
+			rs.setMsg("订单号不能为NULL");
 			return rs;
 		}
-		//获取图片信息
-		int imgs = 0;
-		for(int i=0;i<imgs;i++){
-			ezs_accessory accessory = new ezs_accessory();
-			accessory.setName("");
-			accessory.setPath("");
-			aList.add(accessory);
+		if(imgName!=null){			
+			accessory = new ezs_accessory();
+			accessory.setName(imgName);
+			accessory.setPath(path);
 		}
 		//数据入库
-		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,aList,user);
+		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();

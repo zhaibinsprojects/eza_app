@@ -60,9 +60,6 @@ public class GoodsController {
 	private FileUploadService fileUploadService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
-
-	
-	
 	
 	/**
 	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
