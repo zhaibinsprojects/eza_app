@@ -112,6 +112,7 @@ public class AppHomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceAnalyzeTheme")
 	@ResponseBody
 	public Object getPriceAnalyzeTheme(HttpServletRequest request,HttpServletResponse response){
@@ -137,6 +138,7 @@ public class AppHomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceAnalyze")
 	@ResponseBody
 	public Object getPriceAnalyze(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
@@ -172,6 +174,7 @@ public class AppHomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getResearchReportTheme")
 	@ResponseBody
 	public Object getResearchReportTheme(HttpServletRequest request,HttpServletResponse response){
@@ -197,6 +200,7 @@ public class AppHomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getResearchReport")
 	@ResponseBody
 	public Object getResearchReport(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
@@ -241,6 +245,7 @@ public class AppHomePriceConditionController {
 	 * @param protection 是否环保
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceTrendcy")
 	@ResponseBody
 	public Object getPriceTrendcy(HttpServletRequest request,HttpServletResponse response,String kindId,String colorId
