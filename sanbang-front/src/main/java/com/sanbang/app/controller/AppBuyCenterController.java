@@ -1,5 +1,6 @@
 package com.sanbang.app.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +102,7 @@ public class AppBuyCenterController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodsFromCollection")
 	@ResponseBody
 	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response){
@@ -264,17 +266,26 @@ public class AppBuyCenterController {
 	}
 	/**
 	 * 订单评价
-	 * @param request
-	 * @param response
-	 * @param dvaluate
-	 * @param accessory
+	 * @author zhaibin
+	 * @param logistice 物流速度
+	 * @param goodQuality 商品质量
+	 * @param serviceQuality 服务态度
+	 * @param orderNo 订单号
+	 * @param goodId 商品Id
+	 * @param path 图片路径
+	 * @param imgName 图片名称(不支持多张图片)
 	 * @return
 	 */
 	@RequestMapping("/evaluateAboutOrder")
 	@ResponseBody
-	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,ezs_dvaluate dvaluate,List<ezs_accessory> aList){
+	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,
+			Double logistice,Double goodQuality,Double serviceQuality,String orderNo,Long goodId,String content,
+			String path,String imgName){
+		
 		Map<String, Object> mmp = null;
-		Map<String , Object> mmpImg= null;
+		List<ezs_accessory> aList = new ArrayList<>();
+		ezs_dvaluate dvaluate = new ezs_dvaluate();
+		ezs_accessory accessory = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
@@ -283,29 +294,27 @@ public class AppBuyCenterController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		//图片上传
-		try {
-			//
-			//需要再此添加图片与评论的映射表记录
-			//ezs_dvaluate_accessory
-			mmpImg = this.fileUploadService.uploadFile(request,0,0,10*1024*1024l);
-			if(!"000".equals(mmpImg.get("code"))){
-				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				rs.setMsg("上传失败");
-				return rs;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//参数设置
+		if((orderNo!=null&&!orderNo.trim().equals(""))&&(goodId!=null)){
+			dvaluate.setConttent(content);
+			dvaluate.setLogistics(logistice);
+			dvaluate.setGoodQuality(goodQuality);
+			dvaluate.setServiceQuality(goodQuality);
+			dvaluate.setOrder_no(orderNo);
+			dvaluate.setGoods_id(goodId);
+		}else{
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			rs.setMsg("上传失败");
+			rs.setMsg("订单号不能为NULL");
 			return rs;
 		}
-		
+		if(imgName!=null){			
+			accessory = new ezs_accessory();
+			accessory.setName(imgName);
+			accessory.setPath(path);
+		}
 		//数据入库
-		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,aList,user);
+		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();

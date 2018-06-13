@@ -775,6 +775,7 @@ public class GoodsServiceImpl implements GoodsService{
 			if (goodCar != null && good.getGood_self().equals(true)) {
 				// 自营平台锁库
 				// 获取真实库存
+				// 01样品库存，02商品库存
 				log.info("自营商品。。。。。。。。。");
 				JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
 				if (object != null) {
@@ -819,6 +820,7 @@ public class GoodsServiceImpl implements GoodsService{
 				cktype = 2;
 			}
 			//获取该商品的购买量（不含本次的购买量）（在添加订单时添加锁表记录）
+			//cktype商品类型: 1.供应商商品，2.自营商品，3.样品商品
 			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
 			for (ezs_stock stock : stocks) {
 				stock_num += CommUtil.add(stock.getBuyNum(), stock_num);

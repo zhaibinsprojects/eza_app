@@ -12,21 +12,21 @@ public class ezs_stock {
     private String cWhName;
 
     private String cWhcode;
-
+    //商品类型: 1.供应商商品，2.自营商品，3.样品商品
     private Integer goodClass;
-
+    //ERP库存
     private Double iQuantity;
-
+    //电商库存
     private Double mQuantity;
-
+    //库存状态  0.释放，1.锁库
     private Integer status;
 
     private Long goods_id;
-
+    //购买量
     private Double buyNum;
 
     private Long goodid;
-
+    //订单编号
     private String orderNo;
 
     public Long getId() {

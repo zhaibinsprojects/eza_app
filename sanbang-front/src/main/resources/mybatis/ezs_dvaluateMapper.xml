@@ -34,17 +34,17 @@
     delete from ezs_dvaluate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_dvaluate" >
+  <insert id="insert" parameterType="ezs_dvaluate" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_dvaluate (id, addTime, deleteStatus, 
       conttent, goodQuality, logistics, 
       order_no, serviceQuality, goods_id, 
-      user)
+      user_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{conttent,jdbcType=VARCHAR}, #{goodQuality,jdbcType=DOUBLE}, #{logistics,jdbcType=DOUBLE}, 
       #{order_no,jdbcType=VARCHAR}, #{serviceQuality,jdbcType=DOUBLE}, #{goods_id,jdbcType=BIGINT}, 
-      #{user,jdbcType=BINARY})
+      #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_dvaluate" >
+  <insert id="insertSelective" parameterType="ezs_dvaluate" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_dvaluate
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -75,7 +75,7 @@
         goods_id,
       </if>
       <if test="user != null" >
-        user,
+        user_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -106,8 +106,8 @@
       <if test="goods_id != null" >
         #{goods_id,jdbcType=BIGINT},
       </if>
-      <if test="user != null" >
-        #{user,jdbcType=BINARY},
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -138,8 +138,8 @@
       <if test="goods_id != null" >
         goods_id = #{goods_id,jdbcType=BIGINT},
       </if>
-      <if test="user != null" >
-        user = #{user,jdbcType=BINARY},
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -154,7 +154,7 @@
       order_no = #{order_no,jdbcType=VARCHAR},
       serviceQuality = #{serviceQuality,jdbcType=DOUBLE},
       goods_id = #{goods_id,jdbcType=BIGINT},
-      user = #{user,jdbcType=BINARY}
+      user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="ezs_dvaluate" >

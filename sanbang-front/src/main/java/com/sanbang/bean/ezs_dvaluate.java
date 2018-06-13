@@ -21,9 +21,19 @@ public class ezs_dvaluate {
 
     private Long goods_id;
 
+    private Long user_id;
+    
     private byte[] user;
 
-    public Long getId() {
+    public byte[] getUser() {
+		return user;
+	}
+
+	public void setUser(byte[] user) {
+		this.user = user;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -95,11 +105,11 @@ public class ezs_dvaluate {
         this.goods_id = goods_id;
     }
 
-    public byte[] getUser() {
-        return user;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setUser(byte[] user) {
-        this.user = user;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 }
