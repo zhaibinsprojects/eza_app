@@ -45,4 +45,10 @@ public interface ezs_areaMapper {
     //根据地区名称返回id   add by han
     List<Long> areaToId(String areaName);
     
+    //查询省下的市，或市下的区县
+    List<Long> queryChildId(Long area);
+    
+    //一堆市下的所有区县
+    List<Long> queryChildIds(List<Long> listId);
+    
 }
