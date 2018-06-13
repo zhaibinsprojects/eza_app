@@ -982,10 +982,44 @@
 	
 	<!--商品详情展示-->
 	<select id="getgoodsinfo" resultMap="goodvomap">
-	 select 
-    <include refid="Base_Column_List" />
-    from ezs_goods
-    where id = #{goodsid,jdbcType=BIGINT}	
+		SELECT
+	A.*, (
+		SELECT
+			COUNT(B.id)
+		FROM
+			ezs_dvaluate B
+		WHERE
+			1 = 1
+			AND B.goods_id =#{goodsid,jdbcType=BIGINT}	
+		) allcount,
+		FORMAT(
+		(
+			(
+				SELECT
+					COUNT(B.id)
+				FROM
+					ezs_dvaluate B
+				WHERE
+					1 = 1
+				AND B.goodQuality > 3
+				AND B.goods_id = 1
+			) / (
+				SELECT
+					COUNT(C.id)
+				FROM
+					ezs_dvaluate C
+				WHERE
+					1 = 1
+				AND C.goods_id = 1
+			)
+		),
+		2
+	)*100 highp
+	
+	FROM
+		ezs_goods A
+	WHERE
+		A.id = #{goodsid,jdbcType=BIGINT}	
 	</select>
 	
 </mapper>

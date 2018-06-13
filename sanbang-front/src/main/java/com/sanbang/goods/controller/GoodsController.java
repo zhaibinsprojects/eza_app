@@ -36,6 +36,7 @@ import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
@@ -44,6 +45,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.goods.GoodsVo;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -58,6 +60,9 @@ public class GoodsController {
 	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
+	
+	@Autowired
+	private OrderEvaluateService orderEvaluateService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 
@@ -92,23 +97,33 @@ public class GoodsController {
 	 * @param id 货品id
 	 * @return
 	 */
+	/**
+	 * 查询货品评价列表
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
 	@RequestMapping("/listForEvaluate")
 	@ResponseBody
-	public Result listForEvaluate(HttpServletRequest request,Long id){
+	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNo){
 		Result result = new Result();
-		List<ezs_dvaluate> list  = new ArrayList<ezs_dvaluate>();
-		list = goodsService.listForEvaluate(id);
-		if(null != list && list.size()>0){
-			result.setObj(list);
-			result.setMsg("查询成功");
+		try {
+			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+			Map<String, Object> map=new HashMap<>();
+			map.put("list", dvaluatelist);
+			map.put("highp", goodsvo.getHighp());
+			result.setObj(map);
 			result.setSuccess(true);
-		}else{
-			result.setMsg("查询失败");
+			result.setMsg("查询成功");
+		} catch (Exception e) {
+			e.printStackTrace();
 			result.setSuccess(false);
+			result.setMsg("查询失败");
 		}
+		
 		return result;
 	}
-	
 	/**
 	 * 当第一次收藏时，是insert,取消收藏时是update更新状态（货品收藏）
 	 * @param request

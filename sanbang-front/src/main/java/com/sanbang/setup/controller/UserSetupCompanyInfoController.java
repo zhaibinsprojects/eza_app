@@ -92,7 +92,7 @@ public class UserSetupCompanyInfoController {
 	@ResponseBody
 	public Object upCompanyInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -161,7 +161,7 @@ public class UserSetupCompanyInfoController {
 	@ResponseBody
 	public Object upCompanyOperat(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");

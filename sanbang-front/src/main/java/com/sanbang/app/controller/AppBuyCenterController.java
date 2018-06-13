@@ -329,24 +329,5 @@ public class AppBuyCenterController {
 	}
 	
 	
-	/**
-	 *  评价列表
-	 * @param request
-	 * @param pageNo
-	 * @param goodsid
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/getEvaluateList")
-	@ResponseBody
-	public Object getEvaluateList(HttpServletRequest request,
-			@RequestParam(name="pageNo",defaultValue="1")int pageNo,
-			@RequestParam("goodsid")int goodsid,
-			org.springframework.ui.Model model){		
-		List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,goodsid);
-		model.addAttribute("dvaluatelist", dvaluatelist);
-		GoodsVo  goodsvo=goodsService.getgoodsinfo(goodsid);
-		model.addAttribute("good", goodsvo);
-		return view+"evaluatelist";
-	}	
+	
 }

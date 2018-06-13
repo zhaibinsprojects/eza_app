@@ -163,11 +163,20 @@
   <!--商品评价列表-->
   <select id="getEvaluateList" resultMap="EvaluateListMap">
   	select 
-    <include refid="Base_Column_List" />
-    from ezs_dvaluate
+	    A.id,
+	    date_format(A.addTime, '%Y-%m-%d'),
+		A.deleteStatus,
+		A.conttent,
+		A.goodQuality,
+		A.logistics,
+		A.order_no,
+		A.serviceQuality,
+		A.goods_id,
+		A.user_id
+    from ezs_dvaluate A
     where 1=1
+    and A.goods_id=#{goodsid}
     limit #{totalpage},#{pageNo}
-    and goods_id=#{goodsid}
   </select>
   
    <resultMap id="EvaluateListMap" type="com.sanbang.bean.ezs_dvaluate" >
