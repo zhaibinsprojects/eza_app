@@ -424,6 +424,7 @@ public class GoodsController {
 		}else{
 			result.setSuccess(false);
 			result.setMsg("数据为空");
+			result.setObj(list);
 		}
 		return result;
 	}
