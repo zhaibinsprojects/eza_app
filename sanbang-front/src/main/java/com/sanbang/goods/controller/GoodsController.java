@@ -121,10 +121,10 @@ public class GoodsController {
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
 				if(share.getDeleteStatus().equals(true)){
-					goodsService.updateCollect(goodId,false);
+					goodsService.updateCollect(goodId,user.getId(),false);
 					result.setMsg("取消收藏");
 				}else{
-					goodsService.updateCollect(goodId,true);
+					goodsService.updateCollect(goodId,user.getId(),true);
 					result.setMsg("收藏成功");
 				}
 			}else{
@@ -141,66 +141,7 @@ public class GoodsController {
 		return result;
 	}
 	
-	/**
-	 * 加入采购单（加入购物车）
-	 * @param request
-	 * @param goodsCartList
-	 * @return
-	 */
-	@RequestMapping("/insertCart")
-	@ResponseBody
-	public Result insertCart(HttpServletRequest request,HttpServletResponse response,ezs_goodscart goodscart){
-		Result result = null;
-		//modify start by zhaibin 2018/05/31
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if(user==null){
-			result = Result.failure();
-			result.setMsg("用户未登录");
-			return result;
-		}
-		//modify end by zhaibin 2018/05/31
-		ezs_bill bill = user.getEzs_bill();
-		int n;
-		n = goodsService.insertCart(goodscart);
-		if(n>0){
-			result = Result.success();
-			result.setMsg("添加成功");
-		}else{
-			result = Result.failure();
-			result.setMsg("添加失败");
-		}
-		return result;
-	}
 	
-	/**
-	 * 立即购买（加入订单）
-	 * @param request
-	 * @param order
-	 * @return
-	 */
-	@RequestMapping("/insertOrder")
-	@ResponseBody
-	public Result insertOrder(HttpServletRequest request,HttpServletResponse response,ezs_orderform order){
-		Result result = null;
-		int n;
-		// modify start by zhaibin 2018/05/31
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (user == null) {
-			result = Result.failure();
-			result.setMsg("用户未登录");
-			return result;
-		}
-		// modify end by zhaibin 2018/05/31
-		order.setAddTime(new Date());
-		order.setDeleteStatus(false);
-		n = goodsService.insertOrder(order);
-		if(n>0){
-			result = Result.success();
-			result.setMsg("添加成功");
-			result.setSuccess(true);
-		}
-		return result;
-	}
 	/**
 	 * 采购单列表（就是预约定制的列表）
 	 * @param request
@@ -422,9 +363,9 @@ public class GoodsController {
 			Page page = new Page(list.size(), pageNow);
 			result.setMeta(page);
 		}else{
-			result.setSuccess(false);
-			result.setMsg("数据为空");
+			result.setSuccess(true);
 			result.setObj(list);
+			result.setMsg("数据为空");
 		}
 		return result;
 	}

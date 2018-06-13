@@ -117,9 +117,10 @@
   
   <!-- 根据商品id修改收藏状态 -->
   
-  <update id="updateCollect">
+  <update id="updateCollect" parameterType="java.util.Map">
     update ezs_documentshare
-    set house = #{house,jdbcType=BIT} 
+    set house = #{house,jdbcType=BIT},
+    user_id = #{userId,jdbcType=BIGINT} 
     where good_id = #{good_id,jdbcType=BIGINT}
   </update>
   <!-- 移除收藏商品 -->

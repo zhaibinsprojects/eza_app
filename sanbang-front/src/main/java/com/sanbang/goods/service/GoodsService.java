@@ -32,18 +32,13 @@ public interface GoodsService {
 	 * @param id
 	 */
 	public List<ezs_dvaluate> listForEvaluate(Long id);
-	/**
-	 * 加入采购单（添加购物车）
-	 * @param goodsCart 购物车实体
-	 */
-	public int insertCart(ezs_goodscart goodsCartList);	
 	
 	/**
 	 * 更新收藏状态
 	 * @param id
 	 * @return
 	 */
-	public int updateCollect(Long id,Boolean status);
+	public int updateCollect(Long id,Long userId,Boolean status);
 	
 	/**
 	 * 如果是第一次收藏，就插入数据
@@ -51,13 +46,6 @@ public interface GoodsService {
 	 * @return
 	 */
 	public int insertCollect(Long id,Long userId);
-	
-	/**
-	 * 加入订单
-	 * @param order	订单实体类
-	 * @return
-	 */
-	public int insertOrder(ezs_orderform order);
 	
 	/**
 	 * 同类货品
