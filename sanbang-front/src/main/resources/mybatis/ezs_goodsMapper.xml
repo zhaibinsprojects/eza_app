@@ -765,12 +765,16 @@
 	
 	<!-- 多条件查询，han -->
 	<select id="queryGoodsList" resultType="com.sanbang.vo.GoodsInfo" parameterType="java.util.Map">
-		select g.id,g.name,g.area_id,g.color_id,g.price,g.inventory,g.goods_main_photo_id,a.path picturePath,d.name colorName 
-		from ezs_goods g,ezs_accessory a,ezs_dict d
-		where g.goods_main_photo_id = a.id and g.color_id = d.id 
-		<if test="area_id != null">
-	        and g.area_id = #{area_id,jdbcType=BIGINT} 
-	    </if>
+		select g.id,g.name,g.price,g.inventory,a.path picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
+		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
+		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id 
+	    <if test="areaList.size>0">
+   			and g.area_id IN 
+	        <foreach collection="areaList" item="areaId" open="(" separator="," close=")">
+	        	#{areaId}
+	        </foreach>
+        </if>
+	    
    		<if test="typeList.size>0">
    			and g.goodClass_id IN 
 	        <foreach collection="typeList" item="goodsClass" open="(" separator="," close=")">

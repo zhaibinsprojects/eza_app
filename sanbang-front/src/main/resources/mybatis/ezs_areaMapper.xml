@@ -182,4 +182,18 @@
   	SELECT distinct id FROM ezs_area WHERE areaName like '%${_parameter}%'
   </select>
   
+  <!-- 查询子集 -->
+  <select id="queryChildId" resultType="java.lang.Long" parameterType="java.lang.Long" >
+  	SELECT id FROM ezs_area WHERE parent_id = #{area,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 查询子子集 -->
+  <select id="queryChildIds" resultType="java.lang.Long">
+  	SELECT distinct id FROM ezs_area WHERE parent_id in 
+  	<foreach collection="list" item="id" open="(" close=")" separator=",">
+  		#{id}
+    </foreach>
+  </select>
+  
+  
 </mapper>

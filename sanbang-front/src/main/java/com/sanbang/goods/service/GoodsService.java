@@ -67,7 +67,7 @@ public interface GoodsService {
 	public List<ezs_goods> listForGoods(Long goodClass_id);
 	
 	/**
-	 * @param areaId	地区id
+	 * @param areaList	地区id
 	 * @param typeIds	品类id字符数组
 	 * @param defaultId	默认
 	 * @param inventory 库存量
@@ -89,7 +89,7 @@ public interface GoodsService {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,
+	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,
 			String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,
 			String isProtection,String goodsName,int pageStart);
@@ -100,6 +100,11 @@ public interface GoodsService {
 	 * @return
 	 */
 	public List<Long> areaToId(String areaName);
+	
+	public List<Long> queryChildId(Long area);	//省查市,或市查县、区
+	
+	public List<Long> queryChildIds(List<Long> listId);	//一列市查询一列县、区
+	
 	
 	/**
 	 * 查询颜色

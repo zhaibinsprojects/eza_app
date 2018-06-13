@@ -161,7 +161,7 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
+	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
 			String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
 			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,String isProtection,String goodsName,int pageStart){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
@@ -326,7 +326,7 @@ public class GoodsServiceImpl implements GoodsService{
 		if(null != purpose && !"".equals(purpose)){
 			map.put("purpose", purpose);
 		}
-		map.put("area_id", area);
+		map.put("areaList", areaList);
 		map.put("typeList", typeList);
 		map.put("price1", price1);
 		map.put("price2", price2);
@@ -366,6 +366,19 @@ public class GoodsServiceImpl implements GoodsService{
 	public List<Long> areaToId(String areaName){
 		return areaMapper.areaToId(areaName);
 	}
+	
+	//查询市下的区县，或查询省下的市
+	@Override
+	public List<Long> queryChildId(Long area) {
+		return areaMapper.queryChildId(area);
+	}
+
+	@Override
+	public List<Long> queryChildIds(List<Long> listId) {
+		// TODO Auto-generated method stub
+		return areaMapper.queryChildIds(listId);
+	}
+	
 	
 	//查询颜色
 	public List<CurrencyClass> colorList(){
