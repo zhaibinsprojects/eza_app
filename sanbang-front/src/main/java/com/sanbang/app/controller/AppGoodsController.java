@@ -1,5 +1,6 @@
 package com.sanbang.app.controller;
 
+import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +27,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.itextpdf.text.pdf.BaseFont;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
@@ -40,6 +44,7 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
@@ -318,12 +323,13 @@ public class AppGoodsController {
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
 			@RequestParam(name = "typeId",required=false)String typeId,
-			@RequestParam(name = "addTime",required=false)String addTime,	//默认值（添加时间）
+			@RequestParam(name = "defaultId",required=false)String defaultId,	//默认值（添加时间）
 			@RequestParam(name = "inventory",required=false)String inventory,	//库存量
 			@RequestParam(name = "colorId",required=false)String colorId,
 			@RequestParam(name = "formId",required=false)String formId,
 			@RequestParam(name = "source",required=false)String source,
 			@RequestParam(name = "purpose",required=false)String purpose,
+			@RequestParam(name = "price",required=false)String price,	//价格区间
 			@RequestParam(name = "density",required=false)String density,	//密度
 			@RequestParam(name = "cantilever",required=false)String cantilever,	//悬臂梁缺口冲击
 			@RequestParam(name = "freely",required=false)String freely,	//简支梁缺口冲击
@@ -334,6 +340,7 @@ public class AppGoodsController {
 			@RequestParam(name = "crack",required=false)String crack,	//断裂伸长率
 			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
 			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
+			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
 			@RequestParam(name = "isProtection",required=false)String isProtection,
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
@@ -342,6 +349,7 @@ public class AppGoodsController {
 		String[] typeIds = null;
 		String[] colorIds = null;
 		String[] formIds = null;
+		String[] prices = null;
 		//重要参数
 		String[] densitys = null;
 		String[] cantilevers = null;
@@ -353,59 +361,67 @@ public class AppGoodsController {
 		String[] cracks = null;
 		String[] bendings = null;
 		String[] flexurals = null;
-		if(null != typeId && "" != typeId){
+		String[] burnings = null;
+		if(null != typeId && !"".equals(typeId)){
 			typeIds = typeId.split(",");
 		}
-		if(null != colorId && "" != colorId){
+		if(null != colorId && !"".equals(colorId)){
 			colorIds = colorId.split(",");
 		}
-		if(null != formId && "" != formId){
+		if(null != formId && !"".equals(formId)){
 			formIds = formId.split(",");
 		}
+		if(null != price && !"".equals(price)){
+			prices = price.split(",");
+		}
 		//重要参数
-		if(null != density  && "" != density){
+		if(null != density  && !"".equals(density)){
 			densitys = density.split(",");
 		}
-		if(null != cantilever && "" != cantilever){
+		if(null != cantilever && !"".equals(cantilever)){
 			cantilevers = cantilever.split(",");
 		}
-		if(null != freely && "" != freely){
+		if(null != freely && !"".equals(freely)){
 			freelys = freely.split(",");
 		}
-		if(null != lipolysis && "" != lipolysis){
+		if(null != lipolysis && !"".equals(lipolysis)){
 			lipolysises = lipolysis.split(",");
 		}
-		if(null != ash && "" != ash){
+		if(null != ash && !"".equals(ash)){
 			ashs = ash.split(",");
 		}
-		if(null != water && "" != water){
+		if(null != water && !"".equals(water)){
 			waters = water.split(",");
 		}
-		if(null != tensile && "" != tensile){
+		if(null != tensile && !"".equals(tensile)){
 			tensiles = tensile.split(",");
 		}
-		if(null != crack && "" != crack){
+		if(null != crack && !"".equals(crack)){
 			cracks = crack.split(",");
 		}
-		if(null != bending && "" != bending){
+		if(null != bending && !"".equals(bending)){
 			bendings = bending.split(",");
 		}
-		if(null != flexural && "" != flexural){
+		if(null != flexural && !"".equals(flexural)){
 			flexurals = flexural.split(",");
 		}
-//		分页先搁这儿
-//		Page page = new Page();
-//		page.setStartPos(pageNow);
-//		page.setPageNow(pageNow);
+		if(null != burning && !"".equals(burning)){
+			burnings = burning.split(",");
+		}
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = goodsService.queryGoodsList(area,typeIds,addTime,inventory,colorIds,formIds,source,purpose,densitys,cantilevers,freelys,
-				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,isProtection,goodsName);
+		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
+		list = goodsService.queryGoodsList(area,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
+				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,isProtection,goodsName,pageStart);
 		if(null != list && list.size() > 0){
 			result.setSuccess(true);
 			result.setMsg("筛选成功");
+			result.setObj(list);
+			Page page = new Page(list.size(), pageNow);
+			result.setMeta(page);
 		}else{
 			result.setSuccess(false);
 			result.setMsg("数据为空");
+			
 		}
 		return result;
 	}
@@ -419,25 +435,27 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
-		//直辖市
-		List<Long> ids = goodsService.areaToId(areaName);
-		if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
-			if(null != ids && ids.size()==2){
-				Long id1 = ids.get(0);
-				Long id2 = ids.get(1);
-				if(id1<id2){
-					result.setObj(id1);
-					result.setMsg("返回的id为："+id1);
-				}else{
-					result.setObj(id2);
-					result.setMsg("返回的id为："+id2);
+		if(null != areaName && !"".equals(areaName)){
+			List<Long> ids = goodsService.areaToId(areaName);
+			//直辖市
+			if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
+				if(null != ids && ids.size()==2){
+					Long id1 = ids.get(0);
+					Long id2 = ids.get(1);
+					if(id1<id2){
+						result.setObj(id1);
+						result.setMsg("返回的id为："+id1);
+					}else{
+						result.setObj(id2);
+						result.setMsg("返回的id为："+id2);
+					}
 				}
+				result.setSuccess(true);
+			}else if(null != ids && ids.size() != 0){
+				result.setObj(ids.get(0));
+				result.setSuccess(true);
+				result.setMsg("返回的id为："+ids.get(0));
 			}
-			result.setSuccess(true);
-		}else{
-			result.setObj(ids.get(0));
-			result.setSuccess(true);
-			result.setMsg("返回的id为："+ids.get(0));
 		}
 		return result;
 	}
@@ -487,7 +505,7 @@ public class AppGoodsController {
 	 * 
 	 * @param params
 	 * @param templPath	模板路径
-	 * @param ftlName 文件名称
+	 * @param ftlName 模板文件名称
 	 * @param htmlPath	生成的html文件的名称
 	 * @param pdfPath	导出pdf的路径
 	 * @param fontPath	
@@ -495,7 +513,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/exportPDF")
 	@ResponseBody
-	public String exportPDF(Map<String, Object> params, String templPath, String ftlName, String htmlPath,
+	public static String exportPDF(Map<String, Object> params, String templPath, String ftlName, String htmlPath,
 			String pdfPath, String fontPath){
 		Configuration configuration = null;
 		try {
@@ -511,7 +529,7 @@ public class AppGoodsController {
 			temp.process(params, out);
 			out.flush();
 
-			String url = htmlFile.toURI().toURL().toString();
+			String url = htmlFile.toURI().toString();	//.toURL()
 			OutputStream os = new FileOutputStream(pdfPath);
 			ITextRenderer renderer = new ITextRenderer();
 			renderer.setDocument(url);
@@ -530,6 +548,14 @@ public class AppGoodsController {
 		return pdfPath; 
 		
 	}
+	
+//	public static void main(String[] args) {
+//		Map<String, Object> map=new HashMap<>();
+//		map.put("orderAmount", "aaa");
+//		map.put("AcapAmount", "bb");
+//		map.put("customerName", "呵呵哒呵呵哒");
+//		exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
+//	}
 	
 	/**
 	 * 上传发票图片，返回url

@@ -161,9 +161,9 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String addTime,String inventory,String[] colorIds,String[] formIds,String source,
-			String purpose,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
-			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String isProtection,String goodsName){
+	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
+			String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
+			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,String isProtection,String goodsName,int pageStart){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -187,81 +187,149 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		String density1 = null;	//值1
 		String density2 = null;	//值2
-		if(null != densitys){
-			density1 = densitys[0];
-			density2 = densitys[1];
+		if(null != densitys && !"".equals(densitys)){
+			if(densitys.length == 1){	//当只有最小值时候，前端传过来的是：值1,
+				density1 = densitys[0];
+			}else{
+				density1 = densitys[0];
+				density2 = densitys[1];
+			}
+			
 		}
 		String cantilever1 = null;
 		String cantilever2 = null;
-		if(null != cantilevers){
-			cantilever1 = cantilevers[0];
-			cantilever2 = cantilevers[1];
+		if(null != cantilevers && !"".equals(cantilevers)){
+			if(cantilevers.length == 1){
+				cantilever1 = cantilevers[0];
+			}else{
+				cantilever1 = cantilevers[0];
+				cantilever2 = cantilevers[1];
+			}
+			
 		}
 		String freely1 = null;
 		String freely2 = null;
-		if(null != freelys){
-			freely1 = freelys[0];
-			freely2 = freelys[1];
+		if(null != freelys && !"".equals(freelys)){
+			if(freelys.length == 1){
+				freely1 = freelys[0];
+			}else{
+				freely1 = freelys[0];
+				freely2 = freelys[1];
+			}
+			
 		}
 		String lipolysis1 = null;
 		String lipolysis2 = null;
-		if(null != lipolysises){
-			lipolysis1 = lipolysises[0];
-			lipolysis2 = lipolysises[1];
+		if(null != lipolysises && !"".equals(lipolysises)){
+			if(lipolysises.length == 1){
+				lipolysis1 = lipolysises[0];
+			}else{
+				lipolysis1 = lipolysises[0];
+				lipolysis2 = lipolysises[1];
+			}
+			
 		}
 		String ash1 = null;
 		String ash2 = null;
-		if(null != ashs){
-			ash1 = ashs[0];
-			ash2 = ashs[1];
+		if(null != ashs && !"".equals(ashs)){
+			if(ashs.length == 1){
+				ash1 = ashs[0];
+			}else{
+				ash1 = ashs[0];
+				ash2 = ashs[1];
+			}
+			
 		}
 		String water1 = null;
 		String water2 = null;
-		if(null != waters){
-			water1 = waters[0];
-			water2 = waters[1];
+		if(null != waters && !"".equals(waters)){
+			if(waters.length == 1){
+				water1 = waters[0];
+			}else{
+				water1 = waters[0];
+				water2 = waters[1];
+			}
+			
 		}
 		String tensile1 = null;
 		String tensile2 = null;
-		if(null != tensiles){
-			tensile1 = tensiles[0];
-			tensile2 = tensiles[1];
+		if(null != tensiles && !"".equals(tensiles)){
+			if(tensiles.length == 1){
+				tensile1 = tensiles[0];
+			}else{
+				tensile1 = tensiles[0];
+				tensile2 = tensiles[1];
+			}
+			
 		}
 		String crack1 = null;
 		String crack2 = null;
-		if(null != cracks){
-			crack1 = cracks[0];
-			crack2 = cracks[1];
+		if(null != cracks && !"".equals(cracks)){
+			if(cracks.length == 1){
+				crack1 = cracks[0];
+			}else{
+				crack1 = cracks[0];
+				crack2 = cracks[1];
+			}
 		}
 		String bending1 = null;
 		String bending2 = null;
-		if(null != bendings){
-			bending1 = bendings[0];
-			bending2 = bendings[1];
-			
+		if(null != bendings && !"".equals(bendings)){
+			if(bendings.length == 1){
+				bending1 = bendings[0];
+			}else{
+				bending1 = bendings[0];
+				bending2 = bendings[1];
+			}
 		}
 		String flexural1 = null;
 		String flexural2 = null;
-		if(null != flexurals){
-			flexural1 = flexurals[0];
-			flexural2 = flexurals[1];
+		if(null != flexurals && !"".equals(flexurals)){
+			if(flexurals.length == 1){
+				flexural1 = flexurals[0];
+			}else{
+				flexural1 = flexurals[0];
+				flexural2 = flexurals[1];
+			}
 		}
-		map.put("area_id", area);
-		map.put("typeList", typeList);
-		if(null != addTime && "" != addTime){
-			map.put("addTime", addTime);	//默认
+		String burning1 = null;
+		String burning2 = null;
+		if(null != burnings && !"".equals(burnings)){
+			if(burnings.length == 1){
+				burning1 = burnings[0];
+			}else{
+				burning1 = burnings[0];
+				burning2 = burnings[1];
+			}
 		}
-		if(null != inventory && "" != inventory){
+		String price1 = null;
+		String price2 = null;
+		if(null != prices && !"".equals(prices)){
+			if(prices.length == 1){		//当只有最小值时候，前端传过来的是：值1,
+				price1 = prices[0];
+			}else{
+				price1 = prices[0];
+				price2 = prices[1];
+			}
+		}
+		if(null != defaultId && !"".equals(defaultId)){
+			map.put("addTime", defaultId);	//默认
+		}
+		if(null != inventory && !"".equals(inventory)){
 			map.put("inventory", inventory);	//库存量
 		}
 		map.put("colorList", colorList);
 		map.put("formList", formList);
-		if(null != source && "" != source){
+		if(null != source && !"".equals(source)){
 			map.put("source", source);
 		}
-		if(null != purpose && "" != purpose){
+		if(null != purpose && !"".equals(purpose)){
 			map.put("purpose", purpose);
 		}
+		map.put("area_id", area);
+		map.put("typeList", typeList);
+		map.put("price1", price1);
+		map.put("price2", price2);
 		//重要参数（区间查询）
 		map.put("density1", density1);
 		map.put("density2", density2);
@@ -283,8 +351,12 @@ public class GoodsServiceImpl implements GoodsService{
 		map.put("bending2", bending2);
 		map.put("flexural1", flexural1);
 		map.put("flexural2", flexural2);
+		map.put("burning1", burning1);
+		map.put("burning2", burning2);
 		map.put("protection", isProtection);
 		map.put("name", goodsName);
+		map.put("pageStart", pageStart);	//起始页
+		map.put("pageSize", 10);	//每页10条
 		list = ezs_goodsMapper.queryGoodsList(map);
 		return list;
 	}
@@ -504,6 +576,7 @@ public class GoodsServiceImpl implements GoodsService{
 					}
 					if(goodCountCheckFlag==true){
 						//锁库记录并更新本地库存
+						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存开始...");
 						addStockRecord(goodscart,tGood,orderFormNo);
 						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存成功...");
 					}
@@ -581,6 +654,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.error("ErrorMessage:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
@@ -594,14 +668,21 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	public String createOrderNo(ezs_goods goods) {
 		// TODO Auto-generated method stub
-		int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
-		Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
-		StringBuffer orderNo = new StringBuffer("EM");
-		orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
-		orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
-		orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
-		log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
-		return orderNo.toString();
+		try {
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
+			int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
+			Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
+			StringBuffer orderNo = new StringBuffer("EM");
+			orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
+			orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
+			orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号成功");
+			return orderNo.toString();
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("生成订单号失败："+e.toString());
+			throw e;
+		}
 	}
 	/**
 	 * 循环获取最高级商品种类ID
@@ -662,6 +743,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.error("FunctionName:"+"savePriceTrend "+",context:"+e.toString());
 			throw e;
 		}
         
@@ -673,27 +755,36 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @return
 	 */
 	public boolean checkGoods(ezs_goodscart goodCar,ezs_goods good) {
+		log.info("获取商品实际库存。。。。。");
 		double account = goodCar.getCount();// 购买量
 		boolean bool = false;
-		if (goodCar != null && good.getGood_self().equals(true)) {
-			// 自营平台锁库
-			// 获取真实库存
-			JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
-			if (object != null) {
-				// 现有真实库存量
-				double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
-				if (xaccount > account) {
+		try {
+			if (goodCar != null && good.getGood_self().equals(true)) {
+				// 自营平台锁库
+				// 获取真实库存
+				log.info("自营商品。。。。。。。。。");
+				JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
+				if (object != null) {
+					// 现有真实库存量
+					log.info("实际库存。。。。。。。。。");
+					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+					if (xaccount > account) {
+						// 加入锁库库存
+						bool = true;
+					}
+				}
+			} else {
+				// 供应商锁库
+				log.info("非自营商品，不访问U8库存信息。。。。。。。。。");
+				double xaccount = StorkNumber(good, good.getInventory());
+				if (xaccount >= account) {
 					// 加入锁库库存
 					bool = true;
 				}
 			}
-		} else {
-			// 供应商锁库
-			double xaccount = StorkNumber(good, good.getInventory());
-			if (xaccount >= account) {
-				// 加入锁库库存
-				bool = true;
-			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
 		}
 		return bool;
 	}
@@ -706,6 +797,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	public double StorkNumber(ezs_goods goods, double iQuantity) {
 		// 定义锁库量
+		log.info("本地库存信息更新。。。。。。。。。");
 		try {
 			//上次购买量
 			double stock_num = 0.0;
@@ -721,9 +813,10 @@ public class GoodsServiceImpl implements GoodsService{
 			return CommUtil.subtract(iQuantity, stock_num);
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("本地库存信息更新异常信息："+e.toString());
+			throw e;
 			//logger.debug("计算现有库存量异常");
 		}
-		return 0;
 	}
 	/**
 	 * 添加锁表记录
@@ -752,6 +845,7 @@ public class GoodsServiceImpl implements GoodsService{
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			log.error("FunctionName:"+"addStockRecord "+",context:"+"发生异常："+e.toString());
 			throw e;
 		}
 	}
