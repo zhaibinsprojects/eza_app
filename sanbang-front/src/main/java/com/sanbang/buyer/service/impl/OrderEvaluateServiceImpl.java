@@ -43,8 +43,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 		//评价信息
 		dvaluate.setAddTime(new Date());
 		dvaluate.setDeleteStatus(false);
-		byte[] tByte = {user.getId().byteValue()};
-		dvaluate.setUser(tByte);
+		dvaluate.setUser_id(user.getId());
 		try {
 			for (ezs_accessory accessory : aList) {
 				if(accessory.getName()!=null){
@@ -69,6 +68,15 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;
+	}
+
+	@Override
+	public List<ezs_dvaluate> getEvaluateList(int pageNo,long goodsid) {
+		if(pageNo<1){
+			pageNo=1;
+		}
+		List<ezs_dvaluate>  dvaluatelist=dvaluateMapper.getEvaluateList(10*(pageNo-1), 10,goodsid);
+		return dvaluatelist;
 	}
 
 }

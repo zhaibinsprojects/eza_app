@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_dvaluateMapper" >
-  <resultMap id="BaseResultMap" type="ezs_dvaluate" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_dvaluate" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -11,22 +11,16 @@
     <result column="order_no" property="order_no" jdbcType="VARCHAR" />
     <result column="serviceQuality" property="serviceQuality" jdbcType="DOUBLE" />
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="ezs_dvaluate" extends="BaseResultMap" >
-    <result column="user" property="user" jdbcType="BINARY" />
-  </resultMap>
+  
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, conttent, goodQuality, logistics, order_no, serviceQuality, 
-    goods_id
+    goods_id, user_id
   </sql>
-  <sql id="Blob_Column_List" >
-    user
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from ezs_dvaluate
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -34,17 +28,17 @@
     delete from ezs_dvaluate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_dvaluate" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_dvaluate" >
     insert into ezs_dvaluate (id, addTime, deleteStatus, 
       conttent, goodQuality, logistics, 
       order_no, serviceQuality, goods_id, 
-      user)
+      user_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{conttent,jdbcType=VARCHAR}, #{goodQuality,jdbcType=DOUBLE}, #{logistics,jdbcType=DOUBLE}, 
       #{order_no,jdbcType=VARCHAR}, #{serviceQuality,jdbcType=DOUBLE}, #{goods_id,jdbcType=BIGINT}, 
-      #{user,jdbcType=BINARY})
+      #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_dvaluate" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_dvaluate" >
     insert into ezs_dvaluate
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -74,8 +68,8 @@
       <if test="goods_id != null" >
         goods_id,
       </if>
-      <if test="user != null" >
-        user,
+      <if test="user_id != null" >
+        user_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -106,12 +100,12 @@
       <if test="goods_id != null" >
         #{goods_id,jdbcType=BIGINT},
       </if>
-      <if test="user != null" >
-        #{user,jdbcType=BINARY},
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_dvaluate" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_dvaluate" >
     update ezs_dvaluate
     <set >
       <if test="addTime != null" >
@@ -138,13 +132,13 @@
       <if test="goods_id != null" >
         goods_id = #{goods_id,jdbcType=BIGINT},
       </if>
-      <if test="user != null" >
-        user = #{user,jdbcType=BINARY},
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="ezs_dvaluate" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_dvaluate" >
     update ezs_dvaluate
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -154,30 +148,46 @@
       order_no = #{order_no,jdbcType=VARCHAR},
       serviceQuality = #{serviceQuality,jdbcType=DOUBLE},
       goods_id = #{goods_id,jdbcType=BIGINT},
-      user = #{user,jdbcType=BINARY}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_dvaluate" >
-    update ezs_dvaluate
-    set addTime = #{addTime,jdbcType=TIMESTAMP},
-      deleteStatus = #{deleteStatus,jdbcType=BIT},
-      conttent = #{conttent,jdbcType=VARCHAR},
-      goodQuality = #{goodQuality,jdbcType=DOUBLE},
-      logistics = #{logistics,jdbcType=DOUBLE},
-      order_no = #{order_no,jdbcType=VARCHAR},
-      serviceQuality = #{serviceQuality,jdbcType=DOUBLE},
-      goods_id = #{goods_id,jdbcType=BIGINT}
+      user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   
   <!-- 根据商品id查询评价列表 -->
-  <select id="listForEvaluate" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  <select id="listForEvaluate" resultMap="EvaluateListMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" /> 
     from ezs_dvaluate
     where goods_id = #{goods_id,jdbcType=BIGINT}
   </select>
   
+  <!--商品评价列表-->
+  <select id="getEvaluateList" resultMap="EvaluateListMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ezs_dvaluate
+    where 1=1
+    limit #{totalpage},#{pageNo}
+    and goods_id=#{goodsid}
+  </select>
   
+   <resultMap id="EvaluateListMap" type="com.sanbang.bean.ezs_dvaluate" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="conttent" property="conttent" jdbcType="VARCHAR" />
+    <result column="goodQuality" property="goodQuality" jdbcType="DOUBLE" />
+    <result column="logistics" property="logistics" jdbcType="DOUBLE" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="serviceQuality" property="serviceQuality" jdbcType="DOUBLE" />
+    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <association property="user" column="user_id" select="com.sanbang.dao.ezs_userMapper.selectByPrimaryKey">
+   </association>
+  	<!--图片信息-->
+   <collection property="accessroys" column="id" select="com.sanbang.dao.ezs_dvaluate_accessroyMapper.selectByPrimaryKey" >
+   </collection>
+   
+ 
+  </resultMap>
   
 </mapper>

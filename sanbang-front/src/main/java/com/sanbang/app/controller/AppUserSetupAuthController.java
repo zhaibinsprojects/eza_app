@@ -100,6 +100,8 @@ public class AppUserSetupAuthController {
 			map.put("userimg", "");
 			map.put("name", "");
 			map.put("status", 0);
+			map.put("status", 0);
+			map.put("accountType", 0);
 			map.put("auditingusertype_id","");
 			result.setObj(map);
 			return result;
@@ -107,6 +109,7 @@ public class AppUserSetupAuthController {
 			map.put("userimg", ImageUrlUtil.geturl(DictionaryCate.USER_ICON, upi.getAuthimg()));
 			map.put("name", upi.getName());
 			map.put("status", upi.getEzs_store().getStatus());
+			map.put("accountType", upi.getEzs_store().getAccountType());
 			map.put("auditingusertype_id",dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id())==null?"":
 				dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id()).getCode());
 			result.setObj(map);

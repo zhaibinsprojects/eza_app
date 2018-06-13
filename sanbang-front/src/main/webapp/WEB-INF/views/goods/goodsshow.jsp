@@ -60,16 +60,7 @@
 	<div class="msg-bg"></div>
 	<div class="msg-box"></div>
 	
-	<div class="ezsm-normal-top">
-		<div onclick="javascript:history.go(-1);"></div>
-		<div>
-			<ul class="ezsm-normal-top-nav">
-				<li onclick="window.location.href='${baseurl}app/goods/toGoodsShow.htm?id=${good.id}'" class="ezsm-normal-top-nav-sel"><span>货品</span></li>
-				<li onclick="window.location.href='M04-品类-评价.html'"><span>评价</span></li></a>
-			</ul>
-		</div>
-		<div></div>
-	</div>
+	<%@ include file="/WEB-INF/views/goodshead.jsp"%> 
 	
 	<div class="ezsm-shopdetail-picbox">
 		<div class="ezsm-shopdetail-picbox-main-visual">
@@ -113,19 +104,6 @@
 	</div>
 	<div class="ezsm-shopdetail-desc">${good.content}</div>
 	
-	<div class="blank70"></div>
-	<div class="ezsm-normal-bottombtnB-box">
-		<div class="ezsm-shopdetail-bottombtnbox">
-			<div onclick="window.location.href='M06-采购单.html'"><img src="resource/img/micon_039.png"/><br>采购单</div>
-			<div><img src="resource/img/micon_041.png"/><br>收藏</div>
-			<div><img src="resource/img/micon_043.png"/><br>电话</div>
-			<div><img src="resource/img/micon_045.png"/><br><a href="https://webchat.7moor.com/wapchat.html?accessId=77ad4f10-fa6f-11e7-b5e9-3f25a985904b&amp;fromUrl=&amp;urlTitle=" style="color: #333333;">客服</a></div>
-		</div>
-		<c:choose>
-		
-		</c:choose>
-		<div class="ezsm-normal-bottombtnB2">预约预定</div>
-		<div class="ezsm-normal-bottombtnB1">预约预定</div>
-	</div>
+	<%@ include file="/WEB-INF/views/goodsfoot.jsp"%> 
 </body>
 </html>
