@@ -103,29 +103,12 @@ public class GoodsServiceImpl implements GoodsService{
 		list  = ezs_dvaluateMapper.listForEvaluate(id);
 		return list;
 	}
-	/**
-	 * 添加购物车（待修改）
-	 * @param goodsCart
-	 * @return
-	 */
-	@Transactional
-	public int insertCart(ezs_goodscart goodscart){
-		ezs_storecart storecart = new ezs_storecart();
-		int n = 0;
-		try{
-			//this.storecartMapper.insert(storecart);
-			//this.ezs_goodscartMapper.insert();
-			n = 1;
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return n;
-	}
 	
-	public int updateCollect(Long id,Boolean status){
+	public int updateCollect(Long id,Long userId,Boolean status){
 		Map<String,Object> mmp = new HashMap<String,Object>();
 		mmp.put("good_id", id);
 		mmp.put("house", status);
+		mmp.put("userId", userId);
 		int n = ezs_documentshareMapper.updateCollect(mmp);
 		return n;
 	}
@@ -143,14 +126,6 @@ public class GoodsServiceImpl implements GoodsService{
 		ezs_documentshare n = ezs_documentshareMapper.selectByPrimaryKey(id);
 		return n;
 	}
-	/**
-	 * 添加订单
-	 */
-	public int insertOrder(ezs_orderform order){
-		//判断是否加入购物车
-		int n = ezs_orderformMapper.insertSelective(order);
-		return n;
-	}
 	
 	public List<ezs_goods> listForGoods(Long goodClass_id){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
@@ -161,7 +136,7 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
+	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
 			String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
 			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,String isProtection,String goodsName,int pageStart){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
@@ -326,7 +301,7 @@ public class GoodsServiceImpl implements GoodsService{
 		if(null != purpose && !"".equals(purpose)){
 			map.put("purpose", purpose);
 		}
-		map.put("area_id", area);
+		map.put("areaList", areaList);
 		map.put("typeList", typeList);
 		map.put("price1", price1);
 		map.put("price2", price2);
@@ -366,6 +341,19 @@ public class GoodsServiceImpl implements GoodsService{
 	public List<Long> areaToId(String areaName){
 		return areaMapper.areaToId(areaName);
 	}
+	
+	//查询市下的区县，或查询省下的市
+	@Override
+	public List<Long> queryChildId(Long area) {
+		return areaMapper.queryChildId(area);
+	}
+
+	@Override
+	public List<Long> queryChildIds(List<Long> listId) {
+		// TODO Auto-generated method stub
+		return areaMapper.queryChildIds(listId);
+	}
+	
 	
 	//查询颜色
 	public List<CurrencyClass> colorList(){
@@ -762,6 +750,7 @@ public class GoodsServiceImpl implements GoodsService{
 			if (goodCar != null && good.getGood_self().equals(true)) {
 				// 自营平台锁库
 				// 获取真实库存
+				// 01样品库存，02商品库存
 				log.info("自营商品。。。。。。。。。");
 				JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
 				if (object != null) {
@@ -806,6 +795,7 @@ public class GoodsServiceImpl implements GoodsService{
 				cktype = 2;
 			}
 			//获取该商品的购买量（不含本次的购买量）（在添加订单时添加锁表记录）
+			//cktype商品类型: 1.供应商商品，2.自营商品，3.样品商品
 			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
 			for (ezs_stock stock : stocks) {
 				stock_num += CommUtil.add(stock.getBuyNum(), stock_num);

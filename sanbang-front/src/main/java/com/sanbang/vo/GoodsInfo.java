@@ -11,6 +11,8 @@ public class GoodsInfo extends ezs_goods{
     private String formName;
     private String areaName;
     private String goodClassName;
+    private String utilName;
+    
     //照片相关的
     private String pictureSuffix;	//图片后缀名
     private String pictureName;	//图片名称
@@ -71,6 +73,12 @@ public class GoodsInfo extends ezs_goods{
 	}
 	public void setPicturePath(String picturePath) {
 		this.picturePath = picturePath;
+	}
+	public String getUtilName() {
+		return utilName;
+	}
+	public void setUtilName(String utilName) {
+		this.utilName = utilName;
 	}
 	
 }

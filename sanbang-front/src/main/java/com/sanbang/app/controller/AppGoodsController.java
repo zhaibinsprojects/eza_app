@@ -146,10 +146,10 @@ public class AppGoodsController {
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
 				if(share.getDeleteStatus().equals(true)){
-					goodsService.updateCollect(goodId,false);
+					goodsService.updateCollect(goodId,user.getId(),false);
 					result.setMsg("取消收藏");
 				}else{
-					goodsService.updateCollect(goodId,true);
+					goodsService.updateCollect(goodId,user.getId(),true);
 					result.setMsg("收藏成功");
 				}
 			}else{
@@ -162,53 +162,6 @@ public class AppGoodsController {
 			}
 		}else{
 			result.setMsg("收藏出错");
-		}
-		return result;
-	}
-	
-	/**
-	 * 加入采购单（加入购物车）
-	 * @param request
-	 * @param goodsCart
-	 * @return
-	 */
-	@RequestMapping("/insertCart")
-	@ResponseBody
-	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		ezs_bill bill = user.getEzs_bill();
-		if(null != goodsCart){
-			goodsCart.setBill(bill);
-		}
-		Result result = new Result();
-		int n;
-		n = goodsService.insertCart(goodsCart);
-		if(n>0){
-			result.setObj(goodsCart);
-			result.setSuccess(true);
-			result.setMsg("添加成功");
-		}else{
-			result.setSuccess(false);
-			result.setMsg("添加失败");
-		}
-		return result;
-	}
-	
-	/**
-	 * 立即购买（加入订单）
-	 * @param request
-	 * @param order
-	 * @return
-	 */
-	@RequestMapping("/insertOrder")
-	@ResponseBody
-	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
-		Result result = Result.failure();
-		int n;
-		n = goodsService.insertOrder(order);
-		if(n>0){
-			result.setMsg("添加成功");
-			result.setSuccess(true);
 		}
 		return result;
 	}
@@ -346,6 +299,20 @@ public class AppGoodsController {
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
 		Long area = Long.valueOf(areaId);
+		List<Long> areaList = new ArrayList<Long>();
+		//前端传过来的可能是单个的id值也可能为空，如果为空则是所有，目前地区分为三级
+		//传过来的id是省就查询该省份下的，是市就查询该市下的，是县或者区就查区的
+		List<Long> listId = goodsService.queryChildId(area);	//查询当前id（省）下的所有子id（市），或查当前市下的所有区县
+		if(null != listId && listId.size() != 0){
+			List<Long> listIds = goodsService.queryChildIds(listId);  //查询省下的所有市的所有区县
+			if(null != listIds && listIds.size() != 0){   //area是省
+				areaList = listIds;
+			}else{	//area是市
+				areaList = listId;
+			}
+		}else{	//area是县、区
+			areaList.add(area);
+		}
 		String[] typeIds = null;
 		String[] colorIds = null;
 		String[] formIds = null;
@@ -410,7 +377,7 @@ public class AppGoodsController {
 		}
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
-		list = goodsService.queryGoodsList(area,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
+		list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
 				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,isProtection,goodsName,pageStart);
 		if(null != list && list.size() > 0){
 			result.setSuccess(true);
@@ -419,9 +386,9 @@ public class AppGoodsController {
 			Page page = new Page(list.size(), pageNow);
 			result.setMeta(page);
 		}else{
-			result.setSuccess(false);
+			result.setSuccess(true);
+			result.setObj(list);
 			result.setMsg("数据为空");
-			
 		}
 		return result;
 	}
@@ -443,19 +410,25 @@ public class AppGoodsController {
 					Long id1 = ids.get(0);
 					Long id2 = ids.get(1);
 					if(id1<id2){
-						result.setObj(id1);
-						result.setMsg("返回的id为："+id1);
-					}else{
 						result.setObj(id2);
-						result.setMsg("返回的id为："+id2);
+					}else{
+						result.setObj(id1);
 					}
 				}
 				result.setSuccess(true);
+				result.setMsg("返回成功");
 			}else if(null != ids && ids.size() != 0){
 				result.setObj(ids.get(0));
 				result.setSuccess(true);
-				result.setMsg("返回的id为："+ids.get(0));
+				result.setMsg("返回成功");
+			}else{
+				result.setObj("");
+				result.setSuccess(false);
+				result.setMsg("查询为空");
 			}
+		}else{
+			result.setMsg("参数为空,请传入正确参数");
+			result.setSuccess(false);
 		}
 		return result;
 	}
