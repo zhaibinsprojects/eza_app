@@ -289,7 +289,6 @@ public class BuyCenterController {
 			String path,String imgName){
 		
 		Map<String, Object> mmp = null;
-		List<ezs_accessory> aList = new ArrayList<>();
 		ezs_dvaluate dvaluate = new ezs_dvaluate();
 		ezs_accessory accessory = null;
 		Result rs = null;

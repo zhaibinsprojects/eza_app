@@ -37,6 +37,7 @@ public class AppHomeProvinceMessController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/hotProvince")
 	@ResponseBody
 	public Object hotProvinces(HttpServletRequest request,HttpServletResponse response){
@@ -64,6 +65,7 @@ public class AppHomeProvinceMessController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getProvinces")
 	@ResponseBody
 	public Object getProvinces(HttpServletRequest request,HttpServletResponse response){
@@ -94,6 +96,7 @@ public class AppHomeProvinceMessController {
 	 * @param aid 父级地址节点
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getChildByParents")
 	@ResponseBody
 	public Object getChildByParents(HttpServletRequest request,HttpServletResponse response,Long aid){
