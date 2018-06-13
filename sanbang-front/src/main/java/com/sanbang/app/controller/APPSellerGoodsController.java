@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.area.service.AreaService;
@@ -64,7 +65,7 @@ public class APPSellerGoodsController {
 	 */
 	@RequestMapping("/queryGoodsList")
 	@ResponseBody
-	public Object queryGoodsList(int status, HttpServletRequest request, HttpServletResponse response,String currentPage){
+	public Object queryGoodsList(@RequestParam(name = "status", defaultValue = "-1") int status, HttpServletRequest request, HttpServletResponse response,String currentPage){
 		Result result = Result.failure();
 		List<ezs_goods> list = new ArrayList<>();
 		Map<String, Object> map = null;

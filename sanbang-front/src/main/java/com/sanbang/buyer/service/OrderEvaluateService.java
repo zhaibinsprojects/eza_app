@@ -10,7 +10,8 @@ import com.sanbang.bean.ezs_user;
 
 public interface OrderEvaluateService {
 	
-	public Map<String, Object> orderEvaluate(ezs_dvaluate dvaluate,List<ezs_accessory> aList,ezs_user user);
+
+	Map<String, Object> orderEvaluate(ezs_dvaluate dvaluate, ezs_accessory accessory, ezs_user user);
 	
 	/**
 	 * 评价列表
@@ -19,5 +20,7 @@ public interface OrderEvaluateService {
 	 * @return
 	 */
 	 List<ezs_dvaluate> getEvaluateList(int pageNo,long goodsid);
+
+	
 
 }

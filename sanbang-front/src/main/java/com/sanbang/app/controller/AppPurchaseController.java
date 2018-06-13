@@ -34,6 +34,7 @@ public class AppPurchaseController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPurchaseByUser")
 	@ResponseBody
 	public Object getPurchaseByUser(HttpServletRequest request,HttpServletResponse response){

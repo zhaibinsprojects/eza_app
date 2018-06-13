@@ -29,6 +29,7 @@ public class AppHomeIndustryInfoController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getTheme")
 	@ResponseBody
 	public Object getTheme(HttpServletRequest request,HttpServletResponse response){
@@ -56,6 +57,7 @@ public class AppHomeIndustryInfoController {
 	 * @param currentPage 当前页面
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getSubstance")
 	@ResponseBody
 	public Object getSubjectByTheme(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){

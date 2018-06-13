@@ -53,6 +53,15 @@
     <result column="util_id" jdbcType="BIGINT" property="util_id" />
     <result column="addess2" jdbcType="VARCHAR" property="addess2" />
   </resultMap>
+  
+  <resultMap id="BaseResultMap1" type="com.sanbang.vo.GoodsListInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
     collect, content, crack, density, flexural, freely, good_no, good_self, goods_salenum, 
@@ -628,11 +637,23 @@
     select count(*) from ezs_goods where recommend = '1'
   </select>
   <!-- 根据供应商id查询商品列表-->
-  <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap">
-  	select 
-    <include refid="Base_Column_List" />
-    from ezs_goods 
-    where status=#{status} and user_id=#{sellerId} 
+  <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap1">
+  	SELECT 
+  	A.id,
+  	A.name,
+  	A.price,
+  	A.cncl_num,
+  	A.status status,
+  	B.status audit_status
+	FROM ezs_goods A 
+	LEFT JOIN ezs_goods_audit_process B on
+	A.id = B.goods_id
+	WHERE 
+	1=1
+	<if test="status!=null and status!=-1">
+	and   A.status = #{status} 
+	</if>
+    and user_id=#{sellerId} 
     order by
     lastModifyDate  desc
     LIMIT #{page.startPos},#{page.pageSize}
@@ -765,12 +786,16 @@
 	
 	<!-- 多条件查询，han -->
 	<select id="queryGoodsList" resultType="com.sanbang.vo.GoodsInfo" parameterType="java.util.Map">
-		select g.id,g.name,g.area_id,g.color_id,g.price,g.inventory,g.goods_main_photo_id,a.path picturePath,d.name colorName 
-		from ezs_goods g,ezs_accessory a,ezs_dict d
-		where g.goods_main_photo_id = a.id and g.color_id = d.id 
-		<if test="area_id != null">
-	        and g.area_id = #{area_id,jdbcType=BIGINT} 
-	    </if>
+		select g.id,g.name,g.price,g.inventory,a.path picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
+		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
+		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id 
+	    <if test="areaList.size>0">
+   			and g.area_id IN 
+	        <foreach collection="areaList" item="areaId" open="(" separator="," close=")">
+	        	#{areaId}
+	        </foreach>
+        </if>
+	    
    		<if test="typeList.size>0">
    			and g.goodClass_id IN 
 	        <foreach collection="typeList" item="goodsClass" open="(" separator="," close=")">

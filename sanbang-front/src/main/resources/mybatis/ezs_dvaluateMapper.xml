@@ -164,7 +164,7 @@
   <select id="getEvaluateList" resultMap="EvaluateListMap">
   	select 
 	    A.id,
-	    date_format(A.addTime, '%Y-%m-%d'),
+	    date_format(A.addTime, '%Y-%m-%d')
 		A.deleteStatus,
 		A.conttent,
 		A.goodQuality,

@@ -32,18 +32,13 @@ public interface GoodsService {
 	 * @param id
 	 */
 	public List<ezs_dvaluate> listForEvaluate(Long id);
-	/**
-	 * 加入采购单（添加购物车）
-	 * @param goodsCart 购物车实体
-	 */
-	public int insertCart(ezs_goodscart goodsCartList);	
 	
 	/**
 	 * 更新收藏状态
 	 * @param id
 	 * @return
 	 */
-	public int updateCollect(Long id,Boolean status);
+	public int updateCollect(Long id,Long userId,Boolean status);
 	
 	/**
 	 * 如果是第一次收藏，就插入数据
@@ -53,13 +48,6 @@ public interface GoodsService {
 	public int insertCollect(Long id,Long userId);
 	
 	/**
-	 * 加入订单
-	 * @param order	订单实体类
-	 * @return
-	 */
-	public int insertOrder(ezs_orderform order);
-	
-	/**
 	 * 同类货品
 	 * @param id
 	 * @return
@@ -67,7 +55,7 @@ public interface GoodsService {
 	public List<ezs_goods> listForGoods(Long goodClass_id);
 	
 	/**
-	 * @param areaId	地区id
+	 * @param areaList	地区id
 	 * @param typeIds	品类id字符数组
 	 * @param defaultId	默认
 	 * @param inventory 库存量
@@ -89,7 +77,7 @@ public interface GoodsService {
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
 	 */
-	public List<ezs_goods> queryGoodsList(Long area,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,
+	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,
 			String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,
 			String isProtection,String goodsName,int pageStart);
@@ -100,6 +88,11 @@ public interface GoodsService {
 	 * @return
 	 */
 	public List<Long> areaToId(String areaName);
+	
+	public List<Long> queryChildId(Long area);	//省查市,或市查县、区
+	
+	public List<Long> queryChildIds(List<Long> listId);	//一列市查询一列县、区
+	
 	
 	/**
 	 * 查询颜色
