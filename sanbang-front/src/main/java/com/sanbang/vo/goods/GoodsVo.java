@@ -155,6 +155,10 @@ public class GoodsVo {
 	private Long util_id;
 
 	private String addess2;
+	
+	private long allcount;//总评价
+	
+	private int highp;//好评率
 
 	public Long getId() {
 		return id;
@@ -666,6 +670,21 @@ public class GoodsVo {
 
 	public void setAddess2(String addess2) {
 		this.addess2 = addess2;
+	}
+	public long getAllcount() {
+		return allcount;
+	}
+
+	public void setAllcount(long allcount) {
+		this.allcount = allcount;
+	}
+
+	public int getHighp() {
+		return highp;
+	}
+
+	public void setHighp(int highp) {
+		this.highp = highp;
 	}
 
 	public GoodsVo() {

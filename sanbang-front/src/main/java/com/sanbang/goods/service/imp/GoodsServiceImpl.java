@@ -103,29 +103,12 @@ public class GoodsServiceImpl implements GoodsService{
 		list  = ezs_dvaluateMapper.listForEvaluate(id);
 		return list;
 	}
-	/**
-	 * 添加购物车（待修改）
-	 * @param goodsCart
-	 * @return
-	 */
-	@Transactional
-	public int insertCart(ezs_goodscart goodscart){
-		ezs_storecart storecart = new ezs_storecart();
-		int n = 0;
-		try{
-			//this.storecartMapper.insert(storecart);
-			//this.ezs_goodscartMapper.insert();
-			n = 1;
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return n;
-	}
 	
-	public int updateCollect(Long id,Boolean status){
+	public int updateCollect(Long id,Long userId,Boolean status){
 		Map<String,Object> mmp = new HashMap<String,Object>();
 		mmp.put("good_id", id);
 		mmp.put("house", status);
+		mmp.put("userId", userId);
 		int n = ezs_documentshareMapper.updateCollect(mmp);
 		return n;
 	}
@@ -141,14 +124,6 @@ public class GoodsServiceImpl implements GoodsService{
 	
 	public ezs_documentshare getCollect(Long id){
 		ezs_documentshare n = ezs_documentshareMapper.selectByPrimaryKey(id);
-		return n;
-	}
-	/**
-	 * 添加订单
-	 */
-	public int insertOrder(ezs_orderform order){
-		//判断是否加入购物车
-		int n = ezs_orderformMapper.insertSelective(order);
 		return n;
 	}
 	

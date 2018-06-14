@@ -41,6 +41,7 @@ import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
@@ -64,6 +65,9 @@ public class AppGoodsController {
 	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
+	
+	@Autowired
+	private OrderEvaluateService orderEvaluateService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	private static final String view="/goods/";
@@ -116,18 +120,24 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/listForEvaluate")
 	@ResponseBody
-	public Result listForEvaluate(HttpServletRequest request,Long id){
+	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNo){
 		Result result = new Result();
-		List<ezs_dvaluate> list  = new ArrayList<ezs_dvaluate>();
-		list = goodsService.listForEvaluate(id);
-		if(null != list && list.size()>0){
-			result.setObj(list);
-			result.setMsg("查询成功");
+		try {
+			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+			Map<String, Object> map=new HashMap<>();
+			map.put("list", dvaluatelist);
+			map.put("highp", goodsvo.getHighp());
+			result.setObj(map);
 			result.setSuccess(true);
-		}else{
-			result.setMsg("查询失败");
+			result.setMsg("查询成功");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			result.setSuccess(false);
+			result.setMsg("查询失败");
 		}
+		
 		return result;
 	}
 	
@@ -146,10 +156,10 @@ public class AppGoodsController {
 			ezs_documentshare share = goodsService.getCollect(goodId);
 			if(null != share){
 				if(share.getDeleteStatus().equals(true)){
-					goodsService.updateCollect(goodId,false);
+					goodsService.updateCollect(goodId,user.getId(),false);
 					result.setMsg("取消收藏");
 				}else{
-					goodsService.updateCollect(goodId,true);
+					goodsService.updateCollect(goodId,user.getId(),true);
 					result.setMsg("收藏成功");
 				}
 			}else{
@@ -162,53 +172,6 @@ public class AppGoodsController {
 			}
 		}else{
 			result.setMsg("收藏出错");
-		}
-		return result;
-	}
-	
-	/**
-	 * 加入采购单（加入购物车）
-	 * @param request
-	 * @param goodsCart
-	 * @return
-	 */
-	@RequestMapping("/insertCart")
-	@ResponseBody
-	public Result insertCart(HttpServletRequest request,ezs_goodscart goodsCart){
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		ezs_bill bill = user.getEzs_bill();
-		if(null != goodsCart){
-			goodsCart.setBill(bill);
-		}
-		Result result = new Result();
-		int n;
-		n = goodsService.insertCart(goodsCart);
-		if(n>0){
-			result.setObj(goodsCart);
-			result.setSuccess(true);
-			result.setMsg("添加成功");
-		}else{
-			result.setSuccess(false);
-			result.setMsg("添加失败");
-		}
-		return result;
-	}
-	
-	/**
-	 * 立即购买（加入订单）
-	 * @param request
-	 * @param order
-	 * @return
-	 */
-	@RequestMapping("/insertOrder")
-	@ResponseBody
-	public Result insertOrder(HttpServletRequest request,ezs_orderform order){
-		Result result = Result.failure();
-		int n;
-		n = goodsService.insertOrder(order);
-		if(n>0){
-			result.setMsg("添加成功");
-			result.setSuccess(true);
 		}
 		return result;
 	}
@@ -433,9 +396,9 @@ public class AppGoodsController {
 			Page page = new Page(list.size(), pageNow);
 			result.setMeta(page);
 		}else{
-			result.setSuccess(false);
-			result.setMsg("数据为空");
+			result.setSuccess(true);
 			result.setObj(list);
+			result.setMsg("数据为空");
 		}
 		return result;
 	}

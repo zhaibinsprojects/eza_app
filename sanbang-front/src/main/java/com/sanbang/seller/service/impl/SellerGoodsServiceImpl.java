@@ -164,8 +164,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
-				if (null == cncl_num) {
-					goods.setCncl_num((double) 0);
+				if (null == cncl_num || cncl_num.equals("")) {
+					goods.setCncl_num((double)0);
+				}else{
+					goods.setCncl_num(Double.valueOf(cncl_num));
 				}
 				goods.setValidity(Integer.valueOf(validity));
 				goods.setInventory(Double.valueOf(inventory));
@@ -209,9 +211,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setContent(content);
 				goods.setPurpose(purpose);
 				goods.setUser_id(upi.getId());
-				int goodsId = 0;
 				try {
-					goodsId = goodsMapper.insert(goods);
+					goodsMapper.insert(goods);
 					result.setSuccess(true);
 					result.setMsg("添加货品成功");
 					
@@ -220,7 +221,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					
 					goodsAudit.setAddTime(new Date());
 					goodsAudit.setDeleteStatus(false);
-					goodsAudit.setGoods_id(Long.valueOf(goodsId));
+					goodsAudit.setGoods_id(Long.valueOf(goods.getId()));
 					goodsAudit.setPriceStatus(600);
 					goodsAudit.setSalePrice(new BigDecimal(price));
 					goodsAudit.setStatus(540);
@@ -460,20 +461,19 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 		try {
 			aa = goodsMapper.pullOffShelves(goodsId);
+			if (aa <= 0) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("下架操作异常");
+			} else {
+				result.setSuccess(true);
+				result.setMsg("操作成功");
+			}
 		} catch (Exception e) {
 			log.info("商品下架操作出错" + e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
 			result.setMsg("系统错误！");
-		}
-
-		if (aa <= 0) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("下架操作异常");
-		} else {
-			result.setSuccess(true);
-			result.setMsg("操作成功");
 		}
 		return result;
 	}
@@ -662,7 +662,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit.setSupplyPrice(goods.getPrice());
 				goodsAudit.setStatus(540);
 				try {
-					goodsAuditProcessMapper.updateByPrimaryKeySelective((goodsAudit));
+					goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
 					result.setSuccess(true);
 					result.setMsg("提交审核成功，请静待结果");
 				} catch (Exception e) {

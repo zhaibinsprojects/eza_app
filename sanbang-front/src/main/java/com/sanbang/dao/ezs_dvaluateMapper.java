@@ -2,11 +2,10 @@ package com.sanbang.dao;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
 
 import com.sanbang.bean.ezs_dvaluate;
 
-@Repository
 public interface ezs_dvaluateMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -18,10 +17,11 @@ public interface ezs_dvaluateMapper {
 
     int updateByPrimaryKeySelective(ezs_dvaluate record);
 
-    int updateByPrimaryKeyWithBLOBs(ezs_dvaluate record);
-
     int updateByPrimaryKey(ezs_dvaluate record);
     
-    //新增
-    List<ezs_dvaluate> listForEvaluate(long id);
+    //单个评论
+    List<ezs_dvaluate>   listForEvaluate(Long id);
+    
+    //评论列表
+    List<ezs_dvaluate> getEvaluateList(@Param("totalpage")int totalpage,@Param("pageNo")int pageNo,@Param("goodsid")long goodsid);
 }

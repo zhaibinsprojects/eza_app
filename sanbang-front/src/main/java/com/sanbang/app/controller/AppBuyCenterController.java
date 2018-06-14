@@ -7,9 +7,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.maven.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_accessory;
@@ -18,12 +20,14 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
+import com.sanbang.vo.goods.GoodsVo;
 /**
  * 
  * @author LENOVO
@@ -40,6 +44,12 @@ public class AppBuyCenterController {
 	private OrderEvaluateService orderEvaluateService;
 	@Autowired
 	private FileUploadService fileUploadService; 
+	@Autowired
+	private GoodsService goodsService;
+	
+	
+	private static final String view="/goods/";
+	
 	/**
 	 * 添加商品到收藏夹（不启用）
 	 * @param request
@@ -326,4 +336,7 @@ public class AppBuyCenterController {
 		}
 		return rs;
 	}
+	
+	
+	
 }
