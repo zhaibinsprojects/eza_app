@@ -1,6 +1,5 @@
 package com.sanbang.app.controller;
 
-import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,10 +27,6 @@ import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfStamper;
-import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -250,23 +245,24 @@ public class AppGoodsController {
 	 * 多条件查询
 	 * @param request
 	 * @param areaId	地区id
-	 * @param typeId	品类id字符串数组
+	 * @param typeId	品类id
 	 * @param addTime	默认
 	 * @param inventory	库存
-	 * @param colorId	颜色id字符串数组
-	 * @param formId	形态id字符串数组
+	 * @param colorId	颜色id
+	 * @param formId	形态id
 	 * @param source	来源
 	 * @param purpose	用途
-	 * @param density	密度字符串数组
-	 * @param cantilever	悬臂梁缺口冲击字符串数组
-	 * @param freely	简支梁缺口冲击字符串数组
-	 * @param lipolysis	熔融指数（溶脂）字符串数组
-	 * @param ash	灰分字符串数组
-	 * @param water	水分字符串数组
-	 * @param tensile	拉伸强度字符串数组
-	 * @param crack	断裂伸长率字符串数组
-	 * @param bending	弯曲强度字符串数组
-	 * @param flexural	弯曲模量字符串数组
+	 * @param density	密度
+	 * @param cantilever	悬臂梁缺口冲击
+	 * @param freely	简支梁缺口冲击
+	 * @param lipolysis	熔融指数（溶脂）
+	 * @param ash	灰分
+	 * @param water	水分
+	 * @param tensile	拉伸强度
+	 * @param crack	断裂伸长率
+	 * @param bending	弯曲强度
+	 * @param flexural	弯曲模量
+	 * @param burning	燃烧等级
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
 	 * @return
@@ -294,17 +290,14 @@ public class AppGoodsController {
 			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
 			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
-			@RequestParam(name = "isProtection",required=false)String isProtection,
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
 		Long area = Long.valueOf(areaId);
 		List<Long> areaList = new ArrayList<Long>();
-		//前端传过来的可能是单个的id值也可能为空，如果为空则是所有，目前地区分为三级
-		//传过来的id是省就查询该省份下的，是市就查询该市下的，是县或者区就查区的
-		List<Long> listId = goodsService.queryChildId(area);	//查询当前id（省）下的所有子id（市），或查当前市下的所有区县
+		List<Long> listId = goodsService.queryChildId(area);
 		if(null != listId && listId.size() != 0){
-			List<Long> listIds = goodsService.queryChildIds(listId);  //查询省下的所有市的所有区县
+			List<Long> listIds = goodsService.queryChildIds(listId);
 			if(null != listIds && listIds.size() != 0){   //area是省
 				areaList = listIds;
 			}else{	//area是市
@@ -378,7 +371,7 @@ public class AppGoodsController {
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
 		list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
-				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,isProtection,goodsName,pageStart);
+				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
 		if(null != list && list.size() > 0){
 			result.setSuccess(true);
 			result.setMsg("筛选成功");
@@ -438,6 +431,7 @@ public class AppGoodsController {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping("/colorAndFormList")
 	@ResponseBody
 	public Result colorAndFormList(HttpServletRequest request){

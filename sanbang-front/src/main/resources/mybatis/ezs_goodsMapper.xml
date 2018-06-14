@@ -794,16 +794,13 @@
 	        </foreach>
         </if>
         <if test="source != null and source != ''">
-	        and g.source like '%${source,jdbcType=VARCHAR}%' 
+	        and g.source like '%${source}%' 
 	    </if>
         <if test="purpose != null and purpose != ''">
-	        and g.purpose like '%${purpose,jdbcType=VARCHAR}%' 
-	    </if>
-	    <if test="protection != null and protection != ''">
-	        and g.protection like '%${protection,jdbcType=VARCHAR}%' 
+	        and g.purpose like '%${purpose}%' 
 	    </if>
 	    <if test="name != null and name != ''">
-	        and g.name like '%${name,jdbcType=VARCHAR}%' 
+	        and g.name like '%${name}%' 
 	    </if>
 	    <!-- 价格 -->
 	    <if test="price1 != null and price1 != ''">
