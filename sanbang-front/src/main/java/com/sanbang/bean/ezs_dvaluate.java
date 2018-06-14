@@ -1,6 +1,7 @@
 package com.sanbang.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class ezs_dvaluate {
     private Long id;
@@ -23,17 +24,11 @@ public class ezs_dvaluate {
 
     private Long user_id;
     
-    private byte[] user;
+    private List<ezs_dvaluate_accessroy> accessroys;//图片记录
+    
+    private ezs_user user;//评论人
 
-    public byte[] getUser() {
-		return user;
-	}
-
-	public void setUser(byte[] user) {
-		this.user = user;
-	}
-
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -112,4 +107,16 @@ public class ezs_dvaluate {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+	public List<ezs_dvaluate_accessroy> getAccessroys() {
+		return accessroys;
+	}
+
+	public void setAccessroys(List<ezs_dvaluate_accessroy> accessroys) {
+		this.accessroys = accessroys;
+	}
+
+	
+    
+    
 }

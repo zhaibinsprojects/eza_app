@@ -4,6 +4,9 @@
   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_dvaluate_accessroy" >
     <id column="dvaluate_id" property="dvaluate_id" jdbcType="BIGINT" />
     <result column="accessroy_id" property="accessroy_id" jdbcType="BIGINT" />
+    <!--图片记录-->
+   <association property="accessory" column="accessroy_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
+  </association>
   </resultMap>
   <sql id="Base_Column_List" >
     dvaluate_id, accessroy_id

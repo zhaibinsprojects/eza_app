@@ -1209,6 +1209,7 @@ public class UserProServiceImpl implements UserProService {
 			story.setAdmin_status(0);
 			story.setAuditingusertype_id(ezs_dictMapper.getDictById(DictionaryCate.CRM_USR_TYPE_REGISTER).getId());
 			story.setCreditScore(0);
+			story.setAccountType(0);
 			// 用户详情
 			ezs_userinfo userinfo = new ezs_userinfo();
 			userinfo.setAddTime(new Date());
