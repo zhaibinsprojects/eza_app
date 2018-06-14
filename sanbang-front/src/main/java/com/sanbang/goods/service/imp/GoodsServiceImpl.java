@@ -518,7 +518,6 @@ public class GoodsServiceImpl implements GoodsService{
 			return mmp;
 		}
 		try {
-			//orderForm.setOrder_no(orderFormNo);
 			orderForm.setAddTime(new Date());
 			orderForm.setDeleteStatus(false);
 			orderForm.setUser_id(user.getId());

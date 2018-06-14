@@ -190,7 +190,7 @@ public class AppHomeGoodsMessController {
 		Result PriceAnalyzeInfo = null;
 		Result advicesInfo = null;
 		try {
-			goodsInfo = goodsIntroduceInfo(addressId,currentPage);
+			goodsInfo = goodsIntroduceInfo(currentPage,addressId);
 			PriceAnalyzeInfo = getPriceAnalyzeInfo(currentPage);
 			advicesInfo = getAdvicesInfo();
 			if(goodsInfo!=null){
@@ -259,8 +259,14 @@ public class AppHomeGoodsMessController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
+			List<ezs_ezssubstance> eelist = new ArrayList<>();
+			for (ezs_ezssubstance eze : elist) {
+				//去除文章内容
+				eze.setContent("");
+				eelist.add(eze);
+			}
 			rs = Result.success();
-			rs.setObj(elist);
+			rs.setObj(eelist);
 			rs.setMeta(page);
 			log.info("行情分析查询完成");
 		}else{
