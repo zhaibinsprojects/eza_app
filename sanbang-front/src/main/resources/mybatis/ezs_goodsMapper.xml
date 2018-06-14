@@ -634,7 +634,7 @@
   </update>
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
-    select count(*) from ezs_goods where recommend = '1'
+    select count(1) from ezs_goods where recommend = '1'
   </select>
   <!-- 根据供应商id查询商品列表-->
   <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap1">

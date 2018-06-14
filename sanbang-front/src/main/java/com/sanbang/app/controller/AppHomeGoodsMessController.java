@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
@@ -207,7 +208,7 @@ public class AppHomeGoodsMessController {
 			}
 			rs = Result.success();
 			rs.setObj(homePageMessInfo);
-			rs.setMeta(homePageMessInfo.getPage());
+			rs.setMeta(goodsInfo.getMeta());
 			rs.setMsg("查询信息成功");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -233,9 +234,17 @@ public class AppHomeGoodsMessController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			glist = (List<GoodsInfo>) mmp.get("Obj");
+			List<GoodsInfo> glistTemp = new ArrayList<>();
+			for (GoodsInfo gInfo : glist) {
+				GoodsInfo goodInfo = new GoodsInfo();
+				goodInfo.setId(gInfo.getId());
+				goodInfo.setName(gInfo.getName());
+				goodInfo.setMainPhoto(gInfo.getMainPhoto());
+				glistTemp.add(goodInfo);
+			}
 			page = (Page) mmp.get("Page");
 			rs = Result.success();
-			rs.setObj(glist);
+			rs.setObj(glistTemp);
 			rs.setMeta(page);
 			log.info("优品推荐商品查询完成..........................");
 		}else{
@@ -261,9 +270,15 @@ public class AppHomeGoodsMessController {
 			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
 			List<ezs_ezssubstance> eelist = new ArrayList<>();
 			for (ezs_ezssubstance eze : elist) {
-				//去除文章内容
-				eze.setContent("");
-				eelist.add(eze);
+				//去除不必要信息
+				ezs_ezssubstance tempEze = new ezs_ezssubstance();
+				ezs_column parentColumn = new ezs_column(); 
+				tempEze.setId(eze.getId());
+				tempEze.setName(eze.getName());
+				tempEze.setMeta(eze.getMeta());
+				parentColumn.setName(eze.getParentColumn().getName());
+				tempEze.setParentColumn(parentColumn);
+				eelist.add(tempEze);
 			}
 			rs = Result.success();
 			rs.setObj(eelist);
@@ -278,7 +293,6 @@ public class AppHomeGoodsMessController {
 		return rs;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private Result getAdvicesInfo(){
 		Result rs = null;
 		List<Advices> adviceList = new ArrayList<Advices>();
