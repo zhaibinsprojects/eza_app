@@ -12,6 +12,7 @@ import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.goods.GoodsVo;
 
@@ -149,5 +150,12 @@ public interface GoodsService {
 	 * @return
 	 */
 	GoodsVo  getgoodsinfo(long goodsid);
+	
+	/**
+	 * 展示pdf
+	 * @param goodsid
+	 * @return
+	 */
+	Result  getGoodsPdf(long goodsid);
 	
 }

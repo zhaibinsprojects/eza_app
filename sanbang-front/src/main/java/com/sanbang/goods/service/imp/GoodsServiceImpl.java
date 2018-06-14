@@ -1,5 +1,6 @@
 package com.sanbang.goods.service.imp;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,8 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,13 +38,15 @@ import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.CommUtil;
+import com.sanbang.utils.Result;
 import com.sanbang.utils.StockHelper;
+import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
+import com.sanbang.utils.httpclient.HttpRequestParam;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
-import com.sanbang.utils.StockHelper;
 
 /**
  * 货品相关处理
@@ -83,8 +89,8 @@ public class GoodsServiceImpl implements GoodsService{
 	@Autowired
 	private ezs_price_trendMapper priceTrendMapper; 
 	
-	
-	
+	@Value("${config.processgoods.pdfurl}")
+	private String processgoodspdfurl;
 	
 	/**
 	 * 查询单个货品详情
@@ -844,6 +850,31 @@ public class GoodsServiceImpl implements GoodsService{
 	public GoodsVo getgoodsinfo(long goodsid) {
 		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid);
 		return goodsVo;
+	}
+
+	@Override
+	public Result getGoodsPdf(long goodsid) {
+		Result result=Result.failure();
+		String url=processgoodspdfurl;
+		net.sf.json.JSONObject callBackRet = null;
+		HttpRequestParam httpParam = new HttpRequestParam();
+		try {
+			httpParam.addUrlParams(new BasicNameValuePair("goodsid",String.valueOf(goodsid)));
+			
+				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
+				Map<String, Object> mv = new HashMap<>();
+				mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
+				result.setObj(mv);
+				result.setSuccess(true);
+				result.setMsg("请求成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			log.info("系统错误", e);
+		}
+		return result;
 	}
 	
 	
