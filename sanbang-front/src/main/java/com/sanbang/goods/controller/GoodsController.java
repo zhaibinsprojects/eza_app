@@ -659,7 +659,7 @@ public class GoodsController {
 	 */
 	@RequestMapping(value="/editToSelfGoodCar")
 	@ResponseBody
-	public Object editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -680,9 +680,8 @@ public class GoodsController {
 				if(null != map.get("count")){
 					result.setObj(map.get("count"));
 				}
+				result.setMsg(map.get("Msg").toString());
 			}
-			result.setMsg("成功");
-			result.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMsg("数据传递有误");

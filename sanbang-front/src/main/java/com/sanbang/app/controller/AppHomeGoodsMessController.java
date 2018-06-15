@@ -245,7 +245,8 @@ public class AppHomeGoodsMessController {
 				if(gVo.getMainphoto()!=null&&gVo.getMainphoto().size()>0)
 					goodInfo.setMainPhoto(gVo.getMainphoto().get(0));
 				//地址
-				goodInfo.setAddess(gVo.getAddess());
+				//goodInfo.setAddess(gVo.getAddess());
+				goodInfo.setAreaName(gVo.getArea().getAreaName());
 				//库存
 				goodInfo.setInventory(gVo.getInventory());
 				//单位
