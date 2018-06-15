@@ -30,17 +30,14 @@ public interface ezs_goodsMapper {
     
     int goodsIntroduceCount();
 
-
 	List<ezs_goods> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("page")Page page);
 
 	int pullOffShelves(long goodsId);
 	
 	List<ezs_goods> listForGoods(Long goodClass_id);
 
-	
 	List<ezs_goods> getGoodsFromCollection(Long userId);
 	
-
     List<GoodsInfo> selectByGoodsName(String name);
 	
 	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);	
@@ -52,10 +49,8 @@ public interface ezs_goodsMapper {
 	/**
 	 * 多条件筛选
 	 * @param map
-	 * @return
 	 */
-	List<ezs_goods> queryGoodsList(Map map);
-	
+	List<ezs_goods> queryGoodsList(Map<String,Object> map);
 	
 	/**
 	 * @author langjf
@@ -64,7 +59,6 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid);
-	
 	/**
 	 * 优品推荐 2
 	 * @author zhaiBin
@@ -72,5 +66,5 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	List<GoodsVo> goodsIntroduceTwo(Page page);
-	
+
 }

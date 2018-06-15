@@ -61,6 +61,7 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
+    <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
   </resultMap>
   <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
@@ -644,7 +645,8 @@
   	A.price,
   	A.cncl_num,
   	A.status status,
-  	B.status audit_status
+  	B.status audit_status,
+  	B.priceStatus priceStatus
 	FROM ezs_goods A 
 	LEFT JOIN ezs_goods_audit_process B on
 	A.id = B.goods_id
@@ -822,16 +824,13 @@
 	        </foreach>
         </if>
         <if test="source != null and source != ''">
-	        and g.source like '%${source,jdbcType=VARCHAR}%' 
+	        and g.source like '%${source}%' 
 	    </if>
         <if test="purpose != null and purpose != ''">
-	        and g.purpose like '%${purpose,jdbcType=VARCHAR}%' 
-	    </if>
-	    <if test="protection != null and protection != ''">
-	        and g.protection like '%${protection,jdbcType=VARCHAR}%' 
+	        and g.purpose like '%${purpose}%' 
 	    </if>
 	    <if test="name != null and name != ''">
-	        and g.name like '%${name,jdbcType=VARCHAR}%' 
+	        and g.name like '%${name}%' 
 	    </if>
 	    <!-- 价格 -->
 	    <if test="price1 != null and price1 != ''">
