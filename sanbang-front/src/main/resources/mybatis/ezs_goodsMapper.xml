@@ -635,7 +635,7 @@
   </update>
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
-    select count(*) from ezs_goods where recommend = '1'
+    select count(1) from ezs_goods where recommend = '1'
   </select>
   <!-- 根据供应商id查询商品列表-->
   <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap1">
@@ -749,7 +749,7 @@
   <select id="goodsIntroduce" resultMap="GoodsResultMap" parameterType="com.sanbang.utils.Page">
     select
     <include refid="Goods_Base_Column_List" />
-    from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
+    from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
   </select>
   
   <!-- 查询同类货品，han -->
@@ -817,16 +817,13 @@
 	        </foreach>
         </if>
         <if test="source != null and source != ''">
-	        and g.source like '%${source,jdbcType=VARCHAR}%' 
+	        and g.source like '%${source}%' 
 	    </if>
         <if test="purpose != null and purpose != ''">
-	        and g.purpose like '%${purpose,jdbcType=VARCHAR}%' 
-	    </if>
-	    <if test="protection != null and protection != ''">
-	        and g.protection like '%${protection,jdbcType=VARCHAR}%' 
+	        and g.purpose like '%${purpose}%' 
 	    </if>
 	    <if test="name != null and name != ''">
-	        and g.name like '%${name,jdbcType=VARCHAR}%' 
+	        and g.name like '%${name}%' 
 	    </if>
 	    <!-- 价格 -->
 	    <if test="price1 != null and price1 != ''">
@@ -1009,10 +1006,44 @@
 	
 	<!--商品详情展示-->
 	<select id="getgoodsinfo" resultMap="goodvomap">
-	 select 
-    <include refid="Base_Column_List" />
-    from ezs_goods
-    where id = #{goodsid,jdbcType=BIGINT}	
+		SELECT
+	A.*, (
+		SELECT
+			COUNT(B.id)
+		FROM
+			ezs_dvaluate B
+		WHERE
+			1 = 1
+			AND B.goods_id =#{goodsid,jdbcType=BIGINT}	
+		) allcount,
+		FORMAT(
+		(
+			(
+				SELECT
+					COUNT(B.id)
+				FROM
+					ezs_dvaluate B
+				WHERE
+					1 = 1
+				AND B.goodQuality > 3
+				AND B.goods_id = 1
+			) / (
+				SELECT
+					COUNT(C.id)
+				FROM
+					ezs_dvaluate C
+				WHERE
+					1 = 1
+				AND C.goods_id = 1
+			)
+		),
+		2
+	)*100 highp
+	
+	FROM
+		ezs_goods A
+	WHERE
+		A.id = #{goodsid,jdbcType=BIGINT}	
 	</select>
 	
 </mapper>

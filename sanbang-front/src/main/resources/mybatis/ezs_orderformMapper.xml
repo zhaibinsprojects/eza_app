@@ -419,15 +419,16 @@
 			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
 			B.weAddress_id
 		FROM
-			ezs_goodscart A
-		LEFT JOIN ezs_orderform B ON A.of_id = B.id
+			ezs_orderform B
+		LEFT JOIN ezs_goodscart A ON A.of_id = B.id
 		LEFT JOIN ezs_goods C ON C.id = A.goods_id
 		LEFT JOIN ezs_area D ON D.id = B.address_id
 		LEFT JOIN ezs_storecart E ON E.id = A.sc_id
 		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
 		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
-		where
-		1 = 1
+		WHERE
+			1 = 1
+		AND A.deleteStatus = 0
 
 		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status!='200' and pager.order_status!='110'">
 		 and  B.order_status in (#{pager.order_status})	
@@ -456,14 +457,16 @@
 	  SELECT
 		count(*)
 	FROM
-		ezs_goodscart A
-	LEFT JOIN ezs_orderform B ON A.of_id = B.id
-	LEFT JOIN ezs_goods C ON C.id = A.goods_id
-	LEFT JOIN ezs_address D ON D.id = B.address_id
-	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
-	where
-		1 = 1
+		ezs_orderform B
+		LEFT JOIN ezs_goodscart A ON A.of_id = B.id
+		LEFT JOIN ezs_goods C ON C.id = A.goods_id
+		LEFT JOIN ezs_area D ON D.id = B.address_id
+		LEFT JOIN ezs_storecart E ON E.id = A.sc_id
+		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
+		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+		WHERE
+			1 = 1
+		AND A.deleteStatus = 0
 
 		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status!='200' and pager.order_status!='110'">
 		 and  B.order_status in (#{pager.order_status})
@@ -516,15 +519,16 @@
 			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
 			B.weAddress_id
 			FROM
-				ezs_goodscart A
-			LEFT JOIN ezs_orderform B ON A.of_id = B.id
+				ezs_orderform B
+			LEFT JOIN ezs_goodscart A ON A.of_id = B.id
 			LEFT JOIN ezs_goods C ON C.id = A.goods_id
 			LEFT JOIN ezs_area D ON D.id = B.address_id
 			LEFT JOIN ezs_storecart E ON E.id = A.sc_id
 			LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
 			LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
-			where
-			1 = 1
+			WHERE
+				1 = 1
+			AND A.deleteStatus = 0
 		and
 	 B.order_no=#{order_no}	
 	</select>

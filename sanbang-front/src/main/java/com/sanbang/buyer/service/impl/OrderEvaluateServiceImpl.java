@@ -77,4 +77,13 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 		return mmp;
 	}
 
+	@Override
+	public List<ezs_dvaluate> getEvaluateList(int pageNo,long goodsid) {
+		if(pageNo<1){
+			pageNo=1;
+		}
+		List<ezs_dvaluate>  dvaluatelist=dvaluateMapper.getEvaluateList(10*(pageNo-1), 10,goodsid);
+		return dvaluatelist;
+	}
+
 }

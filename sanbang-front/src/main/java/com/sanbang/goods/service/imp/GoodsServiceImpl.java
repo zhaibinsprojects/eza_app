@@ -29,7 +29,6 @@ import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.dao.ezs_price_trendMapper;
 import com.sanbang.dao.ezs_stockMapper;
-import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
@@ -40,8 +39,6 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
-import com.sanbang.utils.StockHelper;
-
 /**
  * 货品相关处理
  * @author hanlongfei
@@ -71,8 +68,6 @@ public class GoodsServiceImpl implements GoodsService{
 	@Autowired
 	private ezs_storecartMapper storecartMapper;
 	@Autowired
-	private ezs_storeMapper storeMapper; 
-	@Autowired
 	private ezs_stockMapper stockMapper;
 	@Autowired
 	private ezs_userMapper userMapper;
@@ -84,24 +79,17 @@ public class GoodsServiceImpl implements GoodsService{
 	private ezs_price_trendMapper priceTrendMapper; 
 	
 	
-	
-	
 	/**
 	 * 查询单个货品详情
 	 * @param id
 	 * @return
 	 */
-	
 	public ezs_goods getGoodsDetail(Long id){
-		ezs_goods goods = new ezs_goods();
-		goods = ezs_goodsMapper.getGoodsDetail(id);
-		return goods;
+		return ezs_goodsMapper.getGoodsDetail(id);
 	}
 	
 	public List<ezs_dvaluate> listForEvaluate(Long id){
-		List<ezs_dvaluate> list = new ArrayList<ezs_dvaluate>();
-		list  = ezs_dvaluateMapper.listForEvaluate(id);
-		return list;
+		return ezs_dvaluateMapper.listForEvaluate(id);
 	}
 	
 	public int updateCollect(Long id,Long userId,Boolean status){
@@ -109,8 +97,7 @@ public class GoodsServiceImpl implements GoodsService{
 		mmp.put("good_id", id);
 		mmp.put("house", status);
 		mmp.put("userId", userId);
-		int n = ezs_documentshareMapper.updateCollect(mmp);
-		return n;
+		return ezs_documentshareMapper.updateCollect(mmp);
 	}
 	
 	public int insertCollect(Long id,Long userId){
@@ -118,27 +105,24 @@ public class GoodsServiceImpl implements GoodsService{
 		share.setGood_id(id);
 		share.setDeleteStatus(false);
 		share.setUser_id(userId);
-		int n = ezs_documentshareMapper.insertSelective(share);
-		return n;
+		return ezs_documentshareMapper.insertSelective(share);
 	}
 	
 	public ezs_documentshare getCollect(Long id){
-		ezs_documentshare n = ezs_documentshareMapper.selectByPrimaryKey(id);
-		return n;
+		return ezs_documentshareMapper.selectByPrimaryKey(id);
 	}
 	
 	public List<ezs_goods> listForGoods(Long goodClass_id){
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
-		list = ezs_goodsMapper.listForGoods(goodClass_id);
-		return list;
+		return ezs_goodsMapper.listForGoods(goodClass_id);
 	}
 	
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,String source,
-			String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,String[] ashs,String[] waters,
-			String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,String isProtection,String goodsName,int pageStart){
+	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,
+			String[] formIds,String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,
+			String[] lipolysises,String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
+			String[] burnings,String goodsName,int pageStart){
 		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -328,7 +312,6 @@ public class GoodsServiceImpl implements GoodsService{
 		map.put("flexural2", flexural2);
 		map.put("burning1", burning1);
 		map.put("burning2", burning2);
-		map.put("protection", isProtection);
 		map.put("name", goodsName);
 		map.put("pageStart", pageStart);	//起始页
 		map.put("pageSize", 10);	//每页10条
@@ -350,40 +333,29 @@ public class GoodsServiceImpl implements GoodsService{
 
 	@Override
 	public List<Long> queryChildIds(List<Long> listId) {
-		// TODO Auto-generated method stub
 		return areaMapper.queryChildIds(listId);
 	}
 	
-	
 	//查询颜色
 	public List<CurrencyClass> colorList(){
-		List<CurrencyClass> map = new ArrayList<CurrencyClass>();
-		map = ezs_dictMapper.colorList();
-		return map;
+		return ezs_dictMapper.colorList();
 		
 	}
 	//查询形态
 	public List<CurrencyClass> formList(){
-		List<CurrencyClass> map = new ArrayList<CurrencyClass>();
-		map = ezs_dictMapper.formList();
-		return map;
-		
+		return ezs_dictMapper.formList();
 	}
 	
 	public List<ezs_customized> customizedList(Long user_id){
-		List<ezs_customized> list = new ArrayList<ezs_customized>();
-		list = ezs_customizedMapper.customizedList(user_id);
-		return list;
+		return ezs_customizedMapper.customizedList(user_id);
 	}
 	
 	public int insertCustomized(ezs_customized customized){
-		int n = ezs_customizedMapper.insertSelective(customized);
-		return n;
+		return ezs_customizedMapper.insertSelective(customized);
 	}
 	
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord){
-		int n = ezs_customized_recordMapper.insertSelective(customizedRecord);
-		return n;
+		return ezs_customized_recordMapper.insertSelective(customizedRecord);
 	}
 	/**
 	 * 添加购物车（逐个商品进行添加）
@@ -512,7 +484,6 @@ public class GoodsServiceImpl implements GoodsService{
 			return mmp;
 		}
 		try {
-			//orderForm.setOrder_no(orderFormNo);
 			orderForm.setAddTime(new Date());
 			orderForm.setDeleteStatus(false);
 			orderForm.setUser_id(user.getId());
