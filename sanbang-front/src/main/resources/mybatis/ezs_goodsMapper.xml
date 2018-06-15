@@ -635,7 +635,7 @@
   </update>
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
-    select count(1) from ezs_goods where recommend = '1'
+    select count(*) from ezs_goods where recommend = '1'
   </select>
   <!-- 根据供应商id查询商品列表-->
   <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap1">
@@ -745,8 +745,15 @@
     from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and 
     g.name like '%${_parameter}%'
   </select>
-  <!-- 优品推荐2包含图片 -->
+  <!-- 优品推荐包含图片 -->
   <select id="goodsIntroduce" resultMap="GoodsResultMap" parameterType="com.sanbang.utils.Page">
+    select
+    <include refid="Goods_Base_Column_List" />
+    from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
+  </select>
+  
+  <!-- 优品推荐2 -->
+  <select id="goodsIntroduceTwo" resultMap="getGoodIntroduceInfo" parameterType="com.sanbang.utils.Page">
     select
     <include refid="Goods_Base_Column_List" />
     from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
@@ -776,7 +783,7 @@
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
 		a.areaName areaName,gc.name goodClassName,ac.ext pictureSuffix,
-		ac.name pictureName,ac.path picturePath 
+		ac.name pictureName,CONCAT("http://10.10.10.148/",ac.path,"/",ac.name) picturePath 
 		from ezs_goods g 
 		left join ezs_dict d1 on g.color_id = d1.id 
 		left join ezs_dict d2 on g.form_id = d2.id 
@@ -993,8 +1000,17 @@
      <association property="region" column="region_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
      </association>
       <!--主图片-->
-     <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoByPhoto_id">
+    <!--  <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoByPhoto_id">
+     </collection> -->
+     
+     <!--主图片,zhaiBin修改-->
+     <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
      </collection>
+     
+      <!--地区are,zhaiBin-->
+     <!-- <association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     </association> -->
+     
       <!--商品图片-->
      <collection property="goods_photos" column="id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoBygoods_id">
      </collection>
@@ -1002,6 +1018,12 @@
      <collection property="cartographys" column="id" select="com.sanbang.dao.ezs_goods_cartographyMapper.selectcartinfoBygoods_id">
      </collection>
   </resultMap>
+  
+  	<!-- zhaiBin,add -->
+  	<resultMap id="getGoodIntroduceInfo" type="com.sanbang.vo.goods.GoodsVo" extends="goodvomap">  
+    	<association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     	</association>
+	</resultMap>  
 	
 	
 	<!--商品详情展示-->

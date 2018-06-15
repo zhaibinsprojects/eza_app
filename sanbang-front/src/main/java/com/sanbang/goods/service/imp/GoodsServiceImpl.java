@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,12 +35,16 @@ import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.CommUtil;
+import com.sanbang.utils.Result;
 import com.sanbang.utils.StockHelper;
+import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
+import com.sanbang.utils.httpclient.HttpRequestParam;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
+
 /**
  * 货品相关处理
  * @author hanlongfei
@@ -78,6 +84,8 @@ public class GoodsServiceImpl implements GoodsService{
 	@Autowired
 	private ezs_price_trendMapper priceTrendMapper; 
 	
+	@Value("${config.processgoods.pdfurl}")
+	private String processgoodspdfurl;
 	
 	/**
 	 * 查询单个货品详情
@@ -461,6 +469,71 @@ public class GoodsServiceImpl implements GoodsService{
 		return mmp;
 	}
 	/**
+	 * 编辑购物车（编辑单个商品）
+	 * @param goodsId	商品id
+	 * @param count	  编辑的最终数量
+	 * @param user
+	 * @return
+	 */
+	@Transactional(rollbackFor=java.lang.Exception.class)
+	public synchronized Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user){
+		//1、先确认这个商品是否在购物车中存在，没有则提示添加购物车
+		//2、然后就是查询改商品的库存量，如果提示超过库存量，则提示超过现有量
+		//3、更新两张表的数据（ezs_storecart、ezs_goodscart）
+		//4、然后就是查询单价并计算总价，返回到前端
+		log.info("编辑购物车begining...");
+		Map<String, Object> map = new HashMap<String,Object>();
+		try{
+			//1先判断商品存在否以及库存量
+			ezs_goods goods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
+			if(null != goods){
+				if(count > goods.getInventory()){
+					map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					map.put("Msg", "商品数量不足");
+					map.put("count", goods.getInventory());
+					log.info("编辑购物车方法：商品数量不足...");
+					return map;
+				}
+				ezs_goodscart goodsCart = ezs_goodscartMapper.selectByPrimaryKey(goodsId);
+				//2然后判断是否存在购物车中（若存在，则说明之前已经添加进来，那么店铺购物车则也是存在的，下面只做更新操作即可）
+				if(null != goodsCart){
+					double totalPrice = count*(goods.getPrice().doubleValue());
+					ezs_storecart storeCart = new ezs_storecart();
+					storeCart.setTotal_price(BigDecimal.valueOf(totalPrice));
+					storeCart.setId(goodsCart.getSc_id());
+					goodsCart.setCount(count);
+					int n = storecartMapper.updateByPrimaryKeySelective(storeCart);
+					int m = ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCart);
+					if( n > 0 && m > 0){
+						map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						map.put("Msg", "购物车数据更新成功");
+						map.put("totalPrice", totalPrice);
+						log.info("编辑购物车方法：数据更新成功...");
+						return map;
+					}
+				}else{
+					map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					map.put("Msg", "请先添加购物车");
+					log.info("编辑购物车方法：购物车里不存在该商品...");
+					return map;
+				}
+			}else{
+				map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				map.put("Msg", "该商品不存在");
+				log.info("编辑购物车方法：不存在该商品...");
+				return map;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			log.info("编辑购物车异常");
+			map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			map.put("Msg", "参数传递有误");
+			throw e;
+		}
+		log.info("编辑购物车end...");
+		return map;
+	}
+	/**
 	 * 生成订单
 	 * @author zhaibin
 	 * @param orderForm 订单对象
@@ -815,6 +888,31 @@ public class GoodsServiceImpl implements GoodsService{
 	public GoodsVo getgoodsinfo(long goodsid) {
 		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid);
 		return goodsVo;
+	}
+
+	@Override
+	public Result getGoodsPdf(long goodsid) {
+		Result result=Result.failure();
+		String url=processgoodspdfurl;
+		net.sf.json.JSONObject callBackRet = null;
+		HttpRequestParam httpParam = new HttpRequestParam();
+		try {
+			httpParam.addUrlParams(new BasicNameValuePair("goodsid",String.valueOf(goodsid)));
+			
+				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
+				Map<String, Object> mv = new HashMap<>();
+				mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
+				result.setObj(mv);
+				result.setSuccess(true);
+				result.setMsg("请求成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			log.info("系统错误", e);
+		}
+		return result;
 	}
 	
 	

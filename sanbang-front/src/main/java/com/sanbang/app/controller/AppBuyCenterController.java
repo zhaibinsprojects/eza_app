@@ -22,6 +22,7 @@ import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
@@ -173,6 +174,7 @@ public class AppBuyCenterController {
 	 * @param gId 商品ID
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/goodPriceChanges")
 	@ResponseBody
 	public Object goodPriceChanges(HttpServletRequest request,HttpServletResponse response,Long gId){
@@ -198,6 +200,7 @@ public class AppBuyCenterController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodsInvoiceByUser")
 	@ResponseBody
 	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response){
@@ -320,8 +323,8 @@ public class AppBuyCenterController {
 		}
 		if(imgName!=null){			
 			accessory = new ezs_accessory();
-			accessory.setName(imgName);
-			accessory.setPath(path);
+			accessory.setPath(FilePathUtil.getmiddelPath(path));
+			accessory.setName(FilePathUtil.getimageName(path));
 		}
 		//数据入库
 		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);

@@ -3,7 +3,7 @@ package com.sanbang.bean;
 public class ezs_idcard_dict {
     private Long store_id;
 
-    private Long accessory_id;
+    private Long paper_id;
 
     public Long getStore_id() {
         return store_id;
@@ -13,11 +13,11 @@ public class ezs_idcard_dict {
         this.store_id = store_id;
     }
 
-    public Long getAccessory_id() {
-        return accessory_id;
+    public Long getPaper_id() {
+        return paper_id;
     }
 
-    public void setAccessory_id(Long accessory_id) {
-        this.accessory_id = accessory_id;
+    public void setPaper_id(Long paper_id) {
+        this.paper_id = paper_id;
     }
 }

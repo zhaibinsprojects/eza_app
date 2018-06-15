@@ -17,6 +17,7 @@ import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.index.service.AddressService;
@@ -35,6 +36,7 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.ExPage;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomePageMessInfo;
+import com.sanbang.vo.goods.GoodsVo;
 
 @Controller
 @RequestMapping("/app/home")
@@ -194,16 +196,17 @@ public class AppHomeGoodsMessController {
 			goodsInfo = goodsIntroduceInfo(currentPage,addressId);
 			PriceAnalyzeInfo = getPriceAnalyzeInfo(currentPage);
 			advicesInfo = getAdvicesInfo();
-			if(goodsInfo!=null){
+			if(goodsInfo.getObj()!=null){
 				homePageMessInfo.setGoodsInfoList((List<GoodsInfo>)goodsInfo.getObj());
 				homePageMessInfo.setPage(goodsInfo.getMeta());
-				log.info("getFirstPageMessage:推荐商品查询成功");
+			}else{
+				homePageMessInfo.setGoodsInfoList(new ArrayList<GoodsInfo>());
+				homePageMessInfo.setPage(goodsInfo.getMeta());
 			}
-			if(PriceAnalyzeInfo!=null){
+			if(PriceAnalyzeInfo.getObj()!=null){
 				homePageMessInfo.setEzssubstanceList((List<ezs_ezssubstance>)PriceAnalyzeInfo.getObj());
-				log.info("getFirstPageMessage:行情分析查询成功");
 			}
-			if(advicesInfo!=null){
+			if(advicesInfo.getObj()!=null){
 				homePageMessInfo.setAdvicesList((List<Advices>)advicesInfo.getObj());
 			}
 			rs = Result.success();
@@ -224,22 +227,32 @@ public class AppHomeGoodsMessController {
 	private Result goodsIntroduceInfo(String currentPage,String addressId){
 		log.info("优品推荐商品查询begin..........................");
 		Map<String, Object> mmp = null;
-		List<GoodsInfo> glist = null;
+		List<GoodsVo> glist = null;
 		Result rs = null;
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		mmp = this.recommendGoodsService.goodsIntroduce(currentPage);
+		mmp = this.recommendGoodsService.goodsIntroduceTwo(currentPage);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			glist = (List<GoodsInfo>) mmp.get("Obj");
+			glist = (List<GoodsVo>) mmp.get("Obj");
 			List<GoodsInfo> glistTemp = new ArrayList<>();
-			for (GoodsInfo gInfo : glist) {
+			for (GoodsVo gVo : glist) {
 				GoodsInfo goodInfo = new GoodsInfo();
-				goodInfo.setId(gInfo.getId());
-				goodInfo.setName(gInfo.getName());
-				goodInfo.setMainPhoto(gInfo.getMainPhoto());
+				goodInfo.setId(gVo.getId());
+				goodInfo.setName(gVo.getName());
+				if(gVo.getMainphoto()!=null&&gVo.getMainphoto().size()>0)
+					goodInfo.setMainPhoto(gVo.getMainphoto().get(0));
+				//地址
+				//goodInfo.setAddess(gVo.getAddess());
+				goodInfo.setAreaName(gVo.getArea().getAreaName());
+				//库存
+				goodInfo.setInventory(gVo.getInventory());
+				//单位
+				goodInfo.setUtilName(gVo.getUtil().getName());
+				//价格
+				goodInfo.setPrice(gVo.getPrice());
 				glistTemp.add(goodInfo);
 			}
 			page = (Page) mmp.get("Page");

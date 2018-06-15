@@ -477,63 +477,6 @@ public class AppGoodsController {
 		return result;
 	}
 	
-	//生成PDF（质检报告）
-	/**
-	 * 
-	 * @param params
-	 * @param templPath	模板路径
-	 * @param ftlName 模板文件名称
-	 * @param htmlPath	生成的html文件的名称
-	 * @param pdfPath	导出pdf的路径
-	 * @param fontPath	
-	 * @return
-	 */
-	@RequestMapping("/exportPDF")
-	@ResponseBody
-	public static String exportPDF(Map<String, Object> params, String templPath, String ftlName, String htmlPath,
-			String pdfPath, String fontPath){
-		Configuration configuration = null;
-		try {
-			configuration = new Configuration();
-			configuration.setDefaultEncoding("UTF-8");
-			configuration.setDirectoryForTemplateLoading(new File(templPath));
-			Template temp = configuration.getTemplate(ftlName);		//文件名称
-			File htmlFile = new File(htmlPath);
-			if (!htmlFile.exists()) {
-				htmlFile.createNewFile();
-			}
-			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(htmlPath)), "utf-8"));
-			temp.process(params, out);
-			out.flush();
-
-			String url = htmlFile.toURI().toString();	//.toURL()
-			OutputStream os = new FileOutputStream(pdfPath);
-			ITextRenderer renderer = new ITextRenderer();
-			renderer.setDocument(url);
-			
-			// 解决中文问题
-			ITextFontResolver fontResolver = renderer.getFontResolver();
-			fontResolver.addFont(fontPath + "simsun.ttc", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-
-			renderer.layout();
-			renderer.createPDF(os);
-			os.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-		return pdfPath; 
-		
-	}
-	
-//	public static void main(String[] args) {
-//		Map<String, Object> map=new HashMap<>();
-//		map.put("orderAmount", "aaa");
-//		map.put("AcapAmount", "bb");
-//		map.put("customerName", "呵呵哒呵呵哒");
-//		exportPDF(map, "d:/", "jybtz.ftl", "d:/", "d:/", "d:/fonts");
-//	}
-	
 	/**
 	 * 上传发票图片，返回url
 	 * @param request
@@ -671,6 +614,46 @@ public class AppGoodsController {
 		return rs;
 	}
 	/**
+	 * 编辑购物车
+	 * @author han
+	 * @param request
+	 * @param response
+	 * @param goodsId	货品id
+	 * @param count	  货品数量
+	 * @return
+	 */
+	@RequestMapping(value="/editToSelfGoodCar")
+	@ResponseBody
+	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+		Map<String, Object> map = null;
+		Result result = Result.failure();
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (null == user) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try {
+			map = goodsService.editGoodsCart(goodsId,count,user);
+			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				result.setSuccess(true);
+				result.setMsg(map.get("Msg").toString());
+				result.setObj(map.get("totalPrice"));
+			}else{
+				result.setSuccess(false);
+				if(null != map.get("count")){
+					result.setObj(map.get("count"));
+				}
+				result.setMsg(map.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMsg("数据传递有误");
+		}
+		return result;
+	}
+	/**
 	 * 直接下订单（添加订单）
 	 * @author zhaibin
 	 * @param request
@@ -750,4 +733,18 @@ public class AppGoodsController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 查看质检报告
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsPdf")
+	@ResponseBody
+	public Result getGoodsPdf(Long id) {
+		Result result = Result.failure();
+		result=goodsService.getGoodsPdf(id);
+		return result;
+	}
+	
 }

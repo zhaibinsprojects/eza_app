@@ -258,4 +258,10 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_stockMapper"/>
 	</bean>
+	<!-- 省份证 -->
+	<bean id="ezs_idcard_dictMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_idcard_dictMapper"/>
+	</bean>
+	
 </beans>

@@ -57,7 +57,7 @@ public class APPSellerOrderContorller {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setSuccess(false);

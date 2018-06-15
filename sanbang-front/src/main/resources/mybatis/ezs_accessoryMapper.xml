@@ -17,8 +17,7 @@
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, ext, height, info, name, path, size, width, album_id, 
-    config_id, user_id
+    id, addTime, deleteStatus, ext, height, info, name, CONCAT("http://10.10.10.148/",path,"/",name) path, size, width, album_id 
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -209,7 +208,7 @@
   
    <resultMap id="authimgmap" type="com.sanbang.vo.userauth.AuthImageVo" >
     <result column="paperType" property="imgcode" jdbcType="VARCHAR" />
-    <result column="path" property="imgurl" jdbcType="VARCHAR" />
+    <result column="imgurl" property="imgurl" jdbcType="VARCHAR" />
     <result column="id" property="accid" jdbcType="BIGINT" />
     <result column="validDate" property="usetime" jdbcType="TIMESTAMP" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -217,17 +216,43 @@
   
   <!--得到上传图片-->
   <select id="getAuthImgListByStoreid" resultMap="authimgmap">
-	  	SELECT
-		 B.paperType,
- 		 B.validDate,
-  		 C.name,
-		 C.path,
-		 C.id
-	FROM
-		ezs_card_dict A
-	LEFT JOIN ezs_paper B ON A.paper_id = B.id
-	LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
-	WHERE A.store_id=#{storeid}
+  	(
+	SELECT
+			B.paperType,
+			B.validDate,
+			C. NAME,
+			CONCAT(
+				"http://10.10.10.148/",
+				C.path,
+				"/",
+				C. NAME
+			) AS imgurl,
+			C.id
+		FROM
+			ezs_card_dict A
+		LEFT JOIN ezs_paper B ON A.paper_id = B.id
+		LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
+		WHERE
+			A.store_id = #{storeid}
+	)
+	UNION
+		(	SELECT
+			B.paperType,
+			B.validDate,
+			C. NAME,
+			CONCAT(
+				"http://10.10.10.148/",
+				C.path,
+				"/",
+				C. NAME
+			) AS imgurl,
+			C.id
+		FROM
+			ezs_idcard_dict A
+		LEFT JOIN ezs_paper B ON A.paper_id = B.id
+		LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
+		WHERE
+			A.store_id = #{storeid})
   </select>
   
 </mapper>
