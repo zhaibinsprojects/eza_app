@@ -623,14 +623,17 @@ public class GoodsController {
 		try {
 			map = goodsService.editGoodsCart(goodsId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			Map<String,Object> map1=new HashMap<>();
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				result.setSuccess(true);
 				result.setMsg(map.get("Msg").toString());
-				result.setObj(map.get("totalPrice"));
+				map1.put("totalPrice", map.get("totalPrice"));
+				result.setObj(map1);
 			}else{
 				result.setSuccess(false);
 				if(null != map.get("count")){
-					result.setObj(map.get("count"));
+					map1.put("count", map.get("count"));
+					result.setObj(map1);
 				}
 				result.setMsg(map.get("Msg").toString());
 			}

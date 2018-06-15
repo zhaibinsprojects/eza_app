@@ -494,7 +494,10 @@ public class GoodsServiceImpl implements GoodsService{
 					log.info("编辑购物车方法：商品数量不足...");
 					return map;
 				}
-				ezs_goodscart goodsCart = ezs_goodscartMapper.selectByPrimaryKey(goodsId);
+				Map<String, Object> mp = new HashMap<String,Object>();
+				mp.put("goodsId",goodsId);
+				mp.put("userId",user.getId());
+				ezs_goodscart goodsCart = ezs_goodscartMapper.selectByGoodsId(mp);
 				//2然后判断是否存在购物车中（若存在，则说明之前已经添加进来，那么店铺购物车则也是存在的，下面只做更新操作即可）
 				if(null != goodsCart){
 					double totalPrice = count*(goods.getPrice().doubleValue());
@@ -890,6 +893,7 @@ public class GoodsServiceImpl implements GoodsService{
 		return goodsVo;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Result getGoodsPdf(long goodsid) {
 		Result result=Result.failure();
