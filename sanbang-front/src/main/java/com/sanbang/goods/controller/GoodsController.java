@@ -615,22 +615,25 @@ public class GoodsController {
 		Map<String, Object> map = null;
 		Result result = Result.failure();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (null == user) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
+//		if (null == user) {
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//			result.setMsg("用户未登录");
+//			return result;
+//		}
 		try {
 			map = goodsService.editGoodsCart(goodsId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			Map<String,Object> map1=new HashMap<>();
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				result.setSuccess(true);
 				result.setMsg(map.get("Msg").toString());
-				result.setObj(map.get("totalPrice"));
+				map1.put("totalPrice", map.get("totalPrice"));
+				result.setObj(map1);
 			}else{
 				result.setSuccess(false);
 				if(null != map.get("count")){
-					result.setObj(map.get("count"));
+					map1.put("count", map.get("count"));
+					result.setObj(map1);
 				}
 				result.setMsg(map.get("Msg").toString());
 			}
