@@ -163,8 +163,8 @@
   <!--商品评价列表-->
   <select id="getEvaluateList" resultMap="EvaluateListMap">
   	select 
-	    A.id,
-	    date_format(A.addTime, '%Y-%m-%d')
+	   A.id,
+		date_format(A.addTime, '%Y-%m-%d') addTime, 
 		A.deleteStatus,
 		A.conttent,
 		A.goodQuality,

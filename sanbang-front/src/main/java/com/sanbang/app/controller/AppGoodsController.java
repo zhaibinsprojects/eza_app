@@ -789,4 +789,18 @@ public class AppGoodsController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 查看质检报告
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsPdf")
+	@ResponseBody
+	public Result getGoodsPdf(Long id) {
+		Result result = Result.failure();
+		result=goodsService.getGoodsPdf(id);
+		return result;
+	}
+	
 }
