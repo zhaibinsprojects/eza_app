@@ -23,25 +23,30 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_card_dict;
+import com.sanbang.bean.ezs_idcard_dict;
 import com.sanbang.bean.ezs_paper;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_billMapper;
 import com.sanbang.dao.ezs_card_dictMapper;
+import com.sanbang.dao.ezs_idcard_dictMapper;
 import com.sanbang.dao.ezs_industry_dictMapper;
 import com.sanbang.dao.ezs_paperMapper;
 import com.sanbang.dao.ezs_positionMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.setup.service.AuthService;
+import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RandomStr32;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.userauth.AuthImageVo;
 
@@ -97,6 +102,12 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Autowired
 	private ezs_card_dictMapper ezs_card_dictMapper;
+	
+	@Autowired
+	private ezs_idcard_dictMapper ezs_idcard_dictMapper;
+	
+	@Autowired
+	private DictService dictService;
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	@Override
@@ -540,8 +551,10 @@ public class AuthServiceImpl implements AuthService {
 		}
 		ezs_store store=new ezs_store();
 		store.setStatus(1);
+		store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_AUTHENTICATION).getId());
 		store.setId(upi.getEzs_store().getId());
 		store.setAccountType(upi.getEzs_store().getAccountType());
+		store.setRegisterDate(new Date());
 		ezs_storeMapper.updateByPrimaryKeySelective(store);
 		if(result.getSuccess()){
 			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
@@ -642,7 +655,7 @@ public class AuthServiceImpl implements AuthService {
 			for (AuthImageVo authImageVo : list) {
 				if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
 						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")
-						||authImageVo.getImgcode().equals("SHENGMING")){
+						||authImageVo.getImgcode().equals("LICENSEE_SMCARD")){
 				i++;	
 				}
 			}
@@ -659,7 +672,7 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("BUSINESS_LICENSE")
+					if(authImageVo.getImgcode().equals("BUSLIC")
 							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
 							||authImageVo.getImgcode().equals("IDCARD_FONT")
 							||authImageVo.getImgcode().equals("IDCARD_BACK")){
@@ -676,7 +689,7 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("BUSINESS_LICENSE")
+					if(authImageVo.getImgcode().equals("BUSLIC")
 							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
 							||authImageVo.getImgcode().equals("IDCARD_FONT")
 							||authImageVo.getImgcode().equals("IDCARD_BACK")){
@@ -730,7 +743,8 @@ public class AuthServiceImpl implements AuthService {
 				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
 						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
 					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
 				}else{
@@ -739,8 +753,8 @@ public class AuthServiceImpl implements AuthService {
 					ezs_accessory.setExt("");
 					ezs_accessory.setHeight(0);
 					ezs_accessory.setInfo(null);
-					ezs_accessory.setName("");
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setSize((float) 100);
 					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());
@@ -757,10 +771,18 @@ public class AuthServiceImpl implements AuthService {
 					paper.setPaperType(img.getImgcode());
 					ezs_paperMapper.insertSelective(paper);
 					
-					ezs_card_dict card=new ezs_card_dict();
-					card.setPaper_id(paper.getId());
-					card.setStore_id(upi.getStore_id());
-					ezs_card_dictMapper.insertSelective(card);
+					if(img.getImgcode().equals(DictionaryCate.IDCARD_BACK)||img.getImgcode().equals(DictionaryCate.IDCARD_FONT)){
+						ezs_idcard_dict card=new ezs_idcard_dict();
+						card.setPaper_id(paper.getId());
+						card.setStore_id(upi.getStore_id());
+						ezs_idcard_dictMapper.insertSelective(card);
+					}else{
+						
+						ezs_card_dict card=new ezs_card_dict();
+						card.setPaper_id(paper.getId());
+						card.setStore_id(upi.getStore_id());
+						ezs_card_dictMapper.insertSelective(card);
+					}
 				}
 				}
 			}
@@ -891,7 +913,8 @@ public class AuthServiceImpl implements AuthService {
 				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
 						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
 					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
 				}else{
@@ -900,8 +923,8 @@ public class AuthServiceImpl implements AuthService {
 					ezs_accessory.setExt("");
 					ezs_accessory.setHeight(0);
 					ezs_accessory.setInfo(null);
-					ezs_accessory.setName("");
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setSize((float) 100);
 					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());
@@ -909,6 +932,7 @@ public class AuthServiceImpl implements AuthService {
 					
 					//upi记录
 					img.setAccid(ezs_accessory.getId());
+					
 					
 					ezs_paper paper=new ezs_paper();
 					paper.setAddTime(new Date());
@@ -918,10 +942,19 @@ public class AuthServiceImpl implements AuthService {
 					paper.setPaperType(img.getImgcode());
 					ezs_paperMapper.insertSelective(paper);
 					
-					ezs_card_dict card=new ezs_card_dict();
-					card.setPaper_id(paper.getId());
-					card.setStore_id(upi.getStore_id());
-					ezs_card_dictMapper.insertSelective(card);
+					if(img.getImgcode().equals(DictionaryCate.IDCARD_BACK)||img.getImgcode().equals(DictionaryCate.IDCARD_FONT)){
+						ezs_idcard_dict card=new ezs_idcard_dict();
+						card.setPaper_id(paper.getId());
+						card.setStore_id(upi.getStore_id());
+						ezs_idcard_dictMapper.insertSelective(card);
+					}else{
+						
+						ezs_card_dict card=new ezs_card_dict();
+						card.setPaper_id(paper.getId());
+						card.setStore_id(upi.getStore_id());
+						ezs_card_dictMapper.insertSelective(card);
+					}
+					
 				}
 				}
 			}
@@ -971,7 +1004,8 @@ public class AuthServiceImpl implements AuthService {
 				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
 						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
 					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
 				}else{
@@ -980,8 +1014,8 @@ public class AuthServiceImpl implements AuthService {
 					ezs_accessory.setExt("");
 					ezs_accessory.setHeight(0);
 					ezs_accessory.setInfo(null);
-					ezs_accessory.setName("");
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setSize((float) 100);
 					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());
@@ -998,10 +1032,17 @@ public class AuthServiceImpl implements AuthService {
 					paper.setPaperType(img.getImgcode());
 					ezs_paperMapper.insertSelective(paper);
 					
-					ezs_card_dict card=new ezs_card_dict();
-					card.setPaper_id(paper.getId());
-					card.setStore_id(upi.getStore_id());
-					ezs_card_dictMapper.insertSelective(card);
+					if(img.getImgcode().equals(DictionaryCate.IDCARD_BACK)||img.getImgcode().equals(DictionaryCate.IDCARD_FONT)){
+						ezs_idcard_dict card=new ezs_idcard_dict();
+						card.setPaper_id(paper.getId());
+						card.setStore_id(upi.getStore_id());
+						ezs_idcard_dictMapper.insertSelective(card);
+					}else{
+						ezs_card_dict card=new ezs_card_dict();
+						card.setPaper_id(paper.getId());
+						card.setStore_id(upi.getStore_id());
+						ezs_card_dictMapper.insertSelective(card);
+					}
 				}
 				}
 			}

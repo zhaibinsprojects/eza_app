@@ -42,6 +42,7 @@ import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dao.ezs_user_roleMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.userpro.service.TestService;
+import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
@@ -327,8 +328,8 @@ public class TestServiceImpl  implements TestService {
 							ezs_accessory.setExt("");
 							ezs_accessory.setHeight(0);
 							ezs_accessory.setInfo(null);
-							ezs_accessory.setName("");
-							ezs_accessory.setPath(img.getImgurl());
+							ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+							ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 							ezs_accessory.setSize((float) 100);
 							ezs_accessory.setWidth(100);
 							ezs_accessory.setUser_id(upi.getId());

@@ -11,6 +11,7 @@ import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.goods.GoodsVo;
 
@@ -76,7 +77,6 @@ public interface GoodsService {
 			String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,
 			String goodsName,int pageStart);
-	
 	/**
 	 * 根据地区名称返回id
 	 * @param areaName
@@ -120,6 +120,13 @@ public interface GoodsService {
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
 	
 	/**
+	 * 编辑购物车
+	 * @param goodsCart
+	 * @param user
+	 */
+	public Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user);
+	
+	/**
 	 * 生成订单
 	 * @author zhaibin
 	 * @param orderForm 订单对象
@@ -136,5 +143,12 @@ public interface GoodsService {
 	 * @return
 	 */
 	GoodsVo  getgoodsinfo(long goodsid);
+	
+	/**
+	 * 展示pdf
+	 * @param goodsid
+	 * @return
+	 */
+	Result  getGoodsPdf(long goodsid);
 	
 }

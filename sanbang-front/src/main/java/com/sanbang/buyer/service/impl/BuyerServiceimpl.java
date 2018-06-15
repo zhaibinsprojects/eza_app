@@ -41,6 +41,7 @@ import com.sanbang.dao.ezs_order_canceMapper;
 import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.dao.ezs_pactMapper;
 import com.sanbang.dao.ezs_payinfoMapper;
+import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.JsonListUtil;
 import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.RedisUserSession;
@@ -661,8 +662,8 @@ public class BuyerServiceimpl implements BuyerService {
 			ezs_accessory.setExt("");
 			ezs_accessory.setHeight(0);
 			ezs_accessory.setInfo(null);
-			ezs_accessory.setName("");
-			ezs_accessory.setPath(vo.getImgurl());
+			ezs_accessory.setName(FilePathUtil.getimageName(vo.getImgurl()));
+			ezs_accessory.setPath(FilePathUtil.getmiddelPath(vo.getImgurl()));
 			ezs_accessory.setSize((float) 100);
 			ezs_accessory.setWidth(100);
 			ezs_accessory.setUser_id(upi.getId());

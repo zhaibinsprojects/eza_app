@@ -101,10 +101,10 @@ public class GoodsController {
 	 */
 	@RequestMapping("/listForEvaluate")
 	@ResponseBody
-	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNo){
+	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNow){
 		Result result = new Result();
 		try {
-			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
+			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNow,id);
 			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
 			Map<String, Object> map=new HashMap<>();
 			map.put("list", dvaluatelist);
@@ -647,7 +647,46 @@ public class GoodsController {
 			rs.setMsg("数据传递有误");
 		}
 		return rs;
-	}	
+	}
+	/**
+	 * 编辑购物车
+	 * @author han
+	 * @param request
+	 * @param response
+	 * @param goodsId	货品id
+	 * @param count	  货品数量
+	 * @return
+	 */
+	@RequestMapping(value="/editToSelfGoodCar")
+	@ResponseBody
+	public Object editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+		Map<String, Object> map = null;
+		Result result = Result.failure();
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (null == user) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try {
+			map = goodsService.editGoodsCart(goodsId,count,user);
+			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				result.setSuccess(true);
+				result.setMsg(map.get("Msg").toString());
+				result.setObj(map.get("totalPrice"));
+			}else{
+				result.setSuccess(false);
+				if(null != map.get("count")){
+					result.setObj(map.get("count"));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMsg("数据传递有误");
+		}
+		return result;
+	}
 	/**
 	 * 直接下订单（添加订单）
 	 * @author zhaibin
