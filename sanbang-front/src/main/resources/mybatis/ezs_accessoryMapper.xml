@@ -208,7 +208,7 @@
   
    <resultMap id="authimgmap" type="com.sanbang.vo.userauth.AuthImageVo" >
     <result column="paperType" property="imgcode" jdbcType="VARCHAR" />
-    <result column="path" property="imgurl" jdbcType="VARCHAR" />
+    <result column="imgurl" property="imgurl" jdbcType="VARCHAR" />
     <result column="id" property="accid" jdbcType="BIGINT" />
     <result column="validDate" property="usetime" jdbcType="TIMESTAMP" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -220,7 +220,7 @@
 		 B.paperType,
  		 B.validDate,
   		 C.name,
-		 C.path,
+  		 CONCAT("http://10.10.10.148/", C.path,"/", C.name) as imgurl,
 		 C.id
 	FROM
 		ezs_card_dict A

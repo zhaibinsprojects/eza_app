@@ -616,7 +616,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					ezs_accessory.setHeight(0);
 					ezs_accessory.setInfo(null);
 					ezs_accessory.setName("");
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setSize((float) 100);
 					ezs_accessory.setWidth(100);
 					ezs_accessory.setUser_id(upi.getId());

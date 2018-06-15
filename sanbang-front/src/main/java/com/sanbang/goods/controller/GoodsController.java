@@ -102,10 +102,10 @@ public class GoodsController {
 	 */
 	@RequestMapping("/listForEvaluate")
 	@ResponseBody
-	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNo){
+	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNow){
 		Result result = new Result();
 		try {
-			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
+			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNow,id);
 			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
 			Map<String, Object> map=new HashMap<>();
 			map.put("list", dvaluatelist);

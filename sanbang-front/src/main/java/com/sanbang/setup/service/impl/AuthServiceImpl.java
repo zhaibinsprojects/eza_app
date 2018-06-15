@@ -34,6 +34,7 @@ import com.sanbang.dao.ezs_paperMapper;
 import com.sanbang.dao.ezs_positionMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.setup.service.AuthService;
@@ -43,6 +44,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.userauth.AuthImageVo;
 
@@ -98,6 +100,9 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Autowired
 	private ezs_card_dictMapper ezs_card_dictMapper;
+	
+	@Autowired
+	private DictService dictService;
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	@Override
@@ -541,8 +546,10 @@ public class AuthServiceImpl implements AuthService {
 		}
 		ezs_store store=new ezs_store();
 		store.setStatus(1);
+		store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_AUTHENTICATION).getId());
 		store.setId(upi.getEzs_store().getId());
 		store.setAccountType(upi.getEzs_store().getAccountType());
+		store.setRegisterDate(new Date());
 		ezs_storeMapper.updateByPrimaryKeySelective(store);
 		if(result.getSuccess()){
 			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
@@ -660,7 +667,7 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("BUSINESS_LICENSE")
+					if(authImageVo.getImgcode().equals("BUSLIC")
 							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
 							||authImageVo.getImgcode().equals("IDCARD_FONT")
 							||authImageVo.getImgcode().equals("IDCARD_BACK")){
@@ -677,7 +684,7 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("BUSINESS_LICENSE")
+					if(authImageVo.getImgcode().equals("BUSLIC")
 							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
 							||authImageVo.getImgcode().equals("IDCARD_FONT")
 							||authImageVo.getImgcode().equals("IDCARD_BACK")){
@@ -731,7 +738,8 @@ public class AuthServiceImpl implements AuthService {
 				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
 						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
 					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
 				}else{
@@ -892,7 +900,8 @@ public class AuthServiceImpl implements AuthService {
 				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
 						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
 					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
 				}else{
@@ -972,7 +981,8 @@ public class AuthServiceImpl implements AuthService {
 				ezs_accessory ezs_accessory=new com.sanbang.bean.ezs_accessory();
 				if(null!=upi.getAuthimg()&&upi.getAuthimg().size()>0
 						&&checkisExt(img.getImgcode(), upi.getAuthimg())){
-					ezs_accessory.setPath(img.getImgurl());
+					ezs_accessory.setName(FilePathUtil.getimageName(img.getImgurl()));
+					ezs_accessory.setPath(FilePathUtil.getmiddelPath(img.getImgurl()));
 					ezs_accessory.setId(checkisExtId(img.getImgcode(), upi.getAuthimg()));
 					ezs_accessoryMapper.updateByPrimaryKeySelective(ezs_accessory);
 				}else{

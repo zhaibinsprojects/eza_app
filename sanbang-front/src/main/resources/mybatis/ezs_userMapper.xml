@@ -296,6 +296,6 @@ FROM
 	ezs_user A
 LEFT JOIN ezs_userinfo B ON A.userInfo_id = B.id
 WHERE
-	b.phone =#{phone}
+	B.phone =#{phone}
      </select>
 </mapper>
