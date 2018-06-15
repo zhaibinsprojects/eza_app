@@ -57,14 +57,14 @@ public class APPSellerOrderContorller {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setSuccess(false);
 			result.setMsg("用户未登录");
 			return result;
 		}
-		//验证用户是否激活，拥有卖家权限
+//		验证用户是否激活，拥有卖家权限
 		ezs_store store = upi.getEzs_store();
 		Integer storeStatus = store.getStatus();
 		Long auditingusertype_id = store.getAuditingusertype_id();
@@ -80,6 +80,7 @@ public class APPSellerOrderContorller {
 			pageNow = 1;
 		}
 		PagerOrder pager = new PagerOrder();
+		pager.setUserid(upi.getId());
 		pager.setOrder_status(order_status);
 		pager.setOrder_type(order_type);
 		pager.setPageNow(pageNow);
