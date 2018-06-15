@@ -770,4 +770,17 @@ public class GoodsController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 商品id得到质检报告
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping("/getGoodsPdf")
+	@ResponseBody
+	public Object getGoodsPdf(@RequestParam("goodsId")long goodsId){
+		Result result=Result.failure();
+		result=goodsService.getGoodsPdf(goodsId);
+		return result;
+	}
 }
