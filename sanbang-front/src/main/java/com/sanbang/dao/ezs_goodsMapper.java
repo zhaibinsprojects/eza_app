@@ -65,5 +65,12 @@ public interface ezs_goodsMapper {
 	 */
 	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid);
 	
-
+	/**
+	 * 优品推荐 2
+	 * @author zhaiBin
+	 * @param page
+	 * @return
+	 */
+	List<GoodsVo> goodsIntroduceTwo(Page page);
+	
 }

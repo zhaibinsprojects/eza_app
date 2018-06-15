@@ -173,6 +173,7 @@ public class AppBuyCenterController {
 	 * @param gId 商品ID
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/goodPriceChanges")
 	@ResponseBody
 	public Object goodPriceChanges(HttpServletRequest request,HttpServletResponse response,Long gId){
@@ -198,6 +199,7 @@ public class AppBuyCenterController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodsInvoiceByUser")
 	@ResponseBody
 	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response){
