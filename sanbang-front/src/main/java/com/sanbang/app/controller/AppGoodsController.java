@@ -702,6 +702,7 @@ public class AppGoodsController {
 				if(null != map.get("count")){
 					result.setObj(map.get("count"));
 				}
+				result.setMsg(map.get("Msg").toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

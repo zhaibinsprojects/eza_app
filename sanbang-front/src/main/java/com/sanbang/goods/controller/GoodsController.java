@@ -663,11 +663,11 @@ public class GoodsController {
 		Map<String, Object> map = null;
 		Result result = Result.failure();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		if (null == user) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
+//		if (null == user) {
+//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+//			result.setMsg("用户未登录");
+//			return result;
+//		}
 		try {
 			map = goodsService.editGoodsCart(goodsId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
@@ -680,6 +680,7 @@ public class GoodsController {
 				if(null != map.get("count")){
 					result.setObj(map.get("count"));
 				}
+				result.setMsg(map.get("Msg").toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
