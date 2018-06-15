@@ -69,7 +69,9 @@ public class ezs_goods {
     private String seo_description;
 
     private String source;
-
+    /**
+     * 商品状态1.下架 2.正常上架
+     */
     private Integer status;
 
     private String tensile;

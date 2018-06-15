@@ -199,6 +199,9 @@ public class AppHomeGoodsMessController {
 			if(goodsInfo.getObj()!=null){
 				homePageMessInfo.setGoodsInfoList((List<GoodsInfo>)goodsInfo.getObj());
 				homePageMessInfo.setPage(goodsInfo.getMeta());
+			}else{
+				homePageMessInfo.setGoodsInfoList(new ArrayList<GoodsInfo>());
+				homePageMessInfo.setPage(goodsInfo.getMeta());
 			}
 			if(PriceAnalyzeInfo.getObj()!=null){
 				homePageMessInfo.setEzssubstanceList((List<ezs_ezssubstance>)PriceAnalyzeInfo.getObj());
