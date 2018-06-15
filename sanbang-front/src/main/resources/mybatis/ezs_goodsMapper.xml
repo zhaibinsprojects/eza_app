@@ -753,7 +753,7 @@
   </select>
   
   <!-- 优品推荐2 -->
-  <select id="goodsIntroduceTwo" resultMap="goodvomap" parameterType="com.sanbang.utils.Page">
+  <select id="goodsIntroduceTwo" resultMap="getGoodIntroduceInfo" parameterType="com.sanbang.utils.Page">
     select
     <include refid="Goods_Base_Column_List" />
     from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
@@ -1003,10 +1003,13 @@
     <!--  <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoByPhoto_id">
      </collection> -->
      
-     <!--主图片,修改-->
+     <!--主图片,zhaiBin修改-->
      <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
      </collection>
      
+      <!--地区are,zhaiBin-->
+     <!-- <association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     </association> -->
      
       <!--商品图片-->
      <collection property="goods_photos" column="id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoBygoods_id">
@@ -1015,6 +1018,12 @@
      <collection property="cartographys" column="id" select="com.sanbang.dao.ezs_goods_cartographyMapper.selectcartinfoBygoods_id">
      </collection>
   </resultMap>
+  
+  	<!-- zhaiBin,add -->
+  	<resultMap id="getGoodIntroduceInfo" type="com.sanbang.vo.goods.GoodsVo" extends="goodvomap">  
+    	<association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     	</association>
+	</resultMap>  
 	
 	
 	<!--商品详情展示-->
