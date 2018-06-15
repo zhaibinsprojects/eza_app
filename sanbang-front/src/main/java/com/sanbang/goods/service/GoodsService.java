@@ -77,7 +77,6 @@ public interface GoodsService {
 			String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,
 			String goodsName,int pageStart);
-	
 	/**
 	 * 根据地区名称返回id
 	 * @param areaName
@@ -119,6 +118,13 @@ public interface GoodsService {
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
 	
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
+	
+	/**
+	 * 编辑购物车
+	 * @param goodsCart
+	 * @param user
+	 */
+	public Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user);
 	
 	/**
 	 * 生成订单
