@@ -681,7 +681,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping(value="/editToSelfGoodCar")
 	@ResponseBody
-	public Object editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
