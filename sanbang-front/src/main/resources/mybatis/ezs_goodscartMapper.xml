@@ -21,6 +21,20 @@
     from ezs_goodscart
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <!-- 结合店铺购物车以及当前登录人信息查询对应购物车 -->
+  <select id="selectByGoodsId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    g.id, g.addTime, g.deleteStatus, g.cart_type, g.count, g.price, g.goods_id, g.of_id, g.sc_id 
+    from ezs_goodscart g,ezs_storecart s
+    where g.sc_id = s.id 
+    <if test="goodsId != null and goodsId != ''" >
+      and g.goods_id = #{goodsId,jdbcType=BIGINT} 
+    </if>
+    <if test="userId != null and userId != ''" >
+      and s.user_id = #{userId,jdbcType=BIGINT} 
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_goodscart
     where id = #{id,jdbcType=BIGINT}
