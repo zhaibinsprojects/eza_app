@@ -13,9 +13,11 @@ public class GoodsListInfo {
 	private BigDecimal price;
 	
 	private Integer status;
-	
+	// 商品初审状态码 540.待审核 ，544.初审不通过，541.初审通过/待质检（复审），546.复审通过 ，547.复审不通过
 	private Integer audit_status;
-
+	// 商品定价状态码，600.待定价，601.定价审核中，602.定价审核不通过，603.定价审核通过
+	private Integer priceStatus;
+	
 	public Long getId() {
 		return id;
 	}
@@ -62,6 +64,14 @@ public class GoodsListInfo {
 
 	public void setAudit_status(Integer audit_status) {
 		this.audit_status = audit_status;
+	}
+
+	public Integer getPriceStatus() {
+		return priceStatus;
+	}
+
+	public void setPriceStatus(Integer priceStatus) {
+		this.priceStatus = priceStatus;
 	}
 	
 }
