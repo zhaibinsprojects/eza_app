@@ -25,6 +25,10 @@ public class GoodsCollectionServiceImpl implements GoodsCollectionService {
 	@Autowired
 	private ezs_price_trendMapper price_trendMapper; 
 
+	/**
+	 * @author zhaiBin
+	 * @return 获取收藏列表
+	 */
 	@Override
 	public Map<String, Object> getCollectGoodsByUser(Long userId) {
 		// TODO Auto-generated method stub

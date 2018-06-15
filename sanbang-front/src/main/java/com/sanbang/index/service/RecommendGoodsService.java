@@ -18,4 +18,6 @@ public interface RecommendGoodsService {
 	
 	public Map<String, Object> goodsIntroduce(String currentPage);
 	
+	public Map<String, Object> goodsIntroduceTwo(String currentPage);
+	
 }

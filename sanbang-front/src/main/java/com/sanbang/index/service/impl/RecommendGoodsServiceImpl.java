@@ -15,6 +15,7 @@ import com.sanbang.utils.Page;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
+import com.sanbang.vo.goods.GoodsVo;
 
 @Service
 public class RecommendGoodsServiceImpl implements RecommendGoodsService {
@@ -78,6 +79,27 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 		page.setPageSize(10);
 		if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
 			List<GoodsInfo> glist = this.goodsMapper.goodsIntroduce(page);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Page", page);
+			mmp.put("Obj", glist);
+		}else{
+			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+			mmp.put("Msg", "页码越界");
+			mmp.put("Page", page);
+		}
+		return mmp;
+	}
+
+	@Override
+	public Map<String, Object> goodsIntroduceTwo(String currentPage) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		//获取总页数
+		int totalCount = this.goodsMapper.goodsIntroduceCount();
+		Page page = new Page(totalCount, Integer.valueOf(currentPage));
+		page.setPageSize(10);
+		if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
+			List<GoodsVo> glist = this.goodsMapper.goodsIntroduceTwo(page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);

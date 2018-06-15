@@ -412,105 +412,126 @@
   </select>
 	
 	
+
 	<select id="getOrderListByValueCount" parameterType="com.sanbang.vo.PagerOrder" resultType="Integer">
 	  SELECT
 		count(*)
-	FROM
-		ezs_goodscart A
-	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
-	LEFT JOIN ezs_goods C ON C.id = A.goods_id
-	LEFT JOIN ezs_address D ON D.id = B.address_id
-	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	WHERE
+				FROM
+		ezs_purchase_orderform B			
+		LEFT JOIN ezs_goodscart A ON A.of_id = B.id
+		LEFT JOIN ezs_goods C ON C.id = A.goods_id
+		LEFT JOIN ezs_area D ON D.id = B.address_id
+		LEFT JOIN ezs_storecart E ON E.id = A.sc_id
+		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
+		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+		where
 		1 = 1
-		<if test="pager.order_status!=null and pager.order_status!=-1">
-	 	and B.order_status=#{pager.order_status}	
+		<if test="pager.order_status!=null and pager.order_status=='-1'">
+	    and	B.order_status in (20,30,40,50,60,70,80,90,110)	
 		</if>
-		<if test="pager.order_status!=null and pager.order_status==-1">
-	 	and B.order_status in (10,20,30,40,50,60,70,80,90,130,110)	
+		<if test="pager.order_type!=null and pager.order_type!=''">
+		and B.order_type in (${pager.order_type})	
 		</if>
-		<if test="pager.order_type!=null">
-		 and B.order_type=#{pager.order_type}	
+	
+		<if test="pager.order_status!=null and pager.order_status!='-1' ">
+		and	B.order_status in (${pager.order_status})	
 		</if>
+		AND B.sellerUser_id=${pager.userid}
 	</select>
 	
 	<!-- 订单列表 -->
 	<select id="getOrderListByValue" parameterType="com.sanbang.vo.PagerOrder" resultMap="orderMap">
-	  SELECT
-	   C.price,
-		C.good_no,
-		date_format(B.addTime, '%Y-%m-%d' ) addTime,
-		A.count,
-		C.`name`,
-		C.area_id,
-		C.addess,
-		B.total_price,
-		B.goods_amount,
-		B.order_status,
-		B.first_price,
-		B.end_price,
-		B.all_price,
-		B.pact_status,
-		B.address_id,
-		date_format(B.finishtime, '%Y-%m-%d %H:%i:%S') finishtime,
-		B.order_no,
-		B.order_type,
-		B.deleteStatus,
-		D.areaName,
-		F.path,
-		F.name photoName
-	FROM
-		ezs_goodscart A
-	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
-	LEFT JOIN ezs_goods C ON C.id = A.goods_id
-	LEFT JOIN ezs_area D ON D.id = B.address_id
-	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	LEFT JOIN ezs_accessory F ON C.goods_main_photo_id=F.id
-	WHERE
+	 	 SELECT
+     	B.order_no,
+			C.price,
+			C.good_no,
+			date_format(B.addTime, '%Y-%m-%d') addTime,
+			A.count,
+			C.`name`,
+			C.area_id,
+			C.addess,
+			B.total_price,
+			B.goods_amount,
+			B.order_status,
+			B.first_price,
+			B.end_price,
+			B.all_price,
+			B.pact_status,
+			B.address_id,
+			date_format(
+				B.finishtime,
+				'%Y-%m-%d %H:%i:%S'
+			) finishtime,		
+			B.order_type,
+			B.deleteStatus,
+			D.areaName,
+			B.sellerUser_id,	
+  			 CONCAT("http://10.10.10.148/",F.path,F.`name`) as path,
+			F. NAME photoName		
+				FROM
+		ezs_purchase_orderform B			
+		LEFT JOIN ezs_goodscart A ON A.of_id = B.id
+		LEFT JOIN ezs_goods C ON C.id = A.goods_id
+		LEFT JOIN ezs_area D ON D.id = B.address_id
+		LEFT JOIN ezs_storecart E ON E.id = A.sc_id
+		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
+		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+		where
 		1 = 1
 
-		<if test="pager.order_status!=null and pager.order_status!=-1">
-	 	and B.order_status=#{pager.order_status}	
+	
+		<if test="pager.order_status!=null and pager.order_status=='-1'">
+	    and	B.order_status in (20,30,40,50,60,70,80,90,110)	
 		</if>
-		<if test="pager.order_status!=null and pager.order_status==-1">
-	 	and B.order_status in (10,20,30,40,50,60,70,80,90,130,110)	
+		<if test="pager.order_type!=null and pager.order_type!=''">
+		and B.order_type in (${pager.order_type})	
 		</if>
-		<if test="pager.order_type!=null">
-		 and B.order_type=#{pager.order_type}	
+	
+		<if test="pager.order_status!=null and pager.order_status!='-1' ">
+		and	B.order_status in (${pager.order_status})	
 		</if>
+		AND B.sellerUser_id=${pager.userid}
 		limit #{pager.secount},#{pager.pageSize}
 	</select>
 	
 	<!-- 订单详情 -->
 	<select id="getOrderListByOrderno" resultMap="orderMap">
 	  SELECT
-	    C.price,
-		C.good_no,
-		B.addTime,
-		A.count,
-		C.`name`,
-		C.area_id,
-		C.addess,
-		B.total_price,
-		B.goods_amount,
-		B.order_status,
-		B.first_price,
-		B.end_price,
-		B.all_price,
-		B.pact_status,
-		B.address_id,
-		B.finishtime,
-		B.order_no,
-		B.order_type,
-		B.deleteStatus,
-		D.areaName 
-	FROM
-		ezs_goodscart A
-	LEFT JOIN ezs_purchase_orderform B ON A.pof_id = B.id
-	LEFT JOIN ezs_goods C ON C.id = A.goods_id
-	LEFT JOIN ezs_area D ON D.id = B.address_id
-	LEFT JOIN ezs_storecart E ON E.id=A.sc_id
-	WHERE
+     	B.order_no,
+			C.price,
+			C.good_no,
+			date_format(B.addTime, '%Y-%m-%d') addTime,
+			A.count,
+			C.`name`,
+			C.area_id,
+			C.addess,
+			B.total_price,
+			B.goods_amount,
+			B.order_status,
+			B.first_price,
+			B.end_price,
+			B.all_price,
+			B.pact_status,
+			B.address_id,
+			date_format(
+				B.finishtime,
+				'%Y-%m-%d %H:%i:%S'
+			) finishtime,		
+			B.order_type,
+			B.deleteStatus,
+			D.areaName,
+			B.sellerUser_id,	
+  			 CONCAT("http://10.10.10.148/",F.path,F.`name`) as path,
+			F. NAME photoName		
+				FROM
+		ezs_purchase_orderform B			
+		LEFT JOIN ezs_goodscart A ON A.of_id = B.id
+		LEFT JOIN ezs_goods C ON C.id = A.goods_id
+		LEFT JOIN ezs_area D ON D.id = B.address_id
+		LEFT JOIN ezs_storecart E ON E.id = A.sc_id
+		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
+		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+		where
 		1 = 1
 	and 
 	B.order_no=#{order_no}	
