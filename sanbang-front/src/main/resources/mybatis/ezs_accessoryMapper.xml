@@ -222,7 +222,7 @@
 			B.validDate,
 			C. NAME,
 			CONCAT(
-				"http://10.10.10.95/",
+				"http://10.10.10.148/",
 				C.path,
 				"/",
 				C. NAME
@@ -241,7 +241,7 @@
 			B.validDate,
 			C. NAME,
 			CONCAT(
-				"http://10.10.10.95/",
+				"http://10.10.10.148/",
 				C.path,
 				"/",
 				C. NAME

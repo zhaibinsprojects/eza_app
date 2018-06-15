@@ -655,7 +655,7 @@ public class AuthServiceImpl implements AuthService {
 			for (AuthImageVo authImageVo : list) {
 				if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
 						||authImageVo.getImgcode().equals("LICENSEE_IDCARD")
-						||authImageVo.getImgcode().equals("SHENGMING")){
+						||authImageVo.getImgcode().equals("LICENSEE_SMCARD")){
 				i++;	
 				}
 			}
@@ -689,9 +689,10 @@ public class AuthServiceImpl implements AuthService {
 			if(!authupi.isAuthimgstate()){
 				int i=0;
 				for (AuthImageVo authImageVo : list) {
-					if(authImageVo.getImgcode().equals("LETTER_OF_AUTHORIZATION")
-							||authImageVo.getImgcode().equals("LICENSEE_IDCARD")
-							||authImageVo.getImgcode().equals("SHENGMING")){
+					if(authImageVo.getImgcode().equals("BUSLIC")
+							||authImageVo.getImgcode().equals("ACCOUNT_OPENING_LICENSE")
+							||authImageVo.getImgcode().equals("IDCARD_FONT")
+							||authImageVo.getImgcode().equals("IDCARD_BACK")){
 					i++;	
 					}
 				}

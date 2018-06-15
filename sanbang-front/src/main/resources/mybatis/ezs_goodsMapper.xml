@@ -776,7 +776,7 @@
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
 		a.areaName areaName,gc.name goodClassName,ac.ext pictureSuffix,
-		ac.name pictureName,CONCAT("http://10.10.10.95/",ac.path,"/",ac.name) picturePath 
+		ac.name pictureName,CONCAT("http://10.10.10.148/",ac.path,"/",ac.name) picturePath 
 		from ezs_goods g 
 		left join ezs_dict d1 on g.color_id = d1.id 
 		left join ezs_dict d2 on g.form_id = d2.id 
