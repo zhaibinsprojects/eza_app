@@ -216,17 +216,43 @@
   
   <!--得到上传图片-->
   <select id="getAuthImgListByStoreid" resultMap="authimgmap">
-	  	SELECT
-		 B.paperType,
- 		 B.validDate,
-  		 C.name,
-  		 CONCAT("http://10.10.10.148/", C.path,"/", C.name) as imgurl,
-		 C.id
-	FROM
-		ezs_card_dict A
-	LEFT JOIN ezs_paper B ON A.paper_id = B.id
-	LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
-	WHERE A.store_id=#{storeid}
+  	(
+	SELECT
+			B.paperType,
+			B.validDate,
+			C. NAME,
+			CONCAT(
+				"http://10.10.10.95/",
+				C.path,
+				"/",
+				C. NAME
+			) AS imgurl,
+			C.id
+		FROM
+			ezs_card_dict A
+		LEFT JOIN ezs_paper B ON A.paper_id = B.id
+		LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
+		WHERE
+			A.store_id = #{storeid}
+	)
+	UNION
+		(	SELECT
+			B.paperType,
+			B.validDate,
+			C. NAME,
+			CONCAT(
+				"http://10.10.10.95/",
+				C.path,
+				"/",
+				C. NAME
+			) AS imgurl,
+			C.id
+		FROM
+			ezs_idcard_dict A
+		LEFT JOIN ezs_paper B ON A.paper_id = B.id
+		LEFT JOIN ezs_accessory C ON C.id = B.certificate_id
+		WHERE
+			A.store_id = #{storeid})
   </select>
   
 </mapper>

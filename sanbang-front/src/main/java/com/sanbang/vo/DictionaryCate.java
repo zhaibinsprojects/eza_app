@@ -199,7 +199,7 @@ public class DictionaryCate {
     /**
      * 声明
      */
-    public static final String SHENGMING = "SHENGMING";
+    public static final String SHENGMING = "LICENSEE_SMCARD";
 
     /**
      * 其他资质

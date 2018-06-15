@@ -72,8 +72,18 @@ public class ezs_ezssubstance {
     private Long u_id;
 
     private Long user_id;
+    //add by zhaibin 获取其上级栏目
+    private ezs_column parentColumn;
 
-    public Long getId() {
+    public ezs_column getParentColumn() {
+		return parentColumn;
+	}
+
+	public void setParentColumn(ezs_column parentColumn) {
+		this.parentColumn = parentColumn;
+	}
+
+	public Long getId() {
         return id;
     }
 

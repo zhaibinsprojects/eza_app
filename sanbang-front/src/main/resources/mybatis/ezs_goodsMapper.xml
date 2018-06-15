@@ -61,6 +61,7 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
+    <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
   </resultMap>
   <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
@@ -634,7 +635,7 @@
   </update>
   <!-- 总页数 -->
   <select id="goodsIntroduceCount" resultType="java.lang.Integer" parameterType="com.sanbang.utils.Page">
-    select count(*) from ezs_goods where recommend = '1'
+    select count(1) from ezs_goods where recommend = '1'
   </select>
   <!-- 根据供应商id查询商品列表-->
   <select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap1">
@@ -644,7 +645,8 @@
   	A.price,
   	A.cncl_num,
   	A.status status,
-  	B.status audit_status
+  	B.status audit_status,
+  	B.priceStatus priceStatus
 	FROM ezs_goods A 
 	LEFT JOIN ezs_goods_audit_process B on
 	A.id = B.goods_id
@@ -774,7 +776,7 @@
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
 		a.areaName areaName,gc.name goodClassName,ac.ext pictureSuffix,
-		ac.name pictureName,CONCAT("http://10.10.10.148/",ac.path,"/",ac.name) picturePath 
+		ac.name pictureName,CONCAT("http://10.10.10.95/",ac.path,"/",ac.name) picturePath 
 		from ezs_goods g 
 		left join ezs_dict d1 on g.color_id = d1.id 
 		left join ezs_dict d2 on g.form_id = d2.id 
@@ -815,16 +817,13 @@
 	        </foreach>
         </if>
         <if test="source != null and source != ''">
-	        and g.source like '%${source,jdbcType=VARCHAR}%' 
+	        and g.source like '%${source}%' 
 	    </if>
         <if test="purpose != null and purpose != ''">
-	        and g.purpose like '%${purpose,jdbcType=VARCHAR}%' 
-	    </if>
-	    <if test="protection != null and protection != ''">
-	        and g.protection like '%${protection,jdbcType=VARCHAR}%' 
+	        and g.purpose like '%${purpose}%' 
 	    </if>
 	    <if test="name != null and name != ''">
-	        and g.name like '%${name,jdbcType=VARCHAR}%' 
+	        and g.name like '%${name}%' 
 	    </if>
 	    <!-- 价格 -->
 	    <if test="price1 != null and price1 != ''">

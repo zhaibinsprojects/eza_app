@@ -95,8 +95,8 @@ public class StockHelper {
 			sqlBuffer.append("(select cDCName from DistrictClass where cDCCode=cCounty)as County ");
 			sqlBuffer.append("from(select b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,sum(a.iQuantity) as iQuantity,cProvince,cCity,cCounty ");
 			sqlBuffer.append("from CurrentStock a left join  inventory b on a.cInvCode=b.cInvCode left join  Warehouse  c on a.cwhcode=c.cWhCode ");
-			sqlBuffer.append("where SUBSTRING(c.cWhCode,3,2)='"+strockType+"' and b.cInvAddCode ='"+goodNo+"'  group by b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,cProvince,cCity,cCounty)a");
-			//sqlBuffer.append(" group by b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,cProvince,cCity,cCounty)a");
+			//sqlBuffer.append("where SUBSTRING(c.cWhCode,3,2)='"+strockType+"' and b.cInvAddCode ='"+goodNo+"'  group by b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,cProvince,cCity,cCounty)a");
+			sqlBuffer.append(" group by b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,cProvince,cCity,cCounty)a");
 			connm = getConnection();
 			pstmt = connm.createStatement();
 			rs = pstmt.executeQuery(sqlBuffer.toString());

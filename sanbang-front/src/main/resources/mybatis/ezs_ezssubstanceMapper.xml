@@ -38,6 +38,49 @@
     <!-- <result column="u_id" property="u_id" jdbcType="BIGINT" /> -->
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
+  
+  <resultMap id="ExTendOne_BaseResultMap" type="ezs_ezssubstance" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="attachment" property="attachment" jdbcType="VARCHAR" />
+    <result column="attribute" property="attribute" jdbcType="INTEGER" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="bold" property="bold" jdbcType="BIT" />
+    <result column="clickLike" property="clickLike" jdbcType="INTEGER" />
+    <result column="clickRate" property="clickRate" jdbcType="INTEGER" />
+    <result column="clickRrample" property="clickRrample" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="fixedTime" property="fixedTime" jdbcType="VARCHAR" />
+    <result column="keyWord" property="keyWord" jdbcType="VARCHAR" />
+    <result column="linkPort" property="linkPort" jdbcType="BIT" />
+    <result column="linkUrl" property="linkUrl" jdbcType="VARCHAR" />
+    <result column="meta" property="meta" jdbcType="VARCHAR" />
+    <result column="multimediaFiles" property="multimediaFiles" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="origin" property="origin" jdbcType="VARCHAR" />
+    <result column="originUrl" property="originUrl" jdbcType="VARCHAR" />
+    <result column="pcView" property="pcView" jdbcType="BIT" />
+    <result column="photos" property="photos" jdbcType="VARCHAR" />
+    <result column="publicTime" property="publicTime" jdbcType="DATE" />
+    <result column="remarkValue" property="remarkValue" jdbcType="VARCHAR" />
+    <result column="staticStatus" property="staticStatus" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="subheading" property="subheading" jdbcType="VARCHAR" />
+    <result column="tagTitle" property="tagTitle" jdbcType="VARCHAR" />
+    <result column="thumbnail" property="thumbnail" jdbcType="VARCHAR" />
+    <result column="titleColor" property="titleColor" jdbcType="VARCHAR" />
+    <result column="childEc_id" property="childEc_id" jdbcType="BIGINT" />
+    <result column="ec_id" property="ec_id" jdbcType="BIGINT" />
+    <result column="ss_id" property="ss_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <!-- 延迟加载 上级栏目 -->
+	<association column="ec_id" property="parentColumn" select="com.sanbang.dao.ezs_columnMapper.selectByPrimaryKey"></association> 
+	
+  </resultMap>
+  
+  
+  
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, attachment, attribute, author, bold, clickLike, clickRate, 
     clickRrample, content, fixedTime, keyWord, linkPort, linkUrl, meta, multimediaFiles, 
@@ -444,8 +487,10 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="goodsIndustryCountByKinds" resultType="java.lang.Integer" parameterType="java.lang.Long" >
-    select count(*) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT}
+    select count(1) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT}
   </select>
+  
+  
   <select id="goodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
     select
     <include refid="Base_Column_List" />
@@ -455,7 +500,9 @@
   <select id="goodsAllIndustryCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
     select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id) 
   </select>
-  <select id="selectAllGoodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  
+  
+  <select id="selectAllGoodsIndustryByPage" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
   	select 
   	<include refid="Base_Column_List" />
 	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id ) order by addTime desc LIMIT #{startPos},#{pageSize}

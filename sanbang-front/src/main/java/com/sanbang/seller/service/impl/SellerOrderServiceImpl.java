@@ -89,24 +89,33 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 //		ezs_order_info orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
-		ezs_order_info purchaseOrder = purchaseOrderformMapper.getOrderListByOrderno(order_no);
+		ezs_order_info orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
 
-		// 收货地址处理
-		long addressid = purchaseOrder.getAddress_id();
-		ezs_address ezs_address = ezs_addressMapper.selectByPrimaryKey(addressid);
-		if (null != ezs_address) {
-			String str = getaddressinfo(ezs_address.getArea_id());
-			ezs_address.setArea_info(str += ezs_address.getArea_info());
+		
+		map.put("name", orderinfo.getName());//商品名称
+		map.put("price", orderinfo.getPrice());//单价
+		map.put("goods_amount", (orderinfo.getGoods_amount()==null)?0:orderinfo.getGoods_amount());//数量
+		map.put("order_no", orderinfo.getOrder_no());//订单号
+		map.put("addTime", orderinfo.getAddTime());//下单时间
+		map.put("order_status", orderinfo.getOrder_status());
+		map.put("total_price", orderinfo.getTotal_price());//总价 
+		
+		// 支付方式（0.全款，1：首款+尾款 ）
+		if(orderinfo.getPay_mode()==1){
+			//首付款
+			if(orderinfo.getOrder_status()==40){
+				map.put("paytype","首付款");
+				map.put("pay_price", orderinfo.getFirst_price());
+			//尾款	
+			}else if(orderinfo.getOrder_status()==80){
+				map.put("paytype","尾款");
+				map.put("pay_price", orderinfo.getEnd_price());
+			}
+		}else{
+			//首付款
+			map.put("paytype","全款");
+			map.put("pay_price", orderinfo.getTotal_price());
 		}
-
-		map.put("address", ezs_address);// 收货地址
-		map.put("name", purchaseOrder.getName());
-		map.put("price", purchaseOrder.getPrice());
-		map.put("goods_amount", purchaseOrder.getGoods_amount());
-		map.put("total_price", purchaseOrder.getTotal_price());
-		map.put("order_no", purchaseOrder.getOrder_no());
-		map.put("addTime", purchaseOrder.getAddTime());
-		map.put("order_status", purchaseOrder.getOrder_status());
 		return map;
 	}
 	

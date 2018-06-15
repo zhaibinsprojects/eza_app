@@ -80,6 +80,7 @@ public class SellerOrderContorller {
 			pageNow = 1;
 		}
 		PagerOrder pager = new PagerOrder();
+		pager.setUserid(upi.getId());
 		pager.setOrder_status(order_status);
 		pager.setOrder_type(order_type);
 		pager.setPageNow(pageNow);

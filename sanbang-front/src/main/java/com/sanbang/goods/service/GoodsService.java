@@ -1,6 +1,5 @@
 package com.sanbang.goods.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,21 +36,18 @@ public interface GoodsService {
 	/**
 	 * 更新收藏状态
 	 * @param id
-	 * @return
 	 */
 	public int updateCollect(Long id,Long userId,Boolean status);
 	
 	/**
 	 * 如果是第一次收藏，就插入数据
 	 * @param share
-	 * @return
 	 */
 	public int insertCollect(Long id,Long userId);
 	
 	/**
 	 * 同类货品
 	 * @param id
-	 * @return
 	 */
 	public List<ezs_goods> listForGoods(Long goodClass_id);
 	
@@ -76,17 +72,15 @@ public interface GoodsService {
 	 * @param flexural	弯曲模量
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
-	 * @return
 	 */
 	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,
 			String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,
-			String isProtection,String goodsName,int pageStart);
+			String goodsName,int pageStart);
 	
 	/**
 	 * 根据地区名称返回id
 	 * @param areaName
-	 * @return
 	 */
 	public List<Long> areaToId(String areaName);
 	
@@ -94,16 +88,13 @@ public interface GoodsService {
 	
 	public List<Long> queryChildIds(List<Long> listId);	//一列市查询一列县、区
 	
-	
 	/**
 	 * 查询颜色
-	 * @return
 	 */
 	public List<CurrencyClass> colorList();
 	
 	/**
 	 * 查询形态
-	 * @return
 	 */
 	public List<CurrencyClass> formList();
 	
@@ -112,24 +103,20 @@ public interface GoodsService {
 	/**
 	 * 采购单列表
 	 * @param user_id	用户id
-	 * @return
 	 */
 	public List<ezs_customized> customizedList(Long user_id);
 	
 	/**
 	 * 添加预约定制
 	 * @param customized	定制实体
-	 * @return
 	 */
 	public int insertCustomized(ezs_customized customized);
 	
 	/**
 	 * 预约定制记录表
 	 * @param customizedRecord	采购记录
-	 * @return
 	 */
 	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
-	
 	
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
 	
