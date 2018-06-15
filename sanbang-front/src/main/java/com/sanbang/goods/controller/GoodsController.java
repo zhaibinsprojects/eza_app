@@ -681,8 +681,6 @@ public class GoodsController {
 					result.setObj(map.get("count"));
 				}
 			}
-			result.setMsg("成功");
-			result.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMsg("数据传递有误");
