@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
@@ -53,6 +54,7 @@ public class AppHomeGoodsMessController {
 	private CustomizedRecordService customizedRecordService;
 	@Autowired
 	private IndustryInfoService industryInfoService;
+	
 	
 	/**
 	 * 根据商品名称进行商品列表的查询
@@ -176,7 +178,7 @@ public class AppHomeGoodsMessController {
 	}
 	/**
 	 * 返回全部首页相关内容
-	 * @author zhaibin
+	 * @author zhaiBin
 	 * @param request
 	 * @param response
 	 * @param addressId 首页定位地址信息
@@ -209,6 +211,11 @@ public class AppHomeGoodsMessController {
 			if(advicesInfo.getObj()!=null){
 				homePageMessInfo.setAdvicesList((List<Advices>)advicesInfo.getObj());
 			}
+			//添加订阅栏（图片，连接）
+			homePageMessInfo.setSubscribeList(getSubscribeList(request));
+			//添加商品类别三级展示（图片，ID，name）
+			homePageMessInfo.setThirdGoodClassList(getThirdGoodClass());
+			
 			rs = Result.success();
 			rs.setObj(homePageMessInfo);
 			rs.setMeta(goodsInfo.getMeta());
@@ -330,5 +337,48 @@ public class AppHomeGoodsMessController {
 			log.error(e.toString());
 		}
 		return rs;
+	}
+	/**
+	 * 获取三级商品种类
+	 * @author zhaibin
+	 * @param level
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked"})
+	private List<ezs_goods_class> getThirdGoodClass(){
+		log.info("查询三级商品类别信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
+		Map<String, Object> mmp = null;
+		List<ezs_goods_class> goodClassList = null;
+		List<ezs_goods_class> goodClassListTemp = new ArrayList<>();
+		mmp = goodsClassService.queryThirdGoodsClass("3");
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			goodClassList = (List<ezs_goods_class>) mmp.get("Obj");
+			for (ezs_goods_class goodsClass : goodClassList) {
+				ezs_goods_class goodsClassTemp = new ezs_goods_class();
+				goodsClassTemp.setId(goodsClass.getId());
+				goodsClassTemp.setLevel(goodsClass.getLevel());
+				goodsClassTemp.setName(goodsClass.getName());
+				//http://10.10.10.85/front/resource/indeximg/%E9%A6%96%E9%A1%B5-1_03.png
+				if(goodsClass.getPhoto()!=null){
+					ezs_accessory photo = new ezs_accessory();
+					photo.setId(goodsClass.getPhoto().getId());
+					photo.setName(goodsClass.getPhoto().getName());
+					photo.setPath(goodsClass.getPhoto().getPath());
+					goodsClassTemp.setPhoto(photo);
+				}
+				goodClassListTemp.add(goodsClassTemp);
+			}
+			log.info("查询三级商品类别信息end。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
+			return goodClassListTemp;
+		}else{
+			return null;
+		}
+	}
+	
+	private List<Advices> getSubscribeList(HttpServletRequest request){
+		String path = request.getServletContext().getContextPath();
+		System.out.println(path);
+		return null;
 	}
 }

@@ -15,5 +15,7 @@ public interface GoodsClassService {
 	public ezs_goods_class queryByGoods(ezs_goods goods);
 	
 	public Map<String, Object> queryAllGoodsClass();
+	
+	public Map<String, Object> queryThirdGoodsClass(String level);
 
 }
