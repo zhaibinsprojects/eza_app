@@ -8,10 +8,6 @@ public class ezs_stock {
     private Date addTime;
 
     private Boolean deleteStatus;
-
-    private String cWhName;
-
-    private String cWhcode;
     //商品类型: 1.供应商商品，2.自营商品，3.样品商品
     private Integer goodClass;
     //ERP库存
@@ -20,8 +16,6 @@ public class ezs_stock {
     private Double mQuantity;
     //库存状态  0.释放，1.锁库
     private Integer status;
-
-    private Long goods_id;
     //购买量
     private Double buyNum;
 
@@ -51,22 +45,6 @@ public class ezs_stock {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
-    }
-
-    public String getcWhName() {
-        return cWhName;
-    }
-
-    public void setcWhName(String cWhName) {
-        this.cWhName = cWhName == null ? null : cWhName.trim();
-    }
-
-    public String getcWhcode() {
-        return cWhcode;
-    }
-
-    public void setcWhcode(String cWhcode) {
-        this.cWhcode = cWhcode == null ? null : cWhcode.trim();
     }
 
     public Integer getGoodClass() {
@@ -99,14 +77,6 @@ public class ezs_stock {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Long getGoods_id() {
-        return goods_id;
-    }
-
-    public void setGoods_id(Long goods_id) {
-        this.goods_id = goods_id;
     }
 
     public Double getBuyNum() {

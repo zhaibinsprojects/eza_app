@@ -536,11 +536,12 @@ public class AppGoodsController {
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodsCartId()
 	 * @return
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -553,7 +554,7 @@ public class AppGoodsController {
 		try {
 			JSONObject jsonObject = JSONObject.fromObject(orderForm);
 			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE" );
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -666,7 +667,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/addToSelfOrderForm")
 	@ResponseBody
-	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -679,7 +680,7 @@ public class AppGoodsController {
 		try {
 			JSONObject jsonObject = JSONObject.fromObject(orderForm);
 			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS" );
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
