@@ -35,8 +35,39 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 		if (!result.getSuccess()) {
 			return result;
 		}
-		
 		if (upi != null) {
+			Integer status = upi.getEzs_store().getStatus();
+			String userType = upi.getEzs_store().getUserType();
+			if ("BUYER".equals(userType)) {
+ 				switch (status) {
+				case 0:
+					result.setSuccess(true);
+					result.setMsg("请求成功");
+					break;
+				case 1:
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("实名认证待审核");
+					break;
+				case 2:
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+					result.setMsg("请求成功");
+					break;
+				case 3:
+					result.setSuccess(false);
+					result.setMsg("实名认证审核未通过");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					break;
+					
+				default:
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setMsg("系统错误");
+					break;
+				}
+ 				return result;
+			}
 			Long store_id = upi.getStore_id();
 			ezs_store store = ezs_storeMapper.selectByPrimaryKey(store_id);
 			store.setCompanyName(companyName);
@@ -63,6 +94,15 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			
 			try {
 				aa = ezs_storeMapper.updateByPrimaryKeySelective(store);
+				if (aa >0) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_SUCCESS);
+					result.setSuccess(true);
+					result.setMsg("信息提交成功，请等待审核");
+				}else{
+					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_FAIL);
+					result.setSuccess(false);
+					result.setMsg("信息提交失败");
+				}
 			} catch (Exception e) {
 				log.info("保存供应商激活信息失败" + e.toString());
 				result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_FAIL);
@@ -70,15 +110,6 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 				result.setMsg("系统错误");
 			}
 			
-			if (aa >0) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_SUCCESS);
-				result.setSuccess(true);
-				result.setMsg("信息提交成功，请等待审核");
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_FAIL);
-				result.setSuccess(false);
-				result.setMsg("信息提交失败");
-			}
 			
 		}else{
 			result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_FAIL);
