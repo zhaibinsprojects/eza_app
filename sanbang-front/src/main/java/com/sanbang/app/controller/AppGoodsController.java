@@ -541,7 +541,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm,Long goodsCartId){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -552,8 +552,10 @@ public class AppGoodsController {
 			return rs;
 		}
 		try {
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
 			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -667,19 +669,21 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/addToSelfOrderForm")
 	@ResponseBody
-	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm,Long goodsCartId){
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		try {
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
 			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

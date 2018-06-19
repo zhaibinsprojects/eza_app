@@ -528,7 +528,7 @@ public class GoodsController {
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm,Long goodCartId){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -540,8 +540,10 @@ public class GoodsController {
 		}
 		try {
 			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
 			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
