@@ -20,8 +20,23 @@ public class ezs_goods_class {
     private Long photo_id;
 
     private Boolean display;
+    /**
+     * add by zhaibin 
+     * 商品类别图片
+     */
+    private ezs_accessory photo;
+    
+    
 
-    public Long getId() {
+    public ezs_accessory getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(ezs_accessory photo) {
+		this.photo = photo;
+	}
+
+	public Long getId() {
         return id;
     }
 
