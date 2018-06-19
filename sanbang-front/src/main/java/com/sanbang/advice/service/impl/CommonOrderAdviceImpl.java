@@ -25,7 +25,7 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 		
 	private Logger log=Logger.getLogger(CommonOrderAdviceImpl.class);
 	@Override
-	public Result orderFormAdvice(String order_no,String order_status) {
+	public Result orderFormAdviceStatus(String order_no,String order_status) {
 		log.info("wemall订单状态通知===<开始>order_no"+order_no+"order_status"+order_status);
 		Result result=Result.failure();
 		try {
