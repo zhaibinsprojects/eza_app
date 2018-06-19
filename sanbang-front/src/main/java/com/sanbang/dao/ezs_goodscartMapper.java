@@ -1,8 +1,11 @@
 package com.sanbang.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.vo.GoodsCarInfo;
 import com.sanbang.vo.QueryCondition;
@@ -33,4 +36,7 @@ public interface ezs_goodscartMapper {
     List<ezs_goodscart> selectByStoreCarId(QueryCondition queryCondition);
     
     List<GoodsCarInfo> selectByUserId(QueryCondition queryCondition);
+    
+    //查询购物车（根据商品id和当前登录人）
+    ezs_goodscart selectByGoodsId(Map map);
 }
