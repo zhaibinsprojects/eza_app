@@ -1,6 +1,7 @@
 package com.sanbang.seller.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +12,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_area;
+import com.sanbang.bean.ezs_companyType_dict;
+import com.sanbang.bean.ezs_industry_dict;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dao.ezs_companyType_dictMapper;
+import com.sanbang.dao.ezs_industry_dictMapper;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerActivateService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
@@ -25,11 +34,22 @@ import com.sanbang.vo.DictionaryCode;
 public class SellerActivateController {
 	
 	@Autowired
-	SellerActivateService activateService;
+	private SellerActivateService activateService;
 	
 	@Autowired
-	DictService dictService;
+	private DictService dictService;
 	
+	@Autowired
+	private ezs_areaMapper ezs_areaMapper;
+	
+	@Autowired
+	private ezs_industry_dictMapper ezs_industry_dictMapper;
+	
+	@Autowired
+	private ezs_companyType_dictMapper ezs_companyType_dictMapper;
+	
+	@Autowired
+	private ezs_userMapper ezs_userMapper;
 	/**
 	 * 供应商激活
 	 * @param companyName
@@ -79,7 +99,7 @@ public class SellerActivateController {
 	}
 	
 	/**
-	 * 供应商激活未通过时，调用此接口修改激活信息，再次提交
+	 * 供应商激活未通过时，调用此接口回显激活信息
 	 * @param request
 	 * @param response
 	 * @return
@@ -135,7 +155,144 @@ public class SellerActivateController {
 		return result;
 	}
 	
+
+	/**
+	 * 供应商激活信息初始化
+	 * @param 
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/sellerActiviteInit")
+	@ResponseBody
+	public Object sellerActiviteInit(HttpServletRequest request) throws Exception{
+		Result result=Result.failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		if(null!=upi.getEzs_userinfo()){
+			Integer status = upi.getEzs_store().getStatus();
+			String userType = upi.getEzs_store().getUserType();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+			Map<String, Object> map=new HashMap<>();
+			Map<String,Object> map1=new HashMap<>();
+			map1.put("status", status);
+			map1.put("userType", userType);
+			map1.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
+			List<ezs_companyType_dict>  aa=	ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId());
+			map1.put("yTurnover", upi.getEzs_store().getyTurnover());//// 年营业额
+			map1.put("covered", upi.getEzs_store().getCovered());// 占地面积
+			map1.put("rent", upi.getEzs_store().getRent());// 租用
+			map1.put("device_num", upi.getEzs_store().getDevice_num());// 设备数量
+			map1.put("employee_num", upi.getEzs_store().getEmployee_num());// 员工数量
+			map1.put("fixed_assets", upi.getEzs_store().getFixed_assets());// 固定资产
+			map1.put("obtainYear", upi.getEzs_store().getObtainYear());// 实际控制人从业年限
+			map1.put("assets", upi.getEzs_store().getAssets());// 总资产
+			map.put("cominfo", map1);
+ 			result.setObj(map);
+ 			if ("BUYER".equals(userType)) {
+ 				switch (status) {
+				case 0:
+					result.setSuccess(true);
+					result.setMsg("请求成功");
+					break;
+				case 1:
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("实名认证待审核");
+					break;
+				case 2:
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+					result.setMsg("请求成功");
+					break;
+				case 3:
+					result.setSuccess(false);
+					result.setMsg("实名认证审核未通过");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					break;
+					
+				default:
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+					result.setMsg("系统错误");
+					break;
+				}
+ 				return result;
+			}
+		};
+		
+		return result;
+	}
 	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo =  ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo =  ezs_oneinfo.getAreaName();
+				}
+			}
+		}
+		
+		if(!Tools.isEmpty(threeinfo)){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
+		}
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
+		}
+		
+		return sb.toString();
+	}
 	
+	private String getezs_companyType_dict(List<ezs_companyType_dict> list){
+		if(list.size()==0){
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < list.size(); i++) {
+			if(i!=0||i!=list.size()-1){
+				sb.append(",");
+			}
+			sb.append(list.get(i).getDict_id());
+		}
+		return sb.toString();
+		
+	}
 	
+	private String getezs_industry_dict(List<ezs_industry_dict> list){
+		if(list.size()==0){
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < list.size(); i++) {
+			if(i!=0||i!=list.size()-1){
+				sb.append(",");
+			}
+			sb.append(list.get(i).getDict_id());
+		}
+		return sb.toString();
+		
+	}
 }

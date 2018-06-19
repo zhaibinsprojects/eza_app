@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -522,11 +523,12 @@ public class GoodsController {
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodCartId(购物车ID)
 	 * @return
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -538,9 +540,11 @@ public class GoodsController {
 		}
 		try {
 			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE" );
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -649,11 +653,12 @@ public class GoodsController {
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodCartId(购物车ID)
 	 * @return
 	 */
-	@RequestMapping("/addToSelfOrderForm")
+	@RequestMapping(value="/addToSelfOrderForm")
 	@ResponseBody
-	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		log.info("添加订单beginning...........................");
 		Map<String, Object> mmp = null;
 		Result rs = null;
@@ -664,10 +669,18 @@ public class GoodsController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
+		if(goodCartId==null){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("请输入购物车ID");
+			return rs;
+		}
 		try {
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS" );
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();

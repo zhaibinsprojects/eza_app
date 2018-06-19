@@ -132,7 +132,7 @@ public interface GoodsService {
 	 * @param orderForm 订单对象
 	 * @param orderType 订单类型 ： GOODS 商品订单；SAMPLE 样品订单
 	 */
-	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType);
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId);
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
 	

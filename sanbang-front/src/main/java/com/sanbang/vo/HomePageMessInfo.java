@@ -3,6 +3,7 @@ package com.sanbang.vo;
 import java.util.List;
 
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.utils.Page;
 /**
  * 用以封装首页展示相关内容
@@ -17,6 +18,26 @@ public class HomePageMessInfo {
 	private Page page;
 	//广告列表
 	private List<Advices> advicesList;
+	//三级推荐商品类列表
+	private List<ezs_goods_class> ThirdGoodClassList;
+	//订阅栏
+	private List<Advices> subscribeList;
+
+	public List<ezs_goods_class> getThirdGoodClassList() {
+		return ThirdGoodClassList;
+	}
+
+	public void setThirdGoodClassList(List<ezs_goods_class> thirdGoodClassList) {
+		ThirdGoodClassList = thirdGoodClassList;
+	}
+
+	public List<Advices> getSubscribeList() {
+		return subscribeList;
+	}
+
+	public void setSubscribeList(List<Advices> subscribeList) {
+		this.subscribeList = subscribeList;
+	}
 
 	public List<Advices> getAdvicesList() {
 		return advicesList;

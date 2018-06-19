@@ -121,7 +121,7 @@ public class APPSellerGoodsController {
 	public Object queryGoodsInfoById(long id, HttpServletRequest request, HttpServletResponse response){
 		Result result = Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -197,7 +197,7 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object goodsInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -259,7 +259,7 @@ public class APPSellerGoodsController {
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("请重新登陆！");
