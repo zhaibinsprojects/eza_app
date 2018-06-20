@@ -380,15 +380,16 @@ public class AppHomeGoodsMessController {
 	}
 	
 	private List<Advices> getSubscribeList(HttpServletRequest request){
-		String path = request.getServletContext().getContextPath();
+		//String path = request.getServletContext().getContextPath();
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices = new Advices();
-		advices.setPath(path+"/resource/indeximg/首页-1_13.png");
+		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
+		advices.setPath("/resource/indeximg/首页-1_13.png");
 		advices.setpName("首页-1_13.png");
 		advices.setLink("");
 		advices.setContent("标题展示");
 		adviceList.add(advices);
-		log.info("图片："+path+"/resource/indeximg/首页-1_13.png");
+		log.info("图片：/resource/indeximg/首页-1_13.png");
 		return adviceList;
 	}
 }
