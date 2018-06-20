@@ -104,9 +104,9 @@ public class FileUploadServiceImpl implements FileUploadService {
 			// 拼接目录
 			StringBuilder ym = this.dateUtil(0).append(this.dateUtil(1)).append(File.separator);
 			StringBuilder d = this.dateUtil(2).append(File.separator);
-			StringBuilder hms = this.dateUtil(3).append("-").append(this.dateUtil(4)).append("-")
-					.append(this.dateUtil(5)).append("-").append(this.dateUtil(6)).append("-").append(this.dateUtil(7));
 			while (iter.hasNext()) {
+				StringBuilder hms = this.dateUtil(3).append("-").append(this.dateUtil(4)).append("-")
+						.append(this.dateUtil(5)).append("-").append(this.dateUtil(6)).append("-").append(this.dateUtil(7));
 				// 一次遍历所有文件
 				MultipartFile file = multiRequest.getFile(iter.next().toString());
 				if (file != null) {

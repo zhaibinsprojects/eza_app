@@ -233,11 +233,12 @@ public class SellerGoodsController {
 			//形态
 			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
 			//地址
-			map.put("area", areaService.getAreaParentList());
+			//map.put("area", areaService.getAreaParentList());
 			//分类
 			map.put("cata",cataService.getFirstList());
  			result.setObj(map);
  			result.setSuccess(true);
+ 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		};
 		
 		return result;

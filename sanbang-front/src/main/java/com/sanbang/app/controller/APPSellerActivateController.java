@@ -12,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_companyType_dict;
-import com.sanbang.bean.ezs_industry_dict;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_areaMapper;
@@ -25,7 +23,7 @@ import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerActivateService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
-import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
@@ -81,16 +79,16 @@ public class APPSellerActivateController {
 		}
 		
 		//验证用户是否认证，拥有买家资质
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未认证，不能申请卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未认证，不能申请卖家权限。");
+			return result;
+		}
 		
 		result = activateService.addActivateInfo(result, upi,companyName, yTurnover, covered, rent, device_num, employee_num, assets, 
 				obtainYear, open_bank_name, openBankNo, open_branch_name, open_branch_no, location_detail, request, response);
@@ -118,15 +116,15 @@ public class APPSellerActivateController {
 		
 		//验证用户是否认证，拥有买家资质
 		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未认证，不能申请卖家权限。");
-//			return result;
-//		}
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未认证，不能申请卖家权限。");
+			return result;
+		}
 		
 		if (store.getStatus() != 3) {
 			result.setSuccess(false);
@@ -205,7 +203,7 @@ public class APPSellerActivateController {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setMsg("实名认证待审核");
 					break;
-				case 2:
+				case 2:    
 					result.setSuccess(true);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 					result.setMsg("请求成功");
