@@ -1,11 +1,5 @@
 package com.sanbang.app.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,10 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.xhtmlrenderer.pdf.ITextFontResolver;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.lowagie.text.pdf.BaseFont;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -46,10 +37,6 @@ import com.sanbang.utils.Result;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/app/goods")

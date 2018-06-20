@@ -136,6 +136,10 @@ public interface GoodsService {
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
 	
+	public Map<String, Object> preOrderFormFunc(ezs_user user,String orderType,Long goodsCartId);
+	
+	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp);
+	
 	
 	/**
 	 * app订单详情

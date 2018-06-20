@@ -17,7 +17,8 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class StockHelper {
 	private static String JDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	private static String url = "jdbc:sqlserver://39.107.205.12:1433;DatabaseName=UFDATA_004_2018";
+	private static String url = "jdbc:sqlserver://39.107.205.12:1433;DatabaseName=UFDATA_001_2018";
+	//private static String url = "jdbc:sqlserver://39.107.205.12:1433;DatabaseName=SD_EDS_DATAS_CS";
 	private static String user = "sa";
 	private static String psw = "123qweQWE";
 	static {
