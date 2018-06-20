@@ -538,7 +538,8 @@ public class GoodsServiceImpl implements GoodsService{
 					if( n > 0 && m > 0){
 						map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						map.put("Msg", "购物车数据更新成功");
-						map.put("totalPrice", totalPrice);
+						//map.put("totalPrice", totalPrice);	不往前端返总价钱，只返回当前存库量
+						map.put("count", goods.getInventory());
 						log.info("编辑购物车方法：数据更新成功...");
 						return map;
 					}

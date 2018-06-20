@@ -604,7 +604,7 @@ public class GoodsController {
 	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (null == user) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -616,17 +616,12 @@ public class GoodsController {
 			Map<String,Object> map1=new HashMap<>();
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				result.setSuccess(true);
-				result.setMsg(map.get("Msg").toString());
-				map1.put("totalPrice", map.get("totalPrice"));
-				result.setObj(map1);
 			}else{
 				result.setSuccess(false);
-				if(null != map.get("count")){
-					map1.put("count", map.get("count"));
-					result.setObj(map1);
-				}
-				result.setMsg(map.get("Msg").toString());
 			}
+			result.setMsg(map.get("Msg").toString());
+			map1.put("count", map.get("count"));
+			result.setObj(map1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMsg("数据传递有误");

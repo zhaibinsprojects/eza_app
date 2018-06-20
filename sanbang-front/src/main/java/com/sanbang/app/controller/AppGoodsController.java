@@ -642,17 +642,12 @@ public class AppGoodsController {
 			Map<String,Object> map1=new HashMap<>();
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				result.setSuccess(true);
-				result.setMsg(map.get("Msg").toString());
-				map1.put("totalPrice", map.get("totalPrice"));
-				result.setObj(map1);
 			}else{
 				result.setSuccess(false);
-				if(null != map.get("count")){
-					map1.put("count", map.get("count"));
-					result.setObj(map1);
-				}
-				result.setMsg(map.get("Msg").toString());
 			}
+			result.setMsg(map.get("Msg").toString());
+			map1.put("count", map.get("count"));
+			result.setObj(map1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMsg("数据传递有误");
@@ -687,8 +682,6 @@ public class AppGoodsController {
 		}
 		return result;
 	}
-	
-	
 	/**
 	 * 直接下订单（添加订单）
 	 * @author zhaibin
