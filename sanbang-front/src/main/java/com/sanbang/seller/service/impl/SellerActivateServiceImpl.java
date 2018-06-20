@@ -25,13 +25,11 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 	
 	@Override
 	public Result addActivateInfo(Result result, ezs_user upi,String companyName, String yTurnover, String covered, String rent,
-			String device_num, String employee_num, String assets, String obtainYear, String open_bank_name, String openBankNo,
-			String open_branch_name, String open_branch_no, String location_detail, HttpServletRequest request, HttpServletResponse response) {
+			String device_num, String employee_num, String assets, String obtainYear, HttpServletRequest request, HttpServletResponse response) {
 		log.info("供应商激活参数：companyName" + companyName + "&yTurnover" + yTurnover + "covered" +"。。。。。。。。。。。。。。。。");
 		//校验
 		result = checkActivateInfo(result, companyName, yTurnover, covered, rent,
-				device_num, employee_num, assets, obtainYear, open_bank_name, openBankNo, open_branch_name, 
-				open_branch_no, location_detail, request, response);
+				device_num, employee_num, assets, obtainYear, request, response);
 		if (!result.getSuccess()) {
 			return result;
 		}
@@ -77,11 +75,11 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setEmployee_num(Integer.valueOf(employee_num));
 			store.setAssets(Double.valueOf(assets));
 			store.setObtainYear(Integer.valueOf(obtainYear));
-			store.setOpen_bank_name(open_bank_name);
+			/*store.setOpen_bank_name(open_bank_name);
 			store.setOpenBankNo(openBankNo);
 			store.setOpen_branch_name(open_branch_name);
 			store.setOpen_branch_no(open_branch_no);
-			store.setLocation_detail(location_detail);
+			store.setLocation_detail(location_detail);*/
 			store.setUserType("SELLER");
 			store.setStatus(1); // 0 初始值， 1 待审核 ， 2 审核通过， 3 审核不通过
 			if (rent.equals("0")) {
@@ -120,8 +118,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 	}
 
 	private Result checkActivateInfo(Result result, String companyName, String yTurnover, String covered, String rent,
-			String device_num, String employee_num, String assets, String obtainYear,String open_bank_name, String openBankNo,
-			String open_branch_name, String open_branch_no, String location_detail, HttpServletRequest request,
+			String device_num, String employee_num, String assets, String obtainYear, HttpServletRequest request,
 			HttpServletResponse response) {
 		
 		if (Tools.isEmpty(companyName)) {
@@ -180,7 +177,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			result.setMsg("实际控制人从业年限不能为空或非数字格式");
 			return result;
 		}
-		if (Tools.isEmpty(open_bank_name)) {
+		/*if (Tools.isEmpty(open_bank_name)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("开户银行名称不能为空");
@@ -209,7 +206,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			result.setSuccess(false);
 			result.setMsg("开户银行所在地不能为空");
 			return result;
-		}
+		}*/
 		
 		if(Tools.isEmpty(rent) ){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);

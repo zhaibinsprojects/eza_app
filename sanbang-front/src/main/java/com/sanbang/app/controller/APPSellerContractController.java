@@ -145,7 +145,8 @@ public class APPSellerContractController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryContractByIdOrDate")
 	@ResponseBody
-	public Object queryContractByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response, String currentPage){
+	public Object queryContractByIdOrDate(String orderno, String startTime, String endTime,HttpServletRequest request, HttpServletResponse response, String currentPage){
+//	public Object queryContractByIdOrDate(@RequestParam(name = "order_no", defaultValue = "")String orderno, @RequestParam(name = "startTime", defaultValue = "")String startTime, @RequestParam(name = "endTime", defaultValue = "")String endTime,HttpServletRequest request, HttpServletResponse response, String currentPage){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -181,7 +182,7 @@ public class APPSellerContractController {
 		
 		int errorCode = (int) map.get("ErrorCode");
 		
-		page = (Page) map.get("page");
+		page = (Page) map.get("Page");
 		result.setObj(list);
 		result.setMeta(page);
 		result.setErrorcode(errorCode);
