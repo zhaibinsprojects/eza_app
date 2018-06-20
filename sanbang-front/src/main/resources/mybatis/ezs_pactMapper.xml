@@ -170,18 +170,18 @@
    <select id="selectPactByOrderNo" resultType="ezs_pact"> 
    		select * from ezs_pact where order_no = #{orderno}
    </select>
-   <!-- 根据userId查询合同数量 -->
-  <!--  <select id="selectCountById" resultType="java.lang.Integer">
+  <!-- 根据userId查询合同数量 -->
+   <select id="selectCountById" resultType="java.lang.Integer">
    	select count(*)  from ezs_pact where sellerUser_id =#{sellerId}
-   </select> -->
+   </select>
    <!-- 根据userId查询合同分页 -->
-  <!--  <select id="queryPact" parameterType="com.sanbang.utils.Page" resultType="ezs_pact">
+   <select id="queryPact" parameterType="com.sanbang.utils.Page" resultType="ezs_pact">
    	select 
     <include refid="Base_Column_List" />
     from ezs_pact
     where sellerUser_id =#{sellerId} 
     LIMIT #{page.startPos},#{page.pageSize}
-   </select> -->
+   </select>
    <!-- 根据订单签订时间查询 -->
    <select id="selectPactByDate" parameterType="com.sanbang.utils.Page" resultType="ezs_pact"  >
     	select 

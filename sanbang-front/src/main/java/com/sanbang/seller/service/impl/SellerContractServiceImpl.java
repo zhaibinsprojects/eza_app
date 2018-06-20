@@ -122,7 +122,6 @@ public class SellerContractServiceImpl implements SellerContractService {
 					e.printStackTrace();
 				}
 				
-//				list = ezs_pactMapper.selectPactByDate(startTime, endTime,sellerId,page);
 				map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				map.put("Page", page);
 				map.put("Obj", list);

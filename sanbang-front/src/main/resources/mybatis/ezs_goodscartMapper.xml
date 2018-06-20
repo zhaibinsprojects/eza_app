@@ -215,7 +215,7 @@
 		gs.inventory,
 		gs.area_id gAreaId,
 		ga.name pName,
-		ga.path pPath, 
+		CONCAT("http://10.10.10.148/",ga.path,"/",ga.name) pPath, 
 		d.name utilName
 	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id WHERE 
 	EXISTS 

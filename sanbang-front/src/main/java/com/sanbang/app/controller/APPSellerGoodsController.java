@@ -100,7 +100,7 @@ public class APPSellerGoodsController {
 		
 		int errorCode = (int) map.get("ErrorCode");
 		
-		page = (Page) map.get("page");
+		page = (Page) map.get("Page");
 		result.setObj(list);
 		result.setMeta(page);
 		result.setSuccess(true);
@@ -226,9 +226,10 @@ public class APPSellerGoodsController {
 			//形态
 			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
 			//地址
-			map.put("area", areaService.getAreaParentList());
+			//map.put("area", areaService.getAreaParentList());
 			//分类
 			map.put("cata",cataService.getFirstList());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
  			result.setObj(map);
  			result.setSuccess(true);
 		};

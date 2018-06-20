@@ -69,8 +69,7 @@ public class SellerActivateController {
 	@RequestMapping("/sellerActivate") // 固定产值，经营年限  找不到对应字段
 	@ResponseBody
 	public Object sellerActivate(String companyName, String yTurnover, String covered, String rent, String device_num,
-			String employee_num, String assets, String obtainYear,String open_bank_name, String openBankNo, String open_branch_name,
-			String open_branch_no, String location_detail, HttpServletRequest request, HttpServletResponse response){
+			String employee_num, String assets, String obtainYear, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
@@ -94,7 +93,7 @@ public class SellerActivateController {
 //		}
 		
 		result = activateService.addActivateInfo(result, upi,companyName, yTurnover, covered, rent, device_num, employee_num, assets, 
-				obtainYear, open_bank_name, openBankNo, open_branch_name, open_branch_no, location_detail, request, response);
+				obtainYear, request, response);
 		return result;
 	}
 	

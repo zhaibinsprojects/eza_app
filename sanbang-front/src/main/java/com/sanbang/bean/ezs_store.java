@@ -64,7 +64,7 @@ public class ezs_store implements Serializable {
 
 	private Long auditingusertype_id;// 1, 线索用户 2, 注册用户, 3, 认证用户 ,4, 激活用户
 
-	private String tel;// 联系电话
+	private String tel;// 联系电话     
 
 	private Integer accountType;// 1.企业账号，2.个体户
 
