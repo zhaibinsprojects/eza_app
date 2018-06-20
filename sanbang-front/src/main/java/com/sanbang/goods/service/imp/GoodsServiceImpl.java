@@ -534,6 +534,37 @@ public class GoodsServiceImpl implements GoodsService{
 			throw e;
 		}
 		log.info("编辑购物车end...");
+		return map; 
+	}
+	/**
+	 * 删除购物车
+	 */
+	@Transactional(rollbackFor=java.lang.Exception.class)
+	public Map<String,Object> deleteGoodCar(String[] ids){
+		Map<String,Object> map = new HashMap<>();
+		List<Long> list = new ArrayList<>();
+		if(null != ids && ids.length > 0){
+			list = ezs_goodscartMapper.querySid(ids);
+			try{
+				int n = ezs_goodscartMapper.deleteGoodCar(ids);
+				int m = storecartMapper.deleteStoreCar(list);
+				if(n>0 && m>0){
+					map.put("Msg", "删除成功");
+					map.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				}else{
+					map.put("Msg", "删除出错");
+					map.put("ErrorCode",DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				}
+				
+			}catch(Exception e){
+				e.printStackTrace();
+				map.put("Msg", "删除异常");
+				map.put("ErrorCode",DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
+		}else{
+			map.put("Msg", "参数为空，请联系管理员");
+			map.put("ErrorCode",DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		}
 		return map;
 	}
 	/**

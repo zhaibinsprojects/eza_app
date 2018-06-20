@@ -222,4 +222,25 @@
 	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
 	 AND g.deleteStatus = '0' and g.of_id IS NULL
   </select>
+  
+  <!-- 批量查询sc_id，han -->
+  <select id="" resultType="java.lang.Long" parameterType="Integer[]">
+  	select sc_id from ezs_goodscart 
+  	<where>
+  		id
+  	 <foreach collection="array" item="id" open="in (" close=")" separator=",">
+         #{id}
+     </foreach>
+  	</where>
+  </select>
+  <!-- 批量删除，han -->
+  <delete id="deleteGoodCar" parameterType="Integer[]">
+  	delete from ezs_goodscart  
+  	<where>
+  		id
+  	 <foreach collection="array" item="id" open="in (" close=")" separator=",">
+         #{id}
+     </foreach>
+  	</where>
+  </delete>
 </mapper>

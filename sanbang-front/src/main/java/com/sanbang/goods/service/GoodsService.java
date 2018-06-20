@@ -127,6 +127,12 @@ public interface GoodsService {
 	public Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user);
 	
 	/**
+	 * 删除购物车
+	 * @param ids 购物车id
+	 */
+	public Map<String,Object> deleteGoodCar(String[] ids);
+	
+	/**
 	 * 生成订单
 	 * @author zhaibin
 	 * @param orderForm 订单对象

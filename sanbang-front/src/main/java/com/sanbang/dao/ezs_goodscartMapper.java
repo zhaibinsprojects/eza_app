@@ -38,5 +38,11 @@ public interface ezs_goodscartMapper {
     List<GoodsCarInfo> selectByUserId(QueryCondition queryCondition);
     
     //查询购物车（根据商品id和当前登录人）
-    ezs_goodscart selectByGoodsId(Map map);
+    @SuppressWarnings("rawtypes")
+	ezs_goodscart selectByGoodsId(Map map);
+    
+    //根据购物车id查询sc_id
+    List<Long> querySid(String[] ids);
+    //批量删除
+    int deleteGoodCar(String[] ids);
 }
