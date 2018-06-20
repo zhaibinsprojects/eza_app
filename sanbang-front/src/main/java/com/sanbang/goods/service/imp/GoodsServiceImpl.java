@@ -376,6 +376,7 @@ public class GoodsServiceImpl implements GoodsService{
 	public synchronized Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart, ezs_user user) {
 		// TODO Auto-generated method stub
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车 beginning...");
+
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = null;
 		//初始化查询条件

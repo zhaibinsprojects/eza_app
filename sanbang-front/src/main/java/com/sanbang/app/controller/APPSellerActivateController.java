@@ -77,7 +77,6 @@ public class APPSellerActivateController {
 			return result;
 		}
 		
-		
 		result = activateService.addActivateInfo(result, upi,companyName, yTurnover, covered, rent, device_num, employee_num, assets, 
 				obtainYear, request, response);
 		return result;
@@ -104,7 +103,6 @@ public class APPSellerActivateController {
 		
 		//验证用户是否认证，拥有买家资质
 		ezs_store store = upi.getEzs_store();
-		
 		if (store.getStatus() != 3) {
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -182,7 +180,7 @@ public class APPSellerActivateController {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setMsg("实名认证待审核");
 					break;
-				case 2:
+				case 2:    
 					result.setSuccess(true);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 					result.setMsg("请求成功");

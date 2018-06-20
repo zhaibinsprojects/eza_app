@@ -65,7 +65,7 @@ public class HttpRemoteRequestUtils {
 		} catch(Exception e){
 			log.error("----------------调用接口出错doPost方法！---");
 			log.error(e.toString());
-			SendMobileMessage.sendMsg(Dictionary.getProperties("systemErrorAdvice"), "Post请求失败,原因:"+e.toString());
+			//SendMobileMessage.sendMsg(Dictionary.getProperties("systemErrorAdvice"), "Post请求失败,原因:"+e.toString());
 			return null;
 		}finally {
 			httpclient.getConnectionManager().shutdown();
@@ -246,7 +246,7 @@ public class HttpRemoteRequestUtils {
 		} catch(Exception e){
 			log.error("----------------调用接口出错doPost方法！---");
 			log.error(e.toString());
-			SendMobileMessage.sendMsg(Dictionary.getProperties("systemErrorAdvice"), "Post请求失败,原因:"+e.toString());
+			//SendMobileMessage.sendMsg(Dictionary.getProperties("systemErrorAdvice"), "Post请求失败,原因:"+e.toString());
 			return null;
 		}finally {
 			httpclient.getConnectionManager().shutdown();

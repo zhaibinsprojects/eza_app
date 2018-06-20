@@ -1,11 +1,5 @@
 package com.sanbang.goods.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.xhtmlrenderer.pdf.ITextFontResolver;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.itextpdf.text.pdf.BaseFont;
+import com.sanbang.addressmanage.service.AddressService;
+import com.sanbang.bean.ezs_address;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -37,18 +31,18 @@ import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -63,6 +57,12 @@ public class GoodsController {
 	
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
+	
+	@Autowired
+	private AddressService addressService;
+	
+	@Autowired
+	private ezs_areaMapper ezs_areaMapper;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	
@@ -528,7 +528,7 @@ public class GoodsController {
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm,Long goodCartId){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -540,8 +540,10 @@ public class GoodsController {
 		}
 		try {
 			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
 			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -734,5 +736,108 @@ public class GoodsController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
+	}
+	
+	/**
+	 * 商品id得到质检报告
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping("/getGoodsPdf")
+	@ResponseBody
+	public Object getGoodsPdf(@RequestParam("goodsId")long goodsId){
+		Result result=Result.failure();
+		result=goodsService.getGoodsPdf(goodsId);
+		return result;
+	}
+	
+	/**
+	 * 订单确认初始化
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping("/orderConfirminit")
+	@ResponseBody
+	public Object orderConfirminit(HttpServletRequest  request){
+		Result result=Result.failure();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result = Result.failure();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		
+		
+		//收货地址
+		Page page = new Page();
+		page.setPageNow(1);
+		List<ezs_address> addressList = addressService.findAddressByUserId(upi.getId(),page);
+		Map<String, Object> map=new HashMap<>();
+		if(null!=addressList&&addressList.size()>0){
+			//area地址
+			addressList=SetAddressInfo(addressList);
+		    map.put("readdress", addressList.get(0));
+		    map.put("hasd", true);
+		}else{
+			map.put("readdress", null);
+			map.put("hasd", false);
+		}
+		
+		if(null==upi.getEzs_bill()){
+			map.put("hasb", false);
+		}else{
+			map.put("hasb", true);
+		}
+		map.put("bill", upi.getEzs_bill());
+		
+		result.setObj(map);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setSuccess(true);
+		
+		return result;
+	}
+	private List<ezs_address> SetAddressInfo(List<ezs_address> addressList){
+		for (ezs_address ezs_address : addressList) {
+			ezs_address.setArea(getaddressinfo(ezs_address.getArea_id()));
+		}
+		return addressList;
+	}
+	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo =  ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo =  ezs_oneinfo.getAreaName();
+				}
+			}
+		}
+		
+		if(!Tools.isEmpty(threeinfo)){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
+		}
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
+		}
+		
+		return sb.toString();
 	}
 }
