@@ -518,7 +518,7 @@ public class GoodsServiceImpl implements GoodsService{
 				if(count > goods.getInventory()){
 					map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					map.put("Msg", "商品数量不足");
-					map.put("count", goods.getInventory());
+					map.put("inventory", goods.getInventory());
 					log.info("编辑购物车方法：商品数量不足...");
 					return map;
 				}
@@ -539,7 +539,7 @@ public class GoodsServiceImpl implements GoodsService{
 						map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						map.put("Msg", "购物车数据更新成功");
 						//map.put("totalPrice", totalPrice);	不往前端返总价钱，只返回当前存库量
-						map.put("count", goods.getInventory());
+						map.put("inventory", goods.getInventory());
 						log.info("编辑购物车方法：数据更新成功...");
 						return map;
 					}

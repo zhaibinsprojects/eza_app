@@ -646,7 +646,7 @@ public class AppGoodsController {
 				result.setSuccess(false);
 			}
 			result.setMsg(map.get("Msg").toString());
-			map1.put("count", map.get("count"));
+			map1.put("inventory", map.get("inventory"));
 			result.setObj(map1);
 		} catch (Exception e) {
 			e.printStackTrace();
