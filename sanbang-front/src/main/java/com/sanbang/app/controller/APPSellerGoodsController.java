@@ -100,7 +100,7 @@ public class APPSellerGoodsController {
 		
 		int errorCode = (int) map.get("ErrorCode");
 		
-		page = (Page) map.get("page");
+		page = (Page) map.get("Page");
 		result.setObj(list);
 		result.setMeta(page);
 		result.setSuccess(true);

@@ -333,7 +333,7 @@ public class SellerGoodsController {
 	
 
 	/**
-	 * 供应商货品属性修改， 图片修改未完成
+	 * 供应商货品属性修改
 	 * @param goodsId
 	 * @param request
 	 * @param response

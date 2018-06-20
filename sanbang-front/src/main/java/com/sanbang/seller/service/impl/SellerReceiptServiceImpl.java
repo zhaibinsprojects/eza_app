@@ -72,7 +72,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 		int startPos = 0;
 		page.setStartPos(startPos);
 		List<ezs_invoice> glist=new ArrayList<>();
-		if (Integer.valueOf(currentPage) >= 1 && Integer.valueOf(currentPage) <= page.getTotalPageCount()) {
+		if ((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)) {
 			 glist = invoiceMapper.goodsInvoiceCountPage(page, userId);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
