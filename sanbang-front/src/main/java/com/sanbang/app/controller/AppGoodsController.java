@@ -43,6 +43,7 @@ import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
+
 @Controller
 @RequestMapping("/app/goods")
 public class AppGoodsController {
@@ -629,7 +630,7 @@ public class AppGoodsController {
 	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (null == user) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -658,6 +659,36 @@ public class AppGoodsController {
 		}
 		return result;
 	}
+	//删除购物车（多选删除）
+	@RequestMapping(value="/deleteToSelfGoodCar")
+	@ResponseBody
+	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String id){
+		String[] ids = id.split(",");
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (null == user) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try{
+			Map<String,Object> map = goodsService.deleteGoodCar(ids);
+			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			if(null != ErrorCode && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				result.setSuccess(true);
+				result.setMsg(map.get("Msg").toString());
+			}else{
+				result.setSuccess(false);
+				result.setMsg(map.get("Msg").toString());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setMsg("数据传递有误");
+		}
+		return result;
+	}
+	
+	
 	/**
 	 * 直接下订单（添加订单）
 	 * @author zhaibin

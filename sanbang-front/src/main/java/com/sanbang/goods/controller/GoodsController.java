@@ -15,10 +15,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -42,10 +40,7 @@ import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.GoodsOfOrderInfo;
 import com.sanbang.vo.goods.GoodsVo;
-
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/goods")
@@ -633,6 +628,34 @@ public class GoodsController {
 				result.setMsg(map.get("Msg").toString());
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMsg("数据传递有误");
+		}
+		return result;
+	}
+	//删除购物车（多选删除）
+	@RequestMapping(value="/deleteToSelfGoodCar")
+	@ResponseBody
+	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String id){
+		String[] ids = id.split(",");
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (null == user) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try{
+			Map<String,Object> map = goodsService.deleteGoodCar(ids);
+			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			if(null != ErrorCode && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				result.setSuccess(true);
+				result.setMsg(map.get("Msg").toString());
+			}else{
+				result.setSuccess(false);
+				result.setMsg(map.get("Msg").toString());
+			}
+		}catch(Exception e){
 			e.printStackTrace();
 			result.setMsg("数据传递有误");
 		}
