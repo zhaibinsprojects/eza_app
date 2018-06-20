@@ -210,7 +210,7 @@
   </resultMap>
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
-  		g.id,g.cart_type,g.count,g.price,
+  		g.id,g.cart_type,g.count,g.price,g.goods_id,
 		(select CONCAT(d1.`name`,d2.`name`,a.`name`) name from ezs_goods a,ezs_dict d1,ezs_dict d2 where a.color_id = d1.id and a.form_id = d2.id and a.id = g.goods_id) gname,
 		gs.inventory,
 		gs.area_id gAreaId,
