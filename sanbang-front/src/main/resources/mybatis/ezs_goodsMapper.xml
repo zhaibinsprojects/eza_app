@@ -1007,10 +1007,6 @@
      <collection property="mainphoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
      </collection>
      
-      <!--地区are,zhaiBin-->
-     <!-- <association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
-     </association> -->
-     
       <!--商品图片-->
      <collection property="goods_photos" column="id" select="com.sanbang.dao.ezs_goods_photoMapper.selectPhotoinfoBygoods_id">
      </collection>

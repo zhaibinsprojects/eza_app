@@ -35,10 +35,12 @@ public class CustomizedServiceImpl implements CustomizedService {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		try {
+			//初始化必需字段数据
 			customized.setAddTime(new Date());
 			customized.setPurchaser_id(user.getId());
 			customized.setDeleteStatus(false);
 			this.customizedMapper.insert(customized);
+			//初始化必需字段数据
 			customizedRecord.setCustomized_id(customized.getId());
 			customizedRecord.setAddTime(new Date());
 			customizedRecord.setOperater_id(user.getId());

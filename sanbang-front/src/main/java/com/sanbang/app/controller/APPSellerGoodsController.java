@@ -100,7 +100,7 @@ public class APPSellerGoodsController {
 		
 		int errorCode = (int) map.get("ErrorCode");
 		
-		page = (Page) map.get("page");
+		page = (Page) map.get("Page");
 		result.setObj(list);
 		result.setMeta(page);
 		result.setSuccess(true);
@@ -121,7 +121,7 @@ public class APPSellerGoodsController {
 	public Object queryGoodsInfoById(long id, HttpServletRequest request, HttpServletResponse response){
 		Result result = Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -197,7 +197,7 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object goodsInit(HttpServletRequest request) throws Exception{
 		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -226,9 +226,10 @@ public class APPSellerGoodsController {
 			//形态
 			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
 			//地址
-			map.put("area", areaService.getAreaParentList());
+			//map.put("area", areaService.getAreaParentList());
 			//分类
 			map.put("cata",cataService.getFirstList());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
  			result.setObj(map);
  			result.setSuccess(true);
 		};
@@ -259,7 +260,7 @@ public class APPSellerGoodsController {
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("请重新登陆！");

@@ -5,20 +5,16 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="cWhName" property="cWhName" jdbcType="VARCHAR" />
-    <result column="cWhcode" property="cWhcode" jdbcType="VARCHAR" />
     <result column="goodClass" property="goodClass" jdbcType="INTEGER" />
     <result column="iQuantity" property="iQuantity" jdbcType="DOUBLE" />
     <result column="mQuantity" property="mQuantity" jdbcType="DOUBLE" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="buyNum" property="buyNum" jdbcType="DOUBLE" />
     <result column="goodid" property="goodid" jdbcType="BIGINT" />
     <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, cWhName, cWhcode, goodClass, iQuantity, mQuantity, status, 
-    goods_id, buyNum, goodid, orderNo
+    id, addTime, deleteStatus, goodClass, iQuantity, mQuantity, status, buyNum, goodid, orderNo
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -32,14 +28,13 @@
   </delete>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_stock" >
     insert into ezs_stock (id, addTime, deleteStatus, 
-      cWhName, cWhcode, goodClass, 
-      iQuantity, mQuantity, status, 
-      goods_id, buyNum, goodid, 
+      goodClass, 
+      iQuantity, mQuantity, status,buyNum, goodid, 
       orderNo)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{cWhName,jdbcType=VARCHAR}, #{cWhcode,jdbcType=VARCHAR}, #{goodClass,jdbcType=INTEGER}, 
+      #{goodClass,jdbcType=INTEGER}, 
       #{iQuantity,jdbcType=DOUBLE}, #{mQuantity,jdbcType=DOUBLE}, #{status,jdbcType=INTEGER}, 
-      #{goods_id,jdbcType=BIGINT}, #{buyNum,jdbcType=DOUBLE}, #{goodid,jdbcType=BIGINT}, 
+      #{buyNum,jdbcType=DOUBLE}, #{goodid,jdbcType=BIGINT}, 
       #{orderNo,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_stock" >
@@ -54,12 +49,6 @@
       <if test="deleteStatus != null" >
         deleteStatus,
       </if>
-      <if test="cWhName != null" >
-        cWhName,
-      </if>
-      <if test="cWhcode != null" >
-        cWhcode,
-      </if>
       <if test="goodClass != null" >
         goodClass,
       </if>
@@ -71,9 +60,6 @@
       </if>
       <if test="status != null" >
         status,
-      </if>
-      <if test="goods_id != null" >
-        goods_id,
       </if>
       <if test="buyNum != null" >
         buyNum,
@@ -95,12 +81,6 @@
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
       </if>
-      <if test="cWhName != null" >
-        #{cWhName,jdbcType=VARCHAR},
-      </if>
-      <if test="cWhcode != null" >
-        #{cWhcode,jdbcType=VARCHAR},
-      </if>
       <if test="goodClass != null" >
         #{goodClass,jdbcType=INTEGER},
       </if>
@@ -112,9 +92,6 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
-      </if>
-      <if test="goods_id != null" >
-        #{goods_id,jdbcType=BIGINT},
       </if>
       <if test="buyNum != null" >
         #{buyNum,jdbcType=DOUBLE},
@@ -136,12 +113,6 @@
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
       </if>
-      <if test="cWhName != null" >
-        cWhName = #{cWhName,jdbcType=VARCHAR},
-      </if>
-      <if test="cWhcode != null" >
-        cWhcode = #{cWhcode,jdbcType=VARCHAR},
-      </if>
       <if test="goodClass != null" >
         goodClass = #{goodClass,jdbcType=INTEGER},
       </if>
@@ -153,9 +124,6 @@
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="goods_id != null" >
-        goods_id = #{goods_id,jdbcType=BIGINT},
       </if>
       <if test="buyNum != null" >
         buyNum = #{buyNum,jdbcType=DOUBLE},
@@ -173,13 +141,10 @@
     update ezs_stock
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
-      cWhName = #{cWhName,jdbcType=VARCHAR},
-      cWhcode = #{cWhcode,jdbcType=VARCHAR},
       goodClass = #{goodClass,jdbcType=INTEGER},
       iQuantity = #{iQuantity,jdbcType=DOUBLE},
       mQuantity = #{mQuantity,jdbcType=DOUBLE},
       status = #{status,jdbcType=INTEGER},
-      goods_id = #{goods_id,jdbcType=BIGINT},
       buyNum = #{buyNum,jdbcType=DOUBLE},
       goodid = #{goodid,jdbcType=BIGINT},
       orderNo = #{orderNo,jdbcType=VARCHAR}
@@ -188,6 +153,6 @@
   <select id="getStockByGoods" resultMap="BaseResultMap">
   	select 
   	<include refid="Base_Column_List" />
-  	 from ezs_stock e where e.status = '1' and e.goodid = #{goodId} and e.goodClass = #{ckType}
+  	 from ezs_stock e where e.status = '0' and e.goodid = #{goodId} and e.goodClass = #{ckType}
   </select>
 </mapper>

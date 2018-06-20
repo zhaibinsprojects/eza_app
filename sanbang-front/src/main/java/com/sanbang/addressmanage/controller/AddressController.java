@@ -41,7 +41,7 @@ public class AddressController {
 	@ResponseBody
 	public Result saveNewAddress(ezs_address ezs_address){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -59,7 +59,7 @@ public class AddressController {
 	@ResponseBody
 	public Result getAddressListByUserId(@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -103,7 +103,7 @@ public class AddressController {
 	@ResponseBody
 	public Result getAddressById(@RequestParam("id")Long id){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -127,7 +127,7 @@ public class AddressController {
 	@ResponseBody
 	public Result updateAddressById(ezs_address ezs_address){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -145,7 +145,7 @@ public class AddressController {
 	@ResponseBody
 	public Result deleteAddressById(@RequestParam("id") Long id){
 		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");

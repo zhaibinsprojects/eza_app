@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.sanbang.addressmanage.service.AddressService;
+import com.sanbang.bean.ezs_address;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -26,33 +30,35 @@ import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
-import net.sf.json.JSONObject;
-
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
-	
 	@Autowired
 	private GoodsService goodsService;
-	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
-	
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
+	
+	@Autowired
+	private AddressService addressService;
+	
+	@Autowired
+	private ezs_areaMapper ezs_areaMapper;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
-	
 	/**
 	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
 	 * @param request
@@ -74,13 +80,6 @@ public class GoodsController {
 		}
 		return result;
 	}
-	
-	/**
-	 * 查询货品评价列表
-	 * @param request
-	 * @param id 货品id
-	 * @return
-	 */
 	/**
 	 * 查询货品评价列表
 	 * @param request
@@ -510,11 +509,12 @@ public class GoodsController {
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodCartId(购物车ID)
 	 * @return
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -526,9 +526,11 @@ public class GoodsController {
 		}
 		try {
 			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE" );
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -665,11 +667,12 @@ public class GoodsController {
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodCartId(购物车ID)
 	 * @return
 	 */
-	@RequestMapping("/addToSelfOrderForm")
+	@RequestMapping(value="/addToSelfOrderForm")
 	@ResponseBody
-	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		log.info("添加订单beginning...........................");
 		Map<String, Object> mmp = null;
 		Result rs = null;
@@ -680,10 +683,16 @@ public class GoodsController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
+		if(goodCartId==null){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("请输入购物车ID");
+			return rs;
+		}
 		try {
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS" );
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -697,6 +706,166 @@ public class GoodsController {
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
+		}
+		return rs;
+	}
+	/**
+	 * 添加订单，在此可进行多个商品提交订单，
+	 * 针对单个订单进行库存校验并更新库存信息，不足的返回商品不足信息并回撤库信息，
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodCartIds(购物车ID)
+	 * @return
+	 */
+	@RequestMapping(value="/AddGoodsToSelfOrderFormArry")
+	@ResponseBody
+	public Object AddGoodsToSelfOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
+		log.info("添加订单beginning...........................");
+		Map<String, Object> mmp = new HashMap<>();
+		//校验结果集合
+		Map<Object, Object> tempMP = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		if(goodCartIds==null){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("请输入购物车ID");
+			return rs;
+		}
+		try {
+			//获取选中的购物车ID数组
+			String[] goodCartIdTemps = goodCartIds.split(",");
+			//进行下单前预提交库存校验，tempMP含有校验返回信息
+			tempMP = checkOrderForm(user,"GOODS",goodCartIdTemps);
+			boolean orderFormFlag = (boolean)tempMP.get("SuccessFlag");
+			//校验全部通过标志，全部通过，通过后进行下单处理
+			if(orderFormFlag==true){
+				//循环下单方法
+				for(int i=0;i<goodCartIdTemps.length;i++){
+					ezs_orderform tOrderForm = new ezs_orderform();
+					Map<String, Object> tmp = null;
+					tOrderForm.setWeAddress_id(WeAddressId);
+					//进行下单处理
+					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"GOODS",Long.valueOf(goodCartIdTemps[i]));
+					Integer ErrorCode = (Integer) tmp.get("ErrorCode");
+					if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+						//rs.setMsg(tmp.get("Msg").toString());
+						//下单成功,在此不足任何提示
+					}else{
+						//下单失败，获取失败原因
+						log.info("添加订单校验通过，参数有误，添加失败XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+					}
+				}
+				rs = Result.success();
+				//检验通过无需返回前台信息
+				//tempMP.remove("SuccessFlag");
+				//rs.setObj(tempMP);
+				rs.setMsg("下单成功");
+			}else{
+				//校验未通过（未全部通过）
+				rs = Result.failure();
+				tempMP.remove("SuccessFlag");
+				//由此查询返回查询购物车相关信息
+				Map<String, Object> mMp = this.goodsService.getGoodInfoFromGoodCart(tempMP);
+				if(mMp!=null){
+					rs.setObj(mMp.get("Obj"));
+				}
+				rs.setMsg("有未通过预提交测试订单");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+			log.error(e.toString());
+		}
+		return rs;
+	}
+	/**
+	 * 添加订单，在此可进行多个商品提交订单，
+	 * 针对单个订单进行库存校验并更新库存信息，不足的返回商品不足信息并回撤库信息，
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodCartIds(购物车ID)
+	 * @return
+	 */
+	@RequestMapping(value="/AddGoodsToSampleOrderFormArry")
+	@ResponseBody
+	public Object AddGoodsToSampleOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
+		log.info("添加订单beginning...........................");
+		Map<String, Object> mmp = new HashMap<>();
+		//校验结果集合
+		Map<Object, Object> tempMP = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		if(goodCartIds==null){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("请输入购物车ID");
+			return rs;
+		}
+		try {
+			//获取选中的购物车ID数组
+			String[] goodCartIdTemps = goodCartIds.split(",");
+			//进行下单前预提交库存校验，tempMP含有校验返回信息
+			tempMP = checkOrderForm(user,"GOODS",goodCartIdTemps);
+			boolean orderFormFlag = (boolean)tempMP.get("SuccessFlag");
+			//校验全部通过标志，全部通过，通过后进行下单处理
+			if(orderFormFlag==true){
+				//循环下单方法
+				for(int i=0;i<goodCartIdTemps.length;i++){
+					ezs_orderform tOrderForm = new ezs_orderform();
+					Map<String, Object> tmp = null;
+					tOrderForm.setWeAddress_id(WeAddressId);
+					//进行下单处理
+					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"SAMPLE",Long.valueOf(goodCartIdTemps[i]));
+					Integer ErrorCode = (Integer) tmp.get("ErrorCode");
+					if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+						//rs.setMsg(tmp.get("Msg").toString());
+						//下单成功,在此不足任何提示
+					}else{
+						//下单失败，获取失败原因
+						log.info("添加订单校验通过，参数有误，添加失败XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+					}
+				}
+				rs = Result.success();
+				//检验通过无需返回前台信息
+				//tempMP.remove("SuccessFlag");
+				//rs.setObj(tempMP);
+				rs.setMsg("下单成功");
+			}else{
+				//校验未通过（未全部通过）
+				rs = Result.failure();
+				tempMP.remove("SuccessFlag");
+				//由此查询返回查询购物车相关信息
+				Map<String, Object> mMp = this.goodsService.getGoodInfoFromGoodCart(tempMP);
+				if(mMp!=null){
+					rs.setObj(mMp.get("Obj"));
+				}
+				rs.setMsg("有未通过预提交测试订单");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			rs = Result.failure();
+			rs.setMsg("数据传递有误");
+			log.error(e.toString());
 		}
 		return rs;
 	}
@@ -739,5 +908,137 @@ public class GoodsController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
+	}
+	/**
+	 * 校验下单状态
+	 * @author zhaibin
+	 * @return
+	 */
+	private synchronized Map<Object, Object> checkOrderForm(ezs_user user,String orderType,String[] goodsCartIds){
+		Map<Object, Object> mMp = new HashMap<>();
+		boolean SuccessFlag = true;
+		for(int i=0;i<goodsCartIds.length;i++){
+			Map<String, Object> mmp = this.goodsService.preOrderFormFunc(user, orderType, Long.valueOf(goodsCartIds[i]));
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				//执行成功
+				boolean checkFlag = (boolean) mmp.get("GoodCartIDFlag");
+				if(checkFlag==true){
+					mMp.put(mmp.get("GoodCartID"), true);
+				}else{
+					mMp.put(mmp.get("GoodCartID"), false);
+					SuccessFlag = false;
+				}
+			}else{
+				SuccessFlag = false;
+			}
+		}
+		//mMp.put("399",true);
+		//mMp.put("404",false);
+		mMp.put("SuccessFlag",SuccessFlag);
+		return mMp;
+	}
+	
+	/**
+	 * 商品id得到质检报告
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping("/getGoodsPdf")
+	@ResponseBody
+	public Object getGoodsPdf(@RequestParam("goodsId")long goodsId){
+		Result result=Result.failure();
+		result=goodsService.getGoodsPdf(goodsId);
+		return result;
+	}
+	
+	/**
+	 * 订单确认初始化
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping("/orderConfirminit")
+	@ResponseBody
+	public Object orderConfirminit(HttpServletRequest  request){
+		Result result=Result.failure();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result = Result.failure();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		
+		
+		//收货地址
+		Page page = new Page();
+		page.setPageNow(1);
+		List<ezs_address> addressList = addressService.findAddressByUserId(upi.getId(),page);
+		Map<String, Object> map=new HashMap<>();
+		if(null!=addressList&&addressList.size()>0){
+			//area地址
+			addressList=SetAddressInfo(addressList);
+		    map.put("readdress", addressList.get(0));
+		    map.put("hasd", true);
+		}else{
+			map.put("readdress", null);
+			map.put("hasd", false);
+		}
+		
+		if(null==upi.getEzs_bill()){
+			map.put("hasb", false);
+		}else{
+			map.put("hasb", true);
+		}
+		map.put("bill", upi.getEzs_bill());
+		
+		result.setObj(map);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setSuccess(true);
+		
+		return result;
+	}
+	private List<ezs_address> SetAddressInfo(List<ezs_address> addressList){
+		for (ezs_address ezs_address : addressList) {
+			ezs_address.setArea(getaddressinfo(ezs_address.getArea_id()));
+		}
+		return addressList;
+	}
+	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo =  ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo =  ezs_oneinfo.getAreaName();
+				}
+			}
+		}
+		
+		if(!Tools.isEmpty(threeinfo)){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
+		}
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
+		}
+		
+		return sb.toString();
 	}
 }

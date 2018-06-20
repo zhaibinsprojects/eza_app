@@ -17,6 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.sanbang.addressmanage.service.AddressService;
+import com.sanbang.bean.ezs_address;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -27,21 +31,23 @@ import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/app/goods")
 public class AppGoodsController {
+	
 	
 	@Autowired
 	private GoodsService goodsService;
@@ -51,6 +57,12 @@ public class AppGoodsController {
 	
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
+	
+	@Autowired
+	private AddressService addressService;
+	
+	@Autowired
+	private ezs_areaMapper ezs_areaMapper;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	private static final String view="/goods/";
@@ -524,11 +536,12 @@ public class AppGoodsController {
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
+	 * @param goodsCartId()
 	 * @return
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -539,9 +552,11 @@ public class AppGoodsController {
 			return rs;
 		}
 		try {
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE" );
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -684,20 +699,22 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/addToSelfOrderForm")
 	@ResponseBody
-	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,String orderForm){
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		try {
-			JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS" );
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
+			ezs_orderform tOrderForm = new ezs_orderform();
+			tOrderForm.setWeAddress_id(WeAddressId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -767,5 +784,93 @@ public class AppGoodsController {
 		result=goodsService.getGoodsPdf(id);
 		return result;
 	}
+	/**
+	 * 订单确认初始化
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping("/orderConfirminit")
+	@ResponseBody
+	public Object orderConfirminit(HttpServletRequest  request){
+		Result result=Result.failure();
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			result = Result.failure();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		
+		
+		//收货地址
+		Page page = new Page();
+		page.setPageNow(1);
+		List<ezs_address> addressList = addressService.findAddressByUserId(upi.getId(),page);
+		Map<String, Object> map=new HashMap<>();
+		if(null!=addressList&&addressList.size()>0){
+			//area地址
+			addressList=SetAddressInfo(addressList);
+		    map.put("readdress", addressList.get(0));
+		    map.put("hasd", true);
+		}else{
+			map.put("readdress", null);
+			map.put("hasd", false);
+		}
+		
+		if(null==upi.getEzs_bill()){
+			map.put("hasb", false);
+		}else{
+			map.put("hasb", true);
+		}
+		map.put("bill", upi.getEzs_bill());
+		
+		result.setObj(map);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setSuccess(true);
+		
+		return result;
+	}
+	private List<ezs_address> SetAddressInfo(List<ezs_address> addressList){
+		for (ezs_address ezs_address : addressList) {
+			ezs_address.setArea(getaddressinfo(ezs_address.getArea_id()));
+		}
+		return addressList;
+	}
 	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo =  ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo =  ezs_oneinfo.getAreaName();
+				}
+			}
+		}
+		
+		if(!Tools.isEmpty(threeinfo)){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
+		}
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
+		}
+		
+		return sb.toString();
+	}
 }

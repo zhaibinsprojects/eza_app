@@ -210,12 +210,12 @@
   </resultMap>
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
-  		g.*,
+  		g.id,g.cart_type,g.count,g.price,g.goods_id,
 		(select CONCAT(d1.`name`,d2.`name`,a.`name`) name from ezs_goods a,ezs_dict d1,ezs_dict d2 where a.color_id = d1.id and a.form_id = d2.id and a.id = g.goods_id) gname,
 		gs.inventory,
 		gs.area_id gAreaId,
 		ga.name pName,
-		ga.path pPath, 
+		CONCAT("http://10.10.10.148/",ga.path,"/",ga.name) pPath, 
 		d.name utilName
 	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id WHERE 
 	EXISTS 

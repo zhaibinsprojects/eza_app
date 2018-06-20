@@ -108,7 +108,7 @@ public class UserSetupAuthController {
 			map.put("userimg", "");
 			map.put("name", "");
 			map.put("status", 0);
-			map.put("auditingusertype_id","");
+			map.put("auditingusertype_id",0);
 			map.put("accountType", 0);
 			result.setObj(map);
 			return result;
@@ -117,7 +117,7 @@ public class UserSetupAuthController {
 			map.put("name", upi.getName());
 			map.put("status", upi.getEzs_store().getStatus());
 			map.put("auditingusertype_id",dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id())==null?"":
-				dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id()).getCode());
+				dictService.getDictByThisId(upi.getEzs_store().getAuditingusertype_id()).getSequence());
 			map.put("accountType", upi.getEzs_store().getAccountType());
 			result.setObj(map);
 		}
