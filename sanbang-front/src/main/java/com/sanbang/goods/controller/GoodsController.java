@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -962,9 +963,6 @@ public class GoodsController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		
-		
-		
 		//收货地址
 		Page page = new Page();
 		page.setPageNow(1);
