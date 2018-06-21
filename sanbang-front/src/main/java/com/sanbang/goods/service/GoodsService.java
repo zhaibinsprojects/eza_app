@@ -124,7 +124,7 @@ public interface GoodsService {
 	 * @param goodsCart
 	 * @param user
 	 */
-	public Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user);
+	public Map<String,Object> editGoodsCart(Long goodsCartId,Double count,ezs_user user);
 	
 	/**
 	 * 删除购物车
