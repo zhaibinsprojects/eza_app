@@ -19,6 +19,9 @@ public class GoodsCarInfo extends ezs_goodscart {
     
     private String goodName;
     
+    //图片给个绝对路径即可
+    private String picturePath;
+    
     
     public Long getAreaId() {
 		return areaId;
@@ -73,6 +76,12 @@ public class GoodsCarInfo extends ezs_goodscart {
 	}
 	public void setInventory(Double inventory) {
 		this.inventory = inventory;
+	}
+	public String getPicturePath() {
+		return picturePath;
+	}
+	public void setPicturePath(String picturePath) {
+		this.picturePath = picturePath;
 	}
 	public GoodsCarInfo(ezs_accessory mainPhoto, String colorName, String formName, String areaName,
 			String goodClassName, Double inventory) {

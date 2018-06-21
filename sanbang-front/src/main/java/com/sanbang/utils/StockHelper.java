@@ -1,11 +1,13 @@
 package com.sanbang.utils;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -16,12 +18,26 @@ import com.alibaba.fastjson.JSONObject;
  *
  */
 public class StockHelper {
-	private static String JDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	private static String url = "jdbc:sqlserver://39.107.205.12:1433;DatabaseName=UFDATA_004_2018";
-	private static String user = "sa";
-	private static String psw = "123qweQWE";
+	private static String JDriver = null;
+	//private static String url = "jdbc:sqlserver://39.107.205.12:1433;DatabaseName=SD_EDS_DATAS_CS";
+	//private static String url = "jdbc:sqlserver://39.107.205.12:1433;DatabaseName=UFDATA_001_2018";
+	private static String url = null;
+	private static String user = null;
+	private static String psw = null;
+	
 	static {
 		try {
+			
+			Properties properties = new Properties();
+			// 使用ClassLoader加载properties配置文件生成对应的输入流
+			InputStream in = StockHelper.class.getClassLoader().getResourceAsStream("jdbc.properties");
+			// 使用properties对象加载输入流 /sanbang-front/src/main/resources/jdbc.properties
+			properties.load(in);
+			//获取key对应的value值
+			JDriver = properties.getProperty("SqlServer.driverClass");
+			url = properties.getProperty("SqlServer.url");
+			user = properties.getProperty("SqlServer.username");
+			psw = properties.getProperty("SqlServer.password");
 			Class.forName(JDriver);
 		} catch (Exception e) {
 			System.out.println("数据库驱动加载异常");

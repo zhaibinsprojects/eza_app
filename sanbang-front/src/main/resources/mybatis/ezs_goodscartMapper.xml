@@ -21,20 +21,6 @@
     from ezs_goodscart
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <!-- 结合店铺购物车以及当前登录人信息查询对应购物车 -->
-  <select id="selectByGoodsId" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select 
-    g.id, g.addTime, g.deleteStatus, g.cart_type, g.count, g.price, g.goods_id, g.of_id, g.sc_id 
-    from ezs_goodscart g,ezs_storecart s
-    where g.sc_id = s.id 
-    <if test="goodsId != null and goodsId != ''" >
-      and g.goods_id = #{goodsId,jdbcType=BIGINT} 
-    </if>
-    <if test="userId != null and userId != ''" >
-      and s.user_id = #{userId,jdbcType=BIGINT} 
-    </if>
-  </select>
-  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_goodscart
     where id = #{id,jdbcType=BIGINT}
@@ -203,23 +189,49 @@
     <result column="inventory" property="inventory" jdbcType="BIGINT" />
     <result column="gAreaId" property="areaId" jdbcType="BIGINT" />
     <result column="utilName" property="utilName" jdbcType="VARCHAR" />
-    <association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
+    <result column="picturePath" property="picturePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- by han，将mainPhoto这层包装先特么摘出来
+  	<association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
     	<result column="pName" property="name" jdbcType="VARCHAR"/>
     	<result column="pPath" property="path" jdbcType="VARCHAR"/>
     </association>
-  </resultMap>
+   -->
+  <!-- by han，修改，图片路径只返回一个绝对路径即可，名称：picturePath，故将mainPhoto这层包装去掉 -->
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
-  		g.id,g.cart_type,g.count,g.price,
+  		g.id,g.cart_type,g.count,g.price,g.goods_id,
 		(select CONCAT(d1.`name`,d2.`name`,a.`name`) name from ezs_goods a,ezs_dict d1,ezs_dict d2 where a.color_id = d1.id and a.form_id = d2.id and a.id = g.goods_id) gname,
 		gs.inventory,
 		gs.area_id gAreaId,
-		ga.name pName,
-		CONCAT("http://10.10.10.148/",ga.path,"/",ga.name) pPath, 
-		d.name utilName
-	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id WHERE 
+		CONCAT("http://10.10.10.148/",ga.path,"/",ga.name) picturePath, 
+		d.name utilName,
+		a2.areaName 
+	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id 
+	 LEFT JOIN ezs_area a2 on gs.area_id = a2.id WHERE 
 	EXISTS 
 	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
 	 AND g.deleteStatus = '0' and g.of_id IS NULL
   </select>
+  
+  <!-- 批量查询sc_id，han -->
+  <select id="" resultType="java.lang.Long" parameterType="Integer[]">
+  	select sc_id from ezs_goodscart 
+  	<where>
+  		id
+  	 <foreach collection="array" item="id" open="in (" close=")" separator=",">
+         #{id}
+     </foreach>
+  	</where>
+  </select>
+  <!-- 批量删除，han -->
+  <delete id="deleteGoodCar" parameterType="Integer[]">
+  	delete from ezs_goodscart  
+  	<where>
+  		id
+  	 <foreach collection="array" item="id" open="in (" close=")" separator=",">
+         #{id}
+     </foreach>
+  	</where>
+  </delete>
 </mapper>

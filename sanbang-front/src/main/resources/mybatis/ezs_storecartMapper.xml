@@ -135,4 +135,11 @@
   	<include refid="Base_Column_List" />
   	 from ezs_storecart a where a.user_id = #{userId} and a.deleteStatus = '0' and a.sc_status = #{storeCarStatus}
   </select>
+  <!-- 批量删除，han -->
+  <delete id="deleteStoreCar" parameterType="java.util.List">
+  	delete from ezs_storecart where id in 
+  	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+      #{item}   
+    </foreach>
+  </delete>
 </mapper>

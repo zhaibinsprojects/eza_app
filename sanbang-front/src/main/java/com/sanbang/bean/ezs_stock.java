@@ -14,7 +14,7 @@ public class ezs_stock {
     private Double iQuantity;
     //电商库存
     private Double mQuantity;
-    //库存状态  0.释放，1.锁库
+    //库存状态  1.释放，0.锁库
     private Integer status;
     //购买量
     private Double buyNum;

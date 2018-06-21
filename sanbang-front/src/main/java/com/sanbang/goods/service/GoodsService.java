@@ -124,7 +124,13 @@ public interface GoodsService {
 	 * @param goodsCart
 	 * @param user
 	 */
-	public Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user);
+	public Map<String,Object> editGoodsCart(Long goodsCartId,Double count,ezs_user user);
+	
+	/**
+	 * 删除购物车
+	 * @param ids 购物车id
+	 */
+	public Map<String,Object> deleteGoodCar(String[] ids);
 	
 	/**
 	 * 生成订单
@@ -135,6 +141,10 @@ public interface GoodsService {
 	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId);
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user);
+	
+	public Map<String, Object> preOrderFormFunc(ezs_user user,String orderType,Long goodsCartId);
+	
+	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp);
 	
 	
 	/**

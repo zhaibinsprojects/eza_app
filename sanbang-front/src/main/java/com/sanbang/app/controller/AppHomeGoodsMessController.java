@@ -355,6 +355,9 @@ public class AppHomeGoodsMessController {
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			goodClassList = (List<ezs_goods_class>) mmp.get("Obj");
 			for (ezs_goods_class goodsClass : goodClassList) {
+				//筛选，只要有图片的
+				if(goodsClass.getPhoto_id()==null||goodsClass.getPhoto_id().equals(""))
+					continue;
 				ezs_goods_class goodsClassTemp = new ezs_goods_class();
 				goodsClassTemp.setId(goodsClass.getId());
 				goodsClassTemp.setLevel(goodsClass.getLevel());
@@ -377,8 +380,16 @@ public class AppHomeGoodsMessController {
 	}
 	
 	private List<Advices> getSubscribeList(HttpServletRequest request){
-		String path = request.getServletContext().getContextPath();
-		System.out.println(path);
-		return null;
+		//String path = request.getServletContext().getContextPath();
+		List<Advices> adviceList = new ArrayList<>();
+		Advices advices = new Advices();
+		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
+		advices.setPath("/front/resource/indeximg/首页-1_13.png");
+		advices.setpName("首页-1_13.png");
+		advices.setLink("");
+		advices.setContent("标题展示");
+		adviceList.add(advices);
+		log.info("图片：/resource/indeximg/首页-1_13.png");
+		return adviceList;
 	}
 }

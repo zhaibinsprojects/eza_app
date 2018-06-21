@@ -1,11 +1,5 @@
 package com.sanbang.app.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,10 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.xhtmlrenderer.pdf.ITextFontResolver;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.lowagie.text.pdf.BaseFont;
 import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -52,9 +43,6 @@ import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/app/goods")
@@ -633,39 +621,62 @@ public class AppGoodsController {
 	 * @author han
 	 * @param request
 	 * @param response
-	 * @param goodsId	货品id
+	 * @param goodsCartId	当前购物车id
 	 * @param count	  货品数量
 	 * @return
 	 */
 	@RequestMapping(value="/editToSelfGoodCar")
 	@ResponseBody
-	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
+	public Result editToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsCartId,Double count){
 		Map<String, Object> map = null;
 		Result result = Result.failure();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (null == user) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
 		}
 		try {
-			map = goodsService.editGoodsCart(goodsId,count,user);
+			map = goodsService.editGoodsCart(goodsCartId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
 			Map<String,Object> map1=new HashMap<>();
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				result.setSuccess(true);
-				result.setMsg(map.get("Msg").toString());
-				map1.put("totalPrice", map.get("totalPrice"));
-				result.setObj(map1);
 			}else{
 				result.setSuccess(false);
-				if(null != map.get("count")){
-					map1.put("count", map.get("count"));
-					result.setObj(map1);
-				}
+			}
+			result.setMsg(map.get("Msg").toString());
+			map1.put("inventory", map.get("inventory"));
+			result.setObj(map1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMsg("数据传递有误");
+		}
+		return result;
+	}
+	//删除购物车（多选删除）
+	@RequestMapping(value="/deleteToSelfGoodCar")
+	@ResponseBody
+	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String id){
+		String[] ids = id.split(",");
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (null == user) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try{
+			Map<String,Object> map = goodsService.deleteGoodCar(ids);
+			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			if(null != ErrorCode && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				result.setSuccess(true);
+				result.setMsg(map.get("Msg").toString());
+			}else{
+				result.setSuccess(false);
 				result.setMsg(map.get("Msg").toString());
 			}
-		} catch (Exception e) {
+		}catch(Exception e){
 			e.printStackTrace();
 			result.setMsg("数据传递有误");
 		}
