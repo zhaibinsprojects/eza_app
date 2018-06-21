@@ -384,7 +384,7 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices = new Advices();
 		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		advices.setPath("/resource/indeximg/首页-1_13.png");
+		advices.setPath("/front/resource/indeximg/首页-1_13.png");
 		advices.setpName("首页-1_13.png");
 		advices.setLink("");
 		advices.setContent("标题展示");
