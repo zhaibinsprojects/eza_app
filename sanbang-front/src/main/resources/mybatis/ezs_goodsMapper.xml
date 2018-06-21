@@ -798,26 +798,26 @@
 		select g.id,g.name,g.price,g.inventory,a.path picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
 		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
 		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id 
-	    <if test="areaList.size>0">
+	    <if test="areaList != null and areaList.size>0">
    			and g.area_id IN 
 	        <foreach collection="areaList" item="areaId" open="(" separator="," close=")">
 	        	#{areaId}
 	        </foreach>
         </if>
 	    
-   		<if test="typeList.size>0">
+   		<if test="typeList != null and typeList.size>0">
    			and g.goodClass_id IN 
 	        <foreach collection="typeList" item="goodsClass" open="(" separator="," close=")">
 	        	#{goodsClass}
 	        </foreach>
         </if>
-        <if test="colorList.size>0">
+        <if test="colorList != null and colorList.size>0">
    			and g.color_id IN 
 	        <foreach collection="colorList" item="colorId" open="(" separator="," close=")">
 	        	#{colorId}
 	        </foreach>
         </if>
-        <if test="formList.size>0">
+        <if test="formList != null and formList.size>0">
    			and g.form_id IN 
 	        <foreach collection="formList" item="formId" open="(" separator="," close=")">
 	        	#{formId}

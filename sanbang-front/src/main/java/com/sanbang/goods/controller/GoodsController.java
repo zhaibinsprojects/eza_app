@@ -277,18 +277,20 @@ public class GoodsController {
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
-		Long area = Long.valueOf(areaId);
-		List<Long> areaList = new ArrayList<Long>();
-		List<Long> listId = goodsService.queryChildId(area);
-		if(null != listId && listId.size() != 0){
-			List<Long> listIds = goodsService.queryChildIds(listId);
-			if(null != listIds && listIds.size() != 0){   //area是省
-				areaList = listIds;
-			}else{	//area是市
-				areaList = listId;
+		List<Long> areaList = null;
+		if("".equals(areaId) || null == areaId){
+			Long area = Long.valueOf(areaId);
+			List<Long> listId = goodsService.queryChildId(area);
+			if(null != listId && listId.size() != 0){
+				List<Long> listIds = goodsService.queryChildIds(listId);
+				if(null != listIds && listIds.size() != 0){   //area是省
+					areaList = listIds;
+				}else{	//area是市
+					areaList = listId;
+				}
+			}else{	//area是县、区
+				areaList.add(area);
 			}
-		}else{	//area是县、区
-			areaList.add(area);
 		}
 		String[] typeIds = null;
 		String[] colorIds = null;
