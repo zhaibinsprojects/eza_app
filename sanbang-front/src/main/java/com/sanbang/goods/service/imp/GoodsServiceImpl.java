@@ -503,8 +503,9 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public synchronized Map<String,Object> editGoodsCart(Long goodsId,Double count,ezs_user user){
+	public synchronized Map<String,Object> editGoodsCart(Long goodsCartId,Double count,ezs_user user){
 		//1、先确认这个商品是否在购物车中存在，没有则提示添加购物车
 		//2、然后就是查询改商品的库存量，如果提示超过库存量，则提示超过现有量
 		//3、更新两张表的数据（ezs_storecart、ezs_goodscart）
@@ -513,19 +514,16 @@ public class GoodsServiceImpl implements GoodsService{
 		Map<String, Object> map = new HashMap<String,Object>();
 		try{
 			//1先判断商品存在否以及库存量
-			ezs_goods goods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
+			ezs_goodscart goodsCart = ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
+			ezs_goods goods = ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
 			if(null != goods){
 				if(count > goods.getInventory()){
 					map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					map.put("Msg", "商品数量不足");
-					map.put("count", goods.getInventory());
+					map.put("inventory", goods.getInventory());
 					log.info("编辑购物车方法：商品数量不足...");
 					return map;
 				}
-				Map<String, Object> mp = new HashMap<String,Object>();
-				mp.put("goodsId",goodsId);
-				mp.put("userId",user.getId());
-				ezs_goodscart goodsCart = ezs_goodscartMapper.selectByGoodsId(mp);
 				//2然后判断是否存在购物车中（若存在，则说明之前已经添加进来，那么店铺购物车则也是存在的，下面只做更新操作即可）
 				if(null != goodsCart){
 					double totalPrice = count*(goods.getPrice().doubleValue());
@@ -538,7 +536,8 @@ public class GoodsServiceImpl implements GoodsService{
 					if( n > 0 && m > 0){
 						map.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						map.put("Msg", "购物车数据更新成功");
-						map.put("totalPrice", totalPrice);
+						//map.put("totalPrice", totalPrice);	不往前端返总价钱，只返回当前存库量
+						map.put("inventory", goods.getInventory());
 						log.info("编辑购物车方法：数据更新成功...");
 						return map;
 					}
