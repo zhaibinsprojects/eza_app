@@ -60,7 +60,7 @@ public class GoodsController {
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	/**
-	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
+	 * 查询货品详情
 	 * @param request
 	 * @param id 货品id
 	 * @return
@@ -144,7 +144,7 @@ public class GoodsController {
 	
 	
 	/**
-	 * 采购单列表（就是预约定制的列表）
+	 * 预约定制采购单列表（待完善）
 	 * @param request
 	 * @param user_id
 	 * @return
@@ -167,7 +167,7 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 预约预定
+	 * 预约预定（待完善）
 	 * @param request
 	 * @param customized 预约实体类 
 	 * @return
@@ -203,7 +203,7 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 同类货品（以及品类筛选都是走这个方法）
+	 * 同类货品（待完善）
 	 * @param id 商品类别id
 	 * @return
 	 */
@@ -631,8 +631,8 @@ public class GoodsController {
 	//删除购物车（多选删除）
 	@RequestMapping(value="/deleteToSelfGoodCar")
 	@ResponseBody
-	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String id){
-		String[] ids = id.split(",");
+	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String goodsCartId){
+		String[] ids = goodsCartId.split(",");
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (null == user) {

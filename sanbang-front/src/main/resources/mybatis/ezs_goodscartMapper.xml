@@ -215,7 +215,7 @@
   </select>
   
   <!-- 批量查询sc_id，han -->
-  <select id="" resultType="java.lang.Long" parameterType="Integer[]">
+  <select id="querySid" resultType="java.lang.Long" parameterType="Integer[]">
   	select sc_id from ezs_goodscart 
   	<where>
   		id
