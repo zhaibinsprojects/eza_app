@@ -742,7 +742,7 @@ public class AppGoodsController {
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -822,7 +822,7 @@ public class AppGoodsController {
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

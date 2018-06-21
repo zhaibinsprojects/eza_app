@@ -82,7 +82,8 @@ public class HomeCustomerController {
 		return rs;
 	}
 	/**
-	 * 根据已登录用户信息获取用户相关信息
+	 * 根据已登录用户信息获取用户相关信息(电话+详细地址信息)
+	 * @author zhaibin
 	 * @param request
 	 * @param response
 	 * @param user

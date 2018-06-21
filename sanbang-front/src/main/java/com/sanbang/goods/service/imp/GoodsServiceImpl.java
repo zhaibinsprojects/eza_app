@@ -1044,7 +1044,7 @@ public class GoodsServiceImpl implements GoodsService{
 		return result;
 	}
 	/**
-	 * 购物车校验
+	 * 购物车校验（仅校验，不涉及修改和同步库存）
 	 * @author zhaibin
 	 * @return
 	 */
@@ -1084,7 +1084,7 @@ public class GoodsServiceImpl implements GoodsService{
 		return bool;
 	}
 	/**
-	 * 购物车校验
+	 * 购物车校验（下单校验-修改同步库存）
 	 * @author zhaibin
 	 * @return
 	 */
@@ -1160,7 +1160,10 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return bool;
 	}
-
+	/**
+	 * @author zhaibin
+	 * 处理得到的下单因库存不足导致的下单失败，购物车-商品信息封装
+	 */
 	@Override
 	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp) {
 		// TODO Auto-generated method stub

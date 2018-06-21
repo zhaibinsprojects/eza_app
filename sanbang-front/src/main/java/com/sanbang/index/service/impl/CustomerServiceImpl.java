@@ -42,7 +42,6 @@ public class CustomerServiceImpl implements CustomerService {
 		UserInfoMess uim = new UserInfoMess();
 		List<ezs_address> elist = this.addressMapper.getAddressByUserId(user.getId());
 		if(user!=null&&elist!=null&&elist.size()>0){
-			//uim.setUser(user);
 			//默认地址
 			uim.setUserAddress(elist);
 			//获取详细地址信息
@@ -58,9 +57,6 @@ public class CustomerServiceImpl implements CustomerService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "未查询到该用户的默认地址信息");
 		}
-		uim.setUser(user);
-		//包含默认地址的非默认地址
-		uim.setUserAddress(elist);
 		mmp.put("Obj", uim);
 		return mmp;
 	}
