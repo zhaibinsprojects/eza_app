@@ -515,6 +515,12 @@ public class GoodsServiceImpl implements GoodsService{
 		try{
 			//1先判断商品存在否以及库存量
 			ezs_goodscart goodsCart = ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
+			if(null == goodsCart){
+				map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				map.put("Msg", "该购物车数据不存在");
+				log.info("编辑购物车方法：该购物车数据不存在...");
+				return map;
+			}
 			ezs_goods goods = ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
 			if(null != goods){
 				if(count > goods.getInventory()){
