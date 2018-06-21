@@ -615,11 +615,12 @@ public class GoodsController {
 		try {
 			map = goodsService.editGoodsCart(goodsCartId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			String msg = map.get("Msg").toString();
 			Map<String,Object> map1=new HashMap<>();
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				result.setSuccess(true);
-			}else{
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_PARAM_ERROR)&&msg.equals("参数传递有误")){
 				result.setSuccess(false);
+			}else{
+				result.setSuccess(true);
 			}
 			result.setMsg(map.get("Msg").toString());
 			map1.put("inventory", map.get("inventory"));
