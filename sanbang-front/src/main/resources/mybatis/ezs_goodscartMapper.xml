@@ -197,7 +197,7 @@
     	<result column="pPath" property="path" jdbcType="VARCHAR"/>
     </association>
    -->
-  <!-- by han，修改，其中返给前端areaName（其实应该是库存地，即goods中的address，目前先从ezs_dict中取，后期如果要改，再特么改），图片路径只返回一个绝对路径即可，名称：picturePath，故将mainPhoto这层包装去掉 -->
+  <!-- by han，修改，图片路径只返回一个绝对路径即可，名称：picturePath，故将mainPhoto这层包装去掉 -->
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
   		g.id,g.cart_type,g.count,g.price,g.goods_id,
@@ -206,9 +206,9 @@
 		gs.area_id gAreaId,
 		CONCAT("http://10.10.10.148/",ga.path,"/",ga.name) picturePath, 
 		d.name utilName,
-		d2.name areaName
+		a2.areaName 
 	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id 
-	 LEFT JOIN ezs_dict d2 on gs.area_id = d2.id WHERE 
+	 LEFT JOIN ezs_area a2 on gs.area_id = a2.id WHERE 
 	EXISTS 
 	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
 	 AND g.deleteStatus = '0' and g.of_id IS NULL

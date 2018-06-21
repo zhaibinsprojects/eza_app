@@ -184,15 +184,11 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
-				if (protection.equals("0")) {
-					goods.setProtection(false);
-				} else if (protection.equals("1")) {
+				if (Boolean.valueOf(protection)) {
 					goods.setProtection(true);
 				} else {
-					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-					result.setSuccess(false);
-					result.setMsg("参数错误");
-				}
+					goods.setProtection(false);
+				} 
 				goods.setDensity(density);
 				goods.setCantilever(cantilever);
 				goods.setFreely(freely);
@@ -563,14 +559,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
-				if (protection.equals("0")) {
-					goods.setProtection(false);
-				} else if (protection.equals("1")) {
+				if (Boolean.valueOf(protection)) {
 					goods.setProtection(true);
 				} else {
-					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-					result.setSuccess(false);
-					result.setMsg("参数错误");
+					goods.setProtection(false);
 				}
 				goods.setDensity(density);
 				goods.setCantilever(cantilever);

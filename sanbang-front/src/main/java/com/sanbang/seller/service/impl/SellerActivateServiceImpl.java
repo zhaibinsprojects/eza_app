@@ -1,15 +1,18 @@
 package com.sanbang.seller.service.impl;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_storeMapper;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.seller.service.SellerActivateService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -22,6 +25,14 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 	
 	@Autowired
 	private ezs_storeMapper ezs_storeMapper;
+	
+	// 用户登陆信息
+	@Resource(name = "ezs_userMapper")
+	private ezs_userMapper ezs_userMapper;
+	
+	// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
 	
 	@Override
 	public Result addActivateInfo(Result result, ezs_user upi,String companyName, String yTurnover, String covered, String rent,
@@ -82,10 +93,10 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setLocation_detail(location_detail);*/
 			store.setUserType("SELLER");
 			store.setStatus(1); // 0 初始值， 1 待审核 ， 2 审核通过， 3 审核不通过
-			if (rent.equals("0")) {
-				store.setRent(false);//非租用
-			}else if(rent.equals("1")){
-				store.setRent(true);//租用
+			if (Boolean.valueOf(rent)) {
+				store.setRent(true);//非租用
+			}else{
+				store.setRent(false);//租用
 			}
 			
 			int aa = 0; 
@@ -96,6 +107,21 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_SUCCESS);
 					result.setSuccess(true);
 					result.setMsg("信息提交成功，请等待审核");
+					
+					if(result.getSuccess()){
+						ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+						boolean res=RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
+						if (res) {
+							result.setSuccess(true);
+							result.setMsg("保存成功");
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						} else {
+							result.setSuccess(false);
+							result.setMsg("系统错误");
+							result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+						}
+					}
+					
 				}else{
 					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_FAIL);
 					result.setSuccess(false);
