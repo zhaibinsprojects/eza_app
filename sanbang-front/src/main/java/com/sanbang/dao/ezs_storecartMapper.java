@@ -25,4 +25,6 @@ public interface ezs_storecartMapper {
     List<ezs_storecart> getByCondition(QueryCondition queryCondition);
     
     List<ezs_storecart> getByUserId(QueryCondition queryCondition);
+    //批量删除
+    int deleteStoreCar(List list);
 }

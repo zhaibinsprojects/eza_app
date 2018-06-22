@@ -153,6 +153,6 @@
   <select id="getStockByGoods" resultMap="BaseResultMap">
   	select 
   	<include refid="Base_Column_List" />
-  	 from ezs_stock e where e.status = '1' and e.goodid = #{goodId} and e.goodClass = #{ckType}
+  	 from ezs_stock e where e.status = '0' and e.goodid = #{goodId} and e.goodClass = #{ckType}
   </select>
 </mapper>

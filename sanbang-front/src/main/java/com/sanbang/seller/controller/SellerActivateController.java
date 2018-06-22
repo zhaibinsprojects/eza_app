@@ -134,17 +134,7 @@ public class SellerActivateController {
 			return result;
 		}
 		
-		//验证用户是否认证，拥有买家资质
 		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_AUTHENTICATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未认证，不能申请卖家权限。");
-//			return result;
-//		}
 		
 		if (store.getStatus() != 3) {
 			result.setSuccess(false);
@@ -245,71 +235,5 @@ public class SellerActivateController {
 		};
 		
 		return result;
-	}
-	
-	/**
-	 * 地址
-	 * @param areaid
-	 * @return
-	 */
-	private String getaddressinfo(long areaid) {
-		StringBuilder sb = new StringBuilder();
-		String threeinfo = "";
-		String twoinfo = "";
-		String oneinfo = "";
-		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
-		if (ezs_threeinfo != null) {
-			threeinfo = ezs_threeinfo.getAreaName();
-			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
-			if (ezs_twoinfo != null) {
-				twoinfo =  ezs_twoinfo.getAreaName();
-				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
-				if (ezs_oneinfo != null) {
-					oneinfo =  ezs_oneinfo.getAreaName();
-				}
-			}
-		}
-		
-		if(!Tools.isEmpty(threeinfo)){
-			sb = new StringBuilder().append(threeinfo);	
-		}
-		if(!Tools.isEmpty(twoinfo)){
-			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
-		}
-		if(!Tools.isEmpty(oneinfo)){
-			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
-		}
-		
-		return sb.toString();
-	}
-	
-	private String getezs_companyType_dict(List<ezs_companyType_dict> list){
-		if(list.size()==0){
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < list.size(); i++) {
-			if(i!=0||i!=list.size()-1){
-				sb.append(",");
-			}
-			sb.append(list.get(i).getDict_id());
-		}
-		return sb.toString();
-		
-	}
-	
-	private String getezs_industry_dict(List<ezs_industry_dict> list){
-		if(list.size()==0){
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < list.size(); i++) {
-			if(i!=0||i!=list.size()-1){
-				sb.append(",");
-			}
-			sb.append(list.get(i).getDict_id());
-		}
-		return sb.toString();
-		
 	}
 }

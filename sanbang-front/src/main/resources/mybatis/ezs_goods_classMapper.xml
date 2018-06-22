@@ -12,6 +12,12 @@
     <result column="photo_id" property="photo_id" jdbcType="BIGINT" />
     <result column="display" property="display" jdbcType="BIT" />
   </resultMap>
+  
+  <!-- zhaibin,添加图片查询sql -->
+  <resultMap id="GoodClassResultMap" type="ezs_goods_class" extends="BaseResultMap">
+    <association column="photo_id" property="photo" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, level, name, sequence, parent_id, photo_id, display
   </sql>
@@ -138,9 +144,9 @@
       display = #{display,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectAllGoodClassByLevel" resultMap="BaseResultMap" parameterType="string">
+  <select id="selectAllGoodClassByLevel" resultMap="GoodClassResultMap" parameterType="string">
     select 
     <include refid="Base_Column_List" />
-    from ezs_goods_class where level = ${_parameter}
+    from ezs_goods_class where level = ${_parameter}  ORDER BY ADDTIME DESC
   </select>
 </mapper>

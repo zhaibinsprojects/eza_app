@@ -1,7 +1,5 @@
 package com.sanbang.seller.service.impl;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +15,6 @@ import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerActivateService;
-import com.sanbang.utils.MD5Util;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
@@ -124,6 +121,21 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_SUCCESS);
 					result.setSuccess(true);
 					result.setMsg("信息提交成功，请等待审核");
+					
+					if(result.getSuccess()){
+						ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+						boolean res=RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
+						if (res) {
+							result.setSuccess(true);
+							result.setMsg("保存成功");
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+						} else {
+							result.setSuccess(false);
+							result.setMsg("系统错误");
+							result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+						}
+					}
+					
 				}else{
 					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_FAIL);
 					result.setSuccess(false);

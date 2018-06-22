@@ -10,12 +10,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.index.service.CustomerService;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.UserInfoMess;
@@ -25,6 +28,7 @@ import com.sanbang.vo.UserInfoMess;
 public class HomeCustomerController {
 	@Autowired
 	private CustomerService customerService;
+	
 	/**
 	 * 获取用户信息（并判断是否已登录）（定制采购接口调用前，先调用此接口）
 	 * @param request
@@ -78,7 +82,8 @@ public class HomeCustomerController {
 		return rs;
 	}
 	/**
-	 * 根据已登录用户信息获取用户相关信息
+	 * 根据已登录用户信息获取用户相关信息(电话+详细地址信息)
+	 * @author zhaibin
 	 * @param request
 	 * @param response
 	 * @param user
