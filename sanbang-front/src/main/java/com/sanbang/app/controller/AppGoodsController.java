@@ -225,7 +225,7 @@ public class AppGoodsController {
 			result.setMsg("添加失败，但插入了记录");
 			result.setSuccess(false);
 		}
-		return result;
+		return result; 
 	}
 	
 	/**
@@ -255,7 +255,7 @@ public class AppGoodsController {
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id
-	 * @param addTime	默认
+	 * @param defaultId	默认
 	 * @param inventory	库存
 	 * @param colorId	颜色id
 	 * @param formId	形态id
@@ -299,21 +299,23 @@ public class AppGoodsController {
 			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
 			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
-			@RequestParam(name = "goodsName",required=false)String goodsName,
+			@RequestParam(name = " ",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
-		Long area = Long.valueOf(areaId);
 		List<Long> areaList = new ArrayList<Long>();
-		List<Long> listId = goodsService.queryChildId(area);
-		if(null != listId && listId.size() != 0){
-			List<Long> listIds = goodsService.queryChildIds(listId);
-			if(null != listIds && listIds.size() != 0){   //area是省
-				areaList = listIds;
-			}else{	//area是市
-				areaList = listId;
+		if(!"".equals(areaId) && null != areaId){
+			Long area = Long.valueOf(areaId);
+			List<Long> listId = goodsService.queryChildId(area);
+			if(null != listId && listId.size() != 0){
+				List<Long> listIds = goodsService.queryChildIds(listId);
+				if(null != listIds && listIds.size() != 0){   //area是省
+					areaList = listIds;
+				}else{	//area是市
+					areaList = listId;
+				}
+			}else{	//area是县、区
+				areaList.add(area);
 			}
-		}else{	//area是县、区
-			areaList.add(area);
 		}
 		String[] typeIds = null;
 		String[] colorIds = null;
@@ -638,11 +640,12 @@ public class AppGoodsController {
 		try {
 			map = goodsService.editGoodsCart(goodsCartId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			String msg = map.get("Msg").toString();
 			Map<String,Object> map1=new HashMap<>();
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				result.setSuccess(true);
-			}else{
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_PARAM_ERROR)&&msg.equals("参数传递有误")){
 				result.setSuccess(false);
+			}else{
+				result.setSuccess(true);
 			}
 			result.setMsg(map.get("Msg").toString());
 			map1.put("inventory", map.get("inventory"));

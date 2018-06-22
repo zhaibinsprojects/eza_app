@@ -175,6 +175,12 @@ public class GoodsController {
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
+		
+		if(null != customized.getId()){
+			
+			
+		}
+		
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		//加入预约定制
@@ -277,18 +283,20 @@ public class GoodsController {
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
-		Long area = Long.valueOf(areaId);
 		List<Long> areaList = new ArrayList<Long>();
-		List<Long> listId = goodsService.queryChildId(area);
-		if(null != listId && listId.size() != 0){
-			List<Long> listIds = goodsService.queryChildIds(listId);
-			if(null != listIds && listIds.size() != 0){   //area是省
-				areaList = listIds;
-			}else{	//area是市
-				areaList = listId;
+		if(!"".equals(areaId) && null != areaId){
+			Long area = Long.valueOf(areaId);
+			List<Long> listId = goodsService.queryChildId(area);
+			if(null != listId && listId.size() != 0){
+				List<Long> listIds = goodsService.queryChildIds(listId);
+				if(null != listIds && listIds.size() != 0){   //area是省
+					areaList = listIds;
+				}else{	//area是市
+					areaList = listId;
+				}
+			}else{	//area是县、区
+				areaList.add(area);
 			}
-		}else{	//area是县、区
-			areaList.add(area);
 		}
 		String[] typeIds = null;
 		String[] colorIds = null;
@@ -613,11 +621,12 @@ public class GoodsController {
 		try {
 			map = goodsService.editGoodsCart(goodsCartId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			String msg = map.get("Msg").toString();
 			Map<String,Object> map1=new HashMap<>();
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				result.setSuccess(true);
-			}else{
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_PARAM_ERROR)&&msg.equals("参数传递有误")){
 				result.setSuccess(false);
+			}else{
+				result.setSuccess(true);
 			}
 			result.setMsg(map.get("Msg").toString());
 			map1.put("inventory", map.get("inventory"));
