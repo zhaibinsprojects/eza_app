@@ -303,7 +303,7 @@ public class AppGoodsController {
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
 		List<Long> areaList = new ArrayList<Long>();
-		if("".equals(areaId) || null == areaId){
+		if(!"".equals(areaId) && null != areaId){
 			Long area = Long.valueOf(areaId);
 			List<Long> listId = goodsService.queryChildId(area);
 			if(null != listId && listId.size() != 0){
