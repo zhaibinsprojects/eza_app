@@ -175,6 +175,12 @@ public class GoodsController {
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
+		
+		if(null != customized.getId()){
+			
+			
+		}
+		
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		//加入预约定制
@@ -277,7 +283,7 @@ public class GoodsController {
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
-		List<Long> areaList = null;
+		List<Long> areaList = new ArrayList<Long>();
 		if("".equals(areaId) || null == areaId){
 			Long area = Long.valueOf(areaId);
 			List<Long> listId = goodsService.queryChildId(area);

@@ -225,7 +225,7 @@ public class AppGoodsController {
 			result.setMsg("添加失败，但插入了记录");
 			result.setSuccess(false);
 		}
-		return result;
+		return result; 
 	}
 	
 	/**
@@ -255,7 +255,7 @@ public class AppGoodsController {
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id
-	 * @param addTime	默认
+	 * @param defaultId	默认
 	 * @param inventory	库存
 	 * @param colorId	颜色id
 	 * @param formId	形态id
@@ -299,10 +299,10 @@ public class AppGoodsController {
 			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
 			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
-			@RequestParam(name = "goodsName",required=false)String goodsName,
+			@RequestParam(name = " ",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
-		List<Long> areaList = null;
+		List<Long> areaList = new ArrayList<Long>();
 		if("".equals(areaId) || null == areaId){
 			Long area = Long.valueOf(areaId);
 			List<Long> listId = goodsService.queryChildId(area);
