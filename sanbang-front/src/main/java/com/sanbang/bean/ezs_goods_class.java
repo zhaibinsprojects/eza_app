@@ -1,6 +1,7 @@
 package com.sanbang.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class ezs_goods_class {
     private Long id;
@@ -25,10 +26,36 @@ public class ezs_goods_class {
      * 商品类别图片
      */
     private ezs_accessory photo;
+    /**
+     * add by zhaibin
+     * 子节点列表
+     */
+    private List<ezs_goods_class> childNodeList;
+    /**
+     * add by zhaibin
+     * 父节点
+     */
+    private ezs_goods_class parentNode;
     
-    
+     
 
-    public ezs_accessory getPhoto() {
+    public List<ezs_goods_class> getChildNodeList() {
+		return childNodeList;
+	}
+
+	public void setChildNodeList(List<ezs_goods_class> childNodeList) {
+		this.childNodeList = childNodeList;
+	}
+
+	public ezs_goods_class getParentNode() {
+		return parentNode;
+	}
+
+	public void setParentNode(ezs_goods_class parentNode) {
+		this.parentNode = parentNode;
+	}
+
+	public ezs_accessory getPhoto() {
 		return photo;
 	}
 

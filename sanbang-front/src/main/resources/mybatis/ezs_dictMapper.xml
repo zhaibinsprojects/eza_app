@@ -12,7 +12,7 @@
     <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
   </resultMap>
   
-  <resultMap id="ResultMapList" type="com.sanbang.vo.CurrencyClass" >
+  <resultMap id="ResultMapList" type="com.sanbang.vo.CurrencyClass">
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="id" property="id" jdbcType="BIGINT" />
   </resultMap>
@@ -167,12 +167,12 @@
   
   <!-- 查询颜色 -->
   <select id="colorList" resultMap="ResultMapList">
-	  	select d.name,d.id from ezs_dict d where d.deleteStatus = '0' and d.code like '%EZS_COLOR_%'
+	  	select d.name,d.id from ezs_dict d where d.deleteStatus = '0' and d.code like '%EZS_COLOR_%' ORDER BY id ASC
   </select>
   
   <!-- 查询形态 -->
   <select id="formList" resultMap="ResultMapList">
-	  	select d.name,d.id from ezs_dict d where d.deleteStatus = '0' and d.code like '%EZS_FORM_%'
+	  	select d.name,d.id from ezs_dict d where d.deleteStatus = '0' and d.code like '%EZS_FORM_%' ORDER BY id ASC
   </select>
   
   <select id="selectPropertyById"  resultType="java.lang.String">
