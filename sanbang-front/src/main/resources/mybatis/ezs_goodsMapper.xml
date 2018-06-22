@@ -1025,7 +1025,9 @@
 	<!--商品详情展示-->
 	<select id="getgoodsinfo" resultMap="goodvomap">
 		SELECT
-	A.*, (
+	A.*,
+	(select  IF(ISNULL(A.house),0,A.house) collect  FROM ezs_documentshare A WHERE A.user_id=#{userid}
+	 AND A.good_id=#{goodsid} and  A.deleteStatus=0) collected, (
 		SELECT
 			COUNT(B.id)
 		FROM

@@ -7,7 +7,9 @@ import java.util.List;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_dict;
+import com.sanbang.bean.ezs_goods_cartography;
 import com.sanbang.bean.ezs_goods_class;
+import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_quality;
 import com.sanbang.bean.ezs_user;
 
@@ -124,10 +126,10 @@ public class GoodsVo {
 	private List<ezs_accessory> mainphoto;
 
 	// 商品图片
-	private List<ezs_accessory> goods_photos;
+	private List<ezs_goods_photo> goods_photos;
 
 	// 制作过程
-	private List<ezs_accessory> cartographys;
+	private List<ezs_goods_cartography> cartographys;
 	private Date addTime;
 
 	private Boolean deleteStatus;
@@ -159,6 +161,8 @@ public class GoodsVo {
 	private long allcount;//总评价
 	
 	private int highp;//好评率
+	
+	private int collected;
 
 	public Long getId() {
 		return id;
@@ -544,19 +548,19 @@ public class GoodsVo {
 		this.mainphoto = mainphoto;
 	}
 
-	public List<ezs_accessory> getGoods_photos() {
+	public List<ezs_goods_photo> getGoods_photos() {
 		return goods_photos;
 	}
 
-	public void setGoods_photos(List<ezs_accessory> goods_photos) {
+	public void setGoods_photos(List<ezs_goods_photo> goods_photos) {
 		this.goods_photos = goods_photos;
 	}
 
-	public List<ezs_accessory> getCartographys() {
+	public List<ezs_goods_cartography> getCartographys() {
 		return cartographys;
 	}
 
-	public void setCartographys(List<ezs_accessory> cartographys) {
+	public void setCartographys(List<ezs_goods_cartography> cartographys) {
 		this.cartographys = cartographys;
 	}
 
@@ -685,6 +689,14 @@ public class GoodsVo {
 
 	public void setHighp(int highp) {
 		this.highp = highp;
+	}
+
+	public int getCollected() {
+		return collected;
+	}
+
+	public void setCollected(int collected) {
+		this.collected = collected;
 	}
 
 	public GoodsVo() {

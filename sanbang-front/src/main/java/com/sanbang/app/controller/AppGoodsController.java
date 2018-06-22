@@ -78,10 +78,21 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/toGoodsShow")
 	public String toGoodsShow(HttpServletRequest request,Long id,Model model){
-		GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+		//用户校验begin
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		long userid=0;
+		if(null==upi){
+			upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		}
+		userid=null==upi?0:upi.getId();
+		model.addAttribute("userkey", null==upi?0:upi.getUserkey());
+		//用户校验end
+		
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
 		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}
+	
 	
 	
 	/**
@@ -117,8 +128,17 @@ public class AppGoodsController {
 	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNo){
 		Result result = new Result();
 		try {
+			//用户校验begin
+			ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+			long userid=0;
+			if(null==upi){
+				upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			}
+			userid=null==upi?0:upi.getId();
+			//用户校验end
+			
 			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
-			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
 			Map<String, Object> map=new HashMap<>();
 			map.put("list", dvaluatelist);
 			map.put("highp", goodsvo.getHighp());
@@ -145,27 +165,44 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
 		if(null != goodId){
-			ezs_documentshare share = goodsService.getCollect(goodId);
+			ezs_documentshare share = goodsService.getCollect(goodId,user.getId());
 			if(null != share){
-				if(share.getDeleteStatus().equals(true)){
+				if(share.getHouse()==1){
 					goodsService.updateCollect(goodId,user.getId(),false);
-					result.setMsg("取消收藏");
+					result.setMsg("取消收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}else{
 					goodsService.updateCollect(goodId,user.getId(),true);
 					result.setMsg("收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}
 			}else{
 				try{
 					goodsService.insertCollect(goodId,user.getId());
 					result.setMsg("收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}catch(Exception e){
 					e.printStackTrace();
+					result.setMsg("系统错误");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 				}
 			}
 		}else{
 			result.setMsg("收藏出错");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 		}
 		return result;
 	}
@@ -379,20 +416,26 @@ public class AppGoodsController {
 		if(null != burning && !"".equals(burning)){
 			burnings = burning.split(",");
 		}
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
-		list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
-				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
-		if(null != list && list.size() > 0){
-			result.setSuccess(true);
-			result.setMsg("筛选成功");
-			result.setObj(list);
-			Page page = new Page(list.size(), pageNow);
-			result.setMeta(page);
-		}else{
-			result.setSuccess(true);
-			result.setObj(list);
-			result.setMsg("数据为空");
+		try{
+			List<ezs_goods> list = new ArrayList<ezs_goods>();
+			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
+					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
+			if(null != list && list.size() > 0){
+				result.setSuccess(true);
+				result.setMsg("筛选成功");
+				result.setObj(list);
+				Page page = new Page(list.size(), pageNow);
+				result.setMeta(page);
+			}else{
+				result.setSuccess(true);
+				result.setObj(list);
+				result.setMsg("数据为空");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("查询异常，数据出错");
 		}
 		return result;
 	}
@@ -407,28 +450,34 @@ public class AppGoodsController {
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
 		if(null != areaName && !"".equals(areaName)){
-			List<Long> ids = goodsService.areaToId(areaName);
-			//直辖市
-			if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
-				if(null != ids && ids.size()==2){
-					Long id1 = ids.get(0);
-					Long id2 = ids.get(1);
-					if(id1<id2){
-						result.setObj(id2);
-					}else{
-						result.setObj(id1);
+			try{
+				List<Long> ids = goodsService.areaToId(areaName);
+				//直辖市
+				if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
+					if(null != ids && ids.size()==2){
+						Long id1 = ids.get(0);
+						Long id2 = ids.get(1);
+						if(id1<id2){
+							result.setObj(id2);
+						}else{
+							result.setObj(id1);
+						}
 					}
+					result.setSuccess(true);
+					result.setMsg("返回成功");
+				}else if(null != ids && ids.size() != 0){
+					result.setObj(ids.get(0));
+					result.setSuccess(true);
+					result.setMsg("返回成功");
+				}else{
+					result.setObj("");
+					result.setSuccess(true);
+					result.setMsg("数据为空");
 				}
-				result.setSuccess(true);
-				result.setMsg("返回成功");
-			}else if(null != ids && ids.size() != 0){
-				result.setObj(ids.get(0));
-				result.setSuccess(true);
-				result.setMsg("返回成功");
-			}else{
-				result.setObj("");
+			}catch(Exception e){
+				e.printStackTrace();
 				result.setSuccess(false);
-				result.setMsg("查询为空");
+				result.setMsg("查询出错，数据异常");
 			}
 		}else{
 			result.setMsg("参数为空,请传入正确参数");
@@ -447,33 +496,37 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result colorAndFormList(HttpServletRequest request){
 		Result result = Result.failure();
-		//颜色 
-		List<CurrencyClass> colorList = goodsService.colorList();
-		//形态
-		List<CurrencyClass> formList = goodsService.formList();
-		HashMap<String, Object> map1 = new HashMap<String,Object>();
-		HashMap<String,Object> map2 = new HashMap<String,Object>();
-		map1.put("second", colorList);
-		map1.put("type", "颜色");
-		map2.put("second", formList);
-		map2.put("type", "形态");
-		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
-		list.add(map1);
-		list.add(map2);
-		if(colorList.size() > 0 && null == formList){
-			result.setMsg("颜色有值，形态为空");
-			result.setObj(list);
-			result.setSuccess(true);
-		}
-		if(null == colorList && formList.size()>0){
-			result.setMsg("形态有值，颜色为空");
-			result.setObj(list);
-			result.setSuccess(true);
-		}
-		if(formList.size()>0 && colorList.size() > 0){
-			result.setMsg("颜色形态都有值");
-			result.setObj(list);
-			result.setSuccess(true);
+		try{
+			List<CurrencyClass> colorList = goodsService.colorList();	//颜色
+			List<CurrencyClass> formList = goodsService.formList();	//形态
+			HashMap<String, Object> map1 = new HashMap<String,Object>();
+			HashMap<String,Object> map2 = new HashMap<String,Object>();
+			map1.put("second", colorList);
+			map1.put("type", "颜色");
+			map2.put("second", formList);
+			map2.put("type", "形态");
+			List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+			list.add(map1);
+			list.add(map2);
+			if(colorList.size() > 0 && null == formList){
+				result.setMsg("颜色有值，形态为空");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+			if(null == colorList && formList.size()>0){
+				result.setMsg("形态有值，颜色为空");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+			if(formList.size()>0 && colorList.size() > 0){
+				result.setMsg("颜色形态都有值");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setMsg("查询出错，数据异常");
+			result.setSuccess(false);
 		}
 		return result;
 	}

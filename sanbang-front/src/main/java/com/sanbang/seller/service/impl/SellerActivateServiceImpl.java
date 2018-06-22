@@ -13,10 +13,12 @@ import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerActivateService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 @Service
 public class SellerActivateServiceImpl implements SellerActivateService {
@@ -29,6 +31,9 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 	// 用户登陆信息
 	@Resource(name = "ezs_userMapper")
 	private ezs_userMapper ezs_userMapper;
+	
+	@Resource(name = "dictService")
+	private DictService dictService;
 	
 	// rediskey有效期
 	@Value("${consparam.redis.redisuserkeyexpir}")
@@ -75,7 +80,10 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 					result.setMsg("系统错误");
 					break;
 				}
- 				return result;
+ 				if(!result.getSuccess()){
+ 					return result;
+ 				}
+ 				
 			}
 			Long store_id = upi.getStore_id();
 			ezs_store store = ezs_storeMapper.selectByPrimaryKey(store_id);
@@ -91,6 +99,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setOpen_branch_name(open_branch_name);
 			store.setOpen_branch_no(open_branch_no);
 			store.setLocation_detail(location_detail);*/
+			store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_ACTIVATION).getId());
 			store.setUserType("SELLER");
 			store.setStatus(1); // 0 初始值， 1 待审核 ， 2 审核通过， 3 审核不通过
 			if (Boolean.valueOf(rent)) {
@@ -99,10 +108,15 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 				store.setRent(false);//租用
 			}
 			
+			ezs_user ezs_user = new ezs_user();
+			ezs_user.setUserRole("SELLER");
+			ezs_user.setId(upi.getId());
+			
 			int aa = 0; 
 			
 			try {
 				aa = ezs_storeMapper.updateByPrimaryKeySelective(store);
+				ezs_userMapper.updateByPrimaryKeySelective(ezs_user);
 				if (aa >0) {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_ACTIVATE_INFO_SUCCESS);
 					result.setSuccess(true);
