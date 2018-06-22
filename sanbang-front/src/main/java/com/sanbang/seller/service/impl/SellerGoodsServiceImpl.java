@@ -544,8 +544,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
 				goods.setPrice(new BigDecimal(price));
-				if (null == cncl_num) {
-					goods.setCncl_num((double) 0);
+				if (null == cncl_num || cncl_num.equals("")) {
+					goods.setCncl_num((double)0);
+				}else{
+					goods.setCncl_num(Double.valueOf(cncl_num));
 				}
 				goods.setValidity(Integer.valueOf(validity));
 				goods.setInventory(Double.valueOf(inventory));
@@ -687,6 +689,15 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	public String getGoodsProperty(Long propertyId) {
 		
 		return dictMapper.selectPropertyById(propertyId);
+	}
+
+	@Override
+	public Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request) {
+		
+		
+		
+		
+		return null;
 	}
 
 	
