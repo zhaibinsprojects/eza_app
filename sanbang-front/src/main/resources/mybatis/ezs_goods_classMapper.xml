@@ -18,6 +18,24 @@
     <association column="photo_id" property="photo" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey"></association>
   </resultMap>
   
+  <!-- zhaibin,商品分类列表sql -->
+  <resultMap id="TwoAndThreeGoodClassResultMap" type="ezs_goods_class" extends="BaseResultMap">
+    <association column="parent_id" property="parentNode" select="com.sanbang.dao.ezs_goods_classMapper.selectByPrimaryKey"></association>
+    <collection column="id" property="childNodeList" select="com.sanbang.dao.ezs_goods_classMapper.selectChildNodeByParentId"></collection>
+  </resultMap>
+  <!-- add by zhaibin -->
+  <select id="selectChildNodeByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	  select 
+	  <include refid="Base_Column_List" />
+	  from ezs_goods_class where parent_id = #{parentId} ORDER BY name ASC
+  </select>
+  <!-- add by zhaibin 获取二三级分类 -->
+  <select id="selectAllChildNodeExceptFirst" resultMap="TwoAndThreeGoodClassResultMap">
+	  select 
+	  <include refid="Base_Column_List" />
+	  from ezs_goods_class where level = '2' ORDER BY id ASC
+  </select>
+  
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, level, name, sequence, parent_id, photo_id, display
   </sql>

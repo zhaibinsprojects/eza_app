@@ -17,5 +17,9 @@ public interface GoodsClassService {
 	public Map<String, Object> queryAllGoodsClass();
 	
 	public Map<String, Object> queryThirdGoodsClass(String level);
+	
+	public Map<String, Object> queryChildNodes();
+	
+	public Map<String, Object> queryGoodColorAndForm();
 
 }
