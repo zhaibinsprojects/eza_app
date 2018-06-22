@@ -361,13 +361,35 @@ public class GoodsServiceImpl implements GoodsService{
 		return ezs_customizedMapper.customizedList(user_id);
 	}
 	
-	public int insertCustomized(ezs_customized customized){
-		return ezs_customizedMapper.insertSelective(customized);
+	/**
+	 * 预约定制
+	 */
+	@Transactional(rollbackFor=java.lang.Exception.class)
+	public Map<String,Object> insertCustomized(ezs_customized customized,ezs_user user){
+		Map<String,Object> map = new HashMap<String,Object>();
+		Long id = customized.getId();
+		ezs_customized_record record = new ezs_customized_record();
+		record.setId(id);
+		record.setAddTime(new Date());
+		record.setDeleteStatus(false);
+		record.setOperater_id(user.getId());
+		record.setPurchaser_id(user.getId());
+		try{
+			int n = ezs_customizedMapper.insertSelective(customized);
+			int m = ezs_customized_recordMapper.insertSelective(record);
+			if(n>0 && m>0){
+				map.put("Msg", "插入成功");
+			}else{
+				map.put("Msg", "插入失败");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			map.put("Msg", "插入异常");
+		}
+		return map;
 	}
 	
-	public int insertCustomizedRecord(ezs_customized_record customizedRecord){
-		return ezs_customized_recordMapper.insertSelective(customizedRecord);
-	}
 	/**
 	 * 添加购物车（逐个商品进行添加）
 	 * @param goodsCart
@@ -1194,4 +1216,11 @@ public class GoodsServiceImpl implements GoodsService{
 		tempMap.put("Obj", goodsInfoList);
 		return tempMap;
 	}
+	
+	//根据id查询单个
+	public ezs_goods selectByPrimaryKey(Long id){
+		return ezs_goodsMapper.selectByPrimaryKey(id);
+	}
+	
+	
 }

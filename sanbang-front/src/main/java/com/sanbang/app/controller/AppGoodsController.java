@@ -231,9 +231,10 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 预约预定（待完善）
+	 * 预约预定（已改）
 	 * @param request
-	 * @param customized 预约实体类 
+	 * @param customized 预约实体类（前端传的参数：描述remark，数量pre_num，要货时间pre_time，采购预算budget，商品id：goods_id）
+	 * 参数是这几个参数，需要跟前端约定字段名称（必须是这几个名称，否则塞不进实体中，跟前端以及app商量一哈儿）
 	 * @return
 	 */
 	@RequestMapping("/insertCustomized")	
@@ -241,28 +242,49 @@ public class AppGoodsController {
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		//加入预约定制
-		int n = goodsService.insertCustomized(customized);
-		Long id = customized.getId();
-		ezs_customized_record record = new ezs_customized_record();
-		record.setId(id);
-		record.setAddTime(new Date());
-		record.setOperater_id(user.getId());
-		record.setPurchaser_id(user.getId());
-		int m = goodsService.insertCustomizedRecord(record);
-		if(n > 0 && m > 0){
-			result.setMsg("添加成功");
-			result.setSuccess(true);
-		}
-		if(n > 0 && m <= 0){
-			result.setMsg("添加成功，但记录失败");
-			result.setSuccess(true);
-		}
-		if(n > 0 && m <= 0){
-			result.setMsg("添加失败，但插入了记录");
+		String goodsId = customized.getGoods_id().toString();
+		if(null != goodsId && "".equals(goodsId)){
+			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
+			if(null != goods){
+				customized.setAddress(goods.getAddess());
+				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				customized.setDensity(Double.valueOf(goods.getDensity()));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				customized.setPurpose(goods.getPurpose());
+				customized.setShape(goods.getForm_id().toString());	//同理
+				//剩下的需要塞的字段，劳烦彬哥了
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("改商品不存在");
+				result.setSuccess(false);
+				return result;
+			}
+			try{
+				if(null != customized.getRemark() && null != customized.getRemark() && null != customized.getPre_num() && null != customized.getPre_time()){
+					//加入预约定制
+					Map<String,Object> map = goodsService.insertCustomized(customized,user);
+					if(map.get("Msg").equals("插入成功")){
+						result.setMsg("插入成功");
+						result.setSuccess(true);
+					}
+					if(map.get("Msg").equals("插入失败")){
+						result.setMsg("插入失败");
+						result.setSuccess(false);
+					}
+				}else{
+					result.setMsg("请将信息填写完整");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				}
+			}catch(Exception e){
+				result.setMsg("插入出错，数据异常");
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
+		}else{
+			result.setMsg("参数为空，请重新添加数据");
 			result.setSuccess(false);
 		}
-		return result; 
+		return result;
 	}
 	
 	/**
