@@ -97,7 +97,7 @@ public interface GoodsService {
 	 */
 	public List<CurrencyClass> formList();
 	
-	public ezs_documentshare getCollect(Long id);
+	public ezs_documentshare getCollect(Long id,long userid);
 	
 	/**
 	 * 采购单列表
@@ -142,7 +142,7 @@ public interface GoodsService {
 	 * @param goodsid
 	 * @return
 	 */
-	GoodsVo  getgoodsinfo(long goodsid);
+	GoodsVo  getgoodsinfo(long goodsid,long userid);
 	
 	/**
 	 * 展示pdf

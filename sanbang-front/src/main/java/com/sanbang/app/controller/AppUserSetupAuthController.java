@@ -199,6 +199,7 @@ public class AppUserSetupAuthController {
 				map.put("hashimg", true);
 			}else{
 				map.put("hashimg", false);
+				map.put("imgmap", imgmap);
 			}
 			
 			result.setObj(map);

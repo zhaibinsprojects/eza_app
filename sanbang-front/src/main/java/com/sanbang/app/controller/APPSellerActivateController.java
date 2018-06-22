@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +48,11 @@ public class APPSellerActivateController {
 	
 	@Autowired
 	private ezs_userMapper ezs_userMapper;
+	
+	// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
+	
 	/**
 	 * 供应商激活
 	 * @param companyName
@@ -77,8 +83,34 @@ public class APPSellerActivateController {
 			return result;
 		}
 		
+		//验证用户是否认证，拥有买家资质
+		ezs_store store = upi.getEzs_store();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if ( DictionaryCate.CRM_USR_TYPE_CLUE.equals(dictCode)|| DictionaryCate.CRM_USR_TYPE_REGISTER.equals(dictCode)) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未认证，不能申请卖家权限。");
+			return result;
+		}
+		
+		
 		result = activateService.addActivateInfo(result, upi,companyName, yTurnover, covered, rent, device_num, employee_num, assets, 
 				obtainYear, request, response);
+		
+		if(result.getSuccess()){
+			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+			boolean res=RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
+			if (res) {
+				result.setSuccess(true);
+				result.setMsg("保存成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			} else {
+				result.setSuccess(false);
+				result.setMsg("系统错误");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			}
+		}
 		return result;
 	}
 	

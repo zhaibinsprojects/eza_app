@@ -5,10 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,9 +14,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_bill;
@@ -37,13 +32,9 @@ import com.sanbang.dao.ezs_positionMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dict.service.DictService;
-import com.sanbang.redis.RedisConstants;
-import com.sanbang.redis.RedisResult;
 import com.sanbang.setup.service.AuthService;
 import com.sanbang.utils.FilePathUtil;
-import com.sanbang.utils.RandomStr32;
 import com.sanbang.utils.RedisUserSession;
-import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
