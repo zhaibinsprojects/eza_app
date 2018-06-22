@@ -91,8 +91,17 @@ public class GoodsController {
 	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNow){
 		Result result = new Result();
 		try {
+			//用户校验begin
+			ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+			long userid=0;
+			if(null==upi){
+				upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			}
+			userid=null==upi?0:upi.getId();
+			//用户校验end
+			
 			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNow,id);
-			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
 			Map<String, Object> map=new HashMap<>();
 			map.put("list", dvaluatelist);
 			map.put("highp", goodsvo.getHighp());
@@ -118,26 +127,43 @@ public class GoodsController {
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
 		if(null != goodId){
-			ezs_documentshare share = goodsService.getCollect(goodId);
+			ezs_documentshare share = goodsService.getCollect(goodId,user.getId());
 			if(null != share){
 				if(share.getDeleteStatus().equals(true)){
 					goodsService.updateCollect(goodId,user.getId(),false);
-					result.setMsg("取消收藏");
+					result.setMsg("取消收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}else{
 					goodsService.updateCollect(goodId,user.getId(),true);
 					result.setMsg("收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}
 			}else{
 				try{
 					goodsService.insertCollect(goodId,user.getId());
-					result.setMsg("已收藏");
+					result.setMsg("收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}catch(Exception e){
 					e.printStackTrace();
+					result.setMsg("系统错误");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 				}
 			}
 		}else{
 			result.setMsg("收藏出错");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 		}
 		return result;
 	}

@@ -115,11 +115,12 @@ public class GoodsServiceImpl implements GoodsService{
 		share.setGood_id(id);
 		share.setDeleteStatus(false);
 		share.setUser_id(userId);
+		share.setHouse(1);
 		return ezs_documentshareMapper.insertSelective(share);
 	}
 	
-	public ezs_documentshare getCollect(Long id){
-		return ezs_documentshareMapper.selectByPrimaryKey(id);
+	public ezs_documentshare getCollect(Long id,long userid){
+		return ezs_documentshareMapper.selectByGoodsIdUserid(id, userid);
 	}
 	
 	public List<ezs_goods> listForGoods(Long goodClass_id){
@@ -1019,8 +1020,8 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	@Override
-	public GoodsVo getgoodsinfo(long goodsid) {
-		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid);
+	public GoodsVo getgoodsinfo(long goodsid,long userid) {
+		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid,userid);
 		return goodsVo;
 	}
 

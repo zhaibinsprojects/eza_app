@@ -28,6 +28,8 @@ public class ezs_accessory {
     private Long config_id;
 
     private Long user_id;
+    
+    
 
     public Long getId() {
         return id;

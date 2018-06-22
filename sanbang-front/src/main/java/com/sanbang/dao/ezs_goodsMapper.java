@@ -58,7 +58,7 @@ public interface ezs_goodsMapper {
 	 * @param goodsid
 	 * @return
 	 */
-	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid);
+	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid,@Param("userid")long userid);
 	/**
 	 * 优品推荐 2
 	 * @author zhaiBin
