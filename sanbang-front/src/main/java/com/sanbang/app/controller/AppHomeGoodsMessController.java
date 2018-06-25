@@ -605,7 +605,7 @@ public class AppHomeGoodsMessController {
 			substanceTemp.setMeta(substance.getMeta());
 			substanceTemp.setName(substance.getName());
 			substanceTemp.setContent(substance.getContent());
-			rs.setObj(substance);
+			rs.setObj(substanceTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
