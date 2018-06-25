@@ -163,6 +163,8 @@ public class GoodsVo {
 	private int highp;//好评率
 	
 	private int collected;
+	
+	private String path;
 
 	public Long getId() {
 		return id;
@@ -697,6 +699,14 @@ public class GoodsVo {
 
 	public void setCollected(int collected) {
 		this.collected = collected;
+	}
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public GoodsVo() {

@@ -11,9 +11,9 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
- <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
-   <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
+<script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
    
 <script type="text/javascript">
 		$(function(){
@@ -101,7 +101,7 @@
 	</div>
 	<div class="blank10"></div>
 	<div class="ezsm-shopdetail-desctit">
-		描述说明
+		描述说明<a href="${baseurl}app/goods/toGoodsdec.htm?goodsid=${good.id}"><div></div></a>
 	</div>
 	<div class="ezsm-shopdetail-desc" style="width: 100%;">${good.content}</div>
 	<%@ include file="../goodsfoot.jsp"%> 

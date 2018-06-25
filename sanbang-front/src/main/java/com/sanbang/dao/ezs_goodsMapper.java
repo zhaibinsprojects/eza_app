@@ -34,7 +34,7 @@ public interface ezs_goodsMapper {
 
 	int pullOffShelves(long goodsId);
 	
-	List<ezs_goods> listForGoods(Long goodClass_id);
+	List<GoodsVo> listForGoods(Long goodClass_id);
 
 	List<ezs_goods> getGoodsFromCollection(Long userId);
 	

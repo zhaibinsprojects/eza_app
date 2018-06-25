@@ -123,7 +123,7 @@ public class GoodsServiceImpl implements GoodsService{
 		return ezs_documentshareMapper.selectByGoodsIdUserid(id, userid);
 	}
 	
-	public List<ezs_goods> listForGoods(Long goodClass_id){
+	public List<GoodsVo> listForGoods(Long goodClass_id){
 		return ezs_goodsMapper.listForGoods(goodClass_id);
 	}
 	

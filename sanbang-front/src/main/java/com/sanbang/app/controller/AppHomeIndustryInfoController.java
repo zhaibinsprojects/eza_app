@@ -8,21 +8,32 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_ezssubstanceMapper;
 import com.sanbang.index.service.IndustryInfoService;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.ExPage;
+import com.sanbang.vo.goods.GoodsVo;
 
 @Controller
 @RequestMapping("/app/home")
 public class AppHomeIndustryInfoController {
 	@Autowired
 	private IndustryInfoService industryInfoService;
+	
+	@Autowired
+	private ezs_ezssubstanceMapper ezs_ezssubstanceMapper;
+	
+	private static final String view="/cata/";
+	
 	/**
 	 * 获取行业资讯的二级栏目（一级为行业资讯）
 	 * @param request
@@ -86,5 +97,30 @@ public class AppHomeIndustryInfoController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 详情页面
+	 * @param request
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/subjectshowinfo")
+	public String Subjectshowinfo(HttpServletRequest request,Long id,Model model){
+		//用户校验begin
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(null==upi){
+			upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		}
+		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
+		//用户校验end
+		
+		
+		 ezs_ezssubstance info=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		model.addAttribute("info", info);
+		return view+"subjectshowinfo";
+	
+	}
+	
 	
 }

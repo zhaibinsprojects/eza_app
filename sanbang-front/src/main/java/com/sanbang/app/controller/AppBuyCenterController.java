@@ -360,7 +360,7 @@ public class AppBuyCenterController {
 			upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		}
 		userid=null==upi?0:upi.getId();
-		model.addAttribute("userkey", null==upi?0:upi.getUserkey());
+		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
 		//用户校验end
 		
 		List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,goodsid);
