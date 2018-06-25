@@ -490,37 +490,34 @@ public class AppHomeGoodsMessController {
 		return adviceList;
 	}
 	/**
-	 * 获取行情分析（首页展示点击触发）
+	 * 获取首页展示文档二级标题（首页展示点击触发）
 	 * 展示二级标题（日评-周评-月评）及相关分析的标题
 	 * @author zhaibin
 	 * @param request
 	 * @param response
+	 * @param type 12-行情分析；研究报告
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/getGoodPriceCondition")
+	@RequestMapping("/getTheSecondThemeOfEssayReport")
 	@ResponseBody
-	public Object getGoodPriceCondition(HttpServletRequest request,HttpServletResponse response){
+	public Object getTheSecondThemeOfEssayReport(HttpServletRequest request,HttpServletResponse response,Long type){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		mmp = this.reportEssayServer.getSecondTheme(Long.valueOf("12"));
+		//mmp = this.reportEssayServer.getSecondTheme(Long.valueOf("12"));
+		if(type==null){
+			rs = Result.failure();
+			rs.setMsg("类型不能为NULL");
+			return rs;
+		}
+		mmp = this.reportEssayServer.getSecondTheme(type);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
 			List<ezs_column> columnListTemp = new ArrayList<>();
-			//进行字段过滤
-			/*for (ezs_column tcolumn : columnList) {
-				ezs_column columnTemp = new ezs_column();
-				columnTemp.setColumnLevel(tcolumn.getColumnLevel());
-				columnTemp.setId(tcolumn.getId());
-				columnTemp.setName(tcolumn.getName());
-				columnTemp.setTitle(tcolumn.getTitle());
-				columnTemp.setParentEzsColumn_id(tcolumn.getParentEzsColumn_id());
-				columnListTemp.add(columnTemp);
-			}*/
-			//进行显示字段的过滤,暂不启用
+			//进行显示字段的过滤
 			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
-			String filterFields = "ColumnLevel,Id,Name,Title,ParentEzsColumn_id";
+			String filterFields = "columnLevel,id,name,title";
 			try {
 				//字段过滤公共方法
 				columnListTemp = fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
@@ -594,14 +591,19 @@ public class AppHomeGoodsMessController {
 		mmp = this.reportEssayServer.getReportEssayContext(id);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			ezs_ezssubstance substance = (ezs_ezssubstance) mmp.get("Obj"); 
+			ezs_ezssubstance substance = (ezs_ezssubstance) mmp.get("Obj");
+			if(substance==null){
+				rs = Result.success();
+				rs.setMsg("查询内容不存在");
+				return rs;
+			}
 			ezs_ezssubstance substanceTemp = new ezs_ezssubstance(); 
 			rs = Result.success();
 			//过滤字段
-			//substanceTemp.setId(substance.getId());
-			//substanceTemp.setAddTime(substance.getAddTime());
-			//substanceTemp.setMeta(substance.getMeta());
-			//substanceTemp.setName(substance.getName());
+			substanceTemp.setId(substance.getId());
+			substanceTemp.setAddTime(substance.getAddTime());
+			substanceTemp.setMeta(substance.getMeta());
+			substanceTemp.setName(substance.getName());
 			substanceTemp.setContent(substance.getContent());
 			rs.setObj(substance);
 			rs.setMsg(mmp.get("Msg").toString());
