@@ -148,7 +148,7 @@ public interface GoodsService {
 	 * @param count
 	 * @return
 	 */
-	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user,String orderType,Long goodId,Long count);
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user,String orderType,Long WeAddressId,Long goodId,Double count);
 	
 	
 	/**
