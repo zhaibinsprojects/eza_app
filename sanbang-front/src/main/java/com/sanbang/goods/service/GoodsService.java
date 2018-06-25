@@ -109,13 +109,7 @@ public interface GoodsService {
 	 * 添加预约定制
 	 * @param customized	定制实体
 	 */
-	public int insertCustomized(ezs_customized customized);
-	
-	/**
-	 * 预约定制记录表
-	 * @param customizedRecord	采购记录
-	 */
-	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
+	public Map<String,Object> insertCustomized(ezs_customized customized,ezs_user user);
 	
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
 	
@@ -145,6 +139,16 @@ public interface GoodsService {
 	public Map<String, Object> preOrderFormFunc(ezs_user user,String orderType,Long goodsCartId);
 	
 	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp);
+	/**
+	 * 立即购买
+	 * @author zhaibin
+	 * @param user
+	 * @param orderType
+	 * @param goodId
+	 * @param count
+	 * @return
+	 */
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user,String orderType,Long goodId,Long count);
 	
 	
 	/**
@@ -161,4 +165,6 @@ public interface GoodsService {
 	 */
 	Result  getGoodsPdf(long goodsid);
 	
+	//根据商品id查询单个
+	public ezs_goods selectByPrimaryKey(Long id);
 }

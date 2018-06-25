@@ -21,5 +21,4 @@ public interface ezs_customizedMapper {
 
     //add by zhaibin
     List<ezs_customized> getPurchaseByUserId(Long userId);
-    
 }
