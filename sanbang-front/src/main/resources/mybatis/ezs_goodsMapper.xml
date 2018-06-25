@@ -777,7 +777,12 @@
 	<select id="selectCount" resultType="java.lang.Integer">
 		select count(*) from 	
 		ezs_goods
-    	where user_id = #{sellerId}
+    	WHERE 
+		1=1
+		<if test="status!=null and status!=-1">
+			and   status = #{status} 
+		</if> 
+		and user_id = #{sellerId}
 	</select>
 	<!-- 查询商品详情，颜色，形态...做关联，han -->
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">

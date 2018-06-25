@@ -55,14 +55,14 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			if ("BUYER".equals(userType)) {
  				switch (status) {
 				case 0:
-					result.setSuccess(true);
-					result.setMsg("请求成功");
-					break;
+					result.setSuccess(false);
+					result.setMsg("请先进行实名认证");
+					return result;
 				case 1:
 					result.setSuccess(false);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setMsg("实名认证待审核");
-					break;
+					return result;
 				case 2:
 					result.setSuccess(true);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -72,18 +72,16 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 					result.setSuccess(false);
 					result.setMsg("实名认证审核未通过");
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-					break;
-					
+					return result;
 				default:
 					result.setSuccess(false);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 					result.setMsg("系统错误");
-					break;
+					return result;
 				}
  				if(!result.getSuccess()){
  					return result;
  				}
- 				
 			}
 			Long store_id = upi.getStore_id();
 			ezs_store store = ezs_storeMapper.selectByPrimaryKey(store_id);
