@@ -109,13 +109,7 @@ public interface GoodsService {
 	 * 添加预约定制
 	 * @param customized	定制实体
 	 */
-	public int insertCustomized(ezs_customized customized);
-	
-	/**
-	 * 预约定制记录表
-	 * @param customizedRecord	采购记录
-	 */
-	public int insertCustomizedRecord(ezs_customized_record customizedRecord);
+	public Map<String,Object> insertCustomized(ezs_customized customized,ezs_user user);
 	
 	public Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart,ezs_user user);
 	
@@ -171,4 +165,6 @@ public interface GoodsService {
 	 */
 	Result  getGoodsPdf(long goodsid);
 	
+	//根据商品id查询单个
+	public ezs_goods selectByPrimaryKey(Long id);
 }
