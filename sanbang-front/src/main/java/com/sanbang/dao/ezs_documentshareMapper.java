@@ -2,6 +2,7 @@ package com.sanbang.dao;
 
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_documentshare;
@@ -24,4 +25,6 @@ public interface ezs_documentshareMapper {
     int updateCollect(Map mmp);
     
     int updateCollectByUserId(Map<String, Object> mp);
+    
+    ezs_documentshare selectByGoodsIdUserid(@Param("id")Long id,@Param("userid")long userid);
 }

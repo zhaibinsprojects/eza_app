@@ -401,6 +401,8 @@ public class APPSellerGoodsController {
 	 * @param request
 	 * @return
 	 */
+	@RequestMapping("/updatePriceAndCnclNumInit")
+	@ResponseBody
 	public Object updatePriceAndCnclNumInit(HttpServletRequest request, String currentPage){
 		Result result=Result.failure();
 		List<ezs_goods> list = new ArrayList<>();
@@ -425,6 +427,9 @@ public class APPSellerGoodsController {
 		}
 		Long userId = upi.getId();
 		Page page = null;
+		if(currentPage==null){
+			currentPage = "1";
+		}
 		map = sellerGoodsService.queryGoodsListBySellerId(userId, 2, currentPage);
 		
 		list = (List<ezs_goods>)map.get("Obj");
@@ -447,7 +452,8 @@ public class APPSellerGoodsController {
 		return result;
 	}
 	
-	
+	@RequestMapping("/updatePriceAndCnclNum")
+	@ResponseBody
 	public Object updatePriceAndCnclNum(long goodsId, HttpServletRequest request){
 		Result result=Result.failure();
 		Map<String,Object> map = new HashMap<>();

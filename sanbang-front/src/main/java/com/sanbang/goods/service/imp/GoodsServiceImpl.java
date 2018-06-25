@@ -115,11 +115,12 @@ public class GoodsServiceImpl implements GoodsService{
 		share.setGood_id(id);
 		share.setDeleteStatus(false);
 		share.setUser_id(userId);
+		share.setHouse(1);
 		return ezs_documentshareMapper.insertSelective(share);
 	}
 	
-	public ezs_documentshare getCollect(Long id){
-		return ezs_documentshareMapper.selectByPrimaryKey(id);
+	public ezs_documentshare getCollect(Long id,long userid){
+		return ezs_documentshareMapper.selectByGoodsIdUserid(id, userid);
 	}
 	
 	public List<ezs_goods> listForGoods(Long goodClass_id){
@@ -515,6 +516,12 @@ public class GoodsServiceImpl implements GoodsService{
 		try{
 			//1先判断商品存在否以及库存量
 			ezs_goodscart goodsCart = ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
+			if(null == goodsCart){
+				map.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				map.put("Msg", "该购物车数据不存在");
+				log.info("编辑购物车方法：该购物车数据不存在...");
+				return map;
+			}
 			ezs_goods goods = ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
 			if(null != goods){
 				if(count > goods.getInventory()){
@@ -1013,8 +1020,8 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	@Override
-	public GoodsVo getgoodsinfo(long goodsid) {
-		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid);
+	public GoodsVo getgoodsinfo(long goodsid,long userid) {
+		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid,userid);
 		return goodsVo;
 	}
 
@@ -1044,7 +1051,7 @@ public class GoodsServiceImpl implements GoodsService{
 		return result;
 	}
 	/**
-	 * 购物车校验
+	 * 购物车校验（仅校验，不涉及修改和同步库存）
 	 * @author zhaibin
 	 * @return
 	 */
@@ -1084,7 +1091,7 @@ public class GoodsServiceImpl implements GoodsService{
 		return bool;
 	}
 	/**
-	 * 购物车校验
+	 * 购物车校验（下单校验-修改同步库存）
 	 * @author zhaibin
 	 * @return
 	 */
@@ -1160,7 +1167,10 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return bool;
 	}
-
+	/**
+	 * @author zhaibin
+	 * 处理得到的下单因库存不足导致的下单失败，购物车-商品信息封装
+	 */
 	@Override
 	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp) {
 		// TODO Auto-generated method stub

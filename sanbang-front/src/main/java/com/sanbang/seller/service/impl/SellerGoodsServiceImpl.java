@@ -80,7 +80,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	public Map<String, Object> queryGoodsListBySellerId(Long sellerId, int status, String currentPage) {
 		Map<String, Object> mmp = new HashMap<>();
 		// 获取总页数
-		int totalCount = goodsMapper.selectCount(sellerId);
+		int totalCount = goodsMapper.selectCount(sellerId,status);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
 		if ((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)) {
@@ -693,11 +693,31 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	@Override
 	public Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request) {
+		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 		
-		
-		
-		
-		return null;
+		String cncl_num = request.getParameter("cncl_num");//样品库存数量
+		String price = request.getParameter("price");// 价格
+		if (null == cncl_num || cncl_num.equals("")) {
+			goods.setCncl_num((double)0);
+		}else{
+			goods.setCncl_num(Double.valueOf(cncl_num));
+		}
+		if (Tools.isEmpty(price)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入货品价格");
+			if (!Tools.isNum(price)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入有效货品价格");
+			}
+		}
+		goods.setPrice(new BigDecimal(price));
+		goodsMapper.updateByPrimaryKeySelective(goods);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setSuccess(true);
+		result.setMsg("货品更新成功");
+		return result;
 	}
 
 	

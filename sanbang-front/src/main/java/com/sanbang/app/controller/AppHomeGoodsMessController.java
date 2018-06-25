@@ -18,17 +18,16 @@ import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
-import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.CustomizedRecordService;
 import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
 import com.sanbang.index.service.IndustryInfoService;
-import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.index.service.RecommendGoodsService;
+import com.sanbang.index.service.ReportEssayServer;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.FieldFilterUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -54,6 +53,8 @@ public class AppHomeGoodsMessController {
 	private CustomizedRecordService customizedRecordService;
 	@Autowired
 	private IndustryInfoService industryInfoService;
+	@Autowired
+	private ReportEssayServer reportEssayServer;
 	
 	
 	/**
@@ -312,7 +313,11 @@ public class AppHomeGoodsMessController {
 		}
 		return rs;
 	}
-	
+	/**
+	 * 广告-活动展示时可启用，
+	 * @author zhaibin
+	 * @return
+	 */
 	private Result getAdvicesInfo(){
 		Result rs = null;
 		List<Advices> adviceList = new ArrayList<Advices>();
@@ -378,13 +383,18 @@ public class AppHomeGoodsMessController {
 			return null;
 		}
 	}
-	
+	/**
+	 * 主题展示（暂时为一张静态图片）
+	 * @author zhaibin
+	 * @param request
+	 * @return
+	 */
 	private List<Advices> getSubscribeList(HttpServletRequest request){
 		//String path = request.getServletContext().getContextPath();
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices = new Advices();
 		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		advices.setPath("/front/resource/indeximg/首页-1_13.png");
+		advices.setPath("http://10.10.10.148/front/resource/indeximg/首页-1_13.png");
 		advices.setpName("首页-1_13.png");
 		advices.setLink("");
 		advices.setContent("标题展示");
@@ -392,4 +402,130 @@ public class AppHomeGoodsMessController {
 		log.info("图片：/resource/indeximg/首页-1_13.png");
 		return adviceList;
 	}
+	/**
+	 * 获取行情分析（首页展示点击触发）
+	 * 展示二级标题（日评-周评-月评）及相关分析的标题
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/getGoodPriceCondition")
+	@ResponseBody
+	public Object getGoodPriceCondition(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		mmp = this.reportEssayServer.getSecondTheme(Long.valueOf("12"));
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
+			List<ezs_column> columnListTemp = new ArrayList<>();
+			//进行字段过滤
+			for (ezs_column tcolumn : columnList) {
+				ezs_column columnTemp = new ezs_column();
+				columnTemp.setColumnLevel(tcolumn.getColumnLevel());
+				columnTemp.setId(tcolumn.getId());
+				columnTemp.setName(tcolumn.getName());
+				columnTemp.setTitle(tcolumn.getTitle());
+				columnTemp.setParentEzsColumn_id(tcolumn.getParentEzsColumn_id());
+				columnListTemp.add(columnTemp);
+			}
+			//进行显示字段的过滤,暂不启用
+			/*FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
+			String filterFields = "ColumnLevel,Id,Name";
+			try {
+				//字段过滤公共方法
+				fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
+				
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			rs = Result.success();
+			rs.setObj(columnListTemp);
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 获取报告标题（例如：日评下展示）
+	 * 根据二级标题展示报告文章的标题（分页展示）
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param parentId
+	 * @param currentPage
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/getReportEssayTheme")
+	@ResponseBody
+	public Object getReportEssayTheme(HttpServletRequest request,HttpServletResponse response,Long parentId,int currentPage){
+		Map<String, Object> mmp = null;
+		List<ezs_ezssubstance> substanceListTemp = new ArrayList<>();
+		Result rs = null;
+		if(currentPage<=0)
+			currentPage = 1;
+		mmp = this.reportEssayServer.getReportEssayTheme(parentId,currentPage);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_ezssubstance> substanceList = (List<ezs_ezssubstance>) mmp.get("Obj"); 
+			rs = Result.success();
+			//进行字段过滤
+			for (ezs_ezssubstance ss : substanceList) {
+				ezs_ezssubstance substanceTemp = new ezs_ezssubstance();
+				substanceTemp.setId(ss.getId());
+				substanceTemp.setAddTime(ss.getAddTime());
+				substanceTemp.setMeta(ss.getMeta());
+				substanceTemp.setName(ss.getName());
+				substanceListTemp.add(substanceTemp);
+			}
+			rs.setObj(substanceListTemp);
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 根据文章报告ID获取相关内容
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getReportEssayById")
+	@ResponseBody
+	public Object getReportEssayById(HttpServletRequest request,HttpServletResponse response,Long id){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		mmp = this.reportEssayServer.getReportEssayContext(id);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ezs_ezssubstance substance = (ezs_ezssubstance) mmp.get("Obj"); 
+			ezs_ezssubstance substanceTemp = new ezs_ezssubstance(); 
+			rs = Result.success();
+			//过滤字段
+			//substanceTemp.setId(substance.getId());
+			//substanceTemp.setAddTime(substance.getAddTime());
+			//substanceTemp.setMeta(substance.getMeta());
+			//substanceTemp.setName(substance.getName());
+			substanceTemp.setContent(substance.getContent());
+			rs.setObj(substance);
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+
 }

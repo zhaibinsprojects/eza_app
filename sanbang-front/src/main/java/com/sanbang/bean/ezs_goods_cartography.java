@@ -4,6 +4,8 @@ public class ezs_goods_cartography {
     private Long goods_id;
 
     private Long cartography_id;
+    
+    private ezs_accessory photo;
 
     public Long getGoods_id() {
         return goods_id;
@@ -20,4 +22,14 @@ public class ezs_goods_cartography {
     public void setCartography_id(Long cartography_id) {
         this.cartography_id = cartography_id;
     }
+
+	public ezs_accessory getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(ezs_accessory photo) {
+		this.photo = photo;
+	}
+    
+    
 }

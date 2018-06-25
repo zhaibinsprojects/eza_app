@@ -777,7 +777,12 @@
 	<select id="selectCount" resultType="java.lang.Integer">
 		select count(*) from 	
 		ezs_goods
-    	where user_id = #{sellerId}
+    	WHERE 
+		1=1
+		<if test="status!=null and status!=-1">
+			and   status = #{status} 
+		</if> 
+		and user_id = #{sellerId}
 	</select>
 	<!-- 查询商品详情，颜色，形态...做关联，han -->
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
@@ -1025,7 +1030,9 @@
 	<!--商品详情展示-->
 	<select id="getgoodsinfo" resultMap="goodvomap">
 		SELECT
-	A.*, (
+	A.*,
+	(select  IF(ISNULL(A.house),0,A.house) collect  FROM ezs_documentshare A WHERE A.user_id=#{userid}
+	 AND A.good_id=#{goodsid} and  A.deleteStatus=0) collected, (
 		SELECT
 			COUNT(B.id)
 		FROM

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -60,7 +60,7 @@ public class GoodsController {
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	/**
-	 * 查询货品详情（描述说明也走这方法，以及在下订单时候，往前台返回商品单价用以计算总价、商品库存量，也是走这个方法，都从从商品详情中取）
+	 * 查询货品详情
 	 * @param request
 	 * @param id 货品id
 	 * @return
@@ -91,8 +91,17 @@ public class GoodsController {
 	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNow){
 		Result result = new Result();
 		try {
+			//用户校验begin
+			ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+			long userid=0;
+			if(null==upi){
+				upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			}
+			userid=null==upi?0:upi.getId();
+			//用户校验end
+			
 			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNow,id);
-			GoodsVo  goodsvo=goodsService.getgoodsinfo(id);
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
 			Map<String, Object> map=new HashMap<>();
 			map.put("list", dvaluatelist);
 			map.put("highp", goodsvo.getHighp());
@@ -118,33 +127,50 @@ public class GoodsController {
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
 		if(null != goodId){
-			ezs_documentshare share = goodsService.getCollect(goodId);
+			ezs_documentshare share = goodsService.getCollect(goodId,user.getId());
 			if(null != share){
 				if(share.getDeleteStatus().equals(true)){
 					goodsService.updateCollect(goodId,user.getId(),false);
-					result.setMsg("取消收藏");
+					result.setMsg("取消收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}else{
 					goodsService.updateCollect(goodId,user.getId(),true);
 					result.setMsg("收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}
 			}else{
 				try{
 					goodsService.insertCollect(goodId,user.getId());
-					result.setMsg("已收藏");
+					result.setMsg("收藏成功");
+					result.setSuccess(true);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				}catch(Exception e){
 					e.printStackTrace();
+					result.setMsg("系统错误");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 				}
 			}
 		}else{
 			result.setMsg("收藏出错");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 		}
 		return result;
 	}
 	
 	
 	/**
-	 * 采购单列表（就是预约定制的列表）
+	 * 预约定制采购单列表（待完善）
 	 * @param request
 	 * @param user_id
 	 * @return
@@ -167,7 +193,7 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 预约预定
+	 * 预约预定（待完善）
 	 * @param request
 	 * @param customized 预约实体类 
 	 * @return
@@ -175,6 +201,12 @@ public class GoodsController {
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
+		//描述  数量  要货时间  采购预算  商品id
+		if(null != customized.getId()){
+			
+			
+		}
+		
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		//加入预约定制
@@ -203,7 +235,7 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 同类货品（以及品类筛选都是走这个方法）
+	 * 同类货品（待完善）
 	 * @param id 商品类别id
 	 * @return
 	 */
@@ -277,18 +309,20 @@ public class GoodsController {
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
-		Long area = Long.valueOf(areaId);
 		List<Long> areaList = new ArrayList<Long>();
-		List<Long> listId = goodsService.queryChildId(area);
-		if(null != listId && listId.size() != 0){
-			List<Long> listIds = goodsService.queryChildIds(listId);
-			if(null != listIds && listIds.size() != 0){   //area是省
-				areaList = listIds;
-			}else{	//area是市
-				areaList = listId;
+		if(!"".equals(areaId) && null != areaId){
+			Long area = Long.valueOf(areaId);
+			List<Long> listId = goodsService.queryChildId(area);
+			if(null != listId && listId.size() != 0){
+				List<Long> listIds = goodsService.queryChildIds(listId);
+				if(null != listIds && listIds.size() != 0){   //area是省
+					areaList = listIds;
+				}else{	//area是市
+					areaList = listId;
+				}
+			}else{	//area是县、区
+				areaList.add(area);
 			}
-		}else{	//area是县、区
-			areaList.add(area);
 		}
 		String[] typeIds = null;
 		String[] colorIds = null;
@@ -352,20 +386,26 @@ public class GoodsController {
 		if(null != burning && !"".equals(burning)){
 			burnings = burning.split(",");
 		}
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
-		list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
-				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
-		if(null != list && list.size() > 0){
-			result.setSuccess(true);
-			result.setMsg("筛选成功");
-			result.setObj(list);
-			Page page = new Page(list.size(), pageNow);
-			result.setMeta(page);
-		}else{
-			result.setSuccess(true);
-			result.setObj(list);
-			result.setMsg("数据为空");
+		try{
+			List<ezs_goods> list = new ArrayList<ezs_goods>();
+			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
+					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
+			if(null != list && list.size() > 0){
+				result.setSuccess(true);
+				result.setMsg("筛选成功");
+				result.setObj(list);
+				Page page = new Page(list.size(), pageNow);
+				result.setMeta(page);
+			}else{
+				result.setSuccess(true);
+				result.setObj(list);
+				result.setMsg("数据为空");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("查询异常，数据出错");
 		}
 		return result;
 	}
@@ -380,28 +420,34 @@ public class GoodsController {
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
 		if(null != areaName && !"".equals(areaName)){
-			List<Long> ids = goodsService.areaToId(areaName);
-			//直辖市
-			if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
-				if(null != ids && ids.size()==2){
-					Long id1 = ids.get(0);
-					Long id2 = ids.get(1);
-					if(id1<id2){
-						result.setObj(id2);
-					}else{
-						result.setObj(id1);
+			try{
+				List<Long> ids = goodsService.areaToId(areaName);
+				//直辖市
+				if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
+					if(null != ids && ids.size()==2){
+						Long id1 = ids.get(0);
+						Long id2 = ids.get(1);
+						if(id1<id2){
+							result.setObj(id2);
+						}else{
+							result.setObj(id1);
+						}
 					}
+					result.setSuccess(true);
+					result.setMsg("返回成功");
+				}else if(null != ids && ids.size() != 0){
+					result.setObj(ids.get(0));
+					result.setSuccess(true);
+					result.setMsg("返回成功");
+				}else{
+					result.setObj("");
+					result.setSuccess(true);
+					result.setMsg("数据为空");
 				}
-				result.setSuccess(true);
-				result.setMsg("返回成功");
-			}else if(null != ids && ids.size() != 0){
-				result.setObj(ids.get(0));
-				result.setSuccess(true);
-				result.setMsg("返回成功");
-			}else{
-				result.setObj("");
+			}catch(Exception e){
+				e.printStackTrace();
 				result.setSuccess(false);
-				result.setMsg("查询为空");
+				result.setMsg("查询出错，数据异常");
 			}
 		}else{
 			result.setMsg("参数为空,请传入正确参数");
@@ -420,33 +466,37 @@ public class GoodsController {
 	@ResponseBody
 	public Result colorAndFormList(HttpServletRequest request){
 		Result result = Result.failure();
-		//颜色 
-		List<CurrencyClass> colorList = goodsService.colorList();
-		//形态
-		List<CurrencyClass> formList = goodsService.formList();
-		HashMap<String, Object> map1 = new HashMap<String,Object>();
-		HashMap<String,Object> map2 = new HashMap<String,Object>();
-		map1.put("second", colorList);
-		map1.put("type", "颜色");
-		map2.put("second", formList);
-		map2.put("type", "形态");
-		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
-		list.add(map1);
-		list.add(map2);
-		if(colorList.size() > 0 && null == formList){
-			result.setMsg("颜色有值，形态为空");
-			result.setObj(list);
-			result.setSuccess(true);
-		}
-		if(null == colorList && formList.size()>0){
-			result.setMsg("形态有值，颜色为空");
-			result.setObj(list);
-			result.setSuccess(true);
-		}
-		if(formList.size()>0 && colorList.size() > 0){
-			result.setMsg("颜色形态都有值");
-			result.setObj(list);
-			result.setSuccess(true);
+		try{
+			List<CurrencyClass> colorList = goodsService.colorList();	//颜色
+			List<CurrencyClass> formList = goodsService.formList();	//形态
+			HashMap<String, Object> map1 = new HashMap<String,Object>();
+			HashMap<String,Object> map2 = new HashMap<String,Object>();
+			map1.put("second", colorList);
+			map1.put("type", "颜色");
+			map2.put("second", formList);
+			map2.put("type", "形态");
+			List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+			list.add(map1);
+			list.add(map2);
+			if(colorList.size() > 0 && null == formList){
+				result.setMsg("颜色有值，形态为空");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+			if(null == colorList && formList.size()>0){
+				result.setMsg("形态有值，颜色为空");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+			if(formList.size()>0 && colorList.size() > 0){
+				result.setMsg("颜色形态都有值");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setMsg("查询出错，数据异常");
+			result.setSuccess(false);
 		}
 		return result;
 	}
@@ -613,11 +663,12 @@ public class GoodsController {
 		try {
 			map = goodsService.editGoodsCart(goodsCartId,count,user);
 			Integer ErrorCode = (Integer) map.get("ErrorCode");
+			String msg = map.get("Msg").toString();
 			Map<String,Object> map1=new HashMap<>();
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				result.setSuccess(true);
-			}else{
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_PARAM_ERROR)&&msg.equals("参数传递有误")){
 				result.setSuccess(false);
+			}else{
+				result.setSuccess(true);
 			}
 			result.setMsg(map.get("Msg").toString());
 			map1.put("inventory", map.get("inventory"));
@@ -631,8 +682,8 @@ public class GoodsController {
 	//删除购物车（多选删除）
 	@RequestMapping(value="/deleteToSelfGoodCar")
 	@ResponseBody
-	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String id){
-		String[] ids = id.split(",");
+	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String goodsCartId){
+		String[] ids = goodsCartId.split(",");
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (null == user) {
@@ -963,9 +1014,6 @@ public class GoodsController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		
-		
-		
 		//收货地址
 		Page page = new Page();
 		page.setPageNow(1);

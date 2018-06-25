@@ -42,7 +42,7 @@ public interface ezs_goodsMapper {
 	
 	List<ezs_goods> listByOthers(@Param("color")Long color,@Param("form")Long form,@Param("purpose")String purpose,@Param("source")String source,@Param("burning")String burning,@Param("protection")boolean protection);	
 	
-	int selectCount(Long sellerId);
+	int selectCount(@Param("sellerId")Long sellerId, @Param("status")int status);
 
 	List<ezs_goods> queryGoods(@Param("page")Page page, @Param("sellerId")Long sellerId, @Param("status")int status);
 	
@@ -58,7 +58,7 @@ public interface ezs_goodsMapper {
 	 * @param goodsid
 	 * @return
 	 */
-	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid);
+	GoodsVo  getgoodsinfo(@Param("goodsid")long goodsid,@Param("userid")long userid);
 	/**
 	 * 优品推荐 2
 	 * @author zhaiBin

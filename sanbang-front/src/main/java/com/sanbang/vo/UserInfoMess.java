@@ -13,6 +13,14 @@ import com.sanbang.bean.ezs_userinfo;
 public class UserInfoMess {
 	private ezs_user user;
 	private List<ezs_address> userAddress;
+	private List<String> addressMess;
+	
+	public List<String> getAddressMess() {
+		return addressMess;
+	}
+	public void setAddressMess(List<String> addressMess) {
+		this.addressMess = addressMess;
+	}
 	public ezs_user getUser() {
 		return user;
 	}

@@ -87,6 +87,14 @@
     name, origin, originUrl, pcView, photos, publicTime, remarkValue, staticStatus, status, 
     subheading, tagTitle, thumbnail, titleColor, childEc_id, ec_id, ss_id,  user_id
   </sql>
+  
+  <sql id="ColumnListExceptContent" >
+    id, addTime, deleteStatus, attachment, attribute, author, bold, clickLike, clickRate, 
+    clickRrample, fixedTime, keyWord, linkPort, linkUrl, meta, multimediaFiles, 
+    name, origin, originUrl, pcView, photos, publicTime, staticStatus, status, 
+    subheading, tagTitle, thumbnail, titleColor, childEc_id, ec_id, ss_id,  user_id
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -501,7 +509,7 @@
     select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id) 
   </select>
   
-  
+  <!-- 根据一级栏目直接获取文章报告 -->
   <select id="selectAllGoodsIndustryByPage" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
   	select 
   	<include refid="Base_Column_List" />

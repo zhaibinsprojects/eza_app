@@ -8,28 +8,29 @@
     <result column="give" property="give" jdbcType="INTEGER" />
     <result column="house" property="house" jdbcType="INTEGER" />
     <result column="ezsSubstance_id" property="ezsSubstance_id" jdbcType="BIGINT" />
+    <result column="good_id" property="good_id" jdbcType="BIGINT" />
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, give, house, ezsSubstance_id, user_id
+    id, addTime, deleteStatus, give, house, ezsSubstance_id, good_id, user_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_documentshare
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_documentshare
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_documentshare" >
     insert into ezs_documentshare (id, addTime, deleteStatus, 
       give, house, ezsSubstance_id, 
-      user_id)
+      good_id, user_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{give,jdbcType=INTEGER}, #{house,jdbcType=INTEGER}, #{ezsSubstance_id,jdbcType=BIGINT}, 
-      #{user_id,jdbcType=BIGINT})
+      #{good_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_documentshare" >
     insert into ezs_documentshare
@@ -51,6 +52,9 @@
       </if>
       <if test="ezsSubstance_id != null" >
         ezsSubstance_id,
+      </if>
+      <if test="good_id != null" >
+        good_id,
       </if>
       <if test="user_id != null" >
         user_id,
@@ -75,6 +79,9 @@
       <if test="ezsSubstance_id != null" >
         #{ezsSubstance_id,jdbcType=BIGINT},
       </if>
+      <if test="good_id != null" >
+        #{good_id,jdbcType=BIGINT},
+      </if>
       <if test="user_id != null" >
         #{user_id,jdbcType=BIGINT},
       </if>
@@ -98,6 +105,9 @@
       <if test="ezsSubstance_id != null" >
         ezsSubstance_id = #{ezsSubstance_id,jdbcType=BIGINT},
       </if>
+      <if test="good_id != null" >
+        good_id = #{good_id,jdbcType=BIGINT},
+      </if>
       <if test="user_id != null" >
         user_id = #{user_id,jdbcType=BIGINT},
       </if>
@@ -105,12 +115,13 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_documentshare" >
-    update ezs_documentshare 
+    update ezs_documentshare
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
       give = #{give,jdbcType=INTEGER},
       house = #{house,jdbcType=INTEGER},
       ezsSubstance_id = #{ezsSubstance_id,jdbcType=BIGINT},
+      good_id = #{good_id,jdbcType=BIGINT},
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -129,4 +140,11 @@
     set house = 0
     where good_id = #{gId} and user_id = #{userId}
   </update>
+  <select id="selectByGoodsIdUserid" resultMap="BaseResultMap">
+  	  select 
+    <include refid="Base_Column_List" />
+    from ezs_documentshare
+    where good_id = #{id,jdbcType=BIGINT}  and user_id = #{userid,jdbcType=BIGINT} 
+  </select>
+  
 </mapper>
