@@ -560,14 +560,24 @@ public class AppHomeGoodsMessController {
 			List<ezs_ezssubstance> substanceList = (List<ezs_ezssubstance>) mmp.get("Obj"); 
 			rs = Result.success();
 			//进行字段过滤
-			for (ezs_ezssubstance ss : substanceList) {
+			FieldFilterUtil<ezs_ezssubstance> fieldFilterUtil = new FieldFilterUtil<>();
+			String filterFields = "addTime,id,meta,name";
+			try {
+				//字段过滤公共方法
+				substanceListTemp = fieldFilterUtil.getFieldFilterList(substanceList, filterFields,ezs_ezssubstance.class);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			/*for (ezs_ezssubstance ss : substanceList) {
 				ezs_ezssubstance substanceTemp = new ezs_ezssubstance();
 				substanceTemp.setId(ss.getId());
 				substanceTemp.setAddTime(ss.getAddTime());
 				substanceTemp.setMeta(ss.getMeta());
 				substanceTemp.setName(ss.getName());
 				substanceListTemp.add(substanceTemp);
-			}
+			}*/
 			rs.setObj(substanceListTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{

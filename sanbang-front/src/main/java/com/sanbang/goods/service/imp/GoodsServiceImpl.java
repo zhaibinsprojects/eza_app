@@ -1096,6 +1096,10 @@ public class GoodsServiceImpl implements GoodsService{
 					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
 					if (xaccount > account) {
 						bool = true;
+					}else{
+						//供货不足，更新现有库存量
+						good.setInventory(xaccount);
+						ezs_goodsMapper.updateByPrimaryKey(good);
 					}
 				}
 			} else {
@@ -1104,6 +1108,10 @@ public class GoodsServiceImpl implements GoodsService{
 				double xaccount = StorkNumber(good, good.getInventory());
 				if (xaccount >= account) {
 					bool = true;
+				}else{
+					//供货不足，更新现有库存量
+					good.setInventory(xaccount);
+					ezs_goodsMapper.updateByPrimaryKey(good);
 				}
 			}
 		} catch (Exception e) {
