@@ -430,7 +430,8 @@ public class APPSellerGoodsController {
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		map = sellerGoodsService.queryGoodsListBySellerId(userId, 2, currentPage);
+		int status = 1;
+		map = sellerGoodsService.queryGoodsListBySellerId(userId, status, currentPage);
 		
 		list = (List<ezs_goods>)map.get("Obj");
 		
@@ -451,7 +452,11 @@ public class APPSellerGoodsController {
 		
 		return result;
 	}
-	
+	/**
+	 * 更改价格或库存数量 ,修改前提是货品处于下架状态，所以列表查询直接传值status=1
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/updatePriceAndCnclNum")
 	@ResponseBody
 	public Object updatePriceAndCnclNum(long goodsId, HttpServletRequest request){
