@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="ash_content" property="ash_content" jdbcType="DOUBLE" />
     <result column="bend_strength" property="bend_strength" jdbcType="DOUBLE" />
     <result column="budget" property="budget" jdbcType="DOUBLE" />
@@ -23,18 +24,19 @@
     <result column="shape" property="shape" jdbcType="VARCHAR" />
     <result column="source_type" property="source_type" jdbcType="VARCHAR" />
     <result column="sourcefrom" property="sourcefrom" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="tensile" property="tensile" jdbcType="DOUBLE" />
     <result column="water_content" property="water_content" jdbcType="DOUBLE" />
     <result column="xbforce" property="xbforce" jdbcType="DOUBLE" />
     <result column="category_id" property="category_id" jdbcType="BIGINT" />
+    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, ash_content, bend_strength, budget, colour, combustion_grade, 
+    id, addTime, deleteStatus, address, ash_content, bend_strength, budget, colour, combustion_grade, 
     density, elong_break, flexural_modulus, is_ep, jzforce, melt_index, pre_num, pre_time, 
-    purpose, remark, shape, source_type, sourcefrom, tensile, water_content, xbforce, 
-    category_id, purchaser_id, address
+    purpose, remark, shape, source_type, sourcefrom, status, tensile, water_content, 
+    xbforce, category_id, goods_id, purchaser_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -46,29 +48,29 @@
     delete from ezs_customized
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_customized"  useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_customized" >
     insert into ezs_customized (id, addTime, deleteStatus, 
-      ash_content, bend_strength, budget, 
-      colour, combustion_grade, density, 
-      elong_break, flexural_modulus, is_ep, 
-      jzforce, melt_index, pre_num, 
-      pre_time, purpose, remark, 
-      shape, source_type, sourcefrom, 
-      tensile, water_content, xbforce, 
-      category_id, purchaser_id, address
-      )
+      address, ash_content, bend_strength, 
+      budget, colour, combustion_grade, 
+      density, elong_break, flexural_modulus, 
+      is_ep, jzforce, melt_index, 
+      pre_num, pre_time, purpose, 
+      remark, shape, source_type, 
+      sourcefrom, status, tensile, 
+      water_content, xbforce, category_id, 
+      goods_id, purchaser_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{ash_content,jdbcType=DOUBLE}, #{bend_strength,jdbcType=DOUBLE}, #{budget,jdbcType=DOUBLE}, 
-      #{colour,jdbcType=VARCHAR}, #{combustion_grade,jdbcType=DOUBLE}, #{density,jdbcType=DOUBLE}, 
-      #{elong_break,jdbcType=DOUBLE}, #{flexural_modulus,jdbcType=DOUBLE}, #{is_ep,jdbcType=VARCHAR}, 
-      #{jzforce,jdbcType=DOUBLE}, #{melt_index,jdbcType=DOUBLE}, #{pre_num,jdbcType=DOUBLE}, 
-      #{pre_time,jdbcType=TIMESTAMP}, #{purpose,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{shape,jdbcType=VARCHAR}, #{source_type,jdbcType=VARCHAR}, #{sourcefrom,jdbcType=VARCHAR}, 
-      #{tensile,jdbcType=DOUBLE}, #{water_content,jdbcType=DOUBLE}, #{xbforce,jdbcType=DOUBLE}, 
-      #{category_id,jdbcType=BIGINT}, #{purchaser_id,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}
-      )
+      #{address,jdbcType=VARCHAR}, #{ash_content,jdbcType=DOUBLE}, #{bend_strength,jdbcType=DOUBLE}, 
+      #{budget,jdbcType=DOUBLE}, #{colour,jdbcType=VARCHAR}, #{combustion_grade,jdbcType=DOUBLE}, 
+      #{density,jdbcType=DOUBLE}, #{elong_break,jdbcType=DOUBLE}, #{flexural_modulus,jdbcType=DOUBLE}, 
+      #{is_ep,jdbcType=VARCHAR}, #{jzforce,jdbcType=DOUBLE}, #{melt_index,jdbcType=DOUBLE}, 
+      #{pre_num,jdbcType=DOUBLE}, #{pre_time,jdbcType=TIMESTAMP}, #{purpose,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{shape,jdbcType=VARCHAR}, #{source_type,jdbcType=VARCHAR}, 
+      #{sourcefrom,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{tensile,jdbcType=DOUBLE}, 
+      #{water_content,jdbcType=DOUBLE}, #{xbforce,jdbcType=DOUBLE}, #{category_id,jdbcType=BIGINT}, 
+      #{goods_id,jdbcType=BIGINT}, #{purchaser_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized"  useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized" >
     insert into ezs_customized
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -79,6 +81,9 @@
       </if>
       <if test="deleteStatus != null" >
         deleteStatus,
+      </if>
+      <if test="address != null" >
+        address,
       </if>
       <if test="ash_content != null" >
         ash_content,
@@ -134,6 +139,9 @@
       <if test="sourcefrom != null" >
         sourcefrom,
       </if>
+      <if test="status != null" >
+        status,
+      </if>
       <if test="tensile != null" >
         tensile,
       </if>
@@ -146,11 +154,11 @@
       <if test="category_id != null" >
         category_id,
       </if>
+      <if test="goods_id != null" >
+        goods_id,
+      </if>
       <if test="purchaser_id != null" >
         purchaser_id,
-      </if>
-      <if test="address != null" >
-        address,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -162,6 +170,9 @@
       </if>
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
       </if>
       <if test="ash_content != null" >
         #{ash_content,jdbcType=DOUBLE},
@@ -217,6 +228,9 @@
       <if test="sourcefrom != null" >
         #{sourcefrom,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
       <if test="tensile != null" >
         #{tensile,jdbcType=DOUBLE},
       </if>
@@ -229,11 +243,11 @@
       <if test="category_id != null" >
         #{category_id,jdbcType=BIGINT},
       </if>
+      <if test="goods_id != null" >
+        #{goods_id,jdbcType=BIGINT},
+      </if>
       <if test="purchaser_id != null" >
         #{purchaser_id,jdbcType=BIGINT},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -245,6 +259,9 @@
       </if>
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="ash_content != null" >
         ash_content = #{ash_content,jdbcType=DOUBLE},
@@ -300,6 +317,9 @@
       <if test="sourcefrom != null" >
         sourcefrom = #{sourcefrom,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
       <if test="tensile != null" >
         tensile = #{tensile,jdbcType=DOUBLE},
       </if>
@@ -312,11 +332,11 @@
       <if test="category_id != null" >
         category_id = #{category_id,jdbcType=BIGINT},
       </if>
+      <if test="goods_id != null" >
+        goods_id = #{goods_id,jdbcType=BIGINT},
+      </if>
       <if test="purchaser_id != null" >
         purchaser_id = #{purchaser_id,jdbcType=BIGINT},
-      </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -325,6 +345,7 @@
     update ezs_customized
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      address = #{address,jdbcType=VARCHAR},
       ash_content = #{ash_content,jdbcType=DOUBLE},
       bend_strength = #{bend_strength,jdbcType=DOUBLE},
       budget = #{budget,jdbcType=DOUBLE},
@@ -343,12 +364,13 @@
       shape = #{shape,jdbcType=VARCHAR},
       source_type = #{source_type,jdbcType=VARCHAR},
       sourcefrom = #{sourcefrom,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
       tensile = #{tensile,jdbcType=DOUBLE},
       water_content = #{water_content,jdbcType=DOUBLE},
       xbforce = #{xbforce,jdbcType=DOUBLE},
       category_id = #{category_id,jdbcType=BIGINT},
-      purchaser_id = #{purchaser_id,jdbcType=BIGINT},
-      address = #{address,jdbcType=VARCHAR}
+      goods_id = #{goods_id,jdbcType=BIGINT},
+      purchaser_id = #{purchaser_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   

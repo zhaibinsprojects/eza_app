@@ -1,5 +1,6 @@
 package com.sanbang.app.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -178,6 +179,79 @@ public class AppHomeGoodsMessController {
 		return rs;
 	}
 	/**
+	 * 获取商品分类（一二三级别）
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/getAllGoodClassGroupByLevel") 
+	@ResponseBody
+	public Object getAllGoodClassGroupByLevel(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		List<ezs_goods_class> goodsClassList = null;
+		List<ezs_goods_class> secondGoodsClassList = new ArrayList<>();
+		Result rs = null;
+		mmp = this.goodsClassService.queryChildNodes();
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			goodsClassList = (List<ezs_goods_class>) mmp.get("Obj");
+			//过滤字段
+			for (ezs_goods_class goodclass : goodsClassList) {
+				ezs_goods_class goodclassSecond = new ezs_goods_class();
+				List<ezs_goods_class> thirdGoodClassList = new ArrayList<>();
+				List<ezs_goods_class> thirdGoodClassListTemp = new ArrayList<>();
+				goodclassSecond.setId(goodclass.getId());
+				goodclassSecond.setName(goodclass.getName());
+				//获取子节点集合
+				thirdGoodClassList = goodclass.getChildNodeList();
+				for (ezs_goods_class thirdGoodClass : thirdGoodClassList) {
+					ezs_goods_class thirdGoodClassTemp = new ezs_goods_class();
+					thirdGoodClassTemp.setId(thirdGoodClass.getId());
+					//防止因name为null导致字段不显示，传入String对象
+					thirdGoodClassTemp.setName(new String(thirdGoodClass.getName()==null?"  ":thirdGoodClass.getName()));
+					thirdGoodClassListTemp.add(thirdGoodClassTemp);
+				}
+				goodclassSecond.setChildNodeList(thirdGoodClassListTemp);
+				secondGoodsClassList.add(goodclassSecond);
+			}
+			rs = Result.success();
+			rs.setObj(secondGoodsClassList);
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 颜色列表+形态列表
+	 * @author zhaibin
+	 * @return
+	 */
+	@RequestMapping("/getColorAndFormList") 
+	@ResponseBody
+	public Object getColorAndFormList(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		mmp = this.goodsClassService.queryGoodColorAndForm();
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg(mmp.get("Msg").toString());
+			mmp.remove("ErrorCode");
+			mmp.remove("Msg");
+			rs.setObj(mmp);
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	
+	
+	/**
 	 * 返回全部首页相关内容
 	 * @author zhaiBin
 	 * @param request
@@ -190,6 +264,7 @@ public class AppHomeGoodsMessController {
 	@RequestMapping("/getFirstPageMessage")
 	@ResponseBody
 	public Object getFirstPageMessage(HttpServletRequest request,HttpServletResponse response,String addressId,String currentPage){
+		response.setCharacterEncoding("UTF-8");
 		HomePageMessInfo homePageMessInfo = new HomePageMessInfo();
 		Result rs = null;
 		Result goodsInfo = null;
@@ -394,7 +469,19 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices = new Advices();
 		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		advices.setPath("http://10.10.10.148/front/resource/indeximg/首页-1_13.png");
+		
+		String str = "http://10.10.10.148/front/resource/indeximg/首页-1_13.png";
+		String strTemp = "";
+		// 2.以UTF-8编码方式获取str的字节数组，再以默认编码构造字符串
+		try {
+			strTemp = new String(str.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.error("字符串转码失败");
+			log.error(e.getMessage());
+		}
+		advices.setPath(strTemp);
 		advices.setpName("首页-1_13.png");
 		advices.setLink("");
 		advices.setContent("标题展示");
@@ -422,7 +509,7 @@ public class AppHomeGoodsMessController {
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
 			List<ezs_column> columnListTemp = new ArrayList<>();
 			//进行字段过滤
-			for (ezs_column tcolumn : columnList) {
+			/*for (ezs_column tcolumn : columnList) {
 				ezs_column columnTemp = new ezs_column();
 				columnTemp.setColumnLevel(tcolumn.getColumnLevel());
 				columnTemp.setId(tcolumn.getId());
@@ -430,21 +517,18 @@ public class AppHomeGoodsMessController {
 				columnTemp.setTitle(tcolumn.getTitle());
 				columnTemp.setParentEzsColumn_id(tcolumn.getParentEzsColumn_id());
 				columnListTemp.add(columnTemp);
-			}
+			}*/
 			//进行显示字段的过滤,暂不启用
-			/*FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
-			String filterFields = "ColumnLevel,Id,Name";
+			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
+			String filterFields = "ColumnLevel,Id,Name,Title,ParentEzsColumn_id";
 			try {
 				//字段过滤公共方法
-				fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
+				columnListTemp = fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
 				
-			} catch (InstantiationException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+			}
 			rs = Result.success();
 			rs.setObj(columnListTemp);
 			rs.setMsg(mmp.get("Msg").toString());

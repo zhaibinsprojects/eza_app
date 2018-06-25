@@ -61,9 +61,15 @@ public class AppHomeCustomerController {
 	 */
 	@RequestMapping("/getUserAddressInfo")
 	@ResponseBody
-	public Object getUserMess(HttpServletRequest request,HttpServletResponse response,ezs_user user){
+	public Object getUserMessInfo(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(user==null){
+			rs = Result.failure();
+			rs.setMsg("未登录");
+			return rs;
+		}
 		mmp = this.customerService.getUserMessByUser(user);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

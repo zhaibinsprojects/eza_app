@@ -23,4 +23,6 @@ public interface ezs_goods_classMapper {
     List<ezs_goods_class> selectAllGoodClass();
 
     List<ezs_goods_class> selectAllGoodClassByLevel(String level);
+    
+    List<ezs_goods_class> selectAllChildNodeExceptFirst();
 }

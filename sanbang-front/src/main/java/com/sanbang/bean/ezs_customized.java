@@ -9,6 +9,8 @@ public class ezs_customized {
 
     private Boolean deleteStatus;
 
+    private String address;
+
     private Double ash_content;
 
     private Double bend_strength;
@@ -45,6 +47,8 @@ public class ezs_customized {
 
     private String sourcefrom;
 
+    private String status;
+
     private Double tensile;
 
     private Double water_content;
@@ -53,9 +57,9 @@ public class ezs_customized {
 
     private Long category_id;
 
-    private Long purchaser_id;
+    private Long goods_id;
 
-    private String address;
+    private Long purchaser_id;
 
     public Long getId() {
         return id;
@@ -79,6 +83,14 @@ public class ezs_customized {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
     }
 
     public Double getAsh_content() {
@@ -225,6 +237,14 @@ public class ezs_customized {
         this.sourcefrom = sourcefrom == null ? null : sourcefrom.trim();
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
     public Double getTensile() {
         return tensile;
     }
@@ -257,19 +277,19 @@ public class ezs_customized {
         this.category_id = category_id;
     }
 
+    public Long getGoods_id() {
+        return goods_id;
+    }
+
+    public void setGoods_id(Long goods_id) {
+        this.goods_id = goods_id;
+    }
+
     public Long getPurchaser_id() {
         return purchaser_id;
     }
 
     public void setPurchaser_id(Long purchaser_id) {
         this.purchaser_id = purchaser_id;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address == null ? null : address.trim();
     }
 }

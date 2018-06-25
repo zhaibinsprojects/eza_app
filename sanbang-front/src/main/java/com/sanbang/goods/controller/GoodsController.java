@@ -193,42 +193,57 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 预约预定（待完善）
+	 * 预约预定（已改）
 	 * @param request
-	 * @param customized 预约实体类 
+	 * @param customized 预约实体类（前端传的参数：描述remark，数量pre_num，要货时间pre_time，采购预算budget，商品id：goods_id）
+	 * 参数是这几个参数，需要跟前端约定字段名称（必须是这几个名称，否则塞不进实体中，跟前端以及app商量一哈儿）
 	 * @return
 	 */
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
-		
-		if(null != customized.getId()){
-			
-			
-		}
-		
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
-		//加入预约定制
-		int n = goodsService.insertCustomized(customized);
-		Long id = customized.getId();
-		ezs_customized_record record = new ezs_customized_record();
-		record.setId(id);
-		record.setAddTime(new Date());
-		record.setDeleteStatus(false);
-		record.setOperater_id(user.getId());
-		record.setPurchaser_id(user.getId());
-		int m = goodsService.insertCustomizedRecord(record);
-		if(n > 0 && m > 0){
-			result.setMsg("添加成功");
-			result.setSuccess(true);
-		}
-		if(n > 0 && m <= 0){
-			result.setMsg("添加成功，但记录失败");
-			result.setSuccess(true);
-		}
-		if(n > 0 && m <= 0){
-			result.setMsg("添加失败，但插入了记录");
+		String goodsId = customized.getGoods_id().toString();
+		if(null != goodsId && "".equals(goodsId)){
+			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
+			if(null != goods){
+				customized.setAddress(goods.getAddess());
+				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				customized.setDensity(Double.valueOf(goods.getDensity()));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				customized.setPurpose(goods.getPurpose());
+				customized.setShape(goods.getForm_id().toString());	//同理
+				//剩下的需要塞的字段，劳烦彬哥了
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("改商品不存在");
+				result.setSuccess(false);
+				return result;
+			}
+			try{
+				if(null != customized.getRemark() && null != customized.getRemark() && null != customized.getPre_num() && null != customized.getPre_time()){
+					//加入预约定制
+					Map<String,Object> map = goodsService.insertCustomized(customized,user);
+					if(map.get("Msg").equals("插入成功")){
+						result.setMsg("插入成功");
+						result.setSuccess(true);
+					}
+					if(map.get("Msg").equals("插入失败")){
+						result.setMsg("插入失败");
+						result.setSuccess(false);
+					}
+				}else{
+					result.setMsg("请将信息填写完整");
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				}
+			}catch(Exception e){
+				result.setMsg("插入出错，数据异常");
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
+		}else{
+			result.setMsg("参数为空，请重新添加数据");
 			result.setSuccess(false);
 		}
 		return result;
@@ -386,20 +401,26 @@ public class GoodsController {
 		if(null != burning && !"".equals(burning)){
 			burnings = burning.split(",");
 		}
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
-		list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
-				lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
-		if(null != list && list.size() > 0){
-			result.setSuccess(true);
-			result.setMsg("筛选成功");
-			result.setObj(list);
-			Page page = new Page(list.size(), pageNow);
-			result.setMeta(page);
-		}else{
-			result.setSuccess(true);
-			result.setObj(list);
-			result.setMsg("数据为空");
+		try{
+			List<ezs_goods> list = new ArrayList<ezs_goods>();
+			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
+					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
+			if(null != list && list.size() > 0){
+				result.setSuccess(true);
+				result.setMsg("筛选成功");
+				result.setObj(list);
+				Page page = new Page(list.size(), pageNow);
+				result.setMeta(page);
+			}else{
+				result.setSuccess(true);
+				result.setObj(list);
+				result.setMsg("数据为空");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("查询异常，数据出错");
 		}
 		return result;
 	}
@@ -414,28 +435,34 @@ public class GoodsController {
 	public Result areaToId(HttpServletRequest request,String areaName){
 		Result result = Result.failure();
 		if(null != areaName && !"".equals(areaName)){
-			List<Long> ids = goodsService.areaToId(areaName);
-			//直辖市
-			if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
-				if(null != ids && ids.size()==2){
-					Long id1 = ids.get(0);
-					Long id2 = ids.get(1);
-					if(id1<id2){
-						result.setObj(id2);
-					}else{
-						result.setObj(id1);
+			try{
+				List<Long> ids = goodsService.areaToId(areaName);
+				//直辖市
+				if(areaName.contains("北京")||areaName.contains("上海")||areaName.contains("天津")||areaName.contains("重庆")){
+					if(null != ids && ids.size()==2){
+						Long id1 = ids.get(0);
+						Long id2 = ids.get(1);
+						if(id1<id2){
+							result.setObj(id2);
+						}else{
+							result.setObj(id1);
+						}
 					}
+					result.setSuccess(true);
+					result.setMsg("返回成功");
+				}else if(null != ids && ids.size() != 0){
+					result.setObj(ids.get(0));
+					result.setSuccess(true);
+					result.setMsg("返回成功");
+				}else{
+					result.setObj("");
+					result.setSuccess(true);
+					result.setMsg("数据为空");
 				}
-				result.setSuccess(true);
-				result.setMsg("返回成功");
-			}else if(null != ids && ids.size() != 0){
-				result.setObj(ids.get(0));
-				result.setSuccess(true);
-				result.setMsg("返回成功");
-			}else{
-				result.setObj("");
+			}catch(Exception e){
+				e.printStackTrace();
 				result.setSuccess(false);
-				result.setMsg("查询为空");
+				result.setMsg("查询出错，数据异常");
 			}
 		}else{
 			result.setMsg("参数为空,请传入正确参数");
@@ -454,33 +481,37 @@ public class GoodsController {
 	@ResponseBody
 	public Result colorAndFormList(HttpServletRequest request){
 		Result result = Result.failure();
-		//颜色 
-		List<CurrencyClass> colorList = goodsService.colorList();
-		//形态
-		List<CurrencyClass> formList = goodsService.formList();
-		HashMap<String, Object> map1 = new HashMap<String,Object>();
-		HashMap<String,Object> map2 = new HashMap<String,Object>();
-		map1.put("second", colorList);
-		map1.put("type", "颜色");
-		map2.put("second", formList);
-		map2.put("type", "形态");
-		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
-		list.add(map1);
-		list.add(map2);
-		if(colorList.size() > 0 && null == formList){
-			result.setMsg("颜色有值，形态为空");
-			result.setObj(list);
-			result.setSuccess(true);
-		}
-		if(null == colorList && formList.size()>0){
-			result.setMsg("形态有值，颜色为空");
-			result.setObj(list);
-			result.setSuccess(true);
-		}
-		if(formList.size()>0 && colorList.size() > 0){
-			result.setMsg("颜色形态都有值");
-			result.setObj(list);
-			result.setSuccess(true);
+		try{
+			List<CurrencyClass> colorList = goodsService.colorList();	//颜色
+			List<CurrencyClass> formList = goodsService.formList();	//形态
+			HashMap<String, Object> map1 = new HashMap<String,Object>();
+			HashMap<String,Object> map2 = new HashMap<String,Object>();
+			map1.put("second", colorList);
+			map1.put("type", "颜色");
+			map2.put("second", formList);
+			map2.put("type", "形态");
+			List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+			list.add(map1);
+			list.add(map2);
+			if(colorList.size() > 0 && null == formList){
+				result.setMsg("颜色有值，形态为空");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+			if(null == colorList && formList.size()>0){
+				result.setMsg("形态有值，颜色为空");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+			if(formList.size()>0 && colorList.size() > 0){
+				result.setMsg("颜色形态都有值");
+				result.setObj(list);
+				result.setSuccess(true);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setMsg("查询出错，数据异常");
+			result.setSuccess(false);
 		}
 		return result;
 	}
