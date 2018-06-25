@@ -145,6 +145,16 @@ public interface GoodsService {
 	public Map<String, Object> preOrderFormFunc(ezs_user user,String orderType,Long goodsCartId);
 	
 	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp);
+	/**
+	 * 立即购买
+	 * @author zhaibin
+	 * @param user
+	 * @param orderType
+	 * @param goodId
+	 * @param count
+	 * @return
+	 */
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user,String orderType,Long goodId,Long count);
 	
 	
 	/**

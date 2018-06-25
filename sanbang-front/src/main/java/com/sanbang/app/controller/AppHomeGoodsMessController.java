@@ -509,7 +509,7 @@ public class AppHomeGoodsMessController {
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
 			List<ezs_column> columnListTemp = new ArrayList<>();
 			//进行字段过滤
-			for (ezs_column tcolumn : columnList) {
+			/*for (ezs_column tcolumn : columnList) {
 				ezs_column columnTemp = new ezs_column();
 				columnTemp.setColumnLevel(tcolumn.getColumnLevel());
 				columnTemp.setId(tcolumn.getId());
@@ -517,21 +517,18 @@ public class AppHomeGoodsMessController {
 				columnTemp.setTitle(tcolumn.getTitle());
 				columnTemp.setParentEzsColumn_id(tcolumn.getParentEzsColumn_id());
 				columnListTemp.add(columnTemp);
-			}
+			}*/
 			//进行显示字段的过滤,暂不启用
-			/*FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
-			String filterFields = "ColumnLevel,Id,Name";
+			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
+			String filterFields = "ColumnLevel,Id,Name,Title,ParentEzsColumn_id";
 			try {
 				//字段过滤公共方法
-				fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
+				columnListTemp = fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
 				
-			} catch (InstantiationException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+			}
 			rs = Result.success();
 			rs.setObj(columnListTemp);
 			rs.setMsg(mmp.get("Msg").toString());

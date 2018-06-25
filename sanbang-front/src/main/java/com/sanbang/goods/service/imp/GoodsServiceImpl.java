@@ -1194,4 +1194,13 @@ public class GoodsServiceImpl implements GoodsService{
 		tempMap.put("Obj", goodsInfoList);
 		return tempMap;
 	}
+	/**
+	 * 立即购买
+	 * @author zhaibin
+	 */
+	@Override
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user, String orderType, Long goodId, Long count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

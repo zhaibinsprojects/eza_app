@@ -1,52 +1,144 @@
 package com.sanbang.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import java.lang.reflect.Field;
-
+import com.sanbang.bean.ezs_goods;
 /**
- * 对List<T>泛型集合T类型进行内部字段过滤
+ * 集合字段过滤
  * @author zhaibin
- * @param <E>
+ * @param <T>
  */
-public class FieldFilterUtil<T>{
-	
-	private static Logger log = Logger.getLogger(FieldFilterUtil.class);
-	
-	@SuppressWarnings({ "unused", "unchecked" })
-	public List<T> getFieldFilterList(List<T> list,String filterFields,Class<?> clazz) throws InstantiationException,IllegalAccessException {
+public class FieldFilterUtil<T> {
+	/**
+	 * 字段过滤 
+	 * @author zhaibin
+	 * @param list
+	 * @param filterFields
+	 * @param clazz
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	public List<T> getFieldFilterList(List<T> list,String filterFields,Class<T> clazz) 
+			throws Exception {
 		List<T> tempList = new ArrayList<>();
 		if(list.size()<=0){
-			System.out.println(" ");
-			return null;
+			return tempList;
 		}
 		if(filterFields==null||filterFields.trim().equals("")){
-			log.info("过滤地段为NUll");
-			return null;
+			return tempList;
 		}
 		//获取字段数组
 		Field[] fields = clazz.getDeclaredFields();
-		//取消每个属性的安全检查 ,否則无法获取private字段值
-        for(Field f:fields){  
-            f.setAccessible(true);  
-        }  
 		for (int i=0;i<list.size();i++) {
-			//T object = (T) clazz.getClass().getDeclaredFields()
-			//Object ob = new Object();
-			//fields[i].set(obj, value);
-			
-			
+			//创建对象
+			T ob = clazz.newInstance();
 			for (Field field : fields) {
-				System.out.println(field.getName()+" "+field.get(list.get(i)));
+				//取消每个属性的安全检查 ,否則无法获取private字段值
+				field.setAccessible(true);  
+				//存在即保留（确定需要筛选出来的字段）
+				if(filterFields.indexOf(field.getName())<0)
+					continue;
+				
+				/*//字段名称
+				field.getName();
+				//字段值
+				field.get(list.get(i));*/
+				
+				//获取字段的属性
+				String type = field.getGenericType().toString();
+				Class typeTemp = getFieldType(type);
+				
+				//获取属性名称
+				String name = field.getName();
+				String fieldName = name.substring(0, 1).toUpperCase()+name.substring(1,name.length());
+				//读取字段值,暂时不用
+				//Method methodGet = ob.getClass().getMethod("get"+fieldName);
+				//String value = (String) methodGet.invoke(ob);
+				//设置字段值
+				Method methodSet = ob.getClass().getMethod("set"+fieldName, typeTemp);
+				methodSet.invoke(ob,field.get(list.get(i)));
 			}
-			//tempList.add();
+			tempList.add(ob);
 		}
 		return tempList;
 	}
+	/**
+	 * 返回字段类型
+	 * @author zhaibin
+	 * @param type
+	 * @return
+	 */
+	public static Class getFieldType(String type){
+		Class typeTemp = null;
+		if(type.equals("class java.lang.String"))
+			typeTemp = String.class;
+		else if(type.equals("class java.lang.Integer"))
+			typeTemp = Integer.class;
+		else if(type.equals("class java.lang.Boolean"))
+			typeTemp = Boolean.class;
+		else if(type.equals("class java.util.Date"))
+			typeTemp = java.util.Date.class;
+		else if(type.equals("class java.lang.Double"))
+			typeTemp = Double.class;
+		else if(type.equals("class java.lang.Long"))
+			typeTemp = Long.class;
+		else
+			typeTemp = Object.class;
+		return typeTemp;
+	}
+	
+	/**
+	 * 测试类
+	 * @param args
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	public static void main(String[] args) throws Exception {
 
-
-
+		List<ezs_goods> userList = new ArrayList<>();
+		ezs_goods good01 = new ezs_goods();
+		ezs_goods good02 = new ezs_goods();
+		ezs_goods good03 = new ezs_goods();
+		good01.setName("zhang001");
+		good01.setAddess("河南");
+		good01.setAddTime(new Date());
+		good02.setName("zhang002");
+		good02.setAddess("北京");
+		good02.setAddTime(new Date());
+		good03.setName("zhang003");
+		good03.setAddess("罗亚");
+		good03.setAddTime(new Date());
+		userList.add(good01);
+		userList.add(good02);
+		userList.add(good03);
+		
+		FieldFilterUtil<ezs_goods> fieldFilterUtil = new FieldFilterUtil<>();
+		String filterFields = "name,addess,addtime";
+		//String filterFields = "name";
+		try {
+			List<ezs_goods> ulist = fieldFilterUtil.getFieldFilterList(userList, filterFields, ezs_goods.class);
+			for (ezs_goods ezsGoods : ulist) {
+				System.out.println("过滤的结果："+ezsGoods);
+			}
+			
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
