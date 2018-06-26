@@ -167,4 +167,6 @@ public interface GoodsService {
 	
 	//根据商品id查询单个
 	public ezs_goods selectByPrimaryKey(Long id);
+	
+	public Map<String, Object> modifyGoodCars(Long[] goodsCartIds,Double[] counts,ezs_user user);
 }

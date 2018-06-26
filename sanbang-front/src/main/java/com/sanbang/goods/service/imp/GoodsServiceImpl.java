@@ -1339,4 +1339,19 @@ public class GoodsServiceImpl implements GoodsService{
 	public ezs_goods selectByPrimaryKey(Long id){
 		return ezs_goodsMapper.selectByPrimaryKey(id);
 	}
+	/**
+	 * 修改购物车信息
+	 * @author zhaibin
+	 */
+	@Override
+	public Map<String, Object> modifyGoodCars(Long[] goodsCartIds, Double[] counts, ezs_user user) {
+		// TODO Auto-generated method stub
+		for (int i=0;i<goodsCartIds.length;i++) {
+			this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartIds[i]);
+			//this.storecartMapper.selectByPrimaryKey(id);
+			
+		}
+		
+		return null;
+	}
 }

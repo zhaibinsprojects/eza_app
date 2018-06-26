@@ -1067,6 +1067,29 @@ public class AppGoodsController {
 		}
 		return rs;
 	}
+	/**
+	 * 修改购物车数据并返回库存信息
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param goodCarIds 购物车ID数组（以“，”隔开）
+	 * @param goodCounts 购物车商品数量数组（以“，”隔开）
+	 * @return
+	 */
+	@RequestMapping("/modifyGoodCars")
+	@ResponseBody
+	public Object modifyGoodCars(HttpServletRequest request,HttpServletResponse response,String goodCarIds,String goodCounts){
+		Result rs = null;
+		String[] goodCarIDArray = goodCarIds.trim().split(",");
+		String[] goodCountsArray = goodCounts.trim().split(",");
+		if(goodCarIDArray.length<0||goodCountsArray.length<0||goodCarIDArray.length!=goodCountsArray.length){
+			rs = Result.failure();
+			rs.setObj(" ");
+			rs.setMsg("传入数据有误！");
+		}
+		
+		return rs;
+	}
 	
 	
 	/**
