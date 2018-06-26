@@ -1,6 +1,8 @@
 package com.sanbang.vo;
 
 import com.sanbang.bean.ezs_accessory;
+import com.sanbang.bean.ezs_area;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_goods;
 
 public class GoodsInfo extends ezs_goods{
@@ -18,7 +20,22 @@ public class GoodsInfo extends ezs_goods{
     private String pictureName;	//图片名称
     private String picturePath;	//图片路径
     
+    private ezs_dict util;// 单位
+    private ezs_area area;// 商品库存区县
+    
 	
+	public ezs_dict getUtil() {
+		return util;
+	}
+	public void setUtil(ezs_dict util) {
+		this.util = util;
+	}
+	public ezs_area getArea() {
+		return area;
+	}
+	public void setArea(ezs_area area) {
+		this.area = area;
+	}
 	public String getColorName() {
 		return colorName;
 	}

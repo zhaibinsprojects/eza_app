@@ -65,6 +65,6 @@ public interface ezs_goodsMapper {
 	 * @param page
 	 * @return
 	 */
-	List<GoodsVo> goodsIntroduceTwo(Page page);
+	List<GoodsInfo> goodsIntroduceTwo(Page page);
 
 }

@@ -99,7 +99,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
 		if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
-			List<GoodsVo> glist = this.goodsMapper.goodsIntroduceTwo(page);
+			List<GoodsInfo> glist = this.goodsMapper.goodsIntroduceTwo(page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", glist);

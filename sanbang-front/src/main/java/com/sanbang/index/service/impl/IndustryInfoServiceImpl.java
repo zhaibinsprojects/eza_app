@@ -98,4 +98,32 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 		}
 		return mmp;
 	}
+
+	@Override
+	public Map<String, Object> getEssayBySecondTheme(Long parentKindsId, String currentPage) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>(); 
+		//获取总页数
+		int totalCount = this.ezssubstanceMapper.goodsAllIndustryCount(parentKindsId); 
+		if(totalCount>0){
+			ExPage page = new ExPage(totalCount, Integer.valueOf(currentPage)); 
+			page.setPageSize(10);
+			page.setContent(String.valueOf(parentKindsId));
+			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
+				//List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectAllGoodsIndustryByPage(page);
+				List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectEssayThemeByPage(page);
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Page", page);
+				mmp.put("Obj", glist);
+			}else{
+				mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+				mmp.put("Msg", "页码越界");
+				mmp.put("Page", page);
+			}
+		}else{
+			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_KIND_ERROR);
+			mmp.put("Msg", "查询类型有误");
+		}
+		return mmp;
+	}
 }

@@ -28,4 +28,7 @@ public interface ezs_ezssubstanceMapper {
     int goodsAllIndustryCount(Long parentKindId);
     
     List<ezs_ezssubstance> selectAllGoodsIndustryByPage(ExPage page);
+    
+    List<ezs_ezssubstance> selectEssayThemeByPage(ExPage page);
+    
 }
