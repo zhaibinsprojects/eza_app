@@ -57,6 +57,7 @@
   <resultMap id="BaseResultMap1" type="com.sanbang.vo.GoodsListInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+    <result column="inventory" jdbcType="DOUBLE" property="inventory" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="status" jdbcType="INTEGER" property="status" />
@@ -644,6 +645,7 @@
   	A.name,
   	A.price,
   	A.cncl_num,
+  	A.inventory,
   	A.status status,
   	B.status audit_status,
   	B.priceStatus priceStatus

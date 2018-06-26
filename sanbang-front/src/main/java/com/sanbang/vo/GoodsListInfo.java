@@ -8,6 +8,8 @@ public class GoodsListInfo {
 	
 	private Double cncl_num;
 	
+	private Double inventory;
+	
 	private String name;
 	
 	private BigDecimal price;
@@ -32,6 +34,14 @@ public class GoodsListInfo {
 
 	public void setCncl_num(Double cncl_num) {
 		this.cncl_num = cncl_num;
+	}
+
+	public Double getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Double inventory) {
+		this.inventory = inventory;
 	}
 
 	public String getName() {

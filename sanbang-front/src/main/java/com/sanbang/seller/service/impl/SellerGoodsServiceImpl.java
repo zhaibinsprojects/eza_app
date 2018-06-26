@@ -136,7 +136,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String price = request.getParameter("price");// 价格
 				String validity = request.getParameter("validity");// 有效期
 				String cncl_num = request.getParameter("cncl_num");//样品库存数量
-				String inventory = request.getParameter("inventory");// 库存
+				String inventory = request.getParameter("inventory");//商品库存数量
 				String area_id = request.getParameter("area_id");// 库存地区（县市）
 				String addess = request.getParameter("addess");// 库存地区详细地址
 				String supply_id = request.getParameter("supply_id");// 供应情况（是否稳定供货）
@@ -515,7 +515,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String price = request.getParameter("price");// 价格
 				String validity = request.getParameter("validity");// 有效期
 				String cncl_num = request.getParameter("cncl_num");//样品库存数量
-				String inventory = request.getParameter("inventory");// 库存
+				String inventory = request.getParameter("inventory");// 货品库存量
 				String area_id = request.getParameter("area_id");// 库存地区（县市）
 				String addess = request.getParameter("addess");// 库存地区详细地址
 				String supply_id = request.getParameter("supply_id");// 供应情况（是否稳定供货）
@@ -695,12 +695,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	public Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request) {
 		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 		
-		String cncl_num = request.getParameter("cncl_num");//样品库存数量
+		String inventory = request.getParameter("inventory");//样品库存数量
 		String price = request.getParameter("price");// 价格
-		if (null == cncl_num || cncl_num.equals("")) {
-			goods.setCncl_num((double)0);
-		}else{
-			goods.setCncl_num(Double.valueOf(cncl_num));
+		if (Tools.isEmpty(inventory)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入货品库存");
 		}
 		if (Tools.isEmpty(price)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -712,6 +712,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				result.setMsg("请输入有效货品价格");
 			}
 		}
+		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
 		goodsMapper.updateByPrimaryKeySelective(goods);
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
