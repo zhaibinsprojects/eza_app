@@ -1389,7 +1389,6 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	private boolean checkGoodNativeInventory(ezs_goodscart goodCar,ezs_goods good){
 		log.info("获取商品实际库存。。。。。");
-		Map<String, Object> mmp = new HashMap<>();
 		double account = goodCar.getCount();// 购买量
 		boolean bool = false;
 		try {
@@ -1416,9 +1415,9 @@ public class GoodsServiceImpl implements GoodsService{
 				log.info("非自营商品，不访问U8库存信息。。。。。。。。。");
 				double xaccount = StorkNumber(good, good.getInventory());
 				if (xaccount >= account) {
-					//更新下库存
-					good.setInventory(xaccount);
-					ezs_goodsMapper.updateByPrimaryKey(good);
+					//校验不可更新本地库存
+					//good.setInventory(xaccount);
+					//ezs_goodsMapper.updateByPrimaryKey(good);
 					bool = true;
 				}else{
 					//供货不足，本为校验-不更新库存
