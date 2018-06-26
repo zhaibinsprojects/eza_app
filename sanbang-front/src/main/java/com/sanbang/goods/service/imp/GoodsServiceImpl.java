@@ -1030,7 +1030,7 @@ public class GoodsServiceImpl implements GoodsService{
 			//from ezs_stock e where e.status = '0' and e.goodid = #{goodId} and e.goodClass = #{ckType}
 			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
 			for (ezs_stock stock : stocks) {
-				stock_num += CommUtil.add(stock.getBuyNum(), stock_num);
+				stock_num = CommUtil.add(stock.getBuyNum(), stock_num);
 			}
 			Double InventoryTemp = CommUtil.subtract(iQuantity, stock_num);
 			return InventoryTemp;
@@ -1096,6 +1096,10 @@ public class GoodsServiceImpl implements GoodsService{
 					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
 					if (xaccount > account) {
 						bool = true;
+					}else{
+						//供货不足，更新现有库存量
+						good.setInventory(xaccount);
+						ezs_goodsMapper.updateByPrimaryKey(good);
 					}
 				}
 			} else {
@@ -1104,6 +1108,10 @@ public class GoodsServiceImpl implements GoodsService{
 				double xaccount = StorkNumber(good, good.getInventory());
 				if (xaccount >= account) {
 					bool = true;
+				}else{
+					//供货不足，更新现有库存量
+					good.setInventory(xaccount);
+					ezs_goodsMapper.updateByPrimaryKey(good);
 				}
 			}
 		} catch (Exception e) {
