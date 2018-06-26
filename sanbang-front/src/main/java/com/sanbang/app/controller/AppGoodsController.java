@@ -1076,10 +1076,13 @@ public class AppGoodsController {
 	 * @param goodCounts 购物车商品数量数组（以“，”隔开）
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/modifyGoodCars")
 	@ResponseBody
 	public Object modifyGoodCars(HttpServletRequest request,HttpServletResponse response,String goodCarIds,String goodCounts){
 		Result rs = null;
+		Map<String, Object> mmp = null;
+		Map<String, Object> resultMP = null;
 		String[] goodCarIDArray = goodCarIds.trim().split(",");
 		String[] goodCountsArray = goodCounts.trim().split(",");
 		if(goodCarIDArray.length<0||goodCountsArray.length<0||goodCarIDArray.length!=goodCountsArray.length){
@@ -1087,7 +1090,36 @@ public class AppGoodsController {
 			rs.setObj(" ");
 			rs.setMsg("传入数据有误！");
 		}
-		
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(" ");
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsService.modifyGoodCars(goodCarIDArray, goodCountsArray, user);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			//查询购物车即可
+			rs = Result.success();
+			Map<String, Object> goodCarMP = this.goodsService.getGoodCarFunc(user);
+			Integer goodCarErrorCode = (Integer) goodCarMP.get("ErrorCode");
+			if(goodCarErrorCode!=null&&goodCarErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				List<ezs_goodscart> goodCarList = (List<ezs_goodscart>) goodCarMP.get("Obj");
+				rs.setObj(goodCarList);
+			}else{
+				rs = Result.failure();
+				rs.setObj(" ");
+				rs.setMsg("查询购物车失败！");
+			}
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			resultMP = (Map<String, Object>) mmp.get("Obj");
+			rs = Result.failure();
+			rs.setObj(resultMP);
+			rs.setMsg(mmp.get("Msg").toString());
+		}
 		return rs;
 	}
 	

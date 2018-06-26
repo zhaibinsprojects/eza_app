@@ -1340,18 +1340,96 @@ public class GoodsServiceImpl implements GoodsService{
 		return ezs_goodsMapper.selectByPrimaryKey(id);
 	}
 	/**
-	 * 修改购物车信息
+	 * 修改购物车信息（加购物车的是商品即orderType="Good"）
 	 * @author zhaibin
 	 */
 	@Override
-	public Map<String, Object> modifyGoodCars(Long[] goodsCartIds, Double[] counts, ezs_user user) {
-		// TODO Auto-generated method stub
-		for (int i=0;i<goodsCartIds.length;i++) {
-			this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartIds[i]);
-			//this.storecartMapper.selectByPrimaryKey(id);
-			
+	@Transactional(rollbackFor=java.lang.Exception.class)
+	public synchronized Map<String, Object> modifyGoodCars(String[] goodsCartIds, String[] counts, ezs_user user) {
+		Map<String, Object> mmp = new HashMap<String, Object>();
+		Map<String, Object> resultMP = new HashMap<String, Object>();
+		ezs_goodscart goodscart = null;
+		ezs_storecart storecart = null;
+		boolean buyAbleFlag = true;
+		for (int i = 0; i < goodsCartIds.length; i++) {
+			goodscart = this.ezs_goodscartMapper.selectByPrimaryKey(Long.valueOf(goodsCartIds[i].trim()));
+			ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
+			goodscart.setCount(Double.valueOf(counts[i]));
+			if(!checkGoodNativeInventory(goodscart,good)){
+				//该商品库存不足
+				resultMP.put(goodscart.getId().toString(), "商品"+good.getName()+"库存不足");
+				buyAbleFlag = false;
+			}
 		}
-		
-		return null;
+		if(!buyAbleFlag){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Obj", resultMP);
+			mmp.put("Msg", "商品库存不足");
+			return mmp;
+		}
+		for (int i=0;i<goodsCartIds.length;i++) {
+			goodscart = this.ezs_goodscartMapper.selectByPrimaryKey(Long.valueOf(goodsCartIds[i].trim()));
+			storecart = this.storecartMapper.selectByPrimaryKey(goodscart.getSc_id());
+			goodscart.setCount(Double.valueOf(counts[i].trim()));
+			BigDecimal totalPrice = BigDecimal.valueOf(goodscart.getPrice().doubleValue()*goodscart.getCount());
+			storecart.setTotal_price(totalPrice);
+			this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+			this.storecartMapper.updateByPrimaryKey(storecart);
+		}
+		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		mmp.put("Msg", "成功");
+		mmp.put("Obj", " ");
+		return mmp;
+	}
+	
+	/**
+	 * 编辑购物车校验(会更新库存不算本次购买)
+	 * @author zhaibin
+	 * @return
+	 */
+	private boolean checkGoodNativeInventory(ezs_goodscart goodCar,ezs_goods good){
+		log.info("获取商品实际库存。。。。。");
+		Map<String, Object> mmp = new HashMap<>();
+		double account = goodCar.getCount();// 购买量
+		boolean bool = false;
+		try {
+			if (goodCar != null && good.getGood_self().equals(true)) {
+				// 01样品库存，02商品库存
+				log.info("自营商品。。。。。。。。。");
+				JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
+				if (object != null) {
+					log.info("实际库存。。。。。。。。。");
+					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+					if (xaccount > account) {
+						//更新下库存
+						good.setInventory(xaccount);
+						ezs_goodsMapper.updateByPrimaryKey(good);
+						bool = true;
+					}else{
+						//供货不足，本为校验-不更新库存
+						//good.setInventory(xaccount);
+						//ezs_goodsMapper.updateByPrimaryKey(good);
+					}
+				}
+			} else {
+				// 供应商锁库
+				log.info("非自营商品，不访问U8库存信息。。。。。。。。。");
+				double xaccount = StorkNumber(good, good.getInventory());
+				if (xaccount >= account) {
+					//更新下库存
+					good.setInventory(xaccount);
+					ezs_goodsMapper.updateByPrimaryKey(good);
+					bool = true;
+				}else{
+					//供货不足，本为校验-不更新库存
+					//good.setInventory(xaccount);
+					//ezs_goodsMapper.updateByPrimaryKey(good);
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+		return bool;
 	}
 }
