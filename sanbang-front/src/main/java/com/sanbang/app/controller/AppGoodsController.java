@@ -96,6 +96,41 @@ public class AppGoodsController {
 	/**
 	 * @author langjf
 	 * forapp 
+	 * 查询是否收藏
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/iscollented")
+	public Result iscollented(HttpServletRequest request,Long id,Model model){
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,user.getId());
+		if(null != goodsvo){
+			result.setObj(goodsvo.getCollected());
+			result.setMsg("查询成功！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}else{
+			result.setObj(0);
+			result.setMsg("查询失败！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * @author langjf
+	 * forapp 
 	 * 查询货品描述
 	 * @param request
 	 * @param id 货品id

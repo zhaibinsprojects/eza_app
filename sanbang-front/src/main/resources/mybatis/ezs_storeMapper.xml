@@ -19,6 +19,7 @@
     <result column="fixed_assets" property="fixed_assets" jdbcType="DOUBLE" />
     <result column="location_detail" property="location_detail" jdbcType="VARCHAR" />
     <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="snumber" property="snumber" jdbcType="VARCHAR" />
     <result column="obtainYear" property="obtainYear" jdbcType="INTEGER" />
     <result column="openBankNo" property="openBankNo" jdbcType="VARCHAR" />
     <result column="open_bank_name" property="open_bank_name" jdbcType="VARCHAR" />
@@ -47,7 +48,7 @@
     number, obtainYear, openBankNo, open_bank_name, open_branch_name, open_branch_no, 
     person, registerDate, rent, status, userType, yTurnover, area_id, auditingusertype_id, 
     cardType_id, customerAudit_id, unifyCode, creditLevel, location_id, regArea_id, regAddress, 
-    idCardNum
+    idCardNum,snumber
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

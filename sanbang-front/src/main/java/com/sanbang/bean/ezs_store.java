@@ -1,7 +1,6 @@
 package com.sanbang.bean;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -10,7 +9,11 @@ import java.util.Date;
 
 public class ezs_store implements Serializable {
 
-	private static final long serialVersionUID = 860976361940964280L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7652541660905298897L;
 
 	private Long id;
 
@@ -87,6 +90,8 @@ public class ezs_store implements Serializable {
 	private Integer creditScore;
 
 	private String number;
+	
+	private String snumber;
 
 	private Long customerAudit_id;
 
@@ -423,6 +428,16 @@ public class ezs_store implements Serializable {
 	public void setLocation_id(Long location_id) {
 		this.location_id = location_id;
 	}
+	
+	
+
+	public String getSnumber() {
+		return snumber;
+	}
+
+	public void setSnumber(String snumber) {
+		this.snumber = snumber;
+	}
 
 	@Override
 	public String toString() {
@@ -438,12 +453,9 @@ public class ezs_store implements Serializable {
 				+ ", admin_status=" + admin_status + ", capitalPrice=" + capitalPrice + ", account=" + account
 				+ ", unifyCode=" + unifyCode + ", person=" + person + ", regArea_id=" + regArea_id + ", regAddress="
 				+ regAddress + ", idCardNum=" + idCardNum + ", creditScore=" + creditScore + ", number=" + number
-				+ ", customerAudit_id=" + customerAudit_id + ", creditLevel=" + creditLevel + ", location_id="
-				+ location_id + "]";
+				+ ", snumber=" + snumber + ", customerAudit_id=" + customerAudit_id + ", creditLevel=" + creditLevel
+				+ ", location_id=" + location_id + "]";
 	}
-
-	
-
 
 
 }

@@ -305,16 +305,10 @@ public class BuyerServiceimpl implements BuyerService {
 	 * @throws Exception
 	 */
 	@Override
-	public Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response) {
+	public Result seller_order_signature(String order_no, HttpServletRequest request, HttpServletResponse response,ezs_user upi) {
 		Result result = Result.failure();
 		try {
-
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
+			
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -455,7 +449,7 @@ public class BuyerServiceimpl implements BuyerService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("number",member);
-			map.put("temid", temid);
+			map.put("temtype", "PSELL");
 			map.put("pageno", currentPage);
 			map.put("starttime", request.getParameter("starttime"));
 			map.put("endtime", request.getParameter("endtime"));
@@ -745,12 +739,7 @@ public class BuyerServiceimpl implements BuyerService {
 	public Result getezs_invoice(HttpServletRequest request, String order_no) {
 		Result result = Result.failure();
 		try {
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
+			
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -790,12 +779,7 @@ public class BuyerServiceimpl implements BuyerService {
 	public Result getezs_logistics(HttpServletRequest request, String order_no) {
 		Result result = Result.failure();
 		try {
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
+			
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
