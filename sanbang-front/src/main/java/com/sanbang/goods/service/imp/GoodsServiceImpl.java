@@ -616,6 +616,7 @@ public class GoodsServiceImpl implements GoodsService{
 				e.printStackTrace();
 				map.put("Msg", "删除异常");
 				map.put("ErrorCode",DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				throw e;
 			}
 		}else{
 			map.put("Msg", "参数为空，请联系管理员");

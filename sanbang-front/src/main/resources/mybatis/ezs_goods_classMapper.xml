@@ -167,4 +167,10 @@
     <include refid="Base_Column_List" />
     from ezs_goods_class where level = ${_parameter}  ORDER BY ADDTIME DESC
   </select>
+  <!-- add zhaibin 首页展示，包含图片  -->
+  <select id="queryGoodClassIncludePhoto" resultMap="GoodClassResultMap">
+    select 
+    id,level,name,photo_id
+     from ezs_goods_class where level = '3' and photo_id is NOT null ORDER BY ADDTIME DESC
+  </select>
 </mapper>

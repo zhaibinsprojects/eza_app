@@ -129,4 +129,22 @@ public class GoodsClassServiceImpl implements GoodsClassService {
 		}
 		return mmp;
 	}
+
+	@Override
+	public Map<String, Object> queryGoodClassIncludePic() {
+		Map<String, Object> mmp = new HashMap<>();
+		List<ezs_goods_class> eslist = null;
+		//按三级目录查询种类
+		try {
+			eslist = this.goodClassMapper.queryGoodClassIncludePhoto();
+			mmp.put("Obj", eslist);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
 }

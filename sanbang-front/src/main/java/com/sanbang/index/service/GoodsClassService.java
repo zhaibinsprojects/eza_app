@@ -21,5 +21,7 @@ public interface GoodsClassService {
 	public Map<String, Object> queryChildNodes();
 	
 	public Map<String, Object> queryGoodColorAndForm();
+	
+	public Map<String, Object> queryGoodClassIncludePic();
 
 }

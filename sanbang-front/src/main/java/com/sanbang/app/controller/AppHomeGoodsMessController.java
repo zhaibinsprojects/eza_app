@@ -506,27 +506,18 @@ public class AppHomeGoodsMessController {
 		Map<String, Object> mmp = null;
 		List<ezs_goods_class> goodClassList = null;
 		List<ezs_goods_class> goodClassListTemp = new ArrayList<>();
-		mmp = goodsClassService.queryThirdGoodsClass("3");
+		//mmp = goodsClassService.queryThirdGoodsClass("3");
+		mmp = goodsClassService.queryGoodClassIncludePic();
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			goodClassList = (List<ezs_goods_class>) mmp.get("Obj");
 			for (ezs_goods_class goodsClass : goodClassList) {
-				//筛选，只要有图片的
-				if(goodsClass.getPhoto_id()==null||goodsClass.getPhoto_id().equals(""))
-					continue;
-				ezs_goods_class goodsClassTemp = new ezs_goods_class();
-				goodsClassTemp.setId(goodsClass.getId());
-				goodsClassTemp.setLevel(goodsClass.getLevel());
-				goodsClassTemp.setName(goodsClass.getName());
-				//http://10.10.10.85/front/resource/indeximg/%E9%A6%96%E9%A1%B5-1_03.png
-				if(goodsClass.getPhoto()!=null){
-					ezs_accessory photo = new ezs_accessory();
-					photo.setId(goodsClass.getPhoto().getId());
-					photo.setName(goodsClass.getPhoto().getName());
-					photo.setPath(goodsClass.getPhoto().getPath());
-					goodsClassTemp.setPhoto(photo);
-				}
-				goodClassListTemp.add(goodsClassTemp);
+				ezs_accessory photo = new ezs_accessory();
+				photo.setId(goodsClass.getPhoto().getId());
+				photo.setName(goodsClass.getPhoto().getName());
+				photo.setPath(goodsClass.getPhoto().getPath());
+				goodsClass.setPhoto(photo);
+				goodClassListTemp.add(goodsClass);
 			}
 			log.info("查询三级商品类别信息end。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 			return goodClassListTemp;
@@ -545,7 +536,6 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices = new Advices();
 		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		
 		String str = "http://10.10.10.148/front/resource/indeximg/首页-1_13.png";
 		String strTemp = "";
 		// 2.以UTF-8编码方式获取str的字节数组，再以默认编码构造字符串

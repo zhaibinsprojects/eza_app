@@ -25,4 +25,6 @@ public interface ezs_goods_classMapper {
     List<ezs_goods_class> selectAllGoodClassByLevel(String level);
     
     List<ezs_goods_class> selectAllChildNodeExceptFirst();
+    
+    List<ezs_goods_class> queryGoodClassIncludePhoto();
 }

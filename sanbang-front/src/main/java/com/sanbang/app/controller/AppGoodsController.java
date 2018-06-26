@@ -1127,9 +1127,6 @@ public class AppGoodsController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		
-		
-		
 		//收货地址
 		Page page = new Page();
 		page.setPageNow(1);
@@ -1187,7 +1184,6 @@ public class AppGoodsController {
 				}
 			}
 		}
-		
 		if(!Tools.isEmpty(threeinfo)){
 			sb = new StringBuilder().append(threeinfo);	
 		}
@@ -1197,7 +1193,6 @@ public class AppGoodsController {
 		if(!Tools.isEmpty(oneinfo)){
 			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
-		
 		return sb.toString();
 	}
 }
