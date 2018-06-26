@@ -33,5 +33,5 @@ public interface ezs_addressMapper {
 
 	int getCountAddressByUserId(Long userid);
 
-	
+	ezs_address findAddressByUseridAndBes(@Param("userId")Long userId, @Param("bestow")Boolean addressBestow);
 }
