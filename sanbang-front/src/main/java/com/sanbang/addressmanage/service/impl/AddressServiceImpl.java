@@ -161,6 +161,32 @@ public class AddressServiceImpl implements AddressService {
 		
 		return result;
 	}
-	
+	@Override
+	public Result setBestow(Long id, Boolean bestow,Long userId) {
+		Result result = new Result().failure();
+		ezs_address ezs_address = ezs_addressMapper.selectByPrimaryKey(id);
+		if(ezs_address==null){
+			result.setMsg("该地址不存在，请刷新后再试！");
+			return result;
+		}
+		if(!bestow){//true取消默认；false:设置默认
+			//查询是否有默认
+			ezs_address address = ezs_addressMapper.findAddressByUseridAndBes(userId,ezs_address.ADDRESS_BESTOW_0);
+			if(address !=null){
+				address.setBestow(ezs_address.ADDRESS_BESTOW_1);
+				ezs_addressMapper.updateByPrimaryKeySelective(address);
+			}
+			ezs_address.setBestow(ezs_address.ADDRESS_BESTOW_0);
+			ezs_addressMapper.updateByPrimaryKeySelective(ezs_address);
+		}else{
+			ezs_address.setBestow(ezs_address.ADDRESS_BESTOW_1);
+			ezs_addressMapper.updateByPrimaryKeySelective(ezs_address);
+		}
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("设置成功");
+		result.setSuccess(true);
+		
+		return result;
+	}
 
 }

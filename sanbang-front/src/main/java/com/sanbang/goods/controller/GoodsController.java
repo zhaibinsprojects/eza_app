@@ -770,6 +770,75 @@ public class GoodsController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 立即购买(商品)
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param WeAddressId
+	 * @param goodsId
+	 * @param count
+	 * @return
+	 */
+	@RequestMapping(value="/dealImmediatelyBuyGood")
+	@ResponseBody
+	public Object dealImmediatelyBuyGood(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsId,Double count){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsService.immediateAddOrderFormFunc(user, "GOODS",WeAddressId,goodsId, count);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	/**
+	 * 立即购买(样品)
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param WeAddressId
+	 * @param goodsId
+	 * @param count
+	 * @return
+	 */
+	@RequestMapping(value="/dealImmediatelyBuySampleGood")
+	@ResponseBody
+	public Object dealImmediatelyBuySampleGood(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsId,Double count){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsService.immediateAddOrderFormFunc(user,"SAMPLE",WeAddressId,goodsId, count);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			rs = Result.success();
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			rs = Result.failure();
+			rs.setMsg(mmp.get("Msg").toString());
+		}
+		return rs;
+	}
+	
+	
 	/**
 	 * 添加订单，在此可进行多个商品提交订单，
 	 * 针对单个订单进行库存校验并更新库存信息，不足的返回商品不足信息并回撤库信息，
@@ -835,6 +904,7 @@ public class GoodsController {
 				rs = Result.failure();
 				tempMP.remove("SuccessFlag");
 				//由此查询返回查询购物车相关信息
+				//zhaibin
 				Map<String, Object> mMp = this.goodsService.getGoodInfoFromGoodCart(tempMP);
 				if(mMp!=null){
 					rs.setObj(mMp.get("Obj"));

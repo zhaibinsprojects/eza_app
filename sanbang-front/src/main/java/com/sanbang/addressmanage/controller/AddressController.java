@@ -154,6 +154,24 @@ public class AddressController {
 		return addressService.deleteAddressById(id);
 		
 	}
+	/**
+	 * 设置是否为默认地址
+	 * @param id
+	 * @param bestow
+	 * @return
+	 */
+	@RequestMapping("/setBestow")
+	public Result setBestow(Long id,Boolean bestow){
+		Result result = new Result().failure();
+		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		return addressService.setBestow(id,bestow,upi.getId());
+		
+	}
 	
 	private List<ezs_address> SetAddressInfo(List<ezs_address> addressList){
 		for (ezs_address ezs_address : addressList) {

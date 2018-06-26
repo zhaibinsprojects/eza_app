@@ -33,12 +33,13 @@ $(function() {
 			// 试样
 			iosshiyang();
 			 try {
-				 userk= WebViewJavascriptBridge.callHandler('iostocart', str, function() {
+				 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
+					 layer.open({content : userk,skin : 'msg',time : 20});
 					});
-				 layer.open({content : userk,skin : 'msg',time : 2});
+				
 				 if(userk!=""){
 					 $(".userkey").val(userk);
-					 iscollcc(goodsid, userk);
+					// iscollcc(goodsid, userk);
 				 }
 			} catch (e) {
 			}
@@ -352,8 +353,8 @@ function androidshowpdf() {
 		
 		var data = {}
 		var str = JSON.stringify(data);
-		WebViewJavascriptBridge.callHandler('iosnologin', str, function() {
-		});
+		/*WebViewJavascriptBridge.callHandler('iosnologin', str, function() {
+		});*/
 		return false;
 	};
 

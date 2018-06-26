@@ -402,4 +402,92 @@ public class SellerGoodsController {
 		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	
 		return result;
 	}
+	
+	
+	/**
+	 * 更改价格或库存数量  初始化
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updatePriceAndCnclNumInit")
+	@ResponseBody
+	public Object updatePriceAndCnclNumInit(HttpServletRequest request, String currentPage){
+		Result result=Result.failure();
+		List<ezs_goods> list = new ArrayList<>();
+		Map<String, Object> map = null;
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
+		Long userId = upi.getId();
+		Page page = null;
+		if(currentPage==null){
+			currentPage = "1";
+		}
+		map = sellerGoodsService.queryGoodsListBySellerId(userId, 2, currentPage);
+		
+		list = (List<ezs_goods>)map.get("Obj");
+		
+		if (list.size()==0) {
+			result.setSuccess(false);
+			result.setMsg("当前用户没有通过审核正在上架的货品，不能修改商品数量");
+			return result;
+		}
+	
+		
+		int errorCode = (int) map.get("ErrorCode");
+		page = (Page) map.get("Page");
+		result.setObj(list);
+		result.setMeta(page);
+		result.setSuccess(true);
+		result.setMsg("查询成功");
+		result.setErrorcode(errorCode);
+		
+		return result;
+	}
+	
+	@RequestMapping("/updatePriceAndCnclNum")
+	@ResponseBody
+	public Object updatePriceAndCnclNum(long goodsId, HttpServletRequest request){
+		Result result=Result.failure();
+		Map<String,Object> map = new HashMap<>();
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		Long userId = upi.getId();
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
+		
+		//验证用户是否激活，拥有卖家权限
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
+		result = sellerGoodsService.updateGoodsPriceAndNumById(result, goodsId,userId, request);
+		
+		return result;
+	}
+	
+	
 }

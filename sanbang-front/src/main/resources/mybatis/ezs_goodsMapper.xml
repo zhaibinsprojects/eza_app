@@ -54,16 +54,18 @@
 		<result column="addess2" jdbcType="VARCHAR" property="addess2" />
 	</resultMap>
   
-	<resultMap id="BaseResultMap1" type="com.sanbang.vo.GoodsListInfo">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="price" jdbcType="DECIMAL" property="price" />
-		<result column="status" jdbcType="INTEGER" property="status" />
-		<result column="audit_status" jdbcType="INTEGER" property="audit_status" />
-		<result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
-	</resultMap>
-	<sql id="Base_Column_List">
+
+  <resultMap id="BaseResultMap1" type="com.sanbang.vo.GoodsListInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+    <result column="inventory" jdbcType="DOUBLE" property="inventory" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
+    <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
     collect, content, crack, density, flexural, freely, good_no, good_self, goods_salenum, 
     inventory, keyword, lastModifyDate, lipolysis, lockStatus, memberLook, name, price, 
@@ -644,6 +646,7 @@
   	A.name,
   	A.price,
   	A.cncl_num,
+  	A.inventory,
   	A.status status,
   	B.status audit_status,
   	B.priceStatus priceStatus
