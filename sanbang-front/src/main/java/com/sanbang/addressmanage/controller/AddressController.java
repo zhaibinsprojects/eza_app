@@ -161,8 +161,9 @@ public class AddressController {
 	 * @return
 	 */
 	@RequestMapping("/setBestow")
+	@ResponseBody
 	public Result setBestow(Long id,Boolean bestow){
-		Result result = new Result().failure();
+		Result result = Result.failure();
 		ezs_user upi=RedisUserSession.getLoginUserInfo(httpServletRequest);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
