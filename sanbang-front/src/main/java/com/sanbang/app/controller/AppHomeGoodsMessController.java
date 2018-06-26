@@ -586,7 +586,7 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
-			rs.setObj(substanceListTemp.add(new ezs_ezssubstance()));
+			rs.setObj(substanceListTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
