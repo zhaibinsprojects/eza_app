@@ -106,6 +106,7 @@ public class AppHomePriceConditionController {
 	}
 	
 	/**
+	 * (废弃不用)
 	 * 行情分析-二级栏目（年、月、周、日评）
 	 * @param request
 	 * @param response
@@ -132,6 +133,7 @@ public class AppHomePriceConditionController {
 		return rs;
 	}
 	/**
+	 * (废弃不用)
 	 * 行情分析（年、月、周、日评）
 	 * @param request
 	 * @param response
@@ -168,6 +170,7 @@ public class AppHomePriceConditionController {
 		return rs;
 	}
 	/**
+	 * (废弃不用)
 	 * 研究报告二级栏目
 	 * @param request
 	 * @param response
@@ -194,6 +197,7 @@ public class AppHomePriceConditionController {
 		return rs;
 	}
 	/**
+	 * (废弃不用)
 	 * 研究报告
 	 * @param request
 	 * @param response

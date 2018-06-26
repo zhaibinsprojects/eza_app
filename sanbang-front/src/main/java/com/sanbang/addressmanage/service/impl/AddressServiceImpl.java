@@ -163,7 +163,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 	@Override
 	public Result setBestow(Long id, Boolean bestow,Long userId) {
-		Result result = new Result().failure();
+		Result result = Result.failure();
 		ezs_address ezs_address = ezs_addressMapper.selectByPrimaryKey(id);
 		if(ezs_address==null){
 			result.setMsg("该地址不存在，请刷新后再试！");
