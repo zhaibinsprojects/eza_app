@@ -1030,7 +1030,7 @@ public class GoodsServiceImpl implements GoodsService{
 			//from ezs_stock e where e.status = '0' and e.goodid = #{goodId} and e.goodClass = #{ckType}
 			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
 			for (ezs_stock stock : stocks) {
-				stock_num += CommUtil.add(stock.getBuyNum(), stock_num);
+				stock_num = CommUtil.add(stock.getBuyNum(), stock_num);
 			}
 			Double InventoryTemp = CommUtil.subtract(iQuantity, stock_num);
 			return InventoryTemp;

@@ -904,6 +904,7 @@ public class GoodsController {
 				rs = Result.failure();
 				tempMP.remove("SuccessFlag");
 				//由此查询返回查询购物车相关信息
+				//zhaibin
 				Map<String, Object> mMp = this.goodsService.getGoodInfoFromGoodCart(tempMP);
 				if(mMp!=null){
 					rs.setObj(mMp.get("Obj"));

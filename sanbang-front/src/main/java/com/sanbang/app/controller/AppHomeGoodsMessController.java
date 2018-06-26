@@ -531,6 +531,9 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
+			List<ezs_column> columnListTemp = new ArrayList<>();
+			columnListTemp.add(new ezs_column());
+			rs.setObj(columnListTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
