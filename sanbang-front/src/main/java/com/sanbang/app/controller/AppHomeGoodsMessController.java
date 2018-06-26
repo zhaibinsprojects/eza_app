@@ -489,6 +489,7 @@ public class AppHomeGoodsMessController {
 		log.info("图片：/resource/indeximg/首页-1_13.png");
 		return adviceList;
 	}
+	//////////////////////////////////////文章报告展示相关\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	/**
 	 * 获取首页展示文档二级标题（首页展示点击触发）
 	 * 展示二级标题（日评-周评-月评）及相关分析的标题
@@ -503,10 +504,12 @@ public class AppHomeGoodsMessController {
 	@ResponseBody
 	public Object getTheSecondThemeOfEssayReport(HttpServletRequest request,HttpServletResponse response,Long type){
 		Map<String, Object> mmp = null;
+		List<ezs_column> columnListTemp = new ArrayList<>();
 		Result rs = null;
 		//mmp = this.reportEssayServer.getSecondTheme(Long.valueOf("12"));
 		if(type==null){
 			rs = Result.failure();
+			rs.setObj(columnListTemp.add(new ezs_column()));
 			rs.setMsg("类型不能为NULL");
 			return rs;
 		}
@@ -514,7 +517,7 @@ public class AppHomeGoodsMessController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
-			List<ezs_column> columnListTemp = new ArrayList<>();
+			
 			//进行显示字段的过滤
 			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
 			String filterFields = "columnLevel,id,name,title";
@@ -531,9 +534,7 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
-			List<ezs_column> columnListTemp = new ArrayList<>();
-			columnListTemp.add(new ezs_column());
-			rs.setObj(columnListTemp);
+			rs.setObj(columnListTemp.add(new ezs_column()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
@@ -585,6 +586,7 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
+			rs.setObj(substanceListTemp.add(new ezs_ezssubstance()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
@@ -608,6 +610,7 @@ public class AppHomeGoodsMessController {
 			if(substance==null){
 				rs = Result.success();
 				rs.setMsg("查询内容不存在");
+				rs.setObj(new ezs_ezssubstance());
 				return rs;
 			}
 			ezs_ezssubstance substanceTemp = new ezs_ezssubstance(); 
@@ -622,6 +625,7 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
+			rs.setObj(new ezs_ezssubstance());
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
