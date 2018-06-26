@@ -20,5 +20,5 @@ public interface AddressService {
 
 	Result deleteAddressById(Long id);
 	
-
+	Result setBestow(Long id, Boolean bestow,Long userId);
 }

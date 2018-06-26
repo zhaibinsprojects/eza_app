@@ -184,6 +184,10 @@
 	<include refid="Base_Column_List" />
  	from ezs_address where user_id = #{id} and bestow = '0'
   </select>
-  
+  <select id="findAddressByUseridAndBes" resultType="ezs_address">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from ezs_address where user_id = #{userId} and bestow = ${bestow}
+  </select>	
   
 </mapper>
