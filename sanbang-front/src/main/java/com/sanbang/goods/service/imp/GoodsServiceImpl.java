@@ -1347,7 +1347,8 @@ public class GoodsServiceImpl implements GoodsService{
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> modifyGoodCars(String[] goodsCartIds, String[] counts, ezs_user user) {
 		Map<String, Object> mmp = new HashMap<String, Object>();
-		Map<String, Object> resultMP = new HashMap<String, Object>();
+		//Map<String, Object> resultMP = new HashMap<String, Object>();
+		List<String> checkResultList = new ArrayList<>();
 		ezs_goodscart goodscart = null;
 		ezs_storecart storecart = null;
 		boolean buyAbleFlag = true;
@@ -1357,13 +1358,14 @@ public class GoodsServiceImpl implements GoodsService{
 			goodscart.setCount(Double.valueOf(counts[i]));
 			if(!checkGoodNativeInventory(goodscart,good)){
 				//该商品库存不足
-				resultMP.put(goodscart.getId().toString(), "商品"+good.getName()+"库存不足");
+				//resultMP.put(goodscart.getId().toString(), "商品"+good.getName()+"库存不足");
+				checkResultList.add(good.getName()+"库存不足");
 				buyAbleFlag = false;
 			}
 		}
 		if(!buyAbleFlag){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Obj", resultMP);
+			mmp.put("Obj", checkResultList);
 			mmp.put("Msg", "商品库存不足");
 			return mmp;
 		}

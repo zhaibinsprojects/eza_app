@@ -1151,6 +1151,7 @@ public class AppGoodsController {
 		Result rs = null;
 		Map<String, Object> mmp = null;
 		Map<String, Object> resultMP = null;
+		List<String> checkResultList = null;
 		String[] goodCarIDArray = goodCarIds.trim().split(",");
 		String[] goodCountsArray = goodCounts.trim().split(",");
 		if(goodCarIDArray.length<0||goodCountsArray.length<0||goodCarIDArray.length!=goodCountsArray.length){
@@ -1178,14 +1179,15 @@ public class AppGoodsController {
 				rs.setObj(goodCarList);
 			}else{
 				rs = Result.failure();
-				rs.setObj(" ");
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("查询购物车失败！");
 			}
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
-			resultMP = (Map<String, Object>) mmp.get("Obj");
+			//resultMP = (Map<String, Object>) mmp.get("Obj");
+			checkResultList = (List<String>) mmp.get("Obj");
 			rs = Result.failure();
-			rs.setObj(resultMP);
+			rs.setObj(checkResultList);
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
