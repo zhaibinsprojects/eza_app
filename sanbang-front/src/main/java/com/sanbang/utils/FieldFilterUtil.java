@@ -1,7 +1,6 @@
 package com.sanbang.utils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,12 +20,6 @@ public class FieldFilterUtil<T> {
 	 * @param filterFields
 	 * @param clazz
 	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
 	public List<T> getFieldFilterList(List<T> list,String filterFields,Class<T> clazz) 
 			throws Exception {
@@ -48,22 +41,12 @@ public class FieldFilterUtil<T> {
 				//存在即保留（确定需要筛选出来的字段）
 				if(filterFields.indexOf(field.getName())<0)
 					continue;
-				
-				/*//字段名称
-				field.getName();
-				//字段值
-				field.get(list.get(i));*/
-				
 				//获取字段的属性
 				String type = field.getGenericType().toString();
 				Class typeTemp = getFieldType(type);
-				
 				//获取属性名称
 				String name = field.getName();
 				String fieldName = name.substring(0, 1).toUpperCase()+name.substring(1,name.length());
-				//读取字段值,暂时不用
-				//Method methodGet = ob.getClass().getMethod("get"+fieldName);
-				//String value = (String) methodGet.invoke(ob);
 				//设置字段值
 				Method methodSet = ob.getClass().getMethod("set"+fieldName, typeTemp);
 				methodSet.invoke(ob,field.get(list.get(i)));
@@ -71,6 +54,43 @@ public class FieldFilterUtil<T> {
 			tempList.add(ob);
 		}
 		return tempList;
+	}
+	
+	/**
+	 * 字段过滤 
+	 * @author zhaibin
+	 * @param oob 需要过滤的对象
+	 * @param filterFields
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T getFieldFilter(T oob,String filterFields,Class<T> clazz) 
+			throws Exception {
+		if(filterFields==null||filterFields.trim().equals("")){
+			return (T) new Object();
+		}
+		//获取字段数组
+		Field[] fields = clazz.getDeclaredFields();
+		//创建对象
+		T ob = clazz.newInstance();
+		for (Field field : fields) {
+			//取消每个属性的安全检查 ,否則无法获取private字段值
+			field.setAccessible(true);  
+			//存在即保留（确定需要筛选出来的字段）
+			if(filterFields.indexOf(field.getName())<0)
+				continue;
+			//获取字段的属性
+			String type = field.getGenericType().toString();
+			Class typeTemp = getFieldType(type);
+			//获取属性名称
+			String name = field.getName();
+			String fieldName = name.substring(0, 1).toUpperCase()+name.substring(1,name.length());
+			//设置字段值
+			Method methodSet = ob.getClass().getMethod("set"+fieldName, typeTemp);
+			methodSet.invoke(ob,field.get(oob));
+		}
+		return ob;
 	}
 	/**
 	 * 返回字段类型
@@ -97,46 +117,23 @@ public class FieldFilterUtil<T> {
 		return typeTemp;
 	}
 	
-	/**
-	 * 测试类
-	 * @param args
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 */
+	
 	public static void main(String[] args) throws Exception {
 
 		List<ezs_goods> userList = new ArrayList<>();
 		ezs_goods good01 = new ezs_goods();
-		ezs_goods good02 = new ezs_goods();
-		ezs_goods good03 = new ezs_goods();
 		good01.setName("zhang001");
 		good01.setAddess("河南");
 		good01.setAddTime(new Date());
-		good02.setName("zhang002");
-		good02.setAddess("北京");
-		good02.setAddTime(new Date());
-		good03.setName("zhang003");
-		good03.setAddess("罗亚");
-		good03.setAddTime(new Date());
 		userList.add(good01);
-		userList.add(good02);
-		userList.add(good03);
-		
 		FieldFilterUtil<ezs_goods> fieldFilterUtil = new FieldFilterUtil<>();
 		String filterFields = "name,addess,addtime";
 		//String filterFields = "name";
 		try {
-			List<ezs_goods> ulist = fieldFilterUtil.getFieldFilterList(userList, filterFields, ezs_goods.class);
-			for (ezs_goods ezsGoods : ulist) {
-				System.out.println("过滤的结果："+ezsGoods);
-			}
-			
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+			//List<ezs_goods> ulist = fieldFilterUtil.getFieldFilterList(userList, filterFields, ezs_goods.class);
+			ezs_goods goodTemp = fieldFilterUtil.getFieldFilter(good01, filterFields, ezs_goods.class);
+			System.out.println(goodTemp.getName()+" "+goodTemp.getAddess()+" "+goodTemp.getAddTime());
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -58,8 +58,6 @@ public class AppHomeGoodsMessController {
 	private ReportEssayServer reportEssayServer;
 	@Autowired
 	private CustomerService customerService;
-	
-	
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -583,7 +581,6 @@ public class AppHomeGoodsMessController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
-			
 			//进行显示字段的过滤
 			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
 			String filterFields = "columnLevel,id,name,title";
@@ -679,14 +676,18 @@ public class AppHomeGoodsMessController {
 				rs.setObj(new ezs_ezssubstance());
 				return rs;
 			}
+			//进行字段过滤
+			FieldFilterUtil<ezs_ezssubstance> fieldFilterUtil = new FieldFilterUtil<>();
+			String filterFields = "addTime,id,meta,name,content";
 			ezs_ezssubstance substanceTemp = new ezs_ezssubstance(); 
 			rs = Result.success();
-			//过滤字段
-			substanceTemp.setId(substance.getId());
-			substanceTemp.setAddTime(substance.getAddTime());
-			substanceTemp.setMeta(substance.getMeta());
-			substanceTemp.setName(substance.getName());
-			substanceTemp.setContent(substance.getContent());
+			try {
+				//字段过滤公共方法
+				substanceTemp = fieldFilterUtil.getFieldFilter(substance, filterFields, ezs_ezssubstance.class);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			rs.setObj(substanceTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
