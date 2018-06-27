@@ -6,7 +6,6 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
-<meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
@@ -14,18 +13,14 @@
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
-<script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
+
 </head>
-<div class="ezsm-normal-top">
-		<div onclick="javascript:history.go(-1);"></div>
-		<div>
-			<ul class="ezsm-normal-top-nav">
-				<li onclick="window.location.href='${baseurl}app/goods/toGoodsShow.htm?id=${good.id}'" class="ezsm-normal-top-nav-sel"><span>货品</span></li>
-				<li onclick="window.location.href='${baseurl}/app/buy/getEvaluateList.htm?goodsid=${good.id}&pageNo=1'"><span>评价</span></li></a>
-			</ul>
-		</div>
-		<div></div>
-	</div>
+<body style="background:#efefef;">
+	<div><a class="customer" href="https://webchat.7moor.com/wapchat.html?accessId=77ad4f10-fa6f-11e7-b5e9-3f25a985904b&amp;fromUrl=&amp;urlTitle=" style="color: #333333;"></a></div>
 </body>
+<script type="text/javascript">
+$(document).ready(function(){
+	window.location.href="https://webchat.7moor.com/wapchat.html?accessId=77ad4f10-fa6f-11e7-b5e9-3f25a985904b&amp;fromUrl=&amp;urlTitle=";
+})
+</script>
 </html>

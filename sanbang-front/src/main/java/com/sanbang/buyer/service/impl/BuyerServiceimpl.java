@@ -101,6 +101,9 @@ public class BuyerServiceimpl implements BuyerService {
 
 	@Override
 	public List<ezs_order_info> getOrderListByValue(PagerOrder pager) {
+		if(pager.getOrder_status().equals("10")){
+			pager.setOrder_status("1,10");
+		}
 		pager.setPageNow(pager.getPageNow() - 1);
 		pager.setSecount(pager.getPageSize() * pager.getPageNow());
 		int totalcount = ezs_orderformMapper.getOrderListByValueCount(pager);
@@ -323,7 +326,7 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setMsg("订单不存在");
 				return result;
 			}
-			if (orderinfo.getOrder_status()!=20) {
+			if (orderinfo.getOrder_status()!=30) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("合同不在签订状态！");
@@ -390,7 +393,7 @@ public class BuyerServiceimpl implements BuyerService {
 				result.setObj(mv);
 			} else {
 				result.setSuccess(false);
-				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
+				result.setMsg(res.getMessage());
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 
 			}
@@ -506,14 +509,8 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Result orderclose(HttpServletRequest request, String order_no) {
+	public Result orderclose(HttpServletRequest request, String order_no,ezs_user upi) {
 		Result result=Result.failure();
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if (upi == null) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
 
 		String msg=request.getParameter("msg");
 		String name=request.getParameter("name");
@@ -540,7 +537,7 @@ public class BuyerServiceimpl implements BuyerService {
 			return result;
 		}
 		
-		if(orderinfo.getOrder_status()!=10){
+		if(orderinfo.getOrder_status()>10){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请在待签约之前进行关闭订单操作。");
@@ -560,9 +557,10 @@ public class BuyerServiceimpl implements BuyerService {
 		
 		//修改订单状态
 		orderinfo.setDeleteStatus(true);
+		orderinfo.setOrder_status(130);
 		int status=ezs_orderformMapper.updateByPrimaryKey(orderinfo);
 		result.setSuccess(true);
-		result.setMsg("修改成功");
+		result.setMsg("关闭订单成功");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		return result;
 	}
@@ -823,7 +821,7 @@ public class BuyerServiceimpl implements BuyerService {
 		}
 
 		// 判断是否在待支付状态 40 80
-		if (orderinfo.getSc_status() == 40 || orderinfo.getOrder_status() == 80) {
+		if (orderinfo.getOrder_status() == 40 || orderinfo.getOrder_status() == 80) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
 			result.setMsg("请求成功");

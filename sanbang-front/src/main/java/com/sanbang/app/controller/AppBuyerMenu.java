@@ -201,7 +201,7 @@ public class AppBuyerMenu {
 		}
 
 		try {
-			result= buyerService.orderclose(request,order_no);
+			result= buyerService.orderclose(request,order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

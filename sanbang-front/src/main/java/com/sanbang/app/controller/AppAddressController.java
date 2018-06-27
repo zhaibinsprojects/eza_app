@@ -161,7 +161,25 @@ public class AppAddressController {
 		return addressList;
 	}
 	
-	
+	/**
+	 * 设置是否为默认地址
+	 * @param id
+	 * @param bestow
+	 * @return
+	 */
+	@RequestMapping("/setBestow")
+	@ResponseBody
+	public Result setBestow(Long id,Boolean bestow){
+		Result result = Result.failure();
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(httpServletRequest);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		return addressService.setBestow(id,bestow,upi.getId());
+		
+	}
 	
 	/**
 	 * 地址

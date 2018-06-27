@@ -9,7 +9,6 @@ import java.util.Date;
 
 public class ezs_store implements Serializable {
 
-
 	/**
 	 * 
 	 */
@@ -456,6 +455,8 @@ public class ezs_store implements Serializable {
 				+ ", snumber=" + snumber + ", customerAudit_id=" + customerAudit_id + ", creditLevel=" + creditLevel
 				+ ", location_id=" + location_id + "]";
 	}
+
+	
 
 
 }

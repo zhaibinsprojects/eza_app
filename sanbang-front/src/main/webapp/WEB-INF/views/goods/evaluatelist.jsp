@@ -88,4 +88,8 @@
 	
 <%@ include file="../goodsfoot.jsp"%> 
 </body>
+
+<script type="text/javascript">
+var baseurl="${serurl}";
+</script>
 </html>

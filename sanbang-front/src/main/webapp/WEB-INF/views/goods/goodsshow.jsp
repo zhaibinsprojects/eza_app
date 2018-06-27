@@ -57,7 +57,7 @@
 		});
 	</script>
 </head>
-<body style="background:#efefef;">
+<body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
 	<div class="msg-bg"></div>
 	<div class="msg-box"></div>
 	
@@ -103,11 +103,18 @@
 	<div class="ezsm-shopdetail-desctit">
 		描述说明<a href="${baseurl}app/goods/toGoodsdec.htm?goodsid=${good.id}"><div></div></a>
 	</div>
-	<div class="ezsm-shopdetail-desc" style="width: 100%;">${good.content}</div>
+	<div class="ezsm-shopdetail-desc" style="width: 94%;">${good.content}</div>
 	<%@ include file="../goodsfoot.jsp"%> 
 </body>
 
 <script type="text/javascript">
 var baseurl="${serurl}";
+$(document).ready(function(){
+	var imghref=$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src");
+	if(imghref!="undefind"&&imghref!=""){
+		$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src",'http://www.ezaisheng.com/'+imghref);
+		$(".ezsm-shopdetail-desc").find("img").eq(0).css("width","100%");
+	}
+})
 </script>
 </html>

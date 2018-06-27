@@ -34,13 +34,15 @@ $(function() {
 			iosshiyang();
 			 try {
 				 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
-					 layer.open({content : userk,skin : 'msg',time : 20});
+					 layer.open({content : data,skin : 'msg',time : 2});
+					 userk= data;
+					 if(userk!=""){
+						 $(".userkey").val(data);
+						// iscollcc(goodsid, data);
+					 }
 					});
 				
-				 if(userk!=""){
-					 $(".userkey").val(userk);
-					// iscollcc(goodsid, userk);
-				 }
+				 
 			} catch (e) {
 			}
 			
@@ -63,6 +65,7 @@ $(function() {
 		var bridge =setupWebViewJavascriptBridge();
 			
 		} else {
+		goodsid = $(".goodsid").val();
 		// 电话
 		androidtophone();
 		// 查看购物车桥接
@@ -239,7 +242,7 @@ function androidshiyang(goodsid, userk) {
 function androidnologin() {
 	window.android.androidnologin();
 	return false;
-};
+};   
 
 // 电话桥接
 function androidtophone() {
@@ -353,8 +356,8 @@ function androidshowpdf() {
 		
 		var data = {}
 		var str = JSON.stringify(data);
-		/*WebViewJavascriptBridge.callHandler('iosnologin', str, function() {
-		});*/
+		WebViewJavascriptBridge.callHandler('iosnologin', str, function() {
+		});
 		return false;
 	};
 

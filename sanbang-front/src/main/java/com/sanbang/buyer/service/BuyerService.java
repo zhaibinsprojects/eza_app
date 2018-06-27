@@ -70,7 +70,7 @@ public interface BuyerService {
 	  * @param order_no
 	  * @return
 	  */
-	 public Result   orderclose(HttpServletRequest request,String order_no);
+	 public Result   orderclose(HttpServletRequest request,String order_no,ezs_user upi);
 	 
 	 /**
 	  * 上传订单支付凭证
