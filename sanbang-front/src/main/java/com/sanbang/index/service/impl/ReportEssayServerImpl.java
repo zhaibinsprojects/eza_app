@@ -1,5 +1,6 @@
 package com.sanbang.index.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class ReportEssayServerImpl implements ReportEssayServer {
 		if(currentPage<=0||currentPage>page.getTotalPageCount()){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			//须返回本结构
-			mmp.put("Obj", substanceList);
+			mmp.put("Obj", new ArrayList<ezs_ezssubstance>());
 			mmp.put("Msg", "页码越界");
 			return mmp;
 		}

@@ -65,6 +65,7 @@
     <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
     <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
   </resultMap>
+  
   <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
     collect, content, crack, density, flexural, freely, good_no, good_self, goods_salenum, 
@@ -755,12 +756,7 @@
     from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
 	</select>
   
-	<!-- 优品推荐2 -->
-	<select id="goodsIntroduceTwo" resultMap="getGoodIntroduceInfo" parameterType="com.sanbang.utils.Page">
-    select
-		<include refid="Goods_Base_Column_List" />
-    from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
-	</select>
+	
   
 	<!-- 查询同类货品，han -->
 	<select id="listForGoods" resultType="com.sanbang.vo.goods.GoodsVo" parameterType="java.lang.Long">
@@ -779,8 +775,6 @@
 	LEFT JOIN ezs_accessory B ON goods.goods_main_photo_id=B.id
 	WHERE
     goods.goodClass_id=#{goodClass_id} 
-    order by
-    lastModifyDate  desc  limit 10
 	</select>
 	<!-- 由购物车查询商品信息 -->
 	<select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -1034,12 +1028,40 @@
 		</collection>
 	</resultMap>
   
-	<!-- zhaiBin,add -->
-	<resultMap id="getGoodIntroduceInfo" type="com.sanbang.vo.goods.GoodsVo" extends="goodvomap">  
-		<association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
-		</association>
-	</resultMap>  
+
+  	<!-- zhaiBin,add -->
+  	<resultMap id="getGoodIntroduceInfo" type="com.sanbang.vo.goods.GoodsVo" extends="goodvomap">  
+    	<association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+     	</association>
+	</resultMap> 
 	
+	<resultMap id="IntroduceTwoResultMap" type="com.sanbang.vo.GoodsInfo">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="price" jdbcType="DECIMAL" property="price" />
+	    <result column="inventory" jdbcType="DOUBLE" property="inventory" />
+	    <result column="area_id" jdbcType="BIGINT" property="area_id" />
+	    <result column="goods_main_photo_id" jdbcType="BIGINT" property="goods_main_photo_id" />
+	    <result column="util_id" jdbcType="BIGINT" property="util_id" />
+	    <!--单位-->
+	     <association property="util" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
+	     </association>           
+	      <!--地区-->
+	     <association property="area" column="area_id" select="com.sanbang.dao.ezs_areaMapper.selectByPrimaryKey">
+	     </association>
+	     <!--主图片,zhaiBin修改-->
+	     <association property="mainPhoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
+	     </association> 
+  	</resultMap> 
+ <sql id="IntroduceColumnList" >
+    g.id, g.inventory, g.name, g.price, g.area_id, g.goods_main_photo_id, g.util_id
+  </sql>
+	<!-- 优品推荐2 -->
+  <select id="goodsIntroduceTwo" resultMap="IntroduceTwoResultMap" parameterType="com.sanbang.utils.Page">
+    select
+    <include refid="IntroduceColumnList" />
+    from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.recommend = '1' order by g.recommend_time desc LIMIT #{startPos},#{pageSize}
+  </select>
 	
 	<!--商品详情展示-->
 	<select id="getgoodsinfo" resultMap="goodvomap">

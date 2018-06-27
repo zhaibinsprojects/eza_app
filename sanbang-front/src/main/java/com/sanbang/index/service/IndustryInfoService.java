@@ -9,4 +9,11 @@ public interface IndustryInfoService {
 	public Map<String, Object> getIndustryInfoByKinds(Long kindsId,String currentPage);
 	
 	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId,String currentPage);
+	/**
+	 * 根据二级栏目获取文章name和meta(不要文章内容，影响效率)
+	 * @param parentKindsId
+	 * @param currentPage
+	 * @return
+	 */
+	public Map<String, Object> getEssayBySecondTheme(Long parentKindsId,String currentPage);
 }

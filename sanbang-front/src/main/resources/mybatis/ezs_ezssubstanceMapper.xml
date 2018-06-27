@@ -508,11 +508,24 @@
   <select id="goodsAllIndustryCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
     select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id) 
   </select>
-  
   <!-- 根据一级栏目直接获取文章报告 -->
   <select id="selectAllGoodsIndustryByPage" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
   	select 
   	<include refid="Base_Column_List" />
+	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id ) order by addTime desc LIMIT #{startPos},#{pageSize}
+  </select>
+  
+  
+  <resultMap id="EssayThemeResultMap" type="ezs_ezssubstance" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <!-- 延迟加载 上级栏目 -->
+	<association column="ec_id" property="parentColumn" select="com.sanbang.dao.ezs_columnMapper.selectByPrimaryKey"></association> 
+  </resultMap>
+  <!-- 根据一级栏目直接获取文章报告TWO -->
+  <select id="selectEssayThemeByPage" resultMap="EssayThemeResultMap" parameterType="com.sanbang.vo.ExPage">
+  	select 
+  	id,name, ec_id
 	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id ) order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
 </mapper>

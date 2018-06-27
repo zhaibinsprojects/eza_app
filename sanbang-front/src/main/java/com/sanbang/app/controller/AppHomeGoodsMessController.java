@@ -2,6 +2,7 @@ package com.sanbang.app.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.index.service.CustomizedRecordService;
+import com.sanbang.index.service.CustomerService;
 import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
 import com.sanbang.index.service.IndustryInfoService;
@@ -37,6 +38,7 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.ExPage;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomePageMessInfo;
+import com.sanbang.vo.UserInfoMess;
 import com.sanbang.vo.goods.GoodsVo;
 
 @Controller
@@ -51,11 +53,11 @@ public class AppHomeGoodsMessController {
 	@Autowired
 	private CustomizedService customizedService;
 	@Autowired
-	private CustomizedRecordService customizedRecordService;
-	@Autowired
 	private IndustryInfoService industryInfoService;
 	@Autowired
 	private ReportEssayServer reportEssayServer;
+	@Autowired
+	private CustomerService customerService;
 	
 	
 	/**
@@ -178,7 +180,9 @@ public class AppHomeGoodsMessController {
 		}
 		return rs;
 	}
+	//////////////////////////////////采购定制页面初始化\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	/**
+	 * 不启用
 	 * 获取商品分类（一二三级别）
 	 * @author zhaibin
 	 * @param request
@@ -221,11 +225,13 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
+			rs.setObj(secondGoodsClassList);
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
 	/**
+	 * 不启用
 	 * 颜色列表+形态列表
 	 * @author zhaibin
 	 * @return
@@ -245,12 +251,85 @@ public class AppHomeGoodsMessController {
 			rs.setObj(mmp);
 		}else{
 			rs = Result.failure();
+			rs.setObj(" ");
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
-	
-	
+	/**
+	 * 启用
+	 * 初始化采购定制页面
+	 * @author zhaibin
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/initCustomized") 
+	@ResponseBody
+	public Object initCustomized(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> mmp = null;
+		Map<String, Object> mmpp = null;
+		Map<String, Object> addressMP = null;
+		Map<String, Object> resultMP = new HashMap<>();
+		List<ezs_goods_class> secondGoodClassListTemp = new ArrayList<>();
+		Result rs = null;
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(user==null){
+			rs = Result.failure();
+			rs.setMsg("用户未登录");
+			rs.setObj(" ");
+			return rs;
+		}
+		//二三级商品类别分类
+		mmp = this.goodsClassService.queryChildNodes();
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_goods_class> secondGoodClassList = (List<ezs_goods_class>) mmp.get("Obj");
+			//过滤字段
+			for (ezs_goods_class goodclass : secondGoodClassList) {
+				ezs_goods_class goodclassSecond = new ezs_goods_class();
+				List<ezs_goods_class> thirdGoodClassList = new ArrayList<>();
+				List<ezs_goods_class> thirdGoodClassListTemp = new ArrayList<>();
+				goodclassSecond.setId(goodclass.getId());
+				goodclassSecond.setName(goodclass.getName());
+				//获取子节点集合
+				thirdGoodClassList = goodclass.getChildNodeList();
+				for (ezs_goods_class thirdGoodClass : thirdGoodClassList) {
+					ezs_goods_class thirdGoodClassTemp = new ezs_goods_class();
+					thirdGoodClassTemp.setId(thirdGoodClass.getId());
+					//防止因name为null导致字段不显示，传入String对象
+					thirdGoodClassTemp.setName(new String(thirdGoodClass.getName()==null?"  ":thirdGoodClass.getName()));
+					thirdGoodClassListTemp.add(thirdGoodClassTemp);
+				}
+				goodclassSecond.setChildNodeList(thirdGoodClassListTemp);
+				secondGoodClassListTemp.add(goodclassSecond);
+			}
+			resultMP.put("GoodsClassList", secondGoodClassListTemp);
+		}else{
+			resultMP.put("GoodsClassList", secondGoodClassListTemp);
+		}
+		//颜色形态
+		mmpp = this.goodsClassService.queryGoodColorAndForm();
+		Integer ErrorCodeTwo = (Integer)mmpp.get("ErrorCode");
+		if(ErrorCodeTwo!=null&&ErrorCodeTwo.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			resultMP.put("ColorAndForm", mmpp);
+		}else{
+			resultMP.put("ColorAndForm", mmpp);
+		}
+		//在线用户地址信息
+		addressMP = this.customerService.getUserMessByUser(user);
+		Integer ErrorCodeTree = (Integer)addressMP.get("ErrorCode");
+		if(ErrorCodeTree!=null&&ErrorCodeTree.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			UserInfoMess uim = (UserInfoMess) addressMP.get("Obj");
+			resultMP.put("UserInfo", uim);
+		}else{
+			resultMP.put("UserInfo", " ");
+		}
+		rs = Result.success();
+		rs.setObj(resultMP);
+		rs.setMsg("查询成功");
+		return rs;
+	}
+	//////////////////////////////////////////////首页相关内容\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	/**
 	 * 返回全部首页相关内容
 	 * @author zhaiBin
@@ -310,7 +389,7 @@ public class AppHomeGoodsMessController {
 	private Result goodsIntroduceInfo(String currentPage,String addressId){
 		log.info("优品推荐商品查询begin..........................");
 		Map<String, Object> mmp = null;
-		List<GoodsVo> glist = null;
+		List<GoodsInfo> glist = null;
 		Result rs = null;
 		Page page = null;
 		if(currentPage==null){
@@ -319,14 +398,14 @@ public class AppHomeGoodsMessController {
 		mmp = this.recommendGoodsService.goodsIntroduceTwo(currentPage);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			glist = (List<GoodsVo>) mmp.get("Obj");
+			glist = (List<GoodsInfo>) mmp.get("Obj");
 			List<GoodsInfo> glistTemp = new ArrayList<>();
-			for (GoodsVo gVo : glist) {
+			for (GoodsInfo gVo : glist) {
 				GoodsInfo goodInfo = new GoodsInfo();
 				goodInfo.setId(gVo.getId());
 				goodInfo.setName(gVo.getName());
-				if(gVo.getMainphoto()!=null&&gVo.getMainphoto().size()>0)
-					goodInfo.setMainPhoto(gVo.getMainphoto().get(0));
+				if(gVo.getMainPhoto()!=null)
+					goodInfo.setMainPhoto(gVo.getMainPhoto());
 				//地址
 				//goodInfo.setAddess(gVo.getAddess());
 				goodInfo.setAreaName(gVo.getArea().getAreaName());
@@ -359,7 +438,8 @@ public class AppHomeGoodsMessController {
 		Result rs = null;
 		if(currentPage==null)
 			currentPage = "1";
-		mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage);
+		//mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage);
+		mmp = this.industryInfoService.getEssayBySecondTheme(Long.valueOf(12), currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -367,14 +447,10 @@ public class AppHomeGoodsMessController {
 			List<ezs_ezssubstance> eelist = new ArrayList<>();
 			for (ezs_ezssubstance eze : elist) {
 				//去除不必要信息
-				ezs_ezssubstance tempEze = new ezs_ezssubstance();
 				ezs_column parentColumn = new ezs_column(); 
-				tempEze.setId(eze.getId());
-				tempEze.setName(eze.getName());
-				tempEze.setMeta(eze.getMeta());
 				parentColumn.setName(eze.getParentColumn().getName());
-				tempEze.setParentColumn(parentColumn);
-				eelist.add(tempEze);
+				eze.setParentColumn(parentColumn);
+				eelist.add(eze);
 			}
 			rs = Result.success();
 			rs.setObj(eelist);
@@ -430,27 +506,18 @@ public class AppHomeGoodsMessController {
 		Map<String, Object> mmp = null;
 		List<ezs_goods_class> goodClassList = null;
 		List<ezs_goods_class> goodClassListTemp = new ArrayList<>();
-		mmp = goodsClassService.queryThirdGoodsClass("3");
+		//mmp = goodsClassService.queryThirdGoodsClass("3");
+		mmp = goodsClassService.queryGoodClassIncludePic();
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			goodClassList = (List<ezs_goods_class>) mmp.get("Obj");
 			for (ezs_goods_class goodsClass : goodClassList) {
-				//筛选，只要有图片的
-				if(goodsClass.getPhoto_id()==null||goodsClass.getPhoto_id().equals(""))
-					continue;
-				ezs_goods_class goodsClassTemp = new ezs_goods_class();
-				goodsClassTemp.setId(goodsClass.getId());
-				goodsClassTemp.setLevel(goodsClass.getLevel());
-				goodsClassTemp.setName(goodsClass.getName());
-				//http://10.10.10.85/front/resource/indeximg/%E9%A6%96%E9%A1%B5-1_03.png
-				if(goodsClass.getPhoto()!=null){
-					ezs_accessory photo = new ezs_accessory();
-					photo.setId(goodsClass.getPhoto().getId());
-					photo.setName(goodsClass.getPhoto().getName());
-					photo.setPath(goodsClass.getPhoto().getPath());
-					goodsClassTemp.setPhoto(photo);
-				}
-				goodClassListTemp.add(goodsClassTemp);
+				ezs_accessory photo = new ezs_accessory();
+				photo.setId(goodsClass.getPhoto().getId());
+				photo.setName(goodsClass.getPhoto().getName());
+				photo.setPath(goodsClass.getPhoto().getPath());
+				goodsClass.setPhoto(photo);
+				goodClassListTemp.add(goodsClass);
 			}
 			log.info("查询三级商品类别信息end。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 			return goodClassListTemp;
@@ -469,7 +536,6 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices = new Advices();
 		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		
 		String str = "http://10.10.10.148/front/resource/indeximg/首页-1_13.png";
 		String strTemp = "";
 		// 2.以UTF-8编码方式获取str的字节数组，再以默认编码构造字符串
@@ -586,7 +652,7 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
-			rs.setObj(substanceListTemp.add(new ezs_ezssubstance()));
+			rs.setObj(substanceListTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
