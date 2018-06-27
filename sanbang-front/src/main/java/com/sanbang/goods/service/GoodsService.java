@@ -49,7 +49,7 @@ public interface GoodsService {
 	 * 同类货品
 	 * @param id
 	 */
-	public List<ezs_goods> listForGoods(Long goodClass_id);
+	public List<GoodsVo> listForGoods(Long goodClass_id);
 	
 	/**
 	 * @param areaList	地区id

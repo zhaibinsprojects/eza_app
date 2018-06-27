@@ -77,6 +77,12 @@ public class AppUserSetupAuthController {
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
 	
+	@Resource(name="ezs_userMapper")
+	private com.sanbang.dao.ezs_userMapper ezs_userMapper;
+	
+	// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
 	
 	/**
 	 * 买家会员中心
@@ -105,6 +111,11 @@ public class AppUserSetupAuthController {
 			result.setObj(map);
 			return result;
 		}else{
+			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+			if(null!=upi1){
+				RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
+				upi=upi1;
+			}
 			map.put("userimg", ImageUrlUtil.geturl(DictionaryCate.USER_ICON, upi.getAuthimg()));
 			map.put("name", upi.getName());
 			map.put("status", upi.getEzs_store().getStatus());

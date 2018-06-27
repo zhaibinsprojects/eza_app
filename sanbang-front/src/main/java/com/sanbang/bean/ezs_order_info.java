@@ -11,7 +11,10 @@ import java.math.BigDecimal;
  */
 public class ezs_order_info implements Serializable {
 
-	private static final long serialVersionUID = 4369774318700408375L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7494592593867163993L;
 
 	private String good_no;// 商品编号
 
@@ -98,6 +101,10 @@ public class ezs_order_info implements Serializable {
 	private long ispg;
 	//是否可退货
 	private  long ist;
+	
+	private long orderid;
+	
+	private long goodsid;
 
 	public long getIst() {
 		return ist;
@@ -356,6 +363,22 @@ public class ezs_order_info implements Serializable {
 		this.ispg = ispg;
 	}
 
+	public long getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(long orderid) {
+		this.orderid = orderid;
+	}
+
+	public long getGoodsid() {
+		return goodsid;
+	}
+
+	public void setGoodsid(long goodsid) {
+		this.goodsid = goodsid;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_order_info [good_no=" + good_no + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
@@ -367,7 +390,8 @@ public class ezs_order_info implements Serializable {
 				+ ", buyerid=" + buyerid + ", sellerid=" + sellerid + ", pay_mode=" + pay_mode + ", pay_mode01="
 				+ pay_mode01 + ", pay_mode02=" + pay_mode02 + ", sc_status=" + sc_status + ", ezs_logistics="
 				+ ezs_logistics + ", path=" + path + ", photoName=" + photoName + ", weAddress_id=" + weAddress_id
-				+ "]";
+				+ ", ispg=" + ispg + ", ist=" + ist + ", orderid=" + orderid + ", goodsid=" + goodsid + "]";
 	}
+	
 
 }

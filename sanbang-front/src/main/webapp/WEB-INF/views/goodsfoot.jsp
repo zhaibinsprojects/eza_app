@@ -13,6 +13,7 @@
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
+<script type="text/javascript" src="front/resource/js/goods/goods.js"></script>
 
 </head>
 <body style="background:#efefef;">
@@ -22,23 +23,23 @@
 			<div class="tocart"><img src="front/resource/img/micon_039.png"/><br>采购单</div>
 			<c:choose>
 			<c:when test="${good.collected eq 1}">
-			<div class="collcc" onclick="collected('${good.id}','${userkey}');"><img src="front/resource/img/micon_042.png"/><br>收藏</div>
+			<div class="collcc" ><img src="front/resource/img/micon_042.png"/><br>收藏</div>
 			</c:when>
 			<c:otherwise>
-			<div class="collcc" onclick="collected('${good.id}','${userkey}');"><img src="front/resource/img/micon_041.png"/><br>收藏</div>
+			<div class="collcc" ><img src="front/resource/img/micon_041.png"/><br>收藏</div>
 			</c:otherwise>
 			</c:choose>
 			
-			<div onclick=tophone();><img src="front/resource/img/micon_043.png"/><br>电话</div>
+			<div class="tophone"><img src="front/resource/img/micon_043.png"/><br>电话</div>
 			<div><img src="front/resource/img/micon_045.png"/><br><a href="https://webchat.7moor.com/wapchat.html?accessId=77ad4f10-fa6f-11e7-b5e9-3f25a985904b&amp;fromUrl=&amp;urlTitle=" style="color: #333333;">客服</a></div>
 		</div>
 		<c:choose>
 		<c:when test="${good.inventory eq 0}">
-		<div class="ezsm-normal-bottombtnB4" style="background:#00897;color: white;">预约预定</div>
+		<div class="ezsm-normal-bottombtnB4" style="background:#00897;">预约预定</div>
 		</c:when>
 		<c:when test="${good.inventory gt 0 }">
-		<div onclick="addcart('${good.id}','${userkey}');" class="ezsm-normal-bottombtnB2" style="background: orange;width: 25%;">加入采购单</div>
-		<div  class="ezsm-normal-bottombtnB3" style="background: red;width: 25%; color: white;">立即购买</div>
+		<div  class="ezsm-normal-bottombtnB5" style="background: orange;width: 25%;">加入采购单</div>
+		<div  class="ezsm-normal-bottombtnB2" style="background: red;width: 25%; color: white;">立即购买</div>
 		</c:when>
 		</c:choose>
 	</div>

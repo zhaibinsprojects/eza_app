@@ -60,6 +60,15 @@ public class ezs_set_return_order {
 
     private Long userseller_id;
 
+    private Integer nowStatus;
+
+    private Integer porder_status_store;
+
+    private Integer allReadySend;
+
+    private BigDecimal guanothermoeny;
+
+    private String order_no;
     public Long getId() {
         return id;
     }
@@ -283,4 +292,60 @@ public class ezs_set_return_order {
     public void setUserseller_id(Long userseller_id) {
         this.userseller_id = userseller_id;
     }
+
+    public Integer getNowStatus() {
+        return nowStatus;
+    }
+
+    public void setNowStatus(Integer nowStatus) {
+        this.nowStatus = nowStatus;
+    }
+
+    public Integer getPorder_status_store() {
+        return porder_status_store;
+    }
+
+    public void setPorder_status_store(Integer porder_status_store) {
+        this.porder_status_store = porder_status_store;
+    }
+
+    public Integer getAllReadySend() {
+        return allReadySend;
+    }
+
+    public void setAllReadySend(Integer allReadySend) {
+        this.allReadySend = allReadySend;
+    }
+
+    public BigDecimal getGuanothermoeny() {
+        return guanothermoeny;
+    }
+
+    public void setGuanothermoeny(BigDecimal guanothermoeny) {
+        this.guanothermoeny = guanothermoeny;
+    }
+
+	public String getOrder_no() {
+		return order_no;
+	}
+
+	public void setOrder_no(String order_no) {
+		this.order_no = order_no;
+	}
+
+	@Override
+	public String toString() {
+		return "ezs_set_return_order [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
+				+ ", finshtime=" + finshtime + ", guanliremark=" + guanliremark + ", guanliwuliumoeny="
+				+ guanliwuliumoeny + ", num=" + num + ", orderType=" + orderType + ", order_status_store="
+				+ order_status_store + ", prodectname=" + prodectname + ", realReturnMoeny=" + realReturnMoeny
+				+ ", remark=" + remark + ", returnAddress=" + returnAddress + ", returnReason=" + returnReason
+				+ ", returnTotal=" + returnTotal + ", returnType=" + returnType + ", set_return_no=" + set_return_no
+				+ ", state1=" + state1 + ", state2=" + state2 + ", status=" + status + ", tmoney=" + tmoney + ", tnum="
+				+ tnum + ", updatetime=" + updatetime + ", good_id=" + good_id + ", orderForm_id=" + orderForm_id
+				+ ", porderForm_id=" + porderForm_id + ", upoper_id=" + upoper_id + ", userseller_id=" + userseller_id
+				+ ", nowStatus=" + nowStatus + ", porder_status_store=" + porder_status_store + ", allReadySend="
+				+ allReadySend + ", guanothermoeny=" + guanothermoeny + ", order_no=" + order_no + "]";
+	}
+    
 }

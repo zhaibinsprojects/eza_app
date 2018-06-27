@@ -57,7 +57,7 @@ public class AccountSafeController {
 		Result result = Result.success();
 		
 		try {
-			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 			if (upi == null) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				result.setMsg("用户未登录");
@@ -86,7 +86,7 @@ public class AccountSafeController {
 		Result result = Result.success();
 		
 		try {
-			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 			if (upi == null) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				result.setMsg("用户未登录");
@@ -125,7 +125,7 @@ public class AccountSafeController {
 	public Result setOrUpdateSecuratePhone(@RequestParam(value="mobile",required=true) String mobile,@RequestParam(value="code",required=true) String code,HttpServletRequest request){
 		Result result = Result.success();
 		
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");

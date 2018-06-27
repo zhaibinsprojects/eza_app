@@ -85,7 +85,7 @@ public class AppGoodsController {
 			upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		}
 		userid=null==upi?0:upi.getId();
-		model.addAttribute("userkey", null==upi?0:upi.getUserkey());
+		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
 		//用户校验end
 		
 		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
@@ -93,6 +93,74 @@ public class AppGoodsController {
 		return view+"goodsshow";
 	}
 	
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询是否收藏
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/iscollented")
+	public Result iscollented(HttpServletRequest request,Long id,Model model){
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,user.getId());
+		if(null != goodsvo){
+			result.setObj(goodsvo.getCollected());
+			result.setMsg("查询成功！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}else{
+			result.setObj(0);
+			result.setMsg("查询失败！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询货品描述
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@RequestMapping("/toGoodsdec")
+	public String toGoodsdec(HttpServletRequest request,Long goodsid,Model model){
+		//用户校验begin
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		long userid=0;
+		if(null==upi){
+			upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		}
+		userid=null==upi?0:upi.getId();
+		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
+		//用户校验end
+		
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(goodsid,userid);
+		
+		//同类货品
+		List<GoodsVo> catalist = new ArrayList<GoodsVo>();
+		if(null != goodsvo){
+			catalist = goodsService.listForGoods(goodsvo.getGoodClass_id());
+		}
+		
+		model.addAttribute("catalist", catalist);
+		model.addAttribute("good", goodsvo);
+		
+		return view+"goodsdec";
+	}
 	
 	
 	/**
@@ -296,7 +364,7 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result listForGoods(Long goodClass_id){
 		Result result = new Result();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
+		List<GoodsVo> list = new ArrayList<GoodsVo>();
 		if(null != goodClass_id){
 			list = goodsService.listForGoods(goodClass_id);
 			result.setObj(list);

@@ -258,7 +258,7 @@ public class GoodsController {
 	@ResponseBody
 	public Result listForGoods(Long goodClass_id){
 		Result result = new Result();
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
+		List<GoodsVo> list = new ArrayList<GoodsVo>();
 		if(null != goodClass_id){
 			list = goodsService.listForGoods(goodClass_id);
 			result.setObj(list);

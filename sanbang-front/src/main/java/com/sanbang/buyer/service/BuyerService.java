@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sanbang.bean.ezs_order_info;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.PagerOrder;
 
@@ -50,7 +51,7 @@ public interface BuyerService {
 	 * @return
 	 */
 	 public Result seller_order_signature(String order_no,HttpServletRequest request,
-	            HttpServletResponse response);
+	            HttpServletResponse response,ezs_user upi);
 	
 	 
 	 
@@ -69,7 +70,7 @@ public interface BuyerService {
 	  * @param order_no
 	  * @return
 	  */
-	 public Result   orderclose(HttpServletRequest request,String order_no);
+	 public Result   orderclose(HttpServletRequest request,String order_no,ezs_user upi);
 	 
 	 /**
 	  * 上传订单支付凭证

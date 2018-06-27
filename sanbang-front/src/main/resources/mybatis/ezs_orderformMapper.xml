@@ -397,7 +397,7 @@
 			C.addess,
 			B.total_price,
 			B.goods_amount,
-			B.order_status,
+			IF(B.order_status=1,10,B.order_status) order_status,
 			B.first_price,
 			B.end_price,
 			B.all_price,
@@ -413,7 +413,8 @@
 			D.areaName,
 			B.user_id buyerid,
 			C.user_id sellerid,
-			F.path,
+			CONCAT("http://www.ezaisheng.com/",F.path,"/",F.name)  as path
+			,
 			F. NAME photoName,
 			IF(ISNULL(G.id), 0, 1) ispg,
 			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
@@ -434,7 +435,7 @@
 		 and  B.order_status in (#{pager.order_status})	
 		</if>
 		<if test="pager.order_status!=null and pager.order_status=='-1'">
-	    and	B.order_status in (10,20,30,40,50,60,70,80,90,110)	
+	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
 		and B.order_type in (${pager.order_type})	
@@ -472,7 +473,7 @@
 		 and  B.order_status in (#{pager.order_status})
 		</if>
 		<if test="pager.order_status!=null and pager.order_status=='-1'">
-	    and	B.order_status in (10,20,30,40,50,60,70,80,90,110)	
+	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
 		and B.order_type in (${pager.order_type})	
@@ -517,7 +518,8 @@
       		C.user_id  sellerid,
 			IF(ISNULL(G.id), 0, 1) ispg,
 			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
-			B.weAddress_id
+			B.weAddress_id,
+			CONCAT("http://www.ezaisheng.com/",F.path,"/",F.name)  as path
 			FROM
 				ezs_orderform B
 			LEFT JOIN ezs_goodscart A ON A.of_id = B.id

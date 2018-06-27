@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -173,7 +174,7 @@ public class BuyerMenu {
 		}
 
 		try {
-			result= buyerService.orderclose(request,order_no);
+			result= buyerService.orderclose(request,order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -337,7 +338,13 @@ public class BuyerMenu {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			result = buyerService.seller_order_signature(order_no, request, response);
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result = buyerService.seller_order_signature(order_no, request, response,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -372,8 +379,12 @@ public class BuyerMenu {
 		}
 		
 		try {
-			//销售合同 6
-			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 6, pageno, request);
+			//销售合同 6.append(upi.getEzs_store().getSnumber())
+			result = buyerService.getContentList(StringUtils.isEmpty(
+					upi.getEzs_store().getSnumber())?
+							(new StringBuffer().append("'").append(upi.getEzs_store().getNumber()).append("'").toString())
+							:(new StringBuffer().append("'").append(upi.getEzs_store().getNumber()).append("'").append(",").append("'").append(upi.getEzs_store().getSnumber()).append("'").toString()),
+							6, pageno, request);
 		} catch (Exception e) {
 			result.setMsg("未获取到数据");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);

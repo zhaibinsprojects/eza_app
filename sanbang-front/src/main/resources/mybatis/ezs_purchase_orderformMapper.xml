@@ -466,7 +466,7 @@
 			B.deleteStatus,
 			D.areaName,
 			B.sellerUser_id,	
-  			 CONCAT("http://10.10.10.148/",F.path,F.`name`) as path,
+  			 CONCAT("http://www.ezaisheng.com/",F.path,"/",F.name) as path,
 			F. NAME photoName		
 				FROM
 		ezs_purchase_orderform B			

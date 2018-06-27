@@ -10,10 +10,10 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
-<link rel="stylesheet" href="resource/css/ezsm.css?v=1" />
- <script type="text/javascript" src="resource/js/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src="resource/js/jquery.touchSlider.js"></script>
-    <script type="text/javascript" src="resource/js/ezsm.js?v=1"></script>
+<link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
+ <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
+   <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 
 </head>
 <body style="background:#efefef;">
@@ -86,6 +86,10 @@
 		</div>
 	</div>
 	
-<%@ include file="/WEB-INF/views/goodsfoot.jsp"%> 
+<%@ include file="../goodsfoot.jsp"%> 
 </body>
+
+<script type="text/javascript">
+var baseurl="${serurl}";
+</script>
 </html>
