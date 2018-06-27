@@ -276,7 +276,7 @@ public class AppHomeGoodsMessController {
 		if(user==null){
 			rs = Result.failure();
 			rs.setMsg("用户未登录");
-			rs.setObj(" ");
+			rs.setObj(new Object());
 			return rs;
 		}
 		//二三级商品类别分类
@@ -322,7 +322,7 @@ public class AppHomeGoodsMessController {
 			UserInfoMess uim = (UserInfoMess) addressMP.get("Obj");
 			resultMP.put("UserInfo", uim);
 		}else{
-			resultMP.put("UserInfo", " ");
+			resultMP.put("UserInfo", new Object());
 		}
 		rs = Result.success();
 		rs.setObj(resultMP);
