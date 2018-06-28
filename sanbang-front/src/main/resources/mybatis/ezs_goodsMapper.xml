@@ -1087,7 +1087,7 @@
 				WHERE
 					1 = 1
 				AND B.goodQuality > 3
-				AND B.goods_id = 1
+				AND B.goods_id = #{goodsid,jdbcType=BIGINT}	
 			) / (
 				SELECT
 					COUNT(C.id)

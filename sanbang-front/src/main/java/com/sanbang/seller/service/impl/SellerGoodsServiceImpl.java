@@ -592,6 +592,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				if (aa > 0) {
 					result.setSuccess(true);
 					result.setMsg("修改货品成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				} else {
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(false);

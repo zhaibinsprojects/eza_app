@@ -79,16 +79,16 @@ public class SellerGoodsController {
 		Long useId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		Page page = null;
 		if(currentPage==null){
@@ -231,12 +231,14 @@ public class SellerGoodsController {
 			//形态
 			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
 			//形态
-			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
+			map.put("EZS_SUPPLY", dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY));
+			
 			//地址
 			//map.put("area", areaService.getAreaParentList());
 			//分类
 			map.put("cata",cataService.getFirstList());
  			result.setObj(map);
+ 			result.setMsg("请求成功");
  			result.setSuccess(true);
  			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		};

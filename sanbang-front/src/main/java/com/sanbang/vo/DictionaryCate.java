@@ -415,6 +415,10 @@ public class DictionaryCate {
     
     //形态
     public final static String EZS_FORM="EZS_FORM";
+    //供应情况
+    public final static String EZS_SUPPLY="EZS_SUPPLY";
+    
+    
     
     //订单类型
     //货品订单
