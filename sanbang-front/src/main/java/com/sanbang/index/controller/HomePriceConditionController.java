@@ -50,6 +50,7 @@ public class HomePriceConditionController {
 	 * @param protection 是否环保
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceInTime")
 	@ResponseBody
 	public Object getPriceInTime(HttpServletRequest request,HttpServletResponse response,String countryType,String kindId,String colorId
@@ -58,14 +59,14 @@ public class HomePriceConditionController {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//参数传递
-		tMp.put("countryType", countryType);
-		tMp.put("kindId", kindId);
-		tMp.put("colorId", colorId);
-		tMp.put("formId", formId);
-		tMp.put("source", source);
-		tMp.put("purpose", purpose);
-		tMp.put("burning", burning);
-		tMp.put("protection", protection);
+		tMp.put("countryType", countryType);//类型   （1.国产价格/ 2.进口价格  3.实时成交价）
+		tMp.put("kindId", kindId);			//商品分类
+		tMp.put("colorId", colorId);		//颜色
+		tMp.put("formId", formId);			//形态
+		tMp.put("source", source);			//来源
+		tMp.put("purpose", purpose);		//用途
+		tMp.put("burning", burning);		//燃烧等级
+		tMp.put("protection", protection);	//是否环保
 		
 		mmp = this.priceConditionService.getPriceInTime(tMp);
 		List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
@@ -104,7 +105,6 @@ public class HomePriceConditionController {
 		}
 		return rs;
 	}
-	
 	/**
 	 * 行情分析-二级栏目（年、月、周、日评）
 	 * @param request
@@ -225,9 +225,6 @@ public class HomePriceConditionController {
 		}
 		return rs;
 	}
-	
-	
-	
 	/**
 	 * 价格趋势+条件筛选
 	 * @param request
@@ -241,6 +238,7 @@ public class HomePriceConditionController {
 	 * @param protection 是否环保
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceTrendcy")
 	@ResponseBody
 	public Object getPriceTrendcy(HttpServletRequest request,HttpServletResponse response,String kindId,String colorId

@@ -1,7 +1,8 @@
 package com.sanbang.app.controller;
 
-import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ import com.sanbang.vo.ExPage;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomePageMessInfo;
 import com.sanbang.vo.UserInfoMess;
-import com.sanbang.vo.goods.GoodsVo;
 
 @Controller
 @RequestMapping("/app/home")
@@ -58,8 +58,6 @@ public class AppHomeGoodsMessController {
 	private ReportEssayServer reportEssayServer;
 	@Autowired
 	private CustomerService customerService;
-	
-	
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -157,7 +155,7 @@ public class AppHomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
-			,ezs_customized customized) throws Exception{
+			,ezs_customized customized,String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
@@ -168,6 +166,16 @@ public class AppHomeGoodsMessController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
+		if(ppre_time==null){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("交货时间不能为NULL");
+			return rs;
+		}
+		//格式化时间格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf.parse(ppre_time);
+		customized.setPre_time(date);
 		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -474,13 +482,11 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<Advices>();
 		try {
 			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
-			for (int i = 0; i < 3; i++) {
-				Advices advice = new Advices();
-				advice.setPath("qwer/qweqwe/qweqwe");
-				advice.setLink("qwdsasd/asdasd/asdasd");
-				advice.setpName("你猜猜");
-				adviceList.add(advice);
-			}
+			Advices advice = new Advices();
+			advice.setPath("http://10.10.10.148/front/resource/indeximg/title001.jpg");
+			advice.setLink(" ");
+			advice.setpName("title001.jpg");
+			adviceList.add(advice);
 			if(adviceList.size()>0){
 				rs = Result.success();
 				rs.setObj(adviceList);
@@ -534,24 +540,21 @@ public class AppHomeGoodsMessController {
 	private List<Advices> getSubscribeList(HttpServletRequest request){
 		//String path = request.getServletContext().getContextPath();
 		List<Advices> adviceList = new ArrayList<>();
-		Advices advices = new Advices();
-		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		String str = "http://10.10.10.148/front/resource/indeximg/首页-1_13.png";
-		String strTemp = "";
-		// 2.以UTF-8编码方式获取str的字节数组，再以默认编码构造字符串
-		try {
-			strTemp = new String(str.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.error("字符串转码失败");
-			log.error(e.getMessage());
-		}
-		advices.setPath(strTemp);
-		advices.setpName("首页-1_13.png");
-		advices.setLink("");
-		advices.setContent("标题展示");
-		adviceList.add(advices);
+		Advices advices01 = new Advices();
+		Advices advices02 = new Advices();
+		advices01.setPath("http://10.10.10.148/front/resource/indeximg/首页-1_13.png");
+		advices01.setpName("首页-1_13.png");
+		advices01.setLink("");
+		advices01.setContent("标题展示");
+		adviceList.add(advices01);
+		
+		advices01.setPath("http://10.10.10.148/front/resource/indeximg/advice001.jpg");
+		advices01.setpName("advice001.jpg");
+		advices01.setLink("");
+		advices01.setContent("标题展示");
+		
+		adviceList.add(advices01);
+		adviceList.add(advices02);
 		log.info("图片：/resource/indeximg/首页-1_13.png");
 		return adviceList;
 	}
@@ -583,7 +586,6 @@ public class AppHomeGoodsMessController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
-			
 			//进行显示字段的过滤
 			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
 			String filterFields = "columnLevel,id,name,title";
@@ -679,14 +681,18 @@ public class AppHomeGoodsMessController {
 				rs.setObj(new ezs_ezssubstance());
 				return rs;
 			}
+			//进行字段过滤
+			FieldFilterUtil<ezs_ezssubstance> fieldFilterUtil = new FieldFilterUtil<>();
+			String filterFields = "addTime,id,meta,name,content";
 			ezs_ezssubstance substanceTemp = new ezs_ezssubstance(); 
 			rs = Result.success();
-			//过滤字段
-			substanceTemp.setId(substance.getId());
-			substanceTemp.setAddTime(substance.getAddTime());
-			substanceTemp.setMeta(substance.getMeta());
-			substanceTemp.setName(substance.getName());
-			substanceTemp.setContent(substance.getContent());
+			try {
+				//字段过滤公共方法
+				substanceTemp = fieldFilterUtil.getFieldFilter(substance, filterFields, ezs_ezssubstance.class);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			rs.setObj(substanceTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{

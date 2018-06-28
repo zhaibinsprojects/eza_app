@@ -182,7 +182,7 @@
   <select id="getAddressByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
   	select 
 	<include refid="Base_Column_List" />
- 	from ezs_address where user_id = #{id} and bestow = '0'
+ 	from ezs_address where user_id = #{id} and bestow = '0' and deleteStatus = '0' ORDER BY addTime desc
   </select>
   <select id="findAddressByUseridAndBes" resultType="ezs_address">
   	select 
