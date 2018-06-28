@@ -47,27 +47,19 @@ import com.sanbang.vo.goods.GoodsVo;
 @Controller
 @RequestMapping("/app/goods")
 public class AppGoodsController {
-	
-	
 	@Autowired
 	private GoodsService goodsService;
-	
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
-	
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
-	
 	@Autowired
 	private AddressService addressService;
-	
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	private static final String view="/goods/";
-	
-	
 	/**
 	 * @author langjf
 	 * forapp 
@@ -126,8 +118,6 @@ public class AppGoodsController {
 		}
 		return result;
 	}
-	
-	
 	/**
 	 * @author langjf
 	 * forapp 
@@ -155,10 +145,8 @@ public class AppGoodsController {
 		if(null != goodsvo){
 			catalist = goodsService.listForGoods(goodsvo.getGoodClass_id());
 		}
-		
 		model.addAttribute("catalist", catalist);
 		model.addAttribute("good", goodsvo);
-		
 		return view+"goodsdec";
 	}
 	
@@ -204,7 +192,6 @@ public class AppGoodsController {
 			}
 			userid=null==upi?0:upi.getId();
 			//用户校验end
-			
 			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
 			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
 			Map<String, Object> map=new HashMap<>();
@@ -219,7 +206,6 @@ public class AppGoodsController {
 			result.setSuccess(false);
 			result.setMsg("查询失败");
 		}
-		
 		return result;
 	}
 	
