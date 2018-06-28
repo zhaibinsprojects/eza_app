@@ -1,6 +1,5 @@
 package com.sanbang.app.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +40,6 @@ import com.sanbang.vo.ExPage;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomePageMessInfo;
 import com.sanbang.vo.UserInfoMess;
-import com.sanbang.vo.goods.GoodsVo;
 
 @Controller
 @RequestMapping("/app/home")
@@ -484,13 +482,11 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<Advices>();
 		try {
 			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
-			for (int i = 0; i < 3; i++) {
-				Advices advice = new Advices();
-				advice.setPath("qwer/qweqwe/qweqwe");
-				advice.setLink("qwdsasd/asdasd/asdasd");
-				advice.setpName("你猜猜");
-				adviceList.add(advice);
-			}
+			Advices advice = new Advices();
+			advice.setPath("http://10.10.10.148/front/resource/indeximg/title001.jpg");
+			advice.setLink(" ");
+			advice.setpName("title001.jpg");
+			adviceList.add(advice);
 			if(adviceList.size()>0){
 				rs = Result.success();
 				rs.setObj(adviceList);
@@ -544,24 +540,21 @@ public class AppHomeGoodsMessController {
 	private List<Advices> getSubscribeList(HttpServletRequest request){
 		//String path = request.getServletContext().getContextPath();
 		List<Advices> adviceList = new ArrayList<>();
-		Advices advices = new Advices();
-		//advices.setPath(path+"/resource/indeximg/首页-1_13.png");
-		String str = "http://10.10.10.148/front/resource/indeximg/首页-1_13.png";
-		String strTemp = "";
-		// 2.以UTF-8编码方式获取str的字节数组，再以默认编码构造字符串
-		try {
-			strTemp = new String(str.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.error("字符串转码失败");
-			log.error(e.getMessage());
-		}
-		advices.setPath(strTemp);
-		advices.setpName("首页-1_13.png");
-		advices.setLink("");
-		advices.setContent("标题展示");
-		adviceList.add(advices);
+		Advices advices01 = new Advices();
+		Advices advices02 = new Advices();
+		advices01.setPath("http://10.10.10.148/front/resource/indeximg/首页-1_13.png");
+		advices01.setpName("首页-1_13.png");
+		advices01.setLink("");
+		advices01.setContent("标题展示");
+		adviceList.add(advices01);
+		
+		advices01.setPath("http://10.10.10.148/front/resource/indeximg/advice001.jpg");
+		advices01.setpName("advice001.jpg");
+		advices01.setLink("");
+		advices01.setContent("标题展示");
+		
+		adviceList.add(advices01);
+		adviceList.add(advices02);
 		log.info("图片：/resource/indeximg/首页-1_13.png");
 		return adviceList;
 	}
