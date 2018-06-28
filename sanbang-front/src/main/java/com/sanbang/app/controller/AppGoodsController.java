@@ -170,6 +170,7 @@ public class AppGoodsController {
 			result.setSuccess(true);
 		}else{
 			result.setMsg("查询失败！");
+			result.setObj(new Object());
 			result.setSuccess(false);
 		}
 		return result;
@@ -999,12 +1000,14 @@ public class AppGoodsController {
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
@@ -1035,7 +1038,7 @@ public class AppGoodsController {
 				rs = Result.success();
 				//检验通过无需返回前台信息
 				//tempMP.remove("SuccessFlag");
-				//rs.setObj(tempMP);
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 			}else{
 				//校验未通过（未全部通过）
@@ -1052,6 +1055,7 @@ public class AppGoodsController {
 			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
 			log.error(e.toString());
 		}
@@ -1079,12 +1083,14 @@ public class AppGoodsController {
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
@@ -1116,6 +1122,7 @@ public class AppGoodsController {
 				//检验通过无需返回前台信息
 				//tempMP.remove("SuccessFlag");
 				//rs.setObj(tempMP);
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 			}else{
 				//校验未通过（未全部通过）
@@ -1132,6 +1139,7 @@ public class AppGoodsController {
 			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
 			log.error(e.toString());
 		}
