@@ -63,6 +63,7 @@ public class APPSellerGoodsController {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryGoodsList")
 	@ResponseBody
 	public Object queryGoodsList(@RequestParam(name = "status", defaultValue = "-1") int status, HttpServletRequest request, HttpServletResponse response,String currentPage){
@@ -104,6 +105,7 @@ public class APPSellerGoodsController {
 		result.setObj(list);
 		result.setMeta(page);
 		result.setSuccess(true);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("查询成功");
 		result.setErrorcode(errorCode);
 		
@@ -166,6 +168,7 @@ public class APPSellerGoodsController {
 			map.put("form",form);
 			result.setObj(map);
 			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("查询成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,6 +248,7 @@ public class APPSellerGoodsController {
 		List<GoodsClass> list = cataService.getChildList(parentsId);
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
 		result.setObj(list);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		return result;
 	}
 	
@@ -435,6 +439,7 @@ public class APPSellerGoodsController {
 		if (list.size()==0) {
 			result.setSuccess(false);
 			result.setMsg("当前用户没有通过审核正在上架的货品，不能修改商品数量");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			return result;
 		}
 	
@@ -444,6 +449,7 @@ public class APPSellerGoodsController {
 		result.setObj(list);
 		result.setMeta(page);
 		result.setSuccess(true);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("查询成功");
 		result.setErrorcode(errorCode);
 		

@@ -108,6 +108,7 @@ public class BuyerServiceimpl implements BuyerService {
 	
 
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+	static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	public List<ezs_order_info> getOrderListByValue(PagerOrder pager) {
@@ -817,21 +818,21 @@ public class BuyerServiceimpl implements BuyerService {
 					logs.put("proples", ezs_logistics.getProples());
 					logs.put("car_no", ezs_logistics.getCar_no());
 					logs.put("phone", ezs_logistics.getPhone());
-					logs.put("service_time", ezs_logistics.getService_time());
-					logs.put("logistics_name", ezs_logistics.getLogistics_name());
-					logs.put("logistics_no", ezs_logistics.getLogistics_no());
+					logs.put("service_time", ezs_logistics.getService_time()==null?"":sdf1.format(ezs_logistics.getService_time()));
+					logs.put("logistics_name", "");
+					logs.put("logistics_no", "");
 				}else{
 					//快递
 					logs.put("logistics_name", ezs_logistics.getLogistics_name());
 					logs.put("logistics_no", ezs_logistics.getLogistics_no());
-					logs.put("proples", ezs_logistics.getProples());
-					logs.put("car_no", ezs_logistics.getCar_no());
-					logs.put("phone", ezs_logistics.getPhone());
-					logs.put("service_time", ezs_logistics.getService_time());
+					logs.put("proples", "");
+					logs.put("car_no", "");
+					logs.put("phone", "");
+					logs.put("service_time", "");
 					logs.put("logtype", 0);
 					
 				}
-				result.setSuccess(false);
+				result.setSuccess(true);
 				result.setMsg("请求成功");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setObj(logs);
