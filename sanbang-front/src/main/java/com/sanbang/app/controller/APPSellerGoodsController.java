@@ -259,7 +259,6 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -268,16 +267,16 @@ public class APPSellerGoodsController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		try {
 			result = sellerGoodsService.addGoodsInfo(result, upi, request,response);
@@ -300,7 +299,6 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object pullOffShelves(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -336,7 +334,6 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object updateGoodsInfoById(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -371,7 +368,6 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object submitGoodsForAudit(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -401,6 +397,7 @@ public class APPSellerGoodsController {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/updatePriceAndCnclNumInit")
 	@ResponseBody
 	public Object updatePriceAndCnclNumInit(HttpServletRequest request, String currentPage){
@@ -461,15 +458,13 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object updatePriceAndCnclNum(long goodsId, HttpServletRequest request){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		Long userId = upi.getId();
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("请重新登陆！");
 			return result;
 		}
-		
+		Long userId = upi.getId();
 		//验证用户是否激活，拥有卖家权限
 		ezs_store store = upi.getEzs_store();
 		Integer storeStatus = store.getStatus();

@@ -84,7 +84,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 			mmp.put("Obj", glist);
 		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-			mmp.put("Msg", "页码越界");
+			mmp.put("Msg", "暂无数据");
 			mmp.put("Page", page);
 		}
 		return mmp;
@@ -105,7 +105,7 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 			mmp.put("Obj", glist);
 		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-			mmp.put("Msg", "页码越界");
+			mmp.put("Msg", "暂无数据");
 			mmp.put("Page", page);
 		}
 		return mmp;

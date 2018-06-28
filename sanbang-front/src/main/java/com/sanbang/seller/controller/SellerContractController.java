@@ -38,56 +38,7 @@ public class SellerContractController {
 	@Autowired
 	DictService dictService;
 	
-	/**
-	 * 合同管理，展示合同列表
-	 * @param status
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/contractManage")
-//	@ResponseBody
-//	public Object contractManage(HttpServletRequest request, HttpServletResponse response, String currentPage){
-//		Map<String, Object> map = null;
-//		Result result = Result.failure();
-//		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-//		if(upi==null){
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//			result.setMsg("用户未登录");
-//			return result;
-//		}
-//		Long sellerId = upi.getId();
-//		
-//		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
-//		
-//		Page page = null;
-//		if(currentPage==null){
-//			currentPage = "1";
-//		}
-//		map = sellerContractService.contractManage(currentPage, sellerId);
-//		List<ezs_pact> list = new ArrayList<>();
-//		
-//		list = (List<ezs_pact>)map.get("Obj");
-//		
-//		int errorCode = (int) map.get("ErrorCode");
-//		
-//		page = (Page) map.get("page");
-//		result.setObj(list);
-//		result.setMeta(page);
-//		result.setErrorcode(errorCode);
-//		
-//		return result;
-//	}
+
 	/**
 	 * 查看合同详情
 	 * @param pactId
@@ -108,19 +59,18 @@ public class SellerContractController {
 			result.setMsg("用户未登录");
 			return result;
 		}
-		Long sellerId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
@@ -157,16 +107,16 @@ public class SellerContractController {
 		Long sellerId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		Page page = null;
 		if(currentPage==null){

@@ -7,6 +7,6 @@ public interface CommonOrderAdvice {
 	//订单状态通知
 	public  Result orderFormAdviceStatus(String order_no,String order_status);
 	
-	//退货订单状态通知
-	 public  Result returnOrderAdvice(long returnOrderid);
+	//订单详情通知
+	 public  Result returnOrderAdvice(String order_no,String order_status);
 }

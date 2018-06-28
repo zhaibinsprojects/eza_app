@@ -17,15 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.sanbang.bean.ezs_address;
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
-import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.buyer.service.impl.BuyerServiceimpl;
 import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_invoiceMapper;
@@ -33,7 +31,6 @@ import com.sanbang.dao.ezs_logisticsMapper;
 import com.sanbang.dao.ezs_pactMapper;
 import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.seller.service.SellerOrderService;
-import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
@@ -71,6 +68,9 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -311,6 +311,13 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			result.setMsg("系统错误");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
+		
+		if(result.getSuccess()){
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.orderFormAdviceStatus(order_no, "");
+			}
+		}
 		return result;
 	}
 
@@ -334,6 +341,12 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setSuccess(true);
 				result.setMsg("货品订单发货 ");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				if(result.getSuccess()){
+					//wemall回调
+					if(result.getSuccess()){
+						commonOrderAdvice.orderFormAdviceStatus(order_no, "");
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -341,6 +354,8 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			result.setMsg("系统错误");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
+		
+		
 		
 		return result;
 	}

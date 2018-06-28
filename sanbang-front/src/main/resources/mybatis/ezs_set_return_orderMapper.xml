@@ -538,4 +538,37 @@
 	WHERE  1=1
   	and  A.id=#{returnid}
 	</select>
+	
+	
+	<!--退货订单详情-->
+	<select id="returnOrderinfoByOrderno" resultMap="returnbuymap">
+  	SELECT
+	   A.id,
+		A.orderForm_id,
+		A.addTime,
+		A.state1,
+		A.state2,
+		A.`status`,
+		A.deleteStatus,
+		A.set_return_no,
+		A.returnType,
+		A.returnReason,
+		A.remark,
+		B.order_no,
+		A.prodectname,
+		A.num,
+		A.good_id,
+		A.returnTotal,
+		C.price,
+		A.userseller_id,
+		B.user_id,
+	    A.finshtime,
+	    B.order_type
+	FROM
+		ezs_set_return_order A
+	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
+	LEFT JOIN ezs_goods C ON A.good_id = C.id
+	WHERE  1=1
+  	and  B.order_no=#{order_no}
+	</select>
 </mapper>

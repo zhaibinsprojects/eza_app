@@ -33,19 +33,28 @@ public class AddressServiceImpl implements AddressService {
 		Result result = addressValidation(ezs_address);
 		if(result.getSuccess()){
 			//查询新地址是否已存在
-			ezs_address address = ezs_addressMapper.findByAreaidAndAreainfoAnduserid(ezs_address.getArea_id(),ezs_address.getArea_info(),upi.getId());
+			/*ezs_address address = ezs_addressMapper.findByAreaidAndAreainfoAnduserid(ezs_address.getArea_id(),ezs_address.getArea_info(),upi.getId());
 			
 			if(address!=null){
 				result.setMsg("该地址已存在");				
 				return result;
+			}*/
+			
+			if(!ezs_address.getBestow()){//true取消默认；false:设置默认
+				//查询是否有默认
+				ezs_address address = ezs_addressMapper.findAddressByUseridAndBes(upi.getId(),ezs_address.ADDRESS_BESTOW_0);
+				if(address !=null){
+					address.setBestow(ezs_address.ADDRESS_BESTOW_1);
+					ezs_addressMapper.updateByPrimaryKeySelective(address);
+				}
 			}
+			
 			try {
 				ezs_address.setAddTime(DateUtils.getCurrentDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			ezs_address.setDeleteStatus(ezs_address.ADDRESS_DELETESTATUS_0);
-			ezs_address.setBestow(ezs_address.ADDRESS_BESTOW_1);
 			ezs_address.setUser_id(upi.getId());
 			
 			ezs_addressMapper.insert(ezs_address);

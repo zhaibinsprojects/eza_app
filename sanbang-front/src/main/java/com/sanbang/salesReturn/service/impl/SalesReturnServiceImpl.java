@@ -1,9 +1,6 @@
 package com.sanbang.salesReturn.service.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,18 +8,18 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.app.controller.AppUserSetupCompanyInfoController;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_set_return_order;
-import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.dao.ezs_set_return_orderMapper;
 import com.sanbang.salesReturn.service.SalesReturnService;
-import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.returnorder.ReturnOrderVO;
 
 @Service("salesReturnService")
 public class SalesReturnServiceImpl implements SalesReturnService {
@@ -32,6 +29,9 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 	
 	@Autowired
 	private ezs_set_return_orderMapper ezs_set_return_orderMapper;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	private Logger log=Logger.getLogger(AppUserSetupCompanyInfoController.class);
 	@Override
@@ -49,12 +49,24 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 				result.setSuccess(false);
 				result.setMsg("订单号不能为空");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				return  result;
 			}
+			
 			ezs_order_info orde = ezs_orderformMapper.getOrderListByOrderno(returnOrder.getOrder_no());
 			if(null==orde){
 				result.setSuccess(false);
 				result.setMsg("订单不存在");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				return result;
+			}
+			
+			ReturnOrderVO returnvo =ezs_set_return_orderMapper.returnOrderinfoByOrderno(returnOrder.getOrder_no());
+			
+			if(null!=returnvo){
+				result.setSuccess(false);
+				result.setMsg("您已申请退货");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				return result;
 			}
 			// set_return_no; 退货编号
 			//remark:补充说明  
@@ -80,8 +92,14 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 			order.setOrder_status(100);
 			order.setId(orde.getOrderid());
 			int status=ezs_orderformMapper.updateByPrimaryKeySelective(order);
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setMsg("保存成功");
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.returnOrderAdvice(orde.getOrder_no(), "");
+			}
 		} catch (Exception e) {
-			
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setMsg("系统错误");

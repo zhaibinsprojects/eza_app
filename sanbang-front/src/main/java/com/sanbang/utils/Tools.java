@@ -39,6 +39,7 @@ public class Tools {
 	// 日志
 	private static Logger log = Logger.getLogger(Tools.class.getName());
 	private static int num = 100;
+	private static int anum = 110000;
 	
 	
 	public static final String FOLDER = "uploads";
@@ -943,5 +944,21 @@ public class Tools {
 		public static void main(String[] args) {
 			System.out.println(Tools.isNum(""));
 			
+		}
+		
+		/**
+		 * 产生订单序列号
+		 * 
+		 * @return
+		 */
+		public static synchronized String getApplyNo() {
+			String temp = "INV-"+CommUtil.dateToString(new Date(), "YYMMdd");
+			
+			String result = temp + anum;
+			anum++;
+			if (anum == 999999) {
+				anum = 100000;
+			}
+			return result;
 		}
 }

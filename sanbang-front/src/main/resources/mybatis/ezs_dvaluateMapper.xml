@@ -28,7 +28,7 @@
     delete from ezs_dvaluate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_dvaluate" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_dvaluate" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_dvaluate (id, addTime, deleteStatus, 
       conttent, goodQuality, logistics, 
       order_no, serviceQuality, goods_id, 

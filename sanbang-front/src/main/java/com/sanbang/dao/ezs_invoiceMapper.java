@@ -42,7 +42,7 @@ public interface ezs_invoiceMapper {
 	
 	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2,@Param("userId")long userId, @Param("page")Page page);
 
-	int getInvoiceCountByUserId(Long userId);
+	int getInvoiceCountByUserId(@Param("userId")Long userId,@Param("type")int type);
 
-	List<ezs_invoice> goodsInvoiceCountPage(@Param("page")Page page, @Param("userId")Long userId);
+	List<ezs_invoice> goodsInvoiceCountPage(@Param("page")Page page, @Param("userId")Long userId,@Param("type")int type);
 }

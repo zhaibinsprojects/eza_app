@@ -12,6 +12,8 @@
     <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
     <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+     <result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="infoResultMap" type="ezs_invoice" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -24,16 +26,16 @@
     <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
     <result column="order_no" property="order_no" jdbcType="VARCHAR" />
-    <association property="accessory" javaType="ezs_invoice">
-		<id property="id" column="id"/>
-		<result property="path" column="path"/>
-    </association>
+     <result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <association property="accessory" column="receipt_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
+ 	</association>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, express_name, express_no, express_time, invoice_status, 
-    receipt_id, user_id, order_no
+   id, addTime, deleteStatus, apply_no, express_name, express_no, express_time, finish_time, 
+    flag, invoice_status, order_no, receipt_id, user_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_invoice
@@ -43,17 +45,19 @@
     delete from ezs_invoice
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_invoice" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_invoice" >
     insert into ezs_invoice (id, addTime, deleteStatus, 
-      express_name, express_no, express_time, 
-      invoice_status, receipt_id, user_id, 
-      order_no)
+      apply_no, express_name, express_no, 
+      express_time, finish_time, flag, 
+      invoice_status, order_no, receipt_id, 
+      user_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{express_name,jdbcType=VARCHAR}, #{express_no,jdbcType=VARCHAR}, #{express_time,jdbcType=TIMESTAMP}, 
-      #{invoice_status,jdbcType=INTEGER}, #{receipt_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
-      #{order_no,jdbcType=VARCHAR})
+      #{apply_no,jdbcType=VARCHAR}, #{express_name,jdbcType=VARCHAR}, #{express_no,jdbcType=VARCHAR}, 
+      #{express_time,jdbcType=TIMESTAMP}, #{finish_time,jdbcType=TIMESTAMP}, #{flag,jdbcType=INTEGER}, 
+      #{invoice_status,jdbcType=INTEGER}, #{order_no,jdbcType=VARCHAR}, #{receipt_id,jdbcType=BIGINT}, 
+      #{user_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_invoice" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" >
     insert into ezs_invoice
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -65,6 +69,9 @@
       <if test="deleteStatus != null" >
         deleteStatus,
       </if>
+      <if test="apply_no != null" >
+        apply_no,
+      </if>
       <if test="express_name != null" >
         express_name,
       </if>
@@ -74,17 +81,23 @@
       <if test="express_time != null" >
         express_time,
       </if>
+      <if test="finish_time != null" >
+        finish_time,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
       <if test="invoice_status != null" >
         invoice_status,
+      </if>
+      <if test="order_no != null" >
+        order_no,
       </if>
       <if test="receipt_id != null" >
         receipt_id,
       </if>
       <if test="user_id != null" >
         user_id,
-      </if>
-      <if test="order_no != null" >
-        order_no,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -97,6 +110,9 @@
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
       </if>
+      <if test="apply_no != null" >
+        #{apply_no,jdbcType=VARCHAR},
+      </if>
       <if test="express_name != null" >
         #{express_name,jdbcType=VARCHAR},
       </if>
@@ -106,8 +122,17 @@
       <if test="express_time != null" >
         #{express_time,jdbcType=TIMESTAMP},
       </if>
+      <if test="finish_time != null" >
+        #{finish_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=INTEGER},
+      </if>
       <if test="invoice_status != null" >
         #{invoice_status,jdbcType=INTEGER},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
       </if>
       <if test="receipt_id != null" >
         #{receipt_id,jdbcType=BIGINT},
@@ -115,12 +140,9 @@
       <if test="user_id != null" >
         #{user_id,jdbcType=BIGINT},
       </if>
-      <if test="order_no != null" >
-        #{order_no,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_invoice" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_invoice" >
     update ezs_invoice
     <set >
       <if test="addTime != null" >
@@ -128,6 +150,9 @@
       </if>
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="apply_no != null" >
+        apply_no = #{apply_no,jdbcType=VARCHAR},
       </if>
       <if test="express_name != null" >
         express_name = #{express_name,jdbcType=VARCHAR},
@@ -138,8 +163,17 @@
       <if test="express_time != null" >
         express_time = #{express_time,jdbcType=TIMESTAMP},
       </if>
+      <if test="finish_time != null" >
+        finish_time = #{finish_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
       <if test="invoice_status != null" >
         invoice_status = #{invoice_status,jdbcType=INTEGER},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
       </if>
       <if test="receipt_id != null" >
         receipt_id = #{receipt_id,jdbcType=BIGINT},
@@ -147,23 +181,23 @@
       <if test="user_id != null" >
         user_id = #{user_id,jdbcType=BIGINT},
       </if>
-      <if test="order_no != null" >
-        order_no = #{order_no,jdbcType=VARCHAR},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_invoice" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_invoice" >
     update ezs_invoice
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      apply_no = #{apply_no,jdbcType=VARCHAR},
       express_name = #{express_name,jdbcType=VARCHAR},
       express_no = #{express_no,jdbcType=VARCHAR},
       express_time = #{express_time,jdbcType=TIMESTAMP},
+      finish_time = #{finish_time,jdbcType=TIMESTAMP},
+      flag = #{flag,jdbcType=INTEGER},
       invoice_status = #{invoice_status,jdbcType=INTEGER},
+      order_no = #{order_no,jdbcType=VARCHAR},
       receipt_id = #{receipt_id,jdbcType=BIGINT},
-      user_id = #{user_id,jdbcType=BIGINT},
-      order_no = #{order_no,jdbcType=VARCHAR}
+      user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   
@@ -175,7 +209,7 @@
     from ezs_invoice
     where user_id = #{userId}	
     order by finish_time 
-    desc LIMIT #{page.startPos},#{page.pageSize}					
+    desc LIMIT #{page.startPos},#{page.pageSize}	and flag=#{type}				
   </select>
   
   <!-- 根据订单编号和签订时间查询开票记录 -->
@@ -208,7 +242,7 @@
 	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
 	     LIMIT #{page.startPos},#{page.pageSize}
    </select>
-   <!-- 根据订单编号查询合同 -->
+   <!-- 根据订单编号查询票据详情-->
    <select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
    		select 
    		<include refid="Base_Column_List" /> 
@@ -246,7 +280,7 @@
   </select>
  	<!-- 根据uesrId查询invoice数量 -->
  	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
- 		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' 
+ 		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' and flag=#{type}
  	</select>
  	
 </mapper>

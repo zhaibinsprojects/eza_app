@@ -1157,15 +1157,17 @@ public class AppGoodsController {
 			return rs;
 		}
 		try {
+			List<ezs_goodscart> goodCarList=new ArrayList<>();
 			mmp = this.goodsService.getGoodCarFunc(user);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				List<ezs_goodscart> goodCarList = (List<ezs_goodscart>) mmp.get("Obj");
+				goodCarList = (List<ezs_goodscart>) mmp.get("Obj");
 				rs = Result.success();
 				rs.setObj(goodCarList);
 				rs.setMsg(mmp.get("Msg").toString());
 			}else{
 				rs = Result.failure();
+				rs.setObj(goodCarList);
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
