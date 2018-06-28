@@ -169,4 +169,6 @@ public interface GoodsService {
 	public ezs_goods selectByPrimaryKey(Long id);
 	
 	public Map<String, Object> modifyGoodCars(String[] goodsCartIds,String[] counts,ezs_user user);
+	
+	public Map<String, Object> getGoodCarFunc(ezs_user user,String[] goodCarIDs);
 }

@@ -35,4 +35,6 @@ public class HomeDictionaryCode {
      * 查询类型有误
      */
     public static final int ERROR_HOME_KIND_ERROR = 101204;
+    //库存不足
+    public static final int ERROR_HOME_INVENTORY_ERROR = 101205;
 }

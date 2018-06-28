@@ -1,5 +1,6 @@
 package com.sanbang.index.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,12 +55,19 @@ public class HomePriceConditionController {
 	@RequestMapping("/getPriceInTime")
 	@ResponseBody
 	public Object getPriceInTime(HttpServletRequest request,HttpServletResponse response,String countryType,String kindId,String colorId
-			,String formId,String source,String purpose,String burning,String protection){
+			,String formId,String source,String purpose,String burning,String protection,Long areaId){
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		if(kindId==null||areaId==null){
+			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("品类和地址不能为NULL");
+			return rs;
+		}
 		//参数传递
-		tMp.put("countryType", countryType);//类型   （1.国产价格/ 2.进口价格  3.实时成交价）
+		//tMp.put("countryType", countryType);//类型   （1.国产价格/ 2.进口价格  3.实时成交价）
+		tMp.put("countryType", "3");
 		tMp.put("kindId", kindId);			//商品分类
 		tMp.put("colorId", colorId);		//颜色
 		tMp.put("formId", formId);			//形态

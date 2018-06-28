@@ -1432,4 +1432,29 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return bool;
 	}
+
+	@Override
+	public Map<String, Object> getGoodCarFunc(ezs_user user, String[] goodCarIDs) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<GoodsCarInfo> goodCarInfoList = null;
+		try {
+			goodCarInfoList = this.ezs_goodscartMapper.selectByGoodCarIds(goodCarIDs);
+			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Obj", goodCarInfoList);
+				mmp.put("Msg", "查询成功");
+			}else{
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "购物车没有数据");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			log.error("ErrorMessage:"+e.toString());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
 }

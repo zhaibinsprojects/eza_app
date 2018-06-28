@@ -41,4 +41,6 @@ public interface ezs_goodscartMapper {
     List<Long> querySid(String[] ids);
     //批量删除
     int deleteGoodCar(String[] ids);
+    
+    List<GoodsCarInfo> selectByGoodCarIds(String[] ids);
 }
