@@ -1,5 +1,7 @@
 package com.sanbang.index.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -129,7 +132,7 @@ public class HomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
-			,ezs_customized customized) throws Exception{
+			,ezs_customized customized,String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
@@ -139,6 +142,12 @@ public class HomeGoodsMessController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}
+		if(ppre_time!=null){
+			//格式化时间格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = sdf.parse(ppre_time);
+			customized.setPre_time(date);
 		}
 		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");

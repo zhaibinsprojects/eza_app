@@ -1,7 +1,9 @@
 package com.sanbang.app.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +157,7 @@ public class AppHomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
-			,ezs_customized customized) throws Exception{
+			,ezs_customized customized,String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
@@ -166,6 +168,16 @@ public class AppHomeGoodsMessController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
+		if(ppre_time==null){
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("交货时间不能为NULL");
+			return rs;
+		}
+		//格式化时间格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf.parse(ppre_time);
+		customized.setPre_time(date);
 		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

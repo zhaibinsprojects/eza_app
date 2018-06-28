@@ -39,6 +39,8 @@ public class CustomizedServiceImpl implements CustomizedService {
 			customized.setAddTime(new Date());
 			customized.setPurchaser_id(user.getId());
 			customized.setDeleteStatus(false);
+			customized.setStatus("0");
+			customized.setSource_type("1");//来源类型:0是预购  1是采购
 			this.customizedMapper.insert(customized);
 			//初始化必需字段数据
 			customizedRecord.setCustomized_id(customized.getId());
