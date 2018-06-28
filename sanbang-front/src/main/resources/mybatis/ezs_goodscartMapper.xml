@@ -214,6 +214,29 @@
 	 AND g.deleteStatus = '0' and g.of_id IS NULL
   </select>
   
+  
+  
+  <select id="selectByGoodCarIds" resultMap="GoodCarInfoResultMap" parameterType="Integer[]"> 	
+	SELECT 
+  		g.id,g.cart_type,g.count,g.price,g.goods_id,
+		(select CONCAT(d1.`name`,d2.`name`,a.`name`) name from ezs_goods a,ezs_dict d1,ezs_dict d2 where a.color_id = d1.id and a.form_id = d2.id and a.id = g.goods_id) gname,
+		gs.inventory,
+		gs.area_id gAreaId,
+		CONCAT("http://10.10.10.148/",ga.path,"/",ga.name) picturePath, 
+		d.name utilName,
+		a2.areaName 
+	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id 
+	 LEFT JOIN ezs_area a2 on gs.area_id = a2.id 
+	 WHERE g.id 
+	 <foreach collection="array" index="index" item="item" open="in (" close=")" separator=",">
+         #{item}
+     </foreach>
+	 AND g.deleteStatus = '0' and g.of_id IS NULL
+  </select>
+  
+  
+  
+  
   <!-- 批量查询sc_id，han -->
   <select id="querySid" resultType="java.lang.Long" parameterType="Integer[]">
   	select sc_id from ezs_goodscart 

@@ -154,8 +154,12 @@ public class AppHomeGoodsMessController {
 	 */
 	@RequestMapping("/customGoods") 
 	@ResponseBody
-	public Object customGoods(HttpServletRequest request,HttpServletResponse response,ezs_customized_record customizedrecord
-			,ezs_customized customized,String ppre_time) throws Exception{
+	public Object customGoods(HttpServletRequest request,HttpServletResponse response,
+			String ash_content,String bend_strength,String budget,String colour,String combustion_grade,
+			String density,String elong_break,String flexural_modulus,String is_ep,String jzforce,String melt_index,
+			String pre_num,String pre_time,String purpose,String remark,String shape,String source_type,String sourcefrom,
+			String tensile,String water_content,String xbforce,String category_id,String address,
+			String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
@@ -172,10 +176,34 @@ public class AppHomeGoodsMessController {
 			rs.setMsg("交货时间不能为NULL");
 			return rs;
 		}
+		ezs_customized customized = new ezs_customized();
+		customized.setAsh_content(Double.valueOf(ash_content==null?"0":ash_content));
+		customized.setBend_strength(Double.valueOf(bend_strength==null?"0":bend_strength));
+		customized.setBudget(Double.valueOf(budget==null?"0":budget));
+		customized.setColour(colour);
+		customized.setCombustion_grade(Double.valueOf(combustion_grade==null?"0":combustion_grade));
+		customized.setDensity(Double.valueOf(density==null?"0":density));
+		customized.setElong_break(Double.valueOf(elong_break==null?"0":elong_break));
+		customized.setFlexural_modulus(Double.valueOf(flexural_modulus==null?"0":flexural_modulus));
+		customized.setIs_ep(is_ep);
+		customized.setJzforce(Double.valueOf(jzforce==null?"0":jzforce));
+		customized.setMelt_index(Double.valueOf(melt_index==null?"0":melt_index));
+		customized.setPre_num(Double.valueOf(pre_num==null?"0":pre_num));
+		customized.setPurpose(purpose);
+		customized.setRemark(remark);
+		customized.setShape(shape);
+		customized.setSource_type(source_type);
+		customized.setSourcefrom(sourcefrom);
+		customized.setTensile(Double.valueOf(tensile==null?"0":tensile));
+		customized.setWater_content(Double.valueOf(water_content==null?"0":water_content));
+		customized.setXbforce(Double.valueOf(xbforce==null?"0":xbforce));
+		customized.setCategory_id(Long.valueOf(category_id==null?"0":category_id));
+		customized.setAddress(address);
 		//格式化时间格式
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = sdf.parse(ppre_time);
 		customized.setPre_time(date);
+		ezs_customized_record customizedrecord = new ezs_customized_record();
 		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

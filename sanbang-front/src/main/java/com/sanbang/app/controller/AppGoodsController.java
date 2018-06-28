@@ -1,5 +1,7 @@
 package com.sanbang.app.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,6 +43,7 @@ import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
 
@@ -300,26 +303,42 @@ public class AppGoodsController {
 	 * @param pre_time 要货时间
 	 * @param budget 采购预算
 	 * @param goods_id 商品id
-	 * @return
+	 * @return  goodsid 商品ID； remark 备注； prenum 数量； budget 采购预算； pre_time=2018/02/02 要货时间
 	 */
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
-	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
+	public Result insertCustomized(HttpServletRequest request,Long goods_id,String remark,Double pre_num,Double budget,String pre_time){
 		Result result = new Result();
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_customized customized = new ezs_customized();
 		if(user==null){
 			result.setMsg("用户未登录");
 			result.setSuccess(false);
 			result.setObj(new Object());
 			return result;
 		}
+		customized.setGoods_id(goods_id);
 		String goodsId = customized.getGoods_id().toString();
 		if(null != goodsId && !"".equals(goodsId)){
-			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
+			ezs_goods goods = goodsService.selectByPrimaryKey(goods_id);
 			if(null != goods){
+				customized.setRemark(remark);
+				customized.setPre_num(pre_num);
+				customized.setBudget(budget);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = null;
+				try {
+					date = sdf.parse(pre_time);
+					customized.setPre_time(date);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				customized.setAddress(goods.getAddess());//收货地址
 				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
-				customized.setDensity(Double.valueOf(goods.getDensity()==null?"0":goods.getDensity()));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				//Double dd = Double.valueOf(density);
+				customized.setDensity(Double.valueOf((goods.getDensity()==null||goods.getDensity().equals(""))?"0":goods.getDensity()));
+				//customized.setDensity(Double.valueOf(0));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
 				customized.setPurpose(goods.getPurpose());//用途
 				customized.setShape(goods.getForm_id().toString());	//形态
 				//customized.setBudget(goods);//采购预算-前台传
@@ -329,19 +348,19 @@ public class AppGoodsController {
 				customized.setDeleteStatus(false);
 				customized.setGoods_id(goods.getId());
 				customized.setCategory_id(goods.getGoodClass_id());//商品种类
-				customized.setAsh_content(Double.valueOf(goods.getAsh()==null?"0":goods.getAsh()));
-				customized.setBend_strength(Double.valueOf(goods.getBending()==null?"0":goods.getBending()));//弯曲强度
-				customized.setCombustion_grade(Double.valueOf(goods.getBurning()==null?"0":goods.getBurning()));//燃烧等级
-				customized.setElong_break(Double.valueOf(goods.getCrack()==null?"0":goods.getCrack()));//断裂伸长率
-				customized.setFlexural_modulus(Double.valueOf(goods.getFlexural()==null?"0":goods.getFlexural()));//弯曲模量
-				customized.setIs_ep(goods.getProtection()==true?"1":"0");//是否环保
-				customized.setJzforce(Double.valueOf(goods.getFreely()==null?"0":goods.getFreely()));//简支梁缺口冲击
-				customized.setMelt_index(Double.valueOf(goods.getLipolysis()==null?"0":goods.getLipolysis()));//熔融指数
+				customized.setAsh_content(Double.valueOf((goods.getAsh()==null||goods.getAsh().equals(""))?"0":goods.getAsh()));
+				customized.setBend_strength(Double.valueOf((goods.getBending()==null||goods.getBending().equals(""))?"0":goods.getBending()));//弯曲强度
+				customized.setCombustion_grade(Double.valueOf((goods.getBurning()==null||goods.getBurning().equals(""))?"0":goods.getBurning()));//燃烧等级
+				customized.setElong_break(Double.valueOf((goods.getCrack()==null||goods.getCrack().equals(""))?"0":goods.getCrack()));//断裂伸长率
+				customized.setFlexural_modulus(Double.valueOf((goods.getFlexural()==null||goods.getFlexural().equals(""))?"0":goods.getFlexural()));//弯曲模量
+				customized.setIs_ep((goods.getProtection()==true||goods.getProtection().equals(""))?"1":"0");//是否环保
+				customized.setJzforce(Double.valueOf((goods.getFreely()==null||goods.getFreely().equals(""))?"0":goods.getFreely()));//简支梁缺口冲击
+				customized.setMelt_index(Double.valueOf((goods.getLipolysis()==null||goods.getLipolysis().equals(""))?"0":goods.getLipolysis()));//熔融指数
 				customized.setSource_type("0");//来源类型//0是预购  1是采购
 				customized.setSourcefrom(goods.getSource());//来源
-				customized.setTensile(Double.valueOf(goods.getTensile()==null?"0":goods.getTensile()));//拉伸强度
-				customized.setWater_content(Double.valueOf(goods.getWater()==null?"0":goods.getWater()));//水分
-				customized.setXbforce(Double.valueOf(goods.getCantilever()==null?"0":goods.getCantilever()));//悬臂梁缺口冲击
+				customized.setTensile(Double.valueOf((goods.getTensile()==null||goods.getTensile().equals(""))?"0":goods.getTensile()));//拉伸强度
+				customized.setWater_content(Double.valueOf((goods.getWater()==null||goods.getWater().equals(""))?"0":goods.getWater()));//水分
+				customized.setXbforce(Double.valueOf((goods.getCantilever()==null||goods.getCantilever().equals(""))?"0":goods.getCantilever()));//悬臂梁缺口冲击
 				customized.setPurchaser_id(user.getId());
 				customized.setStatus("0");
 			}else{
@@ -1197,8 +1216,9 @@ public class AppGoodsController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			//查询购物车即可
+			//goodCarIDArray
 			rs = Result.success();
-			Map<String, Object> goodCarMP = this.goodsService.getGoodCarFunc(user);
+			Map<String, Object> goodCarMP = this.goodsService.getGoodCarFunc(user,goodCarIDArray);
 			Integer goodCarErrorCode = (Integer) goodCarMP.get("ErrorCode");
 			if(goodCarErrorCode!=null&&goodCarErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				List<ezs_goodscart> goodCarList = (List<ezs_goodscart>) goodCarMP.get("Obj");
@@ -1213,8 +1233,9 @@ public class AppGoodsController {
 			//resultMP = (Map<String, Object>) mmp.get("Obj");
 			checkResultList = (List<String>) mmp.get("Obj");
 			rs = Result.failure();
-			rs.setObj(checkResultList);
-			rs.setMsg(mmp.get("Msg").toString());
+			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_INVENTORY_ERROR);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg(checkResultList.toString());
 		}
 		return rs;
 	}
