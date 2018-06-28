@@ -585,7 +585,7 @@ public class AppHomeGoodsMessController {
 		
 		advices01.setPath("http://10.10.10.148/front/resource/indeximg/advice001.jpg");
 		advices01.setpName("advice001.jpg");
-		advices01.setLink("");
+		advices01.setLink("http://10.10.10.148/front/resource/index.html");
 		advices01.setContent("标题展示");
 		
 		adviceList.add(advices01);

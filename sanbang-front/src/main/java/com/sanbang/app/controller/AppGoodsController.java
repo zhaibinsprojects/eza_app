@@ -1155,6 +1155,7 @@ public class AppGoodsController {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
+			rs.setObj(new ArrayList<>());
 			return rs;
 		}
 		try {
@@ -1175,6 +1176,7 @@ public class AppGoodsController {
 			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
@@ -1200,14 +1202,14 @@ public class AppGoodsController {
 		String[] goodCountsArray = goodCounts.trim().split(",");
 		if(goodCarIDArray.length<0||goodCountsArray.length<0||goodCarIDArray.length!=goodCountsArray.length){
 			rs = Result.failure();
-			rs.setObj(" ");
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("传入数据有误！");
 		}
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setObj(" ");
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}

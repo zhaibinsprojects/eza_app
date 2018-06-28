@@ -1,0 +1,52 @@
+body, button, input, select, textarea{font:62.5% Arial, Verdana, "microsoft yahei";color:#666;font-family:"微软雅黑";}
+body, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, th, td, p, blockquote, pre, form, fieldset, legend, input, button, textarea, hr{margin:0; padding:0;}
+html,body{background-color:#fff;}
+table{border-collapse:collapse;border-spacing:0;}
+li{list-style:none;}
+fieldset, img{border:0; display:block;}
+q:before, q:after{content:'';}
+input, textarea{outline-style:none;}
+input[type="text"], input[type="password"], textarea{outline-style:none;-webkit-appearance:none;}
+textarea{resize:none}
+address, caption, cite, code, dfn, em, i, th, var{font-style:normal;font-weight:normal;}
+legend{color:#000;}
+abbr, acronym{border:0;font-variant:normal;}
+a{text-decoration:none; color:#999; outline:none;}
+a:hover{text-decoration:none;}
+.clearboth{clear:both;}
+.textover{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+/*------*/
+.hf_body{ width: 100%; height: auto;}
+.one_p{ width: 100%; height: auto;}
+.one_p img{ width: 100%; height: auto;display: block;  box-sizing:border-box;vertical-align: middle;}
+.two_p{ padding-top: 3.1rem; background-color: #fff;}
+.two_p h3{ width: 73%; height:2.7rem; padding-bottom: 0.8rem; color: #00897c; font-weight: normal; background: url(../images/title_bak.png) 0 0 no-repeat; background-size:100% 100%; margin: 0 auto; font-size: 1.45rem; line-height: 2.7rem; text-align: center;}
+.two_content{ padding-top: 0.75rem; width: 100%; height: auto;}
+.two_content h4{height: 2rem; line-height: 2rem; font-size: 1.1rem; color: #00897c;font-weight: bold; text-align: center;}
+.two_requr{ padding: 1rem 1.25rem 0;}
+.two_requr p{ font-size: 0.9rem; line-height: 1.6rem; text-indent: 2rem;color: #3a3a3a;}
+.imgBaks{ width: 80%; margin: 0 auto; padding-top: 1rem;}
+.imgBaks img{ width: 100%; height: auto;display: block;  box-sizing:border-box;vertical-align: middle;}
+.three_p{ padding-top: 2.5rem;}
+.three_p h3{width: 87%; height:2.7rem; padding-bottom: 0.8rem; color: #00897c; font-weight: normal; background:url(../images/title_twobak.png) 0 0 no-repeat; background-size:100% 100%; margin: 0 auto; font-size: 1.45rem; line-height: 2.7rem; text-align: center;}
+.three_content{ padding: 0.25rem 1.5rem 0;}
+.three_content h4{ padding-top: 0.75rem; height: 1.8rem; line-height: 1.8rem; border-bottom: 1px solid #00897c; position: relative;}
+.three_content h4 span{ height: 1.8rem; color: #00897c;  width: 7.2rem; text-align: center; line-height: 1.8rem; display: block; position: absolute; top: 0.75rem; margin-top: -2px; left: 50%; margin-left:-3.6rem; border-bottom: 5px solid #00897c; font-size: 1.1rem; font-weight: bold;}
+.three_requr{ padding-top: 0.25rem;}
+.three_requr p{ line-height: 1.6rem; color: #3a3a3a; font-size: 0.9rem;}
+.four_ol,.four_ul { padding-left: 1.2rem;}
+.four_ol li{line-height: 1.6rem; color: #00897c; font-weight: bold; font-size: 0.9rem; list-style: inherit;}
+.four_ul li{line-height: 1.6rem; color: #3a3a3a;  font-size: 0.9rem;list-style: inherit;}
+.imgstyTwo{ width: 80%; margin: 0 auto; padding-top: 1rem;}
+.imgstyTwo img{width: 100%; height: auto;display: block;  box-sizing:border-box;vertical-align: middle;}
+.fif_p{padding-top: 1.6rem; background-color: #fff;}
+.fif_p h3{ width: 55%;height:2.7rem; padding-bottom: 0.8rem; color: #00897c; font-weight: normal; background:url(../images/title_threbak.png) 0 0 no-repeat; background-size:100% 100%; margin: 0 auto; font-size: 1.45rem; line-height: 2.7rem; text-align: center;}
+.imgstyThree{width: 80%; margin: 0 auto; padding-top: 0.4rem; padding-bottom: 4rem;}
+.imgstyThree img{width: 100%; height: auto;display: block;  box-sizing:border-box;vertical-align: middle;}
+/*---------*/
+.fottersty{ height: 3.5rem; background-color: #33a197;position: fixed; bottom: 0px; left: 0; width: 100%;}
+.foterchren{ padding: 0 1.5rem 0 1rem; height: 3.5rem;}
+.foterchren p{float: left; height: 3.5rem; line-height: 3.5rem;}
+.foterchren p label{font-size: 1rem;color: #fff835;float: left;}
+.foterchren p span{font-size: 1.2rem;color: #fff835;float: left;}
+.telePhone{float: right; height: 2.8rem; margin-top: 0.35rem; width: 2.8rem; background: url(../images/telephone.png) 0 0 no-repeat; background-size:100% 100% ;}
