@@ -64,22 +64,22 @@ public class SellerReceiptController {
 		Long userId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		Page page = null;
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		map = sellerReceiptService.getInvoiceListById(userId,currentPage);
+		map = sellerReceiptService.getInvoiceListById(userId,currentPage,2);
 		Integer ErrorCode = (Integer)map.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			list = (List<ezs_invoice>) map.get("Obj");
@@ -119,16 +119,16 @@ public class SellerReceiptController {
 		Long userId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 	
 		Page page = null;
@@ -136,7 +136,7 @@ public class SellerReceiptController {
 			currentPage = "1";
 		}
 
-		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage);
+		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage,2);
 		Integer ErrorCode = (Integer)map.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			list = (List<ezs_invoice>) map.get("Obj");
@@ -172,16 +172,16 @@ public class SellerReceiptController {
 		Long userId = upi.getId();
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		ezs_invoice invoice = null; 
 		ezs_accessory accessory = null;		
@@ -219,24 +219,24 @@ public class SellerReceiptController {
 	 * @param request
 	 * @return
 	 */
-//	@RequestMapping("/showordercontent")
-//	@ResponseBody
-//	public Result showOrderContent(@RequestParam(name = "order_no", defaultValue = "") String order_no,
-//			HttpServletRequest request) {
-//
-//		Result result = Result.success();
-//		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-//		result.setMsg("请求成功");
-//		try {
-//			result = buyerService.showOrderContent(request, order_no);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			result.setSuccess(false);
-//			result.setMsg("查看合同失败");
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-//		}
-//		return result;
-//	}
+	@RequestMapping("/showordercontent")
+	@ResponseBody
+	public Result showOrderContent(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		try {
+			result = buyerService.showOrderContent(request, order_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("查看合同失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
 
 	
 	
@@ -264,16 +264,16 @@ public class SellerReceiptController {
 		}
 		
 		//验证用户是否激活，拥有卖家权限
-//		ezs_store store = upi.getEzs_store();
-//		Integer storeStatus = store.getStatus();
-//		Long auditingusertype_id = store.getAuditingusertype_id();
-//		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
-//		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
-//			result.setSuccess(false);
-//			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-//			result.setMsg("用户未激活，没有卖家权限。");
-//			return result;
-//		}
+		ezs_store store = upi.getEzs_store();
+		Integer storeStatus = store.getStatus();
+		Long auditingusertype_id = store.getAuditingusertype_id();
+		String dictCode = dictService.getCodeByAuditingId(auditingusertype_id);
+		if (!(storeStatus == 2 && DictionaryCate.CRM_USR_TYPE_ACTIVATION.equals(dictCode))) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("用户未激活，没有卖家权限。");
+			return result;
+		}
 		
 		try {
 			//采购合同 5，销售合同 6
@@ -286,5 +286,40 @@ public class SellerReceiptController {
 		return result;
 	}
 	
+	
+	
+	/**
+	 * 上传票据
+	 * //INVIMG
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderinvosubmit")
+	@ResponseBody
+	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			@RequestParam(name = "urlparam", defaultValue = "") String urlParam,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try {
+			result = sellerReceiptService.orderivosubmit(request, order_no, urlParam,upi);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("上传支付凭证失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
 }
 

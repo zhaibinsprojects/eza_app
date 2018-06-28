@@ -378,6 +378,8 @@
 		<result column="weAddress_id" property="weAddress_id" jdbcType="BIGINT" />
 		<result column="ispg" property="ispg" jdbcType="BIGINT" />
 		<result column="ist" property="ist" jdbcType="BIGINT" />
+		<result column="orderid" property="orderid" jdbcType="BIGINT" />
+		<result column="goodsid" property="goodsid" jdbcType="BIGINT" />
 		
 		 <!--物流信息-->
          <association property="ezs_logistics" column="order_no" select="com.sanbang.dao.ezs_logisticsMapper.selectByOrderNo">
@@ -388,6 +390,11 @@
 	<!--订单列表-->
 	<select id="getOrderListByValue" resultMap="orderMap">
 	 SELECT
+	 		B.pay_mode pay_mode,
+			B.pay_mode01 pay_mode01,
+			B.pay_mode02 pay_mode02,
+	 		B.id orderid,
+	 		C.id goodsid,
 			C.price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d') addTime,
@@ -494,6 +501,11 @@
 	<!-- <select id="getOrderListByOrderno" resultMap="BaseResultMap"> -->
 	<select id="getOrderListByOrderno" resultMap="orderMap">
 	  SELECT
+	  		B.pay_mode pay_mode,
+			B.pay_mode01 pay_mode01,
+			B.pay_mode02 pay_mode02,
+		 	B.id orderid,
+			C.id goodsid,
 	   		C.price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d %H:%i:%S') addTime,

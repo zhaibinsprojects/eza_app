@@ -66,7 +66,7 @@ public class ReportEssayServerImpl implements ReportEssayServer {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			//须返回本结构
 			mmp.put("Obj", new ArrayList<ezs_ezssubstance>());
-			mmp.put("Msg", "页码越界");
+			mmp.put("Msg", "暂无数据");
 			return mmp;
 		}
 		try {

@@ -79,7 +79,7 @@ public class APPSellerReceiptController {
 		if(currentPage==null){
 			currentPage = "1";
 		}
-		map = sellerReceiptService.getInvoiceListById(userId,currentPage);
+		map = sellerReceiptService.getInvoiceListById(userId,currentPage,2);
 		Integer ErrorCode = (Integer)map.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			list = (List<ezs_invoice>) map.get("Obj");
@@ -136,7 +136,7 @@ public class APPSellerReceiptController {
 			currentPage = "1";
 		}
 
-		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage);
+		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage,2);
 		Integer ErrorCode = (Integer)map.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			list = (List<ezs_invoice>) map.get("Obj");
@@ -286,5 +286,39 @@ public class APPSellerReceiptController {
 		return result;
 	}
 	
+	
+	/**
+	 * 上传票据
+	 * //INVIMG
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderinvosubmit")
+	@ResponseBody
+	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+			@RequestParam(name = "urlparam", defaultValue = "") String urlParam,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try {
+			result = sellerReceiptService.orderivosubmit(request, order_no, urlParam,upi);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("上传票据失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
 }
 

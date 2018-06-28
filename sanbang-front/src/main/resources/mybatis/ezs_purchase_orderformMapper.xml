@@ -442,7 +442,9 @@
 	<!-- 订单列表 -->
 	<select id="getOrderListByValue" parameterType="com.sanbang.vo.PagerOrder" resultMap="orderMap">
 	 	 SELECT
-     	B.order_no,
+	 	 	B.id orderid,
+			C.id goodsid,
+     		B.order_no,
 			C.price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d') addTime,
@@ -497,7 +499,9 @@
 	<!-- 订单详情 -->
 	<select id="getOrderListByOrderno" resultMap="orderMap">
 	  SELECT
-     	B.order_no,
+			B.id orderid,
+			C.id goodsid,
+     		B.order_no,
 			C.price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d') addTime,
@@ -571,6 +575,8 @@
 		<result column="sellerid" property="sellerid" jdbcType="BIGINT" />
 		<result column="path" property="path" jdbcType="VARCHAR" />
 		<result column="photoName" property="photoName" jdbcType="VARCHAR" />
+		<result column="orderid" property="orderid" jdbcType="BIGINT" />
+		<result column="goodsid" property="goodsid" jdbcType="BIGINT" />
 	</resultMap>
 	
 	<select id="selectByOrderNo" resultMap="BaseResultMap">

@@ -17,7 +17,7 @@ public class ezs_address {
 
     private String area_info;
 
-    private Boolean bestow;
+    private Boolean bestow=true;
 
     private String mobile;
 

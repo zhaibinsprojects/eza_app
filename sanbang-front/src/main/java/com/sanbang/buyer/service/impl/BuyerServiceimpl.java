@@ -1,5 +1,7 @@
 package com.sanbang.buyer.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanbang.addressmanage.service.AddressService;
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -44,7 +47,6 @@ import com.sanbang.dao.ezs_payinfoMapper;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.JsonListUtil;
 import com.sanbang.utils.JsonUtils;
-import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
@@ -66,6 +68,10 @@ public class BuyerServiceimpl implements BuyerService {
 
 	@Value("${config.sign.baseurl}")
 	private String signbase;
+	
+	private String name="天津桑德贸易有限公司";
+	private String bank="中国工商银行天津静海支行";
+	private String banknum="0302 0951 0930 0310 174";
 	
 	@Autowired
 	private ezs_orderformMapper ezs_orderformMapper;
@@ -96,6 +102,10 @@ public class BuyerServiceimpl implements BuyerService {
 	
 	@Autowired
 	private AddressService addressService;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
+	
 
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 
@@ -137,7 +147,10 @@ public class BuyerServiceimpl implements BuyerService {
 		map.put("order_status", orderinfo.getOrder_status());
 		map.put("total_price", orderinfo.getTotal_price());//总价 
 		map.put("ispg", orderinfo.getIspg());//是否为待评价 
-		
+		map.put("goodsid", orderinfo.getGoodsid());//是否为待评价 
+		map.put("companyname", name);//卖方收款账户
+		map.put("bank", bank);
+		map.put("banknum", banknum);
 		// 支付方式（0.全款，1：首款+尾款 ）
 		if(orderinfo.getPay_mode()==1){
 			//首付款
@@ -146,12 +159,14 @@ public class BuyerServiceimpl implements BuyerService {
 				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getFirst_price());
 				map.put("pay_price", orderinfo.getFirst_price());
+				map.put("prop", String.valueOf(orderinfo.getFirst_price().divide(orderinfo.getTotal_price(), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%");
 			//尾款	
 			}else if(orderinfo.getOrder_status()==80){
 				map.put("paytype","尾款");
 				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getEnd_price());
 				map.put("pay_price", orderinfo.getEnd_price());
+				map.put("prop", String.valueOf(orderinfo.getEnd_price().divide(orderinfo.getTotal_price(), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%");
 			}
 		}else{
 			//首付款
@@ -159,6 +174,7 @@ public class BuyerServiceimpl implements BuyerService {
 			map.put("yunfei", orderinfo.getEzs_logistics()==null?0:(orderinfo.getEzs_logistics().getTotal_price()==null?0:orderinfo.getEzs_logistics().getTotal_price()));
 			map.put("small_price", orderinfo.getTotal_price());
 			map.put("pay_price", orderinfo.getTotal_price());
+			map.put("prop", String.valueOf(100)+"%");
 		}
 		
 		return map;
@@ -204,12 +220,7 @@ public class BuyerServiceimpl implements BuyerService {
 	public Result showOrderContent(HttpServletRequest request, String order_no) {
 		Result result = Result.failure();
 		try {
-//			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-//			if (upi == null) {
-//				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-//				result.setMsg("用户未登录");
-//				return result;
-//			}
+
 
 			if (Tools.isEmpty(order_no)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -562,23 +573,22 @@ public class BuyerServiceimpl implements BuyerService {
 		result.setSuccess(true);
 		result.setMsg("关闭订单成功");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		
+		//wemall回调
+		if(result.getSuccess()){
+			commonOrderAdvice.returnOrderAdvice(order_no, "");
+		}
 		return result;
 	}
 
 	//PAYIMG
 	@Override
 	@Transactional(isolation=Isolation.SERIALIZABLE,rollbackFor=Exception.class,propagation=Propagation.REQUIRED)
-	public Result orderpaysubmit(HttpServletRequest request, String order_no,String urlParam) {
+	public Result orderpaysubmit(HttpServletRequest request, String order_no,String urlParam,ezs_user upi) {
 		
 		Result result=Result.failure();
 		
 		try {
-			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
 			
 			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
 			if(orderinfo==null){
@@ -632,7 +642,7 @@ public class BuyerServiceimpl implements BuyerService {
 				}
 				
 			}else if(orderinfo.getOrder_status()==80){
-				if(payresc.size()>1){
+				if(payresc.size()==1){
 					orderinfo.setOrder_status(90);
 				}else{
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -692,6 +702,11 @@ public class BuyerServiceimpl implements BuyerService {
 			result.setMsg("上传成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			//result.setObj(payinfo);//方便修改
+			
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			}
 			return result;
 		} catch (Exception e) {
 			result.setSuccess(false);
@@ -787,16 +802,39 @@ public class BuyerServiceimpl implements BuyerService {
 	
 			ezs_logistics ezs_logistics =	ezs_logisticsMapper.selectByOrderNo(order_no);
 
-			if (null == ezs_logistics||Tools.isEmpty(ezs_logistics.getCar_no())) {
+			Map<String, Object> logs=new HashMap<>();
+			if (null == ezs_logistics) {
 				result.setSuccess(false);
 				result.setMsg("暂无物流信息");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setObj(logs);
 				return result;
 			}else{
+				//判断物流方式
+				if(!Tools.isEmpty(ezs_logistics.getCar_no())){
+					//物流
+					logs.put("logtype", 1);
+					logs.put("proples", ezs_logistics.getProples());
+					logs.put("car_no", ezs_logistics.getCar_no());
+					logs.put("phone", ezs_logistics.getPhone());
+					logs.put("service_time", ezs_logistics.getService_time());
+					logs.put("logistics_name", ezs_logistics.getLogistics_name());
+					logs.put("logistics_no", ezs_logistics.getLogistics_no());
+				}else{
+					//快递
+					logs.put("logistics_name", ezs_logistics.getLogistics_name());
+					logs.put("logistics_no", ezs_logistics.getLogistics_no());
+					logs.put("proples", ezs_logistics.getProples());
+					logs.put("car_no", ezs_logistics.getCar_no());
+					logs.put("phone", ezs_logistics.getPhone());
+					logs.put("service_time", ezs_logistics.getService_time());
+					logs.put("logtype", 0);
+					
+				}
 				result.setSuccess(false);
 				result.setMsg("请求成功");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				result.setObj(ezs_logistics);
+				result.setObj(logs);
 				return result;
 			}
 

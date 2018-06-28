@@ -1,5 +1,7 @@
 package com.sanbang.app.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.maven.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +26,12 @@ import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
 import com.sanbang.vo.goods.GoodsVo;
+import com.sanbang.vo.userauth.AuthImageVo;
 /**
  * 
  * @author LENOVO
@@ -44,10 +47,9 @@ public class AppBuyCenterController {
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
 	@Autowired
-	private FileUploadService fileUploadService; 
-	@Autowired
 	private GoodsService goodsService;
 	
+	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 	
 	private static final String view="/goods/";
 	
@@ -277,68 +279,7 @@ public class AppBuyCenterController {
 		}
 		return rs;
 	}
-	/**
-	 * 订单评价
-	 * @author zhaibin
-	 * @param logistice 物流速度
-	 * @param goodQuality 商品质量
-	 * @param serviceQuality 服务态度
-	 * @param orderNo 订单号
-	 * @param goodId 商品Id
-	 * @param path 图片路径
-	 * @param imgName 图片名称(不支持多张图片)
-	 * @return
-	 */
-	@RequestMapping("/evaluateAboutOrder")
-	@ResponseBody
-	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,
-			Double logistice,Double goodQuality,Double serviceQuality,String orderNo,Long goodId,String content,
-			String path,String imgName){
-		
-		Map<String, Object> mmp = null;
-		List<ezs_accessory> aList = new ArrayList<>();
-		ezs_dvaluate dvaluate = new ezs_dvaluate();
-		ezs_accessory accessory = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		//参数设置
-		if((orderNo!=null&&!orderNo.trim().equals(""))&&(goodId!=null)){
-			dvaluate.setConttent(content);
-			dvaluate.setLogistics(logistice);
-			dvaluate.setGoodQuality(goodQuality);
-			dvaluate.setServiceQuality(goodQuality);
-			dvaluate.setOrder_no(orderNo);
-			dvaluate.setGoods_id(goodId);
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			rs.setMsg("订单号不能为NULL");
-			return rs;
-		}
-		if(imgName!=null){			
-			accessory = new ezs_accessory();
-			accessory.setPath(FilePathUtil.getmiddelPath(path));
-			accessory.setName(FilePathUtil.getimageName(path));
-		}
-		//数据入库
-		mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			rs = Result.success();
-			rs.setMsg(mmp.get("Msg").toString());
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg(mmp.get("Msg").toString());
-		}
-		return rs;
-	}
+	
 	/**
 	 *  评价列表
 	 * @param request
@@ -370,5 +311,133 @@ public class AppBuyCenterController {
 		return view+"evaluatelist";
 	}	
 	
+	/**
+	 * 订单评价
+	 * @author zhaibin
+	 * @param logistice 物流速度
+	 * @param goodQuality 商品质量
+	 * @param serviceQuality 服务态度
+	 * @param orderNo 订单号
+	 * @param goodId 商品Id
+	 * @param path 图片路径
+	 * @param imgName 图片名称(不支持多张图片)
+	 * @return
+	 */
+	@RequestMapping("/evaluateAboutOrder")
+	@ResponseBody
+	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,
+			Double logistice,Double goodQuality,Double serviceQuality,String orderNo,Long goodId,String content,
+			String pinurl){
+		
+		Map<String, Object> mmp = null;
+		ezs_dvaluate dvaluate = new ezs_dvaluate();
+		ezs_accessory accessory = null;
+		Result rs = Result.failure();
+		try {
+			ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (user == null) {
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("用户未登录");
+				return rs;
+			}
+			//参数设置
+			if((orderNo!=null&&!orderNo.trim().equals(""))&&(goodId!=null)){
+				dvaluate.setConttent(content);
+				dvaluate.setLogistics(logistice);
+				dvaluate.setGoodQuality(goodQuality);
+				dvaluate.setServiceQuality(goodQuality);
+				dvaluate.setOrder_no(orderNo);
+				dvaluate.setGoods_id(goodId);
+			}else{
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				rs.setMsg("订单号不能为NULL");
+				return rs;
+			}
+			if(!Tools.isEmpty(pinurl)){	
+				List<AuthImageVo> list=new ArrayList<>();
+				savepic(pinurl, list);
+				if(null==list||list.size()==0){
+					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					rs.setSuccess(false);
+					rs.setMsg("请上传图片");
+					return rs;
+				}
+				
+				if(list.size()>1){
+					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					rs.setSuccess(false);
+					rs.setMsg("只能上传一张图片");
+					return rs;
+				}
+				
+				//票据记录
+				AuthImageVo vo=list.get(0);
+				
+				if(!vo.getImgcode().equals("PINIMG")){
+					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					rs.setSuccess(false);
+					rs.setMsg("标识错误");
+					return rs;
+				}
+				accessory = new ezs_accessory();
+				accessory.setName(FilePathUtil.getimageName(vo.getImgurl()));
+				accessory.setPath(FilePathUtil.getmiddelPath(vo.getImgurl()));
+			}else{
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				rs.setSuccess(false);
+				rs.setMsg("请上传图片");
+				return rs;
+			}
+			//数据入库
+			mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rs.setSuccess(false);
+			rs.setMsg("系统错误");
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return rs;
+	}
+	
+	private static List<AuthImageVo> savepic(String param,List<AuthImageVo> list) throws ParseException{
+		if(!Tools.isEmpty(param)){
+		String[] aa=param.split(";");
+		if(null==aa||aa.length==0){
+			return list;
+		}
+		for (String bb : aa) {
+			String[] cc=bb.split(",");
+			if(null==cc||cc.length<2){
+				return list;
+			}
+			AuthImageVo ImageVo=new AuthImageVo();
+			ImageVo.setImgcode(cc[0]);
+			
+			if(cc[1].indexOf("@")>0&&cc[1].split("@").length==3){
+				ImageVo.setImgurl(cc[1].split("@")[0]);
+				ImageVo.setName(cc[1].split("@")[1]);
+				ImageVo.setUsetime(sdf.parse(cc[1].split("@")[2]));
+				list.add(ImageVo);
+				System.out.println(ImageVo.toString());
+			}else{
+				ImageVo.setImgurl(cc[1].split("@")[0]);
+				list.add(ImageVo);
+				System.out.println(ImageVo.toString());
+			}
+		}
+		}
+		return list;
+	}
 	
 }

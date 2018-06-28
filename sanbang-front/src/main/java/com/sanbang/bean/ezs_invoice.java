@@ -9,21 +9,29 @@ public class ezs_invoice {
 
     private Boolean deleteStatus;
 
-    private String express_name;
+    private String express_name;// 邮寄方式,ems,顺丰，韵达等
 
-    private String express_no;
+    private String express_no;// 快递号
 
-    private Date express_time;
+    private Date express_time;// 开票时间
 
-    private Integer invoice_status;
+    private Integer invoice_status;// 开票状态 1.未配送 2.已配送 3.已完成
 
-    private Long receipt_id;
+    private Long receipt_id;// 票据
 
     private Long user_id;
 
     private String order_no;
     
     private String picurl;
+    
+    private Date finish_time;// 完成时间
+
+    private Integer flag;//票据类型（1.买家 2.卖家）
+    
+    private ezs_accessory  accessory;//图片
+    
+    private String apply_no;
 
     public Long getId() {
         return id;
@@ -112,5 +120,36 @@ public class ezs_invoice {
 	public void setPicurl(String picurl) {
 		this.picurl = picurl;
 	}
-    
+
+	public Date getFinish_time() {
+		return finish_time;
+	}
+
+	public void setFinish_time(Date finish_time) {
+		this.finish_time = finish_time;
+	}
+
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
+	}
+
+	public ezs_accessory getAccessory() {
+		return accessory;
+	}
+
+	public void setAccessory(ezs_accessory accessory) {
+		this.accessory = accessory;
+	}
+
+	public String getApply_no() {
+		return apply_no;
+	}
+
+	public void setApply_no(String apply_no) {
+		this.apply_no = apply_no;
+	}
 }

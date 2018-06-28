@@ -3,6 +3,7 @@ package com.sanbang.advice.service.impl;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.utils.Result;
@@ -17,6 +18,7 @@ import net.sf.json.JSONObject;
  * @author LENOVO
  *
  */
+@Service("commonOrderAdvice")
 public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 
 	// 上下文地址
@@ -32,7 +34,7 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 			JSONObject callBackRet = null;
 			HttpRequestParam httpParam = new HttpRequestParam();
 			httpParam.addUrlParams(new BasicNameValuePair("order_no", order_no));
-			httpParam.addUrlParams(new BasicNameValuePair("order_status", order_status));
+			httpParam.addUrlParams(new BasicNameValuePair("advicetype", "orderstatus"));
 			callBackRet = HttpRemoteRequestUtils.doPost(orderformadviceurl, httpParam);
 			result.setSuccess(true);
 			result.setMsg("调用成功");
@@ -49,23 +51,24 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 		return result;
 	}
 	@Override
-	public Result returnOrderAdvice(long returnOrderid) {
-		log.info("wemall退款订单状态通知===<开始>returnOrderid"+returnOrderid);
+	public Result returnOrderAdvice(String order_no,String order_status) {
+		log.info("wemall订单状态通知===<开始>order_no"+order_no+"order_status"+order_status);
 		Result result=Result.failure();
 		try {
 			JSONObject callBackRet = null;
 			HttpRequestParam httpParam = new HttpRequestParam();
-			httpParam.addUrlParams(new BasicNameValuePair("returnOrderid", String.valueOf(returnOrderid)));
+			httpParam.addUrlParams(new BasicNameValuePair("order_no", order_no));
+			httpParam.addUrlParams(new BasicNameValuePair("advicetype", "updateorder"));
 			callBackRet = HttpRemoteRequestUtils.doPost(orderformadviceurl, httpParam);
 			result.setSuccess(true);
 			result.setMsg("调用成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			log.info("wemall退货订单状态通知===<成功>resmassage"+callBackRet.toString());
+			log.info("wemall订单状态通知===<成功>resmassage"+callBackRet.toString());
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setMsg("系统错误");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			log.info("wemall退货订单状态通知===<错误>returnOrderid"+returnOrderid+"errorcode:"+e.toString());
+			log.info("wemall订单状态通知===<错误>order_no"+order_no+"order_status"+order_status+"errorcode:"+e.toString());
 			e.printStackTrace();
 		}
 		

@@ -78,7 +78,7 @@ public interface BuyerService {
 	  * @param order_no
 	  * @return
 	  */
-	 public Result  orderpaysubmit(HttpServletRequest request,String order_no,String urlParam);
+	 public Result  orderpaysubmit(HttpServletRequest request,String order_no,String urlParam,ezs_user upi);
 	 
 	 
 	 /**

@@ -73,6 +73,10 @@ public class UserSetupAuthController {
 	@Value("${config.shouquan.url}")
 	private String shouquanurl;
 	
+	//demourl
+	@Value("${config.shouquandemo.url}")
+	private String shouquandemourl;
+	
 	@Autowired
 	private  DictService dictService;
 	
@@ -264,6 +268,7 @@ public class UserSetupAuthController {
 			map.put("authfile", auth);
 			map.put("hashauth", hashauth);
 			map.put("temurl", shouquanurl);
+			map.put("demotemurl", shouquandemourl);
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");
@@ -408,6 +413,7 @@ public class UserSetupAuthController {
 			map.put("authfile", auth);
 			map.put("hashauth", hashauth);
 			map.put("temurl", shouquanurl);
+			map.put("demotemurl", shouquandemourl);
 			result.setObj(map);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("获取信息成功");

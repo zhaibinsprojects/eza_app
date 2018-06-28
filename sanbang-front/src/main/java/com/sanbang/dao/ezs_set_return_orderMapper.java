@@ -45,4 +45,12 @@ public interface ezs_set_return_orderMapper {
      */
     List<ReturnOrderVO>  returnOrderListforSeller(@Param("userid")long userid,@Param("totalpage")int totalpage
     		,@Param("order_type")int order_type,@Param("state2")int state2);
+    
+    
+    /**
+     * 订单编号退货
+     * @param order_no
+     * @return
+     */
+    ReturnOrderVO returnOrderinfoByOrderno(String order_no);
 }

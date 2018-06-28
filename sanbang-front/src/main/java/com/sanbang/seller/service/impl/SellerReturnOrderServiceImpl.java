@@ -131,7 +131,6 @@ public class SellerReturnOrderServiceImpl implements SellerReturnOrderService {
 				result.setMsg("只能上传一张图片");
 				return result;
 			}
-			//sql 遗漏  还未写
 			List<ezs_return_attach> hasreturnAttash = ezs_return_attachMapper.getEzsReturnAttachByReturnId(returnid);
 
 			if (null != hasreturnAttash && hasreturnAttash.size() > 0) {
@@ -166,7 +165,9 @@ public class SellerReturnOrderServiceImpl implements SellerReturnOrderService {
 			returnorder.setState2("15");
 			returnorder.setState1("15");
 			ezs_set_return_orderMapper.updateByPrimaryKeySelective(returnorder);
-
+			result.setSuccess(true);
+			result.setMsg("提交申请成功,客服会尽快审核！");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		} catch (ParseException e) {
 			result.setSuccess(false);
 			result.setMsg("系统错误");

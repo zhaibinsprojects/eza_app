@@ -133,7 +133,7 @@ public class SellerContractServiceImpl implements SellerContractService {
 			}
 		}else{
 			map.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
-			map.put("Msg", "页码越界");
+			map.put("Msg", "暂无数据");
 			map.put("Page", page);
 		}
 		return map;

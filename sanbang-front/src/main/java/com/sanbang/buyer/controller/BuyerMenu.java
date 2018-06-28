@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_order_info;
@@ -285,7 +286,7 @@ public class BuyerMenu {
 			return result;
 		}
 		try {
-			result = buyerService.orderpaysubmit(request, order_no, urlParam);
+			result = buyerService.orderpaysubmit(request, order_no, urlParam,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -472,7 +473,7 @@ public class BuyerMenu {
 			currentPage = "1";
 		}
 		try {
-			map = sellerReceiptService.getInvoiceListById(userId,currentPage);
+			map = sellerReceiptService.getInvoiceListById(userId,currentPage,1);
 			Integer ErrorCode = (Integer)map.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				list = (List<ezs_invoice>) map.get("Obj");

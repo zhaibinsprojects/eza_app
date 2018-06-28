@@ -116,7 +116,13 @@ public class ezs_dvaluate {
 		this.accessroys = accessroys;
 	}
 
-	
-    
+	public ezs_user getUser() {
+		return user;
+	}
+
+	public void setUser(ezs_user user) {
+		this.user = user;
+	}
+
     
 }
