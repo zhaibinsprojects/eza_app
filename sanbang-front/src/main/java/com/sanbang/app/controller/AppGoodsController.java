@@ -24,7 +24,6 @@ import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
-import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
