@@ -16,7 +16,6 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
-import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
@@ -24,7 +23,6 @@ import com.sanbang.vo.DictionaryCode;
 public class HomeH5PriceConditionController {
 	
 	private static String view="/hangq";
-	
 	@Autowired
 	private PriceConditionService priceConditionService;
 	@Autowired
@@ -33,9 +31,6 @@ public class HomeH5PriceConditionController {
 	private AddressService addressService;
 	
 	private Logger log=Logger.getLogger(HomeH5PriceConditionController.class);
-	
-	
-	
 	/**
 	 *  app/h5价格分析
 	 * @param catid  大分类
