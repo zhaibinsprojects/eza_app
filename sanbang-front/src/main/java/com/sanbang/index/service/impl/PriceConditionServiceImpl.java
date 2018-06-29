@@ -16,6 +16,7 @@ import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_price_trendMapper;
 import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.Page;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PriceTrendIfo;
@@ -78,12 +79,16 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	
 	//获取价格趋势信息
 	@Override
-	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp) {
+	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp,int currentPage) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> ppList = new ArrayList<>();
 		List<PriceTrendIfo> pList = null;
 		try {
+			int totalCount = this.priceTrendMapper.getPriceConditionCount(mp);
+			Page page = new Page(totalCount, currentPage);
+			mp.put("startPos", page.getStartPos());//每页起始位子
+			mp.put("pageSize", page.getPageSize());//页面大小
 			pList = this.priceTrendMapper.getPriceTrendcy(mp);			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -102,9 +107,11 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Obj", ppList);
+			mmp.put("Msg", "查询成功");
 		}else{
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_CODE_ERROR);
-			mmp.put("Msg", "参数传递有误");
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Obj", ppList);
+			mmp.put("Msg", "未查询到数据");
 		}
 		return mmp;
 	}

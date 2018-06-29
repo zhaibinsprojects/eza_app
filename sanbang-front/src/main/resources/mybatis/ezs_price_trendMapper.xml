@@ -595,6 +595,41 @@
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
     <result column="className" property="sandBytwo" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="getPriceConditionCount" resultType="java.lang.Integer">
+  	select count(1) from(
+		select
+		IFNULL(AVG(a.price),0) currentPrice
+		from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass_id = gc.id LEFT JOIN ezs_dict e1 on a.color_id = e1.id LEFT JOIN ezs_dict e2 on a.form_id = e2.id 
+		where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' and a.type = '3'
+		<trim prefix=" and " suffix=" " suffixOverrides=" and ">
+	      <if test="kindId != null" >
+	        a.goodClass_id = #{kindId}
+	      </if>
+	      <if test="colorId != null" >
+	        a.color_id = #{colorId}
+	      </if>
+	      <if test="formId != null" >
+	        a.form_id = #{formId}
+	      </if>
+	      <if test="source != null" >
+	        a.date_from = #{source}
+	      </if>
+	      <if test="purpose != null" >
+	        a.purpose = #{purpose}
+	      </if>
+	      <if test="burning != null" >
+	        a.burning = #{burning}
+	      </if>
+	      <if test="protection != null" >
+	        a.protection = #{protection}
+	      </if>
+    	</trim>
+    	and a.data_time >= DATE_SUB(DATE_FORMAT(SYSDATE(),'%Y-%m-%d'),interval 1 MONTH)
+ 		GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc
+	) a
+  </select>
+  
   <select id="getPriceTrendcy" resultMap="PriceTrendcyResultMap">
     select
 	IFNULL(AVG(a.price),0) currentPrice,
@@ -602,11 +637,11 @@
 	gc.name className,
 	(
 	select IFNULL(AVG(p.price),0)
-	from ezs_price_trend p where p.type = '3' and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
+	from ezs_price_trend p where p.type = '3' and p.goodClass_id = a.goodClass_id and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
 	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
-      <if test="kindId != null" >
+      <!-- <if test="kindId != null" >
         p.goodClass_id = #{kindId}
-      </if>
+      </if> -->
       <if test="colorId != null" >
         p.color_id = #{colorId}
       </if>
@@ -653,7 +688,8 @@
         a.protection = #{protection}
       </if>
     </trim>
- 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc;      
+    and a.data_time >= DATE_SUB(DATE_FORMAT(SYSDATE(),'%Y-%m-%d'),interval 1 MONTH)
+ 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc LIMIT #{startPos},#{pageSize}
   </select>
   <!-- 获取价格趋势,最近两天实时交易 -->
   <select id="selectPriceChangesByGood" resultMap="PriceTrendcyResultMap" parameterType="java.lang.Long">
@@ -664,6 +700,6 @@
 		from ezs_price_trend a1 
 		where a1.type = '3' and a1.goodClass_id = a2.goodClass_id GROUP BY DATE_FORMAT(a1.data_time,'%Y-%m-%d') order by a1.data_time desc LIMIT 1,1
 	),0)  prePrice
-	from ezs_price_trend a2 where EXISTS (select 1 from ezs_goods g2 where a2.goodClass_id = g2.goodClass_id and g2.id = #{gId} ) and a2.type = '3' GROUP BY DATE_FORMAT(a2.data_time,'%Y-%m-%d') order by a2.data_time desc LIMIT 0,1;
+	from ezs_price_trend a2 where EXISTS (select 1 from ezs_goods g2 where a2.goodClass_id = g2.goodClass_id and g2.id = #{gId} ) and a2.type = '3' GROUP BY DATE_FORMAT(a2.data_time,'%Y-%m-%d') order by a2.data_time desc LIMIT 0,1
   </select>
 </mapper>

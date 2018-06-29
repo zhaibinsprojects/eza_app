@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
+import com.sanbang.index.service.impl.PriceConditionServiceImpl;
 import com.sanbang.utils.FieldFilterUtil;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.mapCompanyPager;
@@ -29,6 +31,7 @@ import com.sanbang.vo.PriceTrendIfo;
 @Controller
 @RequestMapping("/home")
 public class HomePriceConditionController {
+	private static Logger log = Logger.getLogger(PriceConditionServiceImpl.class);
 	@Autowired
 	private PriceConditionService priceConditionService;
 	@Autowired
@@ -105,6 +108,7 @@ public class HomePriceConditionController {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+e.getMessage());
 			}
 			rs.setObj(ReturnList);
 			rs.setMsg(mmp.get("Msg").toString());
@@ -137,6 +141,7 @@ public class HomePriceConditionController {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg("参数传递有误");
+			rs.setObj(new ArrayList<>());
 		}
 		return rs;
 	}
@@ -147,6 +152,7 @@ public class HomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceAnalyzeTheme")
 	@ResponseBody
 	public Object getPriceAnalyzeTheme(HttpServletRequest request,HttpServletResponse response){
@@ -161,6 +167,7 @@ public class HomePriceConditionController {
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(ErrorCode);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
@@ -172,6 +179,7 @@ public class HomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceAnalyze")
 	@ResponseBody
 	public Object getPriceAnalyze(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
@@ -195,6 +203,7 @@ public class HomePriceConditionController {
 			
 		}else{
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
@@ -207,6 +216,7 @@ public class HomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getResearchReportTheme")
 	@ResponseBody
 	public Object getResearchReportTheme(HttpServletRequest request,HttpServletResponse response){
@@ -222,6 +232,7 @@ public class HomePriceConditionController {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			rs.setMsg("参数传递有误");
+			rs.setObj(new ArrayList<>());
 		}
 		return rs;
 	}
@@ -232,6 +243,7 @@ public class HomePriceConditionController {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getResearchReport")
 	@ResponseBody
 	public Object getResearchReport(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
@@ -257,6 +269,7 @@ public class HomePriceConditionController {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
+			rs.setObj(new ArrayList<>());
 		}
 		return rs;
 	}
@@ -271,16 +284,24 @@ public class HomePriceConditionController {
 	 * @param purpose 用途
 	 * @param burning 燃烧指数
 	 * @param protection 是否环保
+	 * @param areaId 定位地址
+	 * @param currentPage 当前页码
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceTrendcy")
 	@ResponseBody
 	public Object getPriceTrendcy(HttpServletRequest request,HttpServletResponse response,String kindId,String colorId
-			,String formId,String source,String purpose,String burning,String protection){
+			,String formId,String source,String purpose,String burning,String protection,Long areaId,int currentPage){
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		if(kindId==null||areaId==null){
+			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("品类和地址不能为NULL");
+			return rs;
+		}
 		//参数传递
 		tMp.put("kindId", kindId);
 		tMp.put("colorId", colorId);
@@ -289,7 +310,7 @@ public class HomePriceConditionController {
 		tMp.put("purpose", purpose);
 		tMp.put("burning", burning);
 		tMp.put("protection", protection);
-		mmp = this.priceConditionService.getPriceTrendcy(tMp);
+		mmp = this.priceConditionService.getPriceTrendcy(tMp,currentPage);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
@@ -298,6 +319,7 @@ public class HomePriceConditionController {
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(ErrorCode);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
