@@ -19,6 +19,7 @@ import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
+import com.sanbang.utils.FieldFilterUtil;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.mapCompanyPager;
 import com.sanbang.vo.DictionaryCode;
@@ -39,7 +40,7 @@ public class HomePriceConditionController {
 	 * 并是否已经订阅
 	 */
 	/**
-	 * 价格行情推送-实时报价（仅有国内实时）
+	 * 价格行情推送-实时报价（仅有实时）
 	 * @param request
 	 * @param response
 	 * @param countryType type 1-国内  3-实时
@@ -91,11 +92,21 @@ public class HomePriceConditionController {
 			tMp.put("areaIds", areaIdsList);
 		}
 		mmp = this.priceConditionService.getPriceInTime(tMp);
-		List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
+			List<PriceTrendIfo> ReturnList = new ArrayList<>();
 			rs = Result.success();
-			rs.setObj(plist);
+			//字段过滤
+			String filterFields = "addTime,data_time,goodArea,goodClassName,goodClass_id,goodColorName,goodFormName,id,price,protection,region_id";
+			FieldFilterUtil<PriceTrendIfo> fieldFilter = new FieldFilterUtil<>();
+			try {
+				ReturnList = fieldFilter.getFieldFilterList(plist, filterFields, PriceTrendIfo.class);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			rs.setObj(ReturnList);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();

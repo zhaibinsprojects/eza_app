@@ -23,6 +23,101 @@ public class PriceTrendIfo extends ezs_price_trend {
 	private String sandBytwo;
 	private String sandBytree;
 	
+    private Long id;
+
+    private Date addTime;
+
+    private Double price;
+
+    private Boolean protection;
+
+    private Integer type;
+
+    private Long goodClass_id;
+
+    private Long region_id;
+
+    private Date data_time;
+
+    private Integer price_type;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Boolean getProtection() {
+        return protection;
+    }
+
+    public void setProtection(Boolean protection) {
+        this.protection = protection;
+    }
+
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Long getGoodClass_id() {
+        return goodClass_id;
+    }
+
+    public void setGoodClass_id(Long goodClass_id) {
+        this.goodClass_id = goodClass_id;
+    }
+
+    public Long getRegion_id() {
+        return region_id;
+    }
+
+    public void setRegion_id(Long region_id) {
+        this.region_id = region_id;
+    }
+
+
+    public Date getData_time() {
+        return data_time;
+    }
+
+    public void setData_time(Date data_time) {
+        this.data_time = data_time;
+    }
+
+
+
+    public Integer getPrice_type() {
+        return price_type;
+    }
+
+    public void setPrice_type(Integer price_type) {
+        this.price_type = price_type;
+    }
+
 	public String getGoodClassName() {
 		return goodClassName;
 	}
