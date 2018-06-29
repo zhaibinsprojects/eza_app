@@ -1,5 +1,6 @@
 package com.sanbang.index.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,43 @@ public class AddressServiceImpl implements AddressService {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
+		return mmp;
+	}
+	/**
+	 * @author zhaibin
+	 * 获取节点的所有子节点（包含叶子节点）
+	 */
+	@Override
+	public Map<String, Object> getAllChildID(Long aid) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<ezs_area> areaIDList = new ArrayList<>();
+		ezs_area firstArea = this.areaMapper.selectByPrimaryKey(aid);
+		List<ezs_area> firstAreaList = null;
+		List<ezs_area> secondAreaList = null;
+		if(firstArea!=null){
+			int firstLevel = firstArea.getLevel();
+			//firstArea.level=2 在此终结
+			areaIDList.add(firstArea);
+			if(firstArea.getLevel()<2){
+				//firstAreaList = this.areaMapper.getAreaListByParId(firstArea.getId());
+				firstAreaList = this.areaMapper.getAreasByParentId(firstArea.getId());
+				//firstArea.level=1 在此终结
+				areaIDList.addAll(firstAreaList);
+				if(firstAreaList!=null&&firstAreaList.size()>0&&firstLevel==0&&firstAreaList.get(0).getLevel()==1){
+					for (ezs_area area : firstAreaList) {
+						//secondAreaList = this.areaMapper.getAreaListByParId(area.getId());
+						secondAreaList = this.areaMapper.getAreasByParentId(area.getId());
+						if(secondAreaList!=null&&secondAreaList.size()>0){
+							areaIDList.addAll(secondAreaList);
+							secondAreaList.clear();
+						}
+					}
+				}
+			}
+		}
+		mmp.put("Obj", areaIDList);
+		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		return mmp;
 	}
 }

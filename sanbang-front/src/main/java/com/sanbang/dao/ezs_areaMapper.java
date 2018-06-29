@@ -51,4 +51,7 @@ public interface ezs_areaMapper {
     //一堆市下的所有区县
     List<Long> queryChildIds(List<Long> listId);
     
+    
+    List<ezs_area> getAreasByParentId(@Param("areaid")long areaid);
+    
 }

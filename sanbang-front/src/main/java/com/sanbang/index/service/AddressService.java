@@ -20,4 +20,10 @@ public interface AddressService {
 	public Map<String, Object> getChildByParents(Long aid);
 	
 	public Map<String, Object> getParentByChild(Long pId);
+	/**
+	 * 获取所有子节点ID包含一、二、三级
+	 * @param aid
+	 * @return
+	 */
+	public Map<String, Object> getAllChildID(Long aid);
 }

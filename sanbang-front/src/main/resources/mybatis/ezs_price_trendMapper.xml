@@ -550,6 +550,44 @@
       </if>
     </trim>
   </select>
+  
+  <select id="selectByAreaIdAndOtherCondition" resultMap="PriceConditionResultMap">
+    select DISTINCT 
+    <include refid="PriceConditionColumnList" />
+    from ezs_price_trend g,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where g.goodClass_id = gc.id and g.color_id = e1.id and g.form_id = e2.id
+      
+      <if test="countryType != null" >
+        and g.type = #{countryType}
+      </if>
+      <if test="kindId != null" >
+        and g.goodClass_id = #{kindId}
+      </if>
+      <if test="colorId != null" >
+        and g.color_id = #{colorId}
+      </if>
+      <if test="formId != null" >
+        and g.form_id = #{formId}
+      </if>
+      <if test="source != null" >
+        and g.date_from = #{source}
+      </if>
+      <if test="purpose != null" >
+        and g.purpose = #{purpose}
+      </if>
+      <if test="burning != null" >
+        and g.burning = #{burning}
+      </if>
+      <if test="protection != null" >
+        and g.protection = #{protection}
+      </if>
+      <!-- 加入数组 -->
+      <if test="areaIds != null and areaIds.size > 0 " >
+        and g.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
+         #{areaIds}
+     	</foreach>
+      </if>
+  </select>
   <!-- 价格走势 -->
   <resultMap id="PriceTrendcyResultMap" type="com.sanbang.vo.PriceTrendIfo" >
     <result column="currentPrice" property="currentAVGPrice" jdbcType="VARCHAR" />

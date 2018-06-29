@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +13,13 @@ import com.sanbang.bean.ezs_column;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_price_trendMapper;
 import com.sanbang.index.service.PriceConditionService;
+import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PriceTrendIfo;
 
 @Service
 public class PriceConditionServiceImpl implements PriceConditionService {
-
+	private static Logger log = Logger.getLogger(PriceConditionServiceImpl.class);
 	@Autowired
 	private ezs_price_trendMapper priceTrendMapper; 
 	@Autowired
@@ -29,13 +31,17 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		List<PriceTrendIfo> plist = null;
 		// TODO Auto-generated method stub
 		try {
-			plist = this.priceTrendMapper.selectByCondition(mp);
+			//plist = this.priceTrendMapper.selectByCondition(mp);
+			plist = this.priceTrendMapper.selectByAreaIdAndOtherCondition(mp);
 			if(plist!=null){
 				mmp.put("Obj", plist);
 				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
+			log.error(e.getMessage());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
 		}
