@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_area;
@@ -60,8 +62,10 @@ public class HomePriceConditionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceInTime")
 	@ResponseBody
-	public Object getPriceInTime(HttpServletRequest request,HttpServletResponse response,String countryType,String kindId,String colorId
-			,String formId,String source,String purpose,String burning,String protection,Long areaId){
+	public Object getPriceInTime(HttpServletRequest request,HttpServletResponse response,String countryType,
+			@RequestParam(value="kindId",required=true)String kindId,String colorId
+			,String formId,String source,String purpose,String burning,String protection,
+			@RequestParam(value="areaId",required=true)Long areaId){
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> mmp = null;
 		Result rs = null;
@@ -291,8 +295,11 @@ public class HomePriceConditionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceTrendcy")
 	@ResponseBody
-	public Object getPriceTrendcy(HttpServletRequest request,HttpServletResponse response,String kindId,String colorId
-			,String formId,String source,String purpose,String burning,String protection,Long areaId,int currentPage){
+	public Object getPriceTrendcy(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(value = "kindId",required = true) String kindId,String colorId
+			,String formId,String source,String purpose,String burning,String protection,
+			@RequestParam(value = "areaId",required = true) Long areaId,
+			@RequestParam(value = "currentPage",required = true) int currentPage){
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> mmp = null;
 		Result rs = null;
@@ -302,6 +309,22 @@ public class HomePriceConditionController {
 			rs.setMsg("品类和地址不能为NULL");
 			return rs;
 		}
+		
+		
+		List<String> areaIdsList = new ArrayList<>();
+		Map<String, Object> areaIdsMap = null;
+		//获取相关地址ID
+		areaIdsMap = this.addressService.getAllChildID(areaId);
+		Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+		if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_area> areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+			for (ezs_area tarea : areaListTemp) {
+				areaIdsList.add(tarea.getId().toString());
+			}
+			tMp.put("areaIds", areaIdsList);
+		}
+		
+		
 		//参数传递
 		tMp.put("kindId", kindId);
 		tMp.put("colorId", colorId);
