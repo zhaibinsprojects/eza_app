@@ -24,7 +24,6 @@ import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
-import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -171,6 +170,7 @@ public class AppGoodsController {
 			result.setSuccess(true);
 		}else{
 			result.setMsg("查询失败！");
+			result.setObj(new Object());
 			result.setSuccess(false);
 		}
 		return result;
@@ -1000,12 +1000,14 @@ public class AppGoodsController {
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
@@ -1036,7 +1038,7 @@ public class AppGoodsController {
 				rs = Result.success();
 				//检验通过无需返回前台信息
 				//tempMP.remove("SuccessFlag");
-				//rs.setObj(tempMP);
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 			}else{
 				//校验未通过（未全部通过）
@@ -1053,6 +1055,7 @@ public class AppGoodsController {
 			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
 			log.error(e.toString());
 		}
@@ -1080,12 +1083,14 @@ public class AppGoodsController {
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
@@ -1117,6 +1122,7 @@ public class AppGoodsController {
 				//检验通过无需返回前台信息
 				//tempMP.remove("SuccessFlag");
 				//rs.setObj(tempMP);
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 			}else{
 				//校验未通过（未全部通过）
@@ -1133,6 +1139,7 @@ public class AppGoodsController {
 			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
 			log.error(e.toString());
 		}
@@ -1157,6 +1164,7 @@ public class AppGoodsController {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
+			rs.setObj(new ArrayList<>());
 			return rs;
 		}
 		try {
@@ -1180,6 +1188,7 @@ public class AppGoodsController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg(mmp.get("Msg").toString());
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
@@ -1206,14 +1215,14 @@ public class AppGoodsController {
 		String[] goodCountsArray = goodCounts.trim().split(",");
 		if(goodCarIDArray.length<0||goodCountsArray.length<0||goodCarIDArray.length!=goodCountsArray.length){
 			rs = Result.failure();
-			rs.setObj(" ");
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("传入数据有误！");
 		}
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setObj(" ");
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}

@@ -176,43 +176,50 @@ public class AppHomeGoodsMessController {
 			rs.setMsg("交货时间不能为NULL");
 			return rs;
 		}
-		ezs_customized customized = new ezs_customized();
-		customized.setAsh_content(Double.valueOf(ash_content==null?"0":ash_content));
-		customized.setBend_strength(Double.valueOf(bend_strength==null?"0":bend_strength));
-		customized.setBudget(Double.valueOf(budget==null?"0":budget));
-		customized.setColour(colour);
-		customized.setCombustion_grade(Double.valueOf(combustion_grade==null?"0":combustion_grade));
-		customized.setDensity(Double.valueOf(density==null?"0":density));
-		customized.setElong_break(Double.valueOf(elong_break==null?"0":elong_break));
-		customized.setFlexural_modulus(Double.valueOf(flexural_modulus==null?"0":flexural_modulus));
-		customized.setIs_ep(is_ep);
-		customized.setJzforce(Double.valueOf(jzforce==null?"0":jzforce));
-		customized.setMelt_index(Double.valueOf(melt_index==null?"0":melt_index));
-		customized.setPre_num(Double.valueOf(pre_num==null?"0":pre_num));
-		customized.setPurpose(purpose);
-		customized.setRemark(remark);
-		customized.setShape(shape);
-		customized.setSource_type(source_type);
-		customized.setSourcefrom(sourcefrom);
-		customized.setTensile(Double.valueOf(tensile==null?"0":tensile));
-		customized.setWater_content(Double.valueOf(water_content==null?"0":water_content));
-		customized.setXbforce(Double.valueOf(xbforce==null?"0":xbforce));
-		customized.setCategory_id(Long.valueOf(category_id==null?"0":category_id));
-		customized.setAddress(address);
-		//格式化时间格式
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = sdf.parse(ppre_time);
-		customized.setPre_time(date);
-		ezs_customized_record customizedrecord = new ezs_customized_record();
-		mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			rs = Result.success();
-			rs.setMsg(mmp.get("Msg").toString());
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg(mmp.get("Msg").toString());
+		try {
+			ezs_customized customized = new ezs_customized();
+			customized.setAsh_content(Double.valueOf((ash_content==null||ash_content.trim().equals(""))?"0":ash_content));
+			customized.setBend_strength(Double.valueOf((bend_strength==null||bend_strength.trim().equals(""))?"0":bend_strength));
+			customized.setBudget(Double.valueOf((budget==null||budget.trim().equals(""))?"0":budget));
+			customized.setColour(colour);
+			//燃烧等级(PC端商品表类型为varchar 采购定制为 double 转化会发生异常)
+			//customized.setCombustion_grade(Double.valueOf((combustion_grade==null||combustion_grade.trim().equals(""))?"0":combustion_grade));
+			customized.setDensity(Double.valueOf((density==null||density.trim().equals(""))?"0":density));
+			customized.setElong_break(Double.valueOf((elong_break==null||elong_break.trim().equals(""))?"0":elong_break));
+			customized.setFlexural_modulus(Double.valueOf((flexural_modulus==null||flexural_modulus.trim().equals(""))?"0":flexural_modulus));
+			customized.setIs_ep(is_ep);
+			customized.setJzforce(Double.valueOf((jzforce==null||jzforce.trim().equals(""))?"0":jzforce));
+			customized.setMelt_index(Double.valueOf((melt_index==null||melt_index.trim().equals(""))?"0":melt_index));
+			customized.setPre_num(Double.valueOf((pre_num==null||pre_num.trim().equals(""))?"0":pre_num));
+			customized.setPurpose(purpose);
+			customized.setRemark(remark);
+			customized.setShape(shape);
+			customized.setSource_type(source_type);
+			customized.setSourcefrom(sourcefrom);
+			customized.setTensile(Double.valueOf((tensile==null||tensile.trim().equals(""))?"0":tensile));
+			customized.setWater_content(Double.valueOf((water_content==null||water_content.trim().equals(""))?"0":water_content));
+			customized.setXbforce(Double.valueOf((xbforce==null||xbforce.trim().equals(""))?"0":xbforce));
+			customized.setCategory_id(Long.valueOf((category_id==null||category_id.trim().equals(""))?"0":category_id));
+			customized.setAddress(address);
+			//格式化时间格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = sdf.parse(ppre_time);
+			customized.setPre_time(date);
+			ezs_customized_record customizedrecord = new ezs_customized_record();
+			mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			}else{
+				rs = Result.failure();
+				rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+e.getMessage());
 		}
 		return rs;
 	}
@@ -578,7 +585,7 @@ public class AppHomeGoodsMessController {
 		
 		advices01.setPath("http://10.10.10.148/front/resource/indeximg/advice001.jpg");
 		advices01.setpName("advice001.jpg");
-		advices01.setLink("");
+		advices01.setLink("http://10.10.10.148/front/resource/index.html");
 		advices01.setContent("标题展示");
 		
 		adviceList.add(advices01);

@@ -27,4 +27,8 @@ public interface ezs_price_trendMapper {
     List<PriceTrendIfo> getPriceTrendcy(Map<String, Object> mp);
     
     List<PriceTrendIfo> selectPriceChangesByGood(Long gId);
+    
+    List<PriceTrendIfo> selectByAreaIdAndOtherCondition(Map<String, Object> mp);
+    
+    int getPriceConditionCount(Map<String, Object> mp);
 }

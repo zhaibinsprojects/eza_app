@@ -150,6 +150,14 @@
   	 A.id, A.areaName
   	FROM ezs_area A WHERE  A.parent_id=#{areaid} AND NOT ISNULL(A.areaName)
   </select>
+  
+  
+  <!--得到子子级数据-->
+  <select id="getAreasByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	SELECT
+  	<include refid="Base_Column_List" />
+  	FROM ezs_area A WHERE  A.parent_id=#{areaid} AND NOT ISNULL(A.areaName)
+  </select>
   <!-- 热门地址 -->
   <resultMap id="BaseHotAreaResultMap" type="com.sanbang.vo.HotProvince" >
     <id column="pid" property="id" jdbcType="BIGINT" />
