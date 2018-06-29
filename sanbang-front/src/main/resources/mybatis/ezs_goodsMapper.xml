@@ -657,7 +657,7 @@
 	WHERE 
 	1=1
 		<if test="status!=null and status!=-1">
-	and   A.status = #{status} 
+		and   A.status = #{status} 
 		</if>
     and user_id=#{sellerId} 
     order by
@@ -774,7 +774,9 @@
 	LEFT JOIN ezs_goods_class gc ON goods.goodClass_id = gc. LEVEL
 	LEFT JOIN ezs_accessory B ON goods.goods_main_photo_id=B.id
 	WHERE
-    goods.goodClass_id=#{goodClass_id} 
+    goods.goodClass_id=#{goodClass_id}
+    GROUP BY  goods.id
+     limit 20
 	</select>
 	<!-- 由购物车查询商品信息 -->
 	<select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">

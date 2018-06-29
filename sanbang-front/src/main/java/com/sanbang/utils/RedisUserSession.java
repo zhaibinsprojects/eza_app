@@ -23,30 +23,35 @@ public class RedisUserSession {
 	 * @throws Exception
 	 */
 	public static ezs_user getLoginUserInfo(HttpServletRequest request){
-		if(null==request){
-			return null;
-		}
-		Cookie [] cookies=request.getCookies();
-		String userKey="";
-		if(cookies!=null){
-			for(Cookie ck:cookies){
-				if(ck.getName().equals("USERKEY")){
-					userKey=ck.getValue();
-					// String tempCached=(String)arg0.getSession().getAttribute("USERKEY");
-					@SuppressWarnings("unchecked")
-					RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get(userKey,ezs_user.class);
-					if(tempCached!=null&&tempCached.getCode()==RedisConstants.SUCCESS){
-						//缓存中已经存在了  说明该用户已经登陆了
-						ezs_user result = tempCached.getResult();
-						result.setUserkey(userKey);;
-						return result;
-					}else{
-						// log.info("获取用户信息,缓存中用户信息过期或异常");
-						break;
+		try {
+			if(null==request){
+				return null;
+			}
+			Cookie [] cookies=request.getCookies();
+			String userKey="";
+			if(cookies!=null){
+				for(Cookie ck:cookies){
+					if(ck.getName().equals("USERKEY")){
+						userKey=ck.getValue();
+						// String tempCached=(String)arg0.getSession().getAttribute("USERKEY");
+						@SuppressWarnings("unchecked")
+						RedisResult<ezs_user> tempCached=(RedisResult<ezs_user>) RedisUtils.get(userKey,ezs_user.class);
+						if(tempCached!=null&&tempCached.getCode()==RedisConstants.SUCCESS){
+							//缓存中已经存在了  说明该用户已经登陆了
+							ezs_user result = tempCached.getResult();
+							result.setUserkey(userKey);;
+							return result;
+						}else{
+							// log.info("获取用户信息,缓存中用户信息过期或异常");
+							break;
+						}
 					}
 				}
+				log.debug("获取用户信息,cookie中未有身份标识.cookie:"+cookies.toString());
 			}
-			log.debug("获取用户信息,cookie中未有身份标识.cookie:"+cookies.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		log.debug("获取用户信息,未找到cookie");
 		return null;

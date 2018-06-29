@@ -97,19 +97,14 @@ public class AddressServiceImpl implements AddressService {
 				return result;
 			}
 		}
-		if(Tools.isEmpty(ezs_address.getTelephone())){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("请输入电话号码");
-			return result;
-			
-		}else{
+		if(!Tools.isEmpty(ezs_address.getTelephone())){
 			if(!Tools.isMobileAndPhone(ezs_address.getTelephone())){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效的电话号码");
 				return result;
 			}
+		
 		}
 		return result;
 	}

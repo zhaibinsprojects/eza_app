@@ -251,9 +251,12 @@ public class SellerGoodsController {
 	@ResponseBody
 	public Result getCataListByparid(HttpServletRequest request,long parentsId){
 		Result result=Result.success();
-		List<GoodsClass> list = cataService.getChildList(parentsId);
+		List<GoodsClass> list = cataService.getSecondList(parentsId);
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
 		result.setObj(list);
+		result.setMsg("请求成功");
+		result.setSuccess(true);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		return result;
 	}
 	

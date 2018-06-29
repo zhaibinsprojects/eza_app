@@ -56,6 +56,6 @@ public class SendMobileMessage {
 
 	public static void main(String[] args) throws Exception {
 		
-		//sendMsg("18910821841,15602113833", "JavaSendMessageTest");
+		sendMsg("18910821841,15602113833", "JavaSendMessageTest");
 	}
 }

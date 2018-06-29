@@ -1010,7 +1010,8 @@ public class GoodsController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodCar")
 	@ResponseBody
-	public Object getGoodCar(HttpServletRequest request,HttpServletResponse response){
+	public Object getGoodCar(@RequestParam(defaultValue="1",name="pageNow")int pageNow,
+			HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
@@ -1022,7 +1023,7 @@ public class GoodsController {
 		}
 		try {
 			List<ezs_goodscart> goodCarList=new ArrayList<>();
-			mmp = this.goodsService.getGoodCarFunc(user);
+			mmp = this.goodsService.getGoodCarFunc(user,pageNow);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				goodCarList = (List<ezs_goodscart>) mmp.get("Obj");

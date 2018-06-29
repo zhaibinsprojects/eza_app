@@ -44,6 +44,7 @@ import com.sanbang.dao.ezs_order_canceMapper;
 import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.dao.ezs_pactMapper;
 import com.sanbang.dao.ezs_payinfoMapper;
+import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.JsonListUtil;
 import com.sanbang.utils.JsonUtils;
@@ -105,6 +106,9 @@ public class BuyerServiceimpl implements BuyerService {
 	
 	@Autowired
 	private CommonOrderAdvice commonOrderAdvice;
+	
+	@Autowired
+	ezs_purchase_orderformMapper purchaseOrderformMapper;
 	
 
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
@@ -232,7 +236,16 @@ public class BuyerServiceimpl implements BuyerService {
 			// 先查一下合同的pdf在不在
 			//List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
 			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+			if(null==orderinfo){
+				 orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
+			}
 			
+			if (null==orderinfo) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("订单不存在");
+				return result;
+			}
 			/*if (pact == null||pact.size()==0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);

@@ -32,6 +32,7 @@ import com.sanbang.dao.ezs_goods_logMapper;
 import com.sanbang.dao.ezs_goods_photoMapper;
 import com.sanbang.dao.ezs_paperMapper;
 import com.sanbang.seller.service.SellerGoodsService;
+import com.sanbang.utils.EvenOddCheck;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
@@ -160,7 +161,6 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String content = request.getParameter("content");// 货品详细描述（PC端含有富文本编辑器，手机端只接收纯文字使用，不考虑图片相关信息）
 					
 				ezs_goods goods = new ezs_goods();
-				goods.setDeleteStatus(true);
 				goods.setAddTime(new Date());
 				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
@@ -184,6 +184,19 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
+				goods.setLockStatus(false);
+				goods.setMemberLook(false);
+				// 添加商品编码
+
+				log.info("sss===>"+goodClass_id);
+		        String goods_no = "GE" + classid2str(Long.valueOf(goodClass_id));
+		        log.info("sss===>"+goods_no);
+		        Long goodid = goods.getId();
+		        goods_no += goodsid2str(goodid);
+		        // 奇校验
+		        goods_no = new EvenOddCheck().toOdd(goods_no);
+		        goods.setGood_no(goods_no);
+		        
 				if (Boolean.valueOf(protection)) {
 					goods.setProtection(true);
 				} else {
@@ -208,23 +221,11 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setContent(content);
 				goods.setPurpose(purpose);
 				goods.setUser_id(upi.getId());
+				goods.setDeleteStatus(false);;
 				try {
 					goodsMapper.insert(goods);
 					result.setSuccess(true);
 					result.setMsg("添加货品成功");
-					
-					//向ezs_goods_audit_process表中查入数据
-					ezs_goods_audit_process goodsAudit = new ezs_goods_audit_process();
-					
-					goodsAudit.setAddTime(new Date());
-					goodsAudit.setDeleteStatus(false);
-					goodsAudit.setGoods_id(Long.valueOf(goods.getId()));
-					goodsAudit.setPriceStatus(600);
-					goodsAudit.setSalePrice(new BigDecimal(price));
-					goodsAudit.setStatus(540);
-					goodsAudit.setSupplyPrice(new BigDecimal(price));
-					
-					goodsAuditProcessMapper.insertSelective(goodsAudit);
 				} catch (Exception e) {
 					e.printStackTrace();
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -270,7 +271,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
-			result.setMsg("添加货品成功，请静待审核");
+			result.setMsg("添加货品成功");
 		} catch (Exception e) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
@@ -297,6 +298,28 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		return status;
 	}
 
+	private static String classid2str(Long classid) {
+        if (classid < 10) {
+            return "0" + classid;
+        } else {
+            return "" + classid;
+        }
+    }
+
+    private static String goodsid2str(Long goodsid) {
+        if (goodsid < 10) {
+            return "0000" + goodsid;
+        } else if (goodsid < 100) {
+            return "000" + goodsid;
+        } else if (goodsid < 1000) {
+            return "00" + goodsid;
+        } else if (goodsid < 10000) {
+            return "0" + goodsid;
+        } else {
+            return "" + goodsid;
+        }
+    }
+	
 	private long checkisExtId(String type, List<AuthImageVo> list) {
 		long id = 0;
 		for (AuthImageVo authImageVo : list) {
@@ -338,7 +361,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		return list;
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		List<AuthImageVo> list = new ArrayList<>();
 		try {
 			savepic("type1,url1@name1@2018-05-06 22:26:00;" + "type2,url2@name2@2018-05-06 22:26:00;" + "type3,url3",
@@ -347,7 +370,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	Result checkParam(HttpServletRequest request) {
 		Result result = Result.success();
@@ -381,11 +404,13 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品类别");
+			return result;
 		}
 		if (Tools.isEmpty(name)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品名称");
+			return result;
 		}
 		if (Tools.isEmpty(price)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -395,57 +420,69 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请输入有效货品价格");
+				return result;
 			}
+			return result;
 		}
 		if (Tools.isEmpty(validity)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品有效期");
+			return result;
 		}
 		if (Tools.isEmpty(inventory)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品库存");
+			return result;
 		}
 		if (Tools.isEmpty(area_id)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品库存地区");
+			return result;
 		}
 		if (Tools.isEmpty(addess)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品库存详细地址");
+			return result;
 		}
 		if (Tools.isEmpty(supply_id)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品供应情况");
+			return result;
 		}
 		if (Tools.isEmpty(color_id)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品颜色");
+			return result;
 		}
 		if (Tools.isEmpty(form_id)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品形态");
+			return result;
 		}
 		if (Tools.isEmpty(source)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品来源");
+			return result;
 		}
 		if (Tools.isEmpty(purpose)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品用途");
+			return result;
 		}
 		if (Tools.isEmpty(protection)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品是否环保");
+			return result;
 		}
 		result.setSuccess(true);
 		return result;
@@ -654,10 +691,17 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 		if ( null != goods ) {
 			ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
-			if (null != goodsAudit) {
-				goodsAudit.setSalePrice(goods.getPrice());
-				goodsAudit.setSupplyPrice(goods.getPrice());
+			if (null == goodsAudit) {
+				//向ezs_goods_audit_process表中查入数据
+				 goodsAudit = new ezs_goods_audit_process();
+				goodsAudit.setAddTime(new Date());
+				goodsAudit.setDeleteStatus(false);
+				goodsAudit.setGoods_id(Long.valueOf(goods.getId()));
+				goodsAudit.setPriceStatus(600);
+				goodsAudit.setSalePrice(new BigDecimal(0));
 				goodsAudit.setStatus(540);
+				goodsAudit.setSupplyPrice(goods.getPrice());
+				goodsAuditProcessMapper.insertSelective(goodsAudit);
 				try {
 					goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
 					result.setSuccess(true);
@@ -722,5 +766,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		return result;
 	}
 
-	
+	public static void main(String[] args) {
+		String goods_no = "GE" + classid2str(Long.valueOf(1));
+        Long goodid =(long) 1;
+        goods_no += goodsid2str(goodid);
+        // 奇校验
+        goods_no = new EvenOddCheck().toOdd(goods_no);
+        System.out.println(goods_no);
+	}
 }

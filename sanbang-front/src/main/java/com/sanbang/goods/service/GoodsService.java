@@ -134,7 +134,7 @@ public interface GoodsService {
 	 */
 	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId);
 	
-	public Map<String, Object> getGoodCarFunc(ezs_user user);
+	public Map<String, Object> getGoodCarFunc(ezs_user user,int pageNow);
 	
 	public Map<String, Object> preOrderFormFunc(ezs_user user,String orderType,Long goodsCartId);
 	

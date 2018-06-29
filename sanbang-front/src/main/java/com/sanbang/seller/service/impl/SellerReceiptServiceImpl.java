@@ -72,7 +72,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	@Autowired
 	private CommonOrderAdvice commonOrderAdvice;
 	
-	private static DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Override
 	public ezs_bill getBillInfoById(Long userId) {
@@ -364,4 +364,5 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 		}
 		return list;
 	}
+	
 }

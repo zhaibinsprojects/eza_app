@@ -325,14 +325,20 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	public Result goodsDelivery(Result result, String order_no, HttpServletRequest request,
 			HttpServletResponse response) {
 		//根据order_no 获取相应采购订单
-		ezs_purchase_orderform purOrder = purchaseOrderformMapper.selectByOrderNo(order_no);
-		Long orderId = purOrder.getId();
-		//更改采购订单发货状态并存库
-		purOrder.setOrder_status(70);
+		ezs_order_info purOrder = purchaseOrderformMapper.getOrderListByOrderno(order_no);
+		if(null==purOrder){
+			result.setSuccess(false);
+			result.setMsg("订单不存在");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			return result;
+		}
+		ezs_purchase_orderform p=new ezs_purchase_orderform();
+		p.setId(purOrder.getOrderid());
+		p.setOrder_status(60);
 		int aa = 0;
 		
 		try {
-			aa = purchaseOrderformMapper.updateByPrimaryKeySelective(purOrder);
+			aa = purchaseOrderformMapper.updateByPrimaryKeySelective(p);
 			if(aa <= 0){
 				result.setSuccess(false);
 				result.setMsg("参数错误");

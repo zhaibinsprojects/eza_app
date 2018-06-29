@@ -228,12 +228,14 @@ public class APPSellerGoodsController {
 			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
 			//形态
 			map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
+			map.put("EZS_SUPPLY", dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY));
+			
 			//地址
 			//map.put("area", areaService.getAreaParentList());
 			//分类
 			map.put("cata",cataService.getFirstList());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
  			result.setObj(map);
+ 			result.setMsg("请求成功");
  			result.setSuccess(true);
 		};
 		
@@ -245,9 +247,12 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Result getCataListByparid(HttpServletRequest request,long parentsId){
 		Result result=Result.success();
-		List<GoodsClass> list = cataService.getChildList(parentsId);
+		List<GoodsClass> list = cataService.getSecondList(parentsId);
 		result.setMeta(new Page(1, 1, 1,1, 1, false, false, false, false));
 		result.setObj(list);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+		result.setSuccess(true);
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		return result;
 	}

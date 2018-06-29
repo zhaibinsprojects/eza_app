@@ -191,13 +191,8 @@
     <result column="utilName" property="utilName" jdbcType="VARCHAR" />
     <result column="picturePath" property="picturePath" jdbcType="VARCHAR" />
   </resultMap>
-  <!-- by han，将mainPhoto这层包装先特么摘出来
-  	<association property="mainPhoto" javaType="com.sanbang.bean.ezs_accessory">
-    	<result column="pName" property="name" jdbcType="VARCHAR"/>
-    	<result column="pPath" property="path" jdbcType="VARCHAR"/>
-    </association>
-   -->
-  <!-- by han，修改，图片路径只返回一个绝对路径即可，名称：picturePath，故将mainPhoto这层包装去掉 -->
+
+  <!---->
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
   		g.id,g.cart_type,g.count,g.price,g.goods_id,
@@ -211,7 +206,8 @@
 	 LEFT JOIN ezs_area a2 on gs.area_id = a2.id WHERE 
 	EXISTS 
 	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
-	 AND g.deleteStatus = '0' and g.of_id IS NULL
+	 AND g.deleteStatus = '0' and  ISNULL(g.of_id)
+	 limit #{pageCount},#{pagesize}
   </select>
   
   

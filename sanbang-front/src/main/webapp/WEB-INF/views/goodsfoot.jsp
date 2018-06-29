@@ -13,7 +13,7 @@
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
-<script type="text/javascript" src="front/resource/js/goods/goods.js"></script>
+
 
 </head>
 <body style="background:#efefef;">

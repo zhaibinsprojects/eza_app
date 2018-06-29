@@ -17,6 +17,7 @@ import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerOrderService;
 import com.sanbang.utils.Page;
@@ -30,6 +31,8 @@ import com.sanbang.vo.PagerOrder;
 @RequestMapping("/seller")
 public class SellerOrderContorller {
 	
+	@Autowired
+	private BuyerService buyerService;
 	//日志
 	private static Logger log = Logger.getLogger(SellerOrderContorller.class.getName());
 	
@@ -147,8 +150,10 @@ public class SellerOrderContorller {
 	 */
 	@RequestMapping("/queryLogisticsInfoById")
 	@ResponseBody
-	public Object queryLogisticsInfoById(String orderNo, HttpServletRequest request, HttpServletResponse response){
-		Result result = Result.failure();
+	public Object queryLogisticsInfoById(String order_no, HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
 		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -168,23 +173,13 @@ public class SellerOrderContorller {
 			return result;
 		}
 		
-		ezs_logistics logistics = null; 
 		try {
-			logistics = sellerOrderService.queryLogisticsByNo(orderNo);
-			if (logistics != null ) {
-				result.setSuccess(true);
-				result.setMsg("查询成功");
-				result.setObj(logistics);
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("查询失败");
-			}
+			result=buyerService.getezs_logistics(request, order_no);
 		} catch (Exception e) {
-			log.info("查询物流信息出错" + e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
 			result.setSuccess(false);
 			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		return result;
 	}

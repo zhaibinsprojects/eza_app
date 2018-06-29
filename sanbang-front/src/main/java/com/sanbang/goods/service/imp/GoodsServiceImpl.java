@@ -895,12 +895,20 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> getGoodCarFunc(ezs_user user) {
+	public Map<String, Object> getGoodCarFunc(ezs_user user,int pageNow) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		List<GoodsCarInfo> goodCarInfoList = null;
 		QueryCondition queryCondition = new QueryCondition();
 		queryCondition.setUserId(user.getId());
+		if(pageNow<=1){
+			pageNow=1;
+			queryCondition.setPagesize(10);
+			queryCondition.setPageCount((pageNow-1)*queryCondition.getPagesize());
+		}else{
+			queryCondition.setPagesize(10);
+			queryCondition.setPageCount((pageNow-1)*queryCondition.getPagesize());
+		}
 		try {
 			goodCarInfoList = this.ezs_goodscartMapper.selectByUserId(queryCondition);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){

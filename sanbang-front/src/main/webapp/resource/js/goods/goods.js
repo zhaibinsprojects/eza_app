@@ -14,12 +14,12 @@ $(function() {
 		setupWebViewJavascriptBridge(function(bridge) {
        		var data = {};
        		var str = JSON.stringify(data);
-			bridge.registerHandler('test', function(data, responseCallback) {  
+			/*bridge.registerHandler('test', function(data, responseCallback) {  
 	            var responseData = {'Javascript Says':'Right back atcha!' }  
 	            responseCallback(responseData)  
-	        }) ;
+	        }) ;*/
 			// 查看购物车桥接
-			iostocart();
+			/*iostocart();
 			// 立即购买
 			iostobuy();
 			// 预约
@@ -27,18 +27,18 @@ $(function() {
 			// 质检报告
 			iosshowpdf();
 			// 未登录
-			iosnologin();
+			//iosnologin();
 			// 电话
 			iostophone();
 			// 试样
-			iosshiyang();
+			iosshiyang();*/
 			 try {
 				 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
-					 layer.open({content : data,skin : 'msg',time : 2});
 					 userk= data;
+					 //layer.open({content : userk,skin : 'msg',time : 20});
 					 if(userk!=""){
 						 $(".userkey").val(data);
-						// iscollcc(goodsid, data);
+						 iscollcc(goodsid, data);
 					 }
 					});
 				
@@ -120,11 +120,12 @@ $(function() {
 			async : false,
 			success : function(data) {
 				if (data.success) {
-					layer.open({
+					/*layer.open({
 						content : data.msg,
 						skin : 'msg',
 						time : 2
-					});
+					});*/
+					cartsuccess();
 				} else {
 					layer.open({content : data.msg,skin : 'msg',time : 2});
 				}
@@ -387,7 +388,19 @@ function androidshowpdf() {
 		})
 	} 
 	
-	
+	/**
+	 * 添加购物车成功
+	 */
+	function cartsuccess(){
+		var u = navigator.userAgent; // 获取用户设备
+		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+		if (isIOS) {
+			WebViewJavascriptBridge.callHandler('ioscart', str, function() {
+			});
+		}else{
+			window.android.androidcart();	
+		}
+	}
 	
 	
 	//显示收藏状态
