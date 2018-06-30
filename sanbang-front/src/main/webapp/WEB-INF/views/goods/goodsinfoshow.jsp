@@ -5,15 +5,16 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
+<base href="${consparam.ser.baseurl}"/>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
-<link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
-<script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
-<script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
+<!-- http://10.10.10.98/ -->
+<link rel="stylesheet" href="/front/resource/css/ezsm.css?v=1" />
+<script type="text/javascript" src="/front/resource/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/front/resource/js/jquery.touchSlider.js"></script>
+<script type="text/javascript" src="/front/resource/js/ezsm.js?v=1"></script>
    
 <script type="text/javascript">
 		$(function(){
@@ -21,6 +22,7 @@
 				$(".ezsm-normal-top-nav li").removeClass("ezsm-normal-top-nav-sel");
 				$(this).addClass("ezsm-normal-top-nav-sel");
 			});
+			
 			$(".ezsm-shopdetail-picbox").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-main-visual").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-main-image").css("height",($("body").width())+"px");
@@ -29,6 +31,7 @@
 			$(".ezsm-shopdetail-picbox-main-image li span").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-main-image li a").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-flicking-con").css("top",($("body").width()-30)+"px");
+			
 			//轮播图效果
 			$(document).ready(function(){
 				$(".ezsm-shopdetail-picbox-main-visual").hover(function(){ $("#btn_prev,#btn_next").fadeOut();
@@ -51,7 +54,7 @@
 				
 				$(".ezsm-shopdetail-picbox-main-image").bind("touchstart",function(){ clearInterval(timer);
 				}).bind("touchend", function(){ timer = setInterval(function(){ $("#btn_next").click(); }, 5000); });
-			});
+			}); 
 		});
 	</script>
 </head>
@@ -134,7 +137,7 @@
 </body>
 
 <script type="text/javascript">
-var baseurl="${serurl}";
+var baseurl="${consparam.ser.baseurl}";
 $(document).ready(function(){
 	var imghref=$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src");
 	if(imghref!="undefind"&&imghref!=""){

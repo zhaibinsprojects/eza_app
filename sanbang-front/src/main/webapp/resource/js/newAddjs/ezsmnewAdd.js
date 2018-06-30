@@ -131,3 +131,67 @@ legend: {
         }
     });
 });
+/*------柱状图1----*/
+$(function () {
+    var chart = Highcharts.chart('containerbar2', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: ''
+        },
+		colors: ['#4cd4c8'],
+		credits: {
+          enabled:false
+},
+       exporting: {
+            enabled:false
+},
+legend: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            tickPositions: [0, 200, 500, 800],
+            title: {
+                text: ''
+            }
+        },
+        series: [{
+            name: '指数',
+            data: [434, 53, 345, 285, 665, 443, 726, 690, 265, 134, 712, 632]
+        }],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 50
+                },
+                
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            formatter: function () {
+                                return this.value.replace('', '')
+                            }
+                        }
+                    },
+                    yAxis: {
+                        labels: {
+                            align: 'left',
+                            x: 0,
+                            y: -2
+                        },
+                        title: {
+                            text: ''
+                        }
+                    }
+                }
+            }]
+        }
+    });
+});
