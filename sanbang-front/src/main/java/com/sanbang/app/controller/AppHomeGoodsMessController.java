@@ -365,7 +365,8 @@ public class AppHomeGoodsMessController {
 			UserInfoMess uim = (UserInfoMess) addressMP.get("Obj");
 			resultMP.put("UserInfo", uim);
 		}else{
-			resultMP.put("UserInfo", new Object());
+			UserInfoMess uim = (UserInfoMess) addressMP.get("Obj");
+			resultMP.put("UserInfo", uim);
 		}
 		rs = Result.success();
 		rs.setObj(resultMP);
