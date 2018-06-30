@@ -5,16 +5,16 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${consparam.ser.baseurl}"/>
+<base href="${serurl}"/>
+<!-- <base href="http://10.10.10.148/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
-<!-- http://10.10.10.98/ -->
-<link rel="stylesheet" href="/front/resource/css/ezsm.css?v=1" />
-<script type="text/javascript" src="/front/resource/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="/front/resource/js/jquery.touchSlider.js"></script>
-<script type="text/javascript" src="/front/resource/js/ezsm.js?v=1"></script>
+<link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
+<script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
+<script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
    
 <script type="text/javascript">
 		$(function(){
@@ -137,7 +137,7 @@
 </body>
 
 <script type="text/javascript">
-var baseurl="${consparam.ser.baseurl}";
+var baseurl="${serurl}";
 $(document).ready(function(){
 	var imghref=$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src");
 	if(imghref!="undefind"&&imghref!=""){
