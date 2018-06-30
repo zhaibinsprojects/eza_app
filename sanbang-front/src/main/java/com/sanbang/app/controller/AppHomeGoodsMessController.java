@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_column;
@@ -737,6 +739,27 @@ public class AppHomeGoodsMessController {
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
+	}
+	
+	/**
+	 * 根据文章报告ID获取相关内容
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getReportEssayH5ById")
+	public String getReportEssayH5ById(HttpServletRequest request,HttpServletResponse response,Long id,Model model){
+		Map<String, Object> mmp = null;
+		Result rs = null;
+		mmp = this.reportEssayServer.getReportEssayContext(id);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ezs_ezssubstance substance = (ezs_ezssubstance) mmp.get("Obj");
+			model.addAttribute("essay", substance);
+			return "/hangq/essayContent";
+		}else
+			return "/hangq/essayContent";
 	}
 
 }

@@ -78,7 +78,7 @@ public class HomeH5PriceConditionController {
 		model.addAttribute("zoushi", zoushi);
 		model.addAttribute("baojia", baojia);
 		
-		return view+"hangqindex";
+		return view+"/hangqindex";
 	}
 	
 }
