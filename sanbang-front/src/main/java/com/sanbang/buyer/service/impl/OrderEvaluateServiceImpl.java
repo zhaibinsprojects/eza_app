@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_dvaluate_accessroy;
+import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_accessoryMapper;
 import com.sanbang.dao.ezs_dvaluateMapper;
 import com.sanbang.dao.ezs_dvaluate_accessroyMapper;
+import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.vo.DictionaryCode;
 
 @Service
@@ -30,6 +32,8 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 	private ezs_accessoryMapper accessoryMapper;
 	@Autowired
 	private ezs_dvaluate_accessroyMapper dvaluateAccessroyMapper;
+	@Autowired
+	private ezs_orderformMapper ezs_orderformMapper;
 
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
@@ -47,6 +51,18 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 			accessory.setSize(Float.valueOf(0));
 		}
 		//评价信息
+		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(dvaluate.getOrder_no());
+		if(null==orderinfo){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "订单不存在");
+			return mmp;
+		}
+		if(orderinfo.getIspg()>0){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "您已评价过该商品");
+			return mmp;
+			
+		}
 		dvaluate.setAddTime(new Date());
 		dvaluate.setDeleteStatus(false);
 		dvaluate.setUser_id(user.getId());
@@ -61,7 +77,6 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 				this.accessoryMapper.insert(accessory);
 				dvaluateAccessroy.setAccessroy_id(accessory.getId());
 				dvaluateAccessroy.setDvaluate_id(dvaluate.getId());
-				this.dvaluateAccessroyMapper.insert(dvaluateAccessroy);
 			}
 			log.info("评价功能完成！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

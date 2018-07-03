@@ -21,4 +21,5 @@ public interface ezs_columnMapper {
     int updateByPrimaryKey(ezs_column record);
     
     List<ezs_column> getSecondThemeByFirstTheme(Long FirstThemeId);
+    
 }

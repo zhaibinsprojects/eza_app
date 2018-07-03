@@ -508,9 +508,10 @@ public class BuyerServiceimpl implements BuyerService {
 						sign.setSigncomFrout(String.valueOf(json.get("signcomFrout")));
 						sign.setSignTime(DateFormatUtils.format(new Date(Long.valueOf(String.valueOf(json.get("signTime")))),"yyyy-MM-dd HH:mm:ss"));
 						sign.setSignUrl(String.valueOf(json.get("signUrl")));
+						sign.setStatus(Integer.valueOf(String.valueOf(json.get("status"))));
 						list.add(sign);
 					}
-					map.put("list", JsonUtils.jsonOut(list));
+					map.put("list", list);
 				}
 				
 				result.setSuccess(true);

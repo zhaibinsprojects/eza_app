@@ -64,6 +64,7 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
     <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
+    <result column="lastModifyDate" jdbcType="VARCHAR" property="lastModifyDate" />
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -643,6 +644,7 @@
 	<!-- 根据供应商id查询商品列表-->
 	<select id="selectGoodsListBySellerId"  parameterType="com.sanbang.utils.Page" resultMap="BaseResultMap1">
   	SELECT 
+  	DATE_FORMAT(A.lastModifyDate,'%Y-%m-%d %H:%i') lastModifyDate,
   	A.id,
   	A.name,
   	A.price,
@@ -667,6 +669,10 @@
 	<!-- 供应商下架货品 -->
 	<update id="pullOffShelves" >
   	update ezs_goods set status = 1 where id =#{goodsId}
+	</update>
+	<!-- 供应商上架货品 -->
+	<update id="pullNoShelves" >
+  	update ezs_goods set status = 2 where id =#{goodsId}
 	</update>
 	<!-- 商品查询带图 -->
 	<resultMap id="GoodsResultMap" type="com.sanbang.vo.GoodsInfo">
@@ -995,7 +1001,9 @@
 		<!--单位-->
 		<association property="util" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
 		</association>
-     
+       <!--单位-->
+		<association property="gclass" column="goodClass_id" select="com.sanbang.dao.ezs_goods_classMapper.selectByPrimaryKey">
+		</association>
 		<!--物流方式-->
 		<association property="logistics" column="logistics_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
 		</association>

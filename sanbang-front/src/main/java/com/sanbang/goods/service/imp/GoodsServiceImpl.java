@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
@@ -38,6 +39,7 @@ import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.CommUtil;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.StockHelper;
+import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
 import com.sanbang.utils.httpclient.HttpRequestParam;
 import com.sanbang.vo.CurrencyClass;
@@ -85,6 +87,9 @@ public class GoodsServiceImpl implements GoodsService{
 	private ezs_goods_classMapper goodsClassMapper;
 	@Autowired
 	private ezs_price_trendMapper priceTrendMapper; 
+	
+	@Autowired
+	private com.sanbang.dao.ezs_areaMapper ezs_areaMapper;
 	
 	@Value("${config.processgoods.pdfurl}")
 	private String processgoodspdfurl;
@@ -1052,6 +1057,9 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	public GoodsVo getgoodsinfo(long goodsid,long userid) {
 		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid,userid);
+		if(null!=goodsVo.getArea_id()){
+			goodsVo.setAreaName(getaddressinfo(goodsVo.getArea_id()));
+		}
 		return goodsVo;
 	}
 
@@ -1464,5 +1472,41 @@ public class GoodsServiceImpl implements GoodsService{
 			mmp.put("Msg", "参数传递有误");
 		}
 		return mmp;
+	}
+	
+	/**
+	 * 地址
+	 * @param areaid
+	 * @return
+	 */
+	private String getaddressinfo(long areaid) {
+		StringBuilder sb = new StringBuilder();
+		String threeinfo = "";
+		String twoinfo = "";
+		String oneinfo = "";
+		ezs_area ezs_threeinfo = ezs_areaMapper.selectByPrimaryKey(areaid);
+		if (ezs_threeinfo != null) {
+			threeinfo = ezs_threeinfo.getAreaName();
+			ezs_area ezs_twoinfo = ezs_areaMapper.selectByPrimaryKey(ezs_threeinfo.getParent_id());
+			if (ezs_twoinfo != null) {
+				twoinfo =  ezs_twoinfo.getAreaName();
+				ezs_area ezs_oneinfo = ezs_areaMapper.selectByPrimaryKey(ezs_twoinfo.getParent_id());
+				if (ezs_oneinfo != null) {
+					oneinfo =  ezs_oneinfo.getAreaName();
+				}
+			}
+		}
+		
+		if(!Tools.isEmpty(threeinfo)){
+			sb = new StringBuilder().append(threeinfo);	
+		}
+		if(!Tools.isEmpty(twoinfo)){
+			sb = new StringBuilder().append(twoinfo).append("-").append(threeinfo);
+		}
+		if(!Tools.isEmpty(oneinfo)){
+			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
+		}
+		
+		return sb.toString();
 	}
 }

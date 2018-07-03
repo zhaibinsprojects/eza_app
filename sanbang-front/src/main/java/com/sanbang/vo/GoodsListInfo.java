@@ -1,6 +1,7 @@
 package com.sanbang.vo;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class GoodsListInfo {
 	
@@ -19,6 +20,8 @@ public class GoodsListInfo {
 	private Integer audit_status;
 	// 商品定价状态码，600.待定价，601.定价审核中，602.定价审核不通过，603.定价审核通过
 	private Integer priceStatus;
+	
+	private String  lastModifyDate;
 	
 	public Long getId() {
 		return id;
@@ -82,6 +85,14 @@ public class GoodsListInfo {
 
 	public void setPriceStatus(Integer priceStatus) {
 		this.priceStatus = priceStatus;
+	}
+
+	public String getLastModifyDate() {
+		return lastModifyDate;
+	}
+
+	public void setLastModifyDate(String lastModifyDate) {
+		this.lastModifyDate = lastModifyDate;
 	}
 	
 }

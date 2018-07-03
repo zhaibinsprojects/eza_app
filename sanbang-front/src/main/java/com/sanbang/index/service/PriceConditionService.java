@@ -6,7 +6,7 @@ import com.sanbang.utils.Page;
 
 public interface PriceConditionService {
 	
-	public Map<String, Object> getPriceInTime(Map<String, Object> mp);
+	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno);
 	
 	public Map<String, Object> getSecondTheme(Long id);
 	

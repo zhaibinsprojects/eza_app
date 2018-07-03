@@ -165,9 +165,21 @@ public class GoodsVo {
 	private int collected;
 	
 	private String path;
+	
+    private String areaName;
+    
+    private ezs_goods_class gclass;
 
 	public Long getId() {
 		return id;
+	}
+
+	public ezs_goods_class getGclass() {
+		return gclass;
+	}
+
+	public void setGclass(ezs_goods_class gclass) {
+		this.gclass = gclass;
 	}
 
 	public void setId(Long id) {
@@ -709,8 +721,16 @@ public class GoodsVo {
 		this.path = path;
 	}
 
+	
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
 	public GoodsVo() {
-		// TODO Auto-generated constructor stub
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_column;
@@ -60,17 +61,16 @@ public class HomeIndustryInfoController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getSubstance")
 	@ResponseBody
-	public Object getSubjectByTheme(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
+	public Object getSubjectByTheme(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(name="id",defaultValue="57")Long id,
+			@RequestParam(name="currentPage",defaultValue="1")int currentPage){
 		Map<String, Object> mmp = null;
 		List<ezs_ezssubstance> elist = null;
 		Result rs = null;
-		if(currentPage==null)
-			currentPage = "1";
-		if(id==null){
-			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(57), currentPage);
-		}else{
-			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
-		}
+		if(currentPage<=0)
+			currentPage = 1;
+		mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		ExPage page = (ExPage) mmp.get("Page");
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

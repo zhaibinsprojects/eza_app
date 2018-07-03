@@ -587,6 +587,7 @@
          #{areaIds}
      	</foreach>
       </if>
+      limit #{pagecount},#{pagesize}
   </select>
   <!-- 价格走势 -->
   <resultMap id="PriceTrendcyResultMap" type="com.sanbang.vo.PriceTrendIfo" >

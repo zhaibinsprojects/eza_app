@@ -1,5 +1,6 @@
 package com.sanbang.buyer.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,8 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
+		List<ezs_order_info> list=new ArrayList<>();
+		PagerOrder pager = new PagerOrder();
 		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -87,12 +90,11 @@ public class BuyerMenu {
 			if (pageNow < 1) {
 				pageNow = 1;
 			}
-			PagerOrder pager = new PagerOrder();
 			pager.setUserid(upi.getId());
 			pager.setOrder_status(order_status);
 			pager.setOrder_type(order_type);
 			pager.setPageNow(pageNow);
-			List<ezs_order_info> list = buyerService.getOrderListByValue(pager);
+			 list = buyerService.getOrderListByValue(pager);
 			result.setMeta(new Page(pageNow, pager.getPageSize(), pager.getTotalCount(), pager.getTotalPageCount(), 0, true,
 					true, true, true));
 			if (list.size() == 0) {
@@ -108,6 +110,9 @@ public class BuyerMenu {
 			result.setSuccess(false);
 			result.setMsg("系统错误");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setObj(list);
+			result.setMeta(new Page(pageNow, pager.getPageSize(), pager.getTotalCount(), pager.getTotalPageCount(), 0, true,
+					true, true, true));
 		}
 		return result;
 	}

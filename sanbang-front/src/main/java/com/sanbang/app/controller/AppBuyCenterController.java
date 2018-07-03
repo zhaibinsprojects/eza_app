@@ -342,13 +342,12 @@ public class AppBuyCenterController {
 				return rs;
 			}
 			//参数设置
-			if((orderNo!=null&&!orderNo.trim().equals(""))&&(goodId!=null)){
+			if((orderNo!=null&&!orderNo.trim().equals(""))){
 				dvaluate.setConttent(content);
 				dvaluate.setLogistics(logistice);
 				dvaluate.setGoodQuality(goodQuality);
 				dvaluate.setServiceQuality(goodQuality);
 				dvaluate.setOrder_no(orderNo);
-				dvaluate.setGoods_id(goodId);
 			}else{
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -384,11 +383,6 @@ public class AppBuyCenterController {
 				accessory = new ezs_accessory();
 				accessory.setName(FilePathUtil.getimageName(vo.getImgurl()));
 				accessory.setPath(FilePathUtil.getmiddelPath(vo.getImgurl()));
-			}else{
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				rs.setSuccess(false);
-				rs.setMsg("请上传图片");
-				return rs;
 			}
 			//数据入库
 			mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);

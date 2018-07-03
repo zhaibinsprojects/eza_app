@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_area;
@@ -55,8 +56,18 @@ public class AppHomePriceConditionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceInTime")
 	@ResponseBody
-	public Object getPriceInTime(HttpServletRequest request,HttpServletResponse response,String countryType,String kindId,String colorId
-			,String formId,String source,String purpose,String burning,String protection,Long areaId){
+	public Object getPriceInTime(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(name="countryType",defaultValue="1")String countryType,
+			@RequestParam(name="kindId",defaultValue="")String kindId,
+			@RequestParam(name="colorId",defaultValue="")String colorId,
+			@RequestParam(name="formId",defaultValue="")String formId,
+			@RequestParam(name="source",defaultValue="")String source,
+			@RequestParam(name="purpose",defaultValue="")String purpose,
+			@RequestParam(name="burning",defaultValue="")String burning,
+			@RequestParam(name="protection",defaultValue="")String protection,
+			@RequestParam(name="areaId",defaultValue="")Long areaId,
+			@RequestParam(name="pageno",defaultValue="1")int pageno){
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> mmp = null;
 		Result rs = null;
@@ -90,7 +101,7 @@ public class AppHomePriceConditionController {
 			tMp.put("areaIds", areaIdsList);
 		}
 		
-		mmp = this.priceConditionService.getPriceInTime(tMp);
+		mmp = this.priceConditionService.getPriceInTime(tMp,pageno);
 		List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -166,12 +177,17 @@ public class AppHomePriceConditionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getPriceAnalyze")
 	@ResponseBody
-	public Object getPriceAnalyze(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
+	public Object getPriceAnalyze(HttpServletRequest request,
+			HttpServletResponse response,
+			Long id,
+			int currentPage
+			)
+	{
 		Map<String, Object> mmp = null;
 		List<ezs_ezssubstance> elist = null;
 		Result rs = null;
-		if(currentPage==null)
-			currentPage = "1";
+		if(currentPage<=0)
+			currentPage = 1;
 		if(id==null){
 			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage);
 		}else{
@@ -230,12 +246,15 @@ public class AppHomePriceConditionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getResearchReport")
 	@ResponseBody
-	public Object getResearchReport(HttpServletRequest request,HttpServletResponse response,Long id,String currentPage){
+	public Object getResearchReport(HttpServletRequest request,
+			HttpServletResponse response,
+			Long id,
+			int currentPage){
 		Map<String, Object> mmp = null;
 		List<ezs_ezssubstance> elist = null;
 		Result rs = null;
-		if(currentPage==null)
-			currentPage = "1";
+		if(currentPage<=0)
+			currentPage = 1;
 		if(id==null){
 			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage);
 		}else{

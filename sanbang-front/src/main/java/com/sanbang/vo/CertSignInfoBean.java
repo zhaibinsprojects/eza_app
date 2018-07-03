@@ -10,7 +10,11 @@ public class CertSignInfoBean implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1879538520656706752L;
+	private static final long serialVersionUID = 8081408201525419095L;
+
+	/**
+	 * 
+	 */
 
 	private String signcomFrout;//储蓄卡用户名
 	
@@ -21,6 +25,8 @@ public class CertSignInfoBean implements Serializable{
 	private String orderid;//银行预留手机号
     
 	private String signTime;//返回状态信息
+	
+	private int status;
 
 	public String getSigncomFrout() {
 		return signcomFrout;
@@ -61,12 +67,21 @@ public class CertSignInfoBean implements Serializable{
 	public void setSignTime(String signTime) {
 		this.signTime = signTime;
 	}
+	
+	
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
 		return "CertSignInfoBean [signcomFrout=" + signcomFrout + ", signUrl=" + signUrl + ", contentno=" + contentno
-				+ ", orderid=" + orderid + ", signTime=" + signTime + "]";
+				+ ", orderid=" + orderid + ", signTime=" + signTime + ", status=" + status + "]";
 	}
-	
 	
 }

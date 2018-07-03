@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_invoiceMapper" >
-  <resultMap id="BaseResultMap" type="ezs_invoice" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
-    <result column="express_no" property="express_no" jdbcType="VARCHAR" />
-    <result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
-    <result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
-    <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
-    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
-     <result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
-    <result column="flag" property="flag" jdbcType="INTEGER" />
-  </resultMap>
-  <resultMap id="infoResultMap" type="ezs_invoice" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
-    <result column="express_no" property="express_no" jdbcType="VARCHAR" />
-    <result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
-    <result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
-    <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
-    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
-     <result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
-    <result column="flag" property="flag" jdbcType="INTEGER" />
-    <association property="accessory" column="receipt_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
- 	</association>
-  </resultMap>
-  <sql id="Base_Column_List" >
+	<resultMap id="BaseResultMap" type="ezs_invoice" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="express_name" property="express_name" jdbcType="VARCHAR" />
+		<result column="express_no" property="express_no" jdbcType="VARCHAR" />
+		<result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
+		<result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
+		<result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
+		<result column="total_price" property="total_price" jdbcType="DECIMAL" />
+		<result column="express_timestr" property="express_timestr" jdbcType="VARCHAR" />
+		<result column="finish_timestr" property="finish_timestr" jdbcType="TIMESTAMP" />
+		<result column="addTimestr" property="addTimestr" jdbcType="VARCHAR" />
+    
+	</resultMap>
+	<resultMap id="infoResultMap" type="ezs_invoice" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="express_name" property="express_name" jdbcType="VARCHAR" />
+		<result column="express_no" property="express_no" jdbcType="VARCHAR" />
+		<result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
+		<result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
+		<result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
+		<association property="accessory" column="receipt_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List" >
    id, addTime, deleteStatus, apply_no, express_name, express_no, express_time, finish_time, 
     flag, invoice_status, order_no, receipt_id, user_id
-  </sql>
-   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
-    <include refid="Base_Column_List" />
+		<include refid="Base_Column_List" />
     from ezs_invoice
     where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_invoice
     where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_invoice" >
+	</delete>
+	<insert id="insert" parameterType="com.sanbang.bean.ezs_invoice" >
     insert into ezs_invoice (id, addTime, deleteStatus, 
       apply_no, express_name, express_no, 
       express_time, finish_time, flag, 
@@ -56,135 +61,135 @@
       #{express_time,jdbcType=TIMESTAMP}, #{finish_time,jdbcType=TIMESTAMP}, #{flag,jdbcType=INTEGER}, 
       #{invoice_status,jdbcType=INTEGER}, #{order_no,jdbcType=VARCHAR}, #{receipt_id,jdbcType=BIGINT}, 
       #{user_id,jdbcType=BIGINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" >
+	</insert>
+	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" >
     insert into ezs_invoice
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
         id,
-      </if>
-      <if test="addTime != null" >
+			</if>
+			<if test="addTime != null" >
         addTime,
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         deleteStatus,
-      </if>
-      <if test="apply_no != null" >
+			</if>
+			<if test="apply_no != null" >
         apply_no,
-      </if>
-      <if test="express_name != null" >
+			</if>
+			<if test="express_name != null" >
         express_name,
-      </if>
-      <if test="express_no != null" >
+			</if>
+			<if test="express_no != null" >
         express_no,
-      </if>
-      <if test="express_time != null" >
+			</if>
+			<if test="express_time != null" >
         express_time,
-      </if>
-      <if test="finish_time != null" >
+			</if>
+			<if test="finish_time != null" >
         finish_time,
-      </if>
-      <if test="flag != null" >
+			</if>
+			<if test="flag != null" >
         flag,
-      </if>
-      <if test="invoice_status != null" >
+			</if>
+			<if test="invoice_status != null" >
         invoice_status,
-      </if>
-      <if test="order_no != null" >
+			</if>
+			<if test="order_no != null" >
         order_no,
-      </if>
-      <if test="receipt_id != null" >
+			</if>
+			<if test="receipt_id != null" >
         receipt_id,
-      </if>
-      <if test="user_id != null" >
+			</if>
+			<if test="user_id != null" >
         user_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
         #{id,jdbcType=BIGINT},
-      </if>
-      <if test="addTime != null" >
+			</if>
+			<if test="addTime != null" >
         #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="apply_no != null" >
+			</if>
+			<if test="apply_no != null" >
         #{apply_no,jdbcType=VARCHAR},
-      </if>
-      <if test="express_name != null" >
+			</if>
+			<if test="express_name != null" >
         #{express_name,jdbcType=VARCHAR},
-      </if>
-      <if test="express_no != null" >
+			</if>
+			<if test="express_no != null" >
         #{express_no,jdbcType=VARCHAR},
-      </if>
-      <if test="express_time != null" >
+			</if>
+			<if test="express_time != null" >
         #{express_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="finish_time != null" >
+			</if>
+			<if test="finish_time != null" >
         #{finish_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="flag != null" >
+			</if>
+			<if test="flag != null" >
         #{flag,jdbcType=INTEGER},
-      </if>
-      <if test="invoice_status != null" >
+			</if>
+			<if test="invoice_status != null" >
         #{invoice_status,jdbcType=INTEGER},
-      </if>
-      <if test="order_no != null" >
+			</if>
+			<if test="order_no != null" >
         #{order_no,jdbcType=VARCHAR},
-      </if>
-      <if test="receipt_id != null" >
+			</if>
+			<if test="receipt_id != null" >
         #{receipt_id,jdbcType=BIGINT},
-      </if>
-      <if test="user_id != null" >
+			</if>
+			<if test="user_id != null" >
         #{user_id,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_invoice" >
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_invoice" >
     update ezs_invoice
-    <set >
-      <if test="addTime != null" >
+		<set >
+			<if test="addTime != null" >
         addTime = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="apply_no != null" >
+			</if>
+			<if test="apply_no != null" >
         apply_no = #{apply_no,jdbcType=VARCHAR},
-      </if>
-      <if test="express_name != null" >
+			</if>
+			<if test="express_name != null" >
         express_name = #{express_name,jdbcType=VARCHAR},
-      </if>
-      <if test="express_no != null" >
+			</if>
+			<if test="express_no != null" >
         express_no = #{express_no,jdbcType=VARCHAR},
-      </if>
-      <if test="express_time != null" >
+			</if>
+			<if test="express_time != null" >
         express_time = #{express_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="finish_time != null" >
+			</if>
+			<if test="finish_time != null" >
         finish_time = #{finish_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="flag != null" >
+			</if>
+			<if test="flag != null" >
         flag = #{flag,jdbcType=INTEGER},
-      </if>
-      <if test="invoice_status != null" >
+			</if>
+			<if test="invoice_status != null" >
         invoice_status = #{invoice_status,jdbcType=INTEGER},
-      </if>
-      <if test="order_no != null" >
+			</if>
+			<if test="order_no != null" >
         order_no = #{order_no,jdbcType=VARCHAR},
-      </if>
-      <if test="receipt_id != null" >
+			</if>
+			<if test="receipt_id != null" >
         receipt_id = #{receipt_id,jdbcType=BIGINT},
-      </if>
-      <if test="user_id != null" >
+			</if>
+			<if test="user_id != null" >
         user_id = #{user_id,jdbcType=BIGINT},
-      </if>
-    </set>
+			</if>
+		</set>
     where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_invoice" >
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_invoice" >
     update ezs_invoice
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -199,88 +204,98 @@
       receipt_id = #{receipt_id,jdbcType=BIGINT},
       user_id = #{user_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
-  </update>
+	</update>
   
     
-  <!-- 通过userId查询开票信息 -->
-   <select id="goodsInvoiceCountPage" resultType="ezs_invoice"  parameterType="com.sanbang.utils.Page">
-    select 
-    <include refid="Base_Column_List" />
-    from ezs_invoice
-    where user_id = #{userId}	
+	<!-- 通过userId查询开票信息 -->
+	<select id="goodsInvoiceCountPage" resultType="ezs_invoice"  parameterType="com.sanbang.utils.Page">
+   SELECT
+	A.*,
+	IF (
+		ISNULL(B.total_price),
+		C.total_price,
+		B.total_price
+	) total_price,
+	  DATE_FORMAT( A.express_time,   '%Y-%m-%d')  express_timestr,
+	  DATE_FORMAT( A.finish_time,   '%Y-%m-%d')  finish_timestr,
+   DATE_FORMAT(A.addTime, '%Y-%m-%d') addTimestr
+    from ezs_invoice A LEFT JOIN ezs_orderform B ON  A.order_no=B.order_no
+    LEFT JOIN ezs_purchase_orderform C ON A.order_no=C.order_no
+    where A.user_id = #{userId}	
+    and A.flag=#{type}
     order by finish_time 
-    desc LIMIT #{page.startPos},#{page.pageSize}	and flag=#{type}				
-  </select>
+    desc LIMIT #{page.startPos},#{page.pageSize}					
+	</select>
   
-  <!-- 根据订单编号和签订时间查询开票记录 -->
-   <select id="selectInvoiceByIdAndDate" resultType="ezs_invoice"  >
+	<!-- 根据订单编号和签订时间查询开票记录 -->
+	<select id="selectInvoiceByIdAndDate" resultType="ezs_invoice"  >
     	select * from 	ezs_invoice invoice
-    	<where>
-			 <if test="orderno != null" >
+		<where>
+			<if test="orderno != null" >
 	        	order_no = #{orderno,jdbcType=VARCHAR},
-	      	</if>
-			 <if test="startTime != null and endTime != null" >
+			</if>
+			<if test="startTime != null and endTime != null" >
 	        	and (unix_timestamp(invoice.addTime)&gt;=unix_timestamp(#{startTime}) and unix_timestamp(invoice.addTime)&lt;unix_timestamp(#{endTime}))
-	      	</if>
-    	</where>
-  </select>
+			</if>
+		</where>
+	</select>
 	 
-   <!-- 通过id查询开票信息 -->
-   <select id="selectInvoiceInfoById"  resultMap="infoResultMap" >
+	<!-- 通过id查询开票信息 -->
+	<select id="selectInvoiceInfoById"  resultMap="infoResultMap" >
     	select ein.id, ein.express_time,ein.express_name,ein.express_no,
     	ein.invoice_status, eac.path
     	from 	ezs_invoice ein,ezs_accessory eac where ein.user_id = eac.user_id
     	and 	ein.id={invoiceId}				
-  </select>
+	</select>
   
-   <!-- 根据订单签订时间查询合同 -->
-   <select id="selectInvoiceByDate" parameterType="com.sanbang.utils.Page" resultType="ezs_invoice"  >
+	<!-- 根据订单签订时间查询合同 -->
+	<select id="selectInvoiceByDate" parameterType="com.sanbang.utils.Page" resultType="ezs_invoice"  >
     	select 
-    	<include refid="Base_Column_List" /> 
+		<include refid="Base_Column_List" /> 
     	from 	ezs_invoice invoice where
 	     (unix_timestamp(invoice.express_time)&gt;=unix_timestamp(#{startTime}) 
 	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
 	     LIMIT #{page.startPos},#{page.pageSize}
-   </select>
-   <!-- 根据订单编号查询票据详情-->
-   <select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
+	</select>
+	<!-- 根据订单编号查询票据详情-->
+	<select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
    		select 
-   		<include refid="Base_Column_List" /> 
+		<include refid="Base_Column_List" /> 
    		from ezs_invoice where order_no = #{orderno}
-   </select>
-   <!-- 根据订单编号查询合同详细信息 -->
-   <select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
+	</select>
+	<!-- 根据订单编号查询合同详细信息 -->
+	<select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
    		select 
-   		<include refid="Base_Column_List" /> 
+		<include refid="Base_Column_List" /> 
    		from ezs_invoice where order_no = #{orderno}
-   </select>
-   <!-- 查询票据信息包含图 -->
-   <resultMap id="invoiceMsgResultMap" type="com.sanbang.vo.InvoiceInfo" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
-    <result column="express_no" property="express_no" jdbcType="VARCHAR" />
-    <result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
-    <result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
-    <result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
-    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
-    <result column="path" property="path" jdbcType="VARCHAR"/>
-	<result column="pname" property="pname" jdbcType="VARCHAR"/>
-	<result column="pext" property="pext"  jdbcType="VARCHAR"/>
-  </resultMap>
-   <select id="selectInvoiceByUser" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long">
+	</select>
+	<!-- 查询票据信息包含图 -->
+	<resultMap id="invoiceMsgResultMap" type="com.sanbang.vo.InvoiceInfo" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="express_name" property="express_name" jdbcType="VARCHAR" />
+		<result column="express_no" property="express_no" jdbcType="VARCHAR" />
+		<result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
+		<result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
+		<result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
+		<result column="user_id" property="user_id" jdbcType="BIGINT" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR"/>
+		<result column="pname" property="pname" jdbcType="VARCHAR"/>
+		<result column="pext" property="pext"  jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="selectInvoiceByUser" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long">
    	select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
    	where e.user_id = #{ userId } and e.deleteStatus = '0' ORDER BY e.addtime desc
-   </select>
-   <select id="selectByPrimaryKeyTwo" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long" >
+	</select>
+	<select id="selectByPrimaryKeyTwo" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long" >
     select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
    	where e.id = #{ id } and e.deleteStatus = '0' ORDER BY e.addtime desc
-  </select>
- 	<!-- 根据uesrId查询invoice数量 -->
- 	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
+	</select>
+	<!-- 根据uesrId查询invoice数量 -->
+	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
  		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' and flag=#{type}
- 	</select>
+	</select>
  	
 </mapper>

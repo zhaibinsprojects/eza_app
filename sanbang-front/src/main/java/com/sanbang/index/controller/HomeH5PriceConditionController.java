@@ -13,17 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sanbang.bean.ezs_area;
+import com.sanbang.bean.ezs_column;
+import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.dao.ezs_columnMapper;
+import com.sanbang.dao.ezs_ezssubstanceMapper;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
-import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
 @RequestMapping("/app/home")
 public class HomeH5PriceConditionController {
 	
-	private static String view="/hangq";
+	private static String view="/hangq/";
 	
 	@Autowired
 	private PriceConditionService priceConditionService;
@@ -31,6 +34,10 @@ public class HomeH5PriceConditionController {
 	private IndustryInfoService industryInfoService;
 	@Autowired
 	private AddressService addressService;
+	@Autowired
+	private ezs_ezssubstanceMapper ezs_ezssubstanceMapper;
+	@Autowired
+	ezs_columnMapper columnMapper;
 	
 	private Logger log=Logger.getLogger(HomeH5PriceConditionController.class);
 	
@@ -49,14 +56,22 @@ public class HomeH5PriceConditionController {
 	@RequestMapping("/hangq")
 	public String hangqin(@RequestParam(name="yanjiucatid",defaultValue="17") int yanjiucatid,
 			@RequestParam(name="yanjiucatid",defaultValue="12") int jiagecatid,
-			@RequestParam(name="currentPage",defaultValue="1") String currentPage,
-			@RequestParam(name="kindId",defaultValue="32") String kindId,
-			@RequestParam(name="areaId",defaultValue="4521984") String areaId,
+			@RequestParam(name="currentPage",defaultValue="1") int pageno,
+			@RequestParam(name="kindId",defaultValue="1") String kindId,
+			@RequestParam(name="areaId",defaultValue="4523541") String areaId,
+			@RequestParam(name="countryType",defaultValue="1")String countryType,
+			@RequestParam(name="colorId",defaultValue="")String colorId,
+			@RequestParam(name="formId",defaultValue="")String formId,
+			@RequestParam(name="source",defaultValue="")String source,
+			@RequestParam(name="purpose",defaultValue="")String purpose,
+			@RequestParam(name="burning",defaultValue="")String burning,
+			@RequestParam(name="protection",defaultValue="")String protection,
 			Model  model){
 		//价格
-		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), currentPage);
+		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno);
 		//研究报告
-		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), currentPage);
+		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno);
+		
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> zoushi =new HashMap<>();
 		Map<String, Object> baojia =new HashMap<>();
@@ -75,15 +90,36 @@ public class HomeH5PriceConditionController {
 					}
 					tMp.put("areaIds", areaIdsList);
 				}
-		zoushi = this.priceConditionService.getPriceTrendcy(tMp,Integer.valueOf(currentPage));
-		baojia = this.priceConditionService.getPriceInTime(tMp);
+		zoushi = this.priceConditionService.getPriceTrendcy(tMp,pageno);
+		baojia = this.priceConditionService.getPriceInTime(tMp,pageno);
 		
 		model.addAttribute("jiage", jiage);
 		model.addAttribute("baogao", baogao);
-		model.addAttribute("zoushi", zoushi);
+		/*model.addAttribute("zoushi", zoushi);*/
 		model.addAttribute("baojia", baojia);
 		
 		return view+"hangqindex";
 	}
 	
+	
+	/**
+	 * 查看文章详情
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/hangqShow")
+	public String wenzhangShow(@RequestParam(name="id",required=true)long id,
+			Model model){
+		ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		ezs_column column=columnMapper.selectByPrimaryKey(show.getEc_id());
+		ezs_ezssubstance	boytton=ezs_ezssubstanceMapper.getButtomOneSubstanceByid(id, column.getParentEzsColumn_id());
+		ezs_ezssubstance	top=ezs_ezssubstanceMapper.getTopOneSubstanceByid(id, column.getParentEzsColumn_id());
+		model.addAttribute("top", top);
+		model.addAttribute("button", boytton);
+		model.addAttribute("show", show);
+		model.addAttribute("title", column.getName());
+		
+		return view+"infoshow";
+	}
 }

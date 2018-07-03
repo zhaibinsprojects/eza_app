@@ -5,7 +5,7 @@
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="cartography_id" property="cartography_id" jdbcType="BIGINT" />
   	<!--图片记录-->
-     <collection property="photo" column="photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
+     <collection property="photo" column="cartography_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
      </collection>
   </resultMap>
   <insert id="insert" parameterType="ezs_goods_cartography" >
@@ -32,7 +32,7 @@
     </trim>
   </insert>
   
-  <select id="selectCartographyById" resultType="ezs_goods_cartography">
+  <select id="selectCartographyById" resultMap="BaseResultMap">
   	select * from  ezs_goods_cartography where goods_id= #{goods_id}
   </select>
   <update id="updateSelective">

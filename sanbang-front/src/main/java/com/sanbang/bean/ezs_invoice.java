@@ -1,5 +1,6 @@
 package com.sanbang.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ezs_invoice {
@@ -32,6 +33,14 @@ public class ezs_invoice {
     private ezs_accessory  accessory;//图片
     
     private String apply_no;
+    
+    private BigDecimal total_price;
+    
+    private String express_timestr;
+    
+    private String finish_timestr;
+    
+    private String addTimestr;
 
     public Long getId() {
         return id;
@@ -152,4 +161,38 @@ public class ezs_invoice {
 	public void setApply_no(String apply_no) {
 		this.apply_no = apply_no;
 	}
+
+	public BigDecimal getTotal_price() {
+		return total_price;
+	}
+
+	public void setTotal_price(BigDecimal total_price) {
+		this.total_price = total_price;
+	}
+
+	public String getExpress_timestr() {
+		return express_timestr;
+	}
+
+	public void setExpress_timestr(String express_timestr) {
+		this.express_timestr = express_timestr;
+	}
+
+	public String getFinish_timestr() {
+		return finish_timestr;
+	}
+
+	public void setFinish_timestr(String finish_timestr) {
+		this.finish_timestr = finish_timestr;
+	}
+
+	public String getAddTimestr() {
+		return addTimestr;
+	}
+
+	public void setAddTimestr(String addTimestr) {
+		this.addTimestr = addTimestr;
+	}
+	
+	
 }

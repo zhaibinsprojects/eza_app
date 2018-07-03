@@ -2,6 +2,7 @@ package com.sanbang.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_ezssubstance;
@@ -30,5 +31,30 @@ public interface ezs_ezssubstanceMapper {
     List<ezs_ezssubstance> selectAllGoodsIndustryByPage(ExPage page);
     
     List<ezs_ezssubstance> selectEssayThemeByPage(ExPage page);
+    
+    /**
+     * 获取上一条
+     * @param id
+     * @param catid
+     * @return
+     */
+    ezs_ezssubstance  getTopOneSubstanceByid(@Param("id")long id ,@Param("catid")long catid);
+    
+    /**
+     * 获取下一条
+     * @param id
+     * @param catid
+     * @return
+     */
+    ezs_ezssubstance  getButtomOneSubstanceByid(@Param("id")long id ,@Param("catid")long catid);
+    
+    /**
+     * 当前分类列表
+     * @param pagecount
+     * @param pagesize
+     * @param catid
+     * @return
+     */
+    List<ezs_ezssubstance>  getButtomOneSubstanceBycatid(@Param("pagecount")long pagecount ,@Param("pagesize")long pagesize ,@Param("catid")long catid);
     
 }

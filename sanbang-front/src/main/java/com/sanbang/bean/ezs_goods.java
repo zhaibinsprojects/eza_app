@@ -105,6 +105,8 @@ public class ezs_goods {
     private Long util_id;
 
     private String addess2;
+    
+    private String lastuptime;
 
     public Long getId() {
         return id;
@@ -505,5 +507,14 @@ public class ezs_goods {
     public void setAddess2(String addess2) {
         this.addess2 = addess2 == null ? null : addess2.trim();
     }
+
+	public String getLastuptime() {
+		return lastuptime;
+	}
+
+	public void setLastuptime(String lastuptime) {
+		this.lastuptime = lastuptime;
+	}
+    
     
 }

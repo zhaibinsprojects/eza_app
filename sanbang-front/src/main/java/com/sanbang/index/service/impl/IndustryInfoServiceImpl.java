@@ -1,5 +1,6 @@
 package com.sanbang.index.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,28 +45,34 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 	}
 
 	@Override
-	public Map<String, Object> getIndustryInfoByKinds(Long kindsId, String currentPage) {
-		// TODO Auto-generated method stub
+	public Map<String, Object> getIndustryInfoByKinds(Long kindsId, int currentPage) {
 		Map<String, Object> mmp = new HashMap<>();
 		//获取总页数
 		int totalCount = this.ezssubstanceMapper.goodsIndustryCountByKinds(kindsId);
+		List<ezs_ezssubstance> glist=null;
+		ExPage page = new ExPage(totalCount, Integer.valueOf(currentPage));
+		page.setPageSize(10);
+		page.setContent(String.valueOf(kindsId));
 		if(totalCount>0){
-			ExPage page = new ExPage(totalCount, Integer.valueOf(currentPage));
-			page.setPageSize(10);
-			page.setContent(String.valueOf(kindsId));
 			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
-				List<ezs_ezssubstance> glist = this.ezssubstanceMapper.goodsIndustryByPage(page);
+				 glist = this.ezssubstanceMapper.goodsIndustryByPage(page);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "请求成功");
 				mmp.put("Page", page);
 				mmp.put("Obj", glist);
 			}else{
+				 glist=new ArrayList<>();
 				mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
 				mmp.put("Msg", "暂无数据");
 				mmp.put("Page", page);
+				mmp.put("Obj", glist);
 			}
 		}else{
+			glist=new ArrayList<>();
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_KIND_ERROR);
 			mmp.put("Msg", "查询类型有误");
+			mmp.put("Page", page);
+			mmp.put("Obj", glist);
 		}
 		return mmp;
 	}
@@ -73,13 +80,13 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 	 * 各种文档分页展示（全部展示不按分类）
 	 */
 	@Override
-	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId, String currentPage) {
+	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId, int currentPage) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>(); 
 		//获取总页数
 		int totalCount = this.ezssubstanceMapper.goodsAllIndustryCount(parentKindsId); 
 		if(totalCount>0){
-			ExPage page = new ExPage(totalCount, Integer.valueOf(currentPage)); 
+			ExPage page = new ExPage(totalCount, currentPage); 
 			page.setPageSize(10);
 			page.setContent(String.valueOf(parentKindsId));
 			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){

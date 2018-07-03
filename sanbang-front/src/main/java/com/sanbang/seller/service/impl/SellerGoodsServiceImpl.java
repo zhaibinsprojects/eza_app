@@ -38,6 +38,7 @@ import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsListInfo;
 import com.sanbang.vo.userauth.AuthImageVo;
 
 @Service
@@ -46,6 +47,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	private Logger log = Logger.getLogger(SellerGoodsServiceImpl.class);
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	ezs_goodsMapper goodsMapper;
@@ -80,12 +82,15 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	@Override
 	public Map<String, Object> queryGoodsListBySellerId(Long sellerId, int status, String currentPage) {
 		Map<String, Object> mmp = new HashMap<>();
+		if(currentPage==null){
+			currentPage = "1";    
+		}
 		// 获取总页数
 		int totalCount = goodsMapper.selectCount(sellerId,status);
 		Page page = new Page(totalCount, Integer.valueOf(currentPage));
 		page.setPageSize(10);
 		if ((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)) {
-			List<ezs_goods> list = goodsMapper.selectGoodsListBySellerId(sellerId, status, page);
+			List<GoodsListInfo> list = goodsMapper.selectGoodsListBySellerId(sellerId, status, page);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Page", page);
 			mmp.put("Obj", list);
@@ -177,8 +182,6 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setPurpose(purpose);
 				goods.setUtil_id((long) 23);
 				goods.setSupply_id(Long.valueOf(supply_id));
-				goods.setSupply_id(Long.valueOf(color_id));
-				goods.setSupply_id(Long.valueOf(form_id));
 				goods.setSource(source);
 				goods.setClick(0);
 				goods.setCollect(0);
@@ -187,16 +190,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setLockStatus(false);
 				goods.setMemberLook(false);
 				// 添加商品编码
-
 				log.info("sss===>"+goodClass_id);
 		        String goods_no = "GE" + classid2str(Long.valueOf(goodClass_id));
 		        log.info("sss===>"+goods_no);
-		        Long goodid = goods.getId();
-		        goods_no += goodsid2str(goodid);
-		        // 奇校验
-		        goods_no = new EvenOddCheck().toOdd(goods_no);
-		        goods.setGood_no(goods_no);
-		        
+		       
 				if (Boolean.valueOf(protection)) {
 					goods.setProtection(true);
 				} else {
@@ -233,6 +230,15 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					result.setMsg("参数错误");
 				}
 
+				 Long goodid = goods.getId();
+		        goods_no += goodsid2str(goodid);
+		        // 奇校验
+		        goods_no = new EvenOddCheck().toOdd(goods_no);
+		        ezs_goods g=new ezs_goods();
+		        g.setGood_no(goods_no);
+				g.setId(goods.getId());
+				goodsMapper.updateByPrimaryKeySelective(g);
+				
 				// 图片信息
 				ezs_goods_photo goodsPhoto = null ;
 				ezs_goods_cartography  cartography = null;
@@ -268,6 +274,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				mainAccid = list.get(0).getAccid();
 				goods.setGoods_main_photo_id(mainAccid);
 				goodsMapper.updateByPrimaryKeySelective(goods);
+				//带审核
+				result=submitGoodsForAudit(result, goods.getId(), request, response);
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
@@ -498,10 +506,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			if (aa <= 0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
-				result.setMsg("下架操作异常");
+				result.setMsg("上架操作异常");
 			} else {
 				result.setSuccess(true);
-				result.setMsg("操作成功");
+				result.setMsg("上架成功");
 			}
 		} catch (Exception e) {
 			log.info("商品下架操作出错" + e.toString());
@@ -672,6 +680,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				mainAccid = list.get(0).getAccid();
 				goods.setGoods_main_photo_id(mainAccid);
 				goodsMapper.updateByPrimaryKeySelective(goods);
+				result=submitGoodsForAudit(result, goodsId, request, response);
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
@@ -757,6 +766,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				result.setMsg("请输入有效货品价格");
 			}
 		}
+		goods.setLastModifyDate(new Date());
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
 		goodsMapper.updateByPrimaryKeySelective(goods);
@@ -773,5 +783,29 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
         // 奇校验
         goods_no = new EvenOddCheck().toOdd(goods_no);
         System.out.println(goods_no);
+	}
+
+	@Override
+	public Result pullNoShelvesById(Result result, long goodsId) {
+
+		int aa = 0;
+
+		try {
+			aa = goodsMapper.pullNoShelves(goodsId);
+			if (aa <= 0) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("上架操作异常");
+			} else {
+				result.setSuccess(true);
+				result.setMsg("上架成功");
+			}
+		} catch (Exception e) {
+			log.info("商品上架操作出错" + e.toString());
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误！");
+		}
+		return result;
 	}
 }

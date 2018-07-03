@@ -48,7 +48,7 @@
     delete from ezs_customized
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_customized" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_customized"  useGeneratedKeys="true" keyProperty="id">
     insert into ezs_customized (id, addTime, deleteStatus, 
       address, ash_content, bend_strength, 
       budget, colour, combustion_grade, 

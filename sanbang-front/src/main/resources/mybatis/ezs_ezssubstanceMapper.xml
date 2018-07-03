@@ -528,4 +528,41 @@
   	id,name, ec_id
 	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id ) order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
+  
+  
+  <select id="getTopOneSubstanceByid" resultMap="ExTendOne_BaseResultMap" >
+  	select 
+  	<include refid="Base_Column_List" />
+	FROM
+	ezs_ezssubstance A
+	WHERE
+	EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{catid} and A.ec_id = ec.id )
+	and
+	A.id &lt; #{id}
+	order by addTime DESC LIMIT 1
+  </select>
+  
+   <select id="getButtomOneSubstanceByid" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  	select 
+  	<include refid="Base_Column_List" />
+		FROM
+	ezs_ezssubstance A
+		WHERE
+		EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{catid} and A.ec_id = ec.id )
+		and
+		A.id &gt; #{id}
+	order by addTime  asc LIMIT 1
+  </select>
+  
+  
+  <select id="getButtomOneSubstanceBycatid" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  	select 
+  	<include refid="Base_Column_List" />
+		FROM
+	ezs_ezssubstance A
+		WHERE
+		A.ec_id = #{catid}
+	order by addTime  desc LIMIT  #{pagecount},#{pagesize}
+  </select>
+  
 </mapper>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.utils.Page;
 import com.sanbang.vo.GoodsInfo;
+import com.sanbang.vo.GoodsListInfo;
 import com.sanbang.vo.goods.GoodsVo;
 
 @Repository
@@ -30,9 +31,11 @@ public interface ezs_goodsMapper {
     
     int goodsIntroduceCount();
 
-	List<ezs_goods> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("page")Page page);
+	List<GoodsListInfo> selectGoodsListBySellerId(@Param("sellerId")Long sellerId, @Param("status")int status, @Param("page")Page page);
 
 	int pullOffShelves(long goodsId);
+	
+	int pullNoShelves(long goodsId);
 	
 	List<GoodsVo> listForGoods(Long goodClass_id);
 

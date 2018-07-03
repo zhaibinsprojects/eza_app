@@ -6,9 +6,9 @@ public interface IndustryInfoService {
 	
 	public Map<String, Object> getSecondTheme(Long id);
 	
-	public Map<String, Object> getIndustryInfoByKinds(Long kindsId,String currentPage);
+	public Map<String, Object> getIndustryInfoByKinds(Long kindsId,int currentPage);
 	
-	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId,String currentPage);
+	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId,int currentPage);
 	/**
 	 * 根据二级栏目获取文章name和meta(不要文章内容，影响效率)
 	 * @param parentKindsId

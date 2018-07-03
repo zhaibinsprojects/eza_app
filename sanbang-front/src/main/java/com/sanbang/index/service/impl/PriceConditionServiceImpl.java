@@ -32,12 +32,12 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	private ezs_areaMapper areaMapper;
 	
 	@Override
-	public Map<String, Object> getPriceInTime(Map<String, Object> mp) {
+	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno) {
 		Map<String, Object> mmp = new HashMap<>();
-		List<PriceTrendIfo> plist = null;
-		// TODO Auto-generated method stub
+		List<PriceTrendIfo> plist = new ArrayList<>();
 		try {
-			//plist = this.priceTrendMapper.selectByCondition(mp);
+			mp.put("pagecount", (pageno-1)*10);
+			mp.put("pagesize", 10);
 			plist = this.priceTrendMapper.selectByAreaIdAndOtherCondition(mp);
 			if(plist!=null){
 				List<PriceTrendIfo> plistTemp = new ArrayList<>();
@@ -48,9 +48,10 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 				mmp.put("Obj", plistTemp);
 				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "查询成功");
+			}else{
+				plist=new ArrayList<>();
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error(e.getMessage());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
