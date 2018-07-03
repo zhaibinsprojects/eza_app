@@ -602,7 +602,7 @@
 		select
 		IFNULL(AVG(a.price),0) currentPrice
 		from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass_id = gc.id LEFT JOIN ezs_dict e1 on a.color_id = e1.id LEFT JOIN ezs_dict e2 on a.form_id = e2.id 
-		where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' and a.type = '3'
+		where a.type = '3'
 		<trim prefix=" and " suffix=" " suffixOverrides=" and ">
 	      <if test="kindId != null" >
 	        a.goodClass_id = #{kindId}
@@ -664,8 +664,8 @@
     </trim>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
 	) prePrice
-	from ezs_price_trend a,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' 
-	and  a.goodClass_id = gc.id and a.color_id = e1.id and a.form_id = e2.id and a.type = '3'
+	from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass_id = gc.id LEFT JOIN ezs_dict e1 on a.color_id = e1.id LEFT JOIN ezs_dict e2 on a.form_id = e2.id
+	where  a.type = '3'
       <if test="kindId != null" >
         and a.goodClass_id = #{kindId}
       </if>
@@ -694,8 +694,8 @@
          #{areaIds}
      	</foreach>
       </if>
-    and a.data_time >= DATE_SUB(DATE_FORMAT(SYSDATE(),'%Y-%m-%d'),interval 1 MONTH)
- 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc LIMIT #{startPos},#{pageSize}
+    <!-- and a.data_time >= DATE_SUB(DATE_FORMAT(SYSDATE(),'%Y-%m-%d'),interval 1 MONTH) -->
+ 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(a.data_time,'%Y-%m-%d') desc LIMIT #{startPos},#{pageSize}
   </select>
   <!-- 获取价格趋势,最近两天实时交易 -->
   <select id="selectPriceChangesByGood" resultMap="PriceTrendcyResultMap" parameterType="java.lang.Long">

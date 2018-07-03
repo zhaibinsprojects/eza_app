@@ -9,13 +9,11 @@ import java.util.List;
 import com.sanbang.bean.ezs_goods;
 /**
  * 集合字段过滤
- * @author zhaibin
  * @param <T>
  */
 public class FieldFilterUtil<T> {
 	/**
 	 * 字段过滤 
-	 * @author zhaibin
 	 * @param list
 	 * @param filterFields
 	 * @param clazz
@@ -58,7 +56,6 @@ public class FieldFilterUtil<T> {
 	
 	/**
 	 * 字段过滤 
-	 * @author zhaibin
 	 * @param oob 需要过滤的对象
 	 * @param filterFields
 	 * @param clazz
@@ -94,7 +91,6 @@ public class FieldFilterUtil<T> {
 	}
 	/**
 	 * 返回字段类型
-	 * @author zhaibin
 	 * @param type
 	 * @return
 	 */

@@ -221,6 +221,9 @@ public class AppHomeGoodsMessController {
 			// TODO: handle exception
 			e.printStackTrace();
 			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+e.getMessage());
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("数据类型传输有误");
 		}
 		return rs;
 	}
