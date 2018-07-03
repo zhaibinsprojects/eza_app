@@ -6,6 +6,7 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
+<!-- <base href="http://10.10.10.148/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -21,6 +22,7 @@
 				$(".ezsm-normal-top-nav li").removeClass("ezsm-normal-top-nav-sel");
 				$(this).addClass("ezsm-normal-top-nav-sel");
 			});
+			
 			$(".ezsm-shopdetail-picbox").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-main-visual").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-main-image").css("height",($("body").width())+"px");
@@ -29,6 +31,7 @@
 			$(".ezsm-shopdetail-picbox-main-image li span").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-main-image li a").css("height",($("body").width())+"px");
 			$(".ezsm-shopdetail-picbox-flicking-con").css("top",($("body").width()-30)+"px");
+			
 			//轮播图效果
 			$(document).ready(function(){
 				$(".ezsm-shopdetail-picbox-main-visual").hover(function(){ $("#btn_prev,#btn_next").fadeOut();
@@ -51,7 +54,7 @@
 				
 				$(".ezsm-shopdetail-picbox-main-image").bind("touchstart",function(){ clearInterval(timer);
 				}).bind("touchend", function(){ timer = setInterval(function(){ $("#btn_next").click(); }, 5000); });
-			});
+			}); 
 		});
 	</script>
 </head>

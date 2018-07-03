@@ -86,10 +86,10 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		List<PriceTrendIfo> ppList = new ArrayList<>();
 		List<PriceTrendIfo> pList = null;
 		try {
-			int totalCount = this.priceTrendMapper.getPriceConditionCount(mp);
-			Page page = new Page(totalCount, currentPage);
-			mp.put("startPos", page.getStartPos());//每页起始位子
-			mp.put("pageSize", page.getPageSize());//页面大小
+			//int totalCount = this.priceTrendMapper.getPriceConditionCount(mp);
+			//Page page = new Page(totalCount, currentPage);
+			mp.put("startPos", (currentPage - 1)*10);//每页起始位子
+			mp.put("pageSize", 10);//页面大小
 			pList = this.priceTrendMapper.getPriceTrendcy(mp);			
 		} catch (Exception e) {
 			// TODO: handle exception

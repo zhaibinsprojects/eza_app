@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,7 +24,6 @@ import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.index.service.impl.PriceConditionServiceImpl;
 import com.sanbang.utils.FieldFilterUtil;
 import com.sanbang.utils.Result;
-import com.sanbang.utils.mapCompanyPager;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.ExPage;
 import com.sanbang.vo.PriceTrendIfo;
@@ -289,6 +287,46 @@ public class HomePriceConditionController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 获取文章报告
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/getH5EssayReport")
+	@ResponseBody
+	public Object getH5EssayReport(HttpServletRequest request,HttpServletResponse response,Long id,int currentPage){
+		Map<String, Object> mmp = null;
+		List<ezs_ezssubstance> elist = null;
+		Result rs = null;
+		if(currentPage<=0)
+			currentPage = 1;
+		if(id==null){
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage);
+		}else{
+			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
+		}
+		ExPage page = (ExPage) mmp.get("Page");
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			elist = (List<ezs_ezssubstance>) mmp.get("Obj");
+			rs = Result.success();
+			rs.setObj(elist);
+			rs.setMeta(page);
+			
+		}else{
+			rs = Result.failure();
+			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
+			rs.setMsg(mmp.get("Msg").toString());
+			rs.setObj(new ArrayList<>());
+		}
+		return rs;
+	}
+	
+	
 	/**
 	 * 价格趋势+条件筛选
 	 * @param request
@@ -322,7 +360,6 @@ public class HomePriceConditionController {
 			return rs;
 		}
 		
-		
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
 		//获取相关地址ID
@@ -335,7 +372,6 @@ public class HomePriceConditionController {
 			}
 			tMp.put("areaIds", areaIdsList);
 		}
-		
 		
 		//参数传递
 		tMp.put("kindId", kindId);
