@@ -26,6 +26,18 @@ public class ezs_financial_service_loans {
 
     private Long user_id;
 
+    private Date acceptTime;
+
+    private String applyNo;
+
+    private String email;
+
+    private Integer status;
+
+    private Long acceptUser_id;
+
+    private Long area_id;
+
     public Long getId() {
         return id;
     }
@@ -112,5 +124,53 @@ public class ezs_financial_service_loans {
 
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
+    }
+
+    public Date getAcceptTime() {
+        return acceptTime;
+    }
+
+    public void setAcceptTime(Date acceptTime) {
+        this.acceptTime = acceptTime;
+    }
+
+    public String getApplyNo() {
+        return applyNo;
+    }
+
+    public void setApplyNo(String applyNo) {
+        this.applyNo = applyNo == null ? null : applyNo.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Long getAcceptUser_id() {
+        return acceptUser_id;
+    }
+
+    public void setAcceptUser_id(Long acceptUser_id) {
+        this.acceptUser_id = acceptUser_id;
+    }
+
+    public Long getArea_id() {
+        return area_id;
+    }
+
+    public void setArea_id(Long area_id) {
+        this.area_id = area_id;
     }
 }

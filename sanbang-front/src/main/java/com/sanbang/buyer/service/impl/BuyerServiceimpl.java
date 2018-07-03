@@ -778,9 +778,11 @@ public class BuyerServiceimpl implements BuyerService {
 			com.sanbang.bean.ezs_invoice ezs_invoice =	ezs_invoiceMapper.selectInvoiceByOrderNo(order_no);
 			
 			if (null == ezs_invoice) {
+				ezs_invoice=new com.sanbang.bean.ezs_invoice();
 				result.setSuccess(false);
 				result.setMsg("暂无发票信息");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setObj(ezs_invoice);
 				return result;
 			}else{
 				if(null!=ezs_invoice.getReceipt_id()&&ezs_invoice.getReceipt_id()>0){
@@ -829,16 +831,16 @@ public class BuyerServiceimpl implements BuyerService {
 				if(!Tools.isEmpty(ezs_logistics.getCar_no())){
 					//物流
 					logs.put("logtype", 1);
-					logs.put("proples", ezs_logistics.getProples());
-					logs.put("car_no", ezs_logistics.getCar_no());
-					logs.put("phone", ezs_logistics.getPhone());
+					logs.put("proples", Tools.isEmpty(ezs_logistics.getProples())?"":ezs_logistics.getProples());
+					logs.put("car_no", Tools.isEmpty(ezs_logistics.getCar_no())?"":ezs_logistics.getCar_no());
+					logs.put("phone", Tools.isEmpty(ezs_logistics.getPhone())?"":ezs_logistics.getPhone());
 					logs.put("service_time", ezs_logistics.getService_time()==null?"":sdf1.format(ezs_logistics.getService_time()));
 					logs.put("logistics_name", "");
 					logs.put("logistics_no", "");
 				}else{
 					//快递
-					logs.put("logistics_name", ezs_logistics.getLogistics_name());
-					logs.put("logistics_no", ezs_logistics.getLogistics_no());
+					logs.put("logistics_name", Tools.isEmpty(ezs_logistics.getLogistics_name())?"":ezs_logistics.getLogistics_name());
+					logs.put("logistics_no",Tools.isEmpty(ezs_logistics.getLogistics_no())?"": ezs_logistics.getLogistics_no());
 					logs.put("proples", "");
 					logs.put("car_no", "");
 					logs.put("phone", "");

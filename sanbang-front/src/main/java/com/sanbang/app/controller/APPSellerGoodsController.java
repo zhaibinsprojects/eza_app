@@ -384,7 +384,6 @@ public class APPSellerGoodsController {
 			
 			result = sellerGoodsService.updateGoodsInfoById(result, goodsId,upi, request,response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);

@@ -6,14 +6,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
@@ -33,8 +31,6 @@ public class SellerOrderContorller {
 	
 	@Autowired
 	private BuyerService buyerService;
-	//日志
-	private static Logger log = Logger.getLogger(SellerOrderContorller.class.getName());
 	
 	@Autowired
 	SellerOrderService sellerOrderService;

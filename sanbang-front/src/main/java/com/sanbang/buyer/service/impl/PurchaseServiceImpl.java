@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import com.sanbang.buyer.service.PurchaseService;
 import com.sanbang.dao.ezs_customizedMapper;
 import com.sanbang.dao.ezs_customized_recordMapper;
 import com.sanbang.dao.ezs_customized_resMapper;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Service
@@ -24,12 +27,22 @@ public class PurchaseServiceImpl implements PurchaseService {
 	private ezs_customized_resMapper customizedResMapper;
 	
 	@Override
-	public Map<String, Object> getPurchaseGoodsByUser(Long userId) {
+	public Map<String, Object> getPurchaseGoodsByUser(HttpServletRequest request,Long userId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		List<ezs_customized> elist = null;
+		
+		String pageNow=request.getParameter("pageNow");
+		int pageNo=1;
+		if(Tools.isEmpty(pageNow)){
+			pageNo=Integer.valueOf(pageNow);
+			if(pageNo<=1){
+				pageNo=1;
+			}
+		}
+		
 		try {
-			elist = this.customizedMapper.getPurchaseByUserId(userId);
+			elist = this.customizedMapper.getPurchaseByUserId(userId,(pageNo-1)*10,10);
 			mmp.put("Obj", elist);
 			mmp.put("Msg", "响应成功");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

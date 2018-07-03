@@ -204,7 +204,6 @@ public class AppGoodsController {
 			result.setSuccess(true);
 			result.setMsg("查询成功");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setMsg("查询失败");
@@ -331,7 +330,6 @@ public class AppGoodsController {
 					date = sdf.parse(pre_time);
 					customized.setPre_time(date);
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				customized.setAddress(goods.getAddess());//收货地址
@@ -701,21 +699,6 @@ public class AppGoodsController {
 		} 
 	}
 	
-	/**
-	 * 插入发票信息
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/insertinvoice")
-	@ResponseBody
-	public Result insertinvoice(HttpServletRequest request,ezs_invoice invoice) {
-		Result result = new Result();
-		//关于发票图片的处理暂时不确定，所以暂时，暂时，先放这儿
-		
-		
-		return result;
-	}
-	
 	
 	/**
 	 * 样品下订单
@@ -753,7 +736,6 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
@@ -796,7 +778,6 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
@@ -905,7 +886,6 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
@@ -1052,7 +1032,6 @@ public class AppGoodsController {
 				rs.setMsg("有未通过预提交测试订单");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setObj(new ArrayList<>());
@@ -1136,7 +1115,6 @@ public class AppGoodsController {
 				rs.setMsg("有未通过预提交测试订单");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setObj(new ArrayList<>());

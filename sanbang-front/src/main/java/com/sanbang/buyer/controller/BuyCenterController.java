@@ -1,5 +1,6 @@
 package com.sanbang.buyer.controller;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,31 +49,7 @@ public class BuyCenterController {
 	private OrderEvaluateService orderEvaluateService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-	/**
-	 * 添加商品到收藏夹（不启用）
-	 * @param request
-	 * @param response
-	 * @param gId
-	 * @return
-	 */
-	@RequestMapping("/addGoodToCollection")
-	@ResponseBody
-	public Object addGoodToCollection(HttpServletRequest request,HttpServletResponse response,Long gId,Long userId){
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		//首先判断该商品是否已在保存记录中，
-		mmp = this.goodsCollectionService.addGoodToCollection(gId,userId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			rs = Result.success();
-			rs.setMsg("");
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg("参数传递有误");
-		}
-		return rs;
-	}
+	
 	/**
 	 * 移除收藏夹商品
 	 * @param request
@@ -82,20 +59,29 @@ public class BuyCenterController {
 	 */
 	@RequestMapping("/removeFromCollection")
 	@ResponseBody
-	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId){
+	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
-		Result rs = null;
+		Result rs = Result.failure();
 		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
-			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		mmp = this.goodsCollectionService.removeGoodFromCollect(gId,upi.getId());
+		
+		String gId=request.getParameter("gIds");
+		if(Tools.isEmpty(gId)){
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setMsg("参数错误");
+			return rs;
+		}
+		String[] gooids=gId.split(",");
+		
+		mmp = this.goodsCollectionService.removeGoodFromCollect(gooids,upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{
 			rs = Result.failure();
@@ -138,32 +124,7 @@ public class BuyCenterController {
 		}
 		return rs;
 	}
-	/**
-	 * 添加商品到购物车（不启用）
-	 * @param request
-	 * @param response
-	 * @param gId
-	 * @return
-	 */
-	@RequestMapping("/addToGoodCart")
-	@ResponseBody
-	public Object addToGoodCart(HttpServletRequest request,HttpServletResponse response,Long gId){
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		List<Object> glist = null;
-		mmp = this.goodsCollectionService.addGoodCart(gId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			rs = Result.success();
-			rs.setObj(glist);
-			rs.setMsg("");
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg("参数传递有误");
-		}
-		return rs;
-	}
+	
 	/**
 	 * 商品最近价格变化趋势
 	 * @param request
@@ -265,7 +226,7 @@ public class BuyCenterController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
-			rs.setMsg("修改成功");
+			rs.setMsg("确认成功");
 		}else{
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
