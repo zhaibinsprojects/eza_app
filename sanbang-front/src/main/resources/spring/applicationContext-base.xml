@@ -63,16 +63,6 @@
 		<property name="filters" value="${jdbc.druid.filters}" />
 	</bean>
 	
-	<!-- 配置SqlServer数据源DataSource2 -->   
-    <!--  <bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource"
-            init-method="init" destroy-method="close">
-            基本属性 url、user、password
-            <property name="driverClassName" value="${SqlServer.driverClass}" />
-            <property name="url" value="${SqlServer.url}" />
-            <property name="username" value="${SqlServer.username}" />
-            <property name="password" value="${SqlServer.password}" />
-     </bean> -->
-	
 
 	<!-- 配置redis -->
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">

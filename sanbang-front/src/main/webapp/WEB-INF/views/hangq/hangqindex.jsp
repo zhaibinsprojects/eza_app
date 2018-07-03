@@ -5,7 +5,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
+<%-- <base href="${serurl}"/> --%>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -14,8 +14,12 @@
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
+<<<<<<< HEAD
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
    
+=======
+<script type="text/javascript" src="front/resource/js/newAddjs/ezsmnewAdd.js"></script>
+>>>>>>> 11109570c88b1161100a28b06c3ce1b41a6c9352
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
 	<div class="content_yzs">

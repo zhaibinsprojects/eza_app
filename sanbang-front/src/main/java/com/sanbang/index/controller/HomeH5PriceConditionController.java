@@ -40,9 +40,6 @@ public class HomeH5PriceConditionController {
 	ezs_columnMapper columnMapper;
 	
 	private Logger log=Logger.getLogger(HomeH5PriceConditionController.class);
-	
-	
-	
 	/**
 	 *  app/h5价格分析
 	 * @param catid  大分类
@@ -98,7 +95,7 @@ public class HomeH5PriceConditionController {
 		/*model.addAttribute("zoushi", zoushi);*/
 		model.addAttribute("baojia", baojia);
 		
-		return view+"hangqindex";
+		return view+"/hangqindex";
 	}
 	
 	

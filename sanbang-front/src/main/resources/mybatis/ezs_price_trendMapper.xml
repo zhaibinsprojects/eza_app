@@ -666,36 +666,34 @@
 	) prePrice
 	from ezs_price_trend a,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where e1.code like 'EZS_COLOR%' and e2.code like 'EZS_FORM%' 
 	and  a.goodClass_id = gc.id and a.color_id = e1.id and a.form_id = e2.id and a.type = '3'
-	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
       <if test="kindId != null" >
-        a.goodClass_id = #{kindId}
+        and a.goodClass_id = #{kindId}
       </if>
       <if test="colorId != null" >
-        a.color_id = #{colorId}
+        and a.color_id = #{colorId}
       </if>
       <if test="formId != null" >
-        a.form_id = #{formId}
+        and a.form_id = #{formId}
       </if>
       <if test="source != null" >
-        a.date_from = #{source}
+        and a.date_from = #{source}
       </if>
       <if test="purpose != null" >
-        a.purpose = #{purpose}
+        and a.purpose = #{purpose}
       </if>
       <if test="burning != null" >
-        a.burning = #{burning}
+        and a.burning = #{burning}
       </if>
       <if test="protection != null" >
-        a.protection = #{protection}
+        and a.protection = #{protection}
       </if>
       <!-- 加入数组 -->
       <if test="areaIds != null and areaIds.size > 0 " >
-        a.region_id 
+        and a.region_id 
 		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
          #{areaIds}
      	</foreach>
       </if>
-    </trim>
     and a.data_time >= DATE_SUB(DATE_FORMAT(SYSDATE(),'%Y-%m-%d'),interval 1 MONTH)
  	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY a.data_time desc LIMIT #{startPos},#{pageSize}
   </select>
