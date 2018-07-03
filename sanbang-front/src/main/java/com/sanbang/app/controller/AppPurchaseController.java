@@ -48,7 +48,7 @@ public class AppPurchaseController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		mmp = this.purchaseService.getPurchaseGoodsByUser(upi.getId());
+		mmp = this.purchaseService.getPurchaseGoodsByUser(request,upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			elist = (List<ezs_customized>) mmp.get("Obj");
