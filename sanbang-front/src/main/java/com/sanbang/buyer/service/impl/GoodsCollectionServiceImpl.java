@@ -13,6 +13,7 @@ import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.dao.ezs_documentshareMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_price_trendMapper;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PriceTrendIfo;
 
@@ -45,28 +46,21 @@ public class GoodsCollectionServiceImpl implements GoodsCollectionService {
 		}
 		return mmp;
 	}
-	/**
-	 *已存在，暂不开发此方法
-	 */
-	@Override
-	public Map<String, Object> addGoodToCollection(Long Id,Long userIed) {
-		// TODO Auto-generated method stub
-		Map<String, Object> mmp = new HashMap<>();
-		Map<String, Object> mp = new HashMap<>();
-		mp.put("gId", Id);
-		mp.put("userId",userIed);
-		
-		return mmp;
-	}
+	
 
 	@Override
-	public Map<String, Object> removeGoodFromCollect(Long gId,Long userId) {
+	public Map<String, Object> removeGoodFromCollect(String[] gIds,Long userId) {
 		Map<String, Object> mmp = new HashMap<>();
-		Map<String, Object> mp = new HashMap<>();
-		mp.put("gId", gId);
-		mp.put("userId", userId);
 		try{
-			this.documentshareMapper.updateCollectByUserId(mp);
+			for (String gid : gIds) {
+				if(Tools.isEmpty(gid)){
+					continue;
+				}
+				Map<String, Object> mp = new HashMap<>();
+				mp.put("gId", Integer.valueOf(gid));
+				mp.put("userId", userId);
+				this.documentshareMapper.updateCollectByUserId(mp);
+			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "移除成功");
 		}catch(Exception e){
@@ -77,11 +71,6 @@ public class GoodsCollectionServiceImpl implements GoodsCollectionService {
 		return mmp;
 	}
 
-	@Override
-	public Map<String, Object> addGoodCart(Long gId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public Map<String, Object> selectPriceChanges(Long gId) {

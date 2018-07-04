@@ -2,6 +2,8 @@ package com.sanbang.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sanbang.bean.ezs_customized;
 
 public interface ezs_customizedMapper {
@@ -20,5 +22,5 @@ public interface ezs_customizedMapper {
     List<ezs_customized> customizedList(Long user_id);
 
     //add by zhaibin
-    List<ezs_customized> getPurchaseByUserId(Long userId);
+    List<ezs_customized> getPurchaseByUserId(@Param("userId")Long userId,@Param("pageCount")int pageCount,@Param("pageSize")int pageSize);
 }

@@ -264,4 +264,10 @@
 			value="com.sanbang.dao.ezs_idcard_dictMapper"/>
 	</bean>
 	
+	<!-- 供应链 -->
+	<bean id="ezs_financial_service_loansMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_financial_service_loansMapper"/>
+	</bean>
+	
 </beans>

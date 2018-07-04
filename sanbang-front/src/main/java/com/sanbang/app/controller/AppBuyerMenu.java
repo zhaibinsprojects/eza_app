@@ -1,5 +1,6 @@
 package com.sanbang.app.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.controller.BuyerMenu;
 import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerReceiptService;
@@ -40,33 +42,10 @@ public class AppBuyerMenu {
 	@Autowired
 	private SellerReceiptService sellerReceiptService;
 	
-	@Autowired
-	private DictService dictService;
 	
+  Logger log=Logger.getLogger(BuyerMenu.class);  
+
 	
-	private Logger log=Logger.getLogger(AppBuyerMenu.class);  
-
-	/**
-	 * 买家会员中心
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/menuinit")
-	@ResponseBody
-	public Result cataInit(HttpServletRequest request) {
-		Result result = Result.success();
-		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-		result.setMsg("请求成功");
-
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (upi == null) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
-		return result;
-	}
 
 	/**
 	 * 订单中心
@@ -101,24 +80,24 @@ public class AppBuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		try {
+		List<ezs_order_info> list=new ArrayList<>();
+		PagerOrder pager = new PagerOrder();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
-			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
 		}
-	
+
+		try {
 			if (pageNow < 1) {
 				pageNow = 1;
 			}
-			PagerOrder pager = new PagerOrder();
 			pager.setUserid(upi.getId());
 			pager.setOrder_status(order_status);
 			pager.setOrder_type(order_type);
 			pager.setPageNow(pageNow);
-			List<ezs_order_info> list = buyerService.getOrderListByValue(pager);
+			 list = buyerService.getOrderListByValue(pager);
 			result.setMeta(new Page(pageNow, pager.getPageSize(), pager.getTotalCount(), pager.getTotalPageCount(), 0, true,
 					true, true, true));
 			if (list.size() == 0) {
@@ -134,6 +113,9 @@ public class AppBuyerMenu {
 			result.setSuccess(false);
 			result.setMsg("系统错误");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setObj(list);
+			result.setMeta(new Page(pageNow, pager.getPageSize(), pager.getTotalCount(), pager.getTotalPageCount(), 0, true,
+					true, true, true));
 		}
 		return result;
 	}
@@ -153,7 +135,7 @@ public class AppBuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		try {
+
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -161,7 +143,7 @@ public class AppBuyerMenu {
 			return result;
 		}
 
-		
+		try {
 			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
 			result.setObj(map);
 		} catch (Exception e) {
@@ -364,13 +346,13 @@ public class AppBuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (upi == null) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
 		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
 			result = buyerService.seller_order_signature(order_no, request, response,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -390,7 +372,7 @@ public class AppBuyerMenu {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value="/getContentList" , produces = "text/html;charset=UTF-8")
+	@RequestMapping("/getContentList")
 	@ResponseBody
 	public Result getContentList(@RequestParam(name = "pageno", defaultValue = "1") int pageno,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -498,6 +480,8 @@ public class AppBuyerMenu {
 		if(currentPage==null){
 			currentPage = "1";
 		}
+		Map<String,Object> returnmap=new HashMap<>();
+		returnmap.put("bill", upi.getEzs_bill());
 		try {
 			map = sellerReceiptService.getInvoiceListById(userId,currentPage,1);
 			Integer ErrorCode = (Integer)map.get("ErrorCode");
@@ -505,13 +489,15 @@ public class AppBuyerMenu {
 				list = (List<ezs_invoice>) map.get("Obj");
 				page = (Page) map.get("Page");
 				result = Result.success(); 
-				result.setObj(list);
+				returnmap.put("list", list);
+				result.setObj(returnmap);
 				result.setMeta(page);
 			}else{
 				result = Result.failure();
 				result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
 				result.setMsg(map.get("Msg").toString());
-				result.setObj(list);
+				returnmap.put("list", list);
+				result.setObj(returnmap);
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -521,54 +507,5 @@ public class AppBuyerMenu {
 		}
 		return result;
 	}
-	
-	
-	/**
-	 * 发票查看
-	 * @param orderNo
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/queryInvoiceInfoById")
-	@ResponseBody
-	public Object queryInvoiceInfoById(String orderNo, HttpServletRequest request, HttpServletResponse response){
-		Result result = Result.failure();
-		Map<String, Object> map = new HashMap<>();
-		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
-		
-		ezs_invoice invoice = null; 
-		ezs_accessory accessory = null;		
-		try {
-			invoice = sellerReceiptService.queryInvoiceByNo(orderNo);
-			if (invoice != null ) {
-				
-				Long receipt_id = invoice.getReceipt_id();
-				accessory = sellerReceiptService.queryAccessoryById(receipt_id);
-				String path = accessory.getPath();
-				map.put("invoice", invoice);
-				map.put("path", path);
-				result.setSuccess(true);
-				result.setMsg("查询成功");
-				result.setObj(map);
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("查询失败");
-			}
-		} catch (Exception e) {
-			log.info("查询发票信息出错" + e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setSuccess(false);
-			result.setMsg("系统错误");
-		}
-		return result;
-	}
-	
 	
 }

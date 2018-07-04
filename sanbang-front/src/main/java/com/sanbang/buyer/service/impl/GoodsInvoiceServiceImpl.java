@@ -63,7 +63,7 @@ public class GoodsInvoiceServiceImpl implements GoodsInvoiceService {
 		ezs_invoice invoice = null;
 		try {
 			invoice = this.invoiceMapper.selectByPrimaryKey(id);
-			invoice.setInvoice_status(1);
+			invoice.setInvoice_status(3);
 			this.invoiceMapper.updateByPrimaryKey(invoice);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		} catch (Exception e) {

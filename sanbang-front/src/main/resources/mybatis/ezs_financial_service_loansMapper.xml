@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_financial_service_loansMapper" >
-  <resultMap id="BaseResultMap" type="ezs_financial_service_loans" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_financial_service_loans" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -13,10 +13,17 @@
     <result column="mainBusiness" property="mainBusiness" jdbcType="VARCHAR" />
     <result column="telNum" property="telNum" jdbcType="VARCHAR" />
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="acceptTime" property="acceptTime" jdbcType="TIMESTAMP" />
+    <result column="applyNo" property="applyNo" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="acceptUser_id" property="acceptUser_id" jdbcType="BIGINT" />
+    <result column="area_id" property="area_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, address, applyType, companyName, contacts, loanAmount, 
-    mainBusiness, telNum, user_id
+    mainBusiness, telNum, user_id, acceptTime, applyNo, email, status, acceptUser_id, 
+    area_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -28,17 +35,21 @@
     delete from ezs_financial_service_loans
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_financial_service_loans" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
     insert into ezs_financial_service_loans (id, addTime, deleteStatus, 
       address, applyType, companyName, 
       contacts, loanAmount, mainBusiness, 
-      telNum, user_id)
+      telNum, user_id, acceptTime, 
+      applyNo, email, status, 
+      acceptUser_id, area_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{address,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{contacts,jdbcType=VARCHAR}, #{loanAmount,jdbcType=DECIMAL}, #{mainBusiness,jdbcType=VARCHAR}, 
-      #{telNum,jdbcType=VARCHAR}, #{user_id,jdbcType=BIGINT})
+      #{telNum,jdbcType=VARCHAR}, #{user_id,jdbcType=BIGINT}, #{acceptTime,jdbcType=TIMESTAMP}, 
+      #{applyNo,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{acceptUser_id,jdbcType=BIGINT}, #{area_id,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="ezs_financial_service_loans" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_financial_service_loans"   useGeneratedKeys="true" keyProperty="id">
     insert into ezs_financial_service_loans
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,6 +84,24 @@
       </if>
       <if test="user_id != null" >
         user_id,
+      </if>
+      <if test="acceptTime != null" >
+        acceptTime,
+      </if>
+      <if test="applyNo != null" >
+        applyNo,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="acceptUser_id != null" >
+        acceptUser_id,
+      </if>
+      <if test="area_id != null" >
+        area_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -109,9 +138,27 @@
       <if test="user_id != null" >
         #{user_id,jdbcType=BIGINT},
       </if>
+      <if test="acceptTime != null" >
+        #{acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyNo != null" >
+        #{applyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="acceptUser_id != null" >
+        #{acceptUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="area_id != null" >
+        #{area_id,jdbcType=BIGINT},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_financial_service_loans" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
     update ezs_financial_service_loans
     <set >
       <if test="addTime != null" >
@@ -144,10 +191,28 @@
       <if test="user_id != null" >
         user_id = #{user_id,jdbcType=BIGINT},
       </if>
+      <if test="acceptTime != null" >
+        acceptTime = #{acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyNo != null" >
+        applyNo = #{applyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="acceptUser_id != null" >
+        acceptUser_id = #{acceptUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="area_id != null" >
+        area_id = #{area_id,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_financial_service_loans" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_financial_service_loans" >
     update ezs_financial_service_loans
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -158,7 +223,13 @@
       loanAmount = #{loanAmount,jdbcType=DECIMAL},
       mainBusiness = #{mainBusiness,jdbcType=VARCHAR},
       telNum = #{telNum,jdbcType=VARCHAR},
-      user_id = #{user_id,jdbcType=BIGINT}
+      user_id = #{user_id,jdbcType=BIGINT},
+      acceptTime = #{acceptTime,jdbcType=TIMESTAMP},
+      applyNo = #{applyNo,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      acceptUser_id = #{acceptUser_id,jdbcType=BIGINT},
+      area_id = #{area_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -100,9 +100,9 @@ public class AppBuyCenterController {
 	 */
 	@RequestMapping("/removeFromCollection")
 	@ResponseBody
-	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response,Long gId){
+	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
-		Result rs = null;
+		Result rs = Result.failure();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
 			rs = Result.failure();
@@ -110,7 +110,14 @@ public class AppBuyCenterController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		mmp = this.goodsCollectionService.removeGoodFromCollect(gId,upi.getId());
+		String gId=request.getParameter("gIds");
+		if(Tools.isEmpty(gId)){
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setMsg("参数错误");
+			return rs;
+		}
+		String[] gooids=gId.split(",");
+		mmp = this.goodsCollectionService.removeGoodFromCollect(gooids,upi.getId());
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -156,32 +163,7 @@ public class AppBuyCenterController {
 		}
 		return rs;
 	}
-	/**
-	 * 添加商品到购物车（不启用）
-	 * @param request
-	 * @param response
-	 * @param gId
-	 * @return
-	 */
-	@RequestMapping("/addToGoodCart")
-	@ResponseBody
-	public Object addToGoodCart(HttpServletRequest request,HttpServletResponse response,Long gId){
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		List<Object> glist = null;
-		mmp = this.goodsCollectionService.addGoodCart(gId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			rs = Result.success();
-			rs.setObj(glist);
-			rs.setMsg("");
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg("参数传递有误");
-		}
-		return rs;
-	}
+	
 	/**
 	 * 商品最近价格变化趋势
 	 * @param request

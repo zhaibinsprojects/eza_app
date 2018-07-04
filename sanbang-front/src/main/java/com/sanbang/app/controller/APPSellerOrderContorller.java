@@ -17,6 +17,7 @@ import com.sanbang.bean.ezs_logistics;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerOrderService;
 import com.sanbang.utils.Page;
@@ -30,8 +31,8 @@ import com.sanbang.vo.PagerOrder;
 @RequestMapping("/app/seller")
 public class APPSellerOrderContorller {
 	
-	//日志
-	private static Logger log = Logger.getLogger(APPSellerOrderContorller.class.getName());
+	@Autowired
+	private BuyerService buyerService;
 	
 	@Autowired
 	SellerOrderService sellerOrderService;
@@ -64,7 +65,7 @@ public class APPSellerOrderContorller {
 			result.setMsg("用户未登录");
 			return result;
 		}
-//		验证用户是否激活，拥有卖家权限
+		//验证用户是否激活，拥有卖家权限
 		ezs_store store = upi.getEzs_store();
 		Integer storeStatus = store.getStatus();
 		Long auditingusertype_id = store.getAuditingusertype_id();
@@ -147,8 +148,10 @@ public class APPSellerOrderContorller {
 	 */
 	@RequestMapping("/queryLogisticsInfoById")
 	@ResponseBody
-	public Object queryLogisticsInfoById(String orderNo, HttpServletRequest request, HttpServletResponse response){
-		Result result = Result.failure();
+	public Object queryLogisticsInfoById(String order_no, HttpServletRequest request, HttpServletResponse response){
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -168,23 +171,13 @@ public class APPSellerOrderContorller {
 			return result;
 		}
 		
-		ezs_logistics logistics = null; 
 		try {
-			logistics = sellerOrderService.queryLogisticsByNo(orderNo);
-			if (logistics != null ) {
-				result.setSuccess(true);
-				result.setMsg("查询成功");
-				result.setObj(logistics);
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("查询失败");
-			}
+			result=buyerService.getezs_logistics(request, order_no);
 		} catch (Exception e) {
-			log.info("查询物流信息出错" + e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			e.printStackTrace();
 			result.setSuccess(false);
 			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		return result;
 	}
@@ -224,6 +217,7 @@ public class APPSellerOrderContorller {
 		try {
 			result = sellerOrderService.seller_order_signature(upi, order_no, request, response);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
 			result.setMsg("请求成功");
 		} catch (Exception e) {
 			e.printStackTrace();

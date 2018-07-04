@@ -477,6 +477,8 @@ public class BuyerMenu {
 		if(currentPage==null){
 			currentPage = "1";
 		}
+		Map<String,Object> returnmap=new HashMap<>();
+		returnmap.put("bill", upi.getEzs_bill());
 		try {
 			map = sellerReceiptService.getInvoiceListById(userId,currentPage,1);
 			Integer ErrorCode = (Integer)map.get("ErrorCode");
@@ -484,13 +486,15 @@ public class BuyerMenu {
 				list = (List<ezs_invoice>) map.get("Obj");
 				page = (Page) map.get("Page");
 				result = Result.success(); 
-				result.setObj(list);
+				returnmap.put("list", list);
+				result.setObj(returnmap);
 				result.setMeta(page);
 			}else{
 				result = Result.failure();
 				result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
 				result.setMsg(map.get("Msg").toString());
-				result.setObj(list);
+				returnmap.put("list", list);
+				result.setObj(returnmap);
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -502,53 +506,7 @@ public class BuyerMenu {
 	}
 	
 	
-	/**
-	 * 发票查看
-	 * @param orderNo
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/queryInvoiceInfoById")
-	@ResponseBody
-	public Object queryInvoiceInfoById(String orderNo, HttpServletRequest request, HttpServletResponse response){
-		Result result = Result.failure();
-		Map<String, Object> map = new HashMap<>();
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("用户未登录");
-			return result;
-		}
-		Long userId = upi.getId();
-		
-		ezs_invoice invoice = null; 
-		ezs_accessory accessory = null;		
-		try {
-			invoice = sellerReceiptService.queryInvoiceByNo(orderNo);
-			if (invoice != null ) {
-				
-				Long receipt_id = invoice.getReceipt_id();
-				accessory = sellerReceiptService.queryAccessoryById(receipt_id);
-				String path = accessory.getPath();
-				map.put("invoice", invoice);
-				map.put("path", path);
-				result.setSuccess(true);
-				result.setMsg("查询成功");
-				result.setObj(map);
-			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("查询失败");
-			}
-		} catch (Exception e) {
-			log.info("查询发票信息出错" + e.toString());
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setSuccess(false);
-			result.setMsg("系统错误");
-		}
-		return result;
-	}
+	
 	
 	
 }

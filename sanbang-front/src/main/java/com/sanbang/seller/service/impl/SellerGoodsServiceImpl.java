@@ -680,7 +680,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				mainAccid = list.get(0).getAccid();
 				goods.setGoods_main_photo_id(mainAccid);
 				goodsMapper.updateByPrimaryKeySelective(goods);
-				result=submitGoodsForAudit(result, goodsId, request, response);
+				//带审核
+				result=submitGoodsForAudit(result, goods.getId(), request, response);
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);

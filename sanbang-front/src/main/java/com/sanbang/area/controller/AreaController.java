@@ -52,7 +52,7 @@ public class AreaController {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		result.setSuccess(true);
-		result.setObj(areaService.getAreaListByParId(areaid));
+		result.setObj(areaid==0?areaService.getAreaParentList():areaService.getAreaListByParId(areaid));
 		return result;
 	}
 	

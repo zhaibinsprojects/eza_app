@@ -382,9 +382,15 @@
     where purchaser_id = #{purchaser_id,jdbcType=BIGINT}
   </select>
   <select id="getPurchaseByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-  	select 
-  	ec.* 
-  	from ezs_customized_record ecr LEFT JOIN ezs_customized ec on ecr.customized_id = ec.id where ecr.purchaser_id = #{userId} 
-  </select>
+  SELECT
+	ec.*
+	FROM
+		ezs_customized_record ecr
+	LEFT JOIN ezs_customized ec ON ecr.customized_id = ec.id
+	WHERE
+		ecr.purchaser_id = #{userId} 
+    ORDER BY ec.addTime
+	limit #{pageCount},#{pageNow}
+	</select>
   
 </mapper>
