@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_accessory;
@@ -219,9 +220,16 @@ public class BuyCenterController {
 	 */
 	@RequestMapping("/changeInvoiceStateByKey")
 	@ResponseBody
-	public Object changeInvoiceStateByKey(HttpServletRequest request,HttpServletResponse response,Long invoiceId){
+	public Object changeInvoiceStateByKey(HttpServletRequest request,HttpServletResponse response,@RequestParam(name="invoiceId",defaultValue="-1")Long invoiceId ){
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
 		mmp = this.goodsInvoiceService.changeInvoiceStateById(invoiceId);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

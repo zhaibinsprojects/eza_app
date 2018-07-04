@@ -3,13 +3,15 @@
 <mapper namespace="com.sanbang.dao.ezs_customized_recordMapper" >
   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customized_record" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="addTime" property="addTime" jdbcType="DATE" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="deal_time" property="deal_time" jdbcType="TIMESTAMP" />
+    <result column="deal_time" property="deal_time" jdbcType="DATE" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="customized_id" property="customized_id" jdbcType="BIGINT" />
     <result column="operater_id" property="operater_id" jdbcType="BIGINT" />
     <result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
+    <association property="ezs_user" column="operater_id" select="com.sanbang.dao.ezs_userMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, deal_time, remark, customized_id, operater_id, purchaser_id
@@ -125,4 +127,11 @@
       purchaser_id = #{purchaser_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="selectByCustomizedId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_customized_record
+    where customized_id = #{customized_id,jdbcType=BIGINT}
+  </select>
 </mapper>

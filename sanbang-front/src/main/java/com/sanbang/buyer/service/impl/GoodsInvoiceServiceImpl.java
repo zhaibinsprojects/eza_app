@@ -58,16 +58,18 @@ public class GoodsInvoiceServiceImpl implements GoodsInvoiceService {
 
 	@Override
 	public Map<String, Object> changeInvoiceStateById(Long id) {
-		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_invoice invoice = null;
+		if(id<=(long)0){
+			mmp.put("Msg", "参数传递异常,传入为"+id);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		}
 		try {
 			invoice = this.invoiceMapper.selectByPrimaryKey(id);
 			invoice.setInvoice_status(3);
 			this.invoiceMapper.updateByPrimaryKey(invoice);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递异常");

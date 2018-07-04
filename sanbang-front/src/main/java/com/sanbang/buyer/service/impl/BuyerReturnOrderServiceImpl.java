@@ -28,7 +28,7 @@ public class BuyerReturnOrderServiceImpl implements BuyerReturnOrderService{
 			if(pageNo<=0){
 				pageNo=1; 
 			}
-			List<ReturnOrderVO> list=ezs_set_return_orderMapper.returnOrderListforBuyer(userid, 10*pageNo);
+			List<ReturnOrderVO> list=ezs_set_return_orderMapper.returnOrderListforBuyer(userid, (pageNo-1)*10);
 			result.setMeta(new Page(pageNo, 10, 10*pageNo, 10*pageNo, 0, true,
 					true, true, true));
 			if (list.size() == 0) {

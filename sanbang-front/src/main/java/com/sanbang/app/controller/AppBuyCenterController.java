@@ -32,6 +32,7 @@ import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
 import com.sanbang.vo.goods.GoodsVo;
 import com.sanbang.vo.userauth.AuthImageVo;
+
 /**
  * 
  * @author LENOVO
@@ -48,13 +49,14 @@ public class AppBuyCenterController {
 	private OrderEvaluateService orderEvaluateService;
 	@Autowired
 	private GoodsService goodsService;
-	
+
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-	
-	private static final String view="/goods/";
-	
+
+	private static final String view = "/goods/";
+
 	/**
 	 * 移除收藏夹商品
+	 * 
 	 * @param request
 	 * @param response
 	 * @param gId
@@ -62,7 +64,7 @@ public class AppBuyCenterController {
 	 */
 	@RequestMapping("/removeFromCollection")
 	@ResponseBody
-	public Object removeFromCollection(HttpServletRequest request,HttpServletResponse response){
+	public Object removeFromCollection(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> mmp = null;
 		Result rs = Result.failure();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -72,27 +74,29 @@ public class AppBuyCenterController {
 			rs.setMsg("用户未登录");
 			return rs;
 		}
-		String gId=request.getParameter("gIds");
-		if(Tools.isEmpty(gId)){
+		String gId = request.getParameter("gIds");
+		if (Tools.isEmpty(gId)) {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			rs.setMsg("参数错误");
 			return rs;
 		}
-		String[] gooids=gId.split(",");
-		mmp = this.goodsCollectionService.removeGoodFromCollect(gooids,upi.getId());
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		String[] gooids = gId.split(",");
+		mmp = this.goodsCollectionService.removeGoodFromCollect(gooids, upi.getId());
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 			rs = Result.success();
 			rs.setMsg(mmp.get("Msg").toString());
-		}else{
+		} else {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
+
 	/**
 	 * 获取收藏夹中该用户下的所有商品
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -100,7 +104,7 @@ public class AppBuyCenterController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodsFromCollection")
 	@ResponseBody
-	public Object getGoodsFromCollection(HttpServletRequest request,HttpServletResponse response){
+	public Object getGoodsFromCollection(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		List<Object> glist = null;
@@ -112,49 +116,53 @@ public class AppBuyCenterController {
 			return rs;
 		}
 		mmp = this.goodsCollectionService.getCollectGoodsByUser(upi.getId());
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			glist = (List<Object>)mmp.get("Obj");
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
+			glist = (List<Object>) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(glist);
 			rs.setMsg("");
-		}else{
+		} else {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg("参数传递有误");
 		}
 		return rs;
 	}
-	
+
 	/**
 	 * 商品最近价格变化趋势
+	 * 
 	 * @param request
 	 * @param response
-	 * @param gId 商品ID
+	 * @param gId
+	 *            商品ID
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/goodPriceChanges")
 	@ResponseBody
-	public Object goodPriceChanges(HttpServletRequest request,HttpServletResponse response,Long gId){
+	public Object goodPriceChanges(HttpServletRequest request, HttpServletResponse response, Long gId) {
 		Map<String, Object> mmp = null;
-		List<PriceTrendIfo> plist = null; 
+		List<PriceTrendIfo> plist = null;
 		Result rs = null;
 		mmp = this.goodsCollectionService.selectPriceChanges(gId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 			plist = (List<PriceTrendIfo>) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(plist);
-		}else{
+		} else {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
+
 	/**
 	 * 获取用户票据信息
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -162,7 +170,7 @@ public class AppBuyCenterController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getGoodsInvoiceByUser")
 	@ResponseBody
-	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response){
+	public Object getGoodsInvoiceByUser(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		List<InvoiceInfo> iList = null;
@@ -174,20 +182,22 @@ public class AppBuyCenterController {
 			return rs;
 		}
 		mmp = this.goodsInvoiceService.getInvoiceByUser(upi.getId());
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 			iList = (List<InvoiceInfo>) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(iList);
-		}else{
+		} else {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
+
 	/**
 	 * 根据票据ID查询票据信息
+	 * 
 	 * @param request
 	 * @param response
 	 * @param invoiceId
@@ -195,25 +205,26 @@ public class AppBuyCenterController {
 	 */
 	@RequestMapping("/getGoodsInvoiceByKey")
 	@ResponseBody
-	public Object getGoodsInvoiceByKey(HttpServletRequest request,HttpServletResponse response,Long invoiceId){
+	public Object getGoodsInvoiceByKey(HttpServletRequest request, HttpServletResponse response, Long invoiceId) {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		InvoiceInfo invoiceInfo = null;
 		mmp = this.goodsInvoiceService.getInvoiceByKey(invoiceId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 			invoiceInfo = (InvoiceInfo) mmp.get("Obj");
 			rs = Result.success();
 			rs.setObj(invoiceInfo);
-		}else{
+		} else {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
+
 	/**
-	 * 
+	 * 确认收票
 	 * @param request
 	 * @param response
 	 * @param invoiceId
@@ -221,24 +232,33 @@ public class AppBuyCenterController {
 	 */
 	@RequestMapping("/changeInvoiceStateByKey")
 	@ResponseBody
-	public Object changeInvoiceStateByKey(HttpServletRequest request,HttpServletResponse response,Long invoiceId){
+	public Object changeInvoiceStateByKey(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(name = "invoiceId", defaultValue = "-1") Long invoiceId) {
 		Map<String, Object> mmp = null;
 		Result rs = null;
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setMsg("用户未登录");
+			return rs;
+		}
 		mmp = this.goodsInvoiceService.changeInvoiceStateById(invoiceId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 			rs = Result.success();
-			rs.setMsg("修改成功");
-		}else{
+			rs.setMsg("确认成功");
+		} else {
 			rs = Result.failure();
 			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 			rs.setMsg(mmp.get("Msg").toString());
 		}
 		return rs;
 	}
-	
+
 	/**
-	 *  评价列表
+	 * 评价列表
+	 * 
 	 * @param request
 	 * @param pageNo
 	 * @param goodsid
@@ -247,45 +267,51 @@ public class AppBuyCenterController {
 	 */
 	@RequestMapping("/getEvaluateList")
 	public Object getEvaluateList(HttpServletRequest request,
-			@RequestParam(name="pageNo",defaultValue="1")int pageNo,
-			@RequestParam("goodsid")int goodsid,
-			org.springframework.ui.Model model){
-		
-		//用户校验begin
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		long userid=0;
-		if(null==upi){
-			upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam("goodsid") int goodsid,
+			org.springframework.ui.Model model) {
+
+		// 用户校验begin
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		long userid = 0;
+		if (null == upi) {
+			upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		}
-		userid=null==upi?0:upi.getId();
-		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
-		//用户校验end
-		
-		List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,goodsid);
+		userid = null == upi ? 0 : upi.getId();
+		model.addAttribute("userkey", null == upi ? "" : upi.getUserkey());
+		// 用户校验end
+
+		List<ezs_dvaluate> dvaluatelist = orderEvaluateService.getEvaluateList(pageNo, goodsid);
 		model.addAttribute("dvaluatelist", dvaluatelist);
-		GoodsVo  goodsvo=goodsService.getgoodsinfo(goodsid,userid);
+		GoodsVo goodsvo = goodsService.getgoodsinfo(goodsid, userid);
 		model.addAttribute("good", goodsvo);
-		return view+"evaluatelist";
-	}	
-	
+		return view + "evaluatelist";
+	}
+
 	/**
 	 * 订单评价
+	 * 
 	 * @author zhaibin
-	 * @param logistice 物流速度
-	 * @param goodQuality 商品质量
-	 * @param serviceQuality 服务态度
-	 * @param orderNo 订单号
-	 * @param goodId 商品Id
-	 * @param path 图片路径
-	 * @param imgName 图片名称(不支持多张图片)
+	 * @param logistice
+	 *            物流速度
+	 * @param goodQuality
+	 *            商品质量
+	 * @param serviceQuality
+	 *            服务态度
+	 * @param orderNo
+	 *            订单号
+	 * @param goodId
+	 *            商品Id
+	 * @param path
+	 *            图片路径
+	 * @param imgName
+	 *            图片名称(不支持多张图片)
 	 * @return
 	 */
 	@RequestMapping("/evaluateAboutOrder")
 	@ResponseBody
-	public Object evaluateAboutOrder(HttpServletRequest request,HttpServletResponse response,
-			Double logistice,Double goodQuality,Double serviceQuality,String orderNo,Long goodId,String content,
-			String pinurl){
-		
+	public Object evaluateAboutOrder(HttpServletRequest request, HttpServletResponse response, Double logistice,
+			Double goodQuality, Double serviceQuality, String orderNo, Long goodId, String content, String pinurl) {
+
 		Map<String, Object> mmp = null;
 		ezs_dvaluate dvaluate = new ezs_dvaluate();
 		ezs_accessory accessory = null;
@@ -298,40 +324,40 @@ public class AppBuyCenterController {
 				rs.setMsg("用户未登录");
 				return rs;
 			}
-			//参数设置
-			if((orderNo!=null&&!orderNo.trim().equals(""))){
+			// 参数设置
+			if ((orderNo != null && !orderNo.trim().equals(""))) {
 				dvaluate.setConttent(content);
 				dvaluate.setLogistics(logistice);
 				dvaluate.setGoodQuality(goodQuality);
 				dvaluate.setServiceQuality(goodQuality);
 				dvaluate.setOrder_no(orderNo);
-			}else{
+			} else {
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("订单号不能为NULL");
 				return rs;
 			}
-			if(!Tools.isEmpty(pinurl)){	
-				List<AuthImageVo> list=new ArrayList<>();
+			if (!Tools.isEmpty(pinurl)) {
+				List<AuthImageVo> list = new ArrayList<>();
 				savepic(pinurl, list);
-				if(null==list||list.size()==0){
+				if (null == list || list.size() == 0) {
 					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					rs.setSuccess(false);
 					rs.setMsg("请上传图片");
 					return rs;
 				}
-				
-				if(list.size()>1){
+
+				if (list.size() > 1) {
 					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					rs.setSuccess(false);
 					rs.setMsg("只能上传一张图片");
 					return rs;
 				}
-				
-				//票据记录
-				AuthImageVo vo=list.get(0);
-				
-				if(!vo.getImgcode().equals("PINIMG")){
+
+				// 票据记录
+				AuthImageVo vo = list.get(0);
+
+				if (!vo.getImgcode().equals("PINIMG")) {
 					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					rs.setSuccess(false);
 					rs.setMsg("标识错误");
@@ -341,13 +367,13 @@ public class AppBuyCenterController {
 				accessory.setName(FilePathUtil.getimageName(vo.getImgurl()));
 				accessory.setPath(FilePathUtil.getmiddelPath(vo.getImgurl()));
 			}
-			//数据入库
-			mmp = this.orderEvaluateService.orderEvaluate(dvaluate,accessory,user);
-			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			// 数据入库
+			mmp = this.orderEvaluateService.orderEvaluate(dvaluate, accessory, user);
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 				rs = Result.success();
 				rs.setMsg(mmp.get("Msg").toString());
-			}else{
+			} else {
 				rs = Result.failure();
 				rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
 				rs.setMsg(mmp.get("Msg").toString());
@@ -360,35 +386,35 @@ public class AppBuyCenterController {
 		}
 		return rs;
 	}
-	
-	private static List<AuthImageVo> savepic(String param,List<AuthImageVo> list) throws ParseException{
-		if(!Tools.isEmpty(param)){
-		String[] aa=param.split(";");
-		if(null==aa||aa.length==0){
-			return list;
-		}
-		for (String bb : aa) {
-			String[] cc=bb.split(",");
-			if(null==cc||cc.length<2){
+
+	private static List<AuthImageVo> savepic(String param, List<AuthImageVo> list) throws ParseException {
+		if (!Tools.isEmpty(param)) {
+			String[] aa = param.split(";");
+			if (null == aa || aa.length == 0) {
 				return list;
 			}
-			AuthImageVo ImageVo=new AuthImageVo();
-			ImageVo.setImgcode(cc[0]);
-			
-			if(cc[1].indexOf("@")>0&&cc[1].split("@").length==3){
-				ImageVo.setImgurl(cc[1].split("@")[0]);
-				ImageVo.setName(cc[1].split("@")[1]);
-				ImageVo.setUsetime(sdf.parse(cc[1].split("@")[2]));
-				list.add(ImageVo);
-				System.out.println(ImageVo.toString());
-			}else{
-				ImageVo.setImgurl(cc[1].split("@")[0]);
-				list.add(ImageVo);
-				System.out.println(ImageVo.toString());
+			for (String bb : aa) {
+				String[] cc = bb.split(",");
+				if (null == cc || cc.length < 2) {
+					return list;
+				}
+				AuthImageVo ImageVo = new AuthImageVo();
+				ImageVo.setImgcode(cc[0]);
+
+				if (cc[1].indexOf("@") > 0 && cc[1].split("@").length == 3) {
+					ImageVo.setImgurl(cc[1].split("@")[0]);
+					ImageVo.setName(cc[1].split("@")[1]);
+					ImageVo.setUsetime(sdf.parse(cc[1].split("@")[2]));
+					list.add(ImageVo);
+					System.out.println(ImageVo.toString());
+				} else {
+					ImageVo.setImgurl(cc[1].split("@")[0]);
+					list.add(ImageVo);
+					System.out.println(ImageVo.toString());
+				}
 			}
-		}
 		}
 		return list;
 	}
-	
+
 }

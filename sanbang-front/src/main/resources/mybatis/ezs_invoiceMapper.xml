@@ -258,10 +258,20 @@
 	     LIMIT #{page.startPos},#{page.pageSize}
 	</select>
 	<!-- 根据订单编号查询票据详情-->
-	<select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
-   		select 
-		<include refid="Base_Column_List" /> 
-   		from ezs_invoice where order_no = #{orderno}
+	<select id="selectInvoiceByOrderNo" resultMap="infoResultMap"> 
+   		   SELECT
+		A.*,
+		IF (
+			ISNULL(B.total_price),
+			C.total_price,
+			B.total_price
+		) total_price,
+		  DATE_FORMAT( A.express_time,   '%Y-%m-%d')  express_timestr,
+		  DATE_FORMAT( A.finish_time,   '%Y-%m-%d')  finish_timestr,
+	   DATE_FORMAT(A.addTime, '%Y-%m-%d') addTimestr
+	    from ezs_invoice A LEFT JOIN ezs_orderform B ON  A.order_no=B.order_no
+    LEFT JOIN ezs_purchase_orderform C ON A.order_no=C.order_no 
+   		where A.order_no = #{orderno}
 	</select>
 	<!-- 根据订单编号查询合同详细信息 -->
 	<select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 

@@ -25,21 +25,89 @@
 			});
 			
 			$("#btn_appley").click(function(){
-				$(".msg-bg").css("display","block");
-				$(".msg-box").css({"display":"block","height":"459px","margin-top":"40px"});
-			
-				var con_str = "";
-				$.ajax({
-					type : "post",
-					url : baseurl+"/front/app/home/loan/loadalert.htm",
-					data : {
-					},
-					dataType : "html",
-					async : false,
-					success : function(data) {
-						$(".msg-box").html(data);
-					   }
-				});
+				var userk ="";
+				var u ="";
+				// APP点击
+				var u = navigator.userAgent; // 获取用户设备
+				var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+				
+				if (isIOS) {
+					setupWebViewJavascriptBridge(function(bridge) {
+			       		var data = {};
+			       		var str = JSON.stringify(data);
+						 try {
+							 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
+								 userk= data;
+								 if(userk!=""){
+									 $(".userkey").val(data);
+									 $(".msg-bg").css("display","block");
+										$(".msg-box").css({"display":"block","height":"459px","margin-top":"40px"});
+									 var con_str = "";
+										$.ajax({
+											type : "post",
+											url : baseurl+"/front/app/home/loan/loadalert.htm",
+											data : {
+											},
+											dataType : "html",
+											async : false,
+											success : function(data) {
+												$(".msg-box").html(data);
+											   }
+										});
+								 }else{
+									var data = {}
+									var str = JSON.stringify(data);
+									WebViewJavascriptBridge.callHandler('iosnologin', str, function() {
+									});
+									}
+								});
+						} catch (e) {
+						}
+						
+					});
+					
+					// ios app 设备才执行
+					//这段代码是固定的，必须要放到js中
+					function setupWebViewJavascriptBridge(callback) {
+					    if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+					    if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+					    window.WVJBCallbacks = [callback];
+					    var WVJBIframe = document.createElement('iframe');
+					    WVJBIframe.style.display = 'none';
+					    WVJBIframe.src = 'https://__bridge_loaded__';
+					    document.documentElement.appendChild(WVJBIframe);
+					    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+					}
+			        // 与OC交互的所有JS方法都要放在此处注册，才能调用通过JS调用OC或者让OC调用这里的JS
+					
+					var bridge =setupWebViewJavascriptBridge();
+						
+					} else {
+					//收藏
+					 try {
+						 userk= window.android.isAndroidLogin();
+						 if(userk!=""){
+							 $(".userkey").val(userk);
+							 $(".msg-bg").css("display","block");
+								$(".msg-box").css({"display":"block","height":"459px","margin-top":"40px"});
+							 var con_str = "";
+								$.ajax({
+									type : "post",
+									url : baseurl+"/front/app/home/loan/loadalert.htm",
+									data : {
+									},
+									dataType : "html",
+									async : false,
+									success : function(data) {
+										$(".msg-box").html(data);
+									   }
+								});
+						 }else{
+							 window.android.androidnologin();
+						 }
+					} catch (e) {
+					}
+				};
 				
 				
 				$(".msg-bg,.me-alert-close,#btn_cancel").click(function(){
@@ -69,6 +137,7 @@
 	</div>
 	<div class="blank50"></div>
 	<div class="ezsm-normal-bottombtn" id="btn_appley">申请贷款</div>
+	<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
 </body>
 
 <script type="text/javascript">

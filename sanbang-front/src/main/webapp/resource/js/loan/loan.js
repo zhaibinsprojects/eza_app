@@ -35,11 +35,22 @@ function loansubmit(){
 				$(".msg-box").css("display","none");
 				layer.open({content : data.msg,skin : 'msg',time : 8});
 			}else{
-				if(data.errorcode==110002){
-					//TODO 去登陆
-					layer.open({content : data.msg,skin : 'msg',time : 2});
+				if(userk!=""&&data.errorcode==110002){
+					$(".userkey").val("");
+					userk="";
+					var u = navigator.userAgent; // 获取用户设备
+					var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+					if (isIOS) {
+						iosnologin();
+					} else {
+						androidnologin();
+					}
 				}else{
-					layer.open({content : data.msg,skin : 'msg',time : 2});
+					layer.open({
+						content : data.msg,
+						skin : 'msg',
+						time : 2
+					});
 				}
 			}
 		}
@@ -109,7 +120,22 @@ $(document).ready(function(){
 			 }
 		} catch (e) {
 		}
-		
-	
 	};
 })
+
+
+// 未登录桥接
+function androidnologin() {
+	window.android.androidnologin();
+	return false;
+}; 
+
+//未登录桥接
+function iosnologin() {
+	
+	var data = {}
+	var str = JSON.stringify(data);
+	WebViewJavascriptBridge.callHandler('iosnologin', str, function() {
+	});
+	return false;
+};

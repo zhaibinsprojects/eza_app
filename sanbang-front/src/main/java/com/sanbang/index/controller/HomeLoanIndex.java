@@ -81,13 +81,13 @@ public class HomeLoanIndex {
 		result.setMsg("提交失败");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		try {
-			/*ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 			if (upi == null) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				result.setMsg("用户未登录");
 				result.setSuccess(false);
 				return result;
-			}*/
+			}
 			result=sbmloanValidate(companyName, contacts, telNum, email, address, applyType, area_id, mainBusiness, loanAmount);
 			if(!result.getSuccess()){
 				return result;
@@ -99,7 +99,7 @@ public class HomeLoanIndex {
 			financialServiceLoans.setTelNum(telNum);
 			financialServiceLoans.setArea_id(area_id);
 			financialServiceLoans.setAddress(address);
-			financialServiceLoans.setUser_id((long)1);
+			financialServiceLoans.setUser_id(upi.getId());
 			financialServiceLoans.setAddTime(new Date());
 			financialServiceLoans.setEmail(email);
 			financialServiceLoans.setStatus(1);

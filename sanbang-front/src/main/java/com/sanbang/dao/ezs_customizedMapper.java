@@ -22,5 +22,7 @@ public interface ezs_customizedMapper {
     List<ezs_customized> customizedList(Long user_id);
 
     //add by zhaibin
-    List<ezs_customized> getPurchaseByUserId(@Param("userId")Long userId,@Param("pageCount")int pageCount,@Param("pageSize")int pageSize);
+    List<ezs_customized> getPurchaseByUserId(@Param("userId")Long userId,@Param("pageCount")long pageCount,@Param("pageSize")long pageSize);
+    
+    ezs_customized getPurchaseById(Long id);
 }

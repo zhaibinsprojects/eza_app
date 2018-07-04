@@ -33,6 +33,7 @@ import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
@@ -59,6 +60,9 @@ public class AppGoodsController {
 	private AddressService addressService;
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
+	
+	@Autowired
+	private  DictService dictService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	private static final String view="/goods/";
@@ -333,12 +337,11 @@ public class AppGoodsController {
 					e.printStackTrace();
 				}
 				customized.setAddress(goods.getAddess());//收货地址
-				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				customized.setColour_id(goods.getColor_id());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
 				//Double dd = Double.valueOf(density);
 				customized.setDensity(Double.valueOf((goods.getDensity()==null||goods.getDensity().equals(""))?"0":goods.getDensity()));
 				//customized.setDensity(Double.valueOf(0));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
 				customized.setPurpose(goods.getPurpose());//用途
-				customized.setShape(goods.getForm_id().toString());	//形态
 				//customized.setBudget(goods);//采购预算-前台传
 				//customized.setPre_num(Double.valueOf(goods.getCrack()));//预订数量-前台传
 				//customized.setPre_time(pre_time);//交货时间-前台传
@@ -361,6 +364,10 @@ public class AppGoodsController {
 				customized.setXbforce(Double.valueOf((goods.getCantilever()==null||goods.getCantilever().equals(""))?"0":goods.getCantilever()));//悬臂梁缺口冲击
 				customized.setPurchaser_id(user.getId());
 				customized.setStatus("0");
+				customized.setColour(dictService.getDictByThisId(goods.getColor_id()).getName());
+				customized.setShape(dictService.getDictByThisId(goods.getForm_id()).getName());	//形态
+				customized.setShape_id(goods.getForm_id());
+				
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("改商品不存在");
@@ -395,6 +402,11 @@ public class AppGoodsController {
 		}
 		return result;
 	}
+	
+	
+	/*public Result customizedValidate(){
+		Result result=Result.failure();
+	}*/
 	
 	/**
 	 * 同类货品（待完善）
