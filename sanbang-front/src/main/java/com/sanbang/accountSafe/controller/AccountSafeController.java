@@ -19,6 +19,7 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.javaMail.Mail;
+import com.sanbang.utils.javaMail.MailUtils;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.MessageDictionary;
 
@@ -145,6 +146,7 @@ public class AccountSafeController {
 	@ResponseBody
 	@RequestMapping("/sendEmail")
 	public  Result sendEmail(HttpServletRequest request){
+		MailUtils mailUtils = new MailUtils();
 		Result result = Result.failure();
 		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
 		if (upi == null) {
@@ -163,6 +165,7 @@ public class AccountSafeController {
 		Mail secondmail = new Mail(upi.getEzs_userinfo().getEmail(), "易再生网", secondHtml);
 		secondmail.setSubject("邮箱验证:" + upi.getName() == null ? ""
 				: upi.getName() + "关于修改邮箱-易再生网");
+		mailUtils.sendTest(secondmail);
 		log.info("评标邮件内容>>>>>>>" + secondHtml);
 		result.setSuccess(true);
 		result.setMsg("发送成功");

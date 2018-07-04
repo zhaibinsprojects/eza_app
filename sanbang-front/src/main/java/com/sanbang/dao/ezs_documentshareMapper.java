@@ -1,5 +1,6 @@
 package com.sanbang.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
@@ -27,4 +28,5 @@ public interface ezs_documentshareMapper {
     int updateCollectByUserId(Map<String, Object> mp);
     
     ezs_documentshare selectByGoodsIdUserid(@Param("id")Long id,@Param("userid")long userid);
+    
 }

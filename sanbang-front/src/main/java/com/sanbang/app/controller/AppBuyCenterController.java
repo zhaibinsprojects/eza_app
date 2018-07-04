@@ -22,12 +22,14 @@ import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.goods.service.GoodsService;
+import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
 import com.sanbang.vo.goods.GoodsVo;
@@ -48,33 +50,44 @@ public class AppBuyCenterController {
 	private OrderEvaluateService orderEvaluateService;
 	@Autowired
 	private GoodsService goodsService;
+	@Autowired
+	private RecommendGoodsService recommendGoodsService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-	
 	private static final String view="/goods/";
-	
 	/**
-	 * 添加商品到收藏夹（不启用）
+	 * 查询收藏夹下商品
 	 * @param request
 	 * @param response
-	 * @param gId
+	 * @param goodsName 商品名称
 	 * @return
 	 */
-	@RequestMapping("/addGoodToCollection")
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/selectGoodByName")
 	@ResponseBody
-	public Object addGoodToCollection(HttpServletRequest request,HttpServletResponse response,Long gId,Long userId){
+	public Object addGoodToCollection(HttpServletRequest request,HttpServletResponse response,String goodsName){
 		Map<String, Object> mmp = null;
-		Result rs = null;
-		//首先判断该商品是否已在保存记录中，
-		mmp = this.goodsCollectionService.addGoodToCollection(gId,userId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		List<GoodsInfo> glist = null;
+		Result 	rs = Result.failure();
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs.setSuccess(false);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.recommendGoodsService.getGoodsInCollectionByName(goodsName,upi.getId());
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			rs = Result.success();
-			rs.setMsg("");
+			glist = (List<GoodsInfo>) mmp.get("Obj");
+			rs.setSuccess(true);
+			rs.setObj(glist);
+			rs.setMsg("收藏列表查询成功！");
 		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg("参数传递有误");
+			rs.setSuccess(false);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("查询失败！");
 		}
 		return rs;
 	}
