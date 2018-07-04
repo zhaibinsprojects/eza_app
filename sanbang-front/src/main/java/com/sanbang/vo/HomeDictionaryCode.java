@@ -38,6 +38,6 @@ public class HomeDictionaryCode {
     //库存不足
     public static final int ERROR_HOME_INVENTORY_ERROR = 101205;
     //邮件已发送
-    public static final int ERROR_ALREADY_SEBD_EMAIL = 101205;
+    public static final int ERROR_ALREADY_SEBD_EMAIL = 101206;
     
 }
