@@ -20,4 +20,6 @@ public interface RecommendGoodsService {
 	
 	public Map<String, Object> goodsIntroduceTwo(String currentPage);
 	
+	public Map<String, Object> getGoodsInCollectionByName(String goodsName,Long userId);
+	
 }

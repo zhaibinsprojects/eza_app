@@ -524,7 +524,7 @@ public class AppHomeGoodsMessController {
 			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 			Advices advice = new Advices();
 			advice.setPath("http://10.10.10.148/front/resource/indeximg/title001.jpg");
-			advice.setLink(" ");
+			advice.setLink("");
 			advice.setpName("title001.jpg");
 			adviceList.add(advice);
 			if(adviceList.size()>0){

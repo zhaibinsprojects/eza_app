@@ -498,7 +498,9 @@
 	  A.elong_break,
 	  C.`name`  catname,
 	  A.budget,
-	  A.flexural_modulus
+	  A.flexural_modulus,
+	  A.combustion_grade,
+	  A.bend_strength
 	FROM
 		ezs_customized A
 	LEFT JOIN ezs_goods B ON A.goods_id = B.id

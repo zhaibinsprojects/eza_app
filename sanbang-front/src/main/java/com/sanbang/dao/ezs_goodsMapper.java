@@ -69,5 +69,7 @@ public interface ezs_goodsMapper {
 	 * @return
 	 */
 	List<GoodsInfo> goodsIntroduceTwo(Page page);
+	
+	List<ezs_goods> getGoodsInCollectionByName(String goodsName,Long userId);
 
 }

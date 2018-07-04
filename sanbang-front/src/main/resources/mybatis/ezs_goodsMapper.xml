@@ -1117,4 +1117,8 @@
 		A.id = #{goodsid,jdbcType=BIGINT}	
 	</select>
 	
+	<select id="getGoodsInCollectionByName" resultMap="BaseResultMap">
+	select * from ezs_goods a where a.`name` like #{0} and EXISTS (select 1 from ezs_documentshare e where e.user_id= #{1} and e.house = '1' and e.good_id = a.id)
+	</select>
+	
 </mapper>

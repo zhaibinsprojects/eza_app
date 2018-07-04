@@ -22,12 +22,13 @@ import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.goods.service.GoodsService;
-import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.index.service.RecommendGoodsService;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
 import com.sanbang.vo.goods.GoodsVo;
@@ -54,6 +55,44 @@ public class AppBuyCenterController {
 
 	private static final String view = "/goods/";
 
+	@Autowired
+	private RecommendGoodsService recommendGoodsService;
+	/**
+	 * 查询收藏夹下商品
+	 * @param request
+	 * @param response
+	 * @param goodsName 商品名称
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/selectGoodByName")
+	@ResponseBody
+	public Object selectGoodByName(HttpServletRequest request,HttpServletResponse response,@RequestParam(value="goodsName",required=true)String goodsName){
+		Map<String, Object> mmp = null;
+		List<GoodsInfo> glist = null;
+		Result 	rs = Result.failure();
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (upi == null) {
+			rs.setSuccess(false);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.recommendGoodsService.getGoodsInCollectionByName(goodsName,upi.getId());
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			glist = (List<GoodsInfo>) mmp.get("Obj");
+			rs.setSuccess(true);
+			rs.setObj(glist);
+			rs.setMsg("收藏列表查询成功！");
+		}else{
+			rs.setSuccess(false);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("查询失败！");
+		}
+		return rs;
+	}
 	/**
 	 * 移除收藏夹商品
 	 * 
