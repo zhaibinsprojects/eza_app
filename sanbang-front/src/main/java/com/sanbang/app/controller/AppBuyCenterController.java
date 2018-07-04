@@ -23,7 +23,6 @@ import com.sanbang.buyer.service.GoodsInvoiceService;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.index.service.RecommendGoodsService;
-import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -65,7 +64,7 @@ public class AppBuyCenterController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/selectGoodByName")
 	@ResponseBody
-	public Object addGoodToCollection(HttpServletRequest request,HttpServletResponse response,String goodsName){
+	public Object selectGoodByName(HttpServletRequest request,HttpServletResponse response,@RequestParam(value="goodsName",required=true)String goodsName){
 		Map<String, Object> mmp = null;
 		List<GoodsInfo> glist = null;
 		Result 	rs = Result.failure();
