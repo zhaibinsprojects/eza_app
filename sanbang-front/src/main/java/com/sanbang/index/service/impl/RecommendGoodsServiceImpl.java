@@ -121,11 +121,10 @@ public class RecommendGoodsServiceImpl implements RecommendGoodsService {
 	public Map<String, Object> getGoodsInCollectionByName(String goodsName,Long userId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
-		List<ezs_goods> goodsInfoList = null;
+		List<GoodsInfo> goodsInfoList = null;
 		try {
 			goodsInfoList = this.goodsMapper.getGoodsInCollectionByName("%"+goodsName+"%",userId);
 			//数据结构修改
-			
 			mmp.put("Obj", goodsInfoList);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "查询成功");
