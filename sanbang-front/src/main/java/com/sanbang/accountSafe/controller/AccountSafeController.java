@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sanbang.accountSafe.service.AccountSafeService;
 import com.sanbang.app.controller.AppUserSetupLinkController;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;
+import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.javaMail.Mail;
 import com.sanbang.utils.javaMail.MailUtils;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.MessageDictionary;
 
 @Controller
@@ -161,10 +164,25 @@ public class AccountSafeController {
 			result.setMsg("您还未填写邮箱！");
 			return result;
 		}
+		
+		RedisResult<String> sendEmailTimesInfo = (RedisResult<String>) RedisUtils.get("SENDEMAIL_"+upi.getEzs_userinfo().getEmail(), String.class);
+		String sendEmailinfo = sendEmailTimesInfo.getResult();
+		if(sendEmailinfo==null){
+			RedisUtils.set("SENDEMAIL_"+upi.getEzs_userinfo().getEmail(), upi.getEzs_userinfo().getEmail(), 3600L);
+		}else{
+			String leftSecond = RedisUtils.getExpir("SENDEMAIL_"+upi.getEzs_userinfo().getEmail()).getResult().toString();
+			log.info("邮箱验证内容已发送过>>>>>>>请"+leftSecond+"s后再试");
+			result.setSuccess(false);
+			result.setErrorcode(HomeDictionaryCode.ERROR_ALREADY_SEBD_EMAIL);
+			result.setMsg("邮箱验证内容已发送过,请"+leftSecond+"s后再试");
+			return result;
+		}
+		
 		String  secondHtml="请点击以下链接进行操作";
 		Mail secondmail = new Mail(upi.getEzs_userinfo().getEmail(), "易再生网", secondHtml);
 		secondmail.setSubject("邮箱验证:" + upi.getName() == null ? ""
 				: upi.getName() + "关于修改邮箱-易再生网");
+		
 		mailUtils.sendTest(secondmail);
 		log.info("评标邮件内容>>>>>>>" + secondHtml);
 		result.setSuccess(true);
