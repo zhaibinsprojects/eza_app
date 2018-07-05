@@ -160,7 +160,7 @@ public class AccountSafeController {
 		log.info("给" + upi.getName() + "发送评标邮件>>>>>>>");
 		
 		if(Tools.isEmpty(upi.getEzs_userinfo().getEmail())){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setErrorcode(HomeDictionaryCode.ERROR_EMAIL_IS_NULL);
 			result.setMsg("您还未填写邮箱！");
 			return result;
 		}
