@@ -771,20 +771,30 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
 		goodsMapper.updateByPrimaryKeySelective(goods);
+		
+
+		ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
+		if (null != goodsAudit) {
+			//向ezs_goods_audit_process表中查入数据
+			 goodsAudit = new ezs_goods_audit_process();
+			goodsAudit.setGoods_id(Long.valueOf(goods.getId()));
+			BigDecimal oldprice=goodsAudit.getSupplyPrice();
+			BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
+			int Percent=goodsAudit.getPercent();
+			if(Percent>0){
+				BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+				BigDecimal Percent1=bb.add(new BigDecimal("1"));
+				SupplyPrice=oldprice.multiply(Percent1);
+			}
+			goodsAudit.setSupplyPrice(SupplyPrice);
+			goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
+			}
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("货品更新成功");
 		return result;
 	}
 
-	public static void main(String[] args) {
-		String goods_no = "GE" + classid2str(Long.valueOf(1));
-        Long goodid =(long) 1;
-        goods_no += goodsid2str(goodid);
-        // 奇校验
-        goods_no = new EvenOddCheck().toOdd(goods_no);
-        System.out.println(goods_no);
-	}
 
 	@Override
 	public Result pullNoShelvesById(Result result, long goodsId) {
@@ -808,5 +818,18 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setMsg("系统错误！");
 		}
 		return result;
+	}
+	
+	
+	public static void main(String[] args) {
+		BigDecimal oldprice=new BigDecimal("120");
+		BigDecimal SupplyPrice=new BigDecimal("120");
+		int Percent=10;
+		if(Percent>0){
+			BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+			BigDecimal Percent1=bb.add(new BigDecimal("1"));
+			SupplyPrice=oldprice.multiply(Percent1);
+		}
+		System.out.println(SupplyPrice);
 	}
 }

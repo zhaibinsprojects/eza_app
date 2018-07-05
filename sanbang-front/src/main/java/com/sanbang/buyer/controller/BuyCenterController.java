@@ -1,6 +1,5 @@
 package com.sanbang.buyer.controller;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.vo.PriceTrendIfo;
 import com.sanbang.vo.userauth.AuthImageVo;
 /**
@@ -153,64 +151,7 @@ public class BuyCenterController {
 		}
 		return rs;
 	}
-	/**
-	 * 获取用户票据信息
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/getGoodsInvoiceByUser")
-	@ResponseBody
-	public Object getGoodsInvoiceByUser(HttpServletRequest request,HttpServletResponse response){
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		List<InvoiceInfo> iList = null;
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
-		if (upi == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}
-		mmp = this.goodsInvoiceService.getInvoiceByUser(upi.getId());
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			iList = (List<InvoiceInfo>) mmp.get("Obj");
-			rs = Result.success();
-			rs.setObj(iList);
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg(mmp.get("Msg").toString());
-		}
-		return rs;
-	}
-	/**
-	 * 根据票据ID查询票据信息
-	 * @param request
-	 * @param response
-	 * @param invoiceId
-	 * @return
-	 */
-	@RequestMapping("/getGoodsInvoiceByKey")
-	@ResponseBody
-	public Object getGoodsInvoiceByKey(HttpServletRequest request,HttpServletResponse response,Long invoiceId){
-		Map<String, Object> mmp = null;
-		Result rs = null;
-		InvoiceInfo invoiceInfo = null;
-		mmp = this.goodsInvoiceService.getInvoiceByKey(invoiceId);
-		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			invoiceInfo = (InvoiceInfo) mmp.get("Obj");
-			rs = Result.success();
-			rs.setObj(invoiceInfo);
-		}else{
-			rs = Result.failure();
-			rs.setErrorcode(Integer.valueOf(mmp.get("ErrorCode").toString()));
-			rs.setMsg(mmp.get("Msg").toString());
-		}
-		return rs;
-	}
+	
 	/**
 	 * 
 	 * @param request

@@ -43,6 +43,7 @@ public class CustomizedServiceImpl implements CustomizedService {
 			customized.setSource_type("1");//来源类型:0是预购  1是采购
 			this.customizedMapper.insert(customized);
 			//初始化必需字段数据
+			customizedRecord.setRemark("您的需求已经提交成功");
 			customizedRecord.setCustomized_id(customized.getId());
 			customizedRecord.setAddTime(new Date());
 			customizedRecord.setOperater_id(user.getId());

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,58 +43,6 @@ public class SellerReceiptController {
 	
 	@Autowired
 	private BuyerService buyerService;
-	/**
-	 * 票据管理页面,展示列表
-	 * @param userId
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/getReceiptList")
-	@ResponseBody
-	public Object getReceiptList(HttpServletRequest request, HttpServletResponse response, String currentPage){
-		Map<String, Object> map = new HashMap<>();
-		List<ezs_invoice> list = null;
-		Result result=Result.failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
-		if(upi==null){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			result.setMsg("请重新登陆！");
-			return result;
-		}
-		Long userId = upi.getId();
-		
-		Page page = null;
-		if(currentPage==null){
-			currentPage = "1";
-		}
-		Map<String,Object> returnmap=new HashMap<>();
-		returnmap.put("bill", upi.getEzs_bill());
-		try {
-			map = sellerReceiptService.getInvoiceListById(userId,currentPage,2);
-			Integer ErrorCode = (Integer)map.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				list = (List<ezs_invoice>) map.get("Obj");
-				page = (Page) map.get("Page");
-				result = Result.success(); 
-				returnmap.put("list", list);
-				result.setObj(returnmap);
-				result.setMeta(page);
-			}else{
-				result = Result.failure();
-				result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
-				result.setMsg(map.get("Msg").toString());
-				returnmap.put("list", list);
-				result.setObj(returnmap);
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			result.setSuccess(false);
-			result.setMsg("系统错误");
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-		}
-		return result;
-	}
 	
 	/**
 	 * 根据订单编号和时间查询发票
@@ -104,20 +53,21 @@ public class SellerReceiptController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/queryInvoiceByIdOrDate")
+	@RequestMapping("/getReceiptList")
 	@ResponseBody
-	public Object queryInvoiceByIdOrDate(String orderno, String startTime,String endTime,HttpServletRequest request, HttpServletResponse response,String currentPage){
-		Map<String, Object> map = new HashMap<>();
+	public Object queryInvoiceByIdOrDate(@RequestParam(name="orderno",defaultValue="")String orderno, 
+			@RequestParam(name="startTime",defaultValue="")String startTime,
+			@RequestParam(name="endTime",defaultValue="")String endTime,
+			HttpServletRequest request, 
+			HttpServletResponse response,
+			@RequestParam(name="currentPage",defaultValue="1")int currentPage){
 		Result result=Result.failure();
-		List<ezs_invoice> list = null;
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("请重新登陆！");
 			return result;
 		}
-		Long userId = upi.getId();
-		
 		//验证用户是否激活，拥有卖家权限
 		ezs_store store = upi.getEzs_store();
 		Integer storeStatus = store.getStatus();
@@ -130,25 +80,10 @@ public class SellerReceiptController {
 			return result;
 		}
 		
-	
-		Page page = null;
-		if(currentPage==null){
-			currentPage = "1";
+		if(currentPage<=1){
+			currentPage = 1;
 		}
-
-		map = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, userId, currentPage,2);
-		Integer ErrorCode = (Integer)map.get("ErrorCode");
-		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			list = (List<ezs_invoice>) map.get("Obj");
-			page = (Page) map.get("Page");
-			result = Result.success(); 
-			result.setObj(list);
-			result.setMeta(page);
-		}else{
-			result = Result.failure();
-			result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
-			result.setMsg(map.get("Msg").toString());
-		}
+		result = sellerReceiptService.queryInvoiceByIdOrDate(result, orderno, startTime, endTime, upi.getId(), currentPage,2);
 		return result;
   }
 	/**
@@ -257,7 +192,11 @@ public class SellerReceiptController {
 		
 		try {
 			//采购合同 5，销售合同 6
-			result = buyerService.getContentList(upi.getEzs_store().getNumber(), 5, pageno, request);
+			result = buyerService.getContentList(StringUtils.isEmpty(
+					upi.getEzs_store().getSnumber())?
+							(new StringBuffer().append("'").append(upi.getEzs_store().getNumber()).append("'").toString())
+							:(new StringBuffer().append("'").append(upi.getEzs_store().getNumber()).append("'").append(",").append("'").append(upi.getEzs_store().getSnumber()).append("'").toString()),
+							5, pageno, request);
 		} catch (Exception e) {
 			result.setMsg("未获取到数据");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);

@@ -25,7 +25,8 @@ function loansubmit(){
 			"telNum" : $(".telNum").val(),
 			"area_id" : area_id,
 			"address" : $(".address").val(),
-			"loanAmount" : $(".loanAmount").val()
+			"loanAmount" : $(".loanAmount").val(),
+			"token" : $(".userkey").val()
 		},
 		dataType : "json",
 		async : false,

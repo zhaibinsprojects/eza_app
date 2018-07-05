@@ -521,7 +521,7 @@ public class BuyerServiceimpl implements BuyerService {
 			} else {
 				List<CertSignInfoBean> list =new ArrayList<>();
 				map.put("list", list);
-				result.setSuccess(false);
+				result.setSuccess(true);
 				result.setMsg("无合同数据");
 				result.setObj(map);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);

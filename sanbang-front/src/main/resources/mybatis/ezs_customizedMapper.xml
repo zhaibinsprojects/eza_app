@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_customizedMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customized" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="ash_content" property="ash_content" jdbcType="DOUBLE" />
-    <result column="bend_strength" property="bend_strength" jdbcType="DOUBLE" />
-    <result column="budget" property="budget" jdbcType="DOUBLE" />
-    <result column="colour" property="colour" jdbcType="VARCHAR" />
-    <result column="combustion_grade" property="combustion_grade" jdbcType="DOUBLE" />
-    <result column="density" property="density" jdbcType="DOUBLE" />
-    <result column="elong_break" property="elong_break" jdbcType="DOUBLE" />
-    <result column="flexural_modulus" property="flexural_modulus" jdbcType="DOUBLE" />
-    <result column="is_ep" property="is_ep" jdbcType="VARCHAR" />
-    <result column="jzforce" property="jzforce" jdbcType="DOUBLE" />
-    <result column="melt_index" property="melt_index" jdbcType="DOUBLE" />
-    <result column="pre_num" property="pre_num" jdbcType="DOUBLE" />
-    <result column="pre_time" property="pre_time" jdbcType="TIMESTAMP" />
-    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="shape" property="shape" jdbcType="VARCHAR" />
-    <result column="source_type" property="source_type" jdbcType="VARCHAR" />
-    <result column="sourcefrom" property="sourcefrom" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="tensile" property="tensile" jdbcType="DOUBLE" />
-    <result column="water_content" property="water_content" jdbcType="DOUBLE" />
-    <result column="xbforce" property="xbforce" jdbcType="DOUBLE" />
-    <result column="category_id" property="category_id" jdbcType="BIGINT" />
-    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
-    <result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
-    <result column="proName" property="proName" jdbcType="VARCHAR" />
-    <result column="colour_id" property="colour_id" jdbcType="BIGINT" />
-    <result column="shape_id" property="shape_id" jdbcType="BIGINT" />
-    <result column="cname" property="cname" jdbcType="VARCHAR" />
-    <result column="catname" property="catname" jdbcType="VARCHAR" />
-    <collection property="recordlist" column="id" select="com.sanbang.dao.ezs_customized_recordMapper.selectByCustomizedId" ></collection>
-    <collection property="reslist" column="id" select="com.sanbang.dao.ezs_customized_resMapper.selectByCustomizedId" ></collection>
-  </resultMap>
- <sql id="Base_Column_List" >
+	<resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customized" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="ash_content" property="ash_content" jdbcType="DOUBLE" />
+		<result column="bend_strength" property="bend_strength" jdbcType="DOUBLE" />
+		<result column="budget" property="budget" jdbcType="DOUBLE" />
+		<result column="colour" property="colour" jdbcType="VARCHAR" />
+		<result column="combustion_grade" property="combustion_grade" jdbcType="DOUBLE" />
+		<result column="density" property="density" jdbcType="DOUBLE" />
+		<result column="elong_break" property="elong_break" jdbcType="DOUBLE" />
+		<result column="flexural_modulus" property="flexural_modulus" jdbcType="DOUBLE" />
+		<result column="is_ep" property="is_ep" jdbcType="VARCHAR" />
+		<result column="jzforce" property="jzforce" jdbcType="DOUBLE" />
+		<result column="melt_index" property="melt_index" jdbcType="DOUBLE" />
+		<result column="pre_num" property="pre_num" jdbcType="DOUBLE" />
+		<result column="pre_time" property="pre_time" jdbcType="TIMESTAMP" />
+		<result column="purpose" property="purpose" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="shape" property="shape" jdbcType="VARCHAR" />
+		<result column="source_type" property="source_type" jdbcType="VARCHAR" />
+		<result column="sourcefrom" property="sourcefrom" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="tensile" property="tensile" jdbcType="DOUBLE" />
+		<result column="water_content" property="water_content" jdbcType="DOUBLE" />
+		<result column="xbforce" property="xbforce" jdbcType="DOUBLE" />
+		<result column="category_id" property="category_id" jdbcType="BIGINT" />
+		<result column="goods_id" property="goods_id" jdbcType="BIGINT" />
+		<result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
+		<result column="proName" property="proName" jdbcType="VARCHAR" />
+		<result column="colour_id" property="colour_id" jdbcType="BIGINT" />
+		<result column="shape_id" property="shape_id" jdbcType="BIGINT" />
+		<result column="cname" property="cname" jdbcType="VARCHAR" />
+		<result column="catname" property="catname" jdbcType="VARCHAR" />
+		<collection property="recordlist" column="id" select="com.sanbang.dao.ezs_customized_recordMapper.selectByCustomizedId" ></collection>
+		<collection property="reslist" column="id" select="com.sanbang.dao.ezs_customized_resMapper.selectByCustomizedId" ></collection>
+	</resultMap>
+	<sql id="Base_Column_List" >
     id, addTime, deleteStatus, address, ash_content, bend_strength, budget, colour, combustion_grade, 
     density, elong_break, flexural_modulus, is_ep, jzforce, melt_index, pre_num, pre_time, 
     purpose, remark, shape, source_type, sourcefrom, status, tensile, water_content, 
     xbforce, category_id, goods_id, purchaser_id, proName, colour_id, shape_id
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
-    <include refid="Base_Column_List" />
+		<include refid="Base_Column_List" />
     from ezs_customized
     where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_customized
     where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_customized" >
+	</delete>
+	<insert id="insert" parameterType="com.sanbang.bean.ezs_customized" >
     insert into ezs_customized (id, addTime, deleteStatus, 
       address, ash_content, bend_strength, 
       budget, colour, combustion_grade, 
@@ -78,306 +78,306 @@
       #{water_content,jdbcType=DOUBLE}, #{xbforce,jdbcType=DOUBLE}, #{category_id,jdbcType=BIGINT}, 
       #{goods_id,jdbcType=BIGINT}, #{purchaser_id,jdbcType=BIGINT}, #{proName,jdbcType=VARCHAR}, 
       #{colour_id,jdbcType=BIGINT}, #{shape_id,jdbcType=BIGINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized" >
+	</insert>
+	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized" >
     insert into ezs_customized
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
         id,
-      </if>
-      <if test="addTime != null" >
+			</if>
+			<if test="addTime != null" >
         addTime,
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         deleteStatus,
-      </if>
-      <if test="address != null" >
+			</if>
+			<if test="address != null" >
         address,
-      </if>
-      <if test="ash_content != null" >
+			</if>
+			<if test="ash_content != null" >
         ash_content,
-      </if>
-      <if test="bend_strength != null" >
+			</if>
+			<if test="bend_strength != null" >
         bend_strength,
-      </if>
-      <if test="budget != null" >
+			</if>
+			<if test="budget != null" >
         budget,
-      </if>
-      <if test="colour != null" >
+			</if>
+			<if test="colour != null" >
         colour,
-      </if>
-      <if test="combustion_grade != null" >
+			</if>
+			<if test="combustion_grade != null" >
         combustion_grade,
-      </if>
-      <if test="density != null" >
+			</if>
+			<if test="density != null" >
         density,
-      </if>
-      <if test="elong_break != null" >
+			</if>
+			<if test="elong_break != null" >
         elong_break,
-      </if>
-      <if test="flexural_modulus != null" >
+			</if>
+			<if test="flexural_modulus != null" >
         flexural_modulus,
-      </if>
-      <if test="is_ep != null" >
+			</if>
+			<if test="is_ep != null" >
         is_ep,
-      </if>
-      <if test="jzforce != null" >
+			</if>
+			<if test="jzforce != null" >
         jzforce,
-      </if>
-      <if test="melt_index != null" >
+			</if>
+			<if test="melt_index != null" >
         melt_index,
-      </if>
-      <if test="pre_num != null" >
+			</if>
+			<if test="pre_num != null" >
         pre_num,
-      </if>
-      <if test="pre_time != null" >
+			</if>
+			<if test="pre_time != null" >
         pre_time,
-      </if>
-      <if test="purpose != null" >
+			</if>
+			<if test="purpose != null" >
         purpose,
-      </if>
-      <if test="remark != null" >
+			</if>
+			<if test="remark != null" >
         remark,
-      </if>
-      <if test="shape != null" >
+			</if>
+			<if test="shape != null" >
         shape,
-      </if>
-      <if test="source_type != null" >
+			</if>
+			<if test="source_type != null" >
         source_type,
-      </if>
-      <if test="sourcefrom != null" >
+			</if>
+			<if test="sourcefrom != null" >
         sourcefrom,
-      </if>
-      <if test="status != null" >
+			</if>
+			<if test="status != null" >
         status,
-      </if>
-      <if test="tensile != null" >
+			</if>
+			<if test="tensile != null" >
         tensile,
-      </if>
-      <if test="water_content != null" >
+			</if>
+			<if test="water_content != null" >
         water_content,
-      </if>
-      <if test="xbforce != null" >
+			</if>
+			<if test="xbforce != null" >
         xbforce,
-      </if>
-      <if test="category_id != null" >
+			</if>
+			<if test="category_id != null" >
         category_id,
-      </if>
-      <if test="goods_id != null" >
+			</if>
+			<if test="goods_id != null" >
         goods_id,
-      </if>
-      <if test="purchaser_id != null" >
+			</if>
+			<if test="purchaser_id != null" >
         purchaser_id,
-      </if>
-      <if test="proName != null" >
+			</if>
+			<if test="proName != null" >
         proName,
-      </if>
-      <if test="colour_id != null" >
+			</if>
+			<if test="colour_id != null" >
         colour_id,
-      </if>
-      <if test="shape_id != null" >
+			</if>
+			<if test="shape_id != null" >
         shape_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
         #{id,jdbcType=BIGINT},
-      </if>
-      <if test="addTime != null" >
+			</if>
+			<if test="addTime != null" >
         #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="address != null" >
+			</if>
+			<if test="address != null" >
         #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="ash_content != null" >
+			</if>
+			<if test="ash_content != null" >
         #{ash_content,jdbcType=DOUBLE},
-      </if>
-      <if test="bend_strength != null" >
+			</if>
+			<if test="bend_strength != null" >
         #{bend_strength,jdbcType=DOUBLE},
-      </if>
-      <if test="budget != null" >
+			</if>
+			<if test="budget != null" >
         #{budget,jdbcType=DOUBLE},
-      </if>
-      <if test="colour != null" >
+			</if>
+			<if test="colour != null" >
         #{colour,jdbcType=VARCHAR},
-      </if>
-      <if test="combustion_grade != null" >
+			</if>
+			<if test="combustion_grade != null" >
         #{combustion_grade,jdbcType=DOUBLE},
-      </if>
-      <if test="density != null" >
+			</if>
+			<if test="density != null" >
         #{density,jdbcType=DOUBLE},
-      </if>
-      <if test="elong_break != null" >
+			</if>
+			<if test="elong_break != null" >
         #{elong_break,jdbcType=DOUBLE},
-      </if>
-      <if test="flexural_modulus != null" >
+			</if>
+			<if test="flexural_modulus != null" >
         #{flexural_modulus,jdbcType=DOUBLE},
-      </if>
-      <if test="is_ep != null" >
+			</if>
+			<if test="is_ep != null" >
         #{is_ep,jdbcType=VARCHAR},
-      </if>
-      <if test="jzforce != null" >
+			</if>
+			<if test="jzforce != null" >
         #{jzforce,jdbcType=DOUBLE},
-      </if>
-      <if test="melt_index != null" >
+			</if>
+			<if test="melt_index != null" >
         #{melt_index,jdbcType=DOUBLE},
-      </if>
-      <if test="pre_num != null" >
+			</if>
+			<if test="pre_num != null" >
         #{pre_num,jdbcType=DOUBLE},
-      </if>
-      <if test="pre_time != null" >
+			</if>
+			<if test="pre_time != null" >
         #{pre_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="purpose != null" >
+			</if>
+			<if test="purpose != null" >
         #{purpose,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
+			</if>
+			<if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="shape != null" >
+			</if>
+			<if test="shape != null" >
         #{shape,jdbcType=VARCHAR},
-      </if>
-      <if test="source_type != null" >
+			</if>
+			<if test="source_type != null" >
         #{source_type,jdbcType=VARCHAR},
-      </if>
-      <if test="sourcefrom != null" >
+			</if>
+			<if test="sourcefrom != null" >
         #{sourcefrom,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
+			</if>
+			<if test="status != null" >
         #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="tensile != null" >
+			</if>
+			<if test="tensile != null" >
         #{tensile,jdbcType=DOUBLE},
-      </if>
-      <if test="water_content != null" >
+			</if>
+			<if test="water_content != null" >
         #{water_content,jdbcType=DOUBLE},
-      </if>
-      <if test="xbforce != null" >
+			</if>
+			<if test="xbforce != null" >
         #{xbforce,jdbcType=DOUBLE},
-      </if>
-      <if test="category_id != null" >
+			</if>
+			<if test="category_id != null" >
         #{category_id,jdbcType=BIGINT},
-      </if>
-      <if test="goods_id != null" >
+			</if>
+			<if test="goods_id != null" >
         #{goods_id,jdbcType=BIGINT},
-      </if>
-      <if test="purchaser_id != null" >
+			</if>
+			<if test="purchaser_id != null" >
         #{purchaser_id,jdbcType=BIGINT},
-      </if>
-      <if test="proName != null" >
+			</if>
+			<if test="proName != null" >
         #{proName,jdbcType=VARCHAR},
-      </if>
-      <if test="colour_id != null" >
+			</if>
+			<if test="colour_id != null" >
         #{colour_id,jdbcType=BIGINT},
-      </if>
-      <if test="shape_id != null" >
+			</if>
+			<if test="shape_id != null" >
         #{shape_id,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customized" >
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customized" >
     update ezs_customized
-    <set >
-      <if test="addTime != null" >
+		<set >
+			<if test="addTime != null" >
         addTime = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteStatus != null" >
+			</if>
+			<if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="address != null" >
+			</if>
+			<if test="address != null" >
         address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="ash_content != null" >
+			</if>
+			<if test="ash_content != null" >
         ash_content = #{ash_content,jdbcType=DOUBLE},
-      </if>
-      <if test="bend_strength != null" >
+			</if>
+			<if test="bend_strength != null" >
         bend_strength = #{bend_strength,jdbcType=DOUBLE},
-      </if>
-      <if test="budget != null" >
+			</if>
+			<if test="budget != null" >
         budget = #{budget,jdbcType=DOUBLE},
-      </if>
-      <if test="colour != null" >
+			</if>
+			<if test="colour != null" >
         colour = #{colour,jdbcType=VARCHAR},
-      </if>
-      <if test="combustion_grade != null" >
+			</if>
+			<if test="combustion_grade != null" >
         combustion_grade = #{combustion_grade,jdbcType=DOUBLE},
-      </if>
-      <if test="density != null" >
+			</if>
+			<if test="density != null" >
         density = #{density,jdbcType=DOUBLE},
-      </if>
-      <if test="elong_break != null" >
+			</if>
+			<if test="elong_break != null" >
         elong_break = #{elong_break,jdbcType=DOUBLE},
-      </if>
-      <if test="flexural_modulus != null" >
+			</if>
+			<if test="flexural_modulus != null" >
         flexural_modulus = #{flexural_modulus,jdbcType=DOUBLE},
-      </if>
-      <if test="is_ep != null" >
+			</if>
+			<if test="is_ep != null" >
         is_ep = #{is_ep,jdbcType=VARCHAR},
-      </if>
-      <if test="jzforce != null" >
+			</if>
+			<if test="jzforce != null" >
         jzforce = #{jzforce,jdbcType=DOUBLE},
-      </if>
-      <if test="melt_index != null" >
+			</if>
+			<if test="melt_index != null" >
         melt_index = #{melt_index,jdbcType=DOUBLE},
-      </if>
-      <if test="pre_num != null" >
+			</if>
+			<if test="pre_num != null" >
         pre_num = #{pre_num,jdbcType=DOUBLE},
-      </if>
-      <if test="pre_time != null" >
+			</if>
+			<if test="pre_time != null" >
         pre_time = #{pre_time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="purpose != null" >
+			</if>
+			<if test="purpose != null" >
         purpose = #{purpose,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
+			</if>
+			<if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="shape != null" >
+			</if>
+			<if test="shape != null" >
         shape = #{shape,jdbcType=VARCHAR},
-      </if>
-      <if test="source_type != null" >
+			</if>
+			<if test="source_type != null" >
         source_type = #{source_type,jdbcType=VARCHAR},
-      </if>
-      <if test="sourcefrom != null" >
+			</if>
+			<if test="sourcefrom != null" >
         sourcefrom = #{sourcefrom,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
+			</if>
+			<if test="status != null" >
         status = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="tensile != null" >
+			</if>
+			<if test="tensile != null" >
         tensile = #{tensile,jdbcType=DOUBLE},
-      </if>
-      <if test="water_content != null" >
+			</if>
+			<if test="water_content != null" >
         water_content = #{water_content,jdbcType=DOUBLE},
-      </if>
-      <if test="xbforce != null" >
+			</if>
+			<if test="xbforce != null" >
         xbforce = #{xbforce,jdbcType=DOUBLE},
-      </if>
-      <if test="category_id != null" >
+			</if>
+			<if test="category_id != null" >
         category_id = #{category_id,jdbcType=BIGINT},
-      </if>
-      <if test="goods_id != null" >
+			</if>
+			<if test="goods_id != null" >
         goods_id = #{goods_id,jdbcType=BIGINT},
-      </if>
-      <if test="purchaser_id != null" >
+			</if>
+			<if test="purchaser_id != null" >
         purchaser_id = #{purchaser_id,jdbcType=BIGINT},
-      </if>
-      <if test="proName != null" >
+			</if>
+			<if test="proName != null" >
         proName = #{proName,jdbcType=VARCHAR},
-      </if>
-      <if test="colour_id != null" >
+			</if>
+			<if test="colour_id != null" >
         colour_id = #{colour_id,jdbcType=BIGINT},
-      </if>
-      <if test="shape_id != null" >
+			</if>
+			<if test="shape_id != null" >
         shape_id = #{shape_id,jdbcType=BIGINT},
-      </if>
-    </set>
+			</if>
+		</set>
     where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customized" >
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customized" >
     update ezs_customized
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
@@ -411,53 +411,53 @@
       colour_id = #{colour_id,jdbcType=BIGINT},
       shape_id = #{shape_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
-  </update>
+	</update>
   
-  <!-- 新增 -->
-  <select id="customizedList" resultType="ezs_customized" parameterType="java.lang.Long" >
+	<!-- 新增 -->
+	<select id="customizedList" resultType="ezs_customized" parameterType="java.lang.Long" >
     select 
-    <include refid="Base_Column_List" />
+		<include refid="Base_Column_List" />
     from ezs_customized
     where purchaser_id = #{purchaser_id,jdbcType=BIGINT}
-  </select>
+	</select>
   
   
-  <resultMap id="BaseResultMap1" type="com.sanbang.bean.ezs_customized" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="ash_content" property="ash_content" jdbcType="DOUBLE" />
-    <result column="bend_strength" property="bend_strength" jdbcType="DOUBLE" />
-    <result column="budget" property="budget" jdbcType="DOUBLE" />
-    <result column="colour" property="colour" jdbcType="VARCHAR" />
-    <result column="combustion_grade" property="combustion_grade" jdbcType="DOUBLE" />
-    <result column="density" property="density" jdbcType="DOUBLE" />
-    <result column="elong_break" property="elong_break" jdbcType="DOUBLE" />
-    <result column="flexural_modulus" property="flexural_modulus" jdbcType="DOUBLE" />
-    <result column="is_ep" property="is_ep" jdbcType="VARCHAR" />
-    <result column="jzforce" property="jzforce" jdbcType="DOUBLE" />
-    <result column="melt_index" property="melt_index" jdbcType="DOUBLE" />
-    <result column="pre_num" property="pre_num" jdbcType="DOUBLE" />
-    <result column="pre_time" property="pre_time" jdbcType="TIMESTAMP" />
-    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="shape" property="shape" jdbcType="VARCHAR" />
-    <result column="source_type" property="source_type" jdbcType="VARCHAR" />
-    <result column="sourcefrom" property="sourcefrom" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="tensile" property="tensile" jdbcType="DOUBLE" />
-    <result column="water_content" property="water_content" jdbcType="DOUBLE" />
-    <result column="xbforce" property="xbforce" jdbcType="DOUBLE" />
-    <result column="category_id" property="category_id" jdbcType="BIGINT" />
-    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
-    <result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
-    <result column="proName" property="proName" jdbcType="VARCHAR" />
-    <result column="colour_id" property="colour_id" jdbcType="BIGINT" />
-    <result column="shape_id" property="shape_id" jdbcType="BIGINT" />
-    <result column="cname" property="cname" jdbcType="VARCHAR" />
-  </resultMap>
-  <select id="getPurchaseByUserId" resultMap="BaseResultMap1" >
+	<resultMap id="BaseResultMap1" type="com.sanbang.bean.ezs_customized" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="ash_content" property="ash_content" jdbcType="DOUBLE" />
+		<result column="bend_strength" property="bend_strength" jdbcType="DOUBLE" />
+		<result column="budget" property="budget" jdbcType="DOUBLE" />
+		<result column="colour" property="colour" jdbcType="VARCHAR" />
+		<result column="combustion_grade" property="combustion_grade" jdbcType="DOUBLE" />
+		<result column="density" property="density" jdbcType="DOUBLE" />
+		<result column="elong_break" property="elong_break" jdbcType="DOUBLE" />
+		<result column="flexural_modulus" property="flexural_modulus" jdbcType="DOUBLE" />
+		<result column="is_ep" property="is_ep" jdbcType="VARCHAR" />
+		<result column="jzforce" property="jzforce" jdbcType="DOUBLE" />
+		<result column="melt_index" property="melt_index" jdbcType="DOUBLE" />
+		<result column="pre_num" property="pre_num" jdbcType="DOUBLE" />
+		<result column="pre_time" property="pre_time" jdbcType="TIMESTAMP" />
+		<result column="purpose" property="purpose" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="shape" property="shape" jdbcType="VARCHAR" />
+		<result column="source_type" property="source_type" jdbcType="VARCHAR" />
+		<result column="sourcefrom" property="sourcefrom" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="tensile" property="tensile" jdbcType="DOUBLE" />
+		<result column="water_content" property="water_content" jdbcType="DOUBLE" />
+		<result column="xbforce" property="xbforce" jdbcType="DOUBLE" />
+		<result column="category_id" property="category_id" jdbcType="BIGINT" />
+		<result column="goods_id" property="goods_id" jdbcType="BIGINT" />
+		<result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
+		<result column="proName" property="proName" jdbcType="VARCHAR" />
+		<result column="colour_id" property="colour_id" jdbcType="BIGINT" />
+		<result column="shape_id" property="shape_id" jdbcType="BIGINT" />
+		<result column="cname" property="cname" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getPurchaseByUserId" resultMap="BaseResultMap1" >
 	SELECT
 		A.id,
 		A.source_type,
@@ -473,38 +473,44 @@
     ORDER BY A.addTime
 	limit #{pageCount},#{pageSize}
 	</select>
-  <select id="getPurchaseById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-	   SELECT
-		A.id,
-		A.source_type,
-		A.addTime,
-		A.pre_num,
-	  IFNULL(B.`name`,CONCAT(A.colour,C.`name`,A.shape)) cname,
-	  C.`name`,
-	  A.pre_time,
-	  A.remark,
-	  A.colour,
-	  A.shape,
-	  A.sourcefrom,
-	  A.purpose,
-	  A.is_ep,
-	  A.water_content,
-	  A.density,
-	  A.melt_index,
-	  A.ash_content,
-	  A.xbforce,
-	  A.jzforce,
-	  A.tensile,
-	  A.elong_break,
-	  C.`name`  catname,
-	  A.budget,
-	  A.flexural_modulus,
-	  A.combustion_grade,
-	  A.bend_strength
+	<select id="getPurchaseById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	  SELECT
+	A.id,
+	IFNULL(A.source_type,'') source_type,
+	A.addTime,
+	IFNULL(A.pre_num,0) pre_num,
+	IFNULL(IFNULL(
+		B.`name`,
+		CONCAT(A.colour, C.`name`, A.shape)
+	) ,'') cname,
+	IFNULL(C.`name`,'') name ,
+	IFNULL(A.pre_time,null) pre_time,
+	IFNULL(A.remark,'') remark,
+	IFNULL(A.colour,'') colour,
+	IFNULL(A.shape,'') shape,
+	IFNULL(A.sourcefrom,'') sourcefrom,
+	IFNULL(A.purpose,'') purpose,
+	IFNULL(A.is_ep,'') is_ep,
+	IFNULL(A.water_content,0) water_content,
+	
+	IFNULL(A.density,0) density,
+	IFNULL(A.melt_index,0) melt_index,
+	IFNULL(A.ash_content,0) ash_content,
+	IFNULL(A.xbforce,0) xbforce,
+	IFNULL(A.jzforce,0) jzforce,
+	IFNULL(A.tensile,0) tensile,
+	IFNULL(A.elong_break,0) elong_break,
+		
+	IFNULL(C.`name`,'') catname,
+	IFNULL(A.budget,0) budget,
+	IFNULL(A.flexural_modulus,0) flexural_modulus,
+	IFNULL(A.combustion_grade,0) combustion_grade,
+	IFNULL(A.bend_strength,0) bend_strength,
+	IFNULL(A.`status`,0) `status`
 	FROM
 		ezs_customized A
 	LEFT JOIN ezs_goods B ON A.goods_id = B.id
-	LEFT JOIN ezs_goods_class C ON A.category_id=C.id
+LEFT JOIN ezs_goods_class C ON A.category_id = C.id
 	WHERE  A.id = #{id,jdbcType=BIGINT}
-  </select>
+	</select>
 </mapper>

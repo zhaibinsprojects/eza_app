@@ -2,17 +2,12 @@ package com.sanbang.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_invoice;
-import com.sanbang.bean.ezs_pact;
-import com.sanbang.vo.InvoiceInfo;
 import com.sanbang.utils.Page;
-import com.sanbang.vo.GoodsInfo;
-import com.sanbang.vo.InvoiceInfo;
 
 @Repository
 public interface ezs_invoiceMapper {
@@ -28,21 +23,13 @@ public interface ezs_invoiceMapper {
 
     int updateByPrimaryKey(ezs_invoice record);
 
-	Map<String, Object> selectInvoiceListInfoById(Long userId, String currentPage);
-
-	ezs_invoice selectInvoiceInfoById(Long invoiceId);
-
 	ezs_invoice selectInvoiceByOrderNo(String orderno);
 
-	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2);
-	
-	List<InvoiceInfo> selectInvoiceByUser(Long userId);
-	
-	InvoiceInfo selectByPrimaryKeyTwo(Long id);
-	
-	List<ezs_invoice> selectInvoiceByDate(@Param("startTime")Date dt1, @Param("endTime")Date dt2,@Param("userId")long userId, @Param("page")Page page);
+	List<ezs_invoice> getInvoiceBySeller(@Param("startTime")Date dt1, @Param("endTime")Date dt2,@Param("page")Page page, @Param("userId")Long userId,@Param("type")int type,@Param("order_no")String order_no);
 
-	int getInvoiceCountByUserId(@Param("userId")Long userId,@Param("type")int type);
+	int getInvoiceCountForSeller(@Param("startTime")Date dt1, @Param("endTime")Date dt2,@Param("page")Page page, @Param("userId")Long userId,@Param("type")int type,@Param("order_no")String order_no);
+	
+	int getInvoiceCountForBuyer(@Param("userId")Long userId,@Param("type")int type);
 
-	List<ezs_invoice> goodsInvoiceCountPage(@Param("page")Page page, @Param("userId")Long userId,@Param("type")int type);
+	List<ezs_invoice> getInvoiceForBuyer(@Param("page")Page page, @Param("userId")Long userId,@Param("type")int type);
 }

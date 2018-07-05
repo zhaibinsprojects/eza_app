@@ -1,7 +1,6 @@
 package com.sanbang.app.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,19 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.ezs_accessory;
-import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_order_info;
-import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.controller.BuyerMenu;
 import com.sanbang.buyer.service.BuyerService;
-import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
-import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PagerOrder;
 
@@ -464,9 +458,8 @@ public class AppBuyerMenu {
 	 */
 	@RequestMapping("/getReceiptList")
 	@ResponseBody
-	public Object getReceiptList(HttpServletRequest request, HttpServletResponse response, String currentPage){
-		Map<String, Object> map = new HashMap<>();
-		List<ezs_invoice> list = null;
+	public Object getReceiptList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(name="currentPage",defaultValue="1")int currentPage){
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
@@ -474,37 +467,11 @@ public class AppBuyerMenu {
 			result.setMsg("请重新登陆！");
 			return result;
 		}
-		Long userId = upi.getId();
 		
-		Page page = null;
-		if(currentPage==null){
-			currentPage = "1";
+		if(currentPage<=1){
+			currentPage = 1;
 		}
-		Map<String,Object> returnmap=new HashMap<>();
-		returnmap.put("bill", upi.getEzs_bill());
-		try {
-			map = sellerReceiptService.getInvoiceListById(userId,currentPage,1);
-			Integer ErrorCode = (Integer)map.get("ErrorCode");
-			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				list = (List<ezs_invoice>) map.get("Obj");
-				page = (Page) map.get("Page");
-				result = Result.success(); 
-				returnmap.put("list", list);
-				result.setObj(returnmap);
-				result.setMeta(page);
-			}else{
-				result = Result.failure();
-				result.setErrorcode(Integer.valueOf(map.get("ErrorCode").toString()));
-				result.setMsg(map.get("Msg").toString());
-				returnmap.put("list", list);
-				result.setObj(returnmap);
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			result.setSuccess(false);
-			result.setMsg("系统错误");
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-		}
+		result = sellerReceiptService.getInvoiceForBuyer(upi.getId(), currentPage, 1);
 		return result;
 	}
 	

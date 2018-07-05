@@ -22,6 +22,8 @@ public class ezs_goods_audit_process {
 
     private Long goods_id;
 
+    private Integer percent;
+
     public Long getId() {
         return id;
     }
@@ -92,5 +94,13 @@ public class ezs_goods_audit_process {
 
     public void setGoods_id(Long goods_id) {
         this.goods_id = goods_id;
+    }
+
+    public Integer getPercent() {
+        return percent;
+    }
+
+    public void setPercent(Integer percent) {
+        this.percent = percent;
     }
 }
