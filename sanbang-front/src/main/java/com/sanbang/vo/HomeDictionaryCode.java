@@ -37,4 +37,7 @@ public class HomeDictionaryCode {
     public static final int ERROR_HOME_KIND_ERROR = 101204;
     //库存不足
     public static final int ERROR_HOME_INVENTORY_ERROR = 101205;
+    //邮件已发送
+    public static final int ERROR_ALREADY_SEBD_EMAIL = 101206;
+    
 }
