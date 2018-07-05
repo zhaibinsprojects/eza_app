@@ -28,6 +28,7 @@ public class AddressServiceImpl implements AddressService {
 	/**
 	 * 获取热门省份
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public Map<String, Object> getHotAddress() {
 		Map<String,Object> mmp = new HashMap<>();
@@ -53,10 +54,11 @@ public class AddressServiceImpl implements AddressService {
 		}
 		return mmp;
 	}
+	@SuppressWarnings("unused")
 	@Override
 	public Map<String, Object> getProvince() {
 		Map<String,Object> mmp = new HashMap<String, Object>();
-		List<ezs_area> elist = null;
+		List<ezs_area> elist = new ArrayList<>();
 		//elist = (List<ezs_area>) RedisUtils.getList("ProvinceMess");
 		if(elist==null){
 			elist = this.areaMapper.getAreaParentList();
