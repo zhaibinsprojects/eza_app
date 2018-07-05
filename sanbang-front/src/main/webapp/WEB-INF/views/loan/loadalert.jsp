@@ -20,28 +20,40 @@
 <script type="text/javascript" src="front/resource/js/loan/loan.js"></script>
 <script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
+<style type="text/css">
+.aicon_yzs{ width:100%; display:block; height:40px; background:url(front/resource/img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:16px; color:#fff; text-indent:20px;}
+</style>
 </head>
 <body style="background: #efefef;">
-	
-		<div class="me-alert-close">
-			<span>×</span>
-		</div>
-		<div class="me-alert-box-tit">申请贷款</div>
+<header class="ezsm-collection-top">
+    <div><a class="aicon_yzs" href="#"></a></div>
+    <div>提交申请</div>
+    <div><a class="" href="#"></a></div>
+  </header>
 		<table class="me-alert-box-table1">
 			<tbody>
 				<tr>
-					<td><span>*</span>服务类型</td>
-					<td><select class="applyType"><option class="-1">请选择</option>
-							<option class="0">货押融资服务</option>
+					<td style="display: none;"><span>*</span>服务类型</td>
+					<td style="display: none;">
+					<select class="applyType">
+							<option class="0" selected="selected">货押融资服务</option>
 							<option class="1">账期融资服务</option></select></td>
+					</select>		
 				</tr>
 				<tr>
-					<td><span>*</span>经营类型</td>
-					<td>
+					<td style="display: none;"><span>*</span>经营类型</td>
+					<td style="display: none;">
 						<select class="mainBusiness">
 							<option class="-1">请选择</option>
-							<c:forEach items="${comtype}" var="com">
+							<c:forEach items="${comtype}" var="com" varStatus="i">
+							<c:choose>
+							<c:when test="${i.index eq 0}">
+							<option class="${com.id}" selected="selected">${com.name}</option>
+							</c:when>
+							<c:otherwise>
 							<option class="${com.id}">${com.name}</option>
+							</c:otherwise>
+							</c:choose>
 							</c:forEach>
 						</select>
 					</td>
@@ -78,9 +90,9 @@
 					<td>详细地址</td>
 					<td><input class="address" type="text" placeholder="请填写详细地址"></td>
 				</tr>
-				<tr>
+				<tr style="display: none;">
 					<td><span>*</span>贷款金额</td>
-					<td><input class="loanAmount" type="text" placeholder="请填写贷款金额"></td>
+					<td><input class="loanAmount" type="text" placeholder="请填写贷款金额" value="0"></td>
 				</tr>
 			</tbody>
 		</table>

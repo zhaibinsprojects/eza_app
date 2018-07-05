@@ -231,7 +231,7 @@ public class HomeLoanIndex {
 				return result;
 			}
 			
-			list=ezs_financial_service_loansMapper.selectLoanByUser(upi.getId(),(pageNow-1)*10,pageNow);
+			list=ezs_financial_service_loansMapper.selectLoanByUser(upi.getId(),(pageNow-1)*10,10);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("查询成功");
 			result.setSuccess(true);

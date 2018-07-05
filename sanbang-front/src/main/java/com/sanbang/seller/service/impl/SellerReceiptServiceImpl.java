@@ -139,6 +139,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMeta(page);
 			result.setSuccess(true);
+			result.setMsg("请求成功");
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -374,6 +375,7 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMeta(page);
 			result.setSuccess(true);
+			result.setMsg("请求成功");
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);

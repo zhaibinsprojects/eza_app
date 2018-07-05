@@ -15,6 +15,19 @@
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <script type="text/javascript" src="front/resource/js/loan/area.js"></script>
+
+<style type="text/css">
+	.hTwoFater_yzs h2{border-left: 5px solid #cdb57c;}
+	.hTwoFater_yzs h2 span{color: #333333;}
+.pj_section{margin-bottom:10px;    background-color:#fff;    border-bottom:1px solid #e5e5e5;    border-top:1px solid #e5e5e5;    height:auto;    width:100%;}
+.pj_sec_con{color:#333333;font-size:14px;line-height:1.5;margin:2%;}
+.pj_sec_liucheng{margin:7% 2% 7% 5%;}
+.pj_sec_liucheng_i{background-color:#fbf9f5;font-size:18px;color:#333333;line-height:2;text-align:center;position:relative;}
+.pj_sec_liucheng_i span{font-size:18px;color:#cdb57c;border:1px dashed #cdb57c;line-height:1.5;width:26px;border-radius:50%;position:absolute;left:-13px;top:3px;background-color:#fff;}
+.pj_bottom_btn{background:url('front/resource/img/pj_jr_btn.png') center center;text-align:center;font-size:16px;color:#433e2f;position:fixed;bottom:0;width:100%;line-height:3;font-weight: bold;}
+.pj_sec_lc_arrow{background:url('front/resource/img/pja_jr_01.png') center center no-repeat;background-size:60%;width:19px;height:30px;display:block;margin:5px auto;}
+</style>
+
 <script>
 		$(function(){
 			$(".ezsm-normal-tab2 ul li").click(function(){
@@ -24,8 +37,8 @@
 				$("#box_"+($(this).attr("data-value"))).css("display","block");
 			});
 			
-			$("#btn_appley").click(function(){
-				var userk ="";
+			$(".ezsm-normal-bottombtn").click(function(){
+				 var userk ="";
 				var u ="";
 				// APP点击
 				var u = navigator.userAgent; // 获取用户设备
@@ -41,7 +54,7 @@
 								 if(userk!=""){
 									 $(".userkey").val(data);
 									 $(".msg-bg").css("display","block");
-										$(".msg-box").css({"display":"block","height":"459px","margin-top":"40px"});
+										$(".msg-box").css({"display":"block","height":"350px","margin-top":"40px"});
 									 var con_str = "";
 										$.ajax({
 											type : "post",
@@ -89,7 +102,7 @@
 						 if(userk!=""){
 							 $(".userkey").val(userk);
 							 $(".msg-bg").css("display","block");
-								$(".msg-box").css({"display":"block","height":"459px","margin-top":"40px"});
+								$(".msg-box").css({"display":"block","height":"350px","margin-top":"40px"});
 							 var con_str = "";
 								$.ajax({
 									type : "post",
@@ -108,9 +121,9 @@
 					} catch (e) {
 					}
 				};
+
 				
-				
-				$(".msg-bg,.me-alert-close,#btn_cancel").click(function(){
+				$(".aicon_yzs").click(function(){
 					$(".msg-bg").css("display","none");
 					$(".msg-box").css("display","none");
 				});
@@ -123,20 +136,44 @@
 	<div class="msg-bg"></div>
 	<div class="msg-box"></div>
 	
-	<div class="ezsm-normal-tab2">
-		<ul>
-			<li data-value="1" class="ezsm-normal-tab2-sel"><div>货押融资</div></li>
-			<li data-value="2"><div>账期融资</div></li>
-		</ul>
-	</div>
-	<div class="ezsm-normal-content" id="box_1">
-		<img src="front/resource/images/file_001.jpg">
-	</div>
-	<div class="ezsm-normal-content" id="box_2" style="display:none;">
-		<img src="front/resource/images/file_002.jpg">
-	</div>
-	<div class="blank50"></div>
-	<div class="ezsm-normal-bottombtn" id="btn_appley">申请贷款</div>
+	<div class="pj_supply_service">
+  	<img src="front/resource/img/pj_supply_01.jpg" width="100% "/>
+  	<section class="pj_section">
+  		<div class="hTwoFater_yzs">
+      <h2><span>业务介绍</span></h2>
+    </div>
+          <div class="pj_sec_con">易再生网货押业务是企业用户以自有库存货物（原料或产成品），或即将购买的货物作为质押物，平台对其进行货值和风险进行评估，以约定价格进行贸易采购，入库共同监管，用户可以在约定的期限内，以约定的价格随时赎回。</div>
+  	</section>
+  	<section class="pj_section">
+  		<div class="hTwoFater_yzs">
+      <h2><span>申请流程</span></h2>
+    </div>
+    <div class="pj_sec_liucheng">
+    	<div class="pj_sec_liucheng_i">
+    		<span>1</span>填写申请资料
+    	</div>
+    	<i class="pj_sec_lc_arrow"></i>
+    	<div class="pj_sec_liucheng_i">
+    		<span>2</span>评估货值以及额度
+    	</div>
+    	<i class="pj_sec_lc_arrow"></i>
+    	<div class="pj_sec_liucheng_i">
+    		<span>3</span>签署业务协议
+    	</div>
+    	<i class="pj_sec_lc_arrow"></i>
+    	<div class="pj_sec_liucheng_i">
+    		<span>4</span> 货物质检入库
+    	</div>
+    	<i class="pj_sec_lc_arrow"></i>
+    	<div class="pj_sec_liucheng_i">
+    		<span>5</span>货物回购
+    	</div>
+    	</div>
+  	</section>
+  </div>
+   <div class="ezsm-normal-bottombtn">
+ 	立即申请
+ </div>
 	<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
 </body>
 

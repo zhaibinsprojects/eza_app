@@ -794,7 +794,7 @@ public class Tools {
      */
     public static int compare_date(String DATE1, String DATE2) {
     	DATE1.compareTo(DATE2);
-    	 DateFormat df = new SimpleDateFormat("yyyy-MM-dd ");
+    	 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         //DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             Date dt1 = df.parse(DATE1);

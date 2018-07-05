@@ -30,11 +30,26 @@ public class PayManageServiceImpl implements PayManageService{
 		
 		//交易记录
 		List<ezs_payinfo> payinfoRecordTotal = ezs_payinfoMapper.selectPayRecordTotal(map);
-		
-		Result result = new Result().success();
+		String s1 = "";
+		String s2 = "";
+		for(ezs_payinfo einfo:payinfoRecordTotal){
+			if(einfo.getOrder_type()==1){//采购单，为支出
+				 s1 = "已支出"+einfo.getAcount()+"笔共"+einfo.getAprice()+"元,";
+			}
+			if(einfo.getOrder_type()==2){
+				 s2 = "已收入"+einfo.getAcount()+"笔共"+einfo.getAprice()+"元";
+			}
+		}
+		if("".equals(s1)){
+			 s1 = "已支出0笔共0元,";
+		}
+		if("".equals(s2)){
+			s2 = "已收入0笔共0元";
+		}
+		Result result = Result.success();
 		map.clear();
 		map.put("recored",payinfoRecord);
-		map.put("recordTotal", payinfoRecordTotal);
+		map.put("recordTotal", s1+s2);
 		
 		result.setMeta(new Page(page.getPageNow(), page.getPageSize(), page.getTotalCount(), page.getTotalPageCount(), 0, true,
 				true, true, true));

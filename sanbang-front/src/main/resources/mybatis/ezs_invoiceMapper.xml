@@ -244,12 +244,12 @@
     LEFT JOIN ezs_purchase_orderform C ON A.order_no=C.order_no
     where A.user_id = #{userId}	
     and A.flag=#{type}
-    <if test="startTime!=null and startTime!=''">
-    		(unix_timestamp(A.express_time)&gt;=unix_timestamp(#{startTime}) 
-	</if>
-     <if test="endTime!=null and endTime!=''">
-    		 and unix_timestamp(A.express_time)&lt;unix_timestamp(#{endTime}))
-	</if>
+   <if test="startTime!=null and startTime!=''">
+    		and  A.express_time 	&gt;= #{startTime}
+		</if>
+    	 <if test="endTime!=null and endTime!=''">
+    	 	and  A.express_time 	&lt;= #{endTime}
+		</if>
 	<if test="order_no!=null and order_no!=''">
     		  and A.order_no  like CONCAT('%','${order_no}','%' )  
 	</if>
@@ -278,12 +278,12 @@
  		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' and flag=#{type}
 	</select>
  	<select id="getInvoiceCountForSeller" resultType="java.lang.Integer">
- 		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' and flag=#{type}
+ 		select count(*) from ezs_invoice A where  A.user_id = #{userId} and A.deleteStatus = '0' and A.flag=#{type}
  		<if test="startTime!=null and startTime!=''">
-    		(unix_timestamp(A.express_time)&gt;=unix_timestamp(#{startTime}) 
+    		and  A.express_time 	&gt;= #{startTime}
 		</if>
     	 <if test="endTime!=null and endTime!=''">
-    		 and unix_timestamp(A.express_time)&lt;unix_timestamp(#{endTime}))
+    	 	and  A.express_time 	&lt;= #{endTime}
 		</if>
 		<if test="order_no!=null and order_no!=''">
     		 and A.order_no  like CONCAT('%','${order_no}','%' )  

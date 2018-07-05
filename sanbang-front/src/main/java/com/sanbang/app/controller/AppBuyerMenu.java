@@ -459,7 +459,7 @@ public class AppBuyerMenu {
 	@RequestMapping("/getReceiptList")
 	@ResponseBody
 	public Object getReceiptList(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(name="currentPage",defaultValue="1")int currentPage){
+			@RequestParam(name="pageNow",defaultValue="1")int currentPage){
 		Result result=Result.failure();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){

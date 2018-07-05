@@ -166,6 +166,7 @@ public class SellerGoodsController {
 			
 			try {
 				GoodsVo  goods=goodsService.getgoodsinfo(id,upi.getId());
+				
 				map.put("goods", goods);
 				result.setObj(map);
 				result.setSuccess(true);
@@ -179,13 +180,13 @@ public class SellerGoodsController {
 			//		//颜色
 		map.put("EZS_COLOR", dictService.getDictByParentId(DictionaryCate.EZS_COLOR));
 			
-		//形态
+//		//形态
 		map.put("EZS_FORM", dictService.getDictByParentId(DictionaryCate.EZS_FORM));
 			
 		map.put("EZS_SUPPLY", dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY));
-		//地址
+//		//地址
 		//map.put("area", areaService.getAreaParentList());
-		//分类
+//		//分类
 		map.put("cata",cataService.getFirstList());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -382,7 +383,6 @@ public class SellerGoodsController {
 			
 			result = sellerGoodsService.updateGoodsInfoById(result, goodsId,upi, request,response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -570,7 +570,7 @@ public class SellerGoodsController {
 				return result;
 			}
 			
-			result = sellerGoodsService.pullOffShelvesById(result, goodsId);
+			result = sellerGoodsService.pullNoShelvesById(result, goodsId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

@@ -1058,7 +1058,7 @@ public class GoodsServiceImpl implements GoodsService{
 	public GoodsVo getgoodsinfo(long goodsid,long userid) {
 		GoodsVo  goodsVo =	ezs_goodsMapper.getgoodsinfo(goodsid,userid);
 		if(null!=goodsVo.getArea_id()){
-			goodsVo.setAreaName(getaddressinfo(goodsVo.getArea_id()));
+			goodsVo.setAreaName(getaddressinfo(goodsVo.getArea_id())+goodsVo.getAddess());
 		}
 		return goodsVo;
 	}

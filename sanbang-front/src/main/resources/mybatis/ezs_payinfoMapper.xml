@@ -13,6 +13,7 @@
     <result column="bill_id" property="bill_id" jdbcType="BIGINT" />
     <result column="paymentUser_id" property="paymentUser_id" jdbcType="BIGINT" />
     <result column="receUser_id" property="receUser_id" jdbcType="BIGINT" />
+    <result column="paystatus" property="paystatus" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, order_no, order_type, pay_mode, pay_no, price, bill_id, 
@@ -193,11 +194,42 @@
   		group by order_type
   </select>
   <select id="selectPayRecord" resultType="com.sanbang.bean.ezs_payinfo">
-  	select a.addTime,a.pay_mode,a.order_type,a.price,d.name from ezs_payinfo a   	
-  	left join ezs_orderform b on a.order_no = b.order_no
-	left join ezs_goodscart c on b.id = c.of_id
-  	left join ezs_goods d on c.goods_id = d.id 
-  	where a.deleteStatus = #{deleteStatus}
+  	SELECT
+		a.addTime,
+		a.pay_mode,
+		a.order_type,
+		a.price,
+		d. NAME,
+	
+	IF (
+		ISNULL(b.order_no),
+		E.order_no,
+		b.order_no
+	) order_no,
+	
+	IF (
+		 a.pay_mode=1,
+		1,
+		IF(ISNULL(F.responseCode),0,1)
+	) paystatus
+	
+	FROM
+		ezs_payinfo a
+	LEFT JOIN ezs_orderform b ON a.order_no = b.order_no
+	LEFT JOIN ezs_purchase_orderform E ON a.order_no = E.order_no
+	LEFT JOIN ezs_goodscart c ON b.id = c.of_id
+	LEFT JOIN ezs_goods d ON c.goods_id = d.id
+	LEFT JOIN xinyi_payinfo F ON  a.pay_no=F.pay_no
+	WHERE
+		NOT ISNULL(
+	
+			IF (
+				ISNULL(b.order_no),
+				E.order_no,
+				b.order_no
+			)
+		)
+	and  a.deleteStatus = #{deleteStatus}
   		<if test="starttime!=null and starttime!=''">
   			and a.addTime &gt;=#{starttime,jdbcType=VARCHAR}
   		</if>

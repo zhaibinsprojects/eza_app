@@ -90,7 +90,48 @@ public class AppGoodsController {
 		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}
-	
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询货品详情
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInfo")
+	@ResponseBody
+	public Result getGoodsInfo(HttpServletRequest request,Long id,Model model){
+		Result result=Result.failure();
+		try {
+			//用户校验begin
+			ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			if(null==upi){
+				result.setSuccess(false);
+				result.setMsg("用户未登录");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				return  result;
+			}
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,upi.getId());
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", goodsvo.getId());
+			map.put("areaName", goodsvo.getAreaName());
+			map.put("path", goodsvo.getMainphoto().get(0).getPath());
+			map.put("name", goodsvo.getName());
+			map.put("price", goodsvo.getPrice());
+			map.put("inventory", goodsvo.getInventory());
+			map.put("unit",goodsvo.getUtil()==null?"吨":goodsvo.getUtil().getName() );
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setObj(map);
+		} catch (Exception e) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误");
+			result.setSuccess(false);
+			e.printStackTrace();
+		}
+		return result;
+	}
 	/**
 	 * @author langjf
 	 * forapp 
@@ -1282,9 +1323,9 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/getGoodsPdf")
 	@ResponseBody
-	public Result getGoodsPdf(Long id) {
+	public Result getGoodsPdf(Long goodsId) {
 		Result result = Result.failure();
-		result=goodsService.getGoodsPdf(id);
+		result=goodsService.getGoodsPdf(goodsId);
 		return result;
 	}
 	/**
