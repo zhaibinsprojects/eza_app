@@ -184,7 +184,7 @@ public class AccountSafeController {
 		String secondHtml = "亲爱的会员:<br/>感谢您使用易再生网，您的邮箱验证成功!<br/><br/>易再生网<br/>"+currentDate+"<br/>";
 		Mail secondmail = new Mail(upi.getEzs_userinfo().getEmail(), "易再生网", secondHtml);
 		secondmail.setSubject("邮箱验证:" + upi.getName() == null ? ""
-				: upi.getName() + "关于修改邮箱-易再生网");
+				: upi.getName() + "关于邮箱验证-易再生网");
 		
 		//mailUtils.sendTest(secondmail);
 		mailUtils.send(secondmail);
