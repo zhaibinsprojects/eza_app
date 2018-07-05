@@ -155,10 +155,15 @@ public class MailUtils {
 	public boolean sendTest(final Mail mail) {
 		boolean success = false;
 		try {
-			String hostName = "smtp.163.com";
-			String mailName = "15737977212@163.com";
-			String mailPassword = "zhai19911213";
-			String mailAddress = "15737977212@163.com";
+			InputStream in = (InputStream) this.getClass().getClassLoader()
+					.getResourceAsStream("javamail.properties");
+			Properties props = new Properties();
+			props.load(in);
+			// 默认使用第一个邮箱，总共有六个邮箱供使用
+			String hostName = props.getProperty("hostName");
+			String mailName = props.getProperty("mailName");
+			String mailPassword = props.getProperty("mailPassword");
+			String mailAddress = props.getProperty("mailAddress");
 
 			Session session = MailUtils.createSession(hostName, mailName,
 					mailPassword);
