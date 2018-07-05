@@ -165,13 +165,20 @@
     <result column="num" property="num" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_HotArea_Column_List" >
-    COUNT(area_custo.cid) as num ,area_custo.pid as pid ,area_custo.pname as pname
+   COUNT(da.areaid) num,da.areaid pid,da.areaname pname 
   </sql>
   <select id="getHotArea" resultMap="BaseHotAreaResultMap">
-    SELECT 
-    <include refid="Base_HotArea_Column_List" />
-    FROM ( SELECT a1.id pid,a1.areaName pname,a3.id aid,a3.areaName aname,ec.id cid FROM ezs_area a1,ezs_area a2,ezs_area a3,ezs_customer ec WHERE a1.level = '0' AND a2.level = '1' AND a3.level = '2' AND a2.parent_id = a1.id AND a3.parent_id = a2.id AND (a1.id = ec.area_id OR a2.id = ec.area_id OR a3.id = ec.area_id )
- 	) area_custo GROUP BY area_custo.pid ORDER BY COUNT(area_custo.cid) DESC
+	select
+	<include refid="Base_HotArea_Column_List" />
+	from 
+	(
+	select a1.id areaid,a1.areaName areaname,a1.parent_id pid,a1.`level` level,ec.id cid,ec.companyName cname from ezs_customer ec,ezs_area a1 where ec.area_id = a1.id and a1.`level` = '0' 
+	UNION
+	select a2.id areaid,a2.areaName areaname,a2.parent_id pid,a2.`level` level,ec.id cid,ec.companyName cname from ezs_customer ec,ezs_area a1,ezs_area a2 where ec.area_id = a1.id and a1.`level` = '1' and a2.id = a1.parent_id
+	UNION
+	select a3.id areaid,a3.areaName areaname,a3.parent_id pid,a3.`level` level,ec.id cid,ec.companyName cname from ezs_customer ec,ezs_area a1,ezs_area a2,ezs_area a3 where ec.area_id = a1.id and a1.`level` = '2' and a1.parent_id = a2.id and a2.parent_id = a3.id
+	) da 
+	GROUP BY da.areaid ORDER BY num desc
   </select>
   <!-- 由子节点获取父节点 -->
   <select id="selectParentByChildKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >

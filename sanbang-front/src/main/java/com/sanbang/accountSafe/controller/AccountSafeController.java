@@ -1,5 +1,7 @@
 package com.sanbang.accountSafe.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -160,7 +162,7 @@ public class AccountSafeController {
 		log.info("给" + upi.getName() + "发送评标邮件>>>>>>>");
 		
 		if(Tools.isEmpty(upi.getEzs_userinfo().getEmail())){
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setErrorcode(HomeDictionaryCode.ERROR_EMAIL_IS_NULL);
 			result.setMsg("您还未填写邮箱！");
 			return result;
 		}
@@ -177,13 +179,15 @@ public class AccountSafeController {
 			result.setMsg("邮箱验证内容已发送过,请"+leftSecond+"s后再试");
 			return result;
 		}
-		
-		String  secondHtml="请点击以下链接进行操作";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+		String currentDate = sdf.format(new Date());
+		String secondHtml = "亲爱的会员:<br/>感谢您使用易再生网，您的邮箱验证成功!<br/><br/>易再生网<br/>"+currentDate+"<br/>";
 		Mail secondmail = new Mail(upi.getEzs_userinfo().getEmail(), "易再生网", secondHtml);
 		secondmail.setSubject("邮箱验证:" + upi.getName() == null ? ""
-				: upi.getName() + "关于修改邮箱-易再生网");
+				: upi.getName() + "关于邮箱验证-易再生网");
 		
-		mailUtils.sendTest(secondmail);
+		//mailUtils.sendTest(secondmail);
+		mailUtils.send(secondmail);
 		log.info("评标邮件内容>>>>>>>" + secondHtml);
 		result.setSuccess(true);
 		result.setMsg("发送成功");
