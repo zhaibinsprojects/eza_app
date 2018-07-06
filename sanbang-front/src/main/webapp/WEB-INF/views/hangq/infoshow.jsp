@@ -29,9 +29,11 @@
             value="${show.addTime}" />）</h3>
       <div class="textOverflow_yzs">
         <p class="111">${show.content}</p>
-         <p class="download" style="color:orange;">下载报告</p>
       </div>
     </div>
+    <div class="textOverflow_yzs">
+         <p class="download" name="${show.name}" style="color:orange;">下载报告</p>
+      </div>
   </section>
 </div>
 <div class="content_yzs">
@@ -55,6 +57,9 @@
     </div>
      </c:if>
   </section>
+  <form action="http://www.ezaisheng.com/contentDown.htm" method="post" id="theForm2">
+		       <input type="hidden" name="fileName"  id="fileName"  value="" />
+		    </form>	
 </div>
 </body>
 
@@ -65,6 +70,11 @@ $(document).ready(function(){
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
 	})
 	$(".MsoNormalTable").css("width","100%");
+	
+	$(".textOverflow_yzs").click(function(){
+		$("#fileName").val("fb1d4d45508145fd925165e5a62a1100_易再生废家电价格指数（第20期）.pdf");
+		$("#theForm2").submit();
+	});
 });
 </script>
 </html>

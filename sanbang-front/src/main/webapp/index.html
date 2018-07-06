@@ -55,9 +55,27 @@
 		}
 	</style>
 	<body>
-		<img src="resource/img/download_logo.png" class="downloadlog"/>
+		<img src="resource/img/download_logo.png" class="downloadlog" name=""/>
 		<div>
 			<a href="javascript:;"><img src="resource/img/download_btn.png" class="downloadBtn"/></a>
 		</div>
 	</body>
+	
+	<script>
+	$(document).ready(function(){
+		var u = navigator.userAgent; // 获取用户设备
+		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+		if (isIOS) {
+			$(".downloadBtn").attr("name","http://m.ezaisheng.com/front/app/version/download.htm");
+		} else {
+			$(".downloadBtn").attr("name","http://m.ezaisheng.com/front/app/version/download.htm");
+		}
+		
+		$(".downloadBtn").click(function(){
+			var url=$(".downloadBtn").attr("name");
+			window.location.href=url;
+		})
+	})
+	</script>
+	
 </html>
