@@ -138,6 +138,11 @@ public class UserProServiceImpl implements UserProService {
 	// 注册阶段标识
 	@Value("${consparam.cookie.registcard}")
 	private String registcarid;
+	
+	
+	@Value("${common.sendMessage.zhizhen}")
+	private String msgurl;
+	
 
 	/**
 	 * 更新缓存中的值
@@ -672,7 +677,7 @@ public class UserProServiceImpl implements UserProService {
 					// 短信内容
 					log.info("短信验证码,发送内容:" + content);
 					try {
-						SendMobileMessage.sendMsg(phone, content);
+						SendMobileMessage.sendMsg(phone, content,msgurl);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
 						Map<String, Object> map = new HashMap<>();
@@ -749,7 +754,7 @@ public class UserProServiceImpl implements UserProService {
 					String content = "您的短信验证码:" + code.toString() + ",请勿告诉他人,有效时间为" + mobilesendcodeexpir + "分钟!";
 					log.info("短信验证码,发送内容:" + content);
 					try {
-						SendMobileMessage.sendMsg(phone, content);
+						SendMobileMessage.sendMsg(phone, content,msgurl);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
 						result.setObj(new HashMap<>().put("mobile", phone));
@@ -820,7 +825,7 @@ public class UserProServiceImpl implements UserProService {
 					log.info("短信验证码,发送内容:" + content);
 
 					try {
-						SendMobileMessage.sendMsg(phone, content);
+						SendMobileMessage.sendMsg(phone, content,msgurl);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
 						result.setObj(new HashMap<>().put("mobile", phone));
@@ -1808,7 +1813,7 @@ public class UserProServiceImpl implements UserProService {
 					String content = "您的短信验证码:" + code.toString() + ",请勿告诉他人,有效时间为" + mobilesendcodeexpir + "分钟!";
 					log.info("短信验证码,发送内容:" + content);
 					try {
-						SendMobileMessage.sendMsg(phone, content);
+						SendMobileMessage.sendMsg(phone, content,msgurl);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
 						result.setObj(new HashMap<>().put("mobile", phone));

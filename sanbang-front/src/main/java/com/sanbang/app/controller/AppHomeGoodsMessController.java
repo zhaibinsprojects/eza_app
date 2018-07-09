@@ -523,7 +523,7 @@ public class AppHomeGoodsMessController {
 		try {
 			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 			Advices advice = new Advices();
-			advice.setPath("http://10.10.10.148/front/resource/indeximg/title001.jpg");
+			advice.setPath("http://m.ezaisheng.com/front/resource/indeximg/title001.jpg");
 			advice.setLink("");
 			advice.setpName("title001.jpg");
 			adviceList.add(advice);
@@ -582,15 +582,15 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<>();
 		Advices advices01 = new Advices();
 		Advices advices02 = new Advices();
-		advices01.setPath("http://10.10.10.148/front/resource/indeximg/首页-1_13.png");
+		advices01.setPath("http://m.ezaisheng.com/front/resource/indeximg/首页-1_13.png");
 		advices01.setpName("首页-1_13.png");
 		advices01.setLink("");
 		advices01.setContent("标题展示");
 		adviceList.add(advices01);
 		
-		advices01.setPath("http://10.10.10.148/front/resource/indeximg/advice001.jpg");
+		advices01.setPath("http://m.ezaisheng.com/front/resource/indeximg/advice001.jpg");
 		advices01.setpName("advice001.jpg");
-		advices01.setLink("http://10.10.10.148/front/resource/index.html");
+		advices01.setLink("http://m.ezaisheng.com/front/resource/index.html");
 		advices01.setContent("标题展示");
 		
 		adviceList.add(advices01);
