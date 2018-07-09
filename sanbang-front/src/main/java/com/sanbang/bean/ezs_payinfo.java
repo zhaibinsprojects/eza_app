@@ -28,8 +28,18 @@ public class ezs_payinfo {
     private Integer acount;
 	private BigDecimal aprice;
 	private String name;
+	private Integer order_status;
 	
+	private int paystatus;
+	
+	public Integer getOrder_status() {
+		 return order_status;
+	}
 
+	public void setOrder_status(Integer order_status) {
+		 this.order_status = order_status;
+	}
+	
 	public Integer getAcount() {
 		return acount;
 	}
@@ -141,4 +151,14 @@ public class ezs_payinfo {
     public void setReceUser_id(Long receUser_id) {
         this.receUser_id = receUser_id;
     }
+
+	public int getPaystatus() {
+		return paystatus;
+	}
+
+	public void setPaystatus(int paystatus) {
+		this.paystatus = paystatus;
+	}
+    
+    
 }

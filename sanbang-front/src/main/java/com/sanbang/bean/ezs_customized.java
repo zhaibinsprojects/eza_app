@@ -1,8 +1,10 @@
 package com.sanbang.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class ezs_customized {
+
     private Long id;
 
     private Date addTime;
@@ -60,6 +62,20 @@ public class ezs_customized {
     private Long goods_id;
 
     private Long purchaser_id;
+
+    private String proName;
+
+    private Long colour_id;
+
+    private Long shape_id;
+    
+    private String cname;
+    
+    private String catname;//品类
+    
+    private List<ezs_customized_record> recordlist;
+    
+    private List<ezs_customized_res>  reslist;
 
     public Long getId() {
         return id;
@@ -292,4 +308,61 @@ public class ezs_customized {
     public void setPurchaser_id(Long purchaser_id) {
         this.purchaser_id = purchaser_id;
     }
+
+	public String getCname() {
+		return cname;
+	}
+
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+
+	public List<ezs_customized_record> getRecordlist() {
+		return recordlist;
+	}
+
+	public void setRecordlist(List<ezs_customized_record> recordlist) {
+		this.recordlist = recordlist;
+	}
+
+	public List<ezs_customized_res> getReslist() {
+		return reslist;
+	}
+
+	public void setReslist(List<ezs_customized_res> reslist) {
+		this.reslist = reslist;
+	}
+
+	public String getCatname() {
+		return catname;
+	}
+
+	public void setCatname(String catname) {
+		this.catname = catname;
+	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+
+	public Long getColour_id() {
+		return colour_id;
+	}
+
+	public void setColour_id(Long colour_id) {
+		this.colour_id = colour_id;
+	}
+
+	public Long getShape_id() {
+		return shape_id;
+	}
+
+	public void setShape_id(Long shape_id) {
+		this.shape_id = shape_id;
+	}
+    
 }

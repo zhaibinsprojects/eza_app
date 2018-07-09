@@ -18,56 +18,21 @@ public class GoodsInvoiceServiceImpl implements GoodsInvoiceService {
 	@Autowired
 	private ezs_invoiceMapper invoiceMapper; 
 
-	@Override
-	public Map<String, Object> getInvoiceByUser(Long userId) {
-		// TODO Auto-generated method stub
-		Map<String, Object> mmp = new HashMap<>();
-		List<InvoiceInfo> iList = null;
-		try {
-			iList = this.invoiceMapper.selectInvoiceByUser(userId);
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Obj", iList);
-			mmp.put("Msg", "查询成功");
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Msg", "参数传递异常");
-		}
-		return mmp;
-	}
-
-	@Override
-	public Map<String, Object> getInvoiceByKey(Long id) {
-		// TODO Auto-generated method stub
-		InvoiceInfo invoice = null;
-		Map<String, Object> mmp = new HashMap<>();
-		try {
-			invoice = this.invoiceMapper.selectByPrimaryKeyTwo(id);
-			mmp.put("Obj", invoice);
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "查询成功");
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			mmp.put("Msg", "参数传递异常");
-		}
-		return mmp;
-	}
 
 	@Override
 	public Map<String, Object> changeInvoiceStateById(Long id) {
-		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_invoice invoice = null;
+		if(id<=(long)0){
+			mmp.put("Msg", "参数传递异常,传入为"+id);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		}
 		try {
 			invoice = this.invoiceMapper.selectByPrimaryKey(id);
 			invoice.setInvoice_status(3);
 			this.invoiceMapper.updateByPrimaryKey(invoice);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递异常");

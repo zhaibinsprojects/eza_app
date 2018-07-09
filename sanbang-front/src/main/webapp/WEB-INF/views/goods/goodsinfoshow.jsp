@@ -62,12 +62,6 @@
 	<div class="msg-bg"></div>
 	<div class="msg-box"></div>
 	
-	<div class="ezsm-normal-top">
-		<div onclick="javascript:history.go(-1);"></div>
-		<div>货品详情</div>
-		<div></div>
-	</div>
-	
 	<div class="ezsm-shopdetail-picbox">
 		<div class="ezsm-shopdetail-picbox-main-visual">
 			<div class="ezsm-shopdetail-picbox-flicking-con">
@@ -89,7 +83,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="ezsm-shopdetail-tit">${good.name}<div class="shiyang">试样</div></div>
+	<div class="ezsm-shopdetail-tit">${good.name}<!-- <div class="shiyang">试样</div> --></div>
 	<div class="ezsm-shopdetail-param">
 		<table cellspacing="0">
 			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.price}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>

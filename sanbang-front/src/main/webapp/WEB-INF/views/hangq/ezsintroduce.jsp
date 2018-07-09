@@ -31,50 +31,22 @@
         <p class="111">${show.content}</p>
       </div>
     </div>
-    <div class="textOverflow_yzs">
-         <p class="download" name="${show.name}" style="color:orange;">下载报告</p>
-      </div>
   </section>
-</div>
-<div class="content_yzs">
-      <!--研究报告--->
-  <section class="secsty_yzs">
-     <c:if test="${not empty top}">
-     <div class="text_yzs" id="${top.id}">
-      <h3>上一篇：${top.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
-            value="${top.addTime}" />）</h3>
-      <div class="textOverflow_yzs">
-      </div>
-    </div>
-     </c:if>
-     <c:if test="${not empty button }">
-    <div class="text_yzs" id="${button.id}">
-      <h3>下一篇：${button.name}
-      		（<fmt:formatDate pattern="yyyy-MM-dd"  value="${button.addTime}" />）
-            </h3>
-      <div class="textOverflow_yzs">
-      </div>
-    </div>
-     </c:if>
-  </section>
-  <form action="http://www.ezaisheng.com/contentDown.htm" method="post" id="theForm2">
-		       <input type="hidden" name="fileName"  id="fileName"  value="" />
-		    </form>	
 </div>
 </body>
 
 <script type="text/javascript">
 var baseurl="${serurl}";
 $(document).ready(function(){
-	$(".text_yzs").click(function(){
-		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
-	})
 	$(".MsoNormalTable").css("width","100%");
-	
-	$(".textOverflow_yzs").click(function(){
-		$("#fileName").val("fb1d4d45508145fd925165e5a62a1100_易再生废家电价格指数（第20期）.pdf");
-		$("#theForm2").submit();
-	});
 });
+
+$(document).ready(function(){
+	var imghref=$(".MsoNormal").find("img").eq(0).attr("src");
+	if(imghref!="undefind"&&imghref!=""){
+		$(".MsoNormal").find("img").eq(0).attr("src",'http://www.ezaisheng.com/'+imghref);
+		$(".MsoNormal").find("img").eq(0).css("width","100%");
+	}
+})
 </script>
 </html>

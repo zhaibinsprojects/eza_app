@@ -119,4 +119,38 @@ public class HomeH5PriceConditionController {
 		
 		return view+"infoshow";
 	}
+	
+	
+	/**
+	 * 关于我们
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/ezsStatement")
+	public String theStatement(@RequestParam(name="id",required=true,defaultValue="46")long id,
+			Model model){
+		ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		ezs_column column=columnMapper.selectByPrimaryKey(show.getEc_id());
+		model.addAttribute("show", show);
+		model.addAttribute("title", column.getName());
+		return view+"ezsStatement";
+	}
+	
+	
+	/**
+	 * 协议说明
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/ezsintroduce")
+	public String ezsintroduce(@RequestParam(name="id",required=true,defaultValue="44")long id,
+			Model model){
+		ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		ezs_column column=columnMapper.selectByPrimaryKey(show.getEc_id());
+		model.addAttribute("show", show);
+		model.addAttribute("title", column.getName());
+		return view+"ezsintroduce";
+	}
 }

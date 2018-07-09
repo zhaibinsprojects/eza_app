@@ -571,7 +571,7 @@ public class APPSellerGoodsController {
 				return result;
 			}
 			
-			result = sellerGoodsService.pullOffShelvesById(result, goodsId);
+			result = sellerGoodsService.pullNoShelvesById(result, goodsId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

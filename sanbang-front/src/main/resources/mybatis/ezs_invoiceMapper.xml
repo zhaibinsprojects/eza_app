@@ -208,7 +208,7 @@
   
     
 	<!-- 通过userId查询开票信息 -->
-	<select id="goodsInvoiceCountPage" resultType="ezs_invoice"  parameterType="com.sanbang.utils.Page">
+	<select id="getInvoiceForBuyer" resultType="ezs_invoice"  parameterType="com.sanbang.utils.Page">
    SELECT
 	A.*,
 	IF (
@@ -226,76 +226,67 @@
     order by finish_time 
     desc LIMIT #{page.startPos},#{page.pageSize}					
 	</select>
-  
-	<!-- 根据订单编号和签订时间查询开票记录 -->
-	<select id="selectInvoiceByIdAndDate" resultType="ezs_invoice"  >
-    	select * from 	ezs_invoice invoice
-		<where>
-			<if test="orderno != null" >
-	        	order_no = #{orderno,jdbcType=VARCHAR},
-			</if>
-			<if test="startTime != null and endTime != null" >
-	        	and (unix_timestamp(invoice.addTime)&gt;=unix_timestamp(#{startTime}) and unix_timestamp(invoice.addTime)&lt;unix_timestamp(#{endTime}))
-			</if>
-		</where>
-	</select>
-	 
-	<!-- 通过id查询开票信息 -->
-	<select id="selectInvoiceInfoById"  resultMap="infoResultMap" >
-    	select ein.id, ein.express_time,ein.express_name,ein.express_no,
-    	ein.invoice_status, eac.path
-    	from 	ezs_invoice ein,ezs_accessory eac where ein.user_id = eac.user_id
-    	and 	ein.id={invoiceId}				
-	</select>
+
   
 	<!-- 根据订单签订时间查询合同 -->
-	<select id="selectInvoiceByDate" parameterType="com.sanbang.utils.Page" resultType="ezs_invoice"  >
-    	select 
-		<include refid="Base_Column_List" /> 
-    	from 	ezs_invoice invoice where
-	     (unix_timestamp(invoice.express_time)&gt;=unix_timestamp(#{startTime}) 
-	     and unix_timestamp(invoice.express_time)&lt;unix_timestamp(#{endTime}))
-	     LIMIT #{page.startPos},#{page.pageSize}
+	<select id="getInvoiceBySeller" parameterType="com.sanbang.utils.Page" resultType="ezs_invoice"  >
+		SELECT
+	A.*,
+	IF (
+		ISNULL(B.total_price),
+		C.total_price,
+		B.total_price
+	) total_price,
+	  DATE_FORMAT( A.express_time,   '%Y-%m-%d')  express_timestr,
+	  DATE_FORMAT( A.finish_time,   '%Y-%m-%d')  finish_timestr,
+   DATE_FORMAT(A.addTime, '%Y-%m-%d') addTimestr
+    from ezs_invoice A LEFT JOIN ezs_orderform B ON  A.order_no=B.order_no
+    LEFT JOIN ezs_purchase_orderform C ON A.order_no=C.order_no
+    where A.user_id = #{userId}	
+    and A.flag=#{type}
+   <if test="startTime!=null and startTime!=''">
+    		and  A.express_time 	&gt;= #{startTime}
+		</if>
+    	 <if test="endTime!=null and endTime!=''">
+    	 	and  A.express_time 	&lt;= #{endTime}
+		</if>
+	<if test="order_no!=null and order_no!=''">
+    		  and A.order_no  like CONCAT('%','${order_no}','%' )  
+	</if>
+    order by finish_time 
+    desc LIMIT #{page.startPos},#{page.pageSize}	
 	</select>
 	<!-- 根据订单编号查询票据详情-->
-	<select id="selectInvoiceByOrderNo" resultType="ezs_invoice"> 
-   		select 
-		<include refid="Base_Column_List" /> 
-   		from ezs_invoice where order_no = #{orderno}
+	<select id="selectInvoiceByOrderNo" resultMap="infoResultMap"> 
+   		   SELECT
+		A.*,
+		IF (
+			ISNULL(B.total_price),
+			C.total_price,
+			B.total_price
+		) total_price,
+		  DATE_FORMAT( A.express_time,   '%Y-%m-%d')  express_timestr,
+		  DATE_FORMAT( A.finish_time,   '%Y-%m-%d')  finish_timestr,
+	   DATE_FORMAT(A.addTime, '%Y-%m-%d') addTimestr
+	    from ezs_invoice A LEFT JOIN ezs_orderform B ON  A.order_no=B.order_no
+    LEFT JOIN ezs_purchase_orderform C ON A.order_no=C.order_no 
+   		where A.order_no = #{orderno}
 	</select>
-	<!-- 根据订单编号查询合同详细信息 -->
-	<select id="selectInvoiceInfoByOrderNo" resultType="ezs_invoice"> 
-   		select 
-		<include refid="Base_Column_List" /> 
-   		from ezs_invoice where order_no = #{orderno}
-	</select>
-	<!-- 查询票据信息包含图 -->
-	<resultMap id="invoiceMsgResultMap" type="com.sanbang.vo.InvoiceInfo" >
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-		<result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-		<result column="express_name" property="express_name" jdbcType="VARCHAR" />
-		<result column="express_no" property="express_no" jdbcType="VARCHAR" />
-		<result column="express_time" property="express_time" jdbcType="TIMESTAMP" />
-		<result column="invoice_status" property="invoice_status" jdbcType="INTEGER" />
-		<result column="receipt_id" property="receipt_id" jdbcType="BIGINT" />
-		<result column="user_id" property="user_id" jdbcType="BIGINT" />
-		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
-		<result column="path" property="path" jdbcType="VARCHAR"/>
-		<result column="pname" property="pname" jdbcType="VARCHAR"/>
-		<result column="pext" property="pext"  jdbcType="VARCHAR"/>
-	</resultMap>
-	<select id="selectInvoiceByUser" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long">
-   	select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
-   	where e.user_id = #{ userId } and e.deleteStatus = '0' ORDER BY e.addtime desc
-	</select>
-	<select id="selectByPrimaryKeyTwo" resultMap="invoiceMsgResultMap" parameterType="java.lang.Long" >
-    select e.*,a.path,a.name pname,a.ext pext from ezs_invoice e LEFT JOIN ezs_accessory a on e.receipt_id = a.id 
-   	where e.id = #{ id } and e.deleteStatus = '0' ORDER BY e.addtime desc
-	</select>
+	
 	<!-- 根据uesrId查询invoice数量 -->
-	<select id="getInvoiceCountByUserId" resultType="java.lang.Integer">
+	<select id="getInvoiceCountForBuyer" resultType="java.lang.Integer">
  		select count(*) from ezs_invoice where user_id = #{userId} and deleteStatus = '0' and flag=#{type}
 	</select>
- 	
+ 	<select id="getInvoiceCountForSeller" resultType="java.lang.Integer">
+ 		select count(*) from ezs_invoice A where  A.user_id = #{userId} and A.deleteStatus = '0' and A.flag=#{type}
+ 		<if test="startTime!=null and startTime!=''">
+    		and  A.express_time 	&gt;= #{startTime}
+		</if>
+    	 <if test="endTime!=null and endTime!=''">
+    	 	and  A.express_time 	&lt;= #{endTime}
+		</if>
+		<if test="order_no!=null and order_no!=''">
+    		 and A.order_no  like CONCAT('%','${order_no}','%' )  
+		</if>
+	</select>
 </mapper>

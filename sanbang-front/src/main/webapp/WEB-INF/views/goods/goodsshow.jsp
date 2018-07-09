@@ -6,7 +6,6 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
-<!-- <base href="http://10.10.10.98/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -16,7 +15,6 @@
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <script type="text/javascript" src="front/resource/js/goods/goods.js"></script>
-   
 <script type="text/javascript">
 		$(function(){
 			$(".ezsm-normal-top-nav li").click(function(){
@@ -86,7 +84,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="ezsm-shopdetail-tit">${good.name}<div class="shiyang">试样</div></div>
+	<div class="ezsm-shopdetail-tit">${good.name}<!-- <div class="shiyang">试样</div> --></div>
 	<div class="ezsm-shopdetail-param">
 		<table cellspacing="0">
 			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.price}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>

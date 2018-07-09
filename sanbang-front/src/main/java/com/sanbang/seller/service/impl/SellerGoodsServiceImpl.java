@@ -506,10 +506,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			if (aa <= 0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
-				result.setMsg("上架操作异常");
+				result.setMsg("下架操作异常");
 			} else {
 				result.setSuccess(true);
-				result.setMsg("上架成功");
+				result.setMsg("下架成功");
 			}
 		} catch (Exception e) {
 			log.info("商品下架操作出错" + e.toString());
@@ -526,7 +526,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		ezs_goods_audit_process goodsAudit = goodsAuditProcessMapper.selectByGoodsId(goodsId); 
 		Integer status = goodsAudit.getStatus();
 		long mainAccid = 0 ;
-		if ( status != 544 ) {
+		if ( status != 544 &&status != 547) {
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setMsg("该商品正在等在审核或已经通过审核， 不能修改属性");
@@ -632,6 +632,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setPurpose(purpose);
 				goods.setUtil_id((long) 23);
 				goods.setUser_id(upi.getId());
+				goods.setStatus(0);
 				int aa = goodsMapper.updateByPrimaryKeySelective(goods);
 				
 				if (aa > 0) {
@@ -711,11 +712,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit.setSalePrice(new BigDecimal(0));
 				goodsAudit.setStatus(540);
 				goodsAudit.setSupplyPrice(goods.getPrice());
+				goodsAudit.setPercent(0);
 				goodsAuditProcessMapper.insertSelective(goodsAudit);
 				try {
-					goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
-					result.setSuccess(true);
-					result.setMsg("提交审核成功，请静待结果");
 				} catch (Exception e) {
 					e.printStackTrace();
 					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -723,9 +722,25 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 					result.setMsg("系统错误");
 				}
 			}else{
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-				result.setSuccess(false);
-				result.setMsg("系统错误");
+				ezs_goods_audit_process goodsAudit1 = new ezs_goods_audit_process();
+				goodsAudit1.setAddTime(new Date());
+				goodsAudit1.setDeleteStatus(false);
+				goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
+				goodsAudit1.setPriceStatus(600);
+				goodsAudit1.setStatus(540);
+				goodsAudit1.setId(goodsAudit.getId());
+				BigDecimal oldprice=goodsAudit.getSupplyPrice();
+				BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
+				int Percent=goodsAudit.getPercent();
+				if(Percent>0){
+					BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+					BigDecimal Percent1=bb.add(new BigDecimal("1"));
+					SupplyPrice=oldprice.multiply(Percent1);
+				}
+				goodsAudit1.setSalePrice(SupplyPrice);
+				goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit1);
+				result.setSuccess(true);
+				result.setMsg("提交审核成功，请静待结果");
 			}
 		}else{
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -771,20 +786,32 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
 		goodsMapper.updateByPrimaryKeySelective(goods);
+		
+
+		ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
+		if (null != goodsAudit) {
+			//向ezs_goods_audit_process表中查入数据
+			ezs_goods_audit_process  goodsAudit1 = new ezs_goods_audit_process();
+			goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
+			BigDecimal oldprice=goodsAudit.getSupplyPrice();
+			BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
+			int Percent=goodsAudit.getPercent();
+			if(Percent>0){
+				BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+				BigDecimal Percent1=bb.add(new BigDecimal("1"));
+				SupplyPrice=oldprice.multiply(Percent1);
+			}
+			goodsAudit1.setSupplyPrice(new BigDecimal(price));
+			goodsAudit1.setSalePrice(SupplyPrice);
+			goodsAudit1.setId(goodsAudit.getId());
+			goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
+			}
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("货品更新成功");
 		return result;
 	}
 
-	public static void main(String[] args) {
-		String goods_no = "GE" + classid2str(Long.valueOf(1));
-        Long goodid =(long) 1;
-        goods_no += goodsid2str(goodid);
-        // 奇校验
-        goods_no = new EvenOddCheck().toOdd(goods_no);
-        System.out.println(goods_no);
-	}
 
 	@Override
 	public Result pullNoShelvesById(Result result, long goodsId) {
@@ -808,5 +835,18 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setMsg("系统错误！");
 		}
 		return result;
+	}
+	
+	
+	public static void main(String[] args) {
+		BigDecimal oldprice=new BigDecimal("120");
+		BigDecimal SupplyPrice=new BigDecimal("120");
+		int Percent=10;
+		if(Percent>0){
+			BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+			BigDecimal Percent1=bb.add(new BigDecimal("1"));
+			SupplyPrice=oldprice.multiply(Percent1);
+		}
+		System.out.println(SupplyPrice);
 	}
 }

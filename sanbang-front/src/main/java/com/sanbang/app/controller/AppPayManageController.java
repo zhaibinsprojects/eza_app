@@ -1,4 +1,4 @@
-package com.sanbang.paymanage.controller;
+package com.sanbang.app.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +20,8 @@ import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
-@RequestMapping("/paymanager")
-public class PayManageController {
+@RequestMapping("/app/paymanager")
+public class AppPayManageController {
 	
 	@Autowired
 	private PayManageService payManageService;
@@ -41,8 +41,8 @@ public class PayManageController {
 			@RequestParam(value="order_type",required=false)Integer order_type,
 			@RequestParam(value="pay_mode",required=false)Integer pay_mode,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow,HttpServletRequest request){
-		Result result = new Result().failure();
-		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		Result result = Result.failure();
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");

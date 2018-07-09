@@ -2,7 +2,9 @@ package com.sanbang.index.controller;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.area.service.AreaService;
@@ -81,13 +84,13 @@ public class HomeLoanIndex {
 		result.setMsg("提交失败");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		try {
-			/*ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 			if (upi == null) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				result.setMsg("用户未登录");
 				result.setSuccess(false);
 				return result;
-			}*/
+			}
 			result=sbmloanValidate(companyName, contacts, telNum, email, address, applyType, area_id, mainBusiness, loanAmount);
 			if(!result.getSuccess()){
 				return result;
@@ -99,7 +102,7 @@ public class HomeLoanIndex {
 			financialServiceLoans.setTelNum(telNum);
 			financialServiceLoans.setArea_id(area_id);
 			financialServiceLoans.setAddress(address);
-			financialServiceLoans.setUser_id((long)1);
+			financialServiceLoans.setUser_id(upi.getId());
 			financialServiceLoans.setAddTime(new Date());
 			financialServiceLoans.setEmail(email);
 			financialServiceLoans.setStatus(1);
@@ -202,6 +205,81 @@ public class HomeLoanIndex {
 			}
 		}
 		result.setSuccess(true);
+		return result;
+	}
+	
+	
+	/**
+	 * 供应链金融列表 app
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getloanslist")
+	@ResponseBody
+	public Result getloanslist(HttpServletRequest request,@RequestParam(name="pageNow" ,defaultValue="1")int pageNow) {
+		Result result = Result.failure();
+		result.setMsg("提交失败");
+		List<ezs_financial_service_loans> list=new ArrayList<>();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				result.setSuccess(false);
+				return result;
+			}
+			
+			list=ezs_financial_service_loansMapper.selectLoanByUser(upi.getId(),(pageNow-1)*10,10);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setMsg("查询成功");
+			result.setSuccess(true);
+			result.setObj(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误");
+			result.setSuccess(false);
+			result.setObj(list);
+		}
+		return result;
+	}
+	
+	/**
+	 * 供应链金融列表 h5
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getloanslistforH5")
+	@ResponseBody
+	public Result getloanslistforH5(HttpServletRequest request,@RequestParam(name="pageNow" ,defaultValue="1")int pageNow) {
+		Result result = Result.failure();
+		result.setMsg("提交失败");
+		List<ezs_financial_service_loans> list=new ArrayList<>();
+		try {
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				result.setSuccess(false);
+				return result;
+			}
+			
+			list=ezs_financial_service_loansMapper.selectLoanByUser(upi.getId(),(pageNow-1)*10,10);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setMsg("查询成功");
+			result.setSuccess(true);
+			result.setObj(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误");
+			result.setSuccess(false);
+			result.setObj(list);
+		}
 		return result;
 	}
 }

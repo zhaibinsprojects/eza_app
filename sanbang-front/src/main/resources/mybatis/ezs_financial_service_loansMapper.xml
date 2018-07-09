@@ -232,4 +232,18 @@
       area_id = #{area_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="selectLoanByUser" resultMap="BaseResultMap" >
+   SELECT
+	A.addTime,
+	A.companyName,
+	A.contacts,
+	A.telNum
+	,
+   A.`status`
+	FROM
+	ezs_financial_service_loans A
+    where A.user_id = #{user_id,jdbcType=BIGINT}  limit #{pageCount},#{pageNow}
+  </select>
+  
 </mapper>

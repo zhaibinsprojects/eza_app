@@ -14,14 +14,35 @@ $(function() {
 		setupWebViewJavascriptBridge(function(bridge) {
        		var data = {};
        		var str = JSON.stringify(data);
+			/*bridge.registerHandler('test', function(data, responseCallback) {  
+	            var responseData = {'Javascript Says':'Right back atcha!' }  
+	            responseCallback(responseData)  
+	        }) ;*/
+			// 查看购物车桥接
+			/*iostocart();
+			// 立即购买
+			iostobuy();
+			// 预约
+			iostoyuyue();
+			// 质检报告
+			iosshowpdf();
+			// 未登录
+			//iosnologin();
+			// 电话
+			iostophone();
+			// 试样
+			iosshiyang();*/
 			 try {
 				 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
 					 userk= data;
+					 //layer.open({content : userk,skin : 'msg',time : 20});
 					 if(userk!=""){
 						 $(".userkey").val(data);
 						 iscollcc(goodsid, data);
 					 }
 					});
+				
+				 
 			} catch (e) {
 			}
 			
@@ -99,6 +120,11 @@ $(function() {
 			async : false,
 			success : function(data) {
 				if (data.success) {
+					layer.open({
+						content : data.msg,
+						skin : 'msg',
+						time : 2
+					});
 					cartsuccess();
 				} else {
 					layer.open({content : data.msg,skin : 'msg',time : 2});

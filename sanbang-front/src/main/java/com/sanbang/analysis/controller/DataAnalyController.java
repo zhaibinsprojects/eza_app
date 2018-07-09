@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.analysis.service.DataAnalyService;
@@ -32,7 +33,7 @@ public class DataAnalyController {
 	 */
 	@RequestMapping("/analysis")
 	@ResponseBody
-	public Result getDataAnalyCharts(String searchType,HttpServletRequest request){
+	public Result getDataAnalyCharts(@RequestParam(name="month")String searchType,HttpServletRequest request){
 			Result result = new Result().success();
 			List<ezs_goodscart> goodscartList = null;
 		if("day".equals(searchType)){

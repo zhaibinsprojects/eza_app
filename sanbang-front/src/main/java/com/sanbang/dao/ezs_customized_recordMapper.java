@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import com.sanbang.bean.ezs_customized_record;
 
 public interface ezs_customized_recordMapper {
@@ -14,4 +16,6 @@ public interface ezs_customized_recordMapper {
     int updateByPrimaryKeySelective(ezs_customized_record record);
 
     int updateByPrimaryKey(ezs_customized_record record);
+    
+    List<ezs_customized_record> selectByCustomizedId(Long customized_id);
 }

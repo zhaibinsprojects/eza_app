@@ -1,5 +1,81 @@
-<html>
-<body>
-<h2>Hello World!</h2>
-</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>易再生</title>
+		<script type="text/javascript" src="resource/script/jquery-1.7.1.min.js"></script>    
+  </head>
+	<style type="text/css">
+		html,body{
+			margin: 0;
+			padding: 0;
+			background-color: #fff;
+			width: 100%;
+			min-height: 100%;
+			text-align: center;
+		}
+		html{
+			background: url(resource/img/download_bg2.png) transparent left bottom no-repeat;
+			background-size: 70%;
+		}		
+		body{
+			background: url(resource/img/download_bg1.png) transparent right top no-repeat;
+			background-size: 70%;
+		}
+		.downloadlog{max-width: 700px;width: 100%;margin: 70px auto 80px}
+		.downloadBtn{max-width: 650px;width: 75%;}
+		/*手机*/
+		@media screen and (max-width: 767px) {
+			
+		}
+		/*平板*/
+		@media screen and (min-width: 767px) {
+			html,body{background-size: 50%;}
+			.downloadlog{margin: 40px auto 40px}
+		}
+		/*中等屏幕*/
+		@media screen and (min-width: 992px) {
+			html,body{background-size: 50%;}
+			.downloadlog{margin: 40px auto 40px}
+		}
+		/*大屏幕*/
+		@media screen and (min-width: 1200px) {
+			html,body{background-size: 50%;}
+			.downloadlog{margin: 50px auto 50px}
+		}
+		/* iphone x */
+		@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3){ 
+			.downloadlog{margin: 100px auto 120px}
+			}
+			/*宽屏*/
+		@media screen and (min-width: 768px) and (max-height:900px) {
+			html,body{background-size: 50%;}
+			.downloadlog{width: 40%;margin: 40px auto 40px}
+			.downloadBtn{width:30%;}
+		}
+	</style>
+	<body>
+		<img src="resource/img/download_logo.png" class="downloadlog" name=""/>
+		<div>
+			<a href="javascript:;"><img src="resource/img/download_btn.png" class="downloadBtn"/></a>
+		</div>
+	</body>
+	
+	<script>
+	$(document).ready(function(){
+		var u = navigator.userAgent; // 获取用户设备
+		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+		if (isIOS) {
+			$(".downloadBtn").attr("name","http://m.ezaisheng.com/front/app/version/download.htm");
+		} else {
+			$(".downloadBtn").attr("name","http://m.ezaisheng.com/front/app/version/download.htm");
+		}
+		
+		$(".downloadBtn").click(function(){
+			var url=$(".downloadBtn").attr("name");
+			window.location.href=url;
+		})
+	})
+	</script>
+	
 </html>

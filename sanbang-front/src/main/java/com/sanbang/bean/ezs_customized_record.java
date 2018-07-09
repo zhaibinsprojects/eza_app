@@ -18,6 +18,8 @@ public class ezs_customized_record {
     private Long operater_id;
 
     private Long purchaser_id;
+    
+    private ezs_user ezs_user;
 
     public Long getId() {
         return id;
@@ -82,4 +84,13 @@ public class ezs_customized_record {
     public void setPurchaser_id(Long purchaser_id) {
         this.purchaser_id = purchaser_id;
     }
+
+	public ezs_user getEzs_user() {
+		return ezs_user;
+	}
+
+	public void setEzs_user(ezs_user ezs_user) {
+		this.ezs_user = ezs_user;
+	}
+    
 }

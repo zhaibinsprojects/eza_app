@@ -21,10 +21,6 @@ import com.sanbang.vo.DictionaryCode;
 public class PurchaseServiceImpl implements PurchaseService {
 	@Autowired
 	private ezs_customizedMapper customizedMapper;
-	@Autowired
-	private ezs_customized_recordMapper customizedRecordMapper;
-	@Autowired
-	private ezs_customized_resMapper customizedResMapper;
 	
 	@Override
 	public Map<String, Object> getPurchaseGoodsByUser(HttpServletRequest request,Long userId) {
@@ -34,15 +30,17 @@ public class PurchaseServiceImpl implements PurchaseService {
 		
 		String pageNow=request.getParameter("pageNow");
 		int pageNo=1;
-		if(Tools.isEmpty(pageNow)){
+		if(!Tools.isEmpty(pageNow)){
 			pageNo=Integer.valueOf(pageNow);
 			if(pageNo<=1){
 				pageNo=1;
 			}
+		}else{
+			pageNo=1;
 		}
 		
 		try {
-			elist = this.customizedMapper.getPurchaseByUserId(userId,(pageNo-1)*10,10);
+			elist = this.customizedMapper.getPurchaseByUserId(userId,Long.valueOf((pageNo-1)*10),10);
 			mmp.put("Obj", elist);
 			mmp.put("Msg", "响应成功");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -61,12 +59,14 @@ public class PurchaseServiceImpl implements PurchaseService {
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_customized customized = null;
 		try{
-			customized = this.customizedMapper.selectByPrimaryKey(Id);
+			customized = this.customizedMapper.getPurchaseById(Id);
 			mmp.put("Obj", customized);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "响应成功");
 		}catch(Exception e){
 			e.printStackTrace();
+			customized=new ezs_customized();
+			mmp.put("Obj", customized);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "响应失败");
 		}
