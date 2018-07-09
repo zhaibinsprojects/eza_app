@@ -556,7 +556,7 @@ public class HomePriceConditionController {
 	@ResponseBody
 	public Object getHangqing(
 			@RequestParam(name="yanjiucatid",defaultValue="17") int yanjiucatid,
-			@RequestParam(name="yanjiucatid",defaultValue="12") int jiagecatid,
+			@RequestParam(name="jiagecatid",defaultValue="12") int jiagecatid,
 			@RequestParam(name="currentPage",defaultValue="1") int pageno,
 			@RequestParam(name="kindId",defaultValue="1") String kindId,
 			@RequestParam(name="areaId",defaultValue="4523541") String areaId,

@@ -14,7 +14,6 @@
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
-<<<<<<< HEAD
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
    
 <script type="text/javascript" src="front/resource/js/newAddjs/ezsmnewAdd.js"></script>
