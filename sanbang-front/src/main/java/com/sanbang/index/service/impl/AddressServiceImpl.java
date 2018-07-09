@@ -58,21 +58,17 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public Map<String, Object> getProvince() {
 		Map<String,Object> mmp = new HashMap<String, Object>();
-		List<ezs_area> elist = new ArrayList<>();
+		List<ezs_area> elist = null;
 		//elist = (List<ezs_area>) RedisUtils.getList("ProvinceMess");
-		if(elist==null){
-			elist = this.areaMapper.getAreaParentList();
-			if(elist!=null){
-				//RedisUtils.setList("ProvinceMess", elist);
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				mmp.put("Obj", elist);
-			}else{
-				mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_HOTCITY_FAIL);
-				mmp.put("Msg", "查询异常");
-			}
-		}else{
+		elist = this.areaMapper.getAreaParentList();
+		if(elist!=null){
+			//RedisUtils.setList("ProvinceMess", elist);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Obj", elist);
+			mmp.put("Msg", "查询成功");
+		}else{
 			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_HOTCITY_FAIL);
+			mmp.put("Msg", "查询异常");
 		}
 		return mmp;
 	}
