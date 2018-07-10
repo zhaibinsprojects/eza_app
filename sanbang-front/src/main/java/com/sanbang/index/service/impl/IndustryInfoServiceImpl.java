@@ -87,7 +87,9 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 		int totalCount = this.ezssubstanceMapper.goodsAllIndustryCount(parentKindsId); 
 		if(totalCount>0){
 			ExPage page = new ExPage(totalCount, currentPage); 
-			page.setPageSize(10);
+			//page.setPageSize(10);
+			//app 端做调整
+			page.setPageSize(3);
 			page.setContent(String.valueOf(parentKindsId));
 			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
 				List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectAllGoodsIndustryByPage(page);
