@@ -36,8 +36,11 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> plist = new ArrayList<>();
 		try {
-			mp.put("pagecount", (pageno-1)*10);
-			mp.put("pagesize", 10);
+			/*mp.put("pagecount", (pageno-1)*10);
+			mp.put("pagesize", 10);*/
+			//app 端做页面展示调整
+			mp.put("pagecount", (pageno-1)*3);
+			mp.put("pagesize", 3);
 			plist = this.priceTrendMapper.selectByAreaIdAndOtherCondition(mp);
 			if(plist!=null){
 				List<PriceTrendIfo> plistTemp = new ArrayList<>();
@@ -88,8 +91,11 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		try {
 			//int totalCount = this.priceTrendMapper.getPriceConditionCount(mp);
 			//Page page = new Page(totalCount, currentPage);
-			mp.put("startPos", (currentPage - 1)*10);//每页起始位子
-			mp.put("pageSize", 10);//页面大小
+			/*mp.put("startPos", (currentPage - 1)*10);//每页起始位子
+			mp.put("pageSize", 10);//页面大小*/
+			//app 做页面展示调整
+			mp.put("startPos", (currentPage - 1)*3);
+			mp.put("pageSize", 3);
 			pList = this.priceTrendMapper.getPriceTrendcy(mp);			
 		} catch (Exception e) {
 			// TODO: handle exception
