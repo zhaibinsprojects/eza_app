@@ -20,20 +20,20 @@ import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_audit_process;
 import com.sanbang.bean.ezs_goods_cartography;
+import com.sanbang.bean.ezs_goods_log;
 import com.sanbang.bean.ezs_goods_photo;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_accessoryMapper;
-import com.sanbang.dao.ezs_card_dictMapper;
 import com.sanbang.dao.ezs_dictMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_goods_audit_processMapper;
 import com.sanbang.dao.ezs_goods_cartographyMapper;
 import com.sanbang.dao.ezs_goods_logMapper;
 import com.sanbang.dao.ezs_goods_photoMapper;
-import com.sanbang.dao.ezs_paperMapper;
 import com.sanbang.seller.service.SellerGoodsService;
 import com.sanbang.utils.EvenOddCheck;
 import com.sanbang.utils.FilePathUtil;
+import com.sanbang.utils.GoodsLogUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
@@ -47,7 +47,6 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	private Logger log = Logger.getLogger(SellerGoodsServiceImpl.class);
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	ezs_goodsMapper goodsMapper;
@@ -65,10 +64,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	private ezs_accessoryMapper ezs_accessoryMapper;
 	
 	@Autowired
-	private ezs_paperMapper ezs_paperMapper;
-	
-	@Autowired
-	private ezs_card_dictMapper ezs_card_dictMapper;
+	private ezs_goods_logMapper ezs_goods_logMapper;
 	
 	@Autowired
 	ezs_goods_photoMapper photoMapper;
@@ -276,10 +272,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsMapper.updateByPrimaryKeySelective(goods);
 				//带审核
 				result=submitGoodsForAudit(result, goods.getId(), request, response);
+				ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), upi.getId(), "用户操作:添加商品"+goods.getName()+"成功");
+				ezs_goods_logMapper.insertSelective(log);
 			}
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(true);
-			result.setMsg("添加货品成功");
 		} catch (Exception e) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setSuccess(false);
@@ -328,16 +323,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
         }
     }
 	
-	private long checkisExtId(String type, List<AuthImageVo> list) {
-		long id = 0;
-		for (AuthImageVo authImageVo : list) {
-			if (authImageVo.getImgcode().equals(type)) {
-				id = authImageVo.getAccid();
-				break;
-			}
-		}
-		return id;
-	}
+	
 
 	private static List<AuthImageVo> savepic(String param, List<AuthImageVo> list) throws ParseException {
 		if (!Tools.isEmpty(param)) {
@@ -369,16 +355,6 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		return list;
 	}
 
-	/*public static void main(String[] args) {
-		List<AuthImageVo> list = new ArrayList<>();
-		try {
-			savepic("type1,url1@name1@2018-05-06 22:26:00;" + "type2,url2@name2@2018-05-06 22:26:00;" + "type3,url3",
-					list);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 
 	Result checkParam(HttpServletRequest request) {
 		Result result = Result.success();
@@ -396,7 +372,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		String purpose = request.getParameter("purpose");// 用途
 		String protection = request.getParameter("protection");// 是否环保
 		// 非必填
-		String density = request.getParameter("density");// 密度
+		/*String density = request.getParameter("density");// 密度
 		String cantilever = request.getParameter("cantilever");// 悬臂梁缺口冲击
 		String freely = request.getParameter("freely");// 简支梁缺口冲击
 		String lipolysis = request.getParameter("lipolysis");// 溶指
@@ -407,7 +383,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		String bending = request.getParameter("bending");// 弯曲强度
 		String flexural = request.getParameter("flexural");// 弯曲模量
 		String burning = request.getParameter("burning");// 燃烧等级
-
+*/
 		if (Tools.isEmpty(goodClass_id)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
@@ -483,7 +459,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		if (Tools.isEmpty(purpose)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
-			result.setMsg("请选择货品用途");
+			result.setMsg("请输入货品用途");
 			return result;
 		}
 		if (Tools.isEmpty(protection)) {
@@ -502,12 +478,21 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		int aa = 0;
 
 		try {
+			ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+			if(null==goods){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("未找到该商品记录");
+				return result;
+			}
 			aa = goodsMapper.pullOffShelves(goodsId);
 			if (aa <= 0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("下架操作异常");
 			} else {
+				ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:添加商品"+goods.getName()+"成功");
+				ezs_goods_logMapper.insertSelective(log);
 				result.setSuccess(true);
 				result.setMsg("下架成功");
 			}
@@ -740,7 +725,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit1.setSalePrice(SupplyPrice);
 				goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit1);
 				result.setSuccess(true);
-				result.setMsg("提交审核成功，请静待结果");
+				result.setMsg("操作完成");
+				ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:提交审核"+goods.getName()+"成功");
+				ezs_goods_logMapper.insertSelective(log);
 			}
 		}else{
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -809,6 +796,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("货品更新成功");
+		ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:修改库存"+goods.getName()+"成功");
+		ezs_goods_logMapper.insertSelective(log);
 		return result;
 	}
 
@@ -819,6 +808,13 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		int aa = 0;
 
 		try {
+			ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+			if(null==goods){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("未找到该商品记录");
+				return result;
+			}
 			aa = goodsMapper.pullNoShelves(goodsId);
 			if (aa <= 0) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -827,6 +823,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			} else {
 				result.setSuccess(true);
 				result.setMsg("上架成功");
+				ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:商品下架"+goods.getName()+"成功");
+				ezs_goods_logMapper.insertSelective(log);
 			}
 		} catch (Exception e) {
 			log.info("商品上架操作出错" + e.toString());

@@ -44,8 +44,10 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			String device_num, String employee_num, String assets, String obtainYear, HttpServletRequest request, HttpServletResponse response) {
 		log.info("供应商激活参数：companyName" + companyName + "&yTurnover" + yTurnover + "covered" +"。。。。。。。。。。。。。。。。");
 		//校验
+		String fixed_assets=request.getParameter("fixed_assets");
+		
 		result = checkActivateInfo(result, companyName, yTurnover, covered, rent,
-				device_num, employee_num, assets, obtainYear, request, response);
+				device_num, employee_num, assets, obtainYear,fixed_assets, request, response);
 		if (!result.getSuccess()) {
 			return result;
 		}
@@ -92,6 +94,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setEmployee_num(Integer.valueOf(employee_num));
 			store.setAssets(Double.valueOf(assets));
 			store.setObtainYear(Integer.valueOf(obtainYear));
+			store.setFixed_assets(Double.valueOf(fixed_assets));
 			/*store.setOpen_bank_name(open_bank_name);
 			store.setOpenBankNo(openBankNo);
 			store.setOpen_branch_name(open_branch_name);
@@ -156,7 +159,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 	}
 
 	private Result checkActivateInfo(Result result, String companyName, String yTurnover, String covered, String rent,
-			String device_num, String employee_num, String assets, String obtainYear, HttpServletRequest request,
+			String device_num, String employee_num, String assets, String obtainYear,String fixed_assets, HttpServletRequest request,
 			HttpServletResponse response) {
 		
 		if (Tools.isEmpty(companyName)) {
@@ -215,37 +218,12 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			result.setMsg("实际控制人从业年限不能为空或非数字格式");
 			return result;
 		}
-		/*if (Tools.isEmpty(open_bank_name)) {
+		if (Tools.isEmpty(fixed_assets)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
-			result.setMsg("开户银行名称不能为空");
+			result.setMsg("固定资产不能为空");
 			return result;
 		}
-		if (Tools.isEmpty(openBankNo) || !Tools.isNum(openBankNo)) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("银行卡号不能为空或格式不正确");
-			return result;
-		}
-		if (Tools.isEmpty(open_branch_name)) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("开户支行名称不能为空");
-			return result;
-		}
-		if (Tools.isEmpty(open_branch_no) || !Tools.isNum(open_branch_no)) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("支行卡号不能为空或格式不正确");
-			return result;
-		}	
-		if (Tools.isEmpty(location_detail)) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("开户银行所在地不能为空");
-			return result;
-		}*/
-		
 		if(Tools.isEmpty(rent) ){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);

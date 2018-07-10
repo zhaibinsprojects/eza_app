@@ -33,7 +33,7 @@ public class AndroidVersionController {
 	//1 不用更新  2必须更新
     private int forbidden=1;
     //小版本号
-    private int serviceCode=2;
+    private int serviceCode=1;
     //更新内容
     private String update_content="1.全新3.0设计语言\n2.更加人性化的自营操作\n3.效率极高的交易流程"; 
     
@@ -48,7 +48,7 @@ public class AndroidVersionController {
 	public void initdata(){
 		versions=new ArrayList<>();
 		versions.add("1.0.1");
-		filebasepath=filebasepath+"ezaisheng1.0.1.apk";
+		filebasepath=filebasepath+"ezaisheng1.0.0.apk";
 		baseurl+="front/app/version/download.htm";
 	}
 	

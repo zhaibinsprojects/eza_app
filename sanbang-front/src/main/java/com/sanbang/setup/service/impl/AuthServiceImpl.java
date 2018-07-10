@@ -483,7 +483,7 @@ public class AuthServiceImpl implements AuthService {
 		Result result = Result.success();
 		String companyName = request.getParameter("companyName");// 企业名称
 		String trueName = request.getParameter("trueName");// 联系人
-		String area_id = request.getParameter("area_id");// 经营地址区县
+		//String area_id = request.getParameter("area_id");// 经营地址区县
 		String address = request.getParameter("address");// 经营地址
 		String idCardNum = request.getParameter("idCardNum");// 经营者省份证号
 		String account = request.getParameter("account");// 注册号
@@ -567,7 +567,7 @@ public class AuthServiceImpl implements AuthService {
 			return result;
 		}
 		//企业信息
-		if(null==upi.getEzs_bill()){
+		if(null==upi.getEzs_bill()&&Tools.isEmpty(upi.getEzs_bill().getBank())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善开票信息");
@@ -605,7 +605,7 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("请完善个体基本信息");
 		}
 		//个体执照信息
-		if(null==upi.getEzs_bill()){
+		if(null==upi.getEzs_bill()&&Tools.isEmpty(upi.getEzs_bill().getBank())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善开票信息");

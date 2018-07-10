@@ -1,7 +1,6 @@
 package com.sanbang.seller.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,20 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.ezs_area;
-import com.sanbang.bean.ezs_companyType_dict;
-import com.sanbang.bean.ezs_industry_dict;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.dao.ezs_areaMapper;
-import com.sanbang.dao.ezs_companyType_dictMapper;
-import com.sanbang.dao.ezs_industry_dictMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerActivateService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
-import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
@@ -39,15 +31,6 @@ public class SellerActivateController {
 	
 	@Autowired
 	private DictService dictService;
-	
-	@Autowired
-	private ezs_areaMapper ezs_areaMapper;
-	
-	@Autowired
-	private ezs_industry_dictMapper ezs_industry_dictMapper;
-	
-	@Autowired
-	private ezs_companyType_dictMapper ezs_companyType_dictMapper;
 	
 	@Autowired
 	private ezs_userMapper ezs_userMapper;
@@ -73,9 +56,18 @@ public class SellerActivateController {
 	 */
 	@RequestMapping("/sellerActivate") // 固定产值，经营年限  找不到对应字段
 	@ResponseBody
-	public Object sellerActivate(String companyName, String yTurnover, String covered, String rent, String device_num,
-			String employee_num, String assets, String obtainYear, HttpServletRequest request, HttpServletResponse response){
+	public Object sellerActivate(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
+		
+		String companyName=request.getParameter("companyName");
+		String yTurnover=request.getParameter("yTurnover");
+		String covered=request.getParameter("covered");
+		String rent=request.getParameter("rent");
+		String device_num=request.getParameter("device_num");
+		String employee_num=request.getParameter("employee_num");
+		String assets=request.getParameter("assets");
+		String obtainYear=request.getParameter("obtainYear");
+		
 		
 		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		if(upi==null){
@@ -191,7 +183,6 @@ public class SellerActivateController {
 			map1.put("status", status);
 			map1.put("userType", userType);
 			map1.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
-			List<ezs_companyType_dict>  aa=	ezs_companyType_dictMapper.getCompanyTypeByThisId(upi.getEzs_store().getId());
 			map1.put("yTurnover", upi.getEzs_store().getyTurnover());//// 年营业额
 			map1.put("covered", upi.getEzs_store().getCovered());// 占地面积
 			map1.put("rent", upi.getEzs_store().getRent());// 租用

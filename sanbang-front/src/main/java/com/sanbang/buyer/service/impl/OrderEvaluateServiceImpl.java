@@ -66,6 +66,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 		dvaluate.setAddTime(new Date());
 		dvaluate.setDeleteStatus(false);
 		dvaluate.setUser_id(user.getId());
+		dvaluate.setGoods_id(orderinfo.getGoodsid());
 		try {
 			//添加评价记录
 			this.dvaluateMapper.insert(dvaluate);
@@ -77,6 +78,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 				this.accessoryMapper.insert(accessory);
 				dvaluateAccessroy.setAccessroy_id(accessory.getId());
 				dvaluateAccessroy.setDvaluate_id(dvaluate.getId());
+				dvaluateAccessroyMapper.insertSelective(dvaluateAccessroy);
 			}
 			log.info("评价功能完成！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

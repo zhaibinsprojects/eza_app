@@ -14,28 +14,23 @@ $(function() {
 		setupWebViewJavascriptBridge(function(bridge) {
        		var data = {};
        		var str = JSON.stringify(data);
-			/*bridge.registerHandler('test', function(data, responseCallback) {  
-	            var responseData = {'Javascript Says':'Right back atcha!' }  
-	            responseCallback(responseData)  
-	        }) ;*/
 			// 查看购物车桥接
-			/*iostocart();
+			iostocart();
 			// 立即购买
 			iostobuy();
 			// 预约
 			iostoyuyue();
 			// 质检报告
 			iosshowpdf();
-			// 未登录
-			//iosnologin();
+			/*// 未登录 初始化不调用
+			iosnologin();*/
 			// 电话
 			iostophone();
 			// 试样
-			iosshiyang();*/
+			iosshiyang();
 			 try {
 				 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
 					 userk= data;
-					 //layer.open({content : userk,skin : 'msg',time : 20});
 					 if(userk!=""){
 						 $(".userkey").val(data);
 						 iscollcc(goodsid, data);
@@ -120,11 +115,6 @@ $(function() {
 			async : false,
 			success : function(data) {
 				if (data.success) {
-					layer.open({
-						content : data.msg,
-						skin : 'msg',
-						time : 2
-					});
 					cartsuccess();
 				} else {
 					layer.open({content : data.msg,skin : 'msg',time : 2});
@@ -213,7 +203,8 @@ function androidtoyuyue(e) {
 
 // 预约预定桥接
 function androidlogintoyuyue(goodsid, userk) {
-	var data = {"goodsid" : goodsid};
+	var data = {"goodsid" : goodsid,
+			"goodsName":$(".goodsName").val()};
 	var str = JSON.stringify(data);
 	window.android.androidlogintoyuyue(str);
 	return false;
@@ -324,7 +315,8 @@ function androidshowpdf() {
 
 	// 预约预定桥接
 	function ioslogintoyuyue(goodsid, userk) {
-		var data = {"goodsid" : goodsid}
+		var data = {"goodsid" : goodsid,
+				"goodsName":$(".goodsName").val()};
 		var str = JSON.stringify(data);
 		WebViewJavascriptBridge.callHandler('iostoyuyue', str, function() {
 		});
@@ -369,7 +361,6 @@ function androidshowpdf() {
 					"telnum" : "400-6666-890"
 				}
 				var str = JSON.stringify(data);
-				layer.open({content : str,skin : 'msg',time : 2});
 				WebViewJavascriptBridge.callHandler('iostophone', str, function() {
 				});
 				return false;

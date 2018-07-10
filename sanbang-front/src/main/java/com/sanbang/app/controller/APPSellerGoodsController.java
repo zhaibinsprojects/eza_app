@@ -190,8 +190,7 @@ public class APPSellerGoodsController {
 //		//分类
 		map.put("cata",cataService.getFirstList());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace();   
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误！");
@@ -276,7 +275,6 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object addGoodsInfo(HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -318,7 +316,6 @@ public class APPSellerGoodsController {
 	public Object pullOffShelves(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		try {
-			Map<String,Object> map = new HashMap<>();
 			ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 			if(upi==null){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -340,7 +337,6 @@ public class APPSellerGoodsController {
 			
 			result = sellerGoodsService.pullOffShelvesById(result, goodsId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -362,7 +358,6 @@ public class APPSellerGoodsController {
 	public Object updateGoodsInfoById(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
 		try {
-			Map<String,Object> map = new HashMap<>();
 			ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 			if(upi==null){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -403,7 +398,6 @@ public class APPSellerGoodsController {
 	@ResponseBody
 	public Object submitGoodsForAudit(long goodsId, HttpServletRequest request, HttpServletResponse response){
 		Result result=Result.failure();
-		Map<String,Object> map = new HashMap<>();
 		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

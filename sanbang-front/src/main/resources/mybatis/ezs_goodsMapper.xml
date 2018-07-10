@@ -774,13 +774,14 @@
 		goods.price,
 		goods.inventory,
 		goods.goods_main_photo_id,
-		CONCAT("http://www.ezaisheng.com/",B.path,"/",B.name) path
+		CONCAT("http://m.ezaisheng.com/",B.path,"/",B.name) path
 	FROM
 		ezs_goods goods
 	LEFT JOIN ezs_goods_class gc ON goods.goodClass_id = gc. LEVEL
 	LEFT JOIN ezs_accessory B ON goods.goods_main_photo_id=B.id
 	WHERE
     goods.goodClass_id=#{goodClass_id}
+    AND goods.`status`=2
     GROUP BY  goods.id
      limit 20
 	</select>
@@ -804,7 +805,7 @@
 	<select id="getGoodsDetail" resultType="com.sanbang.vo.GoodsInfo">
 		select g.*,d1.name colorName,d2.name formName,
 		a.areaName areaName,gc.name goodClassName,ac.ext pictureSuffix,
-		ac.name pictureName,CONCAT("http://m.ezaisheng.com/",ac.path,"/",ac.name) picturePath 
+		ac.name pictureName,CONCAT(ac.path,"/",ac.name) picturePath 
 		from ezs_goods g 
 		left join ezs_dict d1 on g.color_id = d1.id 
 		left join ezs_dict d2 on g.form_id = d2.id 
@@ -816,9 +817,9 @@
 	
 	<!-- 多条件查询，han -->
 	<select id="queryGoodsList" resultType="com.sanbang.vo.GoodsInfo" parameterType="java.util.Map">
-		select g.id,g.name,g.price,g.inventory,a.path picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
+		select g.id,g.name,g.price,g.inventory,CONCAT("http://m.ezaisheng.com/",a.path,"/",a.name) picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
 		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
-		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id 
+		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id AND g.`status`=2
 		<if test="areaList.size>0">
    			and g.area_id IN 
 			<foreach collection="areaList" item="areaId" open="(" separator="," close=")">

@@ -70,7 +70,7 @@ public class UserProServiceImpl implements UserProService {
 	@Resource(name = "ezs_userinfoMapper")
 	private com.sanbang.dao.ezs_userinfoMapper ezs_userinfoMapper;
 
-	// 用户登陆信息
+	// 用户登录信息
 	@Resource(name = "ezs_userMapper")
 	private ezs_userMapper ezs_userMapper;
 
@@ -182,7 +182,7 @@ public class UserProServiceImpl implements UserProService {
 		Result result = Result.failure();
 		Date date = new Date();
 		StringBuilder sbd = new StringBuilder("用户");
-		sbd.append(userName).append("请求登陆，passwd=").append(pd).append(" &userAgent=").append(userAgent).append(" &ip=")
+		sbd.append(userName).append("请求登录，passwd=").append(pd).append(" &userAgent=").append(userAgent).append(" &ip=")
 				.append(ip).append(" &登录,时间:").append(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
 		log.info(sbd.toString());
 		String  useridcard="";
@@ -198,7 +198,7 @@ public class UserProServiceImpl implements UserProService {
 		} else {
 			return result;
 		}
-		log.debug("用户" + userName + "登陆结果" + result.getErrorcode() + "  " + result.getMsg());
+		log.debug("用户" + userName + "登录结果" + result.getErrorcode() + "  " + result.getMsg());
 		return result;
 	}
 
@@ -232,11 +232,11 @@ public class UserProServiceImpl implements UserProService {
 		Result result = Result.success();
 
 		if (flag == null) {
-			// 直接登陆
+			// 直接登录
 			if (StringUtils.isEmpty(pd)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setMsg("登陆密码不能为空");
+				result.setMsg("登录密码不能为空");
 			}
 			if (StringUtils.isEmpty(userName) || !Tools.paramValidate(userName, 7)) {
 				result.setSuccess(false);
@@ -259,13 +259,13 @@ public class UserProServiceImpl implements UserProService {
 			if (StringUtils.isEmpty(code)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setMsg("登陆码不能为空");
+				result.setMsg("登录码不能为空");
 			} else {
 				boolean b = ckcodemobile(code, userName, "MOBILELOGINFLAG");
 				if (!b) {
 					result.setSuccess(false);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-					result.setMsg("登陆验证码错误");
+					result.setMsg("登录验证码错误");
 				}
 				RedisUtils.del(userName + "MOBILELOGINFLAG");
 			}
@@ -287,11 +287,11 @@ public class UserProServiceImpl implements UserProService {
 			Boolean tempStatus = upi.getDeleteStatus();
 			if (!tempStatus) {
 				result.setSuccess(true);
-				result.setMsg("登陆成功");
+				result.setMsg("登录成功");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
  			} else {
 				result.setSuccess(false);
-				result.setMsg("登陆失败用户未启用");
+				result.setMsg("登录失败用户未启用");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			}
 		} else {
@@ -334,7 +334,7 @@ public class UserProServiceImpl implements UserProService {
 				}
 				// 密码验证正确
 				if (b) {
-					// 判断是否是财务关联账户,如果是,将登陆信息切换到主账户.avatar:账户登录标识,true:主账户登录,false:财务账户登录,并保存在redis中
+					// 判断是否是财务关联账户,如果是,将登录信息切换到主账户.avatar:账户登录标识,true:主账户登录,false:财务账户登录,并保存在redis中
 					// 如果当前为主账户,更改标识
 					if (Tools.isEmpty(String.valueOf(userProInfo.getParent_id()))) {
 						userProInfo.setAvatar(true);
@@ -367,9 +367,9 @@ public class UserProServiceImpl implements UserProService {
 
 					try {
 						if (!tempStatus && userProInfo.getAddTime().getTime() > 1479052799000l) {
-							// 首次登陆 应该跳转到 注册联系人资料
+							// 首次登录 应该跳转到 注册联系人资料
 							result.setSuccess(true);
-							result.setMsg("登陆成功");
+							result.setMsg("登录成功");
 							result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 							RedisResult<String> rrt;
 							rrt = (RedisResult<String>) RedisUtils.set(userKey, userProInfo,
@@ -402,7 +402,7 @@ public class UserProServiceImpl implements UserProService {
 	}
 
 	/**
-	 * 未登录状态下 恢复到登陆之前的状态
+	 * 未登录状态下 恢复到登录之前的状态
 	 */
 	public void resumePath(HttpServletRequest request, Map<String, Object> result, HttpServletResponse response) {
 		String toStaticURl = RedisUserSession.getUserKey(cookieuserstaticidcard, request);
@@ -617,7 +617,7 @@ public class UserProServiceImpl implements UserProService {
 	}
 
 	/**
-	 * 发送注册，登陆短信验证码
+	 * 发送注册，登录短信验证码
 	 * 
 	 * @param phone
 	 * @param code
@@ -628,7 +628,7 @@ public class UserProServiceImpl implements UserProService {
 	 * @param mobileintervalstr
 	 *            验证码距离下一次点击的时间间隔
 	 * @param mobilesendtimesstr
-	 *            验证码 获取次数 flag=1无密登陆
+	 *            验证码 获取次数 flag=1无密登录
 	 * @return
 	 */
 	@Override
@@ -641,11 +641,11 @@ public class UserProServiceImpl implements UserProService {
 			result.setMsg("格式有误，请输入正确的手机号码");
 			return result;
 		} else {
-			// 无密登陆
+			// 无密登录
 			if (null != flag && flag == 1) {
 				int count = ezs_userMapper.checkMobile(phone);
 				if (count== 0) {
-					// 不存在，不能登陆
+					// 不存在，不能登录
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PHONE_TYPE_REGISTERED);
 					result.setSuccess(false);
 					result.setMsg("无该手机号注册信息，请先注册！");
@@ -1415,7 +1415,7 @@ public class UserProServiceImpl implements UserProService {
 			if (Tools.isEmpty(linkvo.getUsername()) || !Tools.paramValidate(linkvo.getUsername(), 0)) {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setMsg("登陆名称格式不正确！");
+				result.setMsg("登录名称格式不正确！");
 			} else {
 				ezs_userinfo upuser1 = new ezs_userinfo();
 				upuser1.setId(ezsuser.getEzs_userinfo().getId());

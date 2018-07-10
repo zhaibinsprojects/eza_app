@@ -1,7 +1,6 @@
 package com.sanbang.goods.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +20,10 @@ import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
-import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goodscart;
-import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
@@ -202,8 +199,21 @@ public class GoodsController {
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
-		Result result = new Result();
+		Result result = Result.failure();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		if (user == null) {
+			result = Result.failure();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				result = Result.failure();
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return result;
+			}
+		}
 		String goodsId = customized.getGoods_id().toString();
 		if(null != goodsId && "".equals(goodsId)){
 			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
@@ -553,18 +563,7 @@ public class GoodsController {
 		} 
 	}
 	
-	/**
-	 * 插入发票信息
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/insertinvoice")
-	@ResponseBody
-	public Result insertinvoice(HttpServletRequest request,ezs_invoice invoice) {
-		Result result = new Result();
-		//关于发票图片的处理暂时不确定，所以暂时，暂时，先放这儿
-		return result;
-	}
+	
 	
 	
 
@@ -588,6 +587,13 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
 		}
 		try {
 			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
@@ -633,6 +639,13 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
 		}
 		ezs_goodscart goodsCart = new ezs_goodscart();
 		goodsCart.setCount(count);
@@ -736,13 +749,20 @@ public class GoodsController {
 	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		log.info("添加订单beginning...........................");
 		Map<String, Object> mmp = null;
-		Result rs = null;
+		Result rs = Result.failure();
 		ezs_user user = RedisUserSession.getLoginUserInfo(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
 		}
 		if(goodCartId==null){
 			rs = Result.failure();
@@ -789,9 +809,16 @@ public class GoodsController {
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
 		}
 		mmp = this.goodsService.immediateAddOrderFormFunc(user, "GOODS",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
@@ -818,13 +845,20 @@ public class GoodsController {
 	@ResponseBody
 	public Object dealImmediatelyBuySampleGood(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsId,Double count){
 		Map<String, Object> mmp = null;
-		Result rs = null;
+		Result rs = Result.failure();
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
 		}
 		mmp = this.goodsService.immediateAddOrderFormFunc(user,"SAMPLE",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
@@ -853,7 +887,6 @@ public class GoodsController {
 	@ResponseBody
 	public Object AddGoodsToSelfOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
 		log.info("添加订单beginning...........................");
-		Map<String, Object> mmp = new HashMap<>();
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
@@ -934,7 +967,6 @@ public class GoodsController {
 	@ResponseBody
 	public Object AddGoodsToSampleOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
 		log.info("添加订单beginning...........................");
-		Map<String, Object> mmp = new HashMap<>();
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
