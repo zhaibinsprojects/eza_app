@@ -25,14 +25,14 @@ public interface BuyerService {
 	 * @param orderid
 	 * @return
 	 */
-	Map<String, Object> getOrderInfoShow(String order_no);
+	Map<String, Object> getOrderInfoShow(String order_no,ezs_user upi);
 	
 	/**
 	 * 支付确认
 	 * @param orderid
 	 * @return
 	 */
-	Map<String, Object>orderconfirm(String order_no);
+	Map<String, Object>orderconfirm(String order_no,ezs_user upi);
 	
 	
 	/**
@@ -41,7 +41,7 @@ public interface BuyerService {
 	 * @param order_no
 	 * @return
 	 */
-	Result showOrderContent(HttpServletRequest request,String order_no);
+	Result showOrderContent(HttpServletRequest request,String order_no,ezs_user upi);
 	
 	/**
 	 * 签订合同
@@ -87,7 +87,7 @@ public interface BuyerService {
 	  * @param order_no
 	  * @return
 	  */
-	 public  Result getezs_invoice(HttpServletRequest request,String order_no);
+	 public  Result getezs_invoice(HttpServletRequest request,String order_no,ezs_user upi);
 	 
 	 
 	 
@@ -97,7 +97,7 @@ public interface BuyerService {
 	  * @param order_no
 	  * @return
 	  */
-	 public  Result getezs_logistics(HttpServletRequest request,String order_no);
+	 public  Result getezs_logistics(HttpServletRequest request,String order_no,ezs_user upi);
 	 
 	 
 	 /**
@@ -106,7 +106,7 @@ public interface BuyerService {
 	  * @param order_no
 	  * @return
 	  */
-	 public Result payconfirm(HttpServletRequest request,String order_no);
+	 public Result payconfirm(HttpServletRequest request,String order_no,ezs_user upi);
 	 
 	 
 }

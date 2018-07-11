@@ -137,7 +137,7 @@ public class BuyerMenu {
 		}
 
 		try {
-			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+			Map<String, Object> map = buyerService.getOrderInfoShow(order_no,upi);
 			result.setObj(map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -211,7 +211,7 @@ public class BuyerMenu {
 			return result;
 		}
 		try {
-			result = buyerService.payconfirm(request,order_no);
+			result = buyerService.payconfirm(request,order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -246,12 +246,12 @@ public class BuyerMenu {
 		}
 
 		try {
-			result = buyerService.payconfirm(request,order_no);
+			result = buyerService.payconfirm(request,order_no,upi);
 			if(!result.getSuccess()){
 				return result;
 			}
 			
-			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+			Map<String, Object> map = buyerService.getOrderInfoShow(order_no,upi);
 			result.setObj(map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -314,8 +314,14 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
 		try {
-			result = buyerService.showOrderContent(request, order_no);
+			result = buyerService.showOrderContent(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -409,8 +415,14 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
 		try {
-			result=buyerService.getezs_invoice(request, order_no);
+			result=buyerService.getezs_invoice(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -436,8 +448,14 @@ public class BuyerMenu {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("请重新登陆！");
+			return result;
+		}
 		try {
-			result=buyerService.getezs_logistics(request, order_no);
+			result=buyerService.getezs_logistics(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

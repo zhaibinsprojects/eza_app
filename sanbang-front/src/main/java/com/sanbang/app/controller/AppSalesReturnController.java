@@ -19,6 +19,7 @@ import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_set_return_order;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_orderformMapper;
+import com.sanbang.salesReturn.controller.SalesReturnController;
 import com.sanbang.salesReturn.service.SalesReturnService;
 import com.sanbang.utils.DateUtils;
 import com.sanbang.utils.RedisUserSession;
@@ -30,7 +31,7 @@ import com.sanbang.vo.DictionaryCode;
 @RequestMapping("/app/salesReturn")
 public class AppSalesReturnController {
 	
-	private Logger log = Logger.getLogger(AppSalesReturnController.class);
+	private Logger log = Logger.getLogger(SalesReturnController.class);
 
 	@Autowired
 	private SalesReturnService salesReturnService;
@@ -38,13 +39,18 @@ public class AppSalesReturnController {
 	
 	@RequestMapping(value="/getOrderformById")
 	@ResponseBody
-	public Result getOrderformById(@RequestParam(required=true,value="order_no")String order_no){
+	public Result getOrderformById(HttpServletRequest request,@RequestParam(required=true,value="order_no")String order_no){
 		Result result = Result.success();
 		Map<String,Object> map = new HashMap<String,Object>();
 		
 		try {
-			
-			ezs_order_info orderinfo = salesReturnService.getOrderListByOrderno(order_no);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			ezs_order_info orderinfo = salesReturnService.getOrderListByOrderno(order_no,upi);
 			String returnNo = "";
 			//手动生成退货编号
 			if(null != orderinfo){
@@ -79,15 +85,13 @@ public class AppSalesReturnController {
 	@ResponseBody
 	public Result insertEzsSetReturnOrder(HttpServletRequest request,ezs_set_return_order returnOrder){
 		Result result = Result.success();
-		
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (upi == null) {
+		if(upi==null){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
 		}
-		
-		//为对象中一些前台未传入的字段赋值
+		//未对象中一些前台未传入的字段赋值
 		if(null == returnOrder){
 			
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -100,7 +104,7 @@ public class AppSalesReturnController {
 			returnOrder.setDeleteStatus(true);     //是否启用--- 启用
 			
 		}
-		result = salesReturnService.insertSetReturnOrder(request,returnOrder);
+		result = salesReturnService.insertSetReturnOrder(request,returnOrder,upi);
 		return result;
 		
 	}

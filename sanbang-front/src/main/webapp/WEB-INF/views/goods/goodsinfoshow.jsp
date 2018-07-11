@@ -89,7 +89,7 @@
 			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.price}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
 			<tr> <td>库存</td> <td>${good.inventory}吨</td> </tr>
 			<tr> <td>库存地</td> <td>${good.addess}</td> </tr>
-			<tr> <td>有效期</td> <td>长期有效</td> </tr>
+			<tr> <td>有效期</td> <td>${good.validity}</td> </tr>
 		</table>
 	</div>
 	<div class="ezsm-mem-box-tit1">采购订单</div>

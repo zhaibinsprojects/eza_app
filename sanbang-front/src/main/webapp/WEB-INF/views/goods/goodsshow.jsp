@@ -60,8 +60,9 @@
 	</script>
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
-
-<%-- <div class="ezsm-normal-top">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+<div class="ezsm-normal-top" style="overflow:hidden">
 		<div onclick="javascript:void(0)"></div>
 		<div>
 			<ul class="ezsm-normal-top-nav">
@@ -70,12 +71,7 @@
 			</ul>
 		</div>
 		<div></div>
-	</div> --%>
-
-
-	<div class="msg-bg"></div>
-	<div class="msg-box"></div>
-	
+	</div>	
 	<%-- <%@ include file="../goodshead.jsp"%>  --%>
 	<div class="ezsm-shopdetail-picbox">
 		<div class="ezsm-shopdetail-picbox-main-visual">

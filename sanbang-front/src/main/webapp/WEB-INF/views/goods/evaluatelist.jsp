@@ -50,22 +50,22 @@
 							<tr><td>综合评星</td><td>
 								<c:choose>
 								<c:when test="${dv.goodQuality eq 0}">
-									<img src="resource/img/micon_047.png"/>
+									<img src="front/resource/img/micon_047.png"/>
 								</c:when>
 								<c:when test="${dv.goodQuality eq 1}">
-									<img src="resource/img/micon_051.png"/>
+									<img src="front/resource//img/micon_051.png"/>
 								</c:when>
 								<c:when test="${dv.goodQuality eq 2}">
-									<img src="resource/img/micon_050.png"/>
+									<img src="front/resource/img/micon_050.png"/>
 								</c:when>
 								<c:when test="${dv.goodQuality eq 3}">
-									<img src="resource/img/micon_049.png"/>
+									<img src="front/resource/img/micon_049.png"/>
 								</c:when>
 								<c:when test="${dv.goodQuality eq 4}">
-									<img src="resource/img/micon_048.png"/>
+									<img src="front/resource/img/micon_048.png"/>
 								</c:when>
 								<c:when test="${dv.goodQuality eq 5}">
-									<img src="resource/img/micon_047.png"/>
+									<img src="front/resource/img/micon_047.png"/>
 								</c:when>
 								</c:choose>
 								</td>

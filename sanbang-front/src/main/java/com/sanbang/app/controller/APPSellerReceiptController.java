@@ -113,7 +113,7 @@ public class APPSellerReceiptController {
 			return result;
 		}
 		try {
-			result=buyerService.getezs_invoice(request, orderNo);
+			result=buyerService.getezs_invoice(request, orderNo,upi);
 		} catch (Exception e) {
 			log.info("查询发票信息出错" + e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -139,8 +139,16 @@ public class APPSellerReceiptController {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
+		
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		
 		try {
-			result = buyerService.showOrderContent(request, order_no);
+			result = buyerService.showOrderContent(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

@@ -42,12 +42,10 @@ import com.sanbang.dao.ezs_invoiceMapper;
 import com.sanbang.dao.ezs_logisticsMapper;
 import com.sanbang.dao.ezs_order_canceMapper;
 import com.sanbang.dao.ezs_orderformMapper;
-import com.sanbang.dao.ezs_pactMapper;
 import com.sanbang.dao.ezs_payinfoMapper;
 import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.JsonListUtil;
-import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
@@ -83,9 +81,6 @@ public class BuyerServiceimpl implements BuyerService {
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
 
-	@Autowired
-	private ezs_pactMapper ezs_pactMapper;
-	
 	@Autowired
 	private ezs_invoiceMapper ezs_invoiceMapper;
 	
@@ -128,9 +123,9 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Map<String, Object> getOrderInfoShow(String order_no) {
+	public Map<String, Object> getOrderInfoShow(String order_no,ezs_user upi) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 
 		// 收货地址处理
 		StringBuffer sb=new StringBuffer();
@@ -222,7 +217,7 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Result showOrderContent(HttpServletRequest request, String order_no) {
+	public Result showOrderContent(HttpServletRequest request, String order_no,ezs_user upi) {
 		Result result = Result.failure();
 		try {
 
@@ -235,7 +230,7 @@ public class BuyerServiceimpl implements BuyerService {
 			}
 			// 先查一下合同的pdf在不在
 			//List<ezs_pact> pact = ezs_pactMapper.selectPactByOrderNo(order_no);
-			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 			if(null==orderinfo){
 				 orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
 			}
@@ -344,7 +339,7 @@ public class BuyerServiceimpl implements BuyerService {
 				return result;
 			}
 
-			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 			if (null == orderinfo) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -434,10 +429,10 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Map<String, Object> orderconfirm(String order_no) {
+	public Map<String, Object> orderconfirm(String order_no,ezs_user upi) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 
 		// 收货地址处理
 		long addressid = orderinfo.getAddress_id();
@@ -587,7 +582,7 @@ public class BuyerServiceimpl implements BuyerService {
 		//修改订单状态
 		orderinfo.setDeleteStatus(true);
 		orderinfo.setOrder_status(130);
-		int status=ezs_orderformMapper.updateByPrimaryKey(orderinfo);
+		ezs_orderformMapper.updateByPrimaryKey(orderinfo);
 		result.setSuccess(true);
 		result.setMsg("关闭订单成功");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -608,7 +603,7 @@ public class BuyerServiceimpl implements BuyerService {
 		
 		try {
 			
-			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 			if(orderinfo==null){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
@@ -706,7 +701,7 @@ public class BuyerServiceimpl implements BuyerService {
 			payinfo.setPaymentUser_id(orderinfo.getBuyerid());//支付人id
 			payinfo.setReceUser_id(orderinfo.getSellerid());//收款人id 
 			payinfo.setPay_mode(1);;
-			int status1=ezs_payinfoMapper.insert(payinfo);
+			ezs_payinfoMapper.insert(payinfo);
 			
 			
 			
@@ -715,7 +710,7 @@ public class BuyerServiceimpl implements BuyerService {
 			order.setOrder_no(orderinfo.getOrder_no());
 			order.setOrder_status(orderinfo.getOrder_status());
 			order.setId(orde.getId());
-			int status=ezs_orderformMapper.updateByPrimaryKeySelective(order);
+			ezs_orderformMapper.updateByPrimaryKeySelective(order);
 			result.setSuccess(true);
 			result.setMsg("上传成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -767,7 +762,7 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Result getezs_invoice(HttpServletRequest request, String order_no) {
+	public Result getezs_invoice(HttpServletRequest request, String order_no,ezs_user upi) {
 		Result result = Result.failure();
 		try {
 			
@@ -809,7 +804,7 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Result getezs_logistics(HttpServletRequest request, String order_no) {
+	public Result getezs_logistics(HttpServletRequest request, String order_no,ezs_user upi) {
 		Result result = Result.failure();
 		try {
 			
@@ -868,9 +863,9 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Result payconfirm(HttpServletRequest request, String order_no) {
+	public Result payconfirm(HttpServletRequest request, String order_no,ezs_user upi) {
 		Result result = Result.failure();
-		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no);
+		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 		if (orderinfo == null) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);

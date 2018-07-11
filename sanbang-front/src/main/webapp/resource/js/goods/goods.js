@@ -116,8 +116,34 @@ $(function() {
 			success : function(data) {
 				if (data.success) {
 					cartsuccess();
+					var u = navigator.userAgent; // 获取用户设备
+					var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+					if (isIOS) {
+						layer.open({
+							content : data.msg,
+							skin : 'msg',
+							time : 2
+						});
+					} 
 				} else {
-					layer.open({content : data.msg,skin : 'msg',time : 2});
+					if(userk!=""&&data.errorcode==110002){
+						$(".userkey").val("");
+						userk="";
+						var u = navigator.userAgent; // 获取用户设备
+						var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+						if (isIOS) {
+							iosnologin();
+						} else {
+							androidnologin();
+						}
+					}else{
+						layer.open({
+							content : data.msg,
+							skin : 'msg',
+							time : 2
+						});
+					}
+					
 				}
 			},
 			error : function(e) {
@@ -478,11 +504,24 @@ function androidshowpdf() {
 									"front/resource/img/micon_041.png")
 						}
 					} else {
-						layer.open({
-							content : data.msg,
-							skin : 'msg',
-							time : 2
-						});
+						if(userk!=""&&data.errorcode==110002){
+							$(".userkey").val("");
+							userk="";
+							var u = navigator.userAgent; // 获取用户设备
+							var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+							if (isIOS) {
+								iosnologin();
+							} else {
+								androidnologin();
+							}
+						}else{
+							layer.open({
+								content : data.msg,
+								skin : 'msg',
+								time : 2
+							});
+						}
+						
 					}
 				},
 				error : function(e) {

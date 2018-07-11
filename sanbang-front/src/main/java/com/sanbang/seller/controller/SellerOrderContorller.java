@@ -170,7 +170,7 @@ public class SellerOrderContorller {
 		}
 		
 		try {
-			result=buyerService.getezs_logistics(request, order_no);
+			result=buyerService.getezs_logistics(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

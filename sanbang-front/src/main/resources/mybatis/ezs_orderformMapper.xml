@@ -537,7 +537,7 @@
 			LEFT JOIN ezs_area D ON D.id = B.address_id
 			LEFT JOIN ezs_storecart E ON E.id = A.sc_id
 			LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
-			LEFT JOIN (SELECT L.id,L.order_no FROM ezs_dvaluate L WHERE L.user_id=346 ) G ON G.order_no = B.order_no
+			LEFT JOIN (SELECT L.id,L.order_no FROM ezs_dvaluate L WHERE L.user_id=#{userid} ) G ON G.order_no = B.order_no
 			WHERE
 				1 = 1
 			AND A.deleteStatus = 0

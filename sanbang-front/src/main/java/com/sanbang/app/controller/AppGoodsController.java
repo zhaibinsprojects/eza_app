@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,6 +58,137 @@ public class AppGoodsController {
 	private ezs_areaMapper ezs_areaMapper;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
+	private static final String view="/goods/";
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询货品详情
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@RequestMapping("/toGoodsShow")
+	public String toGoodsShow(HttpServletRequest request,Long id,Model model){
+		//用户校验begin
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		long userid=0;
+		if(null==upi){
+			upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		}
+		userid=null==upi?0:upi.getId();
+		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
+		//用户校验end
+		
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
+		model.addAttribute("good", goodsvo);
+		return view+"goodsshow";
+	}
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询货品详情
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInfo")
+	@ResponseBody
+	public Result getGoodsInfo(HttpServletRequest request,Long id,Model model){
+		Result result=Result.failure();
+		try {
+			//用户校验begin
+			ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			if(null==upi){
+				result.setSuccess(false);
+				result.setMsg("用户未登录");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			}
+			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,upi.getId());
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", goodsvo.getId());
+			map.put("areaName", goodsvo.getAreaName());
+			map.put("path", goodsvo.getMainphoto().get(0).getPath());
+			map.put("name", goodsvo.getName());
+			map.put("price", goodsvo.getPrice());
+			map.put("inventory", goodsvo.getInventory());
+			map.put("unit",goodsvo.getUtil()==null?"吨":goodsvo.getUtil().getName() );
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+			result.setObj(goodsvo);
+		} catch (Exception e) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误");
+			result.setSuccess(false);
+			e.printStackTrace();
+		}
+		return result;
+	}
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询是否收藏
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/iscollented")
+	public Result iscollented(HttpServletRequest request,Long id,Model model){
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,user.getId());
+		if(null != goodsvo){
+			result.setObj(goodsvo.getCollected());
+			result.setMsg("查询成功！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}else{
+			result.setObj(0);
+			result.setMsg("查询失败！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		}
+		return result;
+	}
+	/**
+	 * @author langjf
+	 * forapp 
+	 * 查询货品描述
+	 * @param request
+	 * @param id 货品id
+	 * @return
+	 */
+	@RequestMapping("/toGoodsdec")
+	public String toGoodsdec(HttpServletRequest request,Long goodsid,Model model){
+		//用户校验begin
+		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		long userid=0;
+		if(null==upi){
+			upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		}
+		userid=null==upi?0:upi.getId();
+		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
+		//用户校验end
+		
+		GoodsVo  goodsvo=goodsService.getgoodsinfo(goodsid,userid);
+		
+		//同类货品
+		List<GoodsVo> catalist = new ArrayList<GoodsVo>();
+		if(null != goodsvo){
+			catalist = goodsService.listForGoods(goodsvo.getGoodClass_id());
+		}
+		model.addAttribute("catalist", catalist);
+		model.addAttribute("good", goodsvo);
+		return view+"goodsdec";
+	}
+	
+	
 	/**
 	 * 查询货品详情
 	 * @param request
@@ -90,7 +222,7 @@ public class AppGoodsController {
 		Result result = new Result();
 		try {
 			//用户校验begin
-			ezs_user upi=RedisUserSession.getLoginUserInfo(request);
+			ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
 			long userid=0;
 			if(null==upi){
 				upi=RedisUserSession.getUserInfoByKeyForApp(request);
@@ -124,7 +256,7 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result updateShare(HttpServletRequest request,Long goodId){
 		Result result = new Result();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if(null==user){
 			result.setMsg("用户未登陆");
 			result.setSuccess(false);
@@ -201,7 +333,7 @@ public class AppGoodsController {
 	@ResponseBody
 	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
 		Result result = Result.failure();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			result = Result.failure();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -582,7 +714,7 @@ public class AppGoodsController {
 	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -634,7 +766,7 @@ public class AppGoodsController {
 	public Object addToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,Long goodsId,Double count){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -714,7 +846,7 @@ public class AppGoodsController {
 	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String goodsCartId){
 		String[] ids = goodsCartId.split(",");
 		Result result = new Result();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (null == user) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
@@ -751,7 +883,7 @@ public class AppGoodsController {
 		log.info("添加订单beginning...........................");
 		Map<String, Object> mmp = null;
 		Result rs = Result.failure();
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -891,7 +1023,7 @@ public class AppGoodsController {
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -971,7 +1103,7 @@ public class AppGoodsController {
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -1047,7 +1179,7 @@ public class AppGoodsController {
 			HttpServletRequest request,HttpServletResponse response){
 		Map<String, Object> mmp = null;
 		Result rs = null;
-		ezs_user user = RedisUserSession.getLoginUserInfo(request);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
@@ -1128,7 +1260,7 @@ public class AppGoodsController {
 	@ResponseBody
 	public Object orderConfirminit(HttpServletRequest  request){
 		Result result=Result.failure();
-		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (upi == null) {
 			result = Result.failure();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);

@@ -51,7 +51,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 			accessory.setSize(Float.valueOf(0));
 		}
 		//评价信息
-		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(dvaluate.getOrder_no());
+		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(dvaluate.getOrder_no(),user.getId());
 		if(null==orderinfo){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "订单不存在");

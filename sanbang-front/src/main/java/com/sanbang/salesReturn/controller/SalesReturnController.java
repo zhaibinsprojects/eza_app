@@ -38,13 +38,18 @@ public class SalesReturnController {
 	
 	@RequestMapping(value="/getOrderformById")
 	@ResponseBody
-	public Result getOrderformById(@RequestParam(required=true,value="order_no")String order_no){
+	public Result getOrderformById(HttpServletRequest request,@RequestParam(required=true,value="order_no")String order_no){
 		Result result = Result.success();
 		Map<String,Object> map = new HashMap<String,Object>();
 		
 		try {
-			
-			ezs_order_info orderinfo = salesReturnService.getOrderListByOrderno(order_no);
+			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			ezs_order_info orderinfo = salesReturnService.getOrderListByOrderno(order_no,upi);
 			String returnNo = "";
 			//手动生成退货编号
 			if(null != orderinfo){
@@ -79,7 +84,12 @@ public class SalesReturnController {
 	@ResponseBody
 	public Result insertEzsSetReturnOrder(HttpServletRequest request,ezs_set_return_order returnOrder){
 		Result result = Result.success();
-			
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if(upi==null){
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
 		//未对象中一些前台未传入的字段赋值
 		if(null == returnOrder){
 			
@@ -93,7 +103,7 @@ public class SalesReturnController {
 			returnOrder.setDeleteStatus(true);     //是否启用--- 启用
 			
 		}
-		result = salesReturnService.insertSetReturnOrder(request,returnOrder);
+		result = salesReturnService.insertSetReturnOrder(request,returnOrder,upi);
 		return result;
 		
 	}
