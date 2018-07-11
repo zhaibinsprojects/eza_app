@@ -5,8 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<%-- <base href="${serurl}"/> --%>
-<base href="http://10.10.10.232/"/>
+<base href="${serurl}"/>
+<!-- <base href="http://10.10.10.232/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -100,7 +100,7 @@
 					} else {
 					//收藏
 					//测试用zhaibin
-					window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
+					//window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
 					 try {
 						 userk= window.android.isAndroidLogin();
 						 if(userk!=""){
@@ -183,7 +183,7 @@
 </body>
 
 <script type="text/javascript">
-/* var baseurl="${serurl}"; */
-var baseurl="http://10.10.10.232/";
+ var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.232/"; */
 </script>
 </html>

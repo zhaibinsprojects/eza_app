@@ -39,7 +39,7 @@ function loansubmit(){
 				//提交成功
 				window.location.href=baseurl+"/front/app/home/loan/getResultPage.htm?dealFlag=true";
 			}else{
-				/*if(userk!=""&&data.errorcode==110002){
+				if(userk!=""&&data.errorcode==110002){
 					$(".userkey").val("");
 					userk="";
 					var u = navigator.userAgent; // 获取用户设备
@@ -50,13 +50,14 @@ function loansubmit(){
 						androidnologin();
 					}
 				}else{
-					layer.open({
+					/*layer.open({
 						content : data.msg,
 						skin : 'msg',
 						time : 2
-					});
-				}*/
-				window.location.href=baseurl+"/front/app/home/loan/getResultPage.htm?dealFlag=false";
+					});*/
+					window.location.href=baseurl+"/front/app/home/loan/getResultPage.htm?dealFlag=false";
+				}
+				
 			}
 		}
 	});

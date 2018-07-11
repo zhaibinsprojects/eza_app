@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="zh-Hans">
 <head>
-<%-- <base href="${baseurl}" /> --%>
-<base href="http://10.10.10.232/" />
+<base href="${baseurl}" />
+<!-- <base href="http://10.10.10.232/" /> -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
