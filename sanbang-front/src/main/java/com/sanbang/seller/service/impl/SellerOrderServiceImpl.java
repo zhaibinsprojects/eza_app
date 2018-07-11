@@ -44,7 +44,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	
 	private Logger log =Logger.getLogger(SellerOrderServiceImpl.class);
 	
-	@Value("${config.sign.callbackurl}")
+	@Value("${config.sign.sellercallbackurl}")
 	private String callbackurl;
 
 	@Value("${config.sign.baseurl}")
@@ -206,7 +206,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			String accountType = upi.getEzs_store().getAccountType() + "";
 			String getijingyingshen = upi.getEzs_store().getIdCardNum();
 			String qiyedaimazheng = upi.getEzs_store().getUnifyCode();
-			mv.put("signMemId", upi.getEzs_store().getNumber());
+			mv.put("signMemId", upi.getEzs_store().getSnumber());
 			mv.put("orderid", order_no);
 			mv.put("callBackUrl", callbackurl);
 			mv.put("regid", 6);// (企业类型)5为个人 6为 个体和 公司
@@ -240,7 +240,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setObj(mv);
 			} else {
 				result.setSuccess(false);
-				result.setMsg("合同确认中，请稍后。如有疑问，咨询400-6666-890");
+				result.setMsg(res.getMessage());
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 
 			}
@@ -251,6 +251,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			result.setMsg("系统错误");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
+
 
 		return result;
 	}
