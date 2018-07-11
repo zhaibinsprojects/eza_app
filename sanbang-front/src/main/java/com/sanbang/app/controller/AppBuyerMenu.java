@@ -138,7 +138,7 @@ public class AppBuyerMenu {
 		}
 
 		try {
-			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+			Map<String, Object> map = buyerService.getOrderInfoShow(order_no,upi);
 			result.setObj(map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -212,7 +212,7 @@ public class AppBuyerMenu {
 			return result;
 		}
 		try {
-			result = buyerService.payconfirm(request,order_no);
+			result = buyerService.payconfirm(request,order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -247,12 +247,12 @@ public class AppBuyerMenu {
 		}
 
 		try {
-			result = buyerService.payconfirm(request,order_no);
+			result = buyerService.payconfirm(request,order_no,upi);
 			if(!result.getSuccess()){
 				return result;
 			}
 			
-			Map<String, Object> map = buyerService.getOrderInfoShow(order_no);
+			Map<String, Object> map = buyerService.getOrderInfoShow(order_no,upi);
 			result.setObj(map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -316,7 +316,13 @@ public class AppBuyerMenu {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			result = buyerService.showOrderContent(request, order_no);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result = buyerService.showOrderContent(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -411,7 +417,13 @@ public class AppBuyerMenu {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			result=buyerService.getezs_invoice(request, order_no);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=buyerService.getezs_invoice(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -438,7 +450,13 @@ public class AppBuyerMenu {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			result=buyerService.getezs_logistics(request, order_no);
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (upi == null) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=buyerService.getezs_logistics(request, order_no,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

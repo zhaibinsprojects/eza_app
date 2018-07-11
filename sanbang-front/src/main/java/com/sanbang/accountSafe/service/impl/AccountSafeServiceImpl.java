@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.accountSafe.service.AccountSafeService;
@@ -39,7 +40,8 @@ public class AccountSafeServiceImpl implements AccountSafeService {
 	@Autowired
 	private ezs_userinfoMapper  ezs_userinfoMapper;
 	
-	
+	@Value("${common.sendMessage.zhizhen}")
+	private String msgurl;
 	@Override
 	public Result checkAccountStatus(HttpServletRequest request,ezs_user upi) {
 
@@ -130,7 +132,7 @@ public class AccountSafeServiceImpl implements AccountSafeService {
 					log.info("短信验证码发送内容："+content);
 					
 					try {
-						SendMobileMessage.sendMsg(mobile, content);
+						SendMobileMessage.sendMsg(mobile, content,msgurl);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
 						result.setObj(new HashMap<>().put("mobile", mobile));

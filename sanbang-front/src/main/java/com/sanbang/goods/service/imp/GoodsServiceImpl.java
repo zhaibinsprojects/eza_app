@@ -921,6 +921,7 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("Msg", "查询成功");
 			}else{
+				mmp.put("Obj", goodCarInfoList);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "购物车没有数据");
 			}

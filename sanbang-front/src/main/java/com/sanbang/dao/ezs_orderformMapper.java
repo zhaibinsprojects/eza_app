@@ -36,7 +36,7 @@ public interface ezs_orderformMapper {
      * @param order_no
      * @return
      */
-    ezs_order_info getOrderListByOrderno(String order_no);
+    ezs_order_info getOrderListByOrderno(@Param("order_no")String order_no,@Param("userid")long userid);
     
     /**
      * 订单详细信息

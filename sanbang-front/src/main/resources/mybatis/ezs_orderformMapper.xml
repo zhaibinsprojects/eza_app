@@ -420,7 +420,7 @@
 			D.areaName,
 			B.user_id buyerid,
 			C.user_id sellerid,
-			CONCAT("http://www.ezaisheng.com/",F.path,"/",F.name)  as path
+			CONCAT("http://m.ezaisheng.com/",F.path,"/",F.name)  as path
 			,
 			F. NAME photoName,
 			IF(ISNULL(G.id), 0, 1) ispg,
@@ -529,7 +529,7 @@
 			IF(ISNULL(G.id), 0, 1) ispg,
 			IF (datediff( NOW(),B.addTime)>15, 1, 0) ist,
 			B.weAddress_id,
-			CONCAT("http://www.ezaisheng.com/",F.path,"/",F.name)  as path
+			CONCAT("http://m.ezaisheng.com/",F.path,"/",F.name)  as path
 			FROM
 				ezs_orderform B
 			LEFT JOIN ezs_goodscart A ON A.of_id = B.id
@@ -537,7 +537,7 @@
 			LEFT JOIN ezs_area D ON D.id = B.address_id
 			LEFT JOIN ezs_storecart E ON E.id = A.sc_id
 			LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
-			LEFT JOIN (SELECT L.id,L.order_no FROM ezs_dvaluate L WHERE L.user_id=346 ) G ON G.order_no = B.order_no
+			LEFT JOIN (SELECT L.id,L.order_no FROM ezs_dvaluate L WHERE L.user_id=#{userid} ) G ON G.order_no = B.order_no
 			WHERE
 				1 = 1
 			AND A.deleteStatus = 0

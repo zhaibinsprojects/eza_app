@@ -51,7 +51,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 			accessory.setSize(Float.valueOf(0));
 		}
 		//评价信息
-		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(dvaluate.getOrder_no());
+		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(dvaluate.getOrder_no(),user.getId());
 		if(null==orderinfo){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "订单不存在");
@@ -66,6 +66,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 		dvaluate.setAddTime(new Date());
 		dvaluate.setDeleteStatus(false);
 		dvaluate.setUser_id(user.getId());
+		dvaluate.setGoods_id(orderinfo.getGoodsid());
 		try {
 			//添加评价记录
 			this.dvaluateMapper.insert(dvaluate);
@@ -77,6 +78,7 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 				this.accessoryMapper.insert(accessory);
 				dvaluateAccessroy.setAccessroy_id(accessory.getId());
 				dvaluateAccessroy.setDvaluate_id(dvaluate.getId());
+				dvaluateAccessroyMapper.insertSelective(dvaluateAccessroy);
 			}
 			log.info("评价功能完成！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

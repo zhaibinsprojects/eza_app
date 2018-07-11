@@ -72,4 +72,12 @@ public class ezs_goods_log {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+	@Override
+	public String toString() {
+		return "ezs_goods_log [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", actionId="
+				+ actionId + ", goodsId=" + goodsId + ", remarks=" + remarks + ", user_id=" + user_id + "]";
+	}
+    
+    
 }

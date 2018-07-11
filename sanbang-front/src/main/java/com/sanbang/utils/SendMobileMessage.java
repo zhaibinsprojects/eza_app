@@ -24,11 +24,11 @@ public class SendMobileMessage {
 	 * @param content	内容
 	 * @return
 	 */
-	public static String sendMsg(String mobile, String content){
+	public static String sendMsg(String mobile, String content,String url){
 	
 		log.info("发短信时间接口开始调用,时间:"+System.currentTimeMillis());
 		
-		String url = Dictionary.getProperties("common.sendMessage.zhizhen");
+		//String url = Dictionary.getProperties("common.sendMessage.zhizhen");
 		
 		HttpRequestParam httpParam = new HttpRequestParam();
 		httpParam.addUrlParams(new BasicNameValuePair("UserName", "xinyi"));
@@ -56,6 +56,6 @@ public class SendMobileMessage {
 
 	public static void main(String[] args) throws Exception {
 		
-		sendMsg("18910821841,15602113833", "JavaSendMessageTest");
+		//sendMsg("18910821841,15602113833", "JavaSendMessageTest");
 	}
 }

@@ -13,6 +13,7 @@ import com.sanbang.app.controller.AppUserSetupCompanyInfoController;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_set_return_order;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.dao.ezs_set_return_orderMapper;
 import com.sanbang.salesReturn.service.SalesReturnService;
@@ -35,13 +36,13 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 	
 	private Logger log=Logger.getLogger(AppUserSetupCompanyInfoController.class);
 	@Override
-	public ezs_order_info getOrderListByOrderno(String order_no) {
+	public ezs_order_info getOrderListByOrderno(String order_no,ezs_user upi) {
 		
-		return ezs_orderformMapper.getOrderListByOrderno(order_no);
+		return ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
 	}
 
 	@Override
-	public Result insertSetReturnOrder(HttpServletRequest request,ezs_set_return_order returnOrder) {
+	public Result insertSetReturnOrder(HttpServletRequest request,ezs_set_return_order returnOrder,ezs_user upi) {
 		Result result = Result.success();
 		log.info("请求退货"+returnOrder.toString());
 		try {
@@ -52,7 +53,7 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 				return  result;
 			}
 			
-			ezs_order_info orde = ezs_orderformMapper.getOrderListByOrderno(returnOrder.getOrder_no());
+			ezs_order_info orde = ezs_orderformMapper.getOrderListByOrderno(returnOrder.getOrder_no(), upi.getId());
 			if(null==orde){
 				result.setSuccess(false);
 				result.setMsg("订单不存在");

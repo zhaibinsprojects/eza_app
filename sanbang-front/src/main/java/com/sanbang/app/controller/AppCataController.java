@@ -65,14 +65,16 @@ public class AppCataController {
 		Result result=Result.failure();
 		try{
 			List<GoodsClass> secondList = cataService.getSecondList(id);
-			if(secondList.size()==0){
-				result.setMsg("二级列表为空");
-				result.setSuccess(true);
-				return result;
-			}
 			List<GoodsClass2> thirdList = new ArrayList<GoodsClass2>();
 			Map<String,Object> map2 = new HashMap<String,Object>();	//用map拼前端的json
 			List<Object> transList = new ArrayList<Object>();
+			if(secondList.size()==0){
+				result.setMsg("二级列表为空");
+				result.setSuccess(true);
+				map2.put("second",transList);
+				result.setObj(map2);
+				return result;
+			}
 			for(int n=0; n < secondList.size(); n++){
 				Map<String,Object> map = new HashMap<String,Object>();
 				GoodsClass gc = (GoodsClass)secondList.get(n);

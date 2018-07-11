@@ -173,7 +173,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setMsg("订单不存在");
 				return result;
 			}
-			if (orderinfo.getOrder_status()!=20) {
+			if (orderinfo.getOrder_status()!=30) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("合同不在签订状态！");
