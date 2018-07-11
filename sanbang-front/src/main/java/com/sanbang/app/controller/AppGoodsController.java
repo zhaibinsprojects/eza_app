@@ -1,6 +1,9 @@
 package com.sanbang.app.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,7 @@ import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
@@ -50,12 +54,12 @@ public class AppGoodsController {
 	private FileUploadService fileUploadService;
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
-	
 	@Autowired
 	private AddressService addressService;
-	
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
+	@Autowired
+	private DictService dictService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	private static final String view="/goods/";
@@ -324,39 +328,75 @@ public class AppGoodsController {
 	
 	/**
 	 * 预约预定（已改）
-	 * @param request
-	 * @param customized 预约实体类（前端传的参数：描述remark，数量pre_num，要货时间pre_time，采购预算budget，商品id：goods_id）
+	 * （前端传的参数：描述remark，数量pre_num，要货时间pre_time，采购预算budget，商品id：goods_id）
 	 * 参数是这几个参数，需要跟前端约定字段名称（必须是这几个名称，否则塞不进实体中，跟前端以及app商量一哈儿）
-	 * @return
+	 * @param remark 描述
+	 * @param pre_num 数量
+	 * @param pre_time 要货时间
+	 * @param budget 采购预算
+	 * @param goods_id 商品id
+	 * @return  goodsid 商品ID； remark 备注； prenum 数量； budget 采购预算； pre_time=2018/02/02 要货时间
 	 */
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
-	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
-		Result result = Result.failure();
+	public Result insertCustomized(HttpServletRequest request,Long goods_id,String remark,Double pre_num,Double budget,String pre_time){
+		Result result = new Result();
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (user == null) {
-			result = Result.failure();
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+		ezs_customized customized = new ezs_customized();
+		if(user==null){
 			result.setMsg("用户未登录");
+			result.setSuccess(false);
+			result.setObj(new Object());
 			return result;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
-			if(user.getEzs_store().getStatus()!=2){
-				result = Result.failure();
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
-				return result;
-			}
 		}
+		customized.setGoods_id(goods_id);
 		String goodsId = customized.getGoods_id().toString();
-		if(null != goodsId && "".equals(goodsId)){
-			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
+		if(null != goodsId && !"".equals(goodsId)){
+			ezs_goods goods = goodsService.selectByPrimaryKey(goods_id);
 			if(null != goods){
-				customized.setAddress(goods.getAddess());
-				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
-				customized.setDensity(Double.valueOf(goods.getDensity()));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
-				customized.setPurpose(goods.getPurpose());
-				customized.setShape(goods.getForm_id().toString());	//同理
-				//剩下的需要塞的字段，劳烦彬哥了
+				customized.setRemark(remark);
+				customized.setPre_num(pre_num);
+				customized.setBudget(budget);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = null;
+				try {
+					date = sdf.parse(pre_time);
+					customized.setPre_time(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				customized.setAddress(goods.getAddess());//收货地址
+				customized.setColour_id(goods.getColor_id());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				//Double dd = Double.valueOf(density);
+				customized.setDensity(Double.valueOf((goods.getDensity()==null||goods.getDensity().equals(""))?"0":goods.getDensity()));
+				//customized.setDensity(Double.valueOf(0));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				customized.setPurpose(goods.getPurpose());//用途
+				//customized.setBudget(goods);//采购预算-前台传
+				//customized.setPre_num(Double.valueOf(goods.getCrack()));//预订数量-前台传
+				//customized.setPre_time(pre_time);//交货时间-前台传
+				customized.setAddTime(new Date());
+				customized.setDeleteStatus(false);
+				customized.setGoods_id(goods.getId());
+				customized.setCategory_id(goods.getGoodClass_id());//商品种类
+				customized.setAsh_content(Double.valueOf((goods.getAsh()==null||goods.getAsh().equals(""))?"0":goods.getAsh()));
+				customized.setBend_strength(Double.valueOf((goods.getBending()==null||goods.getBending().equals(""))?"0":goods.getBending()));//弯曲强度
+				customized.setCombustion_grade(Double.valueOf((goods.getBurning()==null||goods.getBurning().equals(""))?"0":goods.getBurning()));//燃烧等级
+				customized.setElong_break(Double.valueOf((goods.getCrack()==null||goods.getCrack().equals(""))?"0":goods.getCrack()));//断裂伸长率
+				customized.setFlexural_modulus(Double.valueOf((goods.getFlexural()==null||goods.getFlexural().equals(""))?"0":goods.getFlexural()));//弯曲模量
+				customized.setIs_ep((goods.getProtection()==true||goods.getProtection().equals(""))?"1":"0");//是否环保
+				customized.setJzforce(Double.valueOf((goods.getFreely()==null||goods.getFreely().equals(""))?"0":goods.getFreely()));//简支梁缺口冲击
+				customized.setMelt_index(Double.valueOf((goods.getLipolysis()==null||goods.getLipolysis().equals(""))?"0":goods.getLipolysis()));//熔融指数
+				customized.setSource_type("0");//来源类型//0是预购  1是采购
+				customized.setSourcefrom(goods.getSource());//来源
+				customized.setTensile(Double.valueOf((goods.getTensile()==null||goods.getTensile().equals(""))?"0":goods.getTensile()));//拉伸强度
+				customized.setWater_content(Double.valueOf((goods.getWater()==null||goods.getWater().equals(""))?"0":goods.getWater()));//水分
+				customized.setXbforce(Double.valueOf((goods.getCantilever()==null||goods.getCantilever().equals(""))?"0":goods.getCantilever()));//悬臂梁缺口冲击
+				customized.setPurchaser_id(user.getId());
+				customized.setStatus("0");
+				customized.setColour(dictService.getDictByThisId(goods.getColor_id()).getName());
+				customized.setShape(dictService.getDictByThisId(goods.getForm_id()).getName());	//形态
+				customized.setShape_id(goods.getForm_id());
+				
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("改商品不存在");
@@ -391,6 +431,7 @@ public class AppGoodsController {
 		}
 		return result;
 	}
+
 	
 	/**
 	 * 同类货品（待完善） hlf
