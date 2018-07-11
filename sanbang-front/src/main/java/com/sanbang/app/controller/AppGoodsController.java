@@ -1,6 +1,8 @@
 package com.sanbang.app.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
@@ -38,7 +41,10 @@ import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
+
+import freemarker.core.ParseException;
 
 
 @Controller
@@ -50,12 +56,13 @@ public class AppGoodsController {
 	private FileUploadService fileUploadService;
 	@Autowired
 	private OrderEvaluateService orderEvaluateService;
-	
 	@Autowired
 	private AddressService addressService;
-	
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
+	
+	@Autowired
+	private  DictService dictService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	private static final String view="/goods/";
@@ -70,7 +77,7 @@ public class AppGoodsController {
 	@RequestMapping("/toGoodsShow")
 	public String toGoodsShow(HttpServletRequest request,Long id,Model model){
 		//用户校验begin
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		long userid=0;
 		if(null==upi){
 			upi=RedisUserSession.getUserInfoByKeyForApp(request);
@@ -101,7 +108,8 @@ public class AppGoodsController {
 			if(null==upi){
 				result.setSuccess(false);
 				result.setMsg("用户未登录");
-				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				return  result;
 			}
 			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,upi.getId());
 			Map<String, Object> map=new HashMap<>();
@@ -114,7 +122,8 @@ public class AppGoodsController {
 			map.put("unit",goodsvo.getUtil()==null?"吨":goodsvo.getUtil().getName() );
 			result.setSuccess(true);
 			result.setMsg("请求成功");
-			result.setObj(goodsvo);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setObj(map);
 		} catch (Exception e) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误");
@@ -167,7 +176,7 @@ public class AppGoodsController {
 	@RequestMapping("/toGoodsdec")
 	public String toGoodsdec(HttpServletRequest request,Long goodsid,Model model){
 		//用户校验begin
-		ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+		ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 		long userid=0;
 		if(null==upi){
 			upi=RedisUserSession.getUserInfoByKeyForApp(request);
@@ -206,10 +215,12 @@ public class AppGoodsController {
 			result.setSuccess(true);
 		}else{
 			result.setMsg("查询失败！");
+			result.setObj(new Object());
 			result.setSuccess(false);
 		}
 		return result;
 	}
+	
 	/**
 	 * 查询货品评价列表
 	 * @param request
@@ -218,19 +229,18 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/listForEvaluate")
 	@ResponseBody
-	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNow){
+	public Result listForEvaluate(HttpServletRequest request,Long id,int pageNo){
 		Result result = new Result();
 		try {
 			//用户校验begin
-			ezs_user upi=RedisUserSession.getUserInfoByKeyForApp(request);
+			ezs_user upi=RedisUserSession.getLoginUserInfo(request);
 			long userid=0;
 			if(null==upi){
 				upi=RedisUserSession.getUserInfoByKeyForApp(request);
 			}
 			userid=null==upi?0:upi.getId();
 			//用户校验end
-			
-			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNow,id);
+			List<ezs_dvaluate>  dvaluatelist=orderEvaluateService.getEvaluateList(pageNo,id);
 			GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
 			Map<String, Object> map=new HashMap<>();
 			map.put("list", dvaluatelist);
@@ -243,9 +253,9 @@ public class AppGoodsController {
 			result.setSuccess(false);
 			result.setMsg("查询失败");
 		}
-		
 		return result;
 	}
+	
 	/**
 	 * 当第一次收藏时，是insert,取消收藏时是update更新状态（货品收藏）
 	 * @param request
@@ -266,7 +276,7 @@ public class AppGoodsController {
 		if(null != goodId){
 			ezs_documentshare share = goodsService.getCollect(goodId,user.getId());
 			if(null != share){
-				if(share.getDeleteStatus().equals(true)){
+				if(share.getHouse()==1){
 					goodsService.updateCollect(goodId,user.getId(),false);
 					result.setMsg("取消收藏成功");
 					result.setSuccess(true);
@@ -298,7 +308,6 @@ public class AppGoodsController {
 		return result;
 	}
 	
-	
 	/**
 	 * 预约定制采购单列表（待完善）
 	 * @param request
@@ -307,10 +316,17 @@ public class AppGoodsController {
 	 */
 	@RequestMapping("/customizedList")
 	@ResponseBody
-	public Result customizedList(HttpServletRequest request,Long user_id){
+	public Result customizedList(HttpServletRequest request){
 		List<ezs_customized> list = new ArrayList<ezs_customized>();
 		Result result = new Result();
-		list =  goodsService.customizedList(user_id);
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(user==null){
+			result.setMsg("用户未登录");
+			result.setSuccess(false);
+			result.setObj(new Object());
+			return result;
+		}
+		list =  goodsService.customizedList(user.getId());
 		if(null != list && list.size()>0){
 			result.setObj(list);
 			result.setSuccess(true);
@@ -324,39 +340,75 @@ public class AppGoodsController {
 	
 	/**
 	 * 预约预定（已改）
-	 * @param request
-	 * @param customized 预约实体类（前端传的参数：描述remark，数量pre_num，要货时间pre_time，采购预算budget，商品id：goods_id）
+	 * （前端传的参数：描述remark，数量pre_num，要货时间pre_time，采购预算budget，商品id：goods_id）
 	 * 参数是这几个参数，需要跟前端约定字段名称（必须是这几个名称，否则塞不进实体中，跟前端以及app商量一哈儿）
-	 * @return
+	 * @param remark 描述
+	 * @param pre_num 数量
+	 * @param pre_time 要货时间
+	 * @param budget 采购预算
+	 * @param goods_id 商品id
+	 * @return  goodsid 商品ID； remark 备注； prenum 数量； budget 采购预算； pre_time=2018/02/02 要货时间
 	 */
 	@RequestMapping("/insertCustomized")	
 	@ResponseBody
-	public Result insertCustomized(HttpServletRequest request,ezs_customized customized){
-		Result result = Result.failure();
+	public Result insertCustomized(HttpServletRequest request,Long goods_id,String remark,Double pre_num,Double budget,String pre_time){
+		Result result = new Result();
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (user == null) {
-			result = Result.failure();
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+		ezs_customized customized = new ezs_customized();
+		if(user==null){
 			result.setMsg("用户未登录");
+			result.setSuccess(false);
+			result.setObj(new Object());
 			return result;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
-			if(user.getEzs_store().getStatus()!=2){
-				result = Result.failure();
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
-				return result;
-			}
 		}
+		customized.setGoods_id(goods_id);
 		String goodsId = customized.getGoods_id().toString();
-		if(null != goodsId && "".equals(goodsId)){
-			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
+		if(null != goodsId && !"".equals(goodsId)){
+			ezs_goods goods = goodsService.selectByPrimaryKey(goods_id);
 			if(null != goods){
-				customized.setAddress(goods.getAddess());
-				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
-				customized.setDensity(Double.valueOf(goods.getDensity()));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
-				customized.setPurpose(goods.getPurpose());
-				customized.setShape(goods.getForm_id().toString());	//同理
-				//剩下的需要塞的字段，劳烦彬哥了
+				customized.setRemark(remark);
+				customized.setPre_num(pre_num);
+				customized.setBudget(budget);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = null;
+				try {
+					date = sdf.parse(pre_time);
+					customized.setPre_time(date);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				customized.setAddress(goods.getAddess());//收货地址
+				customized.setColour_id(goods.getColor_id());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				//Double dd = Double.valueOf(density);
+				customized.setDensity(Double.valueOf((goods.getDensity()==null||goods.getDensity().equals(""))?"0":goods.getDensity()));
+				//customized.setDensity(Double.valueOf(0));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				customized.setPurpose(goods.getPurpose());//用途
+				//customized.setBudget(goods);//采购预算-前台传
+				//customized.setPre_num(Double.valueOf(goods.getCrack()));//预订数量-前台传
+				//customized.setPre_time(pre_time);//交货时间-前台传
+				customized.setAddTime(new Date());
+				customized.setDeleteStatus(false);
+				customized.setGoods_id(goods.getId());
+				customized.setCategory_id(goods.getGoodClass_id());//商品种类
+				customized.setAsh_content(Double.valueOf((goods.getAsh()==null||goods.getAsh().equals(""))?"0":goods.getAsh()));
+				customized.setBend_strength(Double.valueOf((goods.getBending()==null||goods.getBending().equals(""))?"0":goods.getBending()));//弯曲强度
+				customized.setCombustion_grade(Double.valueOf((goods.getBurning()==null||goods.getBurning().equals(""))?"0":goods.getBurning()));//燃烧等级
+				customized.setElong_break(Double.valueOf((goods.getCrack()==null||goods.getCrack().equals(""))?"0":goods.getCrack()));//断裂伸长率
+				customized.setFlexural_modulus(Double.valueOf((goods.getFlexural()==null||goods.getFlexural().equals(""))?"0":goods.getFlexural()));//弯曲模量
+				customized.setIs_ep((goods.getProtection()==true||goods.getProtection().equals(""))?"1":"0");//是否环保
+				customized.setJzforce(Double.valueOf((goods.getFreely()==null||goods.getFreely().equals(""))?"0":goods.getFreely()));//简支梁缺口冲击
+				customized.setMelt_index(Double.valueOf((goods.getLipolysis()==null||goods.getLipolysis().equals(""))?"0":goods.getLipolysis()));//熔融指数
+				customized.setSource_type("0");//来源类型//0是预购  1是采购
+				customized.setSourcefrom(goods.getSource());//来源
+				customized.setTensile(Double.valueOf((goods.getTensile()==null||goods.getTensile().equals(""))?"0":goods.getTensile()));//拉伸强度
+				customized.setWater_content(Double.valueOf((goods.getWater()==null||goods.getWater().equals(""))?"0":goods.getWater()));//水分
+				customized.setXbforce(Double.valueOf((goods.getCantilever()==null||goods.getCantilever().equals(""))?"0":goods.getCantilever()));//悬臂梁缺口冲击
+				customized.setPurchaser_id(user.getId());
+				customized.setStatus("0");
+				customized.setColour(dictService.getDictByThisId(goods.getColor_id()).getName());
+				customized.setShape(dictService.getDictByThisId(goods.getForm_id()).getName());	//形态
+				customized.setShape_id(goods.getForm_id());
+				
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("改商品不存在");
@@ -392,6 +444,11 @@ public class AppGoodsController {
 		return result;
 	}
 	
+	
+	/*public Result customizedValidate(){
+		Result result=Result.failure();
+	}*/
+	
 	/**
 	 * 同类货品（待完善）
 	 * @param id 商品类别id
@@ -420,12 +477,12 @@ public class AppGoodsController {
 	 * @param areaId	地区id
 	 * @param typeId	品类id
 	 * @param defaultId	默认
-	 * @param inventory	库存量
+	 * @param inventory	库存
 	 * @param colorId	颜色id
 	 * @param formId	形态id
 	 * @param source	来源
 	 * @param purpose	用途
-	 * @param density	密度字符串数组
+	 * @param density	密度
 	 * @param cantilever	悬臂梁缺口冲击
 	 * @param freely	简支梁缺口冲击
 	 * @param lipolysis	熔融指数（溶脂）
@@ -438,7 +495,6 @@ public class AppGoodsController {
 	 * @param burning	燃烧等级
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
-	 * @param pageNow 当前页
 	 * @return
 	 */
 	@RequestMapping("/queryGoodsList")
@@ -446,7 +502,7 @@ public class AppGoodsController {
 	public Result queryGoodsList(HttpServletRequest request,
 			@RequestParam(name = "areaId",required=true)String areaId,
 			@RequestParam(name = "typeId",required=false)String typeId,
-			@RequestParam(name = "defaultId",required=false)String defaultId,	//默认值
+			@RequestParam(name = "defaultId",required=false)String defaultId,	//默认值（添加时间）
 			@RequestParam(name = "inventory",required=false)String inventory,	//库存量
 			@RequestParam(name = "colorId",required=false)String colorId,
 			@RequestParam(name = "formId",required=false)String formId,
@@ -464,7 +520,7 @@ public class AppGoodsController {
 			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
 			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
-			@RequestParam(name = "goodsName",required=false)String goodsName,
+			@RequestParam(name = " ",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
 		List<Long> areaList = new ArrayList<Long>();
@@ -511,7 +567,7 @@ public class AppGoodsController {
 			prices = price.split(",");
 		}
 		//重要参数
-		if(null != density && !"".equals(density)){
+		if(null != density  && !"".equals(density)){
 			densitys = density.split(",");
 		}
 		if(null != cantilever && !"".equals(cantilever)){
@@ -697,21 +753,18 @@ public class AppGoodsController {
 	}
 	
 	
-	
-	
-
 	/**
 	 * 样品下订单
 	 * @author zhaibin
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
-	 * @param goodCartId(购物车ID)
+	 * @param goodsCartId()
 	 * @return
 	 */
 	@RequestMapping("/addToSelfSampleOrderForm")
 	@ResponseBody
-	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
+	public Object addToSampleOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -729,12 +782,11 @@ public class AppGoodsController {
 			}
 		}
 		try {
-			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 beginning............");
 			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
 			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
 			ezs_orderform tOrderForm = new ezs_orderform();
 			tOrderForm.setWeAddress_id(WeAddressId);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodCartId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -744,14 +796,13 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
-			log.info("FunctionName:"+"addToSelfSampleOrderForm"+",context:"+"样品订单 处理异常...");
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
 		}
 		return rs;
 	}
+
 	/**
 	 * 添加购物车
 	 * @author zhaibin
@@ -794,7 +845,6 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
@@ -869,24 +919,22 @@ public class AppGoodsController {
 		return result;
 	}
 	/**
-	 * 直接下订单（添加订单）
+	 * 下订单（添加订单）
 	 * @author zhaibin
 	 * @param request
 	 * @param response
-	 * @param orderForm(ezs_orderform类型的JSON串)
-	 * @param goodCartId(购物车ID)
+	 * @param goodsCartId 购物车ID
 	 * @return
 	 */
-	@RequestMapping(value="/addToSelfOrderForm")
+	@RequestMapping("/addToSelfOrderForm")
 	@ResponseBody
-	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodCartId){
-		log.info("添加订单beginning...........................");
+	public Object directAddToSelfOrderForm(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsCartId){
 		Map<String, Object> mmp = null;
 		Result rs = Result.failure();
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
 			rs.setMsg("用户未登录");
 			return rs;
 		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
@@ -897,16 +945,12 @@ public class AppGoodsController {
 				return rs;
 			}
 		}
-		if(goodCartId==null){
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("请输入购物车ID");
-			return rs;
-		}
 		try {
+			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
+			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
 			ezs_orderform tOrderForm = new ezs_orderform();
 			tOrderForm.setWeAddress_id(WeAddressId);
-			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodCartId);
+			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "GOODS",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 				rs = Result.success();
@@ -916,14 +960,12 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
 			rs.setMsg("数据传递有误");
 		}
 		return rs;
 	}
-	
 	/**
 	 * 立即购买(商品)
 	 * @author zhaibin
@@ -982,7 +1024,7 @@ public class AppGoodsController {
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR); 
 			rs.setMsg("用户未登录");
 			return rs;
 		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
@@ -1020,6 +1062,7 @@ public class AppGoodsController {
 	@ResponseBody
 	public Object AddGoodsToSelfOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
 		log.info("添加订单beginning...........................");
+		Map<String, Object> mmp = new HashMap<>();
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
@@ -1027,12 +1070,14 @@ public class AppGoodsController {
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
@@ -1063,14 +1108,13 @@ public class AppGoodsController {
 				rs = Result.success();
 				//检验通过无需返回前台信息
 				//tempMP.remove("SuccessFlag");
-				//rs.setObj(tempMP);
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 			}else{
 				//校验未通过（未全部通过）
 				rs = Result.failure();
 				tempMP.remove("SuccessFlag");
 				//由此查询返回查询购物车相关信息
-				//zhaibin
 				Map<String, Object> mMp = this.goodsService.getGoodInfoFromGoodCart(tempMP);
 				if(mMp!=null){
 					rs.setObj(mMp.get("Obj"));
@@ -1078,9 +1122,9 @@ public class AppGoodsController {
 				rs.setMsg("有未通过预提交测试订单");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
 			log.error(e.toString());
 		}
@@ -1100,6 +1144,7 @@ public class AppGoodsController {
 	@ResponseBody
 	public Object AddGoodsToSampleOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
 		log.info("添加订单beginning...........................");
+		Map<String, Object> mmp = new HashMap<>();
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
@@ -1107,12 +1152,14 @@ public class AppGoodsController {
 		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
@@ -1144,6 +1191,7 @@ public class AppGoodsController {
 				//检验通过无需返回前台信息
 				//tempMP.remove("SuccessFlag");
 				//rs.setObj(tempMP);
+				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 			}else{
 				//校验未通过（未全部通过）
@@ -1157,9 +1205,9 @@ public class AppGoodsController {
 				rs.setMsg("有未通过预提交测试订单");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
 			log.error(e.toString());
 		}
@@ -1184,30 +1232,97 @@ public class AppGoodsController {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
+			rs.setObj(new ArrayList<>());
 			return rs;
 		}
 		try {
 			List<ezs_goodscart> goodCarList=new ArrayList<>();
-			mmp = this.goodsService.getGoodCarFunc(user,pageNow);
+			mmp = this.goodsService.getGoodCarFunc(user, pageNow);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				goodCarList = (List<ezs_goodscart>) mmp.get("Obj");
+				if(null!=(List<ezs_goodscart>) mmp.get("Obj")){
+					goodCarList=(List<ezs_goodscart>) mmp.get("Obj");
+				}
 				rs = Result.success();
 				rs.setObj(goodCarList);
 				rs.setMsg(mmp.get("Msg").toString());
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			}else{
 				rs = Result.failure();
 				rs.setObj(goodCarList);
 				rs.setMsg(mmp.get("Msg").toString());
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
 			rs.setMsg(mmp.get("Msg").toString());
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		return rs;
 	}
+	/**
+	 * 修改购物车数据并返回库存信息
+	 * @author zhaibin
+	 * @param request
+	 * @param response
+	 * @param goodCarIds 购物车ID数组（以“，”隔开）
+	 * @param goodCounts 购物车商品数量数组（以“，”隔开）
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/modifyGoodCars")
+	@ResponseBody
+	public Object modifyGoodCars(HttpServletRequest request,HttpServletResponse response,String goodCarIds,String goodCounts){
+		Result rs = null;
+		Map<String, Object> mmp = null;
+		Map<String, Object> resultMP = null;
+		List<String> checkResultList = null;
+		String[] goodCarIDArray = goodCarIds.trim().split(",");
+		String[] goodCountsArray = goodCounts.trim().split(",");
+		if(goodCarIDArray.length<0||goodCountsArray.length<0||goodCarIDArray.length!=goodCountsArray.length){
+			rs = Result.failure();
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("传入数据有误！");
+		}
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if (user == null) {
+			rs = Result.failure();
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg("用户未登录");
+			return rs;
+		}
+		mmp = this.goodsService.modifyGoodCars(goodCarIDArray, goodCountsArray, user);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			//查询购物车即可
+			//goodCarIDArray
+			rs = Result.success();
+			Map<String, Object> goodCarMP = this.goodsService.getGoodCarFunc(user,goodCarIDArray);
+			Integer goodCarErrorCode = (Integer) goodCarMP.get("ErrorCode");
+			if(goodCarErrorCode!=null&&goodCarErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				List<ezs_goodscart> goodCarList = (List<ezs_goodscart>) goodCarMP.get("Obj");
+				rs.setObj(goodCarList);
+			}else{
+				rs = Result.failure();
+				rs.setObj(new ArrayList<>());
+				rs.setMsg("查询购物车失败！");
+			}
+			rs.setMsg(mmp.get("Msg").toString());
+		}else{
+			//resultMP = (Map<String, Object>) mmp.get("Obj");
+			checkResultList = (List<String>) mmp.get("Obj");
+			rs = Result.failure();
+			rs.setErrorcode(HomeDictionaryCode.ERROR_HOME_INVENTORY_ERROR);
+			rs.setObj(new ArrayList<>());
+			rs.setMsg(checkResultList.toString());
+		}
+		return rs;
+	}
+	
+	
 	/**
 	 * 校验下单状态
 	 * @author zhaibin
@@ -1239,18 +1354,17 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 商品id得到质检报告
-	 * @param goodsId
+	 * 查看质检报告
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/getGoodsPdf")
 	@ResponseBody
-	public Object getGoodsPdf(@RequestParam("goodsId")long goodsId){
-		Result result=Result.failure();
+	public Result getGoodsPdf(Long goodsId) {
+		Result result = Result.failure();
 		result=goodsService.getGoodsPdf(goodsId);
 		return result;
 	}
-	
 	/**
 	 * 订单确认初始化
 	 * @param goodsId
@@ -1324,7 +1438,6 @@ public class AppGoodsController {
 				}
 			}
 		}
-		
 		if(!Tools.isEmpty(threeinfo)){
 			sb = new StringBuilder().append(threeinfo);	
 		}
@@ -1334,7 +1447,6 @@ public class AppGoodsController {
 		if(!Tools.isEmpty(oneinfo)){
 			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
-		
 		return sb.toString();
 	}
 }

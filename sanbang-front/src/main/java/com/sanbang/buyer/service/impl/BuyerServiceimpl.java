@@ -62,7 +62,7 @@ import net.sf.json.JSONObject;
 public class BuyerServiceimpl implements BuyerService {
 	private Logger log =Logger.getLogger(BuyerServiceimpl.class);
 
-	@Value("${config.sign.callbackurl}")
+	@Value("${config.sign.buyercallbackurl}")
 	private String callbackurl;
 
 	@Value("${config.sign.baseurl}")
@@ -379,7 +379,7 @@ public class BuyerServiceimpl implements BuyerService {
 			String accountType = upi.getEzs_store().getAccountType() + "";
 			String getijingyingshen = upi.getEzs_store().getIdCardNum();
 			String qiyedaimazheng = upi.getEzs_store().getUnifyCode();
-			mv.put("signMemId", upi.getEzs_store().getNumber());
+			mv.put("signMemId", upi.getEzs_store().getSnumber());
 			mv.put("orderid", order_no);
 			mv.put("callBackUrl", callbackurl);
 			mv.put("regid", 6);// (企业类型)5为个人 6为 个体和 公司

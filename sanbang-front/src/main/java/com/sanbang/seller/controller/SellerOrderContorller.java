@@ -214,9 +214,6 @@ public class SellerOrderContorller {
 		
 		try {
 			result = sellerOrderService.seller_order_signature(upi, order_no, request, response);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			result.setSuccess(true);
-			result.setMsg("请求成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

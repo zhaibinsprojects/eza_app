@@ -714,15 +714,19 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit1.setPriceStatus(600);
 				goodsAudit1.setStatus(540);
 				goodsAudit1.setId(goodsAudit.getId());
-				BigDecimal oldprice=goodsAudit.getSupplyPrice();
-				BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
-				int Percent=goodsAudit.getPercent();
-				if(Percent>0){
-					BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
-					BigDecimal Percent1=bb.add(new BigDecimal("1"));
-					SupplyPrice=oldprice.multiply(Percent1);
+				
+				if(null!=goodsAudit.getSalePrice()&&goodsAudit.getSalePrice().compareTo(BigDecimal.ZERO)==1){
+					BigDecimal oldprice=goodsAudit.getSupplyPrice();
+					BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
+					int Percent=goodsAudit.getPercent();
+					if(Percent>0){
+						BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+						BigDecimal Percent1=bb.add(new BigDecimal("1"));
+						SupplyPrice=oldprice.multiply(Percent1);
+					}
+					goodsAudit1.setSalePrice(SupplyPrice);
 				}
-				goodsAudit1.setSalePrice(SupplyPrice);
+				
 				goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit1);
 				result.setSuccess(true);
 				result.setMsg("操作完成");
