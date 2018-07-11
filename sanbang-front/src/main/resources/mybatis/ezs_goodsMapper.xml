@@ -1063,14 +1063,16 @@
 	     <association property="mainPhoto" column="goods_main_photo_id" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey">
 	     </association> 
   	</resultMap> 
- <sql id="IntroduceColumnList" >
+ <!-- <sql id="IntroduceColumnList" >
     g.id, g.inventory, g.name, g.price, g.area_id, g.goods_main_photo_id, g.util_id
-  </sql>
+  </sql> -->
 	<!-- 优品推荐2 -->
   <select id="goodsIntroduceTwo" resultMap="IntroduceTwoResultMap" parameterType="com.sanbang.utils.Page">
     select
-    <include refid="IntroduceColumnList" />
-  	from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id order by g.addTime DESC LIMIT #{startPos},#{pageSize}
+    g.id, g.inventory, g.name, 
+    (select s.salePrice from ezs_goods_audit_process s where s.goods_id = g.id and s.deleteStatus = 0) as price,
+    g.area_id, g.goods_main_photo_id, g.util_id
+  	from ezs_goods g LEFT JOIN ezs_accessory a on g.goods_main_photo_id = a.id where g.`status` = '2' order by g.addTime DESC LIMIT #{startPos},#{pageSize}
   </select>
 	
 	<!--商品详情展示-->

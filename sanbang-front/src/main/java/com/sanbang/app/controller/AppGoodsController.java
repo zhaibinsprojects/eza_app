@@ -199,7 +199,7 @@ public class AppGoodsController {
 	
 	
 	/**
-	 * 查询货品详情
+	 * 查询货品详情 hlf
 	 * @param request
 	 * @param id 货品id
 	 * @return
@@ -222,7 +222,7 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 查询货品评价列表
+	 * 查询货品评价列表 hlf
 	 * @param request
 	 * @param id 货品id
 	 * @return
@@ -258,7 +258,7 @@ public class AppGoodsController {
 	
 	/**
 	 * 当第一次收藏时，是insert,取消收藏时是update更新状态（货品收藏）
-	 * @param request
+	 * @param request hlf
 	 * @param goodId	商品id
 	 * @return
 	 */
@@ -309,7 +309,7 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 预约定制采购单列表（待完善）
+	 * 预约定制采购单列表（待完善） hlf
 	 * @param request
 	 * @param user_id
 	 * @return
@@ -450,7 +450,7 @@ public class AppGoodsController {
 	}*/
 	
 	/**
-	 * 同类货品（待完善）
+	 * 同类货品（待完善） hlf
 	 * @param id 商品类别id
 	 * @return
 	 */
@@ -472,7 +472,7 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 多条件查询
+	 * 多条件查询 hlf
 	 * @param request
 	 * @param areaId	地区id
 	 * @param typeId	品类id
@@ -625,8 +625,8 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 根据地区名返回id
-	 * @param request
+	 * 根据地区名返回id hlf
+	 * @param request 
 	 * @return
 	 */
 	@RequestMapping("/areaToId")
@@ -671,11 +671,11 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 返回其他筛选所需的条件:颜色 形态
+	 * 返回其他筛选所需的条件:颜色 形态hlf
 	 * @param request
 	 * @return
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") 
 	@RequestMapping("/colorAndFormList")
 	@ResponseBody
 	public Result colorAndFormList(HttpServletRequest request){
@@ -716,7 +716,7 @@ public class AppGoodsController {
 	}
 	
 	/**
-	 * 上传发票图片，返回url
+	 * 上传发票图片，返回url  hlf
 	 * @param request
 	 * @return
 	 * @throws Exception
@@ -839,7 +839,7 @@ public class AppGoodsController {
 	}
 	/**
 	 * 编辑购物车
-	 * @author han
+	 * @author hanlf
 	 * @param request
 	 * @param response
 	 * @param goodsCartId	当前购物车id
@@ -876,7 +876,7 @@ public class AppGoodsController {
 		}
 		return result;
 	}
-	//删除购物车（多选删除）
+	//删除购物车（多选删除） hlf
 	@RequestMapping(value="/deleteToSelfGoodCar")
 	@ResponseBody
 	public Result deleteToSelfGoodCar(HttpServletRequest request,HttpServletResponse response,String goodsCartId){

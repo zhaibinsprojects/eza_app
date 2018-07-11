@@ -26,17 +26,20 @@ function loansubmit(){
 			"area_id" : area_id,
 			"address" : $(".address").val(),
 			"loanAmount" : $(".loanAmount").val(),
+			"email" : $(".email").val(),
 			"token" : $(".userkey").val()
 		},
 		dataType : "json",
 		async : false,
 		success : function(data) {
 			if(data.success){
-				$(".msg-bg").css("display","none");
+				/*$(".msg-bg").css("display","none");
 				$(".msg-box").css("display","none");
-				layer.open({content : data.msg,skin : 'msg',time : 8});
+				layer.open({content : data.msg,skin : 'msg',time : 8});*/
+				//提交成功
+				window.location.href=baseurl+"/front/app/home/loan/getResultPage.htm?dealFlag=true";
 			}else{
-				if(userk!=""&&data.errorcode==110002){
+				/*if(userk!=""&&data.errorcode==110002){
 					$(".userkey").val("");
 					userk="";
 					var u = navigator.userAgent; // 获取用户设备
@@ -52,7 +55,8 @@ function loansubmit(){
 						skin : 'msg',
 						time : 2
 					});
-				}
+				}*/
+				window.location.href=baseurl+"/front/app/home/loan/getResultPage.htm?dealFlag=false";
 			}
 		}
 	});
@@ -66,13 +70,13 @@ var userk ="";
 var u ="";
 $(document).ready(function(){
 	$(".me-alert-box-btn").click(function(){
+		//window.location.href=baseurl+"/front/app/home/loan/getResultPage.htm?dealFlag=true";
 		//TODO 检查登陆
 		loansubmit();
 	});
 	// APP点击
 	var u = navigator.userAgent; // 获取用户设备
 	var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
-	
 	if (isIOS) {
 		setupWebViewJavascriptBridge(function(bridge) {
        		var data = {};

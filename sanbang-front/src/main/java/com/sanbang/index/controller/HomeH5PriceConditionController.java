@@ -52,7 +52,7 @@ public class HomeH5PriceConditionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/hangq")
 	public String hangqin(@RequestParam(name="yanjiucatid",defaultValue="17") int yanjiucatid,
-			@RequestParam(name="yanjiucatid",defaultValue="12") int jiagecatid,
+			@RequestParam(name="jiagecatid",defaultValue="12") int jiagecatid,
 			@RequestParam(name="currentPage",defaultValue="1") int pageno,
 			@RequestParam(name="kindId",defaultValue="1") String kindId,
 			@RequestParam(name="areaId",defaultValue="4523541") String areaId,
@@ -64,10 +64,10 @@ public class HomeH5PriceConditionController {
 			@RequestParam(name="burning",defaultValue="")String burning,
 			@RequestParam(name="protection",defaultValue="")String protection,
 			Model  model){
-		//价格
-		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno);
-		//研究报告
-		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno);
+		//行情分析
+		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno);
+		//研究报告 
+		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno);
 		
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> zoushi =new HashMap<>();

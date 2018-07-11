@@ -187,8 +187,8 @@ public class HomeLoanIndex {
 			return result;
 		}
 
-		if (Tools.isEmpty(address)) {
-			result.setMsg("请输入详细地址");
+		if (Tools.isEmpty(email)) {
+			result.setMsg("请输入邮箱信息");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			return result;
 		}
@@ -282,4 +282,13 @@ public class HomeLoanIndex {
 		}
 		return result;
 	}
+	
+	@RequestMapping("/getResultPage")
+	public String getResultPage(HttpServletRequest request, HttpServletResponse response,boolean dealFlag ,Model model) {
+		if(dealFlag)
+			return "submit_success";
+		else
+			return "submit_faile";
+	}
+	
 }

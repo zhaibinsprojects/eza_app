@@ -5,7 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}" />
+<%-- <base href="${serurl}" /> --%>
+<base href="http://10.10.10.232/" />
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -26,7 +27,7 @@
 </head>
 <body style="background: #efefef;">
 <header class="ezsm-collection-top">
-    <div><a class="aicon_yzs" href="#"></a></div>
+    <div><a href="javascript:void(0)"></a></div>
     <div>提交申请</div>
     <div><a class="" href="#"></a></div>
   </header>
@@ -90,6 +91,10 @@
 					<td>详细地址</td>
 					<td><input class="address" type="text" placeholder="请填写详细地址"></td>
 				</tr>
+				<tr>
+					<td>邮箱</td>
+					<td><input class="email" type="text" placeholder="请填写邮箱"></td>
+				</tr>
 				<tr style="display: none;">
 					<td><span>*</span>贷款金额</td>
 					<td><input class="loanAmount" type="text" placeholder="请填写贷款金额" value="0"></td>
@@ -100,6 +105,7 @@
 		<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
 </body>
 <script type="text/javascript">
-	var baseurl = "${serurl}";
+	<%-- var baseurl = "${serurl}"; --%>
+	var baseurl = "http://10.10.10.232/";
 </script>
 </html>

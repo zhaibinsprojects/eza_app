@@ -568,9 +568,9 @@ public class HomePriceConditionController {
 			@RequestParam(name="burning",defaultValue="")String burning,
 			@RequestParam(name="protection",defaultValue="")String protection){
 		//价格
-		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno);
-		//研究报告
-		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno);
+		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno);
+		//研究报告 
+		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno);
 		
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> zoushi =new HashMap<>();
