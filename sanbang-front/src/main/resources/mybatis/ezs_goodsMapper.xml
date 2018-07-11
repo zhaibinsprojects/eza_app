@@ -29,6 +29,7 @@
 		<result column="memberLook" jdbcType="BIT" property="memberLook" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="saleprice" jdbcType="DECIMAL" property="saleprice" />
 		<result column="protection" jdbcType="BIT" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />
@@ -61,6 +62,7 @@
     <result column="inventory" jdbcType="DOUBLE" property="inventory" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="saleprice" jdbcType="DECIMAL" property="saleprice" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
     <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
@@ -70,7 +72,7 @@
   <sql id="Base_Column_List">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
     collect, content, crack, density, flexural, freely, good_no, good_self, goods_salenum, 
-    inventory, keyword, lastModifyDate, lipolysis, lockStatus, memberLook, name, price, 
+    inventory, keyword, lastModifyDate, lipolysis, lockStatus, memberLook, name, saleprice as price, 
     protection, purpose, recommend, recommend_time, seo_description, source, status, 
     tensile, validity, water, area_id, classOfFinish_id, color_id, form_id, goodClass_id, 
     goods_main_photo_id, logistics_id, quality_id, region_id, supply_id, user_id, util_id, 
@@ -742,7 +744,7 @@
 	<sql id="Goods_Base_Column_List" >
     g.id, g.addTime, g.deleteStatus, g.addess, g.ash, g.bending, g.burning, g.cantilever, g.click, g.cncl_num, 
     g.collect, g.content, g.crack, g.density, g.flexural, g.freely, g.good_no, g.good_self, g.goods_salenum, 
-    g.inventory, g.keyword, g.lipolysis, g.memberLook, g.name, g.price, g.protection, g.purpose, g.recommend, 
+    g.inventory, g.keyword, g.lipolysis, g.memberLook, g.name, g.saleprice as price, g.protection, g.purpose, g.recommend, 
     g.recommend_time, g.seo_description, g.source, g.status,g.tensile, g.validity, g.water, g.area_id, 
     g.color_id, g.form_id, g.goodClass_id, g.goods_main_photo_id, g.logistics_id, g.quality_id, g.region_id, 
     g.supply_id, g.user_id, g.util_id, g.classOfFinish_id, g.lockStatus,g.lastModifyDate,

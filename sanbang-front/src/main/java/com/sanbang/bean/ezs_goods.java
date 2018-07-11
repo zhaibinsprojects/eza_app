@@ -57,6 +57,8 @@ public class ezs_goods {
     private String name;
 
     private BigDecimal price;
+    
+    private BigDecimal saleprice;
 
     private Boolean protection;
 
@@ -324,7 +326,15 @@ public class ezs_goods {
         this.price = price;
     }
 
-    public Boolean getProtection() {
+    public BigDecimal getSaleprice() {
+		return saleprice;
+	}
+
+	public void setSaleprice(BigDecimal saleprice) {
+		this.saleprice = saleprice;
+	}
+
+	public Boolean getProtection() {
         return protection;
     }
 

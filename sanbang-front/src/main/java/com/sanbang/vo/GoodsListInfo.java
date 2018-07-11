@@ -15,6 +15,8 @@ public class GoodsListInfo {
 	
 	private BigDecimal price;
 	
+	private BigDecimal saleprice;
+	
 	private Integer status;
 	// 商品初审状态码 540.待审核 ，544.初审不通过，541.初审通过/待质检（复审），546.复审通过 ，547.复审不通过
 	private Integer audit_status;
@@ -63,6 +65,14 @@ public class GoodsListInfo {
 		this.price = price;
 	}
 
+	public BigDecimal getSaleprice() {
+		return saleprice;
+	}
+
+	public void setSaleprice(BigDecimal saleprice) {
+		this.saleprice = saleprice;
+	}
+	
 	public Integer getStatus() {
 		return status;
 	}
