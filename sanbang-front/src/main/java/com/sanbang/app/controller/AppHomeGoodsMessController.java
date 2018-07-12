@@ -182,7 +182,8 @@ public class AppHomeGoodsMessController {
 			customized.setAsh_content(Double.valueOf((ash_content==null||ash_content.trim().equals(""))?"0":ash_content));
 			customized.setBend_strength(Double.valueOf((bend_strength==null||bend_strength.trim().equals(""))?"0":bend_strength));
 			customized.setBudget(Double.valueOf((budget==null||budget.trim().equals(""))?"0":budget));
-			customized.setColour(colour);
+			//customized.setColour(colour);
+			customized.setColour_id(Long.valueOf(colour));
 			//燃烧等级(PC端商品表类型为varchar 采购定制为 double 转化会发生异常)
 			//customized.setCombustion_grade(Double.valueOf((combustion_grade==null||combustion_grade.trim().equals(""))?"0":combustion_grade));
 			customized.setDensity(Double.valueOf((density==null||density.trim().equals(""))?"0":density));
@@ -194,7 +195,8 @@ public class AppHomeGoodsMessController {
 			customized.setPre_num(Double.valueOf((pre_num==null||pre_num.trim().equals(""))?"0":pre_num));
 			customized.setPurpose(purpose);
 			customized.setRemark(remark);
-			customized.setShape(shape);
+			//customized.setShape(shape);
+			customized.setShape_id(Long.valueOf(shape));
 			customized.setSource_type(source_type);
 			customized.setSourcefrom(sourcefrom);
 			customized.setTensile(Double.valueOf((tensile==null||tensile.trim().equals(""))?"0":tensile));

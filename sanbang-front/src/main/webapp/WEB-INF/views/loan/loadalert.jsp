@@ -5,7 +5,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}" />
+ <base href="${serurl}" />
 <!-- <base href="http://10.10.10.232/" /> -->
 <meta charset="utf-8" />
 <meta name="viewport"
@@ -101,11 +101,11 @@
 				</tr>
 			</tbody>
 		</table>
-		<div class="me-alert-box-btn" id="btn_save">提交资料</div>
+		<div class="me-alert-box-btn" id="btn_save" style="margin-top: 70%">提交资料</div>
 		<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
 </body>
 <script type="text/javascript">
 	var baseurl = "${serurl}";
-	/* var baseurl = "http://10.10.10.232/"; */
+/* var baseurl = "http://10.10.10.232/"; */
 </script>
 </html>

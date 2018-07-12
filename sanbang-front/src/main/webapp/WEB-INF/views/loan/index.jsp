@@ -5,8 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
-<!-- <base href="http://10.10.10.232/"/> -->
+<%-- <base href="${serurl}"/> --%>
+<base href="http://10.10.10.232/"/>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -43,6 +43,7 @@
 				var u ="";
 				// APP点击
 				var u = navigator.userAgent; // 获取用户设备
+				
 				var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 				if (isIOS) {
 					setupWebViewJavascriptBridge(function(bridge) {
@@ -52,11 +53,11 @@
 							 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
 								 userk= data;
 								 if(userk!=""){
-									 /* $(".userkey").val(data);
-									 $(".msg-bg").css("display","block");
-										$(".msg-box").css({"display":"block","height":"350px","margin-top":"40px"});
-									 var con_str = "";
-										$.ajax({
+									 //$(".userkey").val(data);
+									 //$(".msg-bg").css("display","block");
+									 //$(".msg-box").css({"display":"block","height":"350px","margin-top":"40px"});
+									 //var con_str = "";
+										/* $.ajax({
 											type : "post",
 											url : baseurl+"/front/app/home/loan/loadalert.htm",
 											data : {
@@ -66,8 +67,7 @@
 											success : function(data) {
 												$(".msg-box").html(data);
 											   }
-										});  */
-										//跳转到loadalert.jsp
+										}); */
 									 window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
 								 }else{
 									var data = {}
@@ -80,10 +80,10 @@
 						}
 						
 					});
-					
 					// ios app 设备才执行
 					//这段代码是固定的，必须要放到js中
 					function setupWebViewJavascriptBridge(callback) {
+						
 					    if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
 					    if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
 					    window.WVJBCallbacks = [callback];
@@ -91,7 +91,7 @@
 					    WVJBIframe.style.display = 'none';
 					    WVJBIframe.src = 'https://__bridge_loaded__';
 					    document.documentElement.appendChild(WVJBIframe);
-					    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+					    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0);
 					}
 			        // 与OC交互的所有JS方法都要放在此处注册，才能调用通过JS调用OC或者让OC调用这里的JS
 					
@@ -183,7 +183,7 @@
 </body>
 
 <script type="text/javascript">
- var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/"; */
+  var baseurl="${serurl}";
+ /* var baseurl="http://10.10.10.232/"; */
 </script>
 </html>

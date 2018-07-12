@@ -506,7 +506,9 @@
 	IFNULL(A.flexural_modulus,0) flexural_modulus,
 	IFNULL(A.combustion_grade,0) combustion_grade,
 	IFNULL(A.bend_strength,0) bend_strength,
-	IFNULL(A.`status`,0) `status`
+	IFNULL(A.`status`,0) `status`,
+	A.colour_id,
+	A.shape_id
 	FROM
 		ezs_customized A
 	LEFT JOIN ezs_goods B ON A.goods_id = B.id

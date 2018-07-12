@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.PurchaseService;
+import com.sanbang.dao.ezs_dictMapper;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
@@ -26,9 +28,11 @@ import com.sanbang.vo.DictionaryCode;
 @Controller
 @RequestMapping("/buy")
 public class PurchaseController {
-	
 	@Autowired
 	private PurchaseService purchaseService;  
+	@Autowired
+	private ezs_dictMapper dictMapper;
+	
 	/**
 	 * 根据已登录用户Id查询定制信息
 	 * @param request
@@ -79,6 +83,16 @@ public class PurchaseController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			customized = (ezs_customized) mmp.get("Obj");
+			ezs_dict color = null;
+			ezs_dict from = null;
+			if(customized.getColour_id()!=null)
+				color = dictMapper.selectByPrimaryKey(Long.valueOf(customized.getColour_id()));
+			if(color!=null)
+				customized.setColour(color.getName());
+			if(customized.getShape_id()!=null)
+				from = dictMapper.selectByPrimaryKey(Long.valueOf(customized.getShape_id()));
+			if(from!=null)
+				customized.setShape(from.getName());
 			rs = Result.success();
 			rs.setObj(customized);
 		}else{

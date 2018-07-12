@@ -8,6 +8,7 @@
 <title>易再生-中国再生资源交易平台</title>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
+<script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <style type="text/css">
 html, body, .content_yzs{height:100%;box-sizing:border-box;}
 .pj_mess{margin:0 2%;text-align:center;position:absolute;    top:50%;    margin-top:-150px;    width:96%;}
@@ -19,7 +20,7 @@ html, body, .content_yzs{height:100%;box-sizing:border-box;}
 <body>
 <div class="content_yzs">
   <header class="ezsm-collection-top">
-    <div><a class="aicon_yzs" href="#"></a></div>
+    <div><a href="javascript:void(0);"></a></div>
     <div>提交申请</div>
     <div></div>
   </header>
@@ -30,4 +31,13 @@ html, body, .content_yzs{height:100%;box-sizing:border-box;}
   </div>
 </div>
 </body>
+<script type="text/javascript">
+var baseurl = "${serurl}";
+/* var baseurl = "http://10.10.10.232/"; */
+$(function(){
+	$(".pj_btn").click(function(){
+		window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
+	})
+})
+</script>
 </html>

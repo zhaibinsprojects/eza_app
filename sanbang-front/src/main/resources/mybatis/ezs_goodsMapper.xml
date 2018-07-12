@@ -927,7 +927,14 @@
 		<if test="bending2 != null and bending2 != ''">
 	        and g.bending &lt;= #{bending2,jdbcType=VARCHAR}
 		</if>
-	    
+		<!-- 增加 start-->
+		<if test="burning1 != null and burning1 != ''">
+	        and g.burning &gt;= #{burning1,jdbcType=VARCHAR}
+		</if>
+		<if test="burning2 != null and burning2 != ''">
+	        and g.burning &lt;= #{burning2,jdbcType=VARCHAR}
+		</if>
+	    <!-- 增加 end-->
 		<if test="flexural1 != null and flexural1 != ''">
 	        and g.flexural &gt;= #{flexural1,jdbcType=VARCHAR}
 		</if>
