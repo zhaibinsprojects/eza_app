@@ -445,10 +445,10 @@
 	 	 	B.id orderid,
 			C.id goodsid,
      		B.order_no,
-			C.price,
+			(C.price*1000) price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d') addTime,
-			A.count,
+			(A.count/1000) count,
 			C.`name`,
 			C.area_id,
 			C.addess,
@@ -502,15 +502,14 @@
 			B.id orderid,
 			C.id goodsid,
      		B.order_no,
-			C.price,
+			(C.price*1000) price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d') addTime,
-			A.count,
+			(A.count/1000) goods_amount,
 			C.`name`,
 			C.area_id,
 			C.addess,
 			B.total_price,
-			B.goods_amount,
 			B.order_status,
 			B.first_price,
 			B.end_price,
@@ -537,6 +536,8 @@
 		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
 		where
 		1 = 1
+		AND B.deleteStatus = 0
+		AND A.deleteStatus = 0
 	and 
 	B.order_no=#{order_no}	
 	</select>

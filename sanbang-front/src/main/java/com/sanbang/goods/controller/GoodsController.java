@@ -20,6 +20,7 @@ import com.sanbang.addressmanage.service.AddressService;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
@@ -28,6 +29,7 @@ import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
@@ -55,6 +57,9 @@ public class GoodsController {
 	
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
+	
+	@Autowired
+	private DictService dictService;
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	/**
@@ -207,12 +212,16 @@ public class GoodsController {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				result = Result.failure();
 				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return result;
+			}
 			}
 		}
 		String goodsId = customized.getGoods_id().toString();
@@ -588,12 +597,16 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
+			}
 			}
 		}
 		try {
@@ -640,12 +653,16 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
+			}
 			}
 		}
 		ezs_goodscart goodsCart = new ezs_goodscart();
@@ -757,12 +774,16 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
+			}
 			}
 		}
 		if(goodCartId==null){
@@ -813,12 +834,16 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
+			}
 			}
 		}
 		mmp = this.goodsService.immediateAddOrderFormFunc(user, "GOODS",WeAddressId,goodsId, count);
@@ -853,12 +878,16 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else if(user.getEzs_store().getAuditingusertype_id()<=3){
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
+			}
 			}
 		}
 		mmp = this.goodsService.immediateAddOrderFormFunc(user,"SAMPLE",WeAddressId,goodsId, count);
@@ -897,6 +926,17 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
+			}
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();
@@ -977,6 +1017,17 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
+			if(user.getEzs_store().getStatus()!=2){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return rs;
+			}
+			}
 		}
 		if(goodCartIds==null){
 			rs = Result.failure();

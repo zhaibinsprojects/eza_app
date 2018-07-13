@@ -697,7 +697,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit.setPriceStatus(600);
 				goodsAudit.setSalePrice(new BigDecimal(0));
 				goodsAudit.setStatus(540);
-				goodsAudit.setSupplyPrice(goods.getPrice());
+				goodsAudit.setSupplyPrice(null);
 				goodsAudit.setPercent(0);
 				goodsAuditProcessMapper.insertSelective(goodsAudit);
 				try {

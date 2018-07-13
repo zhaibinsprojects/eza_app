@@ -111,8 +111,8 @@ public class BuyerServiceimpl implements BuyerService {
 
 	@Override
 	public List<ezs_order_info> getOrderListByValue(PagerOrder pager) {
-		if(pager.getOrder_status().equals("10")){
-			pager.setOrder_status("1,10");
+		if(pager.getOrder_status().equals("10,20")){
+			pager.setOrder_status("1,10,20");
 		}
 		pager.setPageNow(pager.getPageNow() - 1);
 		pager.setSecount(pager.getPageSize() * pager.getPageNow());
@@ -453,7 +453,7 @@ public class BuyerServiceimpl implements BuyerService {
 	}
 
 	@Override
-	public Result getContentList(String member, int temid, int currentPage,HttpServletRequest request) {
+	public Result getContentList(String member, String temtype, int currentPage,HttpServletRequest request) {
 		Result result=Result.failure();
 		try {
 			if (Tools.isEmpty(member)) {
@@ -463,16 +463,11 @@ public class BuyerServiceimpl implements BuyerService {
 				return result;
 			}
 
-			if (0==temid) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("合同类型不正确！");
-				return result;
-			}
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("number",member);
-			map.put("temtype", "PSELL");
+			map.put("temtype", temtype);
 			map.put("pageno", currentPage);
 			map.put("starttime", request.getParameter("starttime"));
 			map.put("endtime", request.getParameter("endtime"));

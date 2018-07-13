@@ -201,7 +201,7 @@ public class APPSellerReceiptController {
 					upi.getEzs_store().getSnumber())?
 							(new StringBuffer().append("'").append(upi.getEzs_store().getNumber()).append("'").toString())
 							:(new StringBuffer().append("'").append(upi.getEzs_store().getNumber()).append("'").append(",").append("'").append(upi.getEzs_store().getSnumber()).append("'").toString()),
-							5, pageno, request);
+							"PBUY", pageno, request);
 		} catch (Exception e) {
 			result.setMsg("未获取到数据");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);

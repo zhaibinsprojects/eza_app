@@ -26,9 +26,6 @@
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
     <result column="weAddress_id" property="weAddress_id" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_orderform" extends="BaseResultMap" >
-    <result column="msg" property="msg" jdbcType="LONGVARCHAR" />
-  </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, adjust_price, all_price, cart_session_id, end_price, estimateTime, 
     finishtime, first_price, goods_amount, order_no, order_status, order_type, pact_status, 
@@ -37,11 +34,9 @@
   <sql id="Blob_Column_List" >
     msg
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from ezs_orderform
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -507,12 +502,11 @@
 	   		C.price,
 			C.good_no,
 			date_format(B.addTime, '%Y-%m-%d %H:%i:%S') addTime,
-			A.count,
+			A.count goods_amount,
 			C.`name`,
 			C.area_id,
 			C.addess,
 			B.total_price,
-			B.goods_amount,
 			B.order_status,
 			B.first_price,
 			B.end_price,
@@ -540,6 +534,7 @@
 			LEFT JOIN (SELECT L.id,L.order_no FROM ezs_dvaluate L WHERE L.user_id=#{userid} ) G ON G.order_no = B.order_no
 			WHERE
 				1 = 1
+			AND B.deleteStatus = 0
 			AND A.deleteStatus = 0
 		and
 	 B.order_no=#{order_no}	

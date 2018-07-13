@@ -378,9 +378,10 @@ public class GoodsServiceImpl implements GoodsService{
 		record.setDeleteStatus(false);
 		record.setOperater_id(user.getId());
 		record.setPurchaser_id(user.getId());
+		record.setRemark("您的需求已经提交成功");
 		try{
 			int n = ezs_customizedMapper.insertSelective(customized);
-			record.setId(customized.getId());
+			record.setCustomized_id(customized.getId());
 			int m = ezs_customized_recordMapper.insertSelective(record);
 			if(n>0 && m>0){
 				map.put("Msg", "插入成功");

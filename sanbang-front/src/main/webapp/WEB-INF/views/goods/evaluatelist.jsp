@@ -44,7 +44,8 @@
 			<ul>
 			 <c:forEach items="${dvaluatelist}" var="dv">
 				 <li>
-						<div class="ezsm-evaluate-list-tit">${fn:substring(dv.user.name,0,3)}*** <span>的评价</span><span>${dv.addTime}</span></div>
+						<div class="ezsm-evaluate-list-tit">${fn:substring(dv.user.name,0,3)}*** <span>的评价</span>
+						<span><fmt:formatDate value="${dv.addTime}" type="date" pattern="yyyy-MM-dd HH:mm"/></span></div>
 						<div class="ezsm-evaluate-list-table">
 							<table>
 							<tr><td>综合评星</td><td>

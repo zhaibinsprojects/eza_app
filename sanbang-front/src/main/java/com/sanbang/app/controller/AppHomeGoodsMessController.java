@@ -24,6 +24,7 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dict.service.DictService;
 import com.sanbang.index.service.CustomerService;
 import com.sanbang.index.service.CustomizedService;
 import com.sanbang.index.service.GoodsClassService;
@@ -59,6 +60,8 @@ public class AppHomeGoodsMessController {
 	private ReportEssayServer reportEssayServer;
 	@Autowired
 	private CustomerService customerService;
+	@Autowired
+	private DictService dictService;
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -204,6 +207,8 @@ public class AppHomeGoodsMessController {
 			customized.setXbforce(Double.valueOf((xbforce==null||xbforce.trim().equals(""))?"0":xbforce));
 			customized.setCategory_id(Long.valueOf((category_id==null||category_id.trim().equals(""))?"0":category_id));
 			customized.setAddress(address);
+			customized.setColour(dictService.getDictByThisId(Long.valueOf(colour)).getName());
+			customized.setShape(dictService.getDictByThisId(Long.valueOf(shape)).getName());	//形态
 			//格式化时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = sdf.parse(ppre_time);
