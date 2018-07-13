@@ -100,7 +100,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div class="me-alert-box-btn" id="btn_save" style="margin-top: 70%">提交资料</div>
+		<div class="me-alert-box-btn" id="btn_save" style="margin-top: 60%">提交资料</div>
 		<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
 </body>
 <script type="text/javascript">

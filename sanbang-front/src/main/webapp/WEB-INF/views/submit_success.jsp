@@ -21,7 +21,7 @@ html, body, .content_yzs{height:100%;box-sizing:border-box;}
 <body>
 <div class="content_yzs">
   <header class="ezsm-collection-top">
-    <div><a class="aicon_yzs" href="#"></a></div>
+    <div><a href="javascript:void(0);"></a></div>
     <div>提交申请</div>
     <div></div>
   </header>
@@ -33,4 +33,13 @@ html, body, .content_yzs{height:100%;box-sizing:border-box;}
   </div>
 </div>
 </body>
+<script type="text/javascript">
+var baseurl = "${serurl}";
+/* var baseurl = "http://10.10.10.232/"; */
+$(function(){
+	$(".pj_btn").click(function(){
+		window.location.href=baseurl+"/front/app/home/loan/index.htm";
+	})
+})
+</script>
 </html>
