@@ -41,6 +41,7 @@ import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
@@ -85,8 +86,10 @@ public class AppGoodsController {
 		userid=null==upi?0:upi.getId();
 		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
 		//用户校验end
-		
 		GoodsVo  goodsvo=goodsService.getgoodsinfo(id,userid);
+		//add modify 修改地址信息 
+		String address = getaddressinfo(goodsvo.getArea_id());
+		goodsvo.setAreaName(address);
 		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}
@@ -603,14 +606,22 @@ public class AppGoodsController {
 		}
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
 		try{
-			List<ezs_goods> list = new ArrayList<ezs_goods>();
+			List<GoodsInfo> list = new ArrayList<GoodsInfo>();
+			List<GoodsInfo> listTemp = new ArrayList<GoodsInfo>();
 			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
 					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
 			if(null != list && list.size() > 0){
 				result.setSuccess(true);
 				result.setMsg("筛选成功");
-				result.setObj(list);
-				Page page = new Page(list.size(), pageNow);
+				//地址修改 修改areaName 为省份
+				for (GoodsInfo goodInfo : list) {
+					ezs_area areaTemp = getCityMess(goodInfo.getArea_id());
+					String goodsAddress = areaTemp.getAreaName();
+					goodInfo.setAreaName(goodsAddress);
+					listTemp.add(goodInfo);
+				}
+				result.setObj(listTemp);
+				Page page = new Page(listTemp.size(), pageNow);
 				result.setMeta(page);
 			}else{
 				result.setSuccess(true);
@@ -623,6 +634,15 @@ public class AppGoodsController {
 			result.setMsg("查询异常，数据出错");
 		}
 		return result;
+	}
+	
+	//若省级、市级，则返回省级、市级；若为市级以下，返回市级地址
+	private ezs_area getCityMess(Long childId){
+		ezs_area thisArea = ezs_areaMapper.selectByPrimaryKey(childId);
+		if(thisArea!=null&&thisArea.getLevel()>1){
+			thisArea = ezs_areaMapper.selectByPrimaryKey(thisArea.getParent_id());
+		}
+		return thisArea;
 	}
 	
 	/**
@@ -1215,8 +1235,7 @@ public class AppGoodsController {
 		return rs;
 	}
 	/**
-	 * 获取购物车数据
-	 * @author zhaibin 
+	 * 获取购物车数据 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1265,7 +1284,6 @@ public class AppGoodsController {
 	}
 	/**
 	 * 修改购物车数据并返回库存信息
-	 * @author zhaibin
 	 * @param request
 	 * @param response
 	 * @param goodCarIds 购物车ID数组（以“，”隔开）
@@ -1326,7 +1344,6 @@ public class AppGoodsController {
 	
 	/**
 	 * 校验下单状态
-	 * @author zhaibin
 	 * @return
 	 */
 	private synchronized Map<Object, Object> checkOrderForm(ezs_user user,String orderType,String[] goodsCartIds){
@@ -1450,4 +1467,5 @@ public class AppGoodsController {
 		}
 		return sb.toString();
 	}
+	
 }

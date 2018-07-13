@@ -265,7 +265,6 @@ public class AppBuyCenterController {
 	/**
 	 * 订单评价
 	 * 
-	 * @author zhaibin
 	 * @param logistice
 	 *            物流速度
 	 * @param goodQuality

@@ -824,9 +824,15 @@
 	
 	<!-- 多条件查询，han -->
 	<select id="queryGoodsList" resultType="com.sanbang.vo.GoodsInfo" parameterType="java.util.Map">
-		select g.id,g.name,
+		select g.id,
+		g.name,
 		IFNULL((select s.salePrice from ezs_goods_audit_process s where s.goods_id = g.id and s.deleteStatus = '0'),0.00) as price,
-		g.inventory,CONCAT("http://m.ezaisheng.com/",a.path,"/",a.name) picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
+		g.inventory,
+		CONCAT("http://m.ezaisheng.com/",a.path,"/",a.name) picturePath,
+		d1.name colorName,
+		ar.areaName areaName,
+		d2.name utilName,
+		g.area_id
 		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
 		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id AND g.`status`=2 and g.deleteStatus = '0'
 		<if test="areaList.size>0">

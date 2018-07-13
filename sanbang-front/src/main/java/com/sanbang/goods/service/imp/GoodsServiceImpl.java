@@ -45,6 +45,7 @@ import com.sanbang.utils.httpclient.HttpRequestParam;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsCarInfo;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.GoodsOfOrderInfo;
 import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
@@ -135,11 +136,11 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
-	public List<ezs_goods> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,
+	public List<GoodsInfo> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,
 			String[] formIds,String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,
 			String[] lipolysises,String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
 			String[] burnings,String goodsName,int pageStart){
-		List<ezs_goods> list = new ArrayList<ezs_goods>();
+		List<GoodsInfo> list = new ArrayList<GoodsInfo>();
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<Long> typeList = new ArrayList<Long>();
