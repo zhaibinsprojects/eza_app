@@ -514,6 +514,11 @@
 			<if test="price != null">
         price = #{price,jdbcType=DECIMAL},
 			</if>
+			<!-- 添加销售价格 start -->
+			<if test="saleprice != null">
+        saleprice = #{saleprice,jdbcType=DECIMAL},
+			</if>
+			
 			<if test="protection != null">
         protection = #{protection,jdbcType=BIT},
 			</if>

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_goods;
@@ -753,6 +754,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	}
 
 	@Override
+	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request) {
 		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 		
@@ -776,14 +778,17 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		goods.setLastModifyDate(new Date());
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
-		goodsMapper.updateByPrimaryKeySelective(goods);
-		
+		//goodsMapper.updateByPrimaryKeySelective(goods);
 
 		ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
+		ezs_goods_audit_process  goodsAudit1 = null;
+		BigDecimal oldprice = null;
+		BigDecimal SupplyPrice = null;
 		if (null != goodsAudit) {
 			//向ezs_goods_audit_process表中查入数据
-			ezs_goods_audit_process  goodsAudit1 = new ezs_goods_audit_process();
+			goodsAudit1 = new ezs_goods_audit_process();
 			goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
+			/*
 			BigDecimal oldprice=goodsAudit.getSupplyPrice();
 			BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
 			int Percent=goodsAudit.getPercent();
@@ -795,8 +800,25 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			goodsAudit1.setSupplyPrice(new BigDecimal(price));
 			goodsAudit1.setSalePrice(SupplyPrice);
 			goodsAudit1.setId(goodsAudit.getId());
-			goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
+			*/
+			//add modify start 2018-07-12
+			oldprice=new BigDecimal(price);
+			SupplyPrice=goodsAudit.getSupplyPrice();
+			int Percent=goodsAudit.getPercent();
+			if(Percent>=0){
+				BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
+				BigDecimal Percent1=bb.add(new BigDecimal("1"));
+				SupplyPrice=oldprice.multiply(Percent1);
 			}
+			goodsAudit.setSupplyPrice(new BigDecimal(price));
+			goodsAudit.setSalePrice(SupplyPrice);
+			goodsAudit.setId(goodsAudit.getId());
+			//add modify end 2018-07-12
+			goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
+		}
+		goods.setSaleprice(SupplyPrice);
+		goodsMapper.updateByPrimaryKeySelective(goods);
+		
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("货品更新成功");
