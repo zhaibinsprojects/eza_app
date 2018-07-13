@@ -183,19 +183,19 @@ li{list-style-type:none;}
 .ezsm-cooper-box div:last-child{float:left;width:100px;height:50px;line-height:25px;margin-left:10px;padding:7px 0px;font-family:"黑体";font-size:18px;color:#333333;}
 .ezsm-cooper-box div:last-child span{line-height:25px;font-family:"黑体";font-size:12px;color:#a3a3a3;}
 
-.ezsm-normal-top{width:100%;height:40px;line-height:40px;text-align:center;background:#00897c;font-size:18px;color:#fff;box-shadow:0px 3px 3px #ccc;
+.ezsm-normal-top{width:100%;height:30px;line-height:40px;text-align:center;background:#00897c;font-size:18px;color:#fff;box-shadow:0px 3px 3px #ccc;
     background: -webkit-linear-gradient(135deg, #00ae9d, #00897c); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(135deg,      #00ae9d, #00897c); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(135deg,    #00ae9d, #00897c); /* Firefox 3.6 - 15 */
     background: linear-gradient(135deg,         #00ae9d, #00897c); /* 标准的语法（必须放在最后） */}
 .ezsm-normal-top div{float:left;width:50%;height:40px;}
-.ezsm-normal-top div:first-child{width:25%;height:40px;background:url('../img/micon_019.png') no-repeat;background-size:28px;font-size:16px;}
+.ezsm-normal-top div:first-child{width:25%;height:40px;/* background:url('../img/micon_019.png') no-repeat; */background-size:28px;font-size:16px;}
 .ezsm-normal-top div:last-child{width:25%;height:40px;line-height:10px;font-size:10px;color:#fff;}
 .ezsm-normal-top div:last-child img{width:20px;height:18px;margin-top:5px;margin-bottom:3px;}
 .ezsm-normal-top div:last-child a{color:#fff;}
 .ezsm-normal-top-nav{width:80%;margin:0px auto;}
 .ezsm-normal-top-nav li{float:left;width:50%;height:40px;cursor:pointer;}
-.ezsm-normal-top-nav li span{display:block;width:35px;height:38px;padding:0px 2px;margin:0px auto;border-bottom:2px solid transparent;}
+.ezsm-normal-top-nav li span{    font-size: 10px;display:block;width:35px;height:38px;padding:0px 2px;margin:0px auto;border-bottom:2px solid transparent;}
 .ezsm-normal-top-nav-sel span{border-bottom:2px solid #fff !important;}
 .ezsm-normal-tab{width:100%;overflow-x:scroll;font-family:"黑体";}
 .ezsm-normal-tab ul{width:0px;height:40px;line-height:40px;background:#fff;border-bottom:1px solid #E5E5E5;}
@@ -216,7 +216,10 @@ li{list-style-type:none;}
 .ezsm-normal-bottombtn{width:100%;height:50px;line-height:50px;text-align:center;font-family:"黑体";font-size:18px;color:#fff;background:#008f81;position:fixed;z-index:10px;bottom:0px;cursor:pointer;}
 .ezsm-normal-bottombtnB-box{width:100%;height:50px;box-shadow:0px -8px 8px #c4c3c3;position:fixed;z-index:10px;bottom:0px;}
 .ezsm-normal-bottombtnB1{float:left;width:50%;height:50px;line-height:50px;text-align:center;background:#ffffff;color:#00897c;;font-size:15px;}
+.ezsm-normal-bottombtnB3{float:left;width:50%;height:50px;line-height:50px;text-align:center;background:#ffffff;color:#00897c;;font-size:15px;}
+.ezsm-normal-bottombtnB4{float:left;width:50%;height:50px;line-height:50px;text-align:center;background:#00897c;color:#ffffff;font-size:15px;}
 .ezsm-normal-bottombtnB2{float:left;width:50%;height:50px;line-height:50px;text-align:center;background:#00897c;color:#ffffff;font-size:15px;}
+.ezsm-normal-bottombtnB5{float:left;width:50%;height:50px;line-height:50px;text-align:center;background:#00897c;color:#ffffff;font-size:15px;}
 .ezsm-normal-centerbtn{width:94%;height:45px;line-height:45px;text-align:center;margin:0px auto;border:1px solid #008f81;border-radius:4px;font-family:"黑体";font-size:18px;color:#fff;background:#008f81;cursor:pointer;}
 .ezsm-normal-msg{width:90%;line-height:18px;text-align:center;padding:10px 5%;font-size:12px;color:#999999;}
 .ezsm-normal-msg span{color:#ff6700;}
@@ -305,7 +308,7 @@ li{list-style-type:none;}
 .ezsm-sameshop-box{width:100%;font-family:'微软雅黑';}
 .ezsm-sameshop-img{width:90%;margin:10px auto 0px auto;}
 .ezsm-sameshop-img img{width:100%;}
-.ezsm-sameshop-tit{width:90%;height:26px;line-height:26px;margin:0px auto;font-size:15px;color:#333333;}
+.ezsm-sameshop-tit{width:90%;height:26px;line-height:26px;margin:0px auto;font-size:12px;color:#333333;}
 .ezsm-sameshop-price{width:90%;height:29px;line-height:29px;margin:0px auto;color:#ff6700;font-size:15px;}
 .ezsm-sameshop-price span{float:right;color:#555555;font-size:12px;}
 

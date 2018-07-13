@@ -62,7 +62,7 @@ public interface BuyerService {
 	  * @param pageno
 	  * @return
 	  */
-	 public Result  getContentList(String member,int temid,int pageno,HttpServletRequest request);
+	 public Result  getContentList(String member,String temtype,int pageno,HttpServletRequest request);
 	 
 	 /**
 	  * 关闭订单

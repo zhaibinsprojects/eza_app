@@ -41,7 +41,7 @@ public class CustomizedServiceImpl implements CustomizedService {
 			customized.setDeleteStatus(false);
 			customized.setStatus("0");
 			customized.setSource_type("1");//来源类型:0是预购  1是采购
-			this.customizedMapper.insert(customized);
+			this.customizedMapper.insertSelective(customized);
 			//初始化必需字段数据
 			customizedRecord.setRemark("您的需求已经提交成功");
 			customizedRecord.setCustomized_id(customized.getId());
