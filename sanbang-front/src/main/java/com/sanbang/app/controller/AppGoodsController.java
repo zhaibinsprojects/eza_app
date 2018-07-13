@@ -533,7 +533,7 @@ public class AppGoodsController {
 			@RequestParam(name = "bending",required=false)String bending,	//弯曲强度
 			@RequestParam(name = "flexural",required=false)String flexural,	//弯曲模量
 			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
-			@RequestParam(name = " ",required=false)String goodsName,
+			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
 		List<Long> areaList = new ArrayList<Long>();
