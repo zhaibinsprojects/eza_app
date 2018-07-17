@@ -1120,6 +1120,9 @@ public class GoodsServiceImpl implements GoodsService{
 						good.setInventory(xaccount);
 						ezs_goodsMapper.updateByPrimaryKey(good);
 					}
+				}else{
+					//参考PC，U8查不到，不做同步处理
+					return true;
 				}
 			} else {
 				// 供应商锁库
@@ -1185,6 +1188,9 @@ public class GoodsServiceImpl implements GoodsService{
 						ezs_goodsMapper.updateByPrimaryKey(good);
 						bool = false;
 					}
+				}else{
+					//参考PC，U8查不到，不做同步处理
+					return true;
 				}
 			} else {
 				// 供应商锁库
@@ -1429,6 +1435,8 @@ public class GoodsServiceImpl implements GoodsService{
 						//good.setInventory(xaccount);
 						//ezs_goodsMapper.updateByPrimaryKey(good);
 					}
+				}else{
+					return true;
 				}
 			} else {
 				// 供应商锁库
