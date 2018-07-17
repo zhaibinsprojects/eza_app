@@ -464,7 +464,7 @@
 		A.addTime,
 		A.pre_num,
 		A.status,
-	  IFNULL(B.`name`,CONCAT(A.colour,C.`name`,A.shape)) cname
+	  IFNULL(B.`name`,C.`name`) cname
 	FROM
 		ezs_customized A
 	LEFT JOIN ezs_goods B ON A.goods_id = B.id
