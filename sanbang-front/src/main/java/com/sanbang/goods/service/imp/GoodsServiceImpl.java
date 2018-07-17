@@ -942,7 +942,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @param goods
 	 * @return
 	 */
-	public String createOrderNo(ezs_goods goods) {
+	public synchronized String createOrderNo(ezs_goods goods) {
 		// TODO Auto-generated method stub
 		try {
 			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
