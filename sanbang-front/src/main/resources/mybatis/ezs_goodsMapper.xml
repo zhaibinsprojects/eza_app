@@ -999,6 +999,7 @@
 		<result column="memberLook" jdbcType="BIT" property="memberLook" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="saleprice" jdbcType="DECIMAL" property="saleprice" />
 		<result column="protection" jdbcType="BIT" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />

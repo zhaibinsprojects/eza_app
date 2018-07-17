@@ -98,7 +98,7 @@
 	<div class="ezsm-shopdetail-tit">${good.name}<!-- <div class="shiyang">试样</div> --></div>
 	<div class="ezsm-shopdetail-param">
 		<table cellspacing="0">
-			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.price}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
+			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.saleprice}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
 			<tr> <td>库存</td> <td>${good.inventory}吨</td> </tr>
 			<tr> <td>库存地</td> <td>${good.areaName}</td> </tr>
 			<tr> <td>颜色</td> <td>${good.color.name}</td> </tr>
