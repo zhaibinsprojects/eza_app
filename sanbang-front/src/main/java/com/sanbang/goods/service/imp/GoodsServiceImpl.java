@@ -1260,7 +1260,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
+	public synchronized Map<String, Object> immediateAddOrderFormFunc(ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
 		// TODO Auto-generated method stub
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
