@@ -45,8 +45,6 @@ import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.HomeDictionaryCode;
 import com.sanbang.vo.goods.GoodsVo;
 
-import freemarker.core.ParseException;
-
 
 @Controller
 @RequestMapping("/app/goods")
@@ -367,7 +365,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				result = Result.failure();
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return result;
 			}
@@ -792,7 +790,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -846,7 +844,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -964,7 +962,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -1018,7 +1016,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -1062,7 +1060,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -1111,7 +1109,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -1187,7 +1185,6 @@ public class AppGoodsController {
 	@ResponseBody
 	public Object AddGoodsToSampleOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
 		log.info("添加订单beginning...........................");
-		Map<String, Object> mmp = new HashMap<>();
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
@@ -1204,7 +1201,7 @@ public class AppGoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -1331,7 +1328,6 @@ public class AppGoodsController {
 	public Object modifyGoodCars(HttpServletRequest request,HttpServletResponse response,String goodCarIds,String goodCounts){
 		Result rs = null;
 		Map<String, Object> mmp = null;
-		Map<String, Object> resultMP = null;
 		List<String> checkResultList = null;
 		String[] goodCarIDArray = goodCarIds.trim().split(",");
 		String[] goodCountsArray = goodCounts.trim().split(",");

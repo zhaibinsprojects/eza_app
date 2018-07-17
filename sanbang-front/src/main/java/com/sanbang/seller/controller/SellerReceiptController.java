@@ -1,9 +1,5 @@
 package com.sanbang.seller.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,14 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.ezs_accessory;
-import com.sanbang.bean.ezs_invoice;
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerReceiptService;
-import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCate;
@@ -43,6 +37,9 @@ public class SellerReceiptController {
 	
 	@Autowired
 	private BuyerService buyerService;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	/**
 	 * 根据订单编号和时间查询发票
@@ -238,6 +235,10 @@ public class SellerReceiptController {
 		}
 		try {
 			result = sellerReceiptService.orderivosubmit(request, order_no, urlParam,upi);
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

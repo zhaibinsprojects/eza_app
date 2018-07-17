@@ -1,10 +1,16 @@
 package com.sanbang.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class ezs_goods {
-    private Long id;
+public class ezs_goods  implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2474604456549766873L;
+
+	private Long id;
 
     private Date addTime;
 
@@ -524,6 +530,25 @@ public class ezs_goods {
 
 	public void setLastuptime(String lastuptime) {
 		this.lastuptime = lastuptime;
+	}
+
+	@Override
+	public String toString() {
+		return "ezs_goods [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", addess=" + addess
+				+ ", ash=" + ash + ", bending=" + bending + ", burning=" + burning + ", cantilever=" + cantilever
+				+ ", click=" + click + ", cncl_num=" + cncl_num + ", collect=" + collect + ", content=" + content
+				+ ", crack=" + crack + ", density=" + density + ", flexural=" + flexural + ", freely=" + freely
+				+ ", good_no=" + good_no + ", good_self=" + good_self + ", goods_salenum=" + goods_salenum
+				+ ", inventory=" + inventory + ", keyword=" + keyword + ", lastModifyDate=" + lastModifyDate
+				+ ", lipolysis=" + lipolysis + ", lockStatus=" + lockStatus + ", memberLook=" + memberLook + ", name="
+				+ name + ", price=" + price + ", saleprice=" + saleprice + ", protection=" + protection + ", purpose="
+				+ purpose + ", recommend=" + recommend + ", recommend_time=" + recommend_time + ", seo_description="
+				+ seo_description + ", source=" + source + ", status=" + status + ", tensile=" + tensile + ", validity="
+				+ validity + ", water=" + water + ", area_id=" + area_id + ", classOfFinish_id=" + classOfFinish_id
+				+ ", color_id=" + color_id + ", form_id=" + form_id + ", goodClass_id=" + goodClass_id
+				+ ", goods_main_photo_id=" + goods_main_photo_id + ", logistics_id=" + logistics_id + ", quality_id="
+				+ quality_id + ", region_id=" + region_id + ", supply_id=" + supply_id + ", user_id=" + user_id
+				+ ", util_id=" + util_id + ", addess2=" + addess2 + ", lastuptime=" + lastuptime + "]";
 	}
     
     

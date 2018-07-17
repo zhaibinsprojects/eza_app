@@ -380,6 +380,7 @@ public class GoodsServiceImpl implements GoodsService{
 		record.setRemark("您的需求已经提交成功");
 		try{
 			int n = ezs_customizedMapper.insertSelective(customized);
+			
 			record.setCustomized_id(customized.getId());
 			int m = ezs_customized_recordMapper.insertSelective(record);
 			if(n>0 && m>0){
@@ -404,7 +405,6 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> addGoodsCartFunc(ezs_goodscart goodsCart, ezs_user user) {
-		// TODO Auto-generated method stub
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车 beginning...");
 
 		Map<String, Object> mmp = new HashMap<>();
@@ -434,7 +434,7 @@ public class GoodsServiceImpl implements GoodsService{
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车存在选购商品记录--修改记录beginning");
 				ezs_goodscart goodsCartTemp = goodsCartList.get(0);
 				goodsCartTemp.setCount(goodsCartTemp.getCount()+goodsCart.getCount());
-				this.ezs_goodscartMapper.updateByPrimaryKey(goodsCartTemp);
+				this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCartTemp);
 				//更新店铺购物车
 				QueryCondition queryConditionTemp = new QueryCondition();
 				queryConditionTemp.setStoreId(user.getStore_id());
@@ -448,12 +448,11 @@ public class GoodsServiceImpl implements GoodsService{
 					log.info("店铺购物车已存在，获取购物车信息end...");
 					log.info("店铺购物车已存在，更新购物车信息...");
 					storeCart.setTotal_price(BigDecimal.valueOf(goodsCartTemp.getCount()*good.getPrice().doubleValue()));
-					this.storecartMapper.updateByPrimaryKey(storeCart);
+					this.storecartMapper.updateByPrimaryKeySelective(storeCart);
 					//good.setInventory(good.getInventory()-goodsCartTemp.getCount()-goodsCart.getCount());
-					//this.ezs_goodsMapper.updateByPrimaryKey(good);
+					//this.ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车存在选购商品记录--修改记录end");
 				} catch (Exception e) {
-					// TODO: handle exception
 					e.printStackTrace();
 					log.error("未查询到店铺购物车信息 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 					log.error(e.toString());
@@ -503,16 +502,15 @@ public class GoodsServiceImpl implements GoodsService{
 					totalMoney = goodsCart.getCount()*good.getPrice().doubleValue()+storeCart.getTotal_price().doubleValue();
 				this.ezs_goodscartMapper.insert(goodsCart);
 				storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
-				this.storecartMapper.updateByPrimaryKey(storeCart);
+				this.storecartMapper.updateByPrimaryKeySelective(storeCart);
 				//good.setInventory(good.getInventory()-goodsCart.getCount());
-				//this.ezs_goodsMapper.updateByPrimaryKey(good);
+				//this.ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车不存在选购商品记录--添加记录end");
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "购物车添加成功");
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车异常");
 			log.error(e.toString());
@@ -639,7 +637,6 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public synchronized Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId) {
-		// TODO Auto-generated method stub
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
 		//生成订单号码
@@ -677,7 +674,7 @@ public class GoodsServiceImpl implements GoodsService{
 				orderForm.setTotal_price(storecart.getTotal_price());
 				//更新店铺购物车，每单只有一种商品
 				storecart.setSc_status(1);//暂设定1标志 表示已生成订单
-				this.storecartMapper.updateByPrimaryKey(storecart);
+				this.storecartMapper.updateByPrimaryKeySelective(storecart);
 				//没卵用，仅为生成订单号码
 				orderFormNo = createOrderNo(goodTemp);
 				//同步U8库存
@@ -686,7 +683,6 @@ public class GoodsServiceImpl implements GoodsService{
 					checkGoodOrder(goodsCar,goodTemp,orderType,orderFormNo);
 					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
 				} catch (Exception e) {
-					// TODO: handle exception
 					System.out.println("同步库存异常");
 					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
 					e.printStackTrace();
@@ -701,7 +697,7 @@ public class GoodsServiceImpl implements GoodsService{
 					//样品
 					goodsCar.setCart_type(CommUtil.sample_goods);
 				}
-				this.ezs_goodscartMapper.updateByPrimaryKey(goodsCar);
+				this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCar);
 				//构建实时成交价
 				log.info("生成实时交易记录");
 				savePriceTrend(goodsCar,goodTemp,user);
@@ -715,7 +711,7 @@ public class GoodsServiceImpl implements GoodsService{
 					orderForm.setOrder_type(CommUtil.order_sample_good);
 				}
 				orderForm.setOrder_no(orderFormNo);
-				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				
 				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -743,7 +739,7 @@ public class GoodsServiceImpl implements GoodsService{
 				totalMoney += storeCartTemp.getTotal_price().doubleValue();
 				//更新商铺记录状态
 				storeCartTemp.setSc_status(1);//暂设定1标志 表示已生成订单
-				this.storecartMapper.updateByPrimaryKey(storeCartTemp);
+				this.storecartMapper.updateByPrimaryKeySelective(storeCartTemp);
 				//更新商品购物车
 				QueryCondition queryCondition01 = new QueryCondition();
 				queryCondition01.setUserId(user.getId());
@@ -756,7 +752,7 @@ public class GoodsServiceImpl implements GoodsService{
 					//更新库存
 					ezs_goods tGood = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
 					//tGood.setInventory(tGood.getInventory()-goodscart.getCount());
-					//this.ezs_goodsMapper.updateByPrimaryKey(tGood);
+					//this.ezs_goodsMapper.updateByPrimaryKeySelective(tGood);
 					
 					//同步U8库存
 					boolean goodCountCheckFlag = false;
@@ -764,7 +760,6 @@ public class GoodsServiceImpl implements GoodsService{
 						goodCountCheckFlag = checkGoods(goodscart,tGood);
 						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
 					} catch (Exception e) {
-						// TODO: handle exception
 						System.out.println("同步库存异常");
 						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
 						e.printStackTrace();
@@ -785,7 +780,7 @@ public class GoodsServiceImpl implements GoodsService{
 						//样品
 						goodscart.setCart_type(CommUtil.sample_goods);
 					}
-					this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
+					this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodscart);
 					//构建实时成交价
 					savePriceTrend(goodscart,tGood,user);
 					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
@@ -800,7 +795,7 @@ public class GoodsServiceImpl implements GoodsService{
 				}
 				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
 				orderForm.setOrder_no(orderFormNo);
-				this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				
 				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -811,7 +806,6 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "购物车无数据");
 			}*/
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.getMessage());
@@ -833,7 +827,6 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	public Map<String, Object> preOrderFormFunc(ezs_user user, String orderType,Long goodsCartId) {
-		// TODO Auto-generated method stub
 		log.info("FunctionName:"+"preOrderFormFunc "+",context:"+"开始预提交订单...");
 		Map<String, Object> goodsCartMp = new HashMap<>();
 		if(orderType==null){
@@ -855,7 +848,6 @@ public class GoodsServiceImpl implements GoodsService{
 					goodCountCheckFlag = checkGoodCart(goodsCar,goodTemp,orderType);
 					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"预提交测试，通过U8库进行库存量校验...");
 				} catch (Exception e) {
-					// TODO: handle exception
 					System.out.println("检验商品库存信息失败");
 					log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.toString());
 					e.printStackTrace();
@@ -882,7 +874,6 @@ public class GoodsServiceImpl implements GoodsService{
 				log.error("商品购物车查询失败");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.getMessage());
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.toString());
@@ -902,7 +893,6 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	public Map<String, Object> getGoodCarFunc(ezs_user user,int pageNow) {
-		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		List<GoodsCarInfo> goodCarInfoList = null;
 		QueryCondition queryCondition = new QueryCondition();
@@ -927,7 +917,6 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "购物车没有数据");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error("ErrorMessage:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -942,7 +931,6 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @return
 	 */
 	public String createOrderNo(ezs_goods goods) {
-		// TODO Auto-generated method stub
 		try {
 			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
 			int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
@@ -954,7 +942,6 @@ public class GoodsServiceImpl implements GoodsService{
 			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号成功");
 			return orderNo.toString();
 		} catch (Exception e) {
-			// TODO: handle exception
 			log.error("生成订单号失败："+e.toString());
 			throw e;
 		}
@@ -1016,7 +1003,6 @@ public class GoodsServiceImpl implements GoodsService{
         	pri.setSource_tel(seller.getEzs_userinfo().getTel());  // 来源者电话	
         	this.priceTrendMapper.insert(pri); 
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error("FunctionName:"+"savePriceTrend "+",context:"+e.toString());
 			throw e;
@@ -1117,7 +1103,7 @@ public class GoodsServiceImpl implements GoodsService{
 					}else{
 						//供货不足，更新现有库存量
 						good.setInventory(xaccount);
-						ezs_goodsMapper.updateByPrimaryKey(good);
+						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					}
 				}
 			} else {
@@ -1129,11 +1115,10 @@ public class GoodsServiceImpl implements GoodsService{
 				}else{
 					//供货不足，更新现有库存量
 					good.setInventory(xaccount);
-					ezs_goodsMapper.updateByPrimaryKey(good);
+					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw e;
 		}
 		return bool;
@@ -1175,13 +1160,13 @@ public class GoodsServiceImpl implements GoodsService{
 						stockMapper.insert(stock);
 						// 减去商品库存
 						good.setInventory(stock.getmQuantity());
-						ezs_goodsMapper.updateByPrimaryKey(good);
+						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						log.debug("自营商品锁库成功！");
 						bool = true;
 					}else{
 						//供货不足，更新现有库存量
 						good.setInventory(xaccount);
-						ezs_goodsMapper.updateByPrimaryKey(good);
+						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						bool = false;
 					}
 				}
@@ -1203,18 +1188,17 @@ public class GoodsServiceImpl implements GoodsService{
 					stockMapper.insert(stock);
 					// 减去商品库存
 					good.setInventory(stock.getmQuantity());
-					ezs_goodsMapper.updateByPrimaryKey(good);
+					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					log.debug("营业商品锁库成功！");
 					bool = true;
 				}else{
 					//更新现有库存量
 					good.setInventory(xaccount);
-					ezs_goodsMapper.updateByPrimaryKey(good);
+					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					bool = false;
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw e;
 		}
 		return bool;
@@ -1225,7 +1209,6 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	public Map<String, Object> getGoodInfoFromGoodCart(Map<Object, Object> mmp) {
-		// TODO Auto-generated method stub
 		Map<String, Object> tempMap = new HashMap<>();
 		List<GoodsOfOrderInfo> goodsInfoList = new ArrayList<>();
 		Set<Object> goodCartNoSet = mmp.keySet();
@@ -1254,7 +1237,6 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Map<String, Object> immediateAddOrderFormFunc(ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
-		// TODO Auto-generated method stub
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
@@ -1392,8 +1374,8 @@ public class GoodsServiceImpl implements GoodsService{
 			goodscart.setCount(Double.valueOf(counts[i].trim()));
 			BigDecimal totalPrice = BigDecimal.valueOf(goodscart.getPrice().doubleValue()*goodscart.getCount());
 			storecart.setTotal_price(totalPrice);
-			this.ezs_goodscartMapper.updateByPrimaryKey(goodscart);
-			this.storecartMapper.updateByPrimaryKey(storecart);
+			this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodscart);
+			this.storecartMapper.updateByPrimaryKeySelective(storecart);
 		}
 		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		mmp.put("Msg", "成功");
@@ -1421,12 +1403,12 @@ public class GoodsServiceImpl implements GoodsService{
 					if (xaccount > account) {
 						//更新下库存
 						good.setInventory(xaccount);
-						ezs_goodsMapper.updateByPrimaryKey(good);
+						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						bool = true;
 					}else{
 						//供货不足，本为校验-不更新库存
 						//good.setInventory(xaccount);
-						//ezs_goodsMapper.updateByPrimaryKey(good);
+						//ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					}
 				}
 			} else {
@@ -1436,16 +1418,15 @@ public class GoodsServiceImpl implements GoodsService{
 				if (xaccount >= account) {
 					//校验不可更新本地库存
 					//good.setInventory(xaccount);
-					//ezs_goodsMapper.updateByPrimaryKey(good);
+					//ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					bool = true;
 				}else{
 					//供货不足，本为校验-不更新库存
 					//good.setInventory(xaccount);
-					//ezs_goodsMapper.updateByPrimaryKey(good);
+					//ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw e;
 		}
 		return bool;
@@ -1453,7 +1434,6 @@ public class GoodsServiceImpl implements GoodsService{
 
 	@Override
 	public Map<String, Object> getGoodCarFunc(ezs_user user, String[] goodCarIDs) {
-		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		List<GoodsCarInfo> goodCarInfoList = null;
 		try {
@@ -1467,7 +1447,6 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "购物车没有数据");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			log.error("ErrorMessage:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);

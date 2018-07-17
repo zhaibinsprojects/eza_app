@@ -961,4 +961,15 @@ public class Tools {
 			}
 			return result;
 		}
+		
+		/**
+		 * 得到当前登录名称
+		 * @return
+		 */
+		public static synchronized String getRegistUserName(){
+			String pushN=new StringBuffer().append(String.valueOf(System.currentTimeMillis())).append(String.valueOf((int)((Math.random()*9+1)*1000))).toString();
+			String name=new StringBuffer().append("ezs").append(MD5Util.md5Encode(pushN).substring(15)).toString();
+			System.out.println(name);
+			return name;
+		}
 }

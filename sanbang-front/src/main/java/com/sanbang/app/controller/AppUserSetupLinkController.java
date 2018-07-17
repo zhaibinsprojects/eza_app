@@ -136,12 +136,12 @@ public class AppUserSetupLinkController {
 			return result;
 		}
 		
-		//查看手机号是否修改过
+		/*//查看手机号是否修改过
 		if(null!=upi.getEzs_userinfo().getPhoneStatus()&&upi.getEzs_userinfo().getPhoneStatus()==1){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setMsg("已经修改过一次不可更改！");
 			return result;
-		}
+		}*/
 		
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  
@@ -207,12 +207,12 @@ public class AppUserSetupLinkController {
 			return result;
 		}
 		
-		if(null!=upi.getEzs_userinfo().getPhoneStatus()&&upi.getEzs_userinfo().getPhoneStatus()==1){
+		/*if(null!=upi.getEzs_userinfo().getPhoneStatus()&&upi.getEzs_userinfo().getPhoneStatus()==1){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("只有一次修改机会");
 			return result;
-		}
+		}*/
 		
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  

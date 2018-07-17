@@ -217,7 +217,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				result = Result.failure();
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return result;
 			}
@@ -602,7 +602,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -658,7 +658,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -779,7 +779,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -839,7 +839,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -883,7 +883,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -931,7 +931,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}
@@ -1022,7 +1022,7 @@ public class GoodsController {
 			if(dictCode.getSequence()<=3){
 			if(user.getEzs_store().getStatus()!=2){
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
 				return rs;
 			}

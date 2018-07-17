@@ -505,7 +505,8 @@ public class SellerGoodsController {
 	 */
 	@RequestMapping("/updatePriceAndCnclNum")
 	@ResponseBody
-	public Object updatePriceAndCnclNum(long goodsId, HttpServletRequest request){
+	public Object updatePriceAndCnclNum(long goodsId, HttpServletRequest request,
+			HttpServletResponse  response){
 		Result result=Result.failure();
 		try {
 			ezs_user upi = RedisUserSession.getLoginUserInfo(request);
@@ -526,7 +527,7 @@ public class SellerGoodsController {
 				result.setMsg("用户未激活，没有卖家权限。");
 				return result;
 			}
-			result = sellerGoodsService.updateGoodsPriceAndNumById(result, goodsId,userId, request);
+			result = sellerGoodsService.updateGoodsPriceAndNumById(result, goodsId,userId, request,response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

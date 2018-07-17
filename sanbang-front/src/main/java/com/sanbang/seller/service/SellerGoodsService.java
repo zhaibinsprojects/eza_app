@@ -36,6 +36,6 @@ public interface SellerGoodsService {
 	//查询货品属性
 	String getGoodsProperty(Long propertyId);
 
-	Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request);
+	Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request,HttpServletResponse  response);
 
 }

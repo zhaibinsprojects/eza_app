@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_set_return_order;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.salesReturn.controller.SalesReturnController;
 import com.sanbang.salesReturn.service.SalesReturnService;
-import com.sanbang.utils.DateUtils;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
@@ -35,6 +32,9 @@ public class AppSalesReturnController {
 
 	@Autowired
 	private SalesReturnService salesReturnService;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	
 	@RequestMapping(value="/getOrderformById")
@@ -105,6 +105,10 @@ public class AppSalesReturnController {
 			
 		}
 		result = salesReturnService.insertSetReturnOrder(request,returnOrder,upi);
+		//wemall回调
+		if(result.getSuccess()){
+			commonOrderAdvice.returnOrderAdvice(returnOrder.getOrder_no(), "");
+		}
 		return result;
 		
 	}

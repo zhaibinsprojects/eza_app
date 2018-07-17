@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanbang.addressmanage.service.AddressService;
-import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
@@ -99,8 +98,6 @@ public class BuyerServiceimpl implements BuyerService {
 	@Autowired
 	private AddressService addressService;
 	
-	@Autowired
-	private CommonOrderAdvice commonOrderAdvice;
 	
 	@Autowired
 	ezs_purchase_orderformMapper purchaseOrderformMapper;
@@ -154,14 +151,14 @@ public class BuyerServiceimpl implements BuyerService {
 		// 支付方式（0.全款，1：首款+尾款 ）
 		if(orderinfo.getPay_mode()==1){
 			//首付款
-			if(orderinfo.getOrder_status()==40){
+			if(orderinfo.getOrder_status()>=20&&orderinfo.getOrder_status()<80){
 				map.put("paytype","首付款");
 				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getFirst_price());
 				map.put("pay_price", orderinfo.getFirst_price());
 				map.put("prop", String.valueOf(orderinfo.getFirst_price().divide(orderinfo.getTotal_price(), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%");
 			//尾款	
-			}else if(orderinfo.getOrder_status()==80){
+			}else if(orderinfo.getOrder_status()>=80){
 				map.put("paytype","尾款");
 				map.put("yunfei", orderinfo.getEzs_logistics()==null?0:orderinfo.getEzs_logistics().getTotal_price());
 				map.put("small_price", orderinfo.getEnd_price());
@@ -379,7 +376,7 @@ public class BuyerServiceimpl implements BuyerService {
 			String accountType = upi.getEzs_store().getAccountType() + "";
 			String getijingyingshen = upi.getEzs_store().getIdCardNum();
 			String qiyedaimazheng = upi.getEzs_store().getUnifyCode();
-			mv.put("signMemId", upi.getEzs_store().getSnumber());
+			mv.put("signMemId", upi.getEzs_store().getNumber());
 			mv.put("orderid", order_no);
 			mv.put("callBackUrl", callbackurl);
 			mv.put("regid", 6);// (企业类型)5为个人 6为 个体和 公司
@@ -582,10 +579,7 @@ public class BuyerServiceimpl implements BuyerService {
 		result.setMsg("关闭订单成功");
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		
-		//wemall回调
-		if(result.getSuccess()){
-			commonOrderAdvice.returnOrderAdvice(order_no, "");
-		}
+		
 		return result;
 	}
 
@@ -681,7 +675,7 @@ public class BuyerServiceimpl implements BuyerService {
 			//upi记录
 			vo.setAccid(ezs_accessory.getId());
 			
-			
+			    
 			//票据记录
 			ezs_payinfo payinfo=new ezs_payinfo();
 			payinfo.setAddTime(new Date());
@@ -710,11 +704,6 @@ public class BuyerServiceimpl implements BuyerService {
 			result.setMsg("上传成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			//result.setObj(payinfo);//方便修改
-			
-			//wemall回调
-			if(result.getSuccess()){
-				commonOrderAdvice.returnOrderAdvice(order_no, "");
-			}
 			return result;
 		} catch (Exception e) {
 			result.setSuccess(false);

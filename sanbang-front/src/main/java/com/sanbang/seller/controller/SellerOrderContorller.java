@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
@@ -37,6 +38,9 @@ public class SellerOrderContorller {
 	
 	@Autowired
 	DictService dictService;
+	
+	@Autowired
+	CommonOrderAdvice commonOrderAdvice;
 
 	/**
 	 * 分页查询订单列表
@@ -256,7 +260,12 @@ public class SellerOrderContorller {
 		}	
 		
 		result = sellerOrderService.sampleDelivery(result, order_no, request, response);
-		
+		if(result.getSuccess()){
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.orderFormAdviceStatus(order_no, "");
+			}
+		}
 		return result;
 	}
 	
@@ -288,7 +297,12 @@ public class SellerOrderContorller {
 		}	
 		
 		result = sellerOrderService.goodsDelivery(result, order_no, request, response);
-		
+		if(result.getSuccess()){
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.orderFormAdviceStatus(order_no, "");
+			}
+		}
 		return result;
 	}
 	

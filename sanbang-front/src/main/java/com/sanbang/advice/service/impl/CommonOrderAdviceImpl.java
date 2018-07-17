@@ -23,7 +23,8 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 
 	// 上下文地址
 	@Value("${config.orderform.advice}")
-	public String orderformadviceurl;
+	//public String orderformadviceurl="http://10.10.10.88:8080/wemall2/adviceforout/adviceForH5.htm";
+	public String orderformadviceurl="http://test.ezaisheng.com/ezs/adviceforout/adviceForH5.htm";
 		
 	private Logger log=Logger.getLogger(CommonOrderAdviceImpl.class);
 	@Override
@@ -39,7 +40,7 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 			result.setSuccess(true);
 			result.setMsg("调用成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			log.info("wemall订单状态通知===<成功>resmassage"+callBackRet.toString());
+			log.info("wemall订单状态通知===<成功>resmassage"/*+callBackRet.toString()*/);
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setMsg("系统错误");
@@ -63,7 +64,7 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 			result.setSuccess(true);
 			result.setMsg("调用成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			log.info("wemall订单状态通知===<成功>resmassage"+callBackRet.toString());
+			log.info("wemall订单状态通知===<成功>resmassage"/*+callBackRet.toString()*/);
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setMsg("系统错误");
@@ -75,6 +76,9 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 		return result;
 	}
 	
-	
+	public static void main(String[] args) {
+		CommonOrderAdviceImpl aa=new CommonOrderAdviceImpl();
+		aa.orderFormAdviceStatus("EU0218071700126", "");
+	}
 
 }

@@ -1245,6 +1245,7 @@ public class UserProServiceImpl implements UserProService {
 				user.setUserRole(userRole);
 				user.setTrueName(trueName);
 				user.setStore_id(storyid);
+				//user.setName(Tools.getRegistUserName());
 				aa = ezs_userMapper.insert(user);
 				ezs_user_role role = new ezs_user_role();
 
@@ -1416,7 +1417,15 @@ public class UserProServiceImpl implements UserProService {
 				result.setSuccess(false);
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("登录名称格式不正确！");
+				return  result;
 			} else {
+				List<ezs_user> listu=ezs_userMapper.getUserInfoByUserNameFromBack(linkvo.getUsername());
+				if(listu.size()>0){
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("登录名称已存在！");
+					return  result;
+				}
 				ezs_userinfo upuser1 = new ezs_userinfo();
 				upuser1.setId(ezsuser.getEzs_userinfo().getId());
 				upuser1.setUpdateStatus(1);
@@ -1843,4 +1852,6 @@ public class UserProServiceImpl implements UserProService {
 		return result;
 	}
 
+	
+	
 }

@@ -450,6 +450,7 @@
 		and	B.order_status in (90,110)	
 		</if>
 		AND B.user_id=${pager.userid}
+		ORDER BY B.addTime DESC
 		limit #{pager.secount},#{pager.pageSize}
  	</select>
 	
