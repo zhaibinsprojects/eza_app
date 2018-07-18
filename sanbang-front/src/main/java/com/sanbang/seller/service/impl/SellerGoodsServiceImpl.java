@@ -779,15 +779,15 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
 		//goodsMapper.updateByPrimaryKeySelective(goods);
-
 		ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
-		ezs_goods_audit_process  goodsAudit1 = null;
-		BigDecimal oldprice = null;
+		//ezs_goods_audit_process  goodsAudit1 = null;
+		BigDecimal NewSupplyPrice = null;
 		BigDecimal SupplyPrice = null;
+		BigDecimal SalePrice = null;
 		if (null != goodsAudit) {
 			//向ezs_goods_audit_process表中查入数据
-			goodsAudit1 = new ezs_goods_audit_process();
-			goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
+			//goodsAudit1 = new ezs_goods_audit_process();
+			//goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
 			/*
 			BigDecimal oldprice=goodsAudit.getSupplyPrice();
 			BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
@@ -802,21 +802,25 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			goodsAudit1.setId(goodsAudit.getId());
 			*/
 			//add modify start 2018-07-12
-			oldprice=new BigDecimal(price);
+			//调整供应商价格
+			NewSupplyPrice=new BigDecimal(price);
+			//原供应商价格
 			SupplyPrice=goodsAudit.getSupplyPrice();
+			//原销售价格
+			SalePrice = goodsAudit.getSalePrice();
 			int Percent=goodsAudit.getPercent();
 			if(Percent>=0){
 				BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
 				BigDecimal Percent1=bb.add(new BigDecimal("1"));
-				SupplyPrice=oldprice.multiply(Percent1);
+				SalePrice=NewSupplyPrice.multiply(Percent1);
 			}
-			goodsAudit.setSupplyPrice(new BigDecimal(price));
-			goodsAudit.setSalePrice(SupplyPrice);
-			goodsAudit.setId(goodsAudit.getId());
+			goodsAudit.setSupplyPrice(NewSupplyPrice);
+			goodsAudit.setSalePrice(SalePrice);
 			//add modify end 2018-07-12
 			goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
 		}
-		goods.setSaleprice(SupplyPrice);
+		goods.setPrice(NewSupplyPrice);
+		goods.setSaleprice(SalePrice);
 		goodsMapper.updateByPrimaryKeySelective(goods);
 		
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
