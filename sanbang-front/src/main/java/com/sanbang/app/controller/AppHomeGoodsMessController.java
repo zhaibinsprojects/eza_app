@@ -188,7 +188,7 @@ public class AppHomeGoodsMessController {
 			//customized.setColour(colour);
 			customized.setColour_id(Long.valueOf(colour));
 			//燃烧等级(PC端商品表类型为varchar 采购定制为 double 转化会发生异常)
-			//customized.setCombustion_grade(Double.valueOf((combustion_grade==null||combustion_grade.trim().equals(""))?"0":combustion_grade));
+			customized.setCombustion_grade(Double.valueOf((combustion_grade==null||combustion_grade.trim().equals(""))?"0":combustion_grade));
 			customized.setDensity(Double.valueOf((density==null||density.trim().equals(""))?"0":density));
 			customized.setElong_break(Double.valueOf((elong_break==null||elong_break.trim().equals(""))?"0":elong_break));
 			customized.setFlexural_modulus(Double.valueOf((flexural_modulus==null||flexural_modulus.trim().equals(""))?"0":flexural_modulus));

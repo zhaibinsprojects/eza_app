@@ -30,6 +30,8 @@ public class GoodsVo {
 	private String name;// 商品名称
 
 	private BigDecimal price;// 商品单价
+	
+	private BigDecimal saleprice;// 商品单价
 
 	private int validity;// 商品有效期
 
@@ -216,6 +218,15 @@ public class GoodsVo {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+	
+	
+	public BigDecimal getSaleprice() {
+		return saleprice;
+	}
+
+	public void setSaleprice(BigDecimal saleprice) {
+		this.saleprice = saleprice;
 	}
 
 	public int getValidity() {

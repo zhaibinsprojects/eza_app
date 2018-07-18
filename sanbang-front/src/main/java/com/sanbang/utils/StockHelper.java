@@ -126,6 +126,7 @@ public class StockHelper {
 				object.put("iQuantity", rs.getString("iQuantity"));
 				object.put("cWhCode", rs.getString("cWhCode"));
 				break;
+				//System.out.println(object);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -163,12 +164,13 @@ public class StockHelper {
 	
 	
 	public static void main(String[] args) {
-		System.err.println("访问U8库存");
-		JSONObject object = StockHelper.getStock("01","02");
+		System.out.println("访问U8库存");
+		JSONObject object = StockHelper.getStock("12221121232","1");
 		if (object != null) {
 			// 现有库存量
-			System.out.println(object);
+			//System.out.println(object);
 		}else{
+			System.out.println(object);
 			System.out.println("结果集为NULL");
 		}
 		

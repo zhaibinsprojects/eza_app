@@ -6,6 +6,7 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
+<!-- <base href="http://10.10.10.232/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -97,9 +98,9 @@
 	<div class="ezsm-shopdetail-tit">${good.name}<!-- <div class="shiyang">试样</div> --></div>
 	<div class="ezsm-shopdetail-param">
 		<table cellspacing="0">
-			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.price}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
+			<tr> <td>单价</td> <td><span class="colororange" style="font-weight:bold;font-size:15px;margin-right:20px;">¥${good.saleprice}</span><span style="color:#999999;font-size:12px;">(含税，不含物流费用)</span></td> </tr>
 			<tr> <td>库存</td> <td>${good.inventory}吨</td> </tr>
-			<tr> <td>库存地</td> <td>${good.addess}</td> </tr>
+			<tr> <td>库存地</td> <td>${good.areaName}</td> </tr>
 			<tr> <td>颜色</td> <td>${good.color.name}</td> </tr>
 			<tr> <td>形态</td> <td>${good.form.name}</td> </tr>
 			<tr> <td>原料来源</td> <td>${good.source}</td> </tr>

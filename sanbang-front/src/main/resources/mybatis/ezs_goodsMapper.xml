@@ -842,9 +842,15 @@
 	
 	<!-- 多条件查询，han -->
 	<select id="queryGoodsList" resultType="com.sanbang.vo.GoodsInfo" parameterType="java.util.Map">
-		select g.id,g.name,
+		select g.id,
+		g.name,
 		IFNULL((select s.salePrice from ezs_goods_audit_process s where s.goods_id = g.id and s.deleteStatus = '0'),0.00) as price,
-		g.inventory,CONCAT("http://m.ezaisheng.com/",a.path,"/",a.name) picturePath,d1.name colorName,ar.areaName areaName,d2.name utilName
+		g.inventory,
+		CONCAT("http://m.ezaisheng.com/",a.path,"/",a.name) picturePath,
+		d1.name colorName,
+		ar.areaName areaName,
+		d2.name utilName,
+		g.area_id
 		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
 		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id AND g.`status`=2 and g.deleteStatus = '0'
 		<if test="areaList.size>0">
@@ -883,88 +889,89 @@
 		</if>
 		<!-- 价格 -->
 		<if test="price1 != null and price1 != ''">
-	        and g.price &gt;= #{price1,jdbcType=VARCHAR} 
+	        and g.price &gt;= ${price1}
 		</if>
 		<if test="price2 != null and price2 != ''">
-	        and g.price &lt;= #{price2,jdbcType=VARCHAR} 
+	        and g.price &lt;= ${price2} 
 		</if>
 	    
 		<!-- 重要参数的区间查询 -->
 		<if test="density1 != null and density1 != ''">
-	        and g.density &gt;= #{density1,jdbcType=VARCHAR} 
+	        and g.density &gt;= ${density1} 
 		</if>
 		<if test="density2 != null and density2 != ''">
-	        and g.density &lt;= #{density2,jdbcType=VARCHAR} 
+	        and g.density &lt;= ${density2} 
 		</if>
 	    
 		<if test="cantilever1 != null and cantilever1 != ''">
-	        and g.cantilever &gt;= #{cantilever1,jdbcType=VARCHAR}
+	        and g.cantilever &gt;= ${cantilever1}
 		</if>
 		<if test="cantilever2 != null and cantilever2 != ''">
-	        and g.cantilever &lt;= #{cantilever2,jdbcType=VARCHAR}
+	        and g.cantilever &lt;= ${cantilever2}
 		</if>
 	    
 		<if test="freely1 != null and freely1 != ''">
-	        and g.freely &gt;= #{freely1,jdbcType=VARCHAR}
+	        and g.freely &gt;= ${freely1}
 		</if>
 		<if test="freely2 != null and freely2 != ''">
-	        and g.freely &lt;= #{freely2,jdbcType=VARCHAR}
+	        and g.freely &lt;= ${freely2}
 		</if>
 	    
 		<if test="lipolysis1 != null and lipolysis1 != ''">
-	        and g.lipolysis &gt;= #{lipolysis1,jdbcType=VARCHAR}
+	        and g.lipolysis &gt;= ${lipolysis1}
 		</if>
 		<if test="lipolysis2 != null and lipolysis2 != ''">
-	        and g.lipolysis &lt;= #{lipolysis2,jdbcType=VARCHAR}
+	        and g.lipolysis &lt;= ${lipolysis2}
 		</if>
 	    
 		<if test="ash1 != null and ash1 != ''">
-	        and g.ash &gt;= #{ash1,jdbcType=VARCHAR}
+	        and g.ash &gt;= ${ash1}
 		</if>
 		<if test="ash2 != null and ash2 != ''">
-	        and g.ash &lt;= #{ash2,jdbcType=VARCHAR}
+	        and g.ash &lt;= ${ash2}
 		</if>
 	    
 		<if test="water1 != null and water1 != ''">
-	        and g.water &gt;= #{water1,jdbcType=VARCHAR}
+	        and g.water &gt;= ${water1}
 		</if>
 		<if test="water2 != null and water2 != ''">
-	        and g.water &lt;= #{water2,jdbcType=VARCHAR}
+	        and g.water &lt;= ${water2}
 		</if>
 	    
 		<if test="tensile1 != null and tensile1 != ''">
-	        and g.tensile &gt;= #{tensile1,jdbcType=VARCHAR}
+	        and g.tensile &gt;= ${tensile1}
 		</if>
 		<if test="tensile2 != null and tensile2 != ''">
-	        and g.tensile &lt;= #{tensile2,jdbcType=VARCHAR}
+	        and g.tensile &lt;= ${tensile2}
 		</if>
 	    
 		<if test="crack1 != null and crack1 != ''">
-	        and g.crack &gt;= #{crack1,jdbcType=VARCHAR}
+	        and g.crack &gt;= ${crack1}
 		</if>
 		<if test="crack2 != null and crack2 != ''">
-	        and g.crack &lt;= #{crack2,jdbcType=VARCHAR}
+	        and g.crack &lt;= ${crack2}
 		</if>
 	    
 		<if test="bending1 != null and bending1 != ''">
-	        and g.bending &gt;= #{bending1,jdbcType=VARCHAR}
+	        and g.bending &gt;= ${bending1}
 		</if>
 		<if test="bending2 != null and bending2 != ''">
-	        and g.bending &lt;= #{bending2,jdbcType=VARCHAR}
+	        and g.bending &lt;= ${bending2}
 		</if>
 		<!-- 增加 start-->
 		<if test="burning1 != null and burning1 != ''">
-	        and g.burning &gt;= #{burning1,jdbcType=VARCHAR}
+	        <!-- and g.burning &gt;= ${burning1,jdbcType=BIGINT} -->
+	        and g.burning &gt;= ${burning1}
 		</if>
 		<if test="burning2 != null and burning2 != ''">
-	        and g.burning &lt;= #{burning2,jdbcType=VARCHAR}
+	        and g.burning &lt;= ${burning2}
 		</if>
 	    <!-- 增加 end-->
 		<if test="flexural1 != null and flexural1 != ''">
-	        and g.flexural &gt;= #{flexural1,jdbcType=VARCHAR}
+	        and g.flexural &gt;= ${flexural1}
 		</if>
 		<if test="flexural2 != null and flexural2 != ''">
-	        and g.flexural &lt;= #{flexural2,jdbcType=VARCHAR}
+	        and g.flexural &lt;= ${flexural2}
 		</if>
 	    
 		<!-- 默认：传值0，按照添加时间降序排列 -->
@@ -1010,6 +1017,7 @@
 		<result column="memberLook" jdbcType="BIT" property="memberLook" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="saleprice" jdbcType="DECIMAL" property="saleprice" />
 		<result column="protection" jdbcType="BIT" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />

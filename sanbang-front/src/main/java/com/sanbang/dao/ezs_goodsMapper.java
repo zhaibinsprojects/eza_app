@@ -55,7 +55,7 @@ public interface ezs_goodsMapper {
 	 * 多条件筛选
 	 * @param map
 	 */
-	List<ezs_goods> queryGoodsList(Map<String,Object> map);
+	List<GoodsInfo> queryGoodsList(Map<String,Object> map);
 	
 	/**
 	 * @author langjf

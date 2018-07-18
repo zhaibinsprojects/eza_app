@@ -39,6 +39,7 @@ import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.goods.GoodsVo;
 
 @Controller
@@ -422,7 +423,7 @@ public class GoodsController {
 		}
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
 		try{
-			List<ezs_goods> list = new ArrayList<ezs_goods>();
+			List<GoodsInfo> list = new ArrayList<GoodsInfo>();
 			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
 					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
 			if(null != list && list.size() > 0){
