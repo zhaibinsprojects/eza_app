@@ -63,10 +63,10 @@ public class ReportEssayServerImpl implements ReportEssayServer {
 		ExPage page = new ExPage(totalCount, currentPage);
 		page.setContent(String.valueOf(parentId));
 		if(currentPage<=0||currentPage>page.getTotalPageCount()){
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			//须返回本结构
 			mmp.put("Obj", new ArrayList<ezs_ezssubstance>());
-			mmp.put("Msg", "暂无数据");
+			mmp.put("Msg", "查询成功，暂无数据");
 			return mmp;
 		}
 		try {
