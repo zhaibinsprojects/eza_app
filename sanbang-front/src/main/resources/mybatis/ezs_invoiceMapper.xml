@@ -62,7 +62,7 @@
       #{invoice_status,jdbcType=INTEGER}, #{order_no,jdbcType=VARCHAR}, #{receipt_id,jdbcType=BIGINT}, 
       #{user_id,jdbcType=BIGINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" >
+	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_invoice" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_invoice
 		<trim prefix="(" suffix=")" suffixOverrides="," >
 			<if test="id != null" >

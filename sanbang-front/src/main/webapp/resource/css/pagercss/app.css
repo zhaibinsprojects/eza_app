@@ -1,0 +1,75 @@
+/* *杩欐槸鍗曠嫭涓篗鍑嗗鐨勪釜鎬у寲css锛屽彲浠ヨ鐩栨爣鍑唌ui鐨刢ss瀹氫箟锛�* 鍦ㄥ疄闄呴」鐩紑鍙戞椂锛屽缓璁负App鍗曠嫭鍐欎竴涓猚ss鏂囦欢锛屼粠鑰屽疄鐜伴」鐩殑鑷畾涔夌毊鑲わ紱 *  * */
+html{font-size:14px;}
+body{font-family:"arial, helvetica, sans-serif","microsoft yahei";color:#363636;    min-width:320px;margin:0 auto;line-height:1.2em;background-color:#fff;}
+.mui-bar{min-width:320px;margin:0 auto;background-color:#fff;box-shadow:0 0 1px rgba(0,0,0,.15);height:0.94rem;}
+header.mui-bar .mui-icon,header.mui-bar .mui-btn-link{color:#fff;}
+.mui-bar-transparent{top:0;    background-color:rgba(247,247,247,0);    -webkit-box-shadow:none;    box-shadow:none;}
+header.mui-active .mui-title{color:#29afa3;}
+header.mui-active .mui-icon{color:#29afa3;}
+.mui-fullscreen{min-width:320px;margin:0 auto;height:auto;}
+.mui-title{color:#fff;line-height:0.9rem;font-size:0.4rem;}
+.mui-bar-nav.mui-bar .mui-icon{line-height:0.9rem;padding:0 1rem 0 10px;font-size:0.4rem;}
+.mui-content{background-color:#efeff4;}
+.own-main-background-color{background-color:#007eff;  box-shadow:0 1px 6px #ccc; }
+.own-gray-color{background-color:#efeff4;}
+.own-white-color{background-color:#fff;}
+.mui-btn-67ebdf{background-color:#67ebdf;border:1px solid #67ebdf; color:#fff;}
+.mui-checkbox input[type=checkbox]:checked:before, .mui-radio input[type=radio]:checked:before{color:#ffa31f;}
+input, select, textarea,.mui-input-row label{font-family:"arial, helvetica, sans-serif","microsoft yahei";}
+.mui-btn-outlined.mui-btn-yellow{border:1px solid #ff6507; color:#ff6507;}
+@font-face{font-family:"iconfont";  src:url('../fonts/iconfont.eot?t=1494310483945');src:url('../fonts/iconfont.eot?t=1494310483945#iefix') format('embedded-opentype'), url('../fonts/iconfont.woff?t=1494310483945') format('woff'), url('../fonts/iconfont.ttf?t=1494310483945') format('truetype'), url('../fonts/iconfont.svg?t=1494310483945#iconfont') format('svg');}
+.iconfont{font-family:"iconfont" !important;  font-size:16px;  font-style:normal;  -webkit-font-smoothing:antialiased;  -moz-osx-font-smoothing:grayscale;}
+.icon-dianpu:before{content:"\e61b"; }
+.icon-gouwuche:before{content:"\e648"; }
+.icon-fenlei1:before{content:"\e61f"; }
+.icon-unif012:before{content:"\e620"; }
+.icon-wo:before{content:"\e607"; }
+.icon-wuliu:before{content:"\e684"; }
+.icon-pc-sort-up-copy-down:before{content:"\e600"; }
+.icon-sort-small-copy:before{content:"\e6ac"; }
+.icon-shouye_shouye:before{content:"\e683"; }
+.icon-unif012:before{content:"\e620"; }
+.icon-wuliu:before{content:"\e684"; }
+.mui-bar-tab .mui-tab-item.mui-active{color:#18b0a3;}
+.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label{font-size:1rem;}
+.mui-pull-top-tips{position:absolute;top:-20px;left:50%;margin-left:-25px;width:40px;height:40px;border-radius:100%;z-index:1;}
+.mui-bar~.mui-pull-top-tips{top:24px;}
+.mui-pull-top-wrapper{width:42px;height:42px;display:block;text-align:center;background-color:#efeff4;border:1px solid #ddd;border-radius:25px;background-clip:padding-box;box-shadow:0 4px 10px #bbb;overflow:hidden;}
+.mui-pull-top-tips.mui-transitioning{-webkit-transition-duration:200ms;transition-duration:200ms;}
+.mui-pull-top-tips .mui-pull-loading{margin:0;}
+.mui-pull-top-wrapper .mui-icon, .mui-pull-top-wrapper .mui-spinner{margin-top:7px;}
+.mui-pull-bottom-tips{text-align:center;background-color:#efeff4;font-size:15px;line-height:40px;color:#777;}
+.mui-pull-top-canvas{overflow:hidden;background-color:#fafafa;border-radius:40px;box-shadow:0 4px 10px #bbb;width:40px;height:40px;margin:0 auto;}
+.mui-pull-top-canvas canvas{width:40px;}
+/*--- 鎴戠殑绠＄悊渚涜揣鍟�绛涢� ----------*/
+.page-form .mui-input-group .mui-input-row{height:0.95rem;}
+.page-form .m-select:before{content:"\e581"; color:#999;font-weight:bold;display:inline-block;    font-family:Muiicons;    font-size:0.3rem;    font-style:normal;    font-weight:bold;    line-height:1;    text-decoration:none;    -webkit-font-smoothing:antialiased;    position:absolute;    right:0.1rem;    top:40%;}
+.page-form .mui-content .mui-pull-left{width:70%;}
+.page-form .mui-time{width:50%;}
+.page-form .mui-input-row .mui-block{font-size:0.28rem;    height:0.95rem;    line-height:0.95rem;    color:#999;    margin:0;    padding:0px 15px;}
+.page-form .mui-bar-nav~.mui-content{padding:0.9rem 0;}
+.page-form .mui-time{float:left;position:relative;padding:0;}
+.page-form .mui-time.border-left{border-left:1px solid #c8c7cc;padding-left:0.1rem;}
+.page-form  label{font-size:0.28rem;height:0.95rem;line-height:0.95rem;padding:0 10px;width:30%;}
+.page-form footer{position:fixed;bottom:0;width:100%;}
+.page-form footer .mui-btn{width:50%;float:left;padding:0.2rem;border:0;font-size:0.32rem;border-radius:0;}
+.page-form footer input[type=reset]{background-color:#fec70a;color:#fff;}
+.page-form footer input[type=submit]{background-color:#007eff;color:#fff;}
+.page-form  input.mui-input{font-size:0.28rem;    height:0.95rem;    line-height:0.95rem;    color:#999;    margin:0;    float:none;    width:70%;}
+.page-form .mui-input-row.mui-pic{height:1.8rem;}
+.page-form .padTopf{padding-top:0.3rem;}
+.page-form .imgltfat{width:1.32rem;    height:1.32rem;    float:left;    border:1px solid #e7e7e7;    cursor:pointer;}
+.page-form .kankan{background:url(../images/fdjImg.png) 0 0 no-repeat;    float:left;    width:0.36rem;    height:0.36rem;    background-size:0.36rem 0.36rem;    margin-left:0.2rem;    margin-top:1rem;}
+.page-form .mui-input-row.gunTryu{height:auto;padding:10px;}
+.page-form .gunTryu dl{height:auto;margin:0;}
+.page-form .ddStyl{float:left; width:28%; padding:0 0.12rem 0 0.4rem; height:0.6rem; margin:0.072rem 2%; background:url(../images/imoG.jpg) 0.1rem center #f1f5f8 no-repeat; background-size:0.24rem 0.24rem; border-radius:5px;}
+.page-form .ddStyl p{font-size:0.24rem; color:#858585; line-height:0.6rem;}
+.page-form .ddStyl.ddactive{background:url(../images/imot.jpg) 0.1rem center #007eff no-repeat; background-size:0.24rem 0.24rem;}
+.page-form .ddactive p{color:#fff;}
+.page-form .mui-input-row.texta{height:auto;padding:20px; }
+.page-form .mui-input-row.texta textarea{border:1px solid rgba(0,0,0,.2);    border-radius:3px;}
+.page-form .mui-numbox{font-size:0.28rem;    height:0.63rem;    line-height:0.63rem;    color:#999;    margin:0.2rem 5%;    float:none;    width:60%;    padding:0 0.8rem;}
+.page-form .mui-input-row  .mui-numbox-input{background:#fff;color:#000;font-weight:bold;font-size:0.28rem;}
+.page-form  .mui-numbox .mui-numbox-btn-minus{background-color:#e2e2e3;color:#fff;font-size:0.5rem;width:0.8rem;}
+.page-form  .mui-numbox .mui-numbox-btn-plus{background-color:#fec70a; font-size:0.5rem;color:#fff;width:0.8rem;}
+.page-form .se{float:right;line-height:0.9rem;color:#858585;}

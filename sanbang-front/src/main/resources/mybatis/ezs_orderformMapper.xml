@@ -399,7 +399,7 @@
 			C.addess,
 			B.total_price,
 			B.goods_amount,
-			IF(B.order_status=1,10,B.order_status) order_status,
+			IF(B.order_status=20,30,IF(B.order_status=1,10,B.order_status)) order_status,
 			B.first_price,
 			B.end_price,
 			B.all_price,
@@ -450,6 +450,8 @@
 		and	B.order_status in (90,110)	
 		</if>
 		AND B.user_id=${pager.userid}
+		group by  B.order_no
+		ORDER BY B.addTime DESC
 		limit #{pager.secount},#{pager.pageSize}
  	</select>
 	
@@ -507,7 +509,7 @@
 			C.area_id,
 			C.addess,
 			B.total_price,
-			B.order_status,
+			IF(B.order_status=20,30,IF(B.order_status=1,10,B.order_status)) order_status,
 			B.first_price,
 			B.end_price,
 			B.all_price,
@@ -538,6 +540,7 @@
 			AND A.deleteStatus = 0
 		and
 	 B.order_no=#{order_no}	
+	 group by  B.order_no
 	</select>
 	
 	<!--订单详细信息-->

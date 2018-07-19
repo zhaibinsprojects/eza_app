@@ -103,4 +103,10 @@ public class OrderEvaluateServiceImpl implements OrderEvaluateService {
 		return dvaluatelist;
 	}
 
+	@Override
+	public int getEvaluateListPagerCount(long goodsid) {
+		long count=dvaluateMapper.getEvaluateListPagerCount(goodsid);
+		return  (int) Math.ceil(count/10);
+	}
+
 }

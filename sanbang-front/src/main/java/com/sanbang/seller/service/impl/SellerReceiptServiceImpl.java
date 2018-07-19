@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_invoice;
@@ -67,8 +66,6 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 	@Autowired
 	private com.sanbang.dao.ezs_accessoryMapper ezs_accessoryMapper;
 	
-	@Autowired
-	private CommonOrderAdvice commonOrderAdvice;
 	
 	private static DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -306,15 +303,13 @@ public class SellerReceiptServiceImpl implements SellerReceiptService {
 			order.setOrder_no(orderinfo.getOrder_no());
 			order.setOrder_status(orderinfo.getOrder_status());
 			order.setId(orderinfo.getOrderid());
+			order.setInvoice_id(ezs_invoice.getId());
 			int status=purchaseOrderformMapper.updateByPrimaryKeySelective(order);
 			result.setSuccess(true);
 			result.setMsg("上传成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			//result.setObj(payinfo);//方便修改
-			//wemall回调
-			if(result.getSuccess()){
-				commonOrderAdvice.returnOrderAdvice(order_no, "");
-			}
+			
 			return result;
 		} catch (Exception e) {
 			result.setSuccess(false);

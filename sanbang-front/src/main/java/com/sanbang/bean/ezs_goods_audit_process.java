@@ -11,11 +11,14 @@ public class ezs_goods_audit_process {
     private Boolean deleteStatus;
 
     private Long goodsId;
-
+    
+ // 商品定价状态码，600.待定价，601.定价审核中，602.定价审核不通过，603.定价审核通过
     private Integer priceStatus;
 
     private BigDecimal salePrice;
-
+    
+    
+    // 商品初审状态码 540.待审核 ，544.初审不通过，541.初审通过/待质检（复审），546.复审通过 ，547.复审不通过
     private Integer status;
 
     private BigDecimal supplyPrice;

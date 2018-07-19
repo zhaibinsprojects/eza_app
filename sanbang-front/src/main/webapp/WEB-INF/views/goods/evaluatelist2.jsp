@@ -19,10 +19,12 @@
 <link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css" />
 <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" > 
 </head>
-<body>
-<div class="bodydivee">
+<body style="background:#efefef;">
+	<div class="msg-bg"></div>
+	<div class="msg-box"></div>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
 	
-    <div class="ezsm-normal-top">
+	<div class="ezsm-normal-top">
 		<div onclick=""></div>
 		<div>
 			<ul class="ezsm-normal-top-nav">
@@ -32,6 +34,8 @@
 		</div>
 		<div></div>
 	</div>
+	
+	
 	<div class="ezsm-evaluate-pannel">
 		<div class="ezsm-evaluate-tit" style="">货品评价</div>
 		<div class="ezsm-evaluate-desc">
@@ -40,11 +44,13 @@
 			<div>共计<span>${good.allcount}</span>评价</div>
 		</div>
 	</div>
-    <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 30%;">
-    <div class="mui-scroll"> 
-      <!--数据列表-->
-      <section class="secNeiron mui-table-view mui-table-view-chevron">
-    <c:forEach items="${dvaluatelist}" var="dv">
+	
+	</div>
+	<div class="blank10"></div>
+	<div class="ezsm-evaluate-pannel">
+		<div class="ezsm-evaluate-list">
+			<ul>
+			 <c:forEach items="${dvaluatelist}" var="dv">
 				 <li>
 						<div class="ezsm-evaluate-list-tit">${fn:substring(dv.user.name,0,3)}*** <span>的评价</span>
 						<span><fmt:formatDate value="${dv.addTime}" type="date" pattern="yyyy-MM-dd HH:mm"/></span></div>
@@ -86,21 +92,14 @@
 						</div>
 					</li>
 			 </c:forEach>
-    </section>
-    </div>
-  </div>
-</div>
-<!--总页数 -->
-   <input type="hidden" id="${pageCount}" class="pagecount" value="${pageCount}"/> 
-   <%@ include file="../goodsfoot.jsp"%>  
+			</ul>
+		</div>
+	</div>
+<%@ include file="../goodsfoot.jsp"%> 
 </body>
-
-
-</html>
 
 <script type="text/javascript">
 var baseurl="${serurl}";
 var goodsid="${good.id}";
-var pagecount=document.getElementsByClassName("pagecount")[0].id;
 </script>
 </html>

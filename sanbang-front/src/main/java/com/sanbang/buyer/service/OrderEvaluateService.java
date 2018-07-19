@@ -20,6 +20,8 @@ public interface OrderEvaluateService {
 	 * @return
 	 */
 	 List<ezs_dvaluate> getEvaluateList(int pageNo,long goodsid);
+	 
+	 public int getEvaluateListPagerCount(long goodsid);
 
 	
 

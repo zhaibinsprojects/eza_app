@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_set_return_order;
 import com.sanbang.bean.ezs_user;
@@ -35,6 +36,8 @@ public class SalesReturnController {
 	@Autowired
 	private SalesReturnService salesReturnService;
 	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	@RequestMapping(value="/getOrderformById")
 	@ResponseBody
@@ -104,6 +107,10 @@ public class SalesReturnController {
 			
 		}
 		result = salesReturnService.insertSetReturnOrder(request,returnOrder,upi);
+		//wemall回调
+		if(result.getSuccess()){
+			commonOrderAdvice.returnOrderAdvice(returnOrder.getOrder_no(), "");
+		}
 		return result;
 		
 	}

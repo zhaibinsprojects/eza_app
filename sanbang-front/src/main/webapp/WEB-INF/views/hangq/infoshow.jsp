@@ -15,6 +15,7 @@
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
+<script type="text/javascript" src="front/resource/js/hangq/hangqindex.js"></script>
    
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
@@ -32,13 +33,15 @@
       </div>
     </div>
     <div class="textOverflow_yzs">
+    <h5 style="margin-left: 70%;margin-top: 5%;">
          <p class="download" name="${show.name}" style="color:orange;">下载报告</p>
+     </h5>    
       </div>
   </section>
 </div>
 <div class="content_yzs">
       <!--研究报告--->
-  <section class="secsty_yzs">
+  <section class="secsty_yzs" style="margin-top: 90%;">
      <c:if test="${not empty top}">
      <div class="text_yzs" id="${top.id}">
       <h3>上一篇：${top.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
@@ -66,13 +69,15 @@
 <script type="text/javascript">
 var baseurl="${serurl}";
 $(document).ready(function(){
+	var  pdfname="${show.attachment}";
+	
 	$(".text_yzs").click(function(){
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
 	})
 	$(".MsoNormalTable").css("width","100%");
 	
 	$(".textOverflow_yzs").click(function(){
-		$("#fileName").val("fb1d4d45508145fd925165e5a62a1100_易再生废家电价格指数（第20期）.pdf");
+		$("#fileName").val(pdfname);
 		$("#theForm2").submit();
 	});
 });

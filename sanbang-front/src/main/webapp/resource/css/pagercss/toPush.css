@@ -1,0 +1,275 @@
+/*2013-09-29 lv common start*/
+@charset "utf-8";*{-webkit-touch-callout:none;-webkit-text-size-adjust:none;-webkit-tap-highlight-color:rgba(210,210,210,0.35)}
+html,body,h1,h2,h3,h4,h5,div,p,ul,ol,dl,dt,dd,fieldset,em,img,q,i,sub,sup,em,strong,section,form,span{margin:0;padding:0;list-style:none;font-style:normal; font-size:62.5%;font-weight:normal;border:0 none; font-family:黑体;}
+table,tr,td{ border:0; padding:0;}
+input,button,select{ outline:none;-webkit-appearance: listbox;}
+html{font:normal "microsoft yahei",'HelveticaNeue',sans-serif;color:rgba(0,0,0,1);-webkit-text-size-adjust: none;-moz-text-size-adjust: none;-ms-text-size-adjust: none;text-size-adjust: none; width:100%;height:100%;}
+body{height:100%; background:#fff;}
+a{ text-decoration:none; outline:none;}
+option{ outline:none; border:none;}
+.clearli{ clear:both; display:block;}
+/*-------登录-----*/
+.login_body{ width:100%; height:auto; background:url(../images/login_bak.jpg) center bottom #188dff no-repeat; position:relative;}
+.div_loginbak{ width:27.5rem; height:27.5rem; background:url(../images/login_logo.png) 0 0 no-repeat; position:absolute; top:1.25rem; left:50%; margin-left:-13.75rem; background-size:100% 100%; z-index:0;}
+.login_form{ padding-top:22.5rem; width:24.6rem; margin:0 auto; position:relative; z-index:2;}
+.div_tel,.div_password{ width:20rem; height:3.4rem; padding-left:4.5rem;  border-radius:1.7rem; box-shadow:0px 0.15rem 0.15rem #007eff; overflow:hidden;}
+.div_tel{background:url(../images/login_phon.png) 2rem center #fff no-repeat; background-size:1.65rem 2.05rem;}
+.div_tel input.input_tel,.input_password{ width:19rem; height:3.3rem; line-height:3.3rem; font-size:1.2rem; border:none; color:#000; background:none;}
+.div_password{ margin-top:1.55rem;background:url(../images/login_lock.png) 2rem center #fff no-repeat; background-size:1.65rem 2.05rem;}
+.login_btn{ margin-top:4.2rem; height:3.4rem; width:24.6rem; background-color:#fec70a; border-radius:1.7rem; border:none; font-size:1.42rem; color:#fff; cursor:pointer;}
+/*------一级分类------*/
+.bodydivee{ background-color:#eee;}
+.bodyHeader{ height:3.95rem; background-color:#007eff; position:relative;}
+.goBackh{position:absolute; left:1rem; top:0; width:4rem; height:3.95rem;  background:url(../images/goHome.png) 0.5rem center no-repeat; background-size:1rem 2rem;}
+.goBackh1{    position: absolute;
+    /* left: 1rem; */
+    top: 0;
+    width: 1rem;
+    height: 2rem;
+    /* margin-top: 0.95rem; */
+    background: url(../images/goHome.png) 0 0 no-repeat;
+    /* background-size: 100% 100%; */}
+.headerH{ text-align:center; height:3.95rem; font-size:1.65rem; line-height:3.95rem; color:#fff;}
+.goChren{ position:absolute; right:1rem; top:0; color:#fff; font-size:1.4rem; height:3.95rem; line-height:3.95rem;}
+.sectBody{ background-color:#eee; padding-top:1.4rem; padding-bottom:13rem;}
+.div_father{ padding:0 0.8rem; height:auto;}
+.ul_nall{}
+.ul_nall li{ position:relative; padding-right:2rem; float:left; margin:0.8rem; height:3.3rem; background-color:#fff; border-radius:3px;}
+.ul_nall li p{ font-size:1.2rem; padding-left:1rem; height:3.3rem; line-height:3.3rem; color:#333; overflow:hidden;}
+.close_try{ width:1.3rem; height:1.3rem; position:absolute; top:-0.6rem; right:-0.6rem; background:url(../images/close.png) 0 0 no-repeat; background-size:100% 100%;}
+.add_feil{ position:fixed; bottom:0px; width:100%;}
+.btn_addFenl{ height:3.75rem; background-color:#fec70a; font-size:1.34rem; color:#fff; text-align:center; width:100%; line-height:3.75rem; border:none; }
+.div_uoip{ padding:1rem 0.5rem; background-color:#fff;}
+.add_txts{ height:3.75rem; border-bottom:1px solid #e7e7e7; overflow:hidden;}
+.labgui{ float:left; height:3.75rem; line-height:3.75rem; color:#333; font-size:1.25rem;}
+.add_txtall{ height:3.7rem; float:left; min-width:18rem; line-height:3.7rem; background-color:!important; border:none; font-size:1.3rem; color:#000;}
+/*-----二级分类----*/
+.two_feil{ padding-bottom:1.5rem;}
+.two_feil h3{ font-size:1.35rem; font-weight:bold; color:#333; height:2rem; line-height:2rem; overflow:hidden; padding-left:1.6%;}
+.div_uoip{ padding:1rem 0.5rem; background-color:#fff;}
+.twoAddfeil{ border-bottom:1px solid #e7e7e7;}
+.selectFater{ height:3.3rem; border-bottom:1px solid #e7e7e7;}
+.inputTwos{height:3.3rem; overflow:hidden;}
+.selectFater label,.inputTwos label{ float:left; height:3.3rem; line-height:3.3rem; color:#333; font-size:1.25rem;}
+.selectFater select{height:3.3rem; float:left; line-height:3.3rem; background-color:!important; border:none; font-size:1.2rem; color:#333;}
+.inputTwos input{height:3.3rem; float:left; min-width:18rem; line-height:3.3rem; background-color:!important; border:none; font-size:1.2rem; color:#000;}
+.btn_addFenlT{ height:3.75rem; background-color:#fec70a; font-size:1.34rem; color:#fff; text-align:center; width:100%; line-height:3.75rem; border:none; }
+/*---岗位管理----*/
+.gwgl_bak{ margin-top:1rem; padding:1.3rem 0.5rem 0; background-color:#fff;}
+.renyjs{ padding:0 0.5rem; border-bottom:1px solid #e7e7e7;}
+.renyjs h2{ height:3.2rem; line-height:3.2rem; font-size:1.4rem; color:#333;}
+.renUljio li{ line-height:2.5rem; min-height:2.5rem;}
+.renUljio li label{ font-size:1.25rem; color:#000; line-height:2.5rem;}
+.renUljio li span{font-size:1.2rem; color:#333; line-height:2.5rem;}
+.btn_fall{ padding:1rem 0.5rem; height:6rem;}
+.changesa{ height:3.15rem; width:7.5rem; text-align:center; line-height:3.15rem; color:#fff; font-size:1.25rem; float:left; background-color:#007eff;}
+.deleteOne{ height:3.15rem; width:7.5rem; text-align:center; border:none; line-height:3.15rem; color:#fff; font-size:1.25rem; float:left; background-color:#ffbd0c; border:none; margin-left:1.25rem;}
+/*-----供货商信息采集---*/
+.impotcj{ margin-top:0.5rem; background-color:#fff;}
+.ulImopu{ padding:0.5rem;}
+.ulImopu li{ height:3.9rem; line-height:3.9rem; background:url(../images/imoGo.png) right center no-repeat; background-size:1.5rem 1.5rem; border-bottom:1px solid #e7e7e7;}
+.ulImopu li a{ padding-left:2.6rem; display:block; height:3.9rem; line-height:3.9rem; color:#333; font-size:1.25rem;}
+a.oneimo{ background:url(../images/oneimo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+a.twoimo{ background:url(../images/twoimo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+a.threeimo{ background:url(../images/threeimo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+a.fourimo{ background:url(../images/forimo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+a.fifimo{ background:url(../images/fiveimo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+a.siximo{ background:url(../images/siximo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+a.seveimo{ background:url(../images/seveimo.png) 0.4rem center no-repeat; background-size:1.5rem 1.5rem;}
+.tcdldiv{ padding:3.25rem 0.5rem;}
+.tcdldiv button{ height:3.6rem; line-height:3.6rem; border:none; color:#fff; text-align:center; width:100%; background-color:#fec70a; font-size:1.35rem;}
+/*-----客户信息------*/
+.khnews{ margin-top:1rem; background-color:#fff; padding:0.5rem;}
+.ul_xtone{}
+.ul_xtone li{ height:3.9rem; border-bottom:1px solid #e7e7e7;}
+.points{ float:left; width:1rem; height:3.9rem; background:url(../images/points.jpg) 0 center no-repeat; background-size:1rem 1rem;}
+.ul_xtone li label{ height:3.9rem; line-height:3.9rem; color:#333; font-size:1.25rem; float:left;}
+.ul_xtone li div{ float:left; height:3.9rem;}
+.radfater span{ height:3.9rem; line-height:3.9rem; float:left; padding-left:2.4rem; background:url(../images/radcheck.jpg) 0.5rem center no-repeat; background-size:1.5rem 1.5rem; color:#333; font-size:1.25rem; cursor:pointer; margin-right:1rem;}
+.radfater span.checked{ background:url(../images/radcheckd.jpg) 0.5rem center no-repeat;background-size:1.5rem 1.5rem; color:#007eff;}
+.selectGruio{ min-width:17.5rem; height:3.9rem; line-height:3.9rem; float:left; overflow:hidden;}
+.selectGruio input{height:3.4rem; line-height:3.4rem; min-width:17.5rem; border:none; font-size:1.25rem; color:#333;text-align: center;}
+.selectGruio span{height:3.4rem; line-height:3.4rem; min-width:17.5rem; border:none; font-size:1.25rem; color:#333;text-align: center;}
+.selectGruio select{ height:3.8rem; line-height:3.8rem; min-width:19rem; border:none; font-size:1.25rem; color:#333;}
+.div_oneself{ padding:0.7rem 0;}
+.div_oneself ul{ height:auto;}
+.lioneself{ height:2.4rem; width:7.1rem; border:1px solid #e7e7e7; border-radius:3px; float:left; margin:0.25rem 0.5rem; overflow:hidden;}
+.lioneself p{ line-height:2.4rem; height:2.4rem; background:url(../images/huiDui.jpg) 0.4rem center no-repeat; background-size:1rem 1rem; padding-left:1.65rem; font-size:1.1rem; color:#333;}
+.lioneself p.pactive{background:url(../images/seiDui.jpg) 0.4rem center no-repeat; background-size:1rem 1rem; color:#007eff;}
+.ul_xtTwo{ padding:0.5rem;}
+.ul_xtTwo li{ height:3.9rem; border-bottom:1px solid #e7e7e7;}
+.ul_xtTwo li label{ height:3.9rem; line-height:3.9rem; color:#333; font-size:1.25rem; float:left;}
+.divtyuo{ float:left; min-width:20rem; height:3.9rem; overflow:hidden;font-size: 1.25rem;}
+.divtyuo input{ min-width:20rem; height:3.8rem; line-height:3.8rem; font-size:1.25rem; border:none;}
+.divtyuo span{ min-width:20rem; height:3.8rem; line-height:3.8rem; font-size:1.25rem; border:none;}
+.flRightspn{ float:right; height:3.9rem; margin-right:0.3rem; line-height:3.9rem; font-size:1.25rem; color:#000;}
+.ul_xtTwo li.gunTryu{ padding:0.8rem 0; height:auto;}
+.gunTryu dl{ height:auto;}
+.ddStyl{ float:left; width:auto; padding:0 0.5rem 0 1.3rem; height:2.5rem; margin:0.3rem 0.2rem; background:url(../images/imoG.jpg) 0.3rem center #f1f5f8 no-repeat; background-size:1rem 1rem; border-radius:5px;}
+.ddStyl p{ font-size:1rem; color:#858585; line-height:2.5rem;}
+.ddStyl.ddactive{ background:url(../images/imot.jpg) 0.3rem center #007eff no-repeat; background-size:1rem 1rem;}
+.ddactive p{ color:#fff;}
+.zaztio{ padding:1.25rem 0.5rem;}
+.leftzz{ float:left; height:11.6rem; width:45%;}
+.rightzz{ float:right; height:11.6rem; width:45%;}
+.no_img{ height:8.6rem; width:100%; position:relative; background-color:#e6f2ff;}
+.no_img button{ width:100%; height:8.6rem; background:url(../images/addImg.png) center center no-repeat; background-size:6rem 6rem; position:absolute; top:0; left:0; border:none; cursor:pointer; }
+.div_fdjImg{ position:relative; height:2.8rem; width:100%;}
+.div_fdjImg a{ position:absolute; top:0.7rem; left:0; width:1.5rem; height:1.5rem; background:url(../images/fdjImg.png) 0 0 no-repeat; background-size:1.5rem 1.5rem;}
+.div_fdjImg p{ height:2.8rem; line-height:2.8rem; text-align:center; font-size:1.25rem; color:#333;}
+.ojliop{ font-size:1.3rem; color:#fff; height:3.75rem; line-height:3.75rem; text-align:center; width:100%; background-color:#fec70a; border:none; cursor:pointer; position:fixed; bottom:0px;}
+.pabotms{ padding-bottom:2rem;}
+/*------联系人信息--------*/
+.div_fixedbot{ padding-bottom:4rem;}
+.sec_lxr{ margin-top:0.5rem; padding:0.5rem; background-color:#fff;}
+.rightOver{ float:right; font-size:1.25rem; margin-right:0.3rem; color:#858585; height:3.75rem; line-height:3.75rem;}
+.ul_lxre{ height:auto;}
+.ul_lxre li{height:3.75rem; border-bottom:1px solid #e7e7e7;}
+.ul_lxre li label{ height:3.75rem; font-size:1.25rem; color:#333; line-height:3.75rem; float:left;}
+.p_grtey{ height:3.2rem; line-height:3.2rem;}
+.p_grtey a{ float:right; font-size:1.25rem; color:#ffc435; line-height:3.2rem; text-decoration:underline; margin-right:0.3rem; padding:0 0.5rem;}
+.div_addlxre{ height:3.9rem; width:100%; position:fixed; bottom:0px; z-index:9;}
+.div_addlxre a{ display:block; height:3.9rem; line-height:3.9rem; background-color:#fec70a; color:#fff; font-size:1.4rem; text-align:center;}
+/*--商品信息---*/
+.div_uyip{ background-color:#fff;}
+.div_uyip h2{ height:3.5rem; line-height:3.5rem; border-bottom:1px solid #e7e7e7; background:url(../images/imoGo.png) right center no-repeat; background-size:1.5rem 1.5rem;}
+.div_uyip a{ display:block; height:3.5rem; line-height:3.5rem; color:#333; font-size:1.3rem;}
+.shoplist{ padding-top:1rem; position:relative; border-bottom:1px solid #e5e5e5;}
+.zhuagntai{ position:absolute; top:1rem; right:0.3rem; height:2.3rem; line-height:2.3rem; color:#007eff; font-size:1.2rem;}
+.div_listall{ height:2.25rem; line-height:2.25rem; overflow:hidden;}
+.div_listall label{ font-size:1.2rem; color:#333; float:left; height:2.25rem; line-height:2.25rem;}
+.div_listall span{font-size:1.2rem; color:#333; float:left; height:2.25rem; line-height:2.25rem;}
+.div_listall span.coloRed{ color:#ff8420;}
+.imglistl label{font-size:1.2rem; color:#333; float:left; height:2.25rem; line-height:2.25rem;}
+.imgyUios{ height:7.2rem; float:left;}
+.imgltfat{ width:5.5rem; height:5.5rem; float:left;}
+.kankan{ background:url(../images/fdjImg.png) 0 0 no-repeat; float:left; width:1.5rem; height:1.5rem; background-size:1.5rem 1.5rem; margin-left:0.6rem; margin-top:4rem;}
+/*-----查看商品----*/
+.div_lokshop{ height:3.9rem; width:100%; position:fixed; bottom:0px;}
+.div_lokshop a{ float:left; width:50%; text-align:center; height:3.9rem; line-height:3.9rem; color:#fff; font-size:1.4rem; text-align:center;}
+.div_lokshop a.delea{ background-color:#fec70a;}
+.div_lokshop a.changa{ background-color:#007eff}
+.ul_gaiblist{ padding:0.5rem 0;}
+.ul_gaiblist li{ height:3.75rem; line-height:3.75rem; border-bottom:1px solid #e7e7e7;}
+.ul_gaiblist li label{ height:3.75rem; line-height:3.75rem; font-size:1.25rem; color:#333; float:left; margin-left:0.3rem;}
+.ul_gaiblist li.lilager{ height:8rem;}
+.spanRights{ height:3.75rem; line-height:3.75rem; float:right; font-size:1.2rem; color:#858585; margin-right:0.3rem;}
+.spanRightsR{ height:3.75rem; line-height:3.75rem; float:right; font-size:1.2rem; color:#ff8420; margin-right:0.3rem;}
+.padTopf{ padding-top:1.2rem; height:6.6rem;}
+/*-----走访照片----*/
+.phoneImg{ padding:0.5rem;}
+.imgOnesy{ padding:0.5rem; margin-bottom:1.5rem; border-bottom:1px solid #e7e7e7; height:17.6rem;}
+.imgOnesy div{ width:100%; height:14.2rem;}
+.imgOnesy div.jqoiuo{ height:3.2rem; position:relative; padding-top:0.5rem;}
+.jqoiuo p{ height:3.2rem; line-height:3.2rem; text-align:center; font-size:1.25rem; color:#333;}
+.phenoTo{ width:1.5rem; height:1.5rem; position:absolute; top:1.2rem; right:4rem; background:url(../images/fdjImg.png) 0 0 no-repeat; background-size:1.5rem 1.5rem;}
+.img_baksty{ width:100%; height:14.2rem; background-color:#e3f0fe;}
+.img_baksty button{ width:100%; height:14.2rem;background:url(../images/addImgF.png) center center no-repeat; background-size:6rem 6rem; border:none;}
+/*-----添加联系人------*/
+.addlisMan{ margin-top:1rem; padding:0.5rem; background-color:#fff;}
+.addLisMans{ padding:0 0.5rem;}
+.addLisMans li{ height:3.75rem; border-bottom:1px solid #e7e7e7;}
+.addLisMans li label{ float:left; font-size:1.25rem; color:#333; line-height:3.75rem; height:3.75rem;}
+.addman_div{ height:3.7rem; overflow:hidden; min-width:15rem; float:left;}
+.addman_div input{ height:3.6rem; line-height:3.6rem; border:none; font-size:1.25rem; color:#858585; width:100%;}
+.areuio{ height:3.75rem; position:fixed; bottom:0; width:100%;}
+.areuio button{ width:100%; height:3.75rem; line-height:3.75rem; text-align:center; color:#fff; font-size:1.3rem; background-color:#fec70a; border:none;}
+/*----统计报表----*/
+.divUretab{ margin:1rem 0; height:3.85rem; line-height:3.85rem; background-color:#fff; padding:0 1.25rem;}
+.uretab_lab{ font-size:1.25rem; float:left; color:#333; height:3.8rem; line-height:3.8rem;}
+.userlina{ float:right; font-size:1.5rem; color:#ff8420; font-weight:bold; height:3.8rem; line-height:3.8rem;}
+.userSec{ padding:1rem; background-color:#fff;}
+.userDivone,.userDivtwo,.userDivThree{ padding-top:0.5rem;}
+.userDivone h3{ height:2.4rem; line-height:2.4rem; padding-left:2.2rem; background:url(../images/listDay.jpg) 0 center no-repeat; background-size:2rem 2rem; color:#333; font-size:1.25rem;}
+.userDivone table,.userDivThree table{ width:100%;}
+.userDivone table,.userDivone table td,.userDivThree table,.userDivThree table td{ border:1px solid #e7e7e7;}
+.userDivone table td,.userDivThree table td{ width:50%; text-align:center; height:3.2rem; line-height:3.2rem; font-size:1.25rem; color:#333;}
+.userDivtwo h3{ height:2.4rem; line-height:2.4rem; padding-left:2.2rem; background:url(../images/listtema.jpg) 0 center no-repeat; background-size:2rem 2rem; color:#333; font-size:1.25rem;}
+.userDivtwo table{ width:100%;border:1px solid #e7e7e7;}
+.userDivtwo table td{ width:50%; height:3.2rem; line-height:3.2rem; font-size:1.25rem; color:#333;border:1px solid #e7e7e7;}
+.userDivtwo table a{ display:block; text-align:center; text-decoration:underline; color:#007eff; font-size:1.25rem;}
+.userDivThree h3{ height:2.4rem; line-height:2.4rem; padding-left:2.2rem; background:url(../images/listgps.jpg) 0 center no-repeat; background-size:2rem 2rem; color:#333; font-size:1.25rem;}
+.userDivone h3.userFour{ background:url(../images/listman.jpg) 0 center no-repeat; background-size:2rem 2rem; color:#333; font-size:1.25rem;}
+.userDivtwo tr p{ height:3.2rem; line-height:3.2rem;}
+.fltabspan{ float:left; margin-left:1.5rem; font-size:1.25rem; color:#333; line-height:3.2rem;}
+.frtabspan{ float:right; margin-right:1.5rem; font-size:1.25rem; color:#333; line-height:3.2rem;}
+/*---修改密码-----*/
+.amendPasword{ margin-top:1rem; padding:0.5rem; background-color:#fff;}
+.ul_psWords{ padding:0 0.5rem 1rem;}
+.ul_psWords li{ line-height:3.9rem; height:3.9rem; border-bottom:1px solid #e7e7e7;}
+.ul_psWords li label{ line-height:3.9rem; float:left; font-size:1.25rem; color:#333;}
+.ul_psWords li div{ float:left; min-width:17rem; height:3.8rem;overflow:hidden;}
+.ul_psWords li div input{ width:100%; border:none; height:3.75rem; line-height:3.75rem; font-size:1.25rem; color:#333;}
+.div_amendBtn{ height:3.75rem; padding:0 0.5rem; margin-top:3rem;}
+.div_amendBtn button{ height:3.75rem; line-height:3.75rem; background-color:#fec70a; width:100%; color:#fff; font-size:1.3rem; border:none;}
+/*------新增修改密码------*/
+.ul_newametPas{ padding:0 0.5rem;}
+.ul_newametPas li{ height:3.9rem; line-height:3.9rem; border-bottom:1px solid #e7e7e7;}
+.ul_newametPas li label{ height:3.9rem; float:left; line-height:3.9rem; font-size:1.25rem; color:#333;}
+.ul_newametPas li div{ height:3.9rem; line-height:3.9rem; float:left; width:17rem;}
+.ul_newametPas li div input,.muiCitys{ height:3.7rem; line-height:3.7rem; border:none; font-size:1.25rem; margin:0; padding:0}
+.ul_newametPas li.seleGagnw{ height:auto;}
+.seleGagnw dl{ height:auto; padding-top:0.5rem; padding-bottom:0.3rem;}
+.preserve{ margin-top:1rem; height:3.75rem; }
+.preserve button{ height:3.75rem; line-height:3.75rem; width:100%; color:#fff; border:none; background-color:#fec70a; font-size:1.3rem; text-align:center; padding:0;}
+/*------账户管理-----*/
+.sec_threlkid{ margin:1rem 1rem 0; background-color:#fff; height:3.5rem;}
+.secdqs{ float:left; width:24%; height:3.5rem;}
+.secdqs select{ width:90%;background-color:#fff; padding-left:10%; height:3.4rem; line-height:3.4rem; border:none; color:#333; font-size:1.25rem;}
+.rigtuyio{ width:74%; height:3.5rem; float:right; border-left:2px solid #e7e7e7; overflow:hidden;}
+.rigtuyio input[type=text]{ border:none; height:3.4rem; line-height:3.4rem; font-size:1.25rem; color:#333; margin-left:0.5rem;}
+.xuanqyw{ float:right; margin-right:0.5rem; width:2rem; height:3.5rem; background:url(../images/titselet.jpg) center center no-repeat; background-size:2rem 2rem; border:none;}
+.secNeiron{ padding:0 1.5rem 0; background-color:#fff;}
+.secNeiron h3{ font-size:1.41rem; color:#333; line-height:3rem; height:3rem;}
+.neir_ulboy{ height:auto; border-bottom:1px solid #e7e7e7;}
+.neir_ulboy li{ height:2.3rem; line-height:2.3rem;}
+.neir_ulboy li label{ font-size:1.2rem; color:#333; line-height:2.3rem; float:left;}
+.neir_ulboy li span{font-size:1.2rem; color:#333; line-height:2.3rem; float:left;}
+.groupbtn{ padding:1rem 0.5rem 1.8rem; height:6.1rem;}
+.groupbtn input{ width:30%; float:left; margin:0 1.65%; height:3.1rem; border:none; text-align:center; line-height:2.9rem; font-size:1.25rem;}
+.mepack{ color:#fff; background-color:#007eff;}
+.rootqx{ color:#fff; background-color:#ffbd0c;}
+.hidens{ color:#333; background-color:#9b9b9b;}
+/*---遮罩层--*/
+.graybaks{ background-color:rgba(0,0,0,0.5); width:100%; height:auto; z-index:2; position:fixed; top:0; left:0; display:none;}
+.div_takou{ width:76%; position:absolute; top:15rem; left:12%; z-index:9; display:none;}
+.div_takou h3{ height:4rem; line-height:4rem; text-align:center; font-size:1.5rem; color:#fff; background-color:#007eff;}
+.txtrvuio{ padding:1.5rem 2.5rem; background-color:#fff; border-bottom:1px solid #e7e7e7;}
+.txtrvuio p{ font-size:1.2rem; line-height:1.65rem; text-align:center; color:#333;}
+.txtrvuio p span{ color:#ff8420; font-weight:bold;}
+.yesorno{ height:3.5rem; background-color:#fff;}
+.yesorno a{ float:left; height:3.5rem; width:50%; text-align:center; line-height:3.5rem; font-size:1.25rem; color:#333;}
+.yesorno a.noRoot{ color:#007eff;}
+
+.seachInpot{ background-color:#fff; height:3.5rem;}
+.ghs_input{ height:3.4rem; line-height:3.2rem; float:left; width:80%; padding-left:0.6rem; font-size:1.25rem; color:#333; border:none;}
+.ghs_submit{ height:3.4rem; width:15%; background:url(../images/titselet.jpg) center center no-repeat; background-size:2rem 2rem; border:none;}
+.ghs_divgt{ padding:1rem; position:relative; border-bottom:1px solid #e7e7e7;}
+.ghs_divgt h2{ height:3rem; line-height:3rem; font-size:1.4rem; color:#333; background:url(../images/imoGo.png) right center no-repeat; background-size:1.5rem 1.5rem;}
+.ghs_divgt h2 a{ height:3rem; line-height:3rem; font-size:1.4rem; color:#333; display:block;}
+.ul_ghsvb{ height:auto;}
+.ul_ghsvb li{ height:2.25rem; line-height:2.25rem; overflow:hidden;}
+.ul_ghsvb label,.ul_ghsvb span{ float:left; height:2.25rem; line-height:2.25rem; font-size:1.2rem; color:#333;}
+.name_ghsto{ position:absolute; bottom:1rem; right:1rem; font-size:1.2rem; line-height:2.2rem; color:#007eff;}
+.gps_kh{ margin-top:1rem; height:auto; padding:0 1rem; background-color:#fff;}
+.gps_kh p.ghrixo{ padding:1.5rem 0 1rem 1.8rem; background:url(../images/gpskh.jpg) 0 1.5rem no-repeat; background-size:1.5rem 2rem; line-height:2rem; color:#333; font-size:1.25rem;}
+.shoes{ display:none;}
+.shouipu{ height:2rem; font-size:1.2rem; border:1px solid #e7e7e7; border-radius:3px;}
+.gps_kh p span{ line-height:2rem; color:#333; font-size:1.25rem;}
+.two_getapp{ margin:1rem 1rem 0; height:6.3rem;}
+.serhuxa{ width:7rem; height:5.3rem; padding-left:5rem; border-radius:6px 0 0 6px; background:url(../images/shuxin.jpg) 1.2rem center #fff no-repeat; float:left; background-size:4rem 4rem; font-size:1.4rem; color:#333; line-height:5.2rem; box-sizing:content-box}
+.writeadrs{width:7rem; height:5.3rem; padding-left:5rem; border-radius:0 6px 6px 0; background:url(../images/write.jpg) 1.2rem center #fff no-repeat; float:right; background-size:4rem 4rem; font-size:1.4rem; color:#333; line-height:5.2rem; box-sizing:content-box}
+.listgroup{ height:auto; background-color:#fff;}
+.ulligroup{ padding:1.2rem 0.8rem 0;}
+.ulligroup li{ height:3.8rem; border-bottom:1px solid #e7e7e7; background:url(../images/imoGo.png) right center no-repeat; background-size:1.5rem 1.5rem;}
+.ulligroup li a{ display:block; height:3.8rem; line-height:3.8rem; font-size:1.25rem; color:#333; padding-left:2.2rem;}
+.listone{ background:url(../images/list1.jpg) left center no-repeat; background-size:1.5rem 2rem;}
+.listtwo{ background:url(../images/list2.jpg) left center no-repeat; background-size:1.5rem 2rem;}
+.listthree{ background:url(../images/list3.jpg) left center no-repeat; background-size:1.5rem 2rem;}
+.listfour{ background:url(../images/list4.jpg) left center no-repeat; background-size:1.5rem 2rem;}
+
+/*----*/
+.tbwxsj{ height:2.5rem; line-height:2.5rem; width:auto; margin-top:0.5rem; border:none; background-color:#fec70a; color:#fff; font-size:1.25rem; border-radius:3px;}
+.seleVgtio{ margin:0; padding:0; height:3.6rem; line-height:3.6rem; font-size:1.2rem; border:none;}
+.listfour{ background:url(../images/list4.jpg) left center no-repeat; background-size:1.5rem 2rem;}
+

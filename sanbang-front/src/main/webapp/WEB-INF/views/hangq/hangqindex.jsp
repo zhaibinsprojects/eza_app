@@ -21,7 +21,7 @@
   <!--价格评析-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>价格评析</span></h2>
+      <h2><span>价格评析</span><span style="float: right;color: orange;">更多</span></h2>
     </div>
     <c:forEach var="item" items="${jiage.Obj}">
     <div class="text_yzs" id="${item.id}">
@@ -37,7 +37,7 @@
   <!--研究报告--->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>研究报告</span></h2>
+      <h2><span>研究报告</span><span style="float: right;color: orange;">更多</span></h2>
     </div>
     <c:forEach var="item" items="${baogao.Obj}">
     <div class="text_yzs" id="${item.id}">
@@ -52,7 +52,7 @@
   <!--实时报价--->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>实时报价</span></h2>
+      <h2><span>实时报价</span><span style="float: right;color: orange;">更多</span></h2>
     </div>
     <div class="realTime_price">
       <table class="tableOne_yzs" cellpadding="0" cellspacing="0">

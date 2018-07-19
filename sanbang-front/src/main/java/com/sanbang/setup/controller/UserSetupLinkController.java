@@ -133,11 +133,11 @@ public class UserSetupLinkController {
 		}
 		
 		//查看手机号是否修改过
-		if(upi.getEzs_userinfo().getPhoneStatus()==1){
+		/*if(upi.getEzs_userinfo().getPhoneStatus()==1){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("已经修改过一次不可更改！");
 			return result;
-		}
+		}*/
 		
 		StringBuilder code = new StringBuilder();  
 		Random random = new Random();  

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_invoice;
 import com.sanbang.bean.ezs_logistics;
@@ -69,8 +68,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	@Autowired
 	private ezs_areaMapper ezs_areaMapper;
 	
-	@Autowired
-	private CommonOrderAdvice commonOrderAdvice;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -88,7 +85,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	public Map<String, Object> queryOrderInfoById(String order_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-//		ezs_order_info orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
 		ezs_order_info orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
 
 		
@@ -103,11 +99,11 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 		// 支付方式（0.全款，1：首款+尾款 ）
 		if(orderinfo.getPay_mode()==1){
 			//首付款
-			if(orderinfo.getOrder_status()==40){
+			if(orderinfo.getOrder_status()>=20&&orderinfo.getOrder_status()<80){
 				map.put("paytype","首付款");
 				map.put("pay_price", orderinfo.getFirst_price());
 			//尾款	
-			}else if(orderinfo.getOrder_status()==80){
+			}else if(orderinfo.getOrder_status()>=80){
 				map.put("paytype","尾款");
 				map.put("pay_price", orderinfo.getEnd_price());
 			}
@@ -313,12 +309,7 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		
-		if(result.getSuccess()){
-			//wemall回调
-			if(result.getSuccess()){
-				commonOrderAdvice.orderFormAdviceStatus(order_no, "");
-			}
-		}
+		
 		return result;
 	}
 
@@ -348,12 +339,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 				result.setSuccess(true);
 				result.setMsg("货品订单发货 ");
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				if(result.getSuccess()){
-					//wemall回调
-					if(result.getSuccess()){
-						commonOrderAdvice.orderFormAdviceStatus(order_no, "");
-					}
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

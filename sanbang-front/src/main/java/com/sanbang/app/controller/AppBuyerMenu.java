@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.controller.BuyerMenu;
@@ -35,6 +36,9 @@ public class AppBuyerMenu {
 	
 	@Autowired
 	private SellerReceiptService sellerReceiptService;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	
   Logger log=Logger.getLogger(BuyerMenu.class);  
@@ -178,6 +182,10 @@ public class AppBuyerMenu {
 
 		try {
 			result= buyerService.orderclose(request,order_no,upi);
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

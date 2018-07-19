@@ -570,7 +570,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String content = request.getParameter("content");// 货品详细描述（PC端含有富文本编辑器，手机端只接收纯文字使用，不考虑图片相关信息）
 				
 				ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
-				goods.setDeleteStatus(true);
+				goods.setDeleteStatus(false);
 				goods.setAddTime(new Date());
 				goods.setGoodClass_id(Long.valueOf(goodClass_id));
 				goods.setName(name);
@@ -685,8 +685,11 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	@Override
 	public Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request,
 			HttpServletResponse response) {
-		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+		
+		//查询商品显示金额
+		ezs_goods goods = goodsMapper.selectByPrimaryKeyIsGoodsPrice(goodsId);
 		if ( null != goods ) {
+			log.info("货品信息=="+goods.toString());
 			ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
 			if (null == goodsAudit) {
 				//向ezs_goods_audit_process表中查入数据
@@ -695,9 +698,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit.setDeleteStatus(false);
 				goodsAudit.setGoods_id(Long.valueOf(goods.getId()));
 				goodsAudit.setPriceStatus(600);
-				goodsAudit.setSalePrice(new BigDecimal(0));
+				goodsAudit.setSalePrice(new BigDecimal("0"));
 				goodsAudit.setStatus(540);
-				goodsAudit.setSupplyPrice(null);
+				goodsAudit.setSupplyPrice(goods.getPrice());
 				goodsAudit.setPercent(0);
 				goodsAuditProcessMapper.insertSelective(goodsAudit);
 				try {
@@ -712,13 +715,22 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit1.setAddTime(new Date());
 				goodsAudit1.setDeleteStatus(false);
 				goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
-				goodsAudit1.setPriceStatus(600);
-				goodsAudit1.setStatus(540);
-				goodsAudit1.setId(goodsAudit.getId());
 				
+				//只在待审核状态或白名单客户  恢复初始化状态
+				if(goodsAudit.getStatus()==544||isValidateCompany()){
+					goodsAudit1.setPriceStatus(600);
+					goodsAudit1.setStatus(540);
+					goodsAudit1.setId(goodsAudit.getId());
+				}else{
+					goodsAudit1.setPriceStatus(goodsAudit.getPriceStatus());
+					goodsAudit1.setStatus(goodsAudit.getStatus());
+					goodsAudit1.setId(goodsAudit.getId());
+				}
+				
+				//未设置售价 不进行关联表操作
 				if(null!=goodsAudit.getSalePrice()&&goodsAudit.getSalePrice().compareTo(BigDecimal.ZERO)==1){
-					BigDecimal oldprice=goodsAudit.getSupplyPrice();
-					BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
+					BigDecimal oldprice=goods.getPrice();
+					BigDecimal SupplyPrice=goods.getPrice();
 					int Percent=goodsAudit.getPercent();
 					if(Percent>0){
 						BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
@@ -726,6 +738,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 						SupplyPrice=oldprice.multiply(Percent1);
 					}
 					goodsAudit1.setSalePrice(SupplyPrice);
+					
+					//更新商品售价表
+					ezs_goods goods1 =new ezs_goods();
+					goods1.setId(goods.getId());
+					goods1.setSaleprice(SupplyPrice);
+					goodsMapper.updateByPrimaryKeySelective(goods1);
 				}
 				
 				goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit1);
@@ -741,6 +759,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		}
 		return result;
 	}
+	
+	//判断是否为白名单客户
+	private  boolean isValidateCompany(){
+		
+		return false;
+	}
 
 	@Override
 	public List<ezs_accessory> queryCartographyById(Long goodsId) {
@@ -755,7 +779,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId, HttpServletRequest request) {
+	public Result updateGoodsPriceAndNumById(Result result, long goodsId, Long userId,
+			 HttpServletRequest request,HttpServletResponse response) {
 		ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 		
 		String inventory = request.getParameter("inventory");//样品库存数量
@@ -778,54 +803,10 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		goods.setLastModifyDate(new Date());
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
-		//goodsMapper.updateByPrimaryKeySelective(goods);
-		ezs_goods_audit_process goodsAudit =  goodsAuditProcessMapper.selectByGoodsId(goodsId);
-		//ezs_goods_audit_process  goodsAudit1 = null;
-		BigDecimal NewSupplyPrice = null;
-		BigDecimal SupplyPrice = null;
-		BigDecimal SalePrice = null;
-		if (null != goodsAudit) {
-			//向ezs_goods_audit_process表中查入数据
-			//goodsAudit1 = new ezs_goods_audit_process();
-			//goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
-			/*
-			BigDecimal oldprice=goodsAudit.getSupplyPrice();
-			BigDecimal SupplyPrice=goodsAudit.getSupplyPrice();
-			int Percent=goodsAudit.getPercent();
-			if(Percent>0){
-				BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
-				BigDecimal Percent1=bb.add(new BigDecimal("1"));
-				SupplyPrice=oldprice.multiply(Percent1);
-			}
-			goodsAudit1.setSupplyPrice(new BigDecimal(price));
-			goodsAudit1.setSalePrice(SupplyPrice);
-			goodsAudit1.setId(goodsAudit.getId());
-			*/
-			//add modify start 2018-07-12
-			//调整供应商价格
-			NewSupplyPrice=new BigDecimal(price);
-			//原供应商价格
-			SupplyPrice=goodsAudit.getSupplyPrice();
-			//原销售价格
-			SalePrice = goodsAudit.getSalePrice();
-			int Percent=goodsAudit.getPercent();
-			if(Percent>=0){
-				BigDecimal bb=new BigDecimal(Percent).divide(new BigDecimal("100"));
-				BigDecimal Percent1=bb.add(new BigDecimal("1"));
-				SalePrice=NewSupplyPrice.multiply(Percent1);
-			}
-			goodsAudit.setSupplyPrice(NewSupplyPrice);
-			goodsAudit.setSalePrice(SalePrice);
-			//add modify end 2018-07-12
-			goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit);
-		}
-		goods.setPrice(NewSupplyPrice);
-		goods.setSaleprice(SalePrice);
 		goodsMapper.updateByPrimaryKeySelective(goods);
 		
-		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-		result.setSuccess(true);
-		result.setMsg("货品更新成功");
+		//带审核
+		result=submitGoodsForAudit(result, goods.getId(), request, response);
 		ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:修改库存"+goods.getName()+"成功");
 		ezs_goods_logMapper.insertSelective(log);
 		return result;

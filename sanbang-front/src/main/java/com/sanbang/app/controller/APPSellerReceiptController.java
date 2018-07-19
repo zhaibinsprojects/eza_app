@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
@@ -37,6 +38,9 @@ public class APPSellerReceiptController {
 	
 	@Autowired
 	private BuyerService buyerService;
+	
+	@Autowired
+	private CommonOrderAdvice commonOrderAdvice;
 	
 	/**
 	 * 根据订单编号和时间查询发票
@@ -237,6 +241,10 @@ public class APPSellerReceiptController {
 		}
 		try {
 			result = sellerReceiptService.orderivosubmit(request, order_no, urlParam,upi);
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

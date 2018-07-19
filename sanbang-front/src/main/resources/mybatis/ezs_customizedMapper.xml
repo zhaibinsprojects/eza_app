@@ -55,7 +55,7 @@
     delete from ezs_customized
     where id = #{id,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="com.sanbang.bean.ezs_customized" >
+	<insert id="insert" parameterType="com.sanbang.bean.ezs_customized" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_customized (id, addTime, deleteStatus, 
       address, ash_content, bend_strength, 
       budget, colour, combustion_grade, 
@@ -79,7 +79,7 @@
       #{goods_id,jdbcType=BIGINT}, #{purchaser_id,jdbcType=BIGINT}, #{proName,jdbcType=VARCHAR}, 
       #{colour_id,jdbcType=BIGINT}, #{shape_id,jdbcType=BIGINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized" >
+	<insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_customized
 		<trim prefix="(" suffix=")" suffixOverrides="," >
 			<if test="id != null" >

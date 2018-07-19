@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.app.controller.AppUserSetupCompanyInfoController;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_orderform;
@@ -31,8 +30,6 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 	@Autowired
 	private ezs_set_return_orderMapper ezs_set_return_orderMapper;
 	
-	@Autowired
-	private CommonOrderAdvice commonOrderAdvice;
 	
 	private Logger log=Logger.getLogger(AppUserSetupCompanyInfoController.class);
 	@Override
@@ -96,10 +93,7 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 			result.setSuccess(true);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setMsg("保存成功");
-			//wemall回调
-			if(result.getSuccess()){
-				commonOrderAdvice.returnOrderAdvice(orde.getOrder_no(), "");
-			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
