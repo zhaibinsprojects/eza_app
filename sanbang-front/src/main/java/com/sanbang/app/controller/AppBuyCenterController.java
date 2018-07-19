@@ -258,10 +258,42 @@ public class AppBuyCenterController {
 		List<ezs_dvaluate> dvaluatelist = orderEvaluateService.getEvaluateList(pageNo, goodsid);
 		model.addAttribute("dvaluatelist", dvaluatelist);
 		GoodsVo goodsvo = goodsService.getgoodsinfo(goodsid, userid);
+		long  pageCount=orderEvaluateService.getEvaluateListPagerCount(goodsid);
+		
+		model.addAttribute("pageCount", pageCount);
 		model.addAttribute("good", goodsvo);
 		return view + "evaluatelist";
 	}
+	/**
+	 * 评价列表
+	 * 
+	 * @param request
+	 * @param pageNo
+	 * @param goodsid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/getEvaluateListPager")
+	public Object getEvaluateListPager(HttpServletRequest request,
+			@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam("goodsid") int goodsid,
+			org.springframework.ui.Model model) {
 
+		// 用户校验begin
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		long userid = 0;
+		if (null == upi) {
+			upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		}
+		userid = null == upi ? 0 : upi.getId();
+		model.addAttribute("userkey", null == upi ? "" : upi.getUserkey());
+		// 用户校验end
+
+		List<ezs_dvaluate> dvaluatelist = orderEvaluateService.getEvaluateList(pageNo, goodsid);
+		model.addAttribute("dvaluatelist", dvaluatelist);
+		GoodsVo goodsvo = goodsService.getgoodsinfo(goodsid, userid);
+		model.addAttribute("good", goodsvo);
+		return view + "evaluatelistPage";
+	}
 	/**
 	 * 订单评价
 	 * 

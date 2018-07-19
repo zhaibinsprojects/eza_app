@@ -24,4 +24,7 @@ public interface ezs_dvaluateMapper {
     
     //评论列表
     List<ezs_dvaluate> getEvaluateList(@Param("totalpage")int totalpage,@Param("pageNo")int pageNo,@Param("goodsid")long goodsid);
+    
+    //评论列表总数
+    public long getEvaluateListPagerCount(@Param("goodsid")long goodsid);
 }

@@ -47,6 +47,18 @@ function androidtophone() {
 }
 
 
+//电话桥接
+function androidloadpdf() {
+	
+	$(".fottersty").click(function() {
+		var data = {
+			"filename" : "400-6666-890"
+		}
+		var str = JSON.stringify(data);
+		window.android.androidloadpdf(str);
+		return false;
+	})
+}
 
 
 

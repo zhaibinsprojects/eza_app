@@ -85,7 +85,6 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	public Map<String, Object> queryOrderInfoById(String order_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-//		ezs_order_info orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
 		ezs_order_info orderinfo = purchaseOrderformMapper.getOrderListByOrderno(order_no);
 
 		

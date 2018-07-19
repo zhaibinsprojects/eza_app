@@ -105,7 +105,7 @@
 			<tr> <td>形态</td> <td>${good.form.name}</td> </tr>
 			<tr> <td>原料来源</td> <td>${good.source}</td> </tr>
 			<tr> <td>用途</td> <td>${good.purpose}</td> </tr>
-			<tr> <td>物流方式</td> <td>${good.logistics.name}</td> </tr>
+			<%-- <tr> <td>物流方式</td> <td>${good.logistics.name}</td> </tr> --%>
 			<tr> <td>上批货品质检结果</td> <td><span    class="colorgreen" style="margin-right:20px;">质检报告</span></td> </tr>
 			<tr> <td>推荐度</td> <td><span class="colororange" style="font-size:15px;"> 98%</span></td> </tr>
 		</table>
@@ -120,7 +120,7 @@
 	<div class="ezsm-shopdetail-desctit">
 		描述说明<a href="${baseurl}app/goods/toGoodsdec.htm?goodsid=${good.id}"><div></div></a>
 	</div>
-	<div class="ezsm-shopdetail-desc" style="width: 94%;">${good.content}</div>
+	<div class="ezsm-shopdetail-desc" style="width: 94%;margin-bottom: 15%;">${good.content}</div>
 	<%-- <%@ include file="../goodsfoot.jsp"%>  --%>
 		<div class="ezsm-normal-bottombtnB-box">
 		<div class="ezsm-shopdetail-bottombtnbox">

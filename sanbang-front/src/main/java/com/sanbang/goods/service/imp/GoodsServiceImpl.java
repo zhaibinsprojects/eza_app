@@ -931,7 +931,8 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @param goods
 	 * @return
 	 */
-	public String createOrderNo(ezs_goods goods) {
+	public synchronized String createOrderNo(ezs_goods goods) {
+		// TODO Auto-generated method stub
 		try {
 			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
 			int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
@@ -1448,6 +1449,14 @@ public class GoodsServiceImpl implements GoodsService{
 		try {
 			goodCarInfoList = this.ezs_goodscartMapper.selectByGoodCarIds(goodCarIDs);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
+				
+				for (GoodsCarInfo goodsCarInfo : goodCarInfoList) {
+					if(null!=goodsCarInfo.getAreaId()){
+						goodsCarInfo.setAreaName(getaddressinfo(goodsCarInfo.getAreaId()));
+					}
+					
+				}
+				
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("Msg", "查询成功");

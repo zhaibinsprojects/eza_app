@@ -179,6 +179,13 @@
     limit #{totalpage},#{pageNo}
   </select>
   
+  <select id="getEvaluateListPagerCount" resultType="long">
+  	select 
+	  count(A.id)
+    from ezs_dvaluate A
+    where 1=1
+    and A.goods_id=#{goodsid}
+  </select>
    <resultMap id="EvaluateListMap" type="com.sanbang.bean.ezs_dvaluate" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
@@ -195,8 +202,6 @@
   	<!--图片信息-->
    <collection property="accessroys" column="id" select="com.sanbang.dao.ezs_dvaluate_accessroyMapper.selectByPrimaryKey" >
    </collection>
-   
- 
   </resultMap>
   
 </mapper>

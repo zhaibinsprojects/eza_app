@@ -126,7 +126,7 @@ public class BuyerServiceimpl implements BuyerService {
 
 		// 收货地址处理
 		StringBuffer sb=new StringBuffer();
-		long addressid = orderinfo.getWeAddress_id();
+		long addressid = orderinfo.getAddress_id();
 		if(addressid>0){
 			ezs_address  address=addressService.findAddressById(addressid);
 			sb.append(getaddressinfo(address.getArea_id()));
@@ -138,7 +138,7 @@ public class BuyerServiceimpl implements BuyerService {
 		map.put("address", sb.toString());// 收货地址
 		map.put("name", orderinfo.getName());//商品名称
 		map.put("price", orderinfo.getPrice());//单价
-		map.put("goods_amount", orderinfo.getCount());//数量
+		map.put("goods_amount", orderinfo.getGoods_amount());//数量
 		map.put("order_no", orderinfo.getOrder_no());//订单号
 		map.put("addTime", orderinfo.getAddTime());//下单时间
 		map.put("order_status", orderinfo.getOrder_status());
