@@ -1156,7 +1156,8 @@ public class AppGoodsController {
 				for(int i=0;i<goodCartIdTemps.length;i++){
 					ezs_orderform tOrderForm = new ezs_orderform();
 					Map<String, Object> tmp = null;
-					tOrderForm.setWeAddress_id(WeAddressId);
+					//tOrderForm.setWeAddress_id(WeAddressId);
+					tOrderForm.setAddress_id(WeAddressId);
 					//进行下单处理
 					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"GOODS",Long.valueOf(goodCartIdTemps[i]));
 					Integer ErrorCode = (Integer) tmp.get("ErrorCode");
@@ -1249,7 +1250,8 @@ public class AppGoodsController {
 				for(int i=0;i<goodCartIdTemps.length;i++){
 					ezs_orderform tOrderForm = new ezs_orderform();
 					Map<String, Object> tmp = null;
-					tOrderForm.setWeAddress_id(WeAddressId);
+					//tOrderForm.setWeAddress_id(WeAddressId);
+					tOrderForm.setAddress_id(WeAddressId);
 					//进行下单处理
 					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"SAMPLE",Long.valueOf(goodCartIdTemps[i]));
 					Integer ErrorCode = (Integer) tmp.get("ErrorCode");

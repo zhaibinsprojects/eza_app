@@ -659,9 +659,9 @@ public class GoodsServiceImpl implements GoodsService{
 			//合同状态 1.纸质 2.电子
 			orderForm.setPact_status(2);
 			orderForm.setPay_mode(0);
-			orderForm.setPay_mode01(1);
-			orderForm.setPay_mode02(1);
-			orderForm.setSc_status(1);
+			orderForm.setPay_mode01(0);
+			orderForm.setPay_mode02(0);
+			orderForm.setSc_status(0);
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			this.ezs_orderformMapper.insert(orderForm);
@@ -1293,14 +1293,16 @@ public class GoodsServiceImpl implements GoodsService{
 			//合同状态 1.纸质 2.电子
 			orderForm.setPact_status(2);
 			orderForm.setPay_mode(0);
-			orderForm.setPay_mode01(1);
-			orderForm.setPay_mode02(1);
-			orderForm.setSc_status(1);
+			orderForm.setPay_mode01(0);
+			orderForm.setPay_mode02(0);
+			//运送状态
+			orderForm.setSc_status(0);
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
 			orderForm.setOrder_no(orderFormNo);
-			orderForm.setWeAddress_id(WeAddressId);
+			//orderForm.setWeAddress_id(WeAddressId);
+			orderForm.setAddress_id(WeAddressId);
 			if(orderType.trim().equals("GOODS")){
 				orderForm.setOrder_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
 			}else if(orderType.trim().equals("SAMPLE")){
