@@ -1407,9 +1407,9 @@ public class AppGoodsController {
 				//执行成功
 				boolean checkFlag = (boolean) mmp.get("GoodCartIDFlag");
 				if(checkFlag==true){
-					mMp.put(mmp.get("GoodCartID"), true);
+					mMp.put(mmp.get("GoodCartID").toString(), true);
 				}else{
-					mMp.put(mmp.get("GoodCartID"), false);
+					mMp.put(mmp.get("GoodCartID").toString(), false);
 					SuccessFlag = false;
 				}
 			}else{

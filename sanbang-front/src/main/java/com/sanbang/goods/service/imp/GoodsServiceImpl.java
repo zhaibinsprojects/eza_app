@@ -1029,7 +1029,7 @@ public class GoodsServiceImpl implements GoodsService{
 				cktype = 2;
 			}
 			//获取该商品的购买量（不含本次的购买量）（在添加订单时添加锁表记录）
-			//cktype商品类型: 1.供应商商品，2.自营商品，3.样品商品
+			//cktype商品类型: 1.供应商商品，2.自营商品，3.样品商品   app暂不下样品单
 			//ezs_stock.status库存状态  1.释放，0.锁库
 			//from ezs_stock e where e.status = '0' and e.goodid = #{goodId} and e.goodClass = #{ckType}
 			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
@@ -1120,7 +1120,7 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//供货不足，更新现有库存量
-					good.setInventory(xaccount);
+					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
@@ -1181,7 +1181,8 @@ public class GoodsServiceImpl implements GoodsService{
 				}
 			} else {
 				// 供应商锁库
-				double xaccount = good.getInventory();
+				//double xaccount = good.getInventory();
+				double xaccount = StorkNumber(good,good.getInventory());
 				if (xaccount >= account) {
 					// 加入锁库库存
 					ezs_stock stock = new ezs_stock();
@@ -1202,7 +1203,7 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//更新现有库存量
-					good.setInventory(xaccount);
+					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					bool = false;
 				}
@@ -1231,7 +1232,7 @@ public class GoodsServiceImpl implements GoodsService{
 			goodsInfo.setGoodsName(goodTemp.getName());
 			goodsInfo.setStatus((boolean)mmp.get(obj.toString()));
 			if((boolean)mmp.get(obj.toString())==false){
-				goodsInfo.setMessage("商品"+goodTemp.getName()+"库存不足！！");
+				goodsInfo.setMessage(goodTemp.getName()+"库存不足！！");
 			}
 			goodsInfoList.add(goodsInfo);
 		}
@@ -1435,8 +1436,8 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//供货不足，本为校验-不更新库存
-					//good.setInventory(xaccount);
-					//ezs_goodsMapper.updateByPrimaryKeySelective(good);
+					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
 		} catch (Exception e) {
