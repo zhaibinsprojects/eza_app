@@ -661,6 +661,7 @@ public class GoodsServiceImpl implements GoodsService{
 			orderForm.setSc_status(0);
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
+			//没卵用，仅为生成订单号码
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录添加开始...");
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -676,8 +677,10 @@ public class GoodsServiceImpl implements GoodsService{
 				//更新店铺购物车，每单只有一种商品
 				storecart.setSc_status(1);//暂设定1标志 表示已生成订单
 				this.storecartMapper.updateByPrimaryKeySelective(storecart);
-				//没卵用，仅为生成订单号码
 				orderFormNo = createOrderNo(goodTemp);
+				orderForm.setOrder_no(orderFormNo);
+				//写入订单编号
+				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				//同步U8库存
 				try {
 					log.info("下单逻辑+校验库存+更新本地库存");
@@ -711,7 +714,6 @@ public class GoodsServiceImpl implements GoodsService{
 					//样品订单
 					orderForm.setOrder_type(CommUtil.order_sample_good);
 				}
-				orderForm.setOrder_no(orderFormNo);
 				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				
 				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
@@ -1269,8 +1271,6 @@ public class GoodsServiceImpl implements GoodsService{
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"商品数量不足...");
 				return mmp;
 			}
-			//没卵用，仅为生成订单号码
-			String orderFormNo = createOrderNo(good);
 			//添加订单
 			orderForm.setAddTime(new Date());
 			orderForm.setDeleteStatus(false);
@@ -1285,7 +1285,7 @@ public class GoodsServiceImpl implements GoodsService{
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
-			orderForm.setOrder_no(orderFormNo);
+			
 			//orderForm.setWeAddress_id(WeAddressId);
 			orderForm.setAddress_id(WeAddressId);
 			if(orderType.trim().equals("GOODS")){
@@ -1294,6 +1294,9 @@ public class GoodsServiceImpl implements GoodsService{
 				//样品订单
 				orderForm.setOrder_type(CommUtil.order_sample_good);
 			}
+			//没卵用，仅为生成订单号码
+			String orderFormNo = createOrderNo(good);
+			orderForm.setOrder_no(orderFormNo);
 			this.ezs_orderformMapper.insert(orderForm);
 			//构建店铺购物车
 			//storeCart = new ezs_storecart();
