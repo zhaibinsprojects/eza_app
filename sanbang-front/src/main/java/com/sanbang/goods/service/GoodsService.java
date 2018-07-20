@@ -172,4 +172,6 @@ public interface GoodsService {
 	public Map<String, Object> modifyGoodCars(String[] goodsCartIds,String[] counts,ezs_user user);
 	
 	public Map<String, Object> getGoodCarFunc(ezs_user user,String[] goodCarIDs);
+	
+	public String createOrderNo(ezs_goods goods);
 }

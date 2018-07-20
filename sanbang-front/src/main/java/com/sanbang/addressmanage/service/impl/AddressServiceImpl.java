@@ -48,6 +48,11 @@ public class AddressServiceImpl implements AddressService {
 					ezs_addressMapper.updateByPrimaryKeySelective(address);
 				}
 			}
+			//如果该用户下没有地址，则添加的第一条自动设置为默认
+			List<ezs_address> addressList = ezs_addressMapper.getAddressByUserId(upi.getId());
+			if(addressList.isEmpty()){
+				ezs_address.setBestow(ezs_address.ADDRESS_BESTOW_0);
+			}
 			
 			try {
 				ezs_address.setAddTime(DateUtils.getCurrentDate(new Date(), "yyyy-MM-dd HH:mm:ss"));

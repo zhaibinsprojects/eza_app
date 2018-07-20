@@ -661,6 +661,7 @@ public class GoodsServiceImpl implements GoodsService{
 			orderForm.setSc_status(0);
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
+			//没卵用，仅为生成订单号码
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录添加开始...");
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -676,8 +677,10 @@ public class GoodsServiceImpl implements GoodsService{
 				//更新店铺购物车，每单只有一种商品
 				storecart.setSc_status(1);//暂设定1标志 表示已生成订单
 				this.storecartMapper.updateByPrimaryKeySelective(storecart);
-				//没卵用，仅为生成订单号码
 				orderFormNo = createOrderNo(goodTemp);
+				orderForm.setOrder_no(orderFormNo);
+				//写入订单编号
+				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				//同步U8库存
 				try {
 					log.info("下单逻辑+校验库存+更新本地库存");
@@ -711,7 +714,6 @@ public class GoodsServiceImpl implements GoodsService{
 					//样品订单
 					orderForm.setOrder_type(CommUtil.order_sample_good);
 				}
-				orderForm.setOrder_no(orderFormNo);
 				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				
 				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
@@ -898,6 +900,7 @@ public class GoodsServiceImpl implements GoodsService{
 		List<GoodsCarInfo> goodCarInfoList = null;
 		QueryCondition queryCondition = new QueryCondition();
 		queryCondition.setUserId(user.getId());
+		//queryCondition.setUserId(Long.valueOf("535"));
 		if(pageNow<=1){
 			pageNow=1;
 			queryCondition.setPagesize(10);
@@ -1028,7 +1031,7 @@ public class GoodsServiceImpl implements GoodsService{
 				cktype = 2;
 			}
 			//获取该商品的购买量（不含本次的购买量）（在添加订单时添加锁表记录）
-			//cktype商品类型: 1.供应商商品，2.自营商品，3.样品商品
+			//cktype商品类型: 1.供应商商品，2.自营商品，3.样品商品   app暂不下样品单
 			//ezs_stock.status库存状态  1.释放，0.锁库
 			//from ezs_stock e where e.status = '0' and e.goodid = #{goodId} and e.goodClass = #{ckType}
 			List<ezs_stock> stocks = this.stockMapper.getStockByGoods(goods.getId(), cktype);
@@ -1119,7 +1122,7 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//供货不足，更新现有库存量
-					good.setInventory(xaccount);
+					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
@@ -1180,7 +1183,8 @@ public class GoodsServiceImpl implements GoodsService{
 				}
 			} else {
 				// 供应商锁库
-				double xaccount = good.getInventory();
+				//double xaccount = good.getInventory();
+				double xaccount = StorkNumber(good,good.getInventory());
 				if (xaccount >= account) {
 					// 加入锁库库存
 					ezs_stock stock = new ezs_stock();
@@ -1201,7 +1205,7 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//更新现有库存量
-					good.setInventory(xaccount);
+					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					bool = false;
 				}
@@ -1230,7 +1234,7 @@ public class GoodsServiceImpl implements GoodsService{
 			goodsInfo.setGoodsName(goodTemp.getName());
 			goodsInfo.setStatus((boolean)mmp.get(obj.toString()));
 			if((boolean)mmp.get(obj.toString())==false){
-				goodsInfo.setMessage("商品"+goodTemp.getName()+"库存不足！！");
+				goodsInfo.setMessage(goodTemp.getName()+"库存不足！！");
 			}
 			goodsInfoList.add(goodsInfo);
 		}
@@ -1267,8 +1271,6 @@ public class GoodsServiceImpl implements GoodsService{
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"商品数量不足...");
 				return mmp;
 			}
-			//没卵用，仅为生成订单号码
-			String orderFormNo = createOrderNo(good);
 			//添加订单
 			orderForm.setAddTime(new Date());
 			orderForm.setDeleteStatus(false);
@@ -1283,7 +1285,7 @@ public class GoodsServiceImpl implements GoodsService{
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
-			orderForm.setOrder_no(orderFormNo);
+			
 			//orderForm.setWeAddress_id(WeAddressId);
 			orderForm.setAddress_id(WeAddressId);
 			if(orderType.trim().equals("GOODS")){
@@ -1292,6 +1294,9 @@ public class GoodsServiceImpl implements GoodsService{
 				//样品订单
 				orderForm.setOrder_type(CommUtil.order_sample_good);
 			}
+			//没卵用，仅为生成订单号码
+			String orderFormNo = createOrderNo(good);
+			orderForm.setOrder_no(orderFormNo);
 			this.ezs_orderformMapper.insert(orderForm);
 			//构建店铺购物车
 			//storeCart = new ezs_storecart();
@@ -1434,8 +1439,8 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//供货不足，本为校验-不更新库存
-					//good.setInventory(xaccount);
-					//ezs_goodsMapper.updateByPrimaryKeySelective(good);
+					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
 		} catch (Exception e) {
