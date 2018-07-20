@@ -1,6 +1,8 @@
 package com.sanbang.index.controller;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -291,4 +294,42 @@ public class HomeLoanIndex {
 			return "submit_faile";
 	}
 	
+	
+	/** 
+     * @param args 
+     */  
+    public static void main(String[] args) {  
+  
+        String res = downloadFromUrl("http://www.ezaisheng.com/upload/ezsSubstance/fb1d4d45508145fd925165e5a62a1100_易再生废家电价格指数（第20期）.pdf","d:/");  
+        System.out.println(res);  
+    }  
+  
+  
+    public static String downloadFromUrl(String url,String dir) {  
+  
+        try {  
+            URL httpurl = new URL(url);  
+            String fileName = getFileNameFromUrl(url);  
+            System.out.println(fileName);  
+            File f = new File(dir + fileName);  
+            FileUtils.copyURLToFile(httpurl, f);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            return "Fault!";  
+        }   
+        return "Successful!";  
+    }  
+      
+    public static String getFileNameFromUrl(String url){  
+        String name = new Long(System.currentTimeMillis()).toString() + ".X";  
+        int index = url.lastIndexOf("/");  
+        if(index > 0){  
+            name = url.substring(index + 1);  
+            if(name.trim().length()>0){  
+                return name;  
+            }  
+        }  
+        return name;  
+    }
+
 }

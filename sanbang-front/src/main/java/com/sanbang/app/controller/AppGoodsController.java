@@ -119,7 +119,7 @@ public class AppGoodsController {
 			map.put("areaName", goodsvo.getAreaName());
 			map.put("path", goodsvo.getMainphoto().get(0).getPath());
 			map.put("name", goodsvo.getName());
-			map.put("price", goodsvo.getPrice());
+			map.put("price", goodsvo.getSaleprice());
 			map.put("inventory", goodsvo.getInventory());
 			map.put("unit",goodsvo.getUtil()==null?"吨":goodsvo.getUtil().getName() );
 			result.setSuccess(true);

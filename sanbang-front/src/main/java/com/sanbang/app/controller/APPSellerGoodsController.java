@@ -20,6 +20,7 @@ import com.sanbang.bean.ezs_accessory;
 import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.bean.ezs_goods_class;
+import com.sanbang.bean.ezs_goods_log;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.cata.service.CataService;
@@ -28,6 +29,7 @@ import com.sanbang.goods.service.GoodsService;
 import com.sanbang.seller.controller.SellerGoodsController;
 import com.sanbang.seller.service.SellerGoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
+import com.sanbang.utils.GoodsLogUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -296,6 +298,14 @@ public class APPSellerGoodsController {
 		
 		try {
 			result = sellerGoodsService.addGoodsInfo(result, upi, request,response);
+			
+			if(!result.getSuccess()){
+				return result;
+			}
+			//带审核
+			ezs_goods goods = (ezs_goods) result.getObj();
+			ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), upi.getId(), "用户操作:提交审核"+goods.getName()+"成功");
+			result=sellerGoodsService.submitGoodsForAudit(result, goods.getId(), request, response,log);
 		} catch (Exception e) {
 			log.info("供应商"+upi.getName()+"添加货品出错"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -378,6 +388,14 @@ public class APPSellerGoodsController {
 			}
 			
 			result = sellerGoodsService.updateGoodsInfoById(result, goodsId,upi, request,response);
+			
+			if(!result.getSuccess()){
+				return result;
+			}
+			//带审核
+			ezs_goods goods = sellerGoodsService.queryGoodsInfoById(goodsId);
+			ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), upi.getId(), "用户操作:提交审核"+goods.getName()+"成功");
+			result=sellerGoodsService.submitGoodsForAudit(result, goods.getId(), request, response,log);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -417,8 +435,10 @@ public class APPSellerGoodsController {
 			return result;
 		}
 		
-		
-		result = sellerGoodsService.submitGoodsForAudit(result, goodsId, request,response);	
+		//带审核
+		ezs_goods goods = sellerGoodsService.queryGoodsInfoById(goodsId);
+		ezs_goods_log log=GoodsLogUtil.goodsLog(goodsId, upi.getId(), "用户操作:提交审核"+goods.getName()+"成功");
+		result=sellerGoodsService.submitGoodsForAudit(result, goodsId, request, response,log);
 		return result;
 	}
 	
@@ -523,6 +543,13 @@ public class APPSellerGoodsController {
 				return result;
 			}
 			result = sellerGoodsService.updateGoodsPriceAndNumById(result, goodsId,userId, request,response);
+			if(!result.getSuccess()){
+				return result;
+			}
+			//带审核
+			ezs_goods goods = sellerGoodsService.queryGoodsInfoById(goodsId);
+			ezs_goods_log log=GoodsLogUtil.goodsLog(goodsId, userId, "用户操作:修改库存"+goods.getName()+"成功");
+			result=sellerGoodsService.submitGoodsForAudit(result, goodsId, request, response,log);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

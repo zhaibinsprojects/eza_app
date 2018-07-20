@@ -23,8 +23,8 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 
 	// 上下文地址
 	@Value("${config.orderform.advice}")
-	//public String orderformadviceurl="http://10.10.10.88:8080/wemall2/adviceforout/adviceForH5.htm";
 	public String orderformadviceurl="http://test.ezaisheng.com/ezs/adviceforout/adviceForH5.htm";
+//	public String orderformadviceurl;
 		
 	private Logger log=Logger.getLogger(CommonOrderAdviceImpl.class);
 	@Override
@@ -78,7 +78,7 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 	
 	public static void main(String[] args) {
 		CommonOrderAdviceImpl aa=new CommonOrderAdviceImpl();
-		aa.orderFormAdviceStatus("EU0218071700126", "");
+		aa.orderFormAdviceStatus("EU0218072000138", "");
 	}
 
 }

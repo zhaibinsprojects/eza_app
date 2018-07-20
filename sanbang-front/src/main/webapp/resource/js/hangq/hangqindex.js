@@ -24,9 +24,11 @@ $(function() {
 		
 		var bridge =setupWebViewJavascriptBridge();
 		iostophone();
+		iosloadpdf();
 		} else {
 		// 电话
 		androidtophone();
+		androidloadpdf();
 	};
 	
 });
@@ -47,12 +49,12 @@ function androidtophone() {
 }
 
 
-//电话桥接
+//下载pdf
 function androidloadpdf() {
 	
-	$(".fottersty").click(function() {
+	$(".textOverflow_yzs").click(function() {
 		var data = {
-			"filename" : "400-6666-890"
+			"pdfurl" : pdfname
 		}
 		var str = JSON.stringify(data);
 		window.android.androidloadpdf(str);
@@ -73,5 +75,20 @@ function iostophone() {
 			WebViewJavascriptBridge.callHandler('iostophone', str, function() {
 			});
 			return false;
+	})
+}
+
+
+//下载pdf
+function iosloadpdf() {
+	
+	$(".textOverflow_yzs").click(function() {
+		var data = {
+			"pdfurl" : pdfname
+		} 
+		var str = JSON.stringify(data);
+		WebViewJavascriptBridge.callHandler('iosloadpdf', str, function() {
+		});
+		return false;
 	})
 }

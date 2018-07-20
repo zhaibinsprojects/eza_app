@@ -883,7 +883,17 @@ public class UserProServiceImpl implements UserProService {
 						RedisUtils.del(doFtCodde);
 						int a = 0;
 						try {
-							a = ezs_userMapper.modifyPassword(mobileres.getResult(),
+							ezs_user userProInfo = null;
+							List<ezs_user> userProInfolist= ezs_userMapper.getUserInfoByUserNameFromPhone(mobileres.getResult().trim());;
+							
+							if (userProInfolist == null || userProInfolist.size() == 0) {
+								result.setSuccess(false);
+								result.setMsg("用户不存在");
+								result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+								return result;
+							} 
+							userProInfo = userProInfolist.get(0);
+							a = ezs_userMapper.modifyPassword(userProInfo.getName(),
 									MD5Util.md5Encode(passwd).toLowerCase());
 						} catch (Exception e) {
 							log.error("修改密码失败", e);

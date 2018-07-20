@@ -686,7 +686,7 @@
 		</if>
     and user_id=#{sellerId} 
     order by
-    lastModifyDate  desc
+   A.addTime ,A.lastModifyDate desc
     LIMIT #{page.startPos},#{page.pageSize}
 	</select>
 	<!-- 供应商下架货品 -->
