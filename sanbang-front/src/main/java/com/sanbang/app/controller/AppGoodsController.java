@@ -27,15 +27,18 @@ import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.CommUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -1021,7 +1024,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping(value="/dealImmediatelyBuyGood")
 	@ResponseBody
-	public Object dealImmediatelyBuyGood(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsId,Double count){
+	public synchronized Object dealImmediatelyBuyGood(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsId,Double count){
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -1111,7 +1114,7 @@ public class AppGoodsController {
 	 */
 	@RequestMapping(value="/AddGoodsToSelfOrderFormArry")
 	@ResponseBody
-	public Object AddGoodsToSelfOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
+	public synchronized Object AddGoodsToSelfOrderFormArry(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,String goodCartIds){
 		log.info("添加订单beginning...........................");
 		//校验结果集合
 		Map<Object, Object> tempMP = null;
@@ -1518,5 +1521,4 @@ public class AppGoodsController {
 		}
 		return sb.toString();
 	}
-	
 }
