@@ -898,6 +898,7 @@ public class GoodsServiceImpl implements GoodsService{
 		List<GoodsCarInfo> goodCarInfoList = null;
 		QueryCondition queryCondition = new QueryCondition();
 		queryCondition.setUserId(user.getId());
+		//queryCondition.setUserId(Long.valueOf("535"));
 		if(pageNow<=1){
 			pageNow=1;
 			queryCondition.setPagesize(10);
