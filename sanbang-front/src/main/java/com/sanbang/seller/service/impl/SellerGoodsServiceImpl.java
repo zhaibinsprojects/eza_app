@@ -271,10 +271,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				mainAccid = list.get(0).getAccid();
 				goods.setGoods_main_photo_id(mainAccid);
 				goodsMapper.updateByPrimaryKeySelective(goods);
-				//带审核
-				result=submitGoodsForAudit(result, goods.getId(), request, response);
-				ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), upi.getId(), "用户操作:添加商品"+goods.getName()+"成功");
-				ezs_goods_logMapper.insertSelective(log);
+				result.setObj(goods);
 			}
 		} catch (Exception e) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -667,8 +664,6 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				mainAccid = list.get(0).getAccid();
 				goods.setGoods_main_photo_id(mainAccid);
 				goodsMapper.updateByPrimaryKeySelective(goods);
-				//带审核
-				result=submitGoodsForAudit(result, goods.getId(), request, response);
 			}
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
@@ -684,7 +679,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	@Override
 	public Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response,ezs_goods_log log1) {
 		
 		//查询商品显示金额
 		ezs_goods goods = goodsMapper.selectByPrimaryKeyIsGoodsPrice(goodsId);
@@ -715,7 +710,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit1.setAddTime(new Date());
 				goodsAudit1.setDeleteStatus(false);
 				goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
-				
+				goodsAudit1.setSupplyPrice(goods.getPrice());
 				//只在待审核状态或白名单客户  恢复初始化状态
 				if(goodsAudit.getStatus()==544||isValidateCompany()){
 					goodsAudit1.setPriceStatus(600);
@@ -749,8 +744,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAuditProcessMapper.updateByPrimaryKeySelective(goodsAudit1);
 				result.setSuccess(true);
 				result.setMsg("操作完成");
-				ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:提交审核"+goods.getName()+"成功");
-				ezs_goods_logMapper.insertSelective(log);
+				ezs_goods_logMapper.insertSelective(log1);
 			}
 		}else{
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -789,6 +783,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品库存");
+			return result;
 		}
 		if (Tools.isEmpty(price)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -799,16 +794,16 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				result.setSuccess(false);
 				result.setMsg("请输入有效货品价格");
 			}
+			return result;
 		}
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setSuccess(true);
+		result.setMsg("操作完成");
 		goods.setLastModifyDate(new Date());
 		goods.setInventory(Double.valueOf(inventory));
 		goods.setPrice(new BigDecimal(price));
 		goodsMapper.updateByPrimaryKeySelective(goods);
 		
-		//带审核
-		result=submitGoodsForAudit(result, goods.getId(), request, response);
-		ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), goods.getUser_id(), "用户操作:修改库存"+goods.getName()+"成功");
-		ezs_goods_logMapper.insertSelective(log);
 		return result;
 	}
 

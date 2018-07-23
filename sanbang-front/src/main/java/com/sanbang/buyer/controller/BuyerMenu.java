@@ -294,6 +294,10 @@ public class BuyerMenu {
 		}
 		try {
 			result = buyerService.orderpaysubmit(request, order_no, urlParam,upi);
+			//wemall回调
+			if(result.getSuccess()){
+				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

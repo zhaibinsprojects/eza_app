@@ -5,8 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<%-- <base href="${serurl}"/> --%>
-<base href="http://10.10.10.232/"/>
+<base href="${serurl}"/>
+<!-- <base href="http://10.10.10.232/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -33,11 +33,14 @@
         <p class="111">${show.content}</p>
       </div>
     </div>
+    
+    <c:if test="${ not empty show.attachment}">
     <div class="textOverflow_yzs">
     <h5 style="margin-left: 70%;margin-top: 5%;">
          <p class="download" name="${show.name}" style="color:orange;">下载报告</p>
      </h5>    
       </div>
+     </c:if> 
   </section>
 </div>
 <div class="content_yzs">
@@ -68,21 +71,18 @@
 </body>
 
 <script type="text/javascript">
-
-/* var baseurl="${serurl}"; */
-var baseurl="http://10.10.10.232/";
+var baseurl="${serurl}";
+var  pdfname="${show.attachment}";
 $(document).ready(function(){
-	var  pdfname="${show.attachment}";
-	
 	$(".text_yzs").click(function(){
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
 	})
 	$(".MsoNormalTable").css("width","100%");
 	
-	$(".textOverflow_yzs").click(function(){
+	/* $(".textOverflow_yzs").click(function(){
 		$("#fileName").val(pdfname);
 		$("#theForm2").submit();
-	});
+	}); */
 });
 </script>
 </html>

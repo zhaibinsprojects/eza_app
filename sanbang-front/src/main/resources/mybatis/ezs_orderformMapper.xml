@@ -546,7 +546,7 @@
 	<!--订单详细信息-->
 	<select id="selectByorderno" resultMap="BaseResultMap" >
     select * from ezs_orderform 
-    where order_no = #{order_no}
+    where order_no = #{order_no}  AND deleteStatus = 0
 	</select>
 	
 	<select id="selectOrderNumByDate" resultType="java.lang.Integer">

@@ -84,10 +84,10 @@
 			<div class="ezsm-shopdetail-picbox-main-image">
 				<ul> 
 				 <c:forEach items="${good.mainphoto}" var="mainphoto">
-				 <li><img src="${mainphoto.path}"/></li>
+				 <li><img onerror="this.src='http://www.ezaisheng.com/ezaisheng/resource/style/images/shop/shopshow/blank.png'" src="${mainphoto.path}"/></li>
 				 </c:forEach>
 				 <c:forEach items="${good.goods_photos}" var="goods_photos">
-				 <li><img src="${goods_photos.photo.path}"/></li>
+				 <li><img onerror="this.src='http://www.ezaisheng.com/ezaisheng/resource/style/images/shop/shopshow/blank.png'" src="${goods_photos.photo.path}"/></li>
 				 </c:forEach>
 				</ul>
 				<a href="javascript:;" id="btn_prev"></a>
