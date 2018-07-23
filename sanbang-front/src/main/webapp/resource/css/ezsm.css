@@ -361,7 +361,7 @@ li{list-style-type:none;}
 .ezsm-shopdetail-casebox:first-child{margin-left:0%;}
 .ezsm-shopdetail-casebox img{width:100%;height:80px;}
 
-.ezsm-shopdetail-picbox{width:100%;height:200px;background:#008;}
+.ezsm-shopdetail-picbox{width:100%;height:200px;background:#b3b3b9;}
 .ezsm-shopdetail-picbox-main-visual{height:200px;border-top:1px solid #d7d7d7;overflow:hidden;position:relative;}
 .ezsm-shopdetail-picbox-main-image{height:200px;overflow:hidden;position:relative;}
 .ezsm-shopdetail-picbox-main-image ul{width:9999px;height:200px;overflow:hidden;position:absolute;top:0;left:0}

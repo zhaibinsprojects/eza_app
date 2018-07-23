@@ -412,6 +412,7 @@ function androidshowpdf() {
 		var u = navigator.userAgent; // 获取用户设备
 		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 		if (isIOS) {
+			var  str="";
 			WebViewJavascriptBridge.callHandler('ioscart', str, function() {
 			});
 		}else{

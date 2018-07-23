@@ -1,4 +1,4 @@
-package com.sanbang.seller.controller;
+ package com.sanbang.seller.controller;
 
 import java.util.HashMap;
 import java.util.Map;
