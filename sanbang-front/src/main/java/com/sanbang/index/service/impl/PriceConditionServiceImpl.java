@@ -32,15 +32,15 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	private ezs_areaMapper areaMapper;
 	
 	@Override
-	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno) {
+	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno,int pagesaize) {
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> plist = new ArrayList<>();
 		try {
 			/*mp.put("pagecount", (pageno-1)*10);
 			mp.put("pagesize", 10);*/
 			//app 端做页面展示调整
-			mp.put("pagecount", (pageno-1)*3);
-			mp.put("pagesize", 3);
+			mp.put("pagecount", (pageno-1)*pagesaize);
+			mp.put("pagesize", pagesaize);
 			plist = this.priceTrendMapper.selectByAreaIdAndOtherCondition(mp);
 			if(plist!=null){
 				List<PriceTrendIfo> plistTemp = new ArrayList<>();

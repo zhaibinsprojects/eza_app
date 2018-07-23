@@ -110,7 +110,7 @@ public class HomePriceConditionController {
 			}
 			tMp.put("areaIds", areaIdsList);
 		}
-		mmp = this.priceConditionService.getPriceInTime(tMp,pageno);
+		mmp = this.priceConditionService.getPriceInTime(tMp,pageno,10);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
@@ -208,7 +208,7 @@ public class HomePriceConditionController {
 		if(currentPage<=0)
 			currentPage = 1;
 		if(id==null){
-			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage);
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage,10);
 		}else{
 			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		}
@@ -272,7 +272,7 @@ public class HomePriceConditionController {
 		if(currentPage<=0)
 			currentPage = 1;
 		if(id==null){
-			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage);
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage,10);
 		}else{
 			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		}
@@ -310,7 +310,7 @@ public class HomePriceConditionController {
 		if(currentPage<=0)
 			currentPage = 1;
 		if(id==null){
-			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage);
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage,10);
 		}else{
 			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		}
@@ -568,9 +568,9 @@ public class HomePriceConditionController {
 			@RequestParam(name="burning",defaultValue="")String burning,
 			@RequestParam(name="protection",defaultValue="")String protection){
 		//价格
-		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno);
+		Map<String, Object>  jiage = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(jiagecatid), pageno,10);
 		//研究报告 
-		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno);
+		Map<String, Object>  baogao = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(yanjiucatid), pageno,10);
 		
 		Map<String, Object> tMp = new HashMap<>();
 		Map<String, Object> zoushi =new HashMap<>();
@@ -591,7 +591,7 @@ public class HomePriceConditionController {
 					tMp.put("areaIds", areaIdsList);
 				}
 		zoushi = this.priceConditionService.getPriceTrendcy(tMp,pageno);
-		baojia = this.priceConditionService.getPriceInTime(tMp,pageno);
+		baojia = this.priceConditionService.getPriceInTime(tMp,pageno,10);
 		
 		List<ezs_ezssubstance> essayList = (List<ezs_ezssubstance>)baogao.get("Obj");
 		List<ezs_ezssubstance> jiageList = (List<ezs_ezssubstance>)jiage.get("Obj");

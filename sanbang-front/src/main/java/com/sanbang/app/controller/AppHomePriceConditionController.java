@@ -101,7 +101,7 @@ public class AppHomePriceConditionController {
 			tMp.put("areaIds", areaIdsList);
 		}
 		
-		mmp = this.priceConditionService.getPriceInTime(tMp,pageno);
+		mmp = this.priceConditionService.getPriceInTime(tMp,pageno,10);
 		List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -189,7 +189,7 @@ public class AppHomePriceConditionController {
 		if(currentPage<=0)
 			currentPage = 1;
 		if(id==null){
-			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage);
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage,3);
 		}else{
 			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		}
@@ -256,7 +256,7 @@ public class AppHomePriceConditionController {
 		if(currentPage<=0)
 			currentPage = 1;
 		if(id==null){
-			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage);
+			mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage,3);
 		}else{
 			mmp = this.industryInfoService.getIndustryInfoByKinds(id, currentPage);
 		}
