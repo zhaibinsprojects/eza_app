@@ -5,7 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
+<%-- <base href="${serurl}"/> --%>
+<base href="http://10.10.10.232/"/>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -67,7 +68,9 @@
 </body>
 
 <script type="text/javascript">
-var baseurl="${serurl}";
+
+/* var baseurl="${serurl}"; */
+var baseurl="http://10.10.10.232/";
 $(document).ready(function(){
 	var  pdfname="${show.attachment}";
 	

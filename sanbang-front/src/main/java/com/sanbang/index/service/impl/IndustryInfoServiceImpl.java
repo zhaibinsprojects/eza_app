@@ -80,7 +80,7 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 	 * 各种文档分页展示（全部展示不按分类）
 	 */
 	@Override
-	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId, int currentPage) {
+	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId, int currentPage,int pagesize) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>(); 
 		//获取总页数
@@ -89,7 +89,7 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 			ExPage page = new ExPage(totalCount, currentPage); 
 			//page.setPageSize(10);
 			//app 端做调整
-			page.setPageSize(3);
+			page.setPageSize(pagesize);
 			page.setContent(String.valueOf(parentKindsId));
 			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
 				List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectAllGoodsIndustryByPage(page);

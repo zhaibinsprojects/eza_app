@@ -172,11 +172,11 @@
 	<include refid="Base_HotArea_Column_List" />
 	from 
 	(
-	select a1.id areaid,a1.areaName areaname,a1.parent_id pid,a1.`level` level,ec.id cid,ec.companyName cname from ezs_customer ec,ezs_area a1 where ec.area_id = a1.id and a1.`level` = '0' 
+	select a1.id areaid,a1.areaName areaname,a1.parent_id pid,a1.`level` level,ec.id cid from ezs_address ec,ezs_area a1 where ec.area_id = a1.id and a1.`level` = '0' and ec.deleteStatus = '0' and ec.bestow = '0'
 	UNION
-	select a2.id areaid,a2.areaName areaname,a2.parent_id pid,a2.`level` level,ec.id cid,ec.companyName cname from ezs_customer ec,ezs_area a1,ezs_area a2 where ec.area_id = a1.id and a1.`level` = '1' and a2.id = a1.parent_id
+	select a2.id areaid,a2.areaName areaname,a2.parent_id pid,a2.`level` level,ec.id cid from ezs_address ec,ezs_area a1,ezs_area a2 where ec.area_id = a1.id and a1.`level` = '1' and a2.id = a1.parent_id and ec.deleteStatus = '0' and ec.bestow = '0'
 	UNION
-	select a3.id areaid,a3.areaName areaname,a3.parent_id pid,a3.`level` level,ec.id cid,ec.companyName cname from ezs_customer ec,ezs_area a1,ezs_area a2,ezs_area a3 where ec.area_id = a1.id and a1.`level` = '2' and a1.parent_id = a2.id and a2.parent_id = a3.id
+	select a3.id areaid,a3.areaName areaname,a3.parent_id pid,a3.`level` level,ec.id cid from ezs_address ec,ezs_area a1,ezs_area a2,ezs_area a3 where ec.area_id = a1.id and a1.`level` = '2' and a1.parent_id = a2.id and a2.parent_id = a3.id and ec.deleteStatus = '0' and ec.bestow = '0'
 	) da 
 	GROUP BY da.areaid ORDER BY num desc
   </select>

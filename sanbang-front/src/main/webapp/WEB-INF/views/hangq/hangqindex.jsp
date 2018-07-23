@@ -6,6 +6,8 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
+<!-- <base href="http://10.10.10.232/"/> -->
+
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -21,7 +23,7 @@
   <!--价格评析-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>价格评析</span><span style="float: right;color: orange;">更多</span></h2>
+      <h2><span>价格评析</span><span id="priceAnalyse" style="float: right;color: orange;">更多</span></h2>
     </div>
     <c:forEach var="item" items="${jiage.Obj}">
     <div class="text_yzs" id="${item.id}">
@@ -37,7 +39,7 @@
   <!--研究报告--->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>研究报告</span><span style="float: right;color: orange;">更多</span></h2>
+      <h2><span>研究报告</span><span id="report" style="float: right;color: orange;">更多</span></h2>
     </div>
     <c:forEach var="item" items="${baogao.Obj}">
     <div class="text_yzs" id="${item.id}">
@@ -52,7 +54,7 @@
   <!--实时报价--->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>实时报价</span><span style="float: right;color: orange;">更多</span></h2>
+      <h2><span>实时报价</span><span id="priceInTime" style="float: right;color: orange;">更多</span></h2>
     </div>
     <div class="realTime_price">
       <table class="tableOne_yzs" cellpadding="0" cellspacing="0">
@@ -99,14 +101,25 @@
   </section> -->
   
 </div>
+<input id="goodclassid"  class="pagecount" value="${baojia_goodclass}" style="display: none"/>
+<input id="areaid"  class="pagecount" value="${baojia_areaId}" style="display: none"/>
 </body>
 
 <script type="text/javascript">
 var baseurl="${serurl}";
-
+/* var baseurl="http://10.10.10.232/"; */
+var baojia_goodclass = $('#goodclassid').val();
+var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){
 	$(".text_yzs").click(function(){
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+	})
+	/* 更多 */
+	$(".hTwoFater_yzs").find("span:eq(1)").click(function(){
+		if($(this).attr("id")=="priceInTime")
+			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1&goodClassId="+baojia_goodclass+"&areaId="+baojia_areaId;
+		else
+			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";
 	})
 })
 </script>
