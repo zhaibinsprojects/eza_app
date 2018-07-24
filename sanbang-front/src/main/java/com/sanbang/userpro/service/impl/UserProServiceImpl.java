@@ -578,8 +578,8 @@ public class UserProServiceImpl implements UserProService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_FAIL);
 				result.setSuccess(false);
 				result.setMsg("请求失败");
-				// hunXinService.regHuanxinSingle(username,
-				// HunXinServiceImpl.passwordefault, userInfo.getUserid());
+				 /*hunXinService.regHuanxinSingle(username,
+				 HunXinServiceImpl.passwordefault, userInfo.getUserid());*/
 			}
 
 		} else {

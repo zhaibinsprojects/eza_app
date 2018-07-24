@@ -170,7 +170,7 @@
   <select id="getHotArea" resultMap="BaseHotAreaResultMap">
 	select
 	<include refid="Base_HotArea_Column_List" />
-	from 
+		from 
 	(
 	select a1.id areaid,a1.areaName areaname,a1.parent_id pid,a1.`level` level,ec.id cid from ezs_address ec,ezs_area a1 where ec.area_id = a1.id and a1.`level` = '0' and ec.deleteStatus = '0' and ec.bestow = '0'
 	UNION
@@ -178,7 +178,7 @@
 	UNION
 	select a3.id areaid,a3.areaName areaname,a3.parent_id pid,a3.`level` level,ec.id cid from ezs_address ec,ezs_area a1,ezs_area a2,ezs_area a3 where ec.area_id = a1.id and a1.`level` = '2' and a1.parent_id = a2.id and a2.parent_id = a3.id and ec.deleteStatus = '0' and ec.bestow = '0'
 	) da 
-	GROUP BY da.areaid ORDER BY num desc
+	GROUP BY da.areaid ORDER BY num desc;
   </select>
   <!-- 由子节点获取父节点 -->
   <select id="selectParentByChildKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
