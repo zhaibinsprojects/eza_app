@@ -17,7 +17,8 @@
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
 <script type="text/javascript" src="front/resource/js/hangq/hangqindex.js"></script>
-   
+<script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
 	<div class="content_yzs">
@@ -29,15 +30,18 @@
     <div class="text_yzs" id="${show.id}">
       <h3>${show.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
             value="${show.addTime}" />）</h3>
-      <div class="textOverflow_yzs">
+       <div class="textOverflow_yzs">
         <p class="111">${show.content}</p>
+      </div>     
+      <div class="textOverflow_yzs">
+       <p class="111">${show.meta}</p>
       </div>
     </div>
     
     <c:if test="${ not empty show.attachment}">
     <div class="textOverflow_yzs">
     <h5 style="margin-left: 70%;margin-top: 5%;">
-         <p class="download" name="${show.name}" style="color:orange;">下载报告</p>
+         <p class="download" name="${show.name}" style="color:orange;">在线查看报告</p>
      </h5>    
       </div>
      </c:if> 
@@ -45,7 +49,7 @@
 </div>
 <div class="content_yzs">
       <!--研究报告--->
-  <section class="secsty_yzs" style="margin-top: 90%;">
+  <section class="secsty_yzs" style="margin-top: 60%;margin-bottom: -20%;">
      <c:if test="${not empty top}">
      <div class="text_yzs" id="${top.id}">
       <h3>上一篇：${top.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
@@ -73,6 +77,7 @@
 <script type="text/javascript">
 var baseurl="${serurl}";
 var  pdfname="${show.attachment}";
+var pdfid="${show.id}"
 $(document).ready(function(){
 	$(".text_yzs").click(function(){
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");

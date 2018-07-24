@@ -53,10 +53,25 @@ function androidtophone() {
 function androidloadpdf() {
 	
 	$(".textOverflow_yzs").click(function() {
+		var res=cppdf(pdfid);
+		if(!res){
+			layer.open({
+				content : "查看失败",
+				skin : 'msg',
+				time : 2
+			});
+			return false;
+		}
+		
 		var data = {
-			"pdfurl" : pdfname
+			"pdfurl" : "https://m.ezaisheng.com/upload/h5/ezsSubstance/"+pdfid+".pdf"
 		}
 		var str = JSON.stringify(data);
+		layer.open({
+			content : "回调开始",
+			skin : 'msg',
+			time : 2
+		});
 		window.android.androidloadpdf(str);
 		return false;
 	})
@@ -83,12 +98,31 @@ function iostophone() {
 function iosloadpdf() {
 	
 	$(".textOverflow_yzs").click(function() {
-		var data = {
-			"pdfurl" : pdfname
-		} 
-		var str = JSON.stringify(data);
-		WebViewJavascriptBridge.callHandler('iosloadpdf', str, function() {
-		});
+		$("#fileName").val(pdfname);
+		$("#theForm2").submit();
 		return false;
 	})
+}
+
+
+//查看文件
+function  cppdf(id){
+	var res=false;
+	$.ajax({
+		type : "post",
+		url : baseurl + "/front/app/home/getFileForHangq.htm",
+		data : {
+			"id" : parseInt(id),
+		},
+		dataType : "json",
+		async : false,
+		success : function(data) {
+			if (data.success) {
+				res= true;
+			} 
+		},
+		error : function(e) {
+		}
+	});
+	return res;
 }

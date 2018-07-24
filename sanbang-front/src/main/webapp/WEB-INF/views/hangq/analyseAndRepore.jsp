@@ -18,13 +18,11 @@
 <script type="text/javascript" src="front/resource/js/goods/mui.min.js"></script>
 <script type="text/javascript" src="front/resource/js/goods/analyseAndRepore.js"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
-<!-- <link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css" /> -->
-<!-- <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet"> -->
+<link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css" />
+<link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" > 
 </head>
 <body style="background:#efefef;width: 100%;">
-	<div class="content_yzs">
   <!--价格评析-->
-  <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
       <h2>
       <c:if test="${resultMap.kinds=='priceAnalyse'}">
@@ -36,23 +34,24 @@
       </h2>
     </div>
         
-    <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 0%;">
-    <div class="mui-scroll">
-    <section class="secNeiron mui-table-view mui-table-view-chevron">
+  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 15%;">
+    <div class="mui-scroll"> 
+      <!--数据列表-->
+      <section class="secNeiron mui-table-view mui-table-view-chevron">
     <c:forEach var="item" items="${resultMap.Obj}">
     <div class="text_yzs" id="${item.id}">
-      <h3>${item.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
-            value="${item.addTime}" />）</h3>
+      <h3>${item.name}</h3>
       <div class="textOverflow_yzs">
         <p>${item.meta}</p>
       </div>
+      <h3><fmt:formatDate pattern="yyyy-MM-dd" 
+            value="${item.addTime}" /></h3>
     </div>
     </c:forEach>
     </section>
+     </section>
     </div>
     </div>
-  </section>
-</div>
 </body>
 <script type="text/javascript">
 var baseurl="${serurl}";
@@ -60,9 +59,9 @@ var baseurl="${serurl}";
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){
-	$(".text_yzs").click(function(){
+	mui('body').on('tap', '.text_yzs', function() {
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
-	})
+	});
 })
 </script>
 </html>
