@@ -497,13 +497,30 @@
   <select id="goodsIndustryCountByKinds" resultType="java.lang.Integer" parameterType="java.lang.Long" >
     select count(1) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT}
   </select>
-  
-  
   <select id="goodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
     select
     <include refid="Base_Column_List" />
     from ezs_ezssubstance where ec_id = #{content} order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
+  
+  <!-- 传送多个ID -->
+  <select id="getEssayCounts" resultType="java.lang.Integer">
+    select count(1) from ezs_ezssubstance where ec_id in
+	<foreach collection="array" item="ecIdList" index="index" open="(" separator="," close=")">
+	        	#{ecIdList}
+	</foreach>	
+  </select>
+  <select id="getEssayThemes" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+    select
+    <include refid="Base_Column_List" />
+    from ezs_ezssubstance where ec_id in 
+    <foreach collection="idsArray" item="ids" index="index" open="(" separator="," close=")">
+	    #{ids}
+	</foreach>
+    order by addTime desc LIMIT #{startPos},#{pageSize}
+  </select>
+  
+  
   
   <select id="goodsAllIndustryCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
     select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id) 

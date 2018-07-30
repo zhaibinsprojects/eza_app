@@ -5,6 +5,16 @@ import com.sanbang.utils.Page;
 public class ExPage extends Page {
 	
 	private String content;
+	
+	private String[] idsArray;
+
+	public String[] getIdsArray() {
+		return idsArray;
+	}
+
+	public void setIdsArray(String[] idsArray) {
+		this.idsArray = idsArray;
+	}
 
 	public String getContent() {
 		return content;
