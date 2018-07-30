@@ -17,3 +17,16 @@
           <td>${item.price}</td>
         </tr>
 </c:forEach>
+<script type="text/javascript">
+var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.232/"; */
+var type="${resultMap.kinds}";
+var goodClassId = "${resultMap.goodClassId}";
+var areaId = "${resultMap.areaId}";
+var pagecount="${resultMap.Page.totalPageCount}";
+$(document).ready(function(){
+	$(".text_yzs").click(function(){
+		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+	})
+})
+</script>

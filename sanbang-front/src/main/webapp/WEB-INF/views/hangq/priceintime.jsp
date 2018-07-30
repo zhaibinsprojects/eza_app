@@ -18,20 +18,20 @@
 <script type="text/javascript" src="front/resource/js/goods/mui.min.js"></script>
 <script type="text/javascript" src="front/resource/js/goods/priceInTime.js"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
-<!-- <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet"> -->
+<link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css" />
+<link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" > 
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
-	<div class="content_yzs">
   <!--实时报价--->
-  <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
       <h2><span>实时报价</span></h2>
     </div>
-    <div class="realTime_price">
-    <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+    
+    
+    <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 15%;">
     <div class="mui-scroll">
-    <table class="tableOne_yzs" cellpadding="0" cellspacing="0">
     <section class="secNeiron mui-table-view mui-table-view-chevron">
+    <table class="tableOne_yzs" cellpadding="0" cellspacing="0">
       <c:forEach items="${resultMap.Obj}" var="item">
         <tr>
           <td><label>地区</label></td>
@@ -47,12 +47,10 @@
         </tr>
        </c:forEach>
        </table>
-       </section>
+        </section>
        </div>
        </div>
-    </div>
-  </section>
-</div>
+ 
 </body>
 <script type="text/javascript">
 var baseurl="${serurl}";

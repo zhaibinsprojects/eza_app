@@ -63,8 +63,6 @@
       <h3>下一篇：${button.name}
       		（<fmt:formatDate pattern="yyyy-MM-dd"  value="${button.addTime}" />）
             </h3>
-      <div class="textOverflow_yzs">
-      </div>
     </div>
      </c:if>
   </section>
