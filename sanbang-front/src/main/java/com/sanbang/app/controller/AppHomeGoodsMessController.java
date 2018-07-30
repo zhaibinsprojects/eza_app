@@ -633,16 +633,17 @@ public class AppHomeGoodsMessController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<ezs_column> columnList = (List<ezs_column>) mmp.get("Obj");
-			//进行显示字段的过滤
-			FieldFilterUtil<ezs_column> fieldFilterUtil = new FieldFilterUtil<>();
-			String filterFields = "columnLevel,id,name,title";
-			try {
-				//字段过滤公共方法
-				columnListTemp = fieldFilterUtil.getFieldFilterList(columnList, filterFields,ezs_column.class);
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			
+			for (ezs_column column : columnList) {
+				//热点资讯、专题聚焦不展示
+				if(type==57&&(column.getId()==62||column.getId()==64))
+					continue;
+				ezs_column columnTemp = new ezs_column();
+				columnTemp.setId(column.getId());
+				columnTemp.setName(column.getName());
+				columnTemp.setTitle(column.getTitle());
+				columnTemp.setColumnLevel(column.getColumnLevel());
+				columnListTemp.add(columnTemp);
 			}
 			rs = Result.success();
 			rs.setObj(columnListTemp);
@@ -673,7 +674,23 @@ public class AppHomeGoodsMessController {
 		Result rs = null;
 		if(currentPage<=0)
 			currentPage = 1;
-		mmp = this.reportEssayServer.getReportEssayTheme(parentId,currentPage);
+		
+		if(parentId==58)
+			mmp = this.reportEssayServer.getReportEssayTheme(Long.valueOf(67),currentPage);//特别关注：显示行业行动-要闻
+		else if(parentId==59){
+			mmp = this.reportEssayServer.getReportEssayTheme(Long.valueOf(13),currentPage);//今日行情
+		}else if(parentId==60){
+			String[] parentIds = {"65","66","67"};
+			mmp = this.reportEssayServer.getReportEssayThemeByParentIds(parentIds,currentPage);//行业动态（全内容）
+		}else if(parentId==61){
+			String[] parentIds = {"68","69","70"};
+			mmp = this.reportEssayServer.getReportEssayThemeByParentIds(parentIds,currentPage);//再生智库（全内容）
+		}else if(parentId==63){
+			String[] parentIds = {"71","72"};
+			mmp = this.reportEssayServer.getReportEssayThemeByParentIds(parentIds,currentPage);//再生圈(全内容)
+		}else
+			mmp = this.reportEssayServer.getReportEssayTheme(parentId,currentPage);
+		
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<ezs_ezssubstance> substanceList = (List<ezs_ezssubstance>) mmp.get("Obj"); 
@@ -689,14 +706,6 @@ public class AppHomeGoodsMessController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			/*for (ezs_ezssubstance ss : substanceList) {
-				ezs_ezssubstance substanceTemp = new ezs_ezssubstance();
-				substanceTemp.setId(ss.getId());
-				substanceTemp.setAddTime(ss.getAddTime());
-				substanceTemp.setMeta(ss.getMeta());
-				substanceTemp.setName(ss.getName());
-				substanceListTemp.add(substanceTemp);
-			}*/
 			rs.setObj(substanceListTemp);
 			rs.setMsg(mmp.get("Msg").toString());
 		}else{

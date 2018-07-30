@@ -679,7 +679,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 
 	@Override
 	public Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request,
-			HttpServletResponse response,ezs_goods_log log1) {
+			HttpServletResponse response,ezs_goods_log log1,ezs_user upi) {
+		
 		
 		//查询商品显示金额
 		ezs_goods goods = goodsMapper.selectByPrimaryKeyIsGoodsPrice(goodsId);
@@ -712,7 +713,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goodsAudit1.setGoods_id(Long.valueOf(goods.getId()));
 				goodsAudit1.setSupplyPrice(goods.getPrice());
 				//只在待审核状态或白名单客户  恢复初始化状态
-				if(goodsAudit.getStatus()==544||isValidateCompany()){
+				if(goodsAudit.getStatus()==544||isValidateCompany(upi)){
 					goodsAudit1.setPriceStatus(600);
 					goodsAudit1.setStatus(540);
 					goodsAudit1.setId(goodsAudit.getId());
@@ -755,8 +756,11 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 	}
 	
 	//判断是否为白名单客户
-	private  boolean isValidateCompany(){
-		
+	@SuppressWarnings("unused")
+	private  boolean isValidateCompany(ezs_user upi){
+		if(null!=upi&&(null!=upi.getEzs_store())&&upi.getEzs_store().getName_status()==1){
+			return true;
+		}
 		return false;
 	}
 

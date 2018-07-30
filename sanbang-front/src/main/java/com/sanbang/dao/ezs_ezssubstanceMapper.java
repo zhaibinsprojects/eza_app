@@ -26,6 +26,12 @@ public interface ezs_ezssubstanceMapper {
     
     List<ezs_ezssubstance> goodsIndustryByPage(ExPage page);
     
+    
+    int getEssayCounts(String[] ecIdList);
+    
+    List<ezs_ezssubstance> getEssayThemes(ExPage page);
+    
+    
     int goodsAllIndustryCount(Long parentKindId);
     
     List<ezs_ezssubstance> selectAllGoodsIndustryByPage(ExPage page);
@@ -56,5 +62,7 @@ public interface ezs_ezssubstanceMapper {
      * @return
      */
     List<ezs_ezssubstance>  getButtomOneSubstanceBycatid(@Param("pagecount")long pagecount ,@Param("pagesize")long pagesize ,@Param("catid")long catid);
+    
+    
     
 }

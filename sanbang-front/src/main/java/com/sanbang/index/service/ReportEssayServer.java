@@ -11,5 +11,7 @@ public interface ReportEssayServer {
 	public Map<String, Object> getReportEssayTheme(Long parentId,int currentPage);
 	
 	public Map<String, Object> getReportEssayContext(Long reportId);
+	
+	public Map<String, Object> getReportEssayThemeByParentIds(String[] parentIds,int currentPage);
 
 }

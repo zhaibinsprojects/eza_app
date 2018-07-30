@@ -105,5 +105,38 @@ public class ReportEssayServerImpl implements ReportEssayServer {
 		}
 		return mmp;
 	}
+	@Override
+	public Map<String, Object> getReportEssayThemeByParentIds(String[] parentIds, int currentPage) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<ezs_ezssubstance> substanceList = null;
+		//获取总条目数，供分页使用
+		//int totalCount = this.ezssubstanceMapper.goodsIndustryCountByKinds(parentId);
+		String[] ecIdList = parentIds;
+		int totalCount = this.ezssubstanceMapper.getEssayCounts(ecIdList);
+		ExPage page = new ExPage(totalCount, currentPage);
+		page.setIdsArray(ecIdList);
+		if(currentPage<=0||currentPage>page.getTotalPageCount()){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			//须返回本结构
+			mmp.put("Obj", new ArrayList<ezs_ezssubstance>());
+			mmp.put("Msg", "查询成功，暂无数据");
+			return mmp;
+		}
+		try {
+			//substanceList = this.ezssubstanceMapper.goodsIndustryByPage(page);  
+			substanceList = this.ezssubstanceMapper.getEssayThemes(page);
+			mmp.put("Obj", substanceList);
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Msg", "查询成功");
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error(e.getMessage());
+			e.printStackTrace();
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
 
 }

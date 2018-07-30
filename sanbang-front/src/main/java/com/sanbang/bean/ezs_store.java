@@ -12,7 +12,7 @@ public class ezs_store implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7652541660905298897L;
+	private static final long serialVersionUID = -8981319690444399032L;
 
 	private Long id;
 
@@ -66,7 +66,7 @@ public class ezs_store implements Serializable {
 
 	private Long auditingusertype_id;// 1, 线索用户 2, 注册用户, 3, 认证用户 ,4, 激活用户
 
-	private String tel;// 联系电话     
+	private String tel;// 联系电话
 
 	private Integer accountType;// 1.企业账号，2.个体户
 
@@ -89,7 +89,7 @@ public class ezs_store implements Serializable {
 	private Integer creditScore;
 
 	private String number;
-	
+
 	private String snumber;
 
 	private Long customerAudit_id;
@@ -97,6 +97,8 @@ public class ezs_store implements Serializable {
 	private String creditLevel;
 
 	private Long location_id;
+
+	private int name_status;// 是否白名单
 
 	public Long getId() {
 		return id;
@@ -314,8 +316,6 @@ public class ezs_store implements Serializable {
 		this.tel = tel == null ? null : tel.trim();
 	}
 
-	
-
 	public Integer getAccountType() {
 		return accountType;
 	}
@@ -427,8 +427,6 @@ public class ezs_store implements Serializable {
 	public void setLocation_id(Long location_id) {
 		this.location_id = location_id;
 	}
-	
-	
 
 	public String getSnumber() {
 		return snumber;
@@ -436,6 +434,14 @@ public class ezs_store implements Serializable {
 
 	public void setSnumber(String snumber) {
 		this.snumber = snumber;
+	}
+
+	public int getName_status() {
+		return name_status;
+	}
+
+	public void setName_status(int name_status) {
+		this.name_status = name_status;
 	}
 
 	@Override
@@ -453,10 +459,7 @@ public class ezs_store implements Serializable {
 				+ ", unifyCode=" + unifyCode + ", person=" + person + ", regArea_id=" + regArea_id + ", regAddress="
 				+ regAddress + ", idCardNum=" + idCardNum + ", creditScore=" + creditScore + ", number=" + number
 				+ ", snumber=" + snumber + ", customerAudit_id=" + customerAudit_id + ", creditLevel=" + creditLevel
-				+ ", location_id=" + location_id + "]";
+				+ ", location_id=" + location_id + ", name_status=" + name_status + "]";
 	}
-
-	
-
 
 }

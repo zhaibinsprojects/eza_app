@@ -41,6 +41,7 @@
     <result column="regArea_id" property="regArea_id" jdbcType="BIGINT" />
     <result column="regAddress" property="regAddress" jdbcType="VARCHAR" />
     <result column="idCardNum" property="idCardNum" jdbcType="VARCHAR" />
+    <result column="name_status" property="name_status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, account, accountType, address, admin_status, assets, capitalPrice, 
