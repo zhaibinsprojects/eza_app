@@ -52,21 +52,6 @@
 							 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
 								 userk= data;
 								 if(userk!=""){
-									 //$(".userkey").val(data);
-									 //$(".msg-bg").css("display","block");
-									 //$(".msg-box").css({"display":"block","height":"350px","margin-top":"40px"});
-									 //var con_str = "";
-										/* $.ajax({
-											type : "post",
-											url : baseurl+"/front/app/home/loan/loadalert.htm",
-											data : {
-											},
-											dataType : "html",
-											async : false,
-											success : function(data) {
-												$(".msg-box").html(data);
-											   }
-										}); */
 									 window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
 								 }else{
 									var data = {}
@@ -97,28 +82,9 @@
 					var bridge =setupWebViewJavascriptBridge();
 						
 					} else {
-					//收藏
-					//测试用zhaibin
-					//window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
 					 try {
 						 userk= window.android.isAndroidLogin();
 						 if(userk!=""){
-							/*  $(".userkey").val(userk);
-							 $(".msg-bg").css("display","block");
-								$(".msg-box").css({"display":"block","height":"350px","margin-top":"40px"});
-							 var con_str = "";
-								$.ajax({
-									type : "post",
-									url : baseurl+"/front/app/home/loan/loadalert.htm",
-									data : {
-									},
-									dataType : "html",
-									async : false,
-									success : function(data) {
-										$(".msg-box").html(data);
-									   }
-								}); */
-								
 							 window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
 						 }else{
 							 window.android.androidnologin();

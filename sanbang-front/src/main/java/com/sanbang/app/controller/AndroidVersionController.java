@@ -47,7 +47,7 @@ public class AndroidVersionController {
 	@PostConstruct
 	public void initdata(){
 		versions=new ArrayList<>();
-		versions.add("1.0.1");
+		versions.add("1.0.0");
 		filebasepath=filebasepath+"ezaisheng1.0.0.apk";
 		baseurl+="front/app/version/download.htm";
 	}

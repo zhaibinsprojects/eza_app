@@ -305,7 +305,7 @@ public class APPSellerGoodsController {
 			//带审核
 			ezs_goods goods = (ezs_goods) result.getObj();
 			ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), upi.getId(), "用户操作:提交审核"+goods.getName()+"成功");
-			result=sellerGoodsService.submitGoodsForAudit(result, goods.getId(), request, response,log);
+			result=sellerGoodsService.submitGoodsForAudit(result, goods.getId(), request, response,log,upi);
 		} catch (Exception e) {
 			log.info("供应商"+upi.getName()+"添加货品出错"+e.toString());
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -395,7 +395,7 @@ public class APPSellerGoodsController {
 			//带审核
 			ezs_goods goods = sellerGoodsService.queryGoodsInfoById(goodsId);
 			ezs_goods_log log=GoodsLogUtil.goodsLog(goods.getId(), upi.getId(), "用户操作:提交审核"+goods.getName()+"成功");
-			result=sellerGoodsService.submitGoodsForAudit(result, goods.getId(), request, response,log);
+			result=sellerGoodsService.submitGoodsForAudit(result, goods.getId(), request, response,log,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -438,7 +438,7 @@ public class APPSellerGoodsController {
 		//带审核
 		ezs_goods goods = sellerGoodsService.queryGoodsInfoById(goodsId);
 		ezs_goods_log log=GoodsLogUtil.goodsLog(goodsId, upi.getId(), "用户操作:提交审核"+goods.getName()+"成功");
-		result=sellerGoodsService.submitGoodsForAudit(result, goodsId, request, response,log);
+		result=sellerGoodsService.submitGoodsForAudit(result, goodsId, request, response,log,upi);
 		return result;
 	}
 	
@@ -549,7 +549,7 @@ public class APPSellerGoodsController {
 			//带审核
 			ezs_goods goods = sellerGoodsService.queryGoodsInfoById(goodsId);
 			ezs_goods_log log=GoodsLogUtil.goodsLog(goodsId, userId, "用户操作:修改库存"+goods.getName()+"成功");
-			result=sellerGoodsService.submitGoodsForAudit(result, goodsId, request, response,log);
+			result=sellerGoodsService.submitGoodsForAudit(result, goodsId, request, response,log,upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

@@ -31,7 +31,7 @@ public interface SellerGoodsService {
 
 	Result updateGoodsInfoById(Result result, long goodsId, ezs_user upi, HttpServletRequest request, HttpServletResponse response);
 
-	Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response,ezs_goods_log log);
+	Result submitGoodsForAudit(Result result, long goodsId, HttpServletRequest request, HttpServletResponse response,ezs_goods_log log,ezs_user upi);
 
 	List<ezs_accessory> queryCartographyById(Long goodsId);
 	//查询货品属性

@@ -19,6 +19,7 @@ import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.ExPage;
 import com.sanbang.vo.PriceTrendIfo;
 
 @Service
@@ -39,6 +40,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			/*mp.put("pagecount", (pageno-1)*10);
 			mp.put("pagesize", 10);*/
 			//app 端做页面展示调整
+		
 			mp.put("pagecount", (pageno-1)*pagesaize);
 			mp.put("pagesize", pagesaize);
 			plist = this.priceTrendMapper.selectByAreaIdAndOtherCondition(mp);
@@ -48,6 +50,10 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					item.setGoodArea(getaddressinfo(item.getRegion_id()));
 					plistTemp.add(item);
 				}
+				int totalCount=priceTrendMapper.getPriceConditionCount(mmp);
+				ExPage page = new ExPage(totalCount, Integer.valueOf(pageno)); 
+				page.setPageSize(10);
+				mmp.put("Page", page);
 				mmp.put("Obj", plistTemp);
 				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "查询成功");

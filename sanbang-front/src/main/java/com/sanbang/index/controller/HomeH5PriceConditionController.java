@@ -1,11 +1,11 @@
 package com.sanbang.index.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,6 @@ import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
-import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.PriceTrendIfo;
@@ -58,6 +59,10 @@ public class HomeH5PriceConditionController {
 	private ezs_columnMapper columnMapper;
 	@Autowired
 	private ezs_goods_classMapper goodsClassMapper;
+	@Value("${config.ezsSubstance.pdfurl}")
+	private String ezsSubstanceUrl;	
+	@Value("${config.h5ezsSubstance.pdfurl}")
+	private String ezsh5SubstanceUrl;
 	
 	private Logger log=Logger.getLogger(HomeH5PriceConditionController.class);
 	/**
@@ -346,4 +351,56 @@ public class HomeH5PriceConditionController {
 		model.addAttribute("title", column.getName());
 		return view+"ezsintroduce";
 	}
+	
+	
+	/**
+	 * 复制下载文件
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getFileForHangq")
+	@ResponseBody
+	public Result  getFileForHangq(long id){
+		Result result=Result.failure();
+		result.setSuccess(false);
+		result.setMsg("查看失败");
+		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		try {
+			ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+			String  oldFilePath=ezsSubstanceUrl+show.getAttachment();
+			String  newFilePath=ezsh5SubstanceUrl+show.getId()+".pdf";
+			log.info("oldurl：=="+oldFilePath);
+			log.info("newurl：=="+newFilePath);
+			File srcFile=new File(oldFilePath);
+			File destFile=new File(newFilePath);
+			if(!srcFile.exists()){
+				result.setSuccess(false);
+				result.setMsg("查看失败");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				return  result;
+			}
+			
+			if(!destFile.exists()){
+				if(/*destFile.mkdirs()&&*/destFile.createNewFile()){
+					FileUtil.copyFile(srcFile, destFile);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+					result.setSuccess(true);
+					result.setMsg("查看成功");
+				}else{
+					result.setSuccess(false);
+					result.setMsg("查看失败");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				}
+			}else{
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setSuccess(true);
+				result.setMsg("查看成功");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
+	
 }
