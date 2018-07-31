@@ -386,7 +386,7 @@ public class HomePriceConditionController {
 		tMp.put("purpose", purpose);
 		tMp.put("burning", burning);
 		tMp.put("protection", protection);
-		mmp = this.priceConditionService.getPriceTrendcy(tMp,currentPage);
+		mmp = this.priceConditionService.getPriceTrendcy(tMp,currentPage,10);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
@@ -590,7 +590,7 @@ public class HomePriceConditionController {
 					}
 					tMp.put("areaIds", areaIdsList);
 				}
-		zoushi = this.priceConditionService.getPriceTrendcy(tMp,pageno);
+		zoushi = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
 		baojia = this.priceConditionService.getPriceInTime(tMp,pageno,10);
 		
 		List<ezs_ezssubstance> essayList = (List<ezs_ezssubstance>)baogao.get("Obj");

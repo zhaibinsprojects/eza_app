@@ -495,12 +495,12 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="goodsIndustryCountByKinds" resultType="java.lang.Integer" parameterType="java.lang.Long" >
-    select count(1) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT}
+    select count(1) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT} and deleteStatus = 0
   </select>
   <select id="goodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
     select
     <include refid="Base_Column_List" />
-    from ezs_ezssubstance where ec_id = #{content} order by addTime desc LIMIT #{startPos},#{pageSize}
+    from ezs_ezssubstance where ec_id = #{content} and deleteStatus = 0 order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
   
   <!-- 传送多个ID -->
@@ -509,6 +509,7 @@
 	<foreach collection="array" item="ecIdList" index="index" open="(" separator="," close=")">
 	        	#{ecIdList}
 	</foreach>	
+	and deleteStatus = 0
   </select>
   <select id="getEssayThemes" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
     select
@@ -517,7 +518,7 @@
     <foreach collection="idsArray" item="ids" index="index" open="(" separator="," close=")">
 	    #{ids}
 	</foreach>
-    order by addTime desc LIMIT #{startPos},#{pageSize}
+    and deleteStatus = 0  order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
   
   

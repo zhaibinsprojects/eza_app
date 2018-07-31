@@ -1,9 +1,19 @@
 package com.sanbang.index.controller;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +21,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
+import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.utils.Page;
+import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
+import com.sanbang.vo.PriceTrendIfo;
+import com.sanbang.vo.Series;
 
 @Controller
 @RequestMapping("/app/home")
@@ -39,6 +56,8 @@ public class HomeH5PriceConditionController {
 	private ezs_ezssubstanceMapper ezs_ezssubstanceMapper;
 	@Autowired
 	private ezs_columnMapper columnMapper;
+	@Autowired
+	private ezs_goods_classMapper goodsClassMapper;
 	
 	private Logger log=Logger.getLogger(HomeH5PriceConditionController.class);
 	/**
@@ -89,7 +108,7 @@ public class HomeH5PriceConditionController {
 					}
 					tMp.put("areaIds", areaIdsList);
 				}
-		zoushi = this.priceConditionService.getPriceTrendcy(tMp,pageno);
+		//zoushi = this.priceConditionService.getPriceTrendcy(tMp,pageno,pagesize);
 		baojia = this.priceConditionService.getPriceInTime(tMp,pageno,pagesize);
 		
 		model.addAttribute("jiage", jiage);
@@ -101,6 +120,76 @@ public class HomeH5PriceConditionController {
 		
 		return view+"/hangqindex";
 	}
+	
+	@RequestMapping(value="/getPriceTrendcyShow")
+	@ResponseBody
+	public Object getPriceTrendcyShow(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="kindId",defaultValue="1") String kindId,
+			@RequestParam(name="currentPage",defaultValue="1") int pageno){
+		List<String> dateList = new ArrayList<>();
+		JSONObject json=new JSONObject();
+		Series seriesVo = new Series();
+		List<BigDecimal> priceList = new ArrayList<>();
+		Map<String,Object> mmp = new HashMap<>();
+		Map<String, Object> tMp = new HashMap<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+		//参数传递
+		tMp.put("kindId", kindId);
+		mmp = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
+			if(plist.size()<=0){
+				try {
+		        	response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write("");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+			for (PriceTrendIfo priceTrendIfo : plist) {
+				priceList.add(BigDecimal.valueOf(priceTrendIfo.getCurrentAVGPrice()));
+				try {
+					Date date = sdf.parse(priceTrendIfo.getDealDate());
+					dateList.add(sdf2.format(date));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			ezs_goods_class goodsClass = goodsClassMapper.selectByPrimaryKey(Long.valueOf(kindId));
+			Collections.reverse(priceList);
+			Collections.reverse(dateList);
+			seriesVo.setData(priceList);
+			seriesVo.setName(goodsClass.getName());
+	        json.put("name", dateList);
+	        json.put("data", seriesVo);
+	        try {
+	        	response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write(json.toString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			//无数据
+			try {
+	        	response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write("");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	
+	
 	/**
 	 * app H5页面展示内容（价格评析、研究报告、实时报价，分页展示，页面大小-10）
 	 * @param type（priceAnalyse-价格评析，report-研究报告，priceInTime-实时报价）

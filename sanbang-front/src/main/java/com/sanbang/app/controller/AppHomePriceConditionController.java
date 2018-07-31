@@ -309,7 +309,7 @@ public class AppHomePriceConditionController {
 		tMp.put("purpose", purpose);
 		tMp.put("burning", burning);
 		tMp.put("protection", protection);
-		mmp = this.priceConditionService.getPriceTrendcy(tMp,currentPage);
+		mmp = this.priceConditionService.getPriceTrendcy(tMp,currentPage,10);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");

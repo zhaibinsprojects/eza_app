@@ -5,8 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<%-- <base href="${serurl}"/> --%>
-<base href="http://10.10.10.232/"/>
+<base href="${serurl}"/>
+<!-- <base href="http://10.10.10.232/"/> -->
 
 <meta charset="utf-8" />
 <meta name="viewport"
@@ -17,8 +17,9 @@
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
+<script type="text/javascript" src="front/resource/js/echarts.min.js"></script>
 </head>
-<body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
+<body style="background:#efefef;width: 100%; /* background:#efefef;overflow-x: hidden; */" onload='echartInit()'>
 	<div class="content_yzs">
   <!--价格评析-->
   <section class="secsty_yzs">
@@ -82,32 +83,23 @@
     </div>
   </section>
   <!---价格走势-->
-  <!-- <section class="secsty_yzs">
+  <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
       <h2><span>价格走势</span></h2>
     </div>
     <div id="container" class="nedHiCha_yzs" style="min-width: 310px;"> 
-    
+    	<!-- <div id="main" style="width: 700px;height:400px;"></div> -->
+    	<div id="main" style="width: 90%;height:120%;"></div>
     </div>
-  </section> -->
-  <!---价格指数 -->
-  <!-- <section class="secsty_yzs">
-    <div class="hTwoFater_yzs">
-      <h2><span>价格指数</span></h2>
-    </div>
-    <div id="containerbar" class="nedHiCha_yzs" style="min-width: 310px;">
-    
-    </div>
-  </section> -->
-  
+  </section>
 </div>
 <input id="goodclassid"  class="pagecount" value="${baojia_goodclass}" style="display: none"/>
 <input id="areaid"  class="pagecount" value="${baojia_areaId}" style="display: none"/>
 </body>
 
 <script type="text/javascript">
-/* var baseurl="${serurl}"; */
-var baseurl="http://10.10.10.232/";
+var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.232/"; */
 var baojia_goodclass = $('#goodclassid').val();
 var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){
@@ -123,4 +115,68 @@ $(document).ready(function(){
 	})
 })
 </script>
+<script type="text/javascript">
+function echartInit(){
+	var option = {
+	   	    tooltip: {
+	   	        trigger: 'axis'
+	   	    },
+	   	    legend: {
+	   	    	left: '3%',
+	   	    	data:['价格走势']
+	   	    },
+	   	    grid: {
+	   	    	top:'20%',
+	   	        left: '2%',
+	   	        right: '3%',
+	   	        bottom: '3%',
+	   	        containLabel: true
+	   	    },
+	   	    toolbox: {
+	   	        feature: {
+	   	            saveAsImage: {}
+	   	        }
+	   	    },
+	   	    xAxis: {
+	   	        type: 'category',
+	   	        boundaryGap: false,
+	   	        data: []
+	   	    },
+	   	    yAxis: {
+	   	        type: 'value'
+	   	    },
+	   	    series:{
+	   	       	type:'line',
+	   	        stack: '总量',
+	   	        itemStyle : { normal: {label : {show: false}}},
+	   	        data:[]
+	   	    }
+	   	};
+	$.ajax({
+		  type: 'POST',
+		  url: baseurl+"/front/app/home/getPriceTrendcyShow.htm",
+		  data: {
+			  goodclassId:baojia_goodclass
+		  },
+		  success: function(result){
+			//进行请求后要数据
+  		    //x轴显示
+  		    option.xAxis.data = result.name;
+  		    //主体内容
+  		   	option.series.data = result.data.data;
+  		  	option.series.name = result.data.name;
+			// 基于准备好的dom，初始化echarts实例
+			var myChart = echarts.init(document.getElementById('main'));
+			myChart.hideLoading();
+			// 使用刚指定的配置项和数据显示图表
+			myChart.setOption(option,true);
+			myChart.hideLoading();
+		  },
+		  error : function(errorMsg) {
+	            alert("无该品类实时成交数据!");
+	      },
+		  dataType : "json"
+		});
+}
+    </script>
 </html>
