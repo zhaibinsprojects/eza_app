@@ -3,6 +3,8 @@ package com.sanbang.index.controller;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -156,7 +158,10 @@ public class HomeH5PriceConditionController {
 				return null;
 			}
 			for (PriceTrendIfo priceTrendIfo : plist) {
-				priceList.add(BigDecimal.valueOf(priceTrendIfo.getCurrentAVGPrice()));
+				DecimalFormat df = new DecimalFormat("0.000");
+				
+				//priceList.add(BigDecimal.valueOf(priceTrendIfo.getCurrentAVGPrice()));
+				priceList.add(new BigDecimal(df.format(priceTrendIfo.getCurrentAVGPrice())));
 				try {
 					Date date = sdf.parse(priceTrendIfo.getDealDate());
 					dateList.add(sdf2.format(date));
@@ -167,6 +172,7 @@ public class HomeH5PriceConditionController {
 			}
 			
 			ezs_goods_class goodsClass = goodsClassMapper.selectByPrimaryKey(Long.valueOf(kindId));
+			//对列表进行转向处理
 			Collections.reverse(priceList);
 			Collections.reverse(dateList);
 			seriesVo.setData(priceList);

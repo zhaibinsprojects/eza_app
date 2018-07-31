@@ -129,7 +129,7 @@ function echartInit(){
 	   	    	top:'20%',
 	   	        left: '2%',
 	   	        right: '3%',
-	   	        bottom: '3%',
+	   	        bottom: '10%',
 	   	        containLabel: true
 	   	    },
 	   	    toolbox: {
@@ -147,7 +147,7 @@ function echartInit(){
 	   	    },
 	   	    series:{
 	   	       	type:'line',
-	   	        stack: '总量',
+	   	        stack: '价格',
 	   	        itemStyle : { normal: {label : {show: false}}},
 	   	        data:[]
 	   	    }
