@@ -5,8 +5,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<%-- <base href="${serurl}"/> --%>
-<base href="http://10.10.10.232/"/>
+<base href="${serurl}"/>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -41,7 +40,7 @@
 			<div>共计<span>${good.allcount}</span>评价</div>
 		</div>
 	</div>
-    <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 30%;">
+    <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 35%;">
     <div class="mui-scroll"> 
       <!--数据列表-->
       <section class="secNeiron mui-table-view mui-table-view-chevron">
@@ -100,8 +99,7 @@
 </html>
 
 <script type="text/javascript">
-/* var baseurl="${serurl}"; */
-var baseurl="http://10.10.10.232/";
+var baseurl="${serurl}";
 var goodsid="${good.id}";
 var pagecount=document.getElementsByClassName("pagecount")[0].id;
 </script>
