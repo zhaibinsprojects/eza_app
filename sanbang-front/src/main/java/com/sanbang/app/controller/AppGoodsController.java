@@ -1303,14 +1303,14 @@ public class AppGoodsController {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		/*if (user == null) {
+		if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			rs.setObj(new ArrayList<>());
 			rs.setCount(0);
 			return rs;
-		}*/
+		}
 		try {
 			List<ezs_goodscart> goodCarList=new ArrayList<>();
 			mmp = this.goodsService.getGoodCarFunc(user, pageNow);
