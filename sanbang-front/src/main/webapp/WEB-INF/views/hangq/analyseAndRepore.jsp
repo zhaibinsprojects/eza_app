@@ -50,7 +50,7 @@
 		            value="${item.addTime}" /></h3>
 		    </div>
 		    </c:forEach>
-		  <!--  </div> -->
+		  <!-- </div> -->
     </section>
      </section>
     </div>
