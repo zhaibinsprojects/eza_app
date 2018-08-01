@@ -696,7 +696,7 @@
       </if>
     <!-- and a.data_time >= DATE_SUB(DATE_FORMAT(SYSDATE(),'%Y-%m-%d'),interval 1 MONTH) -->
  	<!-- GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(a.data_time,'%Y-%m-%d') desc LIMIT #{startPos},#{pageSize} -->
- 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(a.data_time,'%Y-%m-%d') desc LIMIT 10
+ 	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(a.data_time,'%Y-%m-%d') desc LIMIT 30
   </select>
   <!-- 获取价格趋势,最近两天实时交易 -->
   <select id="selectPriceChangesByGood" resultMap="PriceTrendcyResultMap" parameterType="java.lang.Long">

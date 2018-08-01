@@ -98,8 +98,8 @@
 </body>
 
 <script type="text/javascript">
- var baseurl="${serurl}"; 
-/* var baseurl="http://10.10.10.232/";  */
+var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.232/"; */ 
 var baojia_goodclass = $('#goodclassid').val();
 var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){
@@ -147,6 +147,7 @@ function echartInit(){
 	   	    },
 	   	    series:{
 	   	       	type:'line',
+	   	     	symbol:'none',//拐点式样
 	   	        stack: '价格',
 	   	        itemStyle : { normal: {label : {show: false}}},
 	   	        data:[]
