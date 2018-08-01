@@ -1303,13 +1303,14 @@ public class AppGoodsController {
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (user == null) {
+		/*if (user == null) {
 			rs = Result.failure();
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			rs.setObj(new ArrayList<>());
+			rs.setCount(0);
 			return rs;
-		}
+		}*/
 		try {
 			List<ezs_goodscart> goodCarList=new ArrayList<>();
 			mmp = this.goodsService.getGoodCarFunc(user, pageNow);
@@ -1322,11 +1323,13 @@ public class AppGoodsController {
 				rs.setObj(goodCarList);
 				rs.setMsg(mmp.get("Msg").toString());
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				rs.setCount(Integer.parseInt(mmp.get("goodCarCount").toString()));
 			}else{
 				rs = Result.failure();
 				rs.setObj(goodCarList);
 				rs.setMsg(mmp.get("Msg").toString());
 				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				rs.setCount(Integer.parseInt(mmp.get("goodCarCount").toString()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1334,6 +1337,7 @@ public class AppGoodsController {
 			rs.setObj(new ArrayList<>());
 			rs.setMsg(mmp.get("Msg").toString());
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			rs.setCount(0);
 		}
 		return rs;
 	}

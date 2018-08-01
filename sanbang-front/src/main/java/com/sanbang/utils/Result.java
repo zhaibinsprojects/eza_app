@@ -16,6 +16,7 @@ public class Result implements Serializable{
 	private Object obj;
 	private int errorcode;
 	private Page meta;//存放分页数据
+	private int count;
 	
 	public Result() {
 	}
@@ -73,6 +74,17 @@ public class Result implements Serializable{
 
 	public void setMeta(Page meta) {
 		this.meta = meta;
+	}
+
+	
+	
+	public int getCount() {
+		return count;
+	}
+
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 

@@ -193,6 +193,15 @@
   </resultMap>
 
   <!---->
+  <select id="getGoodCarNumByUser" resultType="java.lang.Integer" parameterType="com.sanbang.vo.QueryCondition">
+  	SELECT 
+  		count(1)
+	 FROM ezs_goodscart g 
+	 WHERE 
+	EXISTS 
+	(SELECT 1 FROM ezs_storecart s WHERE s.user_id = #{userId} AND s.deleteStatus = '0' and s.sc_status = '0' AND s.id = g.sc_id) 
+	 AND g.deleteStatus = '0' and  ISNULL(g.of_id)
+  </select>
   <select id="selectByUserId" resultMap="GoodCarInfoResultMap" parameterType="com.sanbang.vo.QueryCondition">
   	SELECT 
   		g.id,g.cart_type,g.count,g.price,g.goods_id,

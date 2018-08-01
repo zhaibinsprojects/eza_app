@@ -35,6 +35,8 @@ public interface ezs_goodscartMapper {
     
     List<ezs_goodscart> selectByStoreCarId(QueryCondition queryCondition);
     
+    int getGoodCarNumByUser(QueryCondition queryCondition);
+    
     List<GoodsCarInfo> selectByUserId(QueryCondition queryCondition);
     
     //根据购物车id查询sc_id
