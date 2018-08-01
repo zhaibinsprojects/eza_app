@@ -356,14 +356,14 @@ public class UserProServiceImpl implements UserProService {
 					String str32 = RandomStr32.getStr32();
 					String userKey =""; 
 					if(h5orapp.equals("h5")){
-						userKey="h5"+userProInfo.getName() + userProInfo.getEzs_userinfo().getPhone() + str32;
+						userKey="h5" + userProInfo.getEzs_userinfo().getPhone() + str32;
 						// 添加缓存
 						Cookie cookie = new Cookie(cookieuserkey, userKey);
 						cookie.setMaxAge(Integer.parseInt(cookieuserkeyexpir));
 						cookie.setPath("/");
 						response.addCookie(cookie);
 					}else{
-						userKey="app"+userProInfo.getName() + userProInfo.getEzs_userinfo().getPhone() + str32;
+						userKey="app" + userProInfo.getEzs_userinfo().getPhone() + str32;
 						Map<String, Object> map=new HashMap<>();
 						map.put("token", userKey);
 						result.setObj(map);

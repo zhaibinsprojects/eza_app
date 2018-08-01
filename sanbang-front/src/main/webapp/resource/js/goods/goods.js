@@ -126,6 +126,7 @@ $(function() {
 							time : 2
 						});
 					} 
+					getCartNum();
 				} else {
 					if(userk!=""&&data.errorcode==110002){
 						$(".userkey").val("");
@@ -237,11 +238,19 @@ function androidtoyuyue(e) {
 
 // 预约预定桥接
 function androidlogintoyuyue(goodsid, userk) {
+	if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
+		layer.open({
+			content : $(".toauth").val(),
+			skin : 'msg',
+			time : 2
+		});
+	}else{
 	var data = {"goodsid" : goodsid,
 			"goodsName":$(".goodsName").val()};
 	var str = JSON.stringify(data);
 	window.android.androidlogintoyuyue(str);
 	return false;
+	}
 };
 
 // 试样
@@ -358,12 +367,20 @@ function androidshowpdf() {
 
 	// 预约预定桥接
 	function ioslogintoyuyue(goodsid, userk) {
+		if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
+			layer.open({
+				content : $(".toauth").val(),
+				skin : 'msg',
+				time : 2
+			});
+		}else{
 		var data = {"goodsid" : goodsid,
 				"goodsName":$(".goodsName").val()};
 		var str = JSON.stringify(data);
 		WebViewJavascriptBridge.callHandler('iostoyuyue', str, function() {
 		});
 		return false;
+		}
 	};
 
 	// 试样
@@ -569,8 +586,11 @@ function androidshowpdf() {
 				success : function(data) {
 					if (data.success) {
 						$(".cartnum").html("");
-						$(".cartnum").html(data.obj);
-						$(".cartnum").show();
+						$(".cartnum").html(data.obj.count);
+						if(data.obj.count>0){
+							$(".cartnum").show();
+						}
+						$(".toauth").val(data.obj.toauth);
 					} else {
 						$(".cartnum").hide();
 					}

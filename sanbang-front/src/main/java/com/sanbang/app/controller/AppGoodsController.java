@@ -94,21 +94,6 @@ public class AppGoodsController {
 		String address = getaddressinfo(goodsvo.getArea_id());
 		goodsvo.setAreaName(address);
 		
-		 if(null!=upi){
-			 Long auditingusertype_id = upi.getEzs_store().getAuditingusertype_id();
-				ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
-				if(dictCode.getSequence()<=3){
-				if(upi.getEzs_store().getStatus()!=2){
-					model.addAttribute("toauth", "您还未完成实名认证，请去个人中心完成实名认证！");
-				}else{
-					model.addAttribute("toauth", "");
-				}
-				}
-		 }else{
-			 model.addAttribute("toauth", "");
-		 }
-		
-	
 		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}
@@ -122,16 +107,29 @@ public class AppGoodsController {
 	@RequestMapping("/getCartNum")
 	public Result getCartNum(HttpServletRequest request){
 		Result result = new Result();
-		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if(null==user){
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(null==upi){
 			result.setMsg("用户未登陆");
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			return result;
 		}
+		Map<String, Object> map=new HashMap<>();
+		 if(null!=upi){
+			 Long auditingusertype_id = upi.getEzs_store().getAuditingusertype_id();
+				ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+				if(dictCode.getSequence()<=3){
+				if(upi.getEzs_store().getStatus()!=2){
+					map.put("toauth", "您还未完成实名认证，请去个人中心完成实名认证！");
+				}else{
+					map.put("toauth", "");
+				}
+				}
+		 }
+		
 		int goodCarCount = 0;
 		QueryCondition queryCondition = new QueryCondition();
-		queryCondition.setUserId(Long.valueOf(2));
+		queryCondition.setUserId(upi.getId());
 		queryCondition.setPagesize(10);
 		queryCondition.setPageCount((1-1)*queryCondition.getPagesize());
 			try {
@@ -139,7 +137,8 @@ public class AppGoodsController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			result.setObj(goodCarCount);
+			map.put("count", goodCarCount);
+			result.setObj(map);
 			result.setMsg("查询成功！");
 			result.setSuccess(true);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
