@@ -898,9 +898,11 @@ public class GoodsServiceImpl implements GoodsService{
 	public Map<String, Object> getGoodCarFunc(ezs_user user,int pageNow) {
 		Map<String, Object> mmp = new HashMap<>();
 		List<GoodsCarInfo> goodCarInfoList = null;
+		int goodCarCount = 0;
 		QueryCondition queryCondition = new QueryCondition();
-		queryCondition.setUserId(user.getId());
-		//queryCondition.setUserId(Long.valueOf("535"));
+		//queryCondition.setUserId(user.getId());
+		queryCondition.setUserId(Long.valueOf(2));
+		
 		if(pageNow<=1){
 			pageNow=1;
 			queryCondition.setPagesize(10);
@@ -910,21 +912,25 @@ public class GoodsServiceImpl implements GoodsService{
 			queryCondition.setPageCount((pageNow-1)*queryCondition.getPagesize());
 		}
 		try {
+			goodCarCount = ezs_goodscartMapper.getGoodCarNumByUser(queryCondition);
 			goodCarInfoList = this.ezs_goodscartMapper.selectByUserId(queryCondition);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("Msg", "查询成功");
+				mmp.put("goodCarCount", goodCarCount);
 			}else{
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "购物车没有数据");
+				mmp.put("goodCarCount", 0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("ErrorMessage:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
+			mmp.put("goodCarCount", 0);
 		}
 		return mmp;
 	}
