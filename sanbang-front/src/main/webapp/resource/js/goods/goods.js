@@ -34,6 +34,7 @@ $(function() {
 					 if(userk!=""){
 						 $(".userkey").val(data);
 						 iscollcc(goodsid, data);
+						 getCartNum();
 					 }
 					});
 				
@@ -80,10 +81,10 @@ $(function() {
 			 if(userk!=""){
 				 $(".userkey").val(userk);
 				 iscollcc(goodsid, userk);
+				 getCartNum();
 			 }
 		} catch (e) {
 		}
-		
 	
 	};
 	
@@ -206,7 +207,7 @@ function androidtobuy(e) {
 }
 // 立即购买桥接
 function androidlogintobuy(userk) {
- if($(".toauth").val()==""||$(".toauth").val()==undefined){
+	if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
 		layer.open({
 			content : $(".toauth").val(),
 			skin : 'msg',
@@ -326,7 +327,7 @@ function androidshowpdf() {
 	}
 	// 立即购买桥接
 	function ioslogintobuy(userk) {
-		if($(".toauth").val()==""||$(".toauth").val()==undefined){
+		if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
 			layer.open({
 				content : $(".toauth").val(),
 				skin : 'msg',
@@ -550,3 +551,34 @@ function androidshowpdf() {
 					}
 				});
 	};
+	
+	
+	/**
+	 * 购物车数量
+	 * @returns {Boolean}
+	 */
+	function getCartNum(){
+		$.ajax({
+				type : "post",
+				url : baseurl + "front/app/goods/getCartNum.htm",
+				data : {
+					"token" : $(".userkey").val()
+				},
+				dataType : "json",
+				async : false,
+				success : function(data) {
+					if (data.success) {
+						$(".cartnum").html("");
+						$(".cartnum").html(data.obj);
+						$(".cartnum").show();
+					} else {
+						$(".cartnum").hide();
+					}
+				},
+				error : function(e) {
+					$(".cartnum").hide();
+				}
+				});
+	
+	}
+	

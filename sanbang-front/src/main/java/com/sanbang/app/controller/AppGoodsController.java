@@ -27,18 +27,16 @@ import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
-import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
-import com.sanbang.dao.ezs_goods_classMapper;
+import com.sanbang.dao.ezs_goodscartMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
-import com.sanbang.utils.CommUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -47,6 +45,7 @@ import com.sanbang.vo.CurrencyClass;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.HomeDictionaryCode;
+import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
 
 
@@ -65,6 +64,8 @@ public class AppGoodsController {
 	private ezs_areaMapper ezs_areaMapper;
 	@Autowired
 	private DictService dictService;
+	@Autowired
+	private ezs_goodscartMapper ezs_goodscartMapper;
 
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
@@ -111,6 +112,41 @@ public class AppGoodsController {
 		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}
+	
+	/**
+	 * 查看购物车总数
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getCartNum")
+	public Result getCartNum(HttpServletRequest request){
+		Result result = new Result();
+		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+		if(null==user){
+			result.setMsg("用户未登陆");
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			return result;
+		}
+		int goodCarCount = 0;
+		QueryCondition queryCondition = new QueryCondition();
+		queryCondition.setUserId(Long.valueOf(2));
+		queryCondition.setPagesize(10);
+		queryCondition.setPageCount((1-1)*queryCondition.getPagesize());
+			try {
+				goodCarCount = ezs_goodscartMapper.getGoodCarNumByUser(queryCondition);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			result.setObj(goodCarCount);
+			result.setMsg("查询成功！");
+			result.setSuccess(true);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		return result;
+	}
+	
+	
 	/**
 	 * @author langjf
 	 * forapp 

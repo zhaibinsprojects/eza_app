@@ -124,7 +124,12 @@
 	<%-- <%@ include file="../goodsfoot.jsp"%>  --%>
 		<div class="ezsm-normal-bottombtnB-box">
 		<div class="ezsm-shopdetail-bottombtnbox">
-			<div class="tocart"><img src="front/resource/img/micon_039.png"/><br>采购单</div>
+			<div class="tocart">
+		<span class="cartnum" style="display: none;position:absolute;top: -4px;left: 26px;
+			background:red;/* padding:5px; */border-radius:50%;
+			color: #fff;width: 20px;height: 20px;line-height: 20px;
+			text-align:  center;font-size: 12px;text-align:  center;">2</span>
+			<img src="front/resource/img/micon_039.png"/><br>采购单</div>
 			<c:choose>
 			<c:when test="${good.collected eq 1}">
 			<div class="collcc" ><img src="front/resource/img/micon_042.png"/><br>收藏</div>
@@ -158,7 +163,7 @@ var baseurl="${serurl}";
 $(document).ready(function(){
 	var imghref=$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src");
 	if(imghref!="undefined"&&imghref!=""){
-		$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src",'http://www.ezaisheng.com/'+imghref);
+		//$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src",'http://www.ezaisheng.com/'+imghref);
 		$(".ezsm-shopdetail-desc").find("img").eq(0).css("width","100%");
 	}
 })
