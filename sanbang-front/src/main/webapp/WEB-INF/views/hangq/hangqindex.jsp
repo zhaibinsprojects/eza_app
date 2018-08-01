@@ -6,7 +6,7 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
-<!-- <base href="http://10.10.10.232/"/> -->
+<%-- <base href="http://10.10.10.232/"/> --%>
 
 <meta charset="utf-8" />
 <meta name="viewport"
@@ -98,8 +98,8 @@
 </body>
 
 <script type="text/javascript">
-var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/"; */
+ var baseurl="${serurl}"; 
+/* var baseurl="http://10.10.10.232/";  */
 var baojia_goodclass = $('#goodclassid').val();
 var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){

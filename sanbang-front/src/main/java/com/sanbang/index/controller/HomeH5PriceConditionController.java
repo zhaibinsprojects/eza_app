@@ -3,7 +3,6 @@ package com.sanbang.index.controller;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -143,6 +142,7 @@ public class HomeH5PriceConditionController {
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 		//参数传递
 		tMp.put("kindId", kindId);
+		//修改为取近一个月数据
 		mmp = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){

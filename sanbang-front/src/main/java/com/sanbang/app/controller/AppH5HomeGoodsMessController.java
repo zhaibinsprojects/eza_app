@@ -51,10 +51,9 @@ public class AppH5HomeGoodsMessController {
 		//用户校验end
 		GoodsVo  goodsvo = goodsService.getgoodsinfo(id,userid);
 		//库存地址信息
-		
 		String address = getaddressinfo(goodsvo.getArea_id());
 		goodsvo.setAddess(address);
-		//
+		//制作过程图片
 		List<ezs_goods_cartography> cartographyList = goodsvo.getCartographys();
 		List<ezs_goods_cartography> cartographyListTemp = new ArrayList<>();
 		for (ezs_goods_cartography goodscartography : cartographyList) {
