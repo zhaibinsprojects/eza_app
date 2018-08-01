@@ -132,6 +132,7 @@
 
 <script type="text/javascript">
 var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.232/"; */
 $(document).ready(function(){
 	var imghref=$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src");
 	if(imghref!="undefind"&&imghref!=""){

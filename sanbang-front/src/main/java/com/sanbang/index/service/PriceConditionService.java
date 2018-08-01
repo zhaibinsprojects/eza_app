@@ -10,7 +10,7 @@ public interface PriceConditionService {
 	
 	public Map<String, Object> getSecondTheme(Long id);
 	
-	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp,int currentPage); 
+	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp,int currentPage,int pagesaize); 
 	
 
 }

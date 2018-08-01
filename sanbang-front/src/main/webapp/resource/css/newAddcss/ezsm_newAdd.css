@@ -7,7 +7,7 @@
 .text_yzs{ margin-left:12px; padding:8px 6px 12px 0; border-bottom:1px solid #e5e5e5;}
 .text_yzs:last-child{border:none;}
 .text_yzs h3{ font-size:16px; color:#333; line-height:22px;}
-.textOverflow_yzs{display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden; padding:5px 0 0;}
+.textOverflow_yzs{display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden; padding:5px 0 0;}
 .textOverflow_yzs p{ font-size:13px; color:#999; line-height:18px;}
 .realTime_price{ padding-left:12px;}
 .tableOne_yzs{ width:100%; background-color:#fff; border:none;}

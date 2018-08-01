@@ -83,6 +83,7 @@
 	</div>
 	<div class="ezsm-index-more">我也是有底线的</div>
 	<%@ include file="../goodsfoot.jsp"%> 
+	<input name="toauth" type="hidden" class="toauth" value="${toauth}"/>
 </body>
 
 <script type="text/javascript">

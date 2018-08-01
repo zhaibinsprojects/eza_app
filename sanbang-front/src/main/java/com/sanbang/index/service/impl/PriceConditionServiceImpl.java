@@ -89,7 +89,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	
 	//获取价格趋势信息
 	@Override
-	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp,int currentPage) {
+	public Map<String, Object> getPriceTrendcy(Map<String, Object> mp,int currentPage,int pagesaize) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> ppList = new ArrayList<>();
@@ -100,8 +100,8 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			/*mp.put("startPos", (currentPage - 1)*10);//每页起始位子
 			mp.put("pageSize", 10);//页面大小*/
 			//app 做页面展示调整
-			mp.put("startPos", (currentPage - 1)*3);
-			mp.put("pageSize", 3);
+			mp.put("startPos", (currentPage - 1)*pagesaize);
+			mp.put("pageSize", pagesaize);
 			pList = this.priceTrendMapper.getPriceTrendcy(mp);			
 		} catch (Exception e) {
 			// TODO: handle exception

@@ -92,6 +92,22 @@ public class AppGoodsController {
 		//add modify 修改地址信息 
 		String address = getaddressinfo(goodsvo.getArea_id());
 		goodsvo.setAreaName(address);
+		
+		 if(null!=upi){
+			 Long auditingusertype_id = upi.getEzs_store().getAuditingusertype_id();
+				ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+				if(dictCode.getSequence()<=3){
+				if(upi.getEzs_store().getStatus()!=2){
+					model.addAttribute("toauth", "您还未完成实名认证，请去个人中心完成实名认证！");
+				}else{
+					model.addAttribute("toauth", "");
+				}
+				}
+		 }else{
+			 model.addAttribute("toauth", "");
+		 }
+		
+	
 		model.addAttribute("good", goodsvo);
 		return view+"goodsshow";
 	}

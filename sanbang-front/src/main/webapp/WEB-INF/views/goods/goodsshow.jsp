@@ -150,7 +150,7 @@
 	<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
 	<input name="goodsid" type="hidden" class="goodsid" value="${good.id}"/>
 	<input name="goodsName" type="hidden" class="goodsName" value="${good.name}"/>
-	
+	<input name="toauth" type="hidden" class="toauth" value="${toauth}"/>
 </body>
 
 <script type="text/javascript">

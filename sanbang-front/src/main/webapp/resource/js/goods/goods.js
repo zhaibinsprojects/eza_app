@@ -206,12 +206,19 @@ function androidtobuy(e) {
 }
 // 立即购买桥接
 function androidlogintobuy(userk) {
+ if($(".toauth").val()==""||$(".toauth").val()==undefined){
+		layer.open({
+			content : $(".toauth").val(),
+			skin : 'msg',
+			time : 2
+		});
+	}else{
 	var data = {
 		"goodsid" : goodsid
 	};
 	var str = JSON.stringify(data);
 	window.android.androidlogintobuy(str);
-	return false;
+	return false;}
 };
 
 // 预约
@@ -319,11 +326,20 @@ function androidshowpdf() {
 	}
 	// 立即购买桥接
 	function ioslogintobuy(userk) {
-		var data = {"goodsid" : goodsid}
-		var str = JSON.stringify(data);
-		WebViewJavascriptBridge.callHandler('iostobuy', str, function() {
-		});
-		return false;
+		if($(".toauth").val()==""||$(".toauth").val()==undefined){
+			layer.open({
+				content : $(".toauth").val(),
+				skin : 'msg',
+				time : 2
+			});
+		}else{
+			var data = {"goodsid" : goodsid}
+			var str = JSON.stringify(data);
+			WebViewJavascriptBridge.callHandler('iostobuy', str, function() {
+			});
+			return false;
+		}
+		
 	};
 
 	// 预约

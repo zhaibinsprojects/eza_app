@@ -20,7 +20,7 @@
 	<div class="blank70"></div>
 	<div class="ezsm-normal-bottombtnB-box">
 		<div class="ezsm-shopdetail-bottombtnbox">
-			<div class="tocart"><img src="front/resource/img/micon_039.png"/><br>采购单</div>
+			<div class="tocart"><span style="position:absolute;top: -4px;left: 26px;background:red;/* padding:5px; */border-radius:50%;color: #fff;width: 20px;height: 20px;line-height: 20px;text-align:  center;font-size: 12px;text-align:  center;">2</span><img src="front/resource/img/micon_039.png"/><br>采购单</div>
 			<c:choose>
 			<c:when test="${good.collected eq 1}">
 			<div class="collcc" ><img src="front/resource/img/micon_042.png"/><br>收藏</div>
