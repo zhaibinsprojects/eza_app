@@ -285,6 +285,13 @@ public class UserProServiceImpl implements UserProService {
 		
 		if (upi != null && upi.getName().equals(userName.trim())) {
 			Boolean tempStatus = upi.getDeleteStatus();
+			if("ADMIN".equals(upi.getUserRole())){
+				result.setSuccess(false);
+				result.setMsg("登录失败后台用户未启用");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
+			
+			
 			if (!tempStatus) {
 				result.setSuccess(true);
 				result.setMsg("登录成功");
@@ -364,9 +371,8 @@ public class UserProServiceImpl implements UserProService {
 					
 					userProInfo.setUserkey(userKey);
 					
-
 					try {
-						if (!tempStatus && userProInfo.getAddTime().getTime() > 1479052799000l) {
+						if (!tempStatus && userProInfo.getAddTime().getTime() > 1479052799000l&&(!"ADMIN".equals(userProInfo.getUserRole()))) {
 							// 首次登录 应该跳转到 注册联系人资料
 							result.setSuccess(true);
 							result.setMsg("登录成功");
