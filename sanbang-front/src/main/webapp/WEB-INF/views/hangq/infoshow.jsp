@@ -19,6 +19,13 @@
 <script type="text/javascript" src="front/resource/js/hangq/hangqindex.js"></script>
 <script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
+<style type="text/css">
+/*设置文档中图片显示样式 */
+.textOverflow_yzs img {
+  width: 80%;
+  height: 80%;
+}
+</style>
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
 	<div class="content_yzs">
@@ -30,7 +37,7 @@
     <div class="text_yzs" id="${show.id}">
       <h3>${show.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
             value="${show.addTime}" />）</h3>
-       <div class="textOverflow_yzs">
+       <div class="textOverflow_yzs" onclick="">
         <p class="111">${show.content}</p>
       </div>     
       <div class="textOverflow_yzs">
@@ -39,12 +46,12 @@
     </div>
     
     <c:if test="${ not empty show.attachment}">
-    <div class="textOverflow_yzs">
-    <h5 style="margin-left: 70%;margin-top: 5%;">
-         <p class="download" name="${show.name}" style="color:orange;">在线查看报告</p>
-     </h5>    
-      </div>
-     </c:if> 
+	    <div class="textOverflow_yzs">
+	    <h5 style="margin-left: 70%;margin-top: 5%;">
+	         <p class="download" name="${show.name}" style="color:orange;">在线查看报告</p>
+	     </h5>    
+	      </div>
+    </c:if> 
   </section>
 </div>
 <div class="content_yzs">
@@ -66,9 +73,11 @@
     </div>
      </c:if>
   </section>
-  <form action="http://www.ezaisheng.com/contentDown.htm" method="post" id="theForm2">
-		       <input type="hidden" name="fileName"  id="fileName"  value="" />
-		    </form>	
+	  <c:if test="${ not empty show.attachment}">
+		  <form action="http://www.ezaisheng.com/contentDown.htm" method="post" id="theForm2">
+				       <input type="hidden" name="fileName"  id="fileName"  value="" />
+		  </form>	
+	  </c:if>
 </div>
 </body>
 

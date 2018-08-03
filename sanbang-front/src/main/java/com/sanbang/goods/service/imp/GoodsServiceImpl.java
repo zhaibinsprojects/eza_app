@@ -940,6 +940,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 * @param goods
 	 * @return
 	 */
+	@Override
 	public synchronized String createOrderNo(ezs_goods goods) {
 		// TODO Auto-generated method stub
 		try {

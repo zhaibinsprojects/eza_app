@@ -674,7 +674,6 @@ public class AppHomeGoodsMessController {
 		Result rs = null;
 		if(currentPage<=0)
 			currentPage = 1;
-		
 		if(parentId==58)
 			mmp = this.reportEssayServer.getReportEssayTheme(Long.valueOf(67),currentPage);//特别关注：显示行业行动-要闻
 		else if(parentId==59){
@@ -716,7 +715,7 @@ public class AppHomeGoodsMessController {
 		return rs;
 	}
 	/**
-	 * 根据文章报告ID获取相关内容
+	 * 根据文章报告ID获取相关内容（没用）
 	 * @param request
 	 * @param response
 	 * @param id
@@ -760,7 +759,7 @@ public class AppHomeGoodsMessController {
 	}
 	
 	/**
-	 * 根据文章报告ID获取相关内容
+	 * 根据文章报告ID获取相关内容（没用）
 	 * @param request
 	 * @param response
 	 * @param id

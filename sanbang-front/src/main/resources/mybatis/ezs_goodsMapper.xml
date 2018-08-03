@@ -54,6 +54,60 @@
 		<result column="util_id" jdbcType="BIGINT" property="util_id" />
 		<result column="addess2" jdbcType="VARCHAR" property="addess2" />
 	</resultMap>
+	
+	<resultMap id="collection_BaseResultMap" type="com.sanbang.bean.ezs_goods">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+		<result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
+		<result column="addess" jdbcType="VARCHAR" property="addess" />
+		<result column="ash" jdbcType="VARCHAR" property="ash" />
+		<result column="bending" jdbcType="VARCHAR" property="bending" />
+		<result column="burning" jdbcType="VARCHAR" property="burning" />
+		<result column="cantilever" jdbcType="VARCHAR" property="cantilever" />
+		<result column="click" jdbcType="INTEGER" property="click" />
+		<result column="cncl_num" jdbcType="DOUBLE" property="cncl_num" />
+		<result column="collect" jdbcType="INTEGER" property="collect" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+		<result column="crack" jdbcType="VARCHAR" property="crack" />
+		<result column="density" jdbcType="VARCHAR" property="density" />
+		<result column="flexural" jdbcType="VARCHAR" property="flexural" />
+		<result column="freely" jdbcType="VARCHAR" property="freely" />
+		<result column="good_no" jdbcType="VARCHAR" property="good_no" />
+		<result column="good_self" jdbcType="BIT" property="good_self" />
+		<result column="goods_salenum" jdbcType="INTEGER" property="goods_salenum" />
+		<result column="inventory" jdbcType="DOUBLE" property="inventory" />
+		<result column="keyword" jdbcType="VARCHAR" property="keyword" />
+		<result column="lastModifyDate" jdbcType="TIMESTAMP" property="lastModifyDate" />
+		<result column="lipolysis" jdbcType="VARCHAR" property="lipolysis" />
+		<result column="lockStatus" jdbcType="BIT" property="lockStatus" />
+		<result column="memberLook" jdbcType="BIT" property="memberLook" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<!-- 收藏夹查看信息，price展示位销售价格，app取price字段，故此处用saleprice映射到实体类price上 -->
+		<result column="saleprice" jdbcType="DECIMAL" property="price" />
+		<result column="protection" jdbcType="BIT" property="protection" />
+		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
+		<result column="recommend" jdbcType="BIT" property="recommend" />
+		<result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
+		<result column="seo_description" jdbcType="VARCHAR" property="seo_description" />
+		<result column="source" jdbcType="VARCHAR" property="source" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="tensile" jdbcType="VARCHAR" property="tensile" />
+		<result column="validity" jdbcType="INTEGER" property="validity" />
+		<result column="water" jdbcType="VARCHAR" property="water" />
+		<result column="area_id" jdbcType="BIGINT" property="area_id" />
+		<result column="classOfFinish_id" jdbcType="BIGINT" property="classOfFinish_id" />
+		<result column="color_id" jdbcType="BIGINT" property="color_id" />
+		<result column="form_id" jdbcType="BIGINT" property="form_id" />
+		<result column="goodClass_id" jdbcType="BIGINT" property="goodClass_id" />
+		<result column="goods_main_photo_id" jdbcType="BIGINT" property="goods_main_photo_id" />
+		<result column="logistics_id" jdbcType="BIGINT" property="logistics_id" />
+		<result column="quality_id" jdbcType="BIGINT" property="quality_id" />
+		<result column="region_id" jdbcType="BIGINT" property="region_id" />
+		<result column="supply_id" jdbcType="BIGINT" property="supply_id" />
+		<result column="user_id" jdbcType="BIGINT" property="user_id" />
+		<result column="util_id" jdbcType="BIGINT" property="util_id" />
+		<result column="addess2" jdbcType="VARCHAR" property="addess2" />
+	</resultMap>
   
 
   <resultMap id="BaseResultMap1" type="com.sanbang.vo.GoodsListInfo">
@@ -812,7 +866,7 @@
      limit 20
 	</select>
 	<!-- 由购物车查询商品信息 -->
-	<select id="getGoodsFromCollection" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	<select id="getGoodsFromCollection" resultMap="collection_BaseResultMap" parameterType="java.lang.Long">
   	select g.* from ezs_goods g where EXISTS (select 1 from ezs_documentshare e where e.good_id = g.id and e.deleteStatus = '0' and e.house = '1' and e.user_id = #{userId})
 	</select>
 

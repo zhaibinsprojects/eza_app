@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1012,7 +1014,7 @@ public class AppGoodsController {
 		return result;
 	}
 	/**
-	 * 下订单（添加订单）
+	 * 下订单（添加订单）(不用)
 	 * @author zhaibin
 	 * @param request
 	 * @param response
@@ -1108,7 +1110,7 @@ public class AppGoodsController {
 		return rs;
 	}
 	/**
-	 * 立即购买(样品)
+	 * 立即购买(样品)(不用)
 	 * @author zhaibin
 	 * @param request
 	 * @param response
@@ -1249,7 +1251,7 @@ public class AppGoodsController {
 	/**
 	 * 添加订单，在此可进行多个商品提交订单，
 	 * 针对单个订单进行库存校验并更新库存信息，不足的返回商品不足信息并回撤库信息，
-	 * @author zhaibin
+	 * @author zhaibin (不用)
 	 * @param request
 	 * @param response
 	 * @param orderForm(ezs_orderform类型的JSON串)
