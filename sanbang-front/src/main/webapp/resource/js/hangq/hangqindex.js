@@ -67,11 +67,11 @@ function androidloadpdf() {
 			"pdfurl" : "https://m.ezaisheng.com/upload/h5/ezsSubstance/"+pdfid+".pdf"
 		}
 		var str = JSON.stringify(data);
-		layer.open({
+		/*layer.open({
 			content : "回调开始",
 			skin : 'msg',
 			time : 2
-		});
+		});*/
 		window.android.androidloadpdf(str);
 		return false;
 	})

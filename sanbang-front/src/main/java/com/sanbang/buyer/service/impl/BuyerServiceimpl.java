@@ -248,7 +248,7 @@ public class BuyerServiceimpl implements BuyerService {
 			if (orderinfo.getPact_status() == 1) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
-				result.setMsg("纸质合同线下签订中，请您耐心等待！");
+				result.setMsg("抱歉，您签订的是纸质合同，无法通过APP在线查看。");
 				return result;
 			}
 			String url = signbase+"/website/certSign/forh5/showcontentpdf.do";
