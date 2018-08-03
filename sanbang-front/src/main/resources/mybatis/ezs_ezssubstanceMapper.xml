@@ -497,9 +497,12 @@
   <select id="goodsIndustryCountByKinds" resultType="java.lang.Integer" parameterType="java.lang.Long" >
     select count(1) from ezs_ezssubstance where ec_id = #{id,jdbcType=BIGINT} and deleteStatus = 0
   </select>
-  <select id="goodsIndustryByPage" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  
+  <select id="goodsIndustryByPage" resultType="com.sanbang.bean.ezs_ezssubstance" parameterType="com.sanbang.vo.ExPage">
     select
-    <include refid="Base_Column_List" />
+    <!-- <include refid="Base_Column_List" /> -->
+	id, addTime, author, linkPort, linkUrl, meta, name, origin, 
+	originUrl, pcView, photos, status, childEc_id, ec_id, ss_id,  user_id
     from ezs_ezssubstance where ec_id = #{content} and deleteStatus = 0 order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
   
@@ -511,9 +514,11 @@
 	</foreach>	
 	and deleteStatus = 0
   </select>
-  <select id="getEssayThemes" resultMap="BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  <select id="getEssayThemes" resultType="com.sanbang.bean.ezs_ezssubstance" parameterType="com.sanbang.vo.ExPage">
     select
-    <include refid="Base_Column_List" />
+    id, addTime, author, linkPort, linkUrl, meta, name, origin, 
+	originUrl, pcView, photos, status, childEc_id, ec_id, ss_id,  user_id
+    <!-- <include refid="Base_Column_List" /> -->
     from ezs_ezssubstance where ec_id in 
     <foreach collection="idsArray" item="ids" index="index" open="(" separator="," close=")">
 	    #{ids}

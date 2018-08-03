@@ -936,28 +936,23 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return mmp;
 	}
-	/**
-	 * 创建订单号码
-	 * @author zhaibin
-	 * @param goods
-	 * @return
-	 */
-	public   String createOrderNo(ezs_goods goods) {
-		synchronized(syncnum){
-			try {
-				log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
-				int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
-				Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
-				StringBuffer orderNo = new StringBuffer("EM");
-				orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
-				orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
-				orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
-				log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号成功");
-				return orderNo.toString();
-			} catch (Exception e) {
-				log.error("生成订单号失败："+e.toString());
-				throw e;
-			}
+
+	@Override
+	public synchronized String createOrderNo(ezs_goods goods) {
+		// TODO Auto-generated method stub
+		try {
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
+			int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
+			Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
+			StringBuffer orderNo = new StringBuffer("EM");
+			orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
+			orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
+			orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号成功");
+			return orderNo.toString();
+		} catch (Exception e) {
+			log.error("生成订单号失败："+e.toString());
+			throw e;
 		}
 		
 		

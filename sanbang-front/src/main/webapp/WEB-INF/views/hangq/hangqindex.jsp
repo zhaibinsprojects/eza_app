@@ -6,7 +6,7 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
-<%-- <base href="http://10.10.10.232/"/> --%>
+<!-- <base href="http://10.10.10.232/"/> -->
 
 <meta charset="utf-8" />
 <meta name="viewport"
@@ -78,7 +78,6 @@
           <td>${item.goodPrice}</td>
         </tr> --%>
        </c:forEach> 
-        
       </table>
     </div>
   </section>
@@ -87,9 +86,9 @@
     <div class="hTwoFater_yzs">
       <h2><span>价格走势</span></h2>
     </div>
-    <div id="container" class="nedHiCha_yzs" style="min-width: 310px;"> 
+    <div id="container" class="nedHiCha_yzs" style="min-width: 400px;"> 
     	<!-- <div id="main" style="width: 700px;height:400px;"></div> -->
-    	<div id="main" style="width: 90%;height:120%;"></div>
+    	<div id="main" style="width: 90%;height:100%;"></div>
     </div>
   </section>
 </div>
@@ -99,7 +98,7 @@
 
 <script type="text/javascript">
 var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/"; */ 
+/* var baseurl="http://10.10.10.232/"; */
 var baojia_goodclass = $('#goodclassid').val();
 var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){
@@ -143,7 +142,8 @@ function echartInit(){
 	   	        data: []
 	   	    },
 	   	    yAxis: {
-	   	        type: 'value'
+	   	        type: 'value',
+	   	     	scale:true
 	   	    },
 	   	    series:{
 	   	       	type:'line',
