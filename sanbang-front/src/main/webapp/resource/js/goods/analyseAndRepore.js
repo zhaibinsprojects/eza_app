@@ -29,7 +29,7 @@
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > pagecount)); //参数为true代表没有更多数据了。
 					var table = document.body.querySelector('.mui-table-view');
 					var li = document.createElement('div');
-					//li.className = 'ghs_divgt';
+					li.className = 'child_cont';
 					var html=pagertemp(count);
 					li.innerHTML = html;
 					table.appendChild(li);
@@ -54,7 +54,8 @@
 					url : baseurl+"/front/app/home/analyseAndReportPage.htm",
 					data : {
 						 "currentPage":pageno+1,
-						  "type":type
+						  "type":type,
+						  "ecId":$('.ezsm-normal-tab-sel').attr("id")
 					},
 					dataType : "html",
 					async : false,
