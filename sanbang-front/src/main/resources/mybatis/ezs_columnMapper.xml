@@ -317,6 +317,6 @@
     select 
     <include refid="Base_Column_List" />
     from ezs_column
-    where parentEzsColumn_id = #{id,jdbcType=BIGINT}
+    where parentEzsColumn_id = #{id,jdbcType=BIGINT} and deleteStatus = '0' ORDER BY id ASC
   </select>
 </mapper>

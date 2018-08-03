@@ -35,6 +35,10 @@ public interface ezs_ezssubstanceMapper {
     int goodsAllIndustryCount(Long parentKindId);
     
     List<ezs_ezssubstance> selectAllGoodsIndustryByPage(ExPage page);
+   /* 价格行情文档*/
+    int goodsAllIndustryCount2(@Param("id")Long id,@Param("ecId")Long ecId);
+    List<ezs_ezssubstance> selectAllGoodsIndustryByPage2(ExPage page);
+    
     
     List<ezs_ezssubstance> selectEssayThemeByPage(ExPage page);
     
