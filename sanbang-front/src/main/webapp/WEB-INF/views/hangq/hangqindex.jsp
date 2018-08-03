@@ -17,14 +17,16 @@
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
-<script type="text/javascript" src="front/resource/js/echarts.min.js"></script>
+<script src="front/resource/js/highcharts.js"></script>
+<script src="front/resource/js/newAddjs/exporting.js"></script>
+
 </head>
-<body style="background:#efefef;width: 100%; /* background:#efefef;overflow-x: hidden; */" onload='echartInit()'>
+<body style="background:#efefef;width: 100%; " >
 	<div class="content_yzs">
   <!--价格评析-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>价格评析</span><span id="priceAnalyse" style="float: right;color: orange;">更多</span></h2>
+     <h2><span>价格评析</span><span id="priceAnalyse" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span></h2>
     </div>
     <c:forEach var="item" items="${jiage.Obj}">
     <div class="text_yzs" id="${item.id}">
@@ -40,7 +42,7 @@
   <!--研究报告--->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>研究报告</span><span id="report" style="float: right;color: orange;">更多</span></h2>
+      <h2><span>研究报告</span><span id="report" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span></h2>
     </div>
     <c:forEach var="item" items="${baogao.Obj}">
     <div class="text_yzs" id="${item.id}">
@@ -55,7 +57,7 @@
   <!--实时报价--->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>实时报价</span><span id="priceInTime" style="float: right;color: orange;">更多</span></h2>
+      <h2><span>实时报价</span><span id="priceInTime" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span></h2>
     </div>
     <div class="realTime_price">
       <table class="tableOne_yzs" cellpadding="0" cellspacing="0">
@@ -71,12 +73,19 @@
         </tr>
         <tr>
           <td><label>国内参考价</label></td>
-          <td>${item.price}</td>
+          <td>${item.price}元</td>
         </tr>
-        <%-- <tr>
-          <td><label>实时成交价</label></td>
-          <td>${item.goodPrice}</td>
-        </tr> --%>
+        <tr>
+          <td><label>时间</label></td>
+          <td><fmt:formatDate pattern="yyyy-MM-dd" 
+            value="${item.addTime}" /></td>
+        </tr>
+          <tr>
+         <td><span style="margin-top: 7%;"></span></td>
+         <td></td>
+      
+         </tr>
+       
        </c:forEach> 
       </table>
     </div>
@@ -84,9 +93,9 @@
   <!---价格走势-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>价格走势</span></h2>
+      <h2><span>价格走势</span><span id="priceAnalyse" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span></h2>
     </div>
-    <div id="container" class="nedHiCha_yzs" style="min-width: 400px;"> 
+    <div id="container" class="nedHiCha_yzs" style="    min-width: 95%;"> 
     	<!-- <div id="main" style="width: 700px;height:400px;"></div> -->
     	<div id="main" style="width: 90%;height:100%;"></div>
     </div>
@@ -98,14 +107,13 @@
 
 <script type="text/javascript">
 var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/"; */
 var baojia_goodclass = $('#goodclassid').val();
 var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){
 	$(".text_yzs").click(function(){
 		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
 	})
-	/* 更多 */
+	/* > */
 	$(".hTwoFater_yzs").find("span:eq(1)").click(function(){
 		if($(this).attr("id")=="priceInTime")
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1&goodClassId="+baojia_goodclass+"&areaId="+baojia_areaId;
@@ -115,63 +123,30 @@ $(document).ready(function(){
 })
 </script>
 <script type="text/javascript">
-function echartInit(){
-	var option = {
-	   	    tooltip: {
-	   	        trigger: 'axis'
-	   	    },
-	   	    legend: {
-	   	    	left: '3%',
-	   	    	data:['价格走势']
-	   	    },
-	   	    grid: {
-	   	    	top:'20%',
-	   	        left: '2%',
-	   	        right: '3%',
-	   	        bottom: '10%',
-	   	        containLabel: true
-	   	    },
-	   	    toolbox: {
-	   	        feature: {
-	   	            saveAsImage: {}
-	   	        }
-	   	    },
-	   	    xAxis: {
-	   	        type: 'category',
-	   	        boundaryGap: false,
-	   	        data: []
-	   	    },
-	   	    yAxis: {
-	   	        type: 'value',
-	   	     	scale:true
-	   	    },
-	   	    series:{
-	   	       	type:'line',
-	   	     	symbol:'none',//拐点式样
-	   	        stack: '价格',
-	   	        itemStyle : { normal: {label : {show: false}}},
-	   	        data:[]
-	   	    }
-	   	};
+
+$(document).ready(function(){
+	var baojia_goodclass = $('#goodclassid').val();
+	getdate(baojia_goodclass);
+});
+
+function getdate(classid){
+	var xdata="";
+	var name="";
+	var data="";
 	$.ajax({
 		  type: 'POST',
 		  url: baseurl+"/front/app/home/getPriceTrendcyShow.htm",
 		  data: {
-			  goodclassId:baojia_goodclass
+			  goodclassId:classid
 		  },
 		  success: function(result){
 			//进行请求后要数据
-  		    //x轴显示
-  		    option.xAxis.data = result.name;
-  		    //主体内容
-  		   	option.series.data = result.data.data;
-  		  	option.series.name = result.data.name;
-			// 基于准备好的dom，初始化echarts实例
-			var myChart = echarts.init(document.getElementById('main'));
-			myChart.hideLoading();
-			// 使用刚指定的配置项和数据显示图表
-			myChart.setOption(option,true);
-			myChart.hideLoading();
+		    //x轴显示
+		    xdata =result.name;
+		    //主体内容
+		   	data = result.data.data;
+		   	name=result.data.name;
+		   	echartInit(xdata, name, data);
 		  },
 		  error : function(errorMsg) {
 	            alert("无该品类实时成交数据!");
@@ -179,5 +154,77 @@ function echartInit(){
 		  dataType : "json"
 		});
 }
+
+function echartInit(xdata,name,mydata){
+	
+	Highcharts.chart('container', {
+	        chart: {
+	            zoomType: 'x'
+	        },
+	        title: {
+	            text: ''
+	        },
+	        subtitle: {
+	            text: ''
+	        },
+			colors: ['#4cd4c8'],
+	        xAxis: {
+	        	 tickInterval: 8,
+	        categories: xdata
+	    },
+			credits: {
+	          enabled:false
+	},
+	       exporting: {
+	            enabled:false
+	},
+	        yAxis: {
+	        	allowDecimals:false,//tickPositions: [0, 5, 10, 15,20,25,30],
+	        	title: {
+	            	text: ''
+	        	}
+	    	},
+	        legend: {
+	            enabled: false
+	        },
+			
+	        plotOptions: {
+	            area: {
+	                fillColor: {
+	                    linearGradient: {
+	                        x1: 0,
+	                        y1: 0,
+	                        x2: 0,
+	                        y2: 1
+	                    },
+	                    stops: [
+	                        [0, '#4cd4c8'],
+	                        [1, Highcharts.Color('#4cd4c8').setOpacity(0).get('rgba')]
+	                    ]
+	                },
+	                marker: {
+	                    radius: 1,
+						lineWidth: 1,
+						fillColor: '#fff',//点填充色
+						lineColor: '#4cd4c8',//点边框色
+	                },
+	                lineWidth: 1,
+					
+	                states: {
+	                    hover: {
+	                        lineWidth: 1
+	                    }
+	                },
+	                threshold: null
+	            }
+	        },
+	        series: [{
+				type: 'area',
+		        name: name,
+		        data: mydata,
+		        lineWidth:1
+	    }]
+	    });
+};
     </script>
 </html>

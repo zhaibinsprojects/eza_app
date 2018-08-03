@@ -211,7 +211,7 @@ public class HomeH5PriceConditionController {
 	public String analyseAndReport(@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="goodClassId",required=false,defaultValue="1")String goodClassId,
 			@RequestParam(name="areaId",required=false,defaultValue="4523541") String areaId,
-			int currentPage,Model model){
+			int currentPage,Model model,HttpServletRequest request){
 		String showpages = "analyseAndRepore";
 		Map<String, Object> resultMap = new HashMap<>();
 		int pagesize = 10;
@@ -228,6 +228,21 @@ public class HomeH5PriceConditionController {
 			//参数传递
 			Map<String, Object> tMp = new HashMap<>();
 			tMp.put("kindId", goodClassId);
+			tMp.put("colorId", request.getParameter("colorId"));
+			tMp.put("formId", request.getParameter("formId"));
+			tMp.put("areaId", request.getParameter("areaId"));
+			
+			model.addAttribute("colorId", request.getParameter("colorId"));
+			model.addAttribute("kindId", request.getParameter("goodClassId"));
+			model.addAttribute("formId", request.getParameter("formId"));
+			model.addAttribute("areaId", request.getParameter("areaId"));
+			
+			
+			model.addAttribute("colorval", request.getParameter("colorval"));
+			model.addAttribute("kindval", request.getParameter("goodClassval"));
+			model.addAttribute("formval", request.getParameter("formval"));
+			model.addAttribute("areaval", request.getParameter("areaval"));
+			
 			//获取相关地址ID
 			List<String> areaIdsList = new ArrayList<>();
 			Map<String, Object> areaIdsMap = null;
