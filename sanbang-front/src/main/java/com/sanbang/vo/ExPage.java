@@ -7,6 +7,18 @@ public class ExPage extends Page {
 	private String content;
 	
 	private String[] idsArray;
+	
+	private Long ecId;
+	
+	
+
+	public Long getEcId() {
+		return ecId;
+	}
+
+	public void setEcId(Long ecId) {
+		this.ecId = ecId;
+	}
 
 	public String[] getIdsArray() {
 		return idsArray;

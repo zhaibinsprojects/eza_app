@@ -45,9 +45,7 @@ import com.sanbang.vo.Series;
 @Controller
 @RequestMapping("/app/home")
 public class HomeH5PriceConditionController {
-	
 	private static String view="/hangq/";
-	
 	@Autowired
 	private PriceConditionService priceConditionService;
 	@Autowired
@@ -211,35 +209,42 @@ public class HomeH5PriceConditionController {
 	public String analyseAndReport(@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="goodClassId",required=false,defaultValue="1")String goodClassId,
 			@RequestParam(name="areaId",required=false,defaultValue="4523541") String areaId,
-			int currentPage,Model model,HttpServletRequest request){
+			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,Model model,HttpServletRequest request,
+			@RequestParam(name="ecId",required=false,defaultValue="0")Long ecId
+			){
 		String showpages = "analyseAndRepore";
 		Map<String, Object> resultMap = new HashMap<>();
 		int pagesize = 10;
 		if(currentPage<1) currentPage=1;
 		if(type.trim().endsWith("priceAnalyse")){
 			//展示价格评析
-			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12), currentPage,pagesize);
+			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds2(Long.valueOf(12),ecId,currentPage,pagesize);
+			//查询二级目录
+			List<ezs_column> columnList = this.columnMapper.getSecondThemeByFirstTheme(Long.valueOf(12));
 			resultMap.put("kinds", "priceAnalyse");
+			resultMap.put("columnList", columnList);
 		}else if(type.trim().endsWith("report")){
 			//研究报告
-			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(17), currentPage,pagesize);
+			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds2(Long.valueOf(17),ecId,currentPage,pagesize);
+			List<ezs_column> columnList = this.columnMapper.getSecondThemeByFirstTheme(Long.valueOf(17));
 			resultMap.put("kinds", "report");
+			resultMap.put("columnList", columnList);
 		}else if(type.trim().endsWith("priceInTime")){
 			//参数传递
 			Map<String, Object> tMp = new HashMap<>();
-			tMp.put("kindId", goodClassId);
+			tMp.put("kindId", request.getParameter("kindId"));
 			tMp.put("colorId", request.getParameter("colorId"));
 			tMp.put("formId", request.getParameter("formId"));
 			tMp.put("areaId", request.getParameter("areaId"));
 			
 			model.addAttribute("colorId", request.getParameter("colorId"));
-			model.addAttribute("kindId", request.getParameter("goodClassId"));
+			model.addAttribute("kindId", request.getParameter("kindId"));
 			model.addAttribute("formId", request.getParameter("formId"));
 			model.addAttribute("areaId", request.getParameter("areaId"));
 			
 			
 			model.addAttribute("colorval", request.getParameter("colorval"));
-			model.addAttribute("kindval", request.getParameter("goodClassval"));
+			model.addAttribute("kindval", request.getParameter("kindval"));
 			model.addAttribute("formval", request.getParameter("formval"));
 			model.addAttribute("areaval", request.getParameter("areaval"));
 			
@@ -278,7 +283,7 @@ public class HomeH5PriceConditionController {
 	public String analyseAndReportPage(@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="goodClassId",required=false,defaultValue="1")String goodClassId,
 			@RequestParam(name="areaId",required=false,defaultValue="4523541") String areaId,
-			int currentPage,Model model){
+			int currentPage,Model model,HttpServletRequest request){
 		String showpages = "analyseAndReporePage";
 		Map<String, Object> resultMap = new HashMap<>();
 		int pagesize = 10;
@@ -294,7 +299,21 @@ public class HomeH5PriceConditionController {
 		}else if(type.trim().endsWith("priceInTime")){
 			//参数传递
 			Map<String, Object> tMp = new HashMap<>();
-			tMp.put("kindId", goodClassId);
+			tMp.put("kindId", request.getParameter("kindId"));
+			tMp.put("colorId", request.getParameter("colorId"));
+			tMp.put("formId", request.getParameter("formId"));
+			tMp.put("areaId", request.getParameter("areaId"));
+			
+			model.addAttribute("colorId", request.getParameter("colorId"));
+			model.addAttribute("kindId", request.getParameter("kindId"));
+			model.addAttribute("formId", request.getParameter("formId"));
+			model.addAttribute("areaId", request.getParameter("areaId"));
+			
+			
+			model.addAttribute("colorval", request.getParameter("colorval"));
+			model.addAttribute("kindval", request.getParameter("kindval"));
+			model.addAttribute("formval", request.getParameter("formval"));
+			model.addAttribute("areaval", request.getParameter("areaval"));
 			//获取相关地址ID
 			List<String> areaIdsList = new ArrayList<>();
 			Map<String, Object> areaIdsMap = null;

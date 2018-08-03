@@ -527,17 +527,36 @@
   </select>
   
   
-  
-  <select id="goodsAllIndustryCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
-    select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id) 
+  <!-- 价格行情文档展示 1.0-->
+  <select id="goodsAllIndustryCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+    select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id)
   </select>
-  
-
   <!-- 根据一级栏目直接获取文章报告 -->
   <select id="selectAllGoodsIndustryByPage" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
   	select 
   	<include refid="ColumnListExceptContent" />
-	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id ) order by addTime desc LIMIT #{startPos},#{pageSize}
+	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id)
+	order by addTime desc LIMIT #{startPos},#{pageSize}
+  </select>
+  
+
+   
+    <!-- 价格行情文档展示 2.0-->
+  <select id="goodsAllIndustryCount2" resultType="java.lang.Integer">
+    select count(*) from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{id,jdbcType=BIGINT} and ee.ec_id = ec.id)
+    <if test="ecId != 0 and ecId != null">
+     and ee.ec_id = #{ecId}
+    </if> 
+  </select>
+  <!-- 根据一级栏目直接获取文章报告 -->
+  <select id="selectAllGoodsIndustryByPage2" resultMap="ExTendOne_BaseResultMap" parameterType="com.sanbang.vo.ExPage">
+  	select 
+  	<include refid="ColumnListExceptContent" />
+	from ezs_ezssubstance ee where EXISTS (select 1 from ezs_column ec where ec.parentEzsColumn_id = #{content} and ee.ec_id = ec.id )
+	<if test="ecId != 0 and ecId != null">
+     and ee.ec_id = #{ecId}
+    </if>
+	order by addTime desc LIMIT #{startPos},#{pageSize}
   </select>
   
   

@@ -17,7 +17,8 @@
 			 */
 			function pulldownRefresh() {
 				setTimeout(function() {
-					window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1&goodClassId="+goodClassId+"&areaId="+areaId;
+					csubmit();
+					//window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1&goodClassId="+goodClassId+"&areaId="+areaId;
 					}, 1500);
 			}
 			var count = 0;
@@ -50,8 +51,16 @@
 					data : {
 						 "currentPage":pageno+1,
 						 "type":type,
-						 "goodClassId":goodClassId,
-						 "areaId":areaId
+						 "colorId":$(".colorId").val(),
+						 "kindId":$(".kindId").val(),
+						 
+						 "formId":$(".formId").val(),
+						 "areaId":$(".areaId").val(),
+						 
+						 "colorval":$(".colorval").val(),
+						 "kindval":$(".kindval").val(),
+						 "formval":$(".formval").val(),
+						 "areaval":$(".areaval").val()
 					},
 					dataType : "html",
 					async : false,

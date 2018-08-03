@@ -14,8 +14,18 @@
         </tr>
         <tr>
           <td><label>国内参考价</label></td>
-          <td>${item.price}</td>
+          <td>${item.price}元</td>
         </tr>
+          <tr>
+          <td><label>时间</label></td>
+          <td><fmt:formatDate pattern="yyyy-MM-dd" 
+            value="${item.addTime}" /></td>
+        </tr>
+          <tr>
+         <td><span style="margin-top: 7%;"></span></td>
+         <td></td>
+      
+         </tr>
 </c:forEach>
 <script type="text/javascript">
 var baseurl="${serurl}";

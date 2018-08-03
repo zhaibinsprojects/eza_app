@@ -31,7 +31,8 @@
   <!--实时报价--->
     <div class="hTwoFater_yzs">
       <h2><span>实时报价</span></h2>
-    <nav class="navAll_yzs" style="margin-top: 3%;">
+    <nav class="navAll_yzs" style="margin-top: 3%;margin-left: -5%;
+    margin-right: -5%;">
   	<ul class="nav_ulsty_yzs">
     	<li  id="showCityPicker" style="width: 25%;"><a id="cityResult" href="javascript:;">山东</a></li>
         <li id="showUserPicker" style="width: 25%;"><a id="userResult" href="javascript:;">品类</a></li>
@@ -57,7 +58,7 @@
 		        </tr>
 		        <tr>
 		          <td><label>国内参考价</label></td>
-		          <td>${item.price}</td>
+		          <td>${item.price}元</td>
 		        </tr>
 		          <tr>
 		          <td><label>时间</label></td>

@@ -556,16 +556,16 @@
     <include refid="PriceConditionColumnList" />
     from ezs_price_trend g,ezs_goods_class gc,ezs_dict e1,ezs_dict e2 where g.goodClass_id = gc.id and g.color_id = e1.id and g.form_id = e2.id
       
-      <if test="countryType != null" >
+      <if test="countryType != null and countryType != ''" >
         and g.type = #{countryType}
       </if>
-      <if test="kindId != null" >
+      <if test="kindId != null and kindId != '' " >
         and g.goodClass_id = #{kindId}
       </if>
-      <if test="colorId != null" >
+      <if test="colorId != null and colorId != ''" >
         and g.color_id = #{colorId}
       </if>
-      <if test="formId != null" >
+      <if test="formId != null and formId != ''" >
         and g.form_id = #{formId}
       </if>
       <if test="source != null" >

@@ -15,21 +15,21 @@
 							if(undefined==items[2].value||-1==items[2].value){
 								if(undefined==items[1].value||-1==items[1].value){
 									userResult.innerText =items[0].text;
-									$(".kindId").val(items[0].value);
-									$(".kindval").val(items[0].text);
+									document.getElementsByName("kindId")[0].value=items[0].value;
+									document.getElementsByName("kindval")[0].value=items[0].text;
 								}else{
 									userResult.innerText =items[1].text;
-									$(".kindId").val(items[1].value);
-									$(".kindval").val(items[1].text);
+									document.getElementsByName("kindId")[0].value=items[1].value;
+									document.getElementsByName("kindval")[0].value=items[1].text;
 								}
 							}else{
 								userResult.innerText =items[2].text;
-								$(".kindId").val(items[2].value);
-								$(".kindval").val(items[2].text);
+								document.getElementsByName("kindId")[0].value=items[2].value;
+								document.getElementsByName("kindval")[0].value=items[2].text;
 							}
-							$(".csubmit").submit();
 							//返回 false 可以阻止选择框的关闭
 							//return false;
+							csubmit();
 						});
 					}, false);
 					//-----------------------------------------
@@ -45,19 +45,19 @@
 							if(undefined==items[2].value||-1==items[2].value){
 								if(undefined==items[1].value||-1==items[1].value){
 									cityResult.innerText =items[0].text;
-									$(".areaId").val(items[0].value);
-									$(".areaval").val(items[0].text);
+									document.getElementsByName("areaId")[0].value=items[0].value;
+									document.getElementsByName("areaval")[0].value=items[0].text;
 								}else{
 									cityResult.innerText =items[1].text;
-									$(".areaId").val(items[0].value);
-									$(".areaval").val(items[0].text);
+									document.getElementsByName("areaId")[0].value=items[1].value;
+									document.getElementsByName("areaval")[0].value=items[1].text;
 								}
 							}else{
 								cityResult.innerText =items[2].text;
-								$(".areaId").val(items[0].value);
-								$(".areaval").val(items[0].text);
+								document.getElementsByName("areaId")[0].value=items[2].value;
+								document.getElementsByName("areaval")[0].value=items[2].text;
 							}
-							$(".csubmit").submit();
+							csubmit();
 							
 							//返回 false 可以阻止选择框的关闭
 							//return false;
@@ -72,15 +72,16 @@
 					showColorPickerButton.addEventListener('tap', function(event) {
 						colorPicker.show(function(items) {
 							if(items[0].text!="全部"){
-								$(".colorId").val(items[0].value);
-								$(".colorval").val(items[0].text);
+								document.getElementsByName("colorId")[0].value=items[0].value;
+								document.getElementsByName("colorval")[0].value=items[0].text;
 								colorResult.innerText = items[0].text;
 							}else{
-								$(".colorId").val("");
-								$(".colorval").val("");
+								document.getElementsByName("colorId")[0].value="";
+								document.getElementsByName("colorval")[0].value="";
+								
 								colorResult.innerText = "全部";
 							}
-							$(".csubmit").submit();
+							csubmit();
 						});
 					}, false);
 					
@@ -92,15 +93,18 @@
 					showFormPickerButton.addEventListener('tap', function(event) {
 						formPicker.show(function(items) {
 							if(items[0].text!="全部"){
-								$(".formId").val(items[0].value);
-								$(".formval").val(items[0].text);
+								document.getElementsByName("formId")[0].value=items[0].value;
+								document.getElementsByName("formval")[0].value=items[0].text;
 								formResult.innerText = items[0].text;
 							}else{
-								$(".formId").val("");
-								$(".formval").val("");
+								document.getElementsByName("formId")[0].value="";
+								document.getElementsByName("formval")[0].value="";
+								
 								formResult.innerText = "全部";
 							}
-							$(".csubmit").submit();
+							csubmit();
+						
+							
 							
 						});
 					}, false);
@@ -117,3 +121,8 @@ $(".nav_ulsty_yzs li").click(function(){
 	$(".qx_yzsbtn").click(function(){
 		$(".graybaks,.grayChren").hide();
 		});	
+	
+function csubmit(){
+	$(".csubmit").submit();
+}	
+	

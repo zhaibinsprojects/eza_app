@@ -80,7 +80,7 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 	 * 各种文档分页展示（全部展示不按分类）
 	 */
 	@Override
-	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId, int currentPage,int pagesize) {
+	public Map<String, Object> getAllIndustryInfoByParentKinds(Long parentKindsId,int currentPage,int pagesize) {
 		// TODO Auto-generated method stub
 		Map<String, Object> mmp = new HashMap<>(); 
 		//获取总页数
@@ -121,6 +121,36 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
 				//List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectAllGoodsIndustryByPage(page);
 				List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectEssayThemeByPage(page);
+				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Page", page);
+				mmp.put("Obj", glist);
+			}else{
+				mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_PAGE_FAIL);
+				mmp.put("Msg", "暂无数据");
+				mmp.put("Page", page);
+			}
+		}else{
+			mmp.put("ErrorCode", HomeDictionaryCode.ERROR_HOME_KIND_ERROR);
+			mmp.put("Msg", "查询类型有误");
+		}
+		return mmp;
+	}
+
+	@Override
+	public Map<String, Object> getAllIndustryInfoByParentKinds2(Long parentKindsId,Long ecId,int currentPage, int pagesize) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>(); 
+		//获取总页数
+		int totalCount = this.ezssubstanceMapper.goodsAllIndustryCount2(parentKindsId,ecId); 
+		if(totalCount>0){
+			ExPage page = new ExPage(totalCount, currentPage); 
+			//page.setPageSize(10);
+			//app 端做调整
+			page.setPageSize(pagesize);
+			page.setContent(String.valueOf(parentKindsId));
+			page.setEcId(ecId);
+			if((Integer.valueOf(currentPage)>=1&&Integer.valueOf(currentPage)<=page.getTotalPageCount())||(page.getTotalPageCount()==0)){
+				List<ezs_ezssubstance> glist = this.ezssubstanceMapper.selectAllGoodsIndustryByPage2(page);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Page", page);
 				mmp.put("Obj", glist);
