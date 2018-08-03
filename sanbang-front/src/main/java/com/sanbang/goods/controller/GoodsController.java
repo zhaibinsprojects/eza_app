@@ -653,7 +653,7 @@ public class GoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else{ 
+		}/*else{ 
 			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
 			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
 			if(dictCode.getSequence()<=3){
@@ -664,7 +664,7 @@ public class GoodsController {
 				return rs;
 			}
 			}
-		}
+		}*/
 		ezs_goodscart goodsCart = new ezs_goodscart();
 		goodsCart.setCount(count);
 		goodsCart.setGoods_id(goodsId);
@@ -1185,6 +1185,17 @@ public class GoodsController {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
+		}else{
+			Long auditingusertype_id = upi.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
+			if(upi.getEzs_store().getStatus()!=2){
+				result = Result.failure();
+				result.setErrorcode(DictionaryCode.ERROR_WEB_NOAUTH_ERROR);
+				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return result;
+			}
+			}
 		}
 		//收货地址
 		Page page = new Page();

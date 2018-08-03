@@ -151,5 +151,23 @@ public class DictionaryCode {
      * 查询发票详情失败
      */
     public static final int ERROR_WEB_QUERY_BILL_INFO_FAIL = 110014;
+    
+    
+    /**
+     *用户未认证
+     */
+    public static final int ERROR_WEB_NOAUTH_ERROR = 102000;
+    /**
+     *用户认证待审核
+     */
+    public static final int ERROR_WEB_LINEAUTH_ERROR = 102001;
+    /**
+     *用户认证已通过
+     */
+    public static final int ERROR_WEB_PASSAUTH_ERROR = 102002;
+    /**
+     *用户认证未通过
+     */
+    public static final int ERROR_WEB_NOPASSAUTH_ERROR = 102003;
 
 }

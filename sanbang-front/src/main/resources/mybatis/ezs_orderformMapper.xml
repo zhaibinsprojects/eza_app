@@ -399,7 +399,7 @@
 			C.addess,
 			B.total_price,
 			B.goods_amount,
-			IF(B.order_status=20,30,IF(B.order_status=1,10,B.order_status)) order_status,
+			IF(B.order_status=20,30,IF(B.order_status=1,10,IF(B.order_status=75,70,IF(B.order_status=93 OR B.order_status=95,90,B.order_status)))) order_status,
 			B.first_price,
 			B.end_price,
 			B.all_price,
@@ -437,7 +437,7 @@
 		 and  B.order_status in (#{pager.order_status})	
 		</if>
 		<if test="pager.order_status!=null and pager.order_status=='-1'">
-	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,110)	
+	    and	B.order_status in (1,10,20,30,40,50,60,70,75,80,90,93,95,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
 		and B.order_type in (${pager.order_type})	
@@ -476,7 +476,7 @@
 		 and  B.order_status in (#{pager.order_status})
 		</if>
 		<if test="pager.order_status!=null and pager.order_status=='-1'">
-	    and	B.order_status in (1,10,20,30,40,50,60,70,80,90,110)	
+	    and	B.order_status in (1,10,20,30,40,50,60,70,75,80,90,93,95,110)	
 		</if>
 		<if test="pager.order_type!=null and pager.order_type!=''">
 		and B.order_type in (${pager.order_type})	
@@ -509,7 +509,7 @@
 			C.area_id,
 			C.addess,
 			B.total_price,
-			IF(B.order_status=20,30,IF(B.order_status=1,10,B.order_status)) order_status,
+			IF(B.order_status=20,30,IF(B.order_status=1,10,IF(B.order_status=75,70,IF(B.order_status=93 OR B.order_status=95,90,B.order_status)))) order_status,
 			B.first_price,
 			B.end_price,
 			B.all_price,

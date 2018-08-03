@@ -119,11 +119,9 @@ public class AppGoodsController {
 			 Long auditingusertype_id = upi.getEzs_store().getAuditingusertype_id();
 				ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
 				if(dictCode.getSequence()<=3){
-				if(upi.getEzs_store().getStatus()!=2){
-					map.put("toauth", "您还未完成实名认证，请去个人中心完成实名认证！");
-				}else{
-					map.put("toauth", "");
-				}
+					map.put("toauth", upi.getEzs_store().getStatus());
+					}else{
+					map.put("toauth", 2);
 				}
 		 }
 		
@@ -912,7 +910,7 @@ public class AppGoodsController {
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			rs.setMsg("用户未登录");
 			return rs;
-		}else{ 
+		}/*else{ 
 			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
 			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
 			if(dictCode.getSequence()<=3){
@@ -923,7 +921,7 @@ public class AppGoodsController {
 				return rs;
 			}
 			}
-		}
+		}*/
 		ezs_goodscart goodsCart = new ezs_goodscart();
 		goodsCart.setCount(count);
 		goodsCart.setGoods_id(goodsId);
@@ -1421,6 +1419,31 @@ public class AppGoodsController {
 			rs.setObj(new ArrayList<>());
 			rs.setMsg("用户未登录");
 			return rs;
+		}else{ 
+			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
+				
+			if(user.getEzs_store().getStatus()==0){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_NOAUTH_ERROR);
+				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				rs.setObj(new ArrayList<>());
+				return rs;
+			}else if(user.getEzs_store().getStatus()==1){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_LINEAUTH_ERROR);
+				rs.setMsg("您实名认证审核中，请去个人中心完成实名认证！");
+				rs.setObj(new ArrayList<>());
+				return rs;
+			}else if(user.getEzs_store().getStatus()==3){
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_NOPASSAUTH_ERROR);
+				rs.setMsg("您实名认证未通过，请去个人中心完成实名认证！");
+				rs.setObj(new ArrayList<>());
+				return rs;
+			}
+			}
 		}
 		mmp = this.goodsService.modifyGoodCars(goodCarIDArray, goodCountsArray, user);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
@@ -1507,6 +1530,17 @@ public class AppGoodsController {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
 			result.setMsg("用户未登录");
 			return result;
+		}else{
+			Long auditingusertype_id = upi.getEzs_store().getAuditingusertype_id();
+			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+			if(dictCode.getSequence()<=3){
+			if(upi.getEzs_store().getStatus()!=2){
+				result = Result.failure();
+				result.setErrorcode(DictionaryCode.ERROR_WEB_NOAUTH_ERROR);
+				result.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				return result;
+			}
+			}
 		}
 		//收货地址
 		Page page = new Page();

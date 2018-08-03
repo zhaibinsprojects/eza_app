@@ -85,6 +85,7 @@ $(function() {
 			 }
 		} catch (e) {
 		}
+		
 	
 	};
 	
@@ -208,19 +209,13 @@ function androidtobuy(e) {
 }
 // 立即购买桥接
 function androidlogintobuy(userk) {
-	if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
-		layer.open({
-			content : $(".toauth").val(),
-			skin : 'msg',
-			time : 2
-		});
-	}else{
 	var data = {
-		"goodsid" : goodsid
+		"goodsid" : goodsid,
+		"isauth" : $(".toauth").val()
 	};
 	var str = JSON.stringify(data);
 	window.android.androidlogintobuy(str);
-	return false;}
+	return false;
 };
 
 // 预约
@@ -238,20 +233,14 @@ function androidtoyuyue(e) {
 
 // 预约预定桥接
 function androidlogintoyuyue(goodsid, userk) {
-	if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
-		layer.open({
-			content : $(".toauth").val(),
-			skin : 'msg',
-			time : 2
-		});
-	}else{
 	var data = {"goodsid" : goodsid,
-			"goodsName":$(".goodsName").val()};
+			"goodsName":$(".goodsName").val()/*,
+			"isauth" : $(".toauth").val()*/
+			};
 	var str = JSON.stringify(data);
 	window.android.androidlogintoyuyue(str);
 	return false;
-	}
-};
+	};
 
 // 试样
 function shiyang(e) {
@@ -336,21 +325,15 @@ function androidshowpdf() {
 	}
 	// 立即购买桥接
 	function ioslogintobuy(userk) {
-		if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
-			layer.open({
-				content : $(".toauth").val(),
-				skin : 'msg',
-				time : 2
-			});
-		}else{
-			var data = {"goodsid" : goodsid}
-			var str = JSON.stringify(data);
-			WebViewJavascriptBridge.callHandler('iostobuy', str, function() {
-			});
-			return false;
-		}
-		
-	};
+		var data = {
+				"goodsid" : goodsid,
+				"isauth" : $(".toauth").val()
+			}
+		var str = JSON.stringify(data);
+		WebViewJavascriptBridge.callHandler('iostobuy', str, function() {
+		});
+		return false;
+};
 
 	// 预约
 	function iostoyuyue() {
@@ -367,21 +350,16 @@ function androidshowpdf() {
 
 	// 预约预定桥接
 	function ioslogintoyuyue(goodsid, userk) {
-		if($(".toauth").val()!=""&&$(".toauth").val()!=undefined){
-			layer.open({
-				content : $(".toauth").val(),
-				skin : 'msg',
-				time : 2
-			});
-		}else{
-		var data = {"goodsid" : goodsid,
-				"goodsName":$(".goodsName").val()};
-		var str = JSON.stringify(data);
-		WebViewJavascriptBridge.callHandler('iostoyuyue', str, function() {
-		});
-		return false;
-		}
-	};
+		var data = {
+				"goodsid" : goodsid,
+				"goodsName":$(".goodsName").val()/*,
+				"isauth" : $(".toauth").val()*/
+				};
+				var str = JSON.stringify(data);
+				WebViewJavascriptBridge.callHandler('iostoyuyue', str, function() {
+				});
+				return false;
+};
 
 	// 试样
 	function iosshiyang() {
