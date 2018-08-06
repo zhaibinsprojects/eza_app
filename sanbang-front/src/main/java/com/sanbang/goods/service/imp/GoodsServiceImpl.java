@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
@@ -916,16 +918,15 @@ public class GoodsServiceImpl implements GoodsService{
 		try {
 			goodCarCount = ezs_goodscartMapper.getGoodCarNumByUser(queryCondition);
 			goodCarInfoList = this.ezs_goodscartMapper.selectByUserId(queryCondition);
+			mmp.put("goodCarCount", goodCarCount);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("Msg", "查询成功");
-				mmp.put("goodCarCount", goodCarCount);
 			}else{
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "购物车没有数据");
-				mmp.put("goodCarCount", 0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1073,10 +1074,9 @@ public class GoodsServiceImpl implements GoodsService{
 		HttpRequestParam httpParam = new HttpRequestParam();
 		try {
 			httpParam.addUrlParams(new BasicNameValuePair("goodsid",String.valueOf(goodsid)));
-			
 				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
 				Map<String, Object> mv = new HashMap<>();
-				mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
+				//mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
 				result.setObj(mv);
 				result.setSuccess(true);
 				result.setMsg("请求成功");

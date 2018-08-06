@@ -53,6 +53,8 @@ function androidtophone() {
 function androidloadpdf() {
 	
 	$(".textOverflow_yzs").click(function() {
+		if(pdfname==''||pdfname==null)
+			return false;
 		var res=cppdf(pdfid);
 		if(!res){
 			layer.open({

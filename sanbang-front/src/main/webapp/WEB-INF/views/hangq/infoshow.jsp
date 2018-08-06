@@ -16,9 +16,9 @@
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
+<link rel="stylesheet" href="front/resource/script/layer/mobile/need/layer.css" />
 <script type="text/javascript" src="front/resource/js/hangq/hangqindex.js"></script>
-<script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
+<!-- <script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script> -->
 <style type="text/css">
 /*设置文档中图片显示样式 */
 .textOverflow_yzs img {

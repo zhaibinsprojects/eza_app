@@ -219,7 +219,6 @@ public class HomeH5PriceConditionController {
 			//展示价格评析
 			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds2(Long.valueOf(12),ecId,currentPage,pagesize);
 			//查询二级目录
-			List<ezs_column> columnListTemp = new ArrayList<>();
 			List<ezs_column> columnList = this.columnMapper.getSecondThemeByFirstTheme(Long.valueOf(12));
 			resultMap.put("kinds", "priceAnalyse");
 			resultMap.put("columnList", columnList);
