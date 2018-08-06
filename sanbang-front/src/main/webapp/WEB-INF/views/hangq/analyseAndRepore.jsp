@@ -35,11 +35,22 @@
     </div> 
     <!-- 显示标题 -->
     <div class="ezsm-normal-tab" style="z-index:auto;margin-top:4%; width: 100%">
-		<ul>
+		<ul style="width: 100%;">
 			<li id="0" class="ezsm-normal-tab-sel">全部</li>
-			<c:forEach var="item" items="${resultMap.columnList}">
-				<li id="${item.id}">${item.name}</li>
-			</c:forEach>
+			<c:choose>
+				<c:when test="${resultMap.kinds=='priceAnalyse'}">
+					<c:forEach var="item" items="${resultMap.columnList}" varStatus="i">
+						<c:if test="${i.index < 2}">
+							<li id="${item.id}">${item.name}</li>
+						</c:if>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="item" items="${resultMap.columnList}" varStatus="i">
+						<li id="${item.id}">${item.name}</li>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
 		</ul>
 	</div>
   <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 22%;">
@@ -74,9 +85,9 @@ $(document).ready(function(){
 })
 $(function(){
 			$(".ezsm-normal-tab ul li").each(function(){
-				var width_li = $(this).width()+36;
+				/* var width_li = $(this).width()+36;
 				var width_ul = $(".ezsm-normal-tab ul").width();
-				$(".ezsm-normal-tab ul").css("width",(width_li+width_ul)+"px")
+				$(".ezsm-normal-tab ul").css("width",(width_li+width_ul)+"px") */
 			});
 			$(".ezsm-normal-tab ul li").click(function(){
 				$(".ezsm-normal-tab ul li").removeClass("ezsm-normal-tab-sel");

@@ -2,7 +2,7 @@
 .aicon_yzs{ width:100%; display:block; height:40px; background:url(../../img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:16px; color:#fff; text-indent:20px;}
 .secsty_yzs{ margin-bottom:10px; background-color:#fff;border-bottom:1px solid #e5e5e5; border-top:1px solid #e5e5e5; height:auto; width:100%;}
 .hTwoFater_yzs{ height:28px; border-bottom:1px solid #e5e5e5; padding:12px 6px 0 12px;}
-.hTwoFater_yzs h2{ height:16px; line-height:16px;  border-left:5px solid #00897c; padding-left:8px; background:url(../../../img/right_icon.png) right center no-repeat; background-size:7px 12px;}
+.hTwoFater_yzs h2{ height:16px; line-height:16px;  border-left:5px solid #00897c; padding-left:8px;/*  background:url(/front/resource/img/right_icon.png) right center no-repeat */; background-size:7px 12px;}
 .hTwoFater_yzs h2 span{font-size:16px; color:#00897c; font-weight:bold; float:left; margin-top:1px;}
 .text_yzs{ margin-left:12px; padding:8px 6px 12px 0; border-bottom:1px solid #e5e5e5;}
 .text_yzs:last-child{border:none;}

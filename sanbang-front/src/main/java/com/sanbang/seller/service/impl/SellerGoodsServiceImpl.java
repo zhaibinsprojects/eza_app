@@ -406,12 +406,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			}
 			return result;
 		}
-		if (Tools.isEmpty(validity)) {
+		/*if (Tools.isEmpty(validity)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请输入货品有效期");
 			return result;
-		}
+		}*/
 		if (Tools.isEmpty(inventory)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);

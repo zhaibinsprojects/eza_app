@@ -6,7 +6,8 @@
 		<script type="text/javascript" src="resource/script/jquery-1.7.1.min.js"></script>    
   </head>
 	<style type="text/css">
-		html,body{
+		html,
+		body {
 			margin: 0;
 			padding: 0;
 			background-color: #fff;
@@ -14,59 +15,139 @@
 			min-height: 100%;
 			text-align: center;
 		}
-		html{
+		
+		html {
 			background: url(resource/img/download_bg2.png) transparent left bottom no-repeat;
 			background-size: 70%;
-		}		
-		body{
+		}
+		
+		body {
 			background: url(resource/img/download_bg1.png) transparent right top no-repeat;
 			background-size: 70%;
 		}
-		.downloadlog{max-width: 700px;width: 100%;margin: 70px auto 80px}
-		.downloadBtn{max-width: 650px;width: 75%;}
-		/*手机*/
-		@media screen and (max-width: 767px) {
-			
+		
+		.downloadlog {
+			max-width: 700px;
+			width: 100%;
+			margin: 70px auto 80px
 		}
+		
+		.downloadBtn {
+			max-width: 650px;
+			width: 75%;
+		}
+		
+		.layer {
+			background-color: rgba(0, 0, 0, 0.5);
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+		
+		.router {
+			background-color: rgba(255, 255, 255, 0.9);
+			background: url(resource/img/download_link.png) rgba(255, 255, 255, 0.9) 95% 5px no-repeat;
+			background-size: 17%;
+			height: 30%;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			font-size: 18px;
+			color: #222222;
+			text-align: center;
+			display: -webkit-flex; /* Safari */
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.router span {
+			color: #0f7468;
+		}
+		/*手机*/
+		
+		@media screen and (max-width: 767px) {}
 		/*平板*/
+		
 		@media screen and (min-width: 767px) {
-			html,body{background-size: 50%;}
-			.downloadlog{margin: 40px auto 40px}
+			html,
+			body {
+				background-size: 50%;
+			}
+			.downloadlog {
+				margin: 40px auto 40px
+			}
 		}
 		/*中等屏幕*/
+		
 		@media screen and (min-width: 992px) {
-			html,body{background-size: 50%;}
-			.downloadlog{margin: 40px auto 40px}
+			html,
+			body {
+				background-size: 50%;
+			}
+			.downloadlog {
+				margin: 40px auto 40px
+			}
 		}
 		/*大屏幕*/
+		
 		@media screen and (min-width: 1200px) {
-			html,body{background-size: 50%;}
-			.downloadlog{margin: 50px auto 50px}
+			html,
+			body {
+				background-size: 50%;
+			}
+			.downloadlog {
+				margin: 50px auto 50px
+			}
 		}
 		/* iphone x */
-		@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3){ 
-			.downloadlog{margin: 100px auto 120px}
+		
+		@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+			.downloadlog {
+				margin: 100px auto 120px
 			}
-			/*宽屏*/
+		}
+		/*宽屏*/
+		
 		@media screen and (min-width: 768px) and (max-height:900px) {
-			html,body{background-size: 50%;}
-			.downloadlog{width: 40%;margin: 40px auto 40px}
-			.downloadBtn{width:30%;}
+			html,
+			body {
+				background-size: 50%;
+			}
+			.downloadlog {
+				width: 40%;
+				margin: 40px auto 40px
+			}
+			.downloadBtn {
+				width: 30%;
+			}
 		}
 	</style>
 	<body>
 		<img src="resource/img/download_logo.png" class="downloadlog" name=""/>
-		<div >
+		<div style="    margin-top: 15%;">
 			<a href="javascript:;"><img src="resource/img/download_btn.png" class="downloadBtn"/></a>
+		</div>
+		<div class="layer" style="display: none;">
+			<div class="router">
+				<div style="font-size: 50px;color: #222222;font-weight: bold;">链接打不开？</div>
+				<div style="font-size: 28px;">由于微信限制，请点击右上角<br>选择<span>“在浏览器中打开”</span></div>
+			</div>
 		</div>
 	</body>
 	
 	<script>
 	$(document).ready(function(){
+		var ua = window.navigator.userAgent.toLowerCase(); 
+		if(ua.match(/MicroMessenger/i) != 'micromessenger'){ 
+			$('.layer').fadeIn();
+		}else{ 
 		var u = navigator.userAgent; // 获取用户设备
 		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 		if (isIOS) {
-			$(".downloadBtn").attr("name","http://m.ezaisheng.com/front/app/version/download.htm");
+			 $(".downloadBtn").attr("name","http://m.ezaisheng.com/front"); 
 		} else {
 			$(".downloadBtn").attr("name","http://m.ezaisheng.com/front/app/version/download.htm");
 		}
@@ -75,7 +156,9 @@
 			var url=$(".downloadBtn").attr("name");
 			window.location.href=url;
 		})
+		} 
 	})
+	
 	</script>
 	
 </html>
