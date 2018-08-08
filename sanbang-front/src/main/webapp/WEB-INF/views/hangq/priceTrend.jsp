@@ -26,16 +26,10 @@
 <link href="front/resource/css/newAddcss/mui.poppicker.css" rel="stylesheet" />
 <script type="text/javascript" src="front/resource/js/newAddjs/pricezsDetail.js"></script>
  <script src="front/resource/js/highcharts.js"></script>
- <style type="text/css">
-  .highcharts-root {
-	    width: 90%;
-	    height: 86%;
-	}
- </style>
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
   <!--实时报价--->
-    <section class="secsty_yzs">
+    <section class="secsty_yzs" style="height:50%">
     <div class="hTwoFater_yzs">
       <h2><span>价格趋势</span></h2>
     <nav class="navAll_yzs" style="margin-top: 3%;margin-left: -5%; margin-right: -5%;">
@@ -47,7 +41,7 @@
     </ul>
   	</nav>
     </div>
-    <div id="container" class="nedHiCha_yzs" style="min-width: 95%;height:50%;"> 
+    <div id="container" class="nedHiCha_yzs" style="min-width: 95%;height:80%;"> 
     	<!-- <div id="main" style="width: 90%;height:40%;"></div> -->
     </div>
   </section>
