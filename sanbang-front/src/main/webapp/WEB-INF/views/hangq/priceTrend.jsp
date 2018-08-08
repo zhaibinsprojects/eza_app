@@ -32,7 +32,7 @@
     <section class="secsty_yzs" style="height:50%">
     <div class="hTwoFater_yzs">
       <h2><span>价格趋势</span></h2>
-    <nav class="navAll_yzs" style="margin-top: 3%;margin-left: -5%; margin-right: -5%;">
+    <nav class="navAll_yzs" style="margin-top: 3%;/* margin-left: -5%; margin-right: -5%; */">
   	<ul class="nav_ulsty_yzs">
     	<li  id="showCityPicker" style="width: 25%;"><a id="cityResult" href="javascript:;">山东</a></li>
         <li id="showUserPicker" style="width: 25%;"><a id="userResult" href="javascript:;">品类</a></li>
