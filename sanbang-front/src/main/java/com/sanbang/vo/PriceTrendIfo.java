@@ -18,6 +18,8 @@ public class PriceTrendIfo extends ezs_price_trend {
 	//成交日期
 	private String dealDate;
 	//涨幅
+	private Double increaseValue;
+	
 	private String sandByOne;
 	//品类名称
 	private String sandBytwo;
@@ -109,6 +111,14 @@ public class PriceTrendIfo extends ezs_price_trend {
     }
 
 
+	public Double getIncreaseValue() {
+		return increaseValue;
+	}
+
+	public void setIncreaseValue(Double increaseValue) {
+		this.increaseValue = increaseValue;
+	}
+    
 
     public Integer getPrice_type() {
         return price_type;

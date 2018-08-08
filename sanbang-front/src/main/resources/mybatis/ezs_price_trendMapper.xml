@@ -639,29 +639,29 @@
 	(
 	select IFNULL(AVG(p.price),0)
 	from ezs_price_trend p where p.type = '3' and p.goodClass_id = a.goodClass_id and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
-	<trim prefix=" and " suffix=" " suffixOverrides=" and ">
+	<!-- <trim prefix=" and " suffix=" " suffixOverrides=" and "> -->
       <!-- <if test="kindId != null" >
         p.goodClass_id = #{kindId}
       </if> -->
       <if test="colorId != null" >
-        p.color_id = #{colorId}
+        and p.color_id = #{colorId}
       </if>
       <if test="formId != null" >
-        p.form_id = #{formId}
+        and p.form_id = #{formId}
       </if>
       <if test="source != null" >
-        p.date_from = #{source}
+        and p.date_from = #{source}
       </if>
       <if test="purpose != null" >
-        p.purpose = #{purpose}
+        and p.purpose = #{purpose}
       </if>
       <if test="burning != null" >
-        p.burning = #{burning}
+        and p.burning = #{burning}
       </if>
       <if test="protection != null" >
-        g.protection = #{protection}
+        and g.protection = #{protection}
       </if>
-    </trim>
+    <!-- </trim> -->
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
 	) prePrice
 	from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass_id = gc.id LEFT JOIN ezs_dict e1 on a.color_id = e1.id LEFT JOIN ezs_dict e2 on a.form_id = e2.id

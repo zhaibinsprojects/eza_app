@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sanbang.bean.ezs_area;
@@ -124,10 +125,168 @@ public class HomeH5PriceConditionController {
 		
 		return view+"/hangqindex";
 	}
+	//获取areaId的所有子标签（包含本标签）
+	public List<Long> getAllChildrenAreaIDs(Long areaId){
+		//获取相关地址ID
+		List<Long> areaIdsList = new ArrayList<>();
+		Map<String, Object> areaIdsMap = null;
+		areaIdsMap = this.addressService.getAllChildID(areaId);
+		Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+		if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_area> areaListTemp =new ArrayList<>();
+			areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+			for (ezs_area tarea : areaListTemp) {
+				areaIdsList.add(tarea.getId());
+			}
+			//return areaIdsList;
+		}
+		return areaIdsList;
+	}
 	
 	@RequestMapping(value="/getPriceTrendcyShow")
 	@ResponseBody
 	public Object getPriceTrendcyShow(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="currentPage",defaultValue="1") int pageno,
+			@RequestParam(name="kindId",defaultValue="1") String kindId,
+			@RequestParam(name="areaId",required=false) Long areaId,
+			@RequestParam(name="formId",required=false) Long formId,
+			@RequestParam(name="colorId",required=false) Long colorId ){
+		List<String> dateList = new ArrayList<>();
+		JSONObject json=new JSONObject();
+		Series seriesVo = new Series();
+		List<BigDecimal> priceList = new ArrayList<>();
+		Map<String,Object> mmp = new HashMap<>();
+		Map<String, Object> tMp = new HashMap<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+		//参数传递
+		tMp.clear();
+		tMp.put("kindId", kindId);
+		tMp.put("formId", formId);
+		tMp.put("colorId", colorId);
+		//获取地址列表查询条件
+		List<Long> areaIds = getAllChildrenAreaIDs(areaId);
+		if(areaIds.size()>0)
+			tMp.put("areaIds", areaIds);
+		//修改为取近一个月数据
+		mmp = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
+			
+			if(plist.size()<=0){
+				try {
+		        	response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write("");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//return null;
+			}
+			for (PriceTrendIfo priceTrendIfo : plist) {
+				DecimalFormat df = new DecimalFormat("0.000");
+				DecimalFormat dftwo = new DecimalFormat("0.00%");
+				priceTrendIfo.setCurrentAVGPrice(Double.valueOf(df.format(priceTrendIfo.getCurrentAVGPrice())));
+				priceTrendIfo.setSandByOne(dftwo.format(priceTrendIfo.getIncreaseValue()));
+				//priceList.add(BigDecimal.valueOf(priceTrendIfo.getCurrentAVGPrice()));
+				priceList.add(new BigDecimal(df.format(priceTrendIfo.getCurrentAVGPrice())));
+				try {
+					Date date = sdf.parse(priceTrendIfo.getDealDate());
+					priceTrendIfo.setDealDate(sdf2.format(date));
+					dateList.add(sdf2.format(date));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			ezs_goods_class goodsClass = goodsClassMapper.selectByPrimaryKey(Long.valueOf(kindId));
+			//对列表进行转向处理
+			Collections.reverse(priceList);
+			Collections.reverse(dateList);
+			seriesVo.setData(priceList);
+			seriesVo.setName(goodsClass.getName());
+	        json.put("name", dateList);
+	        json.put("data", seriesVo);
+	        json.put("plist", plist);
+	        try {
+	        	response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write(json.toString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			//无数据
+			try {
+	        	response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write("");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	//仅挑转到指定页面
+	@RequestMapping(value="/turnToPriceMess")
+	public String turnToPriceMess(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="kindId",defaultValue="1") String kindId,
+			@RequestParam(name="currentPage",defaultValue="1") int pageno,
+			@RequestParam(name="areaId",defaultValue="1") Long areaId,Model model){
+		model.addAttribute("kindId", kindId);
+		model.addAttribute("areaId", areaId);
+		return view+"priceTrend";
+	}
+	//通过Ajax异步刷新 
+	/*@RequestMapping(value="/turnToPriceTrend")
+	public Object turnToPriceTrend(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="currentPage",defaultValue="1") int pageno,
+			@RequestParam(name="kindId",defaultValue="1") String kindId,
+			@RequestParam(name="areaId",defaultValue="1") Long areaId,
+			@RequestParam(name="formId",defaultValue="1") Long formId,
+			@RequestParam(name="colorId",defaultValue="1") Long colorId,
+			Model  model){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+		//返回结果集
+		Map<String,Object> resultMap = new HashMap<>();
+		//参数
+		Map<String,Object> tMp = new HashMap<>();
+		Map<String,Object> mmp = new HashMap<>();
+		//参数传递
+		tMp.put("kindId", kindId);
+		System.out.println("kindId------------------"+kindId);
+		//tMp.put("areaIds", new String[] {areaId.toString()});
+		//修改为取近一个月数据
+		mmp = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> plist = (List<PriceTrendIfo>) mmp.get("Obj");
+			for (PriceTrendIfo priceTrendIfo : plist) {
+				DecimalFormat df = new DecimalFormat("0.000");
+				priceTrendIfo.setCurrentAVGPrice(Double.valueOf(df.format(priceTrendIfo.getCurrentAVGPrice())));
+				Date date;
+				try {
+					date = sdf.parse(priceTrendIfo.getDealDate());
+					priceTrendIfo.setDealDate(sdf2.format(date));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			resultMap.put("Obj", plist);
+		}
+		//resultMap.put("goodClassId", kindId);
+		//resultMap.put("areaId", areaId);
+		model.addAttribute("resultMap",resultMap);
+		return view+"priceTrend";
+	}*/
+	
+	@RequestMapping(value="/getPriceTrend")
+	@ResponseBody
+	public Object getPriceTrend(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(name="kindId",defaultValue="1") String kindId,
 			@RequestParam(name="currentPage",defaultValue="1") int pageno){
 		List<String> dateList = new ArrayList<>();

@@ -92,7 +92,7 @@
   <!---价格走势-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>价格走势</span>
+      <h2><span>价格走势</span><span id="priceTrend" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span>
       <!-- <span id="priceAnalyse" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span> -->
       </h2>
     </div>
@@ -119,13 +119,14 @@ $(document).ready(function(){
 	$(".hTwoFater_yzs").find("span:eq(1)").click(function(){
 		if($(this).attr("id")=="priceInTime")
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1&kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
-		else
+		else if($(this).attr("id")=="priceAnalyse"||$(this).attr("id")=="report")
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";
+		else if($(this).attr("id")=="priceTrend")
+			window.location.href=baseurl+"/front/app/home/turnToPriceMess.htm?kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
 	})
 })
 </script>
 <script type="text/javascript">
-
 $(document).ready(function(){
 	var baojia_goodclass = $('#goodclassid').val();
 	getdate(baojia_goodclass);
