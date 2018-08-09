@@ -1508,4 +1508,6 @@ public class CommUtil {
 		return b1.subtract(b2).doubleValue();
 	}
 	
+	
+	
 }

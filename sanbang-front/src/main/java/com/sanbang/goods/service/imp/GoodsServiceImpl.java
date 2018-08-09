@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_customized;
@@ -423,6 +425,7 @@ public class GoodsServiceImpl implements GoodsService{
 		ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
 		List<ezs_goodscart> goodsCartList = this.ezs_goodscartMapper.selectByCondition(queryCondition);
 		try {
+			//此if分支条件应该可以删除 2018-08-08 可保留初步校验 不同步及修改库存
 			if(goodsCartList!=null&&goodsCartList.size()>0){
 				double tCount = goodsCartList.get(0).getCount()+goodsCart.getCount();
 				if(tCount>good.getInventory()){
@@ -432,6 +435,7 @@ public class GoodsServiceImpl implements GoodsService{
 					return mmp;
 				}
 			}
+			//一商品一提交购物车，goodsCart不会出现多个商品现象
 			if(goodsCartList!=null&&goodsCartList.size()>0){
 				//若存在
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车存在选购商品记录--修改记录beginning");
@@ -916,16 +920,15 @@ public class GoodsServiceImpl implements GoodsService{
 		try {
 			goodCarCount = ezs_goodscartMapper.getGoodCarNumByUser(queryCondition);
 			goodCarInfoList = this.ezs_goodscartMapper.selectByUserId(queryCondition);
+			mmp.put("goodCarCount", goodCarCount);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("Msg", "查询成功");
-				mmp.put("goodCarCount", goodCarCount);
 			}else{
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "购物车没有数据");
-				mmp.put("goodCarCount", 0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1072,8 +1075,7 @@ public class GoodsServiceImpl implements GoodsService{
 		net.sf.json.JSONObject callBackRet = null;
 		HttpRequestParam httpParam = new HttpRequestParam();
 		try {
-			httpParam.addUrlParams(new BasicNameValuePair("goodid",String.valueOf(goodsid)));
-			
+			httpParam.addUrlParams(new BasicNameValuePair("goodsid",String.valueOf(goodsid)));
 				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
 				Map<String, Object> mv = new HashMap<>();
 				mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
@@ -1109,8 +1111,10 @@ public class GoodsServiceImpl implements GoodsService{
 				if (object != null) {
 					// 现有真实库存量
 					log.info("实际库存。。。。。。。。。");
+					//库存单位转化，U8库存单位为Kg,本地为T
+					double iQuantity = getiQuantity(CommUtil.null2Double(object.getString("iQuantity")));
 					//double iQuantity = CommUtil.null2Double(object.getString("iQuantity"));
-					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+					double xaccount = StorkNumber(good,iQuantity);
 					if (xaccount > account) {
 						bool = true;
 					}else{
@@ -1125,12 +1129,14 @@ public class GoodsServiceImpl implements GoodsService{
 			} else {
 				// 供应商锁库
 				log.info("非自营商品，不访问U8库存信息。。。。。。。。。");
-				double xaccount = StorkNumber(good, good.getInventory());
+				//double xaccount = StorkNumber(good, good.getInventory());
+				double xaccount = good.getInventory();
 				if (xaccount >= account) {
 					bool = true;
 				}else{
 					//供货不足，更新现有库存量
-					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					//good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					good.setInventory(xaccount);
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}
@@ -1159,28 +1165,34 @@ public class GoodsServiceImpl implements GoodsService{
 				if (object != null) {
 					// 现有真实库存量
 					log.info("实际库存。。。。。。。。。");
-					double iQuantity = CommUtil.null2Double(object.getString("iQuantity"));
-					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+					//U8库存量
+					//库存单位转化，U8库存单位为Kg,本地为T
+					double iQuantity = getiQuantity(CommUtil.null2Double(object.getString("iQuantity")));
+					//double iQuantity = CommUtil.null2Double(object.getString("iQuantity"));
+					//实际可售量
+					double xaccount = StorkNumber(good,iQuantity);
 					if (xaccount > account) {
 						// 加入锁库库存
 						ezs_stock stock = new ezs_stock();
 						stock.setAddTime(new Date());
 						stock.setDeleteStatus(false);
 						stock.setGoodClass(2);
+						//U8库存量
 						stock.setiQuantity(iQuantity);
 						stock.setStatus(0);
+						//实际可售量-当前购买量=实际剩余量
 						stock.setmQuantity(CommUtil.sub(xaccount, account));
 						stock.setBuyNum(account);
 						stock.setOrderNo(orderFormNo);
 						stock.setGoodid(good.getId());
 						stockMapper.insert(stock);
-						// 减去商品库存
+						//更新为当前剩余量
 						good.setInventory(stock.getmQuantity());
 						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						log.debug("自营商品锁库成功！");
 						bool = true;
 					}else{
-						//供货不足，更新现有库存量
+						//供货不足，更新为实际可售量
 						good.setInventory(xaccount);
 						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						bool = false;
@@ -1190,9 +1202,9 @@ public class GoodsServiceImpl implements GoodsService{
 					return true;
 				}
 			} else {
-				// 供应商锁库
-				//double xaccount = good.getInventory();
-				double xaccount = StorkNumber(good,good.getInventory());
+				//非自营商品，按实际库存量计算，不用ezs_stock记录计算剩余量，但需要添加此记录
+				double xaccount = good.getInventory();
+				//double xaccount = StorkNumber(good,good.getInventory());
 				if (xaccount >= account) {
 					// 加入锁库库存
 					ezs_stock stock = new ezs_stock();
@@ -1200,20 +1212,23 @@ public class GoodsServiceImpl implements GoodsService{
 					stock.setDeleteStatus(false);
 					stock.setGoodClass(1);
 					stock.setStatus(0);
+					//全部更新为当前剩余量
 					stock.setiQuantity(CommUtil.sub(good.getInventory(), account));
 					stock.setmQuantity(CommUtil.sub(good.getInventory(), account));
 					stock.setGoodid(good.getId());
 					stock.setBuyNum(account);
 					stock.setOrderNo(orderFormNo);
 					stockMapper.insert(stock);
-					// 减去商品库存
+					// 减去商品库存（是否在此做差？）
 					good.setInventory(stock.getmQuantity());
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					log.debug("营业商品锁库成功！");
 					bool = true;
 				}else{
-					//更新现有库存量
-					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					//更新现有库存量（慎重是否可修为0）
+					//good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					//修改为当前可售量
+					good.setInventory(xaccount);
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					bool = false;
 				}
@@ -1222,6 +1237,16 @@ public class GoodsServiceImpl implements GoodsService{
 			throw e;
 		}
 		return bool;
+	}
+	
+	private double getiQuantity(double null2Double) {
+		double iQuantity = 0.0;
+		try {
+			iQuantity = CommUtil.div(null2Double, 1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return iQuantity;
 	}
 	/**
 	 * @author zhaibin
@@ -1422,9 +1447,11 @@ public class GoodsServiceImpl implements GoodsService{
 				JSONObject object = StockHelper.getStock(good.getGood_no(), "02");
 				if (object != null) {
 					log.info("实际库存。。。。。。。。。");
-					double xaccount = StorkNumber(good,CommUtil.null2Double(object.getString("iQuantity")));
+					//库存单位转化，U8库存单位为Kg,本地为T
+					double iQuantity = getiQuantity(CommUtil.null2Double(object.getString("iQuantity")));
+					double xaccount = StorkNumber(good,iQuantity);
 					if (xaccount > account) {
-						//更新下库存
+						//更新下库存(可售量)
 						good.setInventory(xaccount);
 						ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						bool = true;
@@ -1439,7 +1466,8 @@ public class GoodsServiceImpl implements GoodsService{
 			} else {
 				// 供应商锁库
 				log.info("非自营商品，不访问U8库存信息。。。。。。。。。");
-				double xaccount = StorkNumber(good, good.getInventory());
+				//double xaccount = StorkNumber(good, good.getInventory());
+				double xaccount = good.getInventory();
 				if (xaccount >= account) {
 					//校验不可更新本地库存
 					//good.setInventory(xaccount);
@@ -1447,7 +1475,7 @@ public class GoodsServiceImpl implements GoodsService{
 					bool = true;
 				}else{
 					//供货不足，本为校验-不更新库存
-					good.setInventory(xaccount>=0.0?xaccount:Double.valueOf(0));
+					good.setInventory(xaccount);
 					ezs_goodsMapper.updateByPrimaryKeySelective(good);
 				}
 			}

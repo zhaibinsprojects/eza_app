@@ -100,8 +100,8 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			/*mp.put("startPos", (currentPage - 1)*10);//每页起始位子
 			mp.put("pageSize", 10);//页面大小*/
 			//app 做页面展示调整
-			mp.put("startPos", (currentPage - 1)*pagesaize);
-			mp.put("pageSize", pagesaize);
+			//mp.put("startPos", (currentPage - 1)*pagesaize);
+			//mp.put("pageSize", pagesaize);
 			pList = this.priceTrendMapper.getPriceTrendcy(mp);			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -115,7 +115,9 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 				} catch (Exception e) {
 					increase = 0.00;
 				}
+				//涨幅
 				priceTrendIfo.setSandByOne(String.valueOf(increase));
+				priceTrendIfo.setIncreaseValue(increase);
 				ppList.add(priceTrendIfo);
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

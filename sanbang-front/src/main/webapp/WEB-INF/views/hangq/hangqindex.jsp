@@ -6,6 +6,7 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
+<!-- <base href="http://10.10.10.232/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -91,8 +92,8 @@
   <!---价格走势-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>价格走势</span>
-      <span id="getPriceMove" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span>
+      <h2><span>价格走势</span><span id="priceTrend" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span>
+      <!-- <span id="priceAnalyse" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span> -->
       </h2>
     </div>
     <div id="container" class="nedHiCha_yzs" style="    min-width: 95%;"> 
@@ -107,6 +108,7 @@
 
 <script type="text/javascript">
 var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.232/"; */
 var baojia_goodclass = $('#goodclassid').val();
 var baojia_areaId = $('#areaid').val();
 $(document).ready(function(){
@@ -119,16 +121,16 @@ $(document).ready(function(){
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1&kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
 		}else if($(this).attr("id")=="getPriceMove"){
 			window.location.href=baseurl+"/front/app/home/getPriceMove.htm";
-		}else{
-			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";
-			
+		}else if($(this).attr("id")=="priceAnalyse"||$(this).attr("id")=="report"){
+			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";}
+		else if($(this).attr("id")=="priceTrend"){
+			window.location.href=baseurl+"/front/app/home/turnToPriceMess.htm?kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
 		}
 			
 	})
 })
 </script>
 <script type="text/javascript">
-
 $(document).ready(function(){
 	var baojia_goodclass = $('#goodclassid').val();
 	getdate(baojia_goodclass);
@@ -154,7 +156,6 @@ function getdate(classid){
 		   	echartInit(xdata, name, data);
 		  },
 		  error : function(errorMsg) {
-	            
 	      },
 		  dataType : "json"
 		});

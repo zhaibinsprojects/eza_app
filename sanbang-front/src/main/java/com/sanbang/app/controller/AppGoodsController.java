@@ -841,7 +841,7 @@ public class AppGoodsController {
 	
 	
 	/**
-	 * 样品下订单
+	 * 样品下订单(未启用)
 	 * @author zhaibin
 	 * @param request
 	 * @param response
@@ -1110,7 +1110,7 @@ public class AppGoodsController {
 		return rs;
 	}
 	/**
-	 * 立即购买(样品)(不用)
+	 * 立即购买(样品)(未启用)
 	 * @author zhaibin
 	 * @param request
 	 * @param response
