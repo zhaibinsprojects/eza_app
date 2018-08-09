@@ -93,7 +93,7 @@ public class AndroidVersionController {
 			return; } 
 		OutputStream out = null; 
 		try { 
-			response.reset(); response.setContentType("application/octet-stream; charset=utf-8"); 
+			response.reset(); response.setContentType("application/vnd.android.package-archive"); 
 			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
 			response.setContentLength(bin.available());
 			out = response.getOutputStream(); 

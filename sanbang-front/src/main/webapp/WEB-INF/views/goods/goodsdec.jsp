@@ -27,20 +27,20 @@
 		<div class="ezsm-shopdesc-tit">重要参数</div>
 		<div class="ezsm-shopdesc-table">
 			<table cellspacing="0">
-				<tr> <td>密度<br><span>(g/m³)</span></td> <td>${good.density}</td> </tr>
-				<tr> <td>悬臂梁缺口冲击<br><span>(KJ/m²)</span></td> <td>${good.cantilever}</td> </tr>
-				<tr> <td>简支梁缺口冲击<br><span>(KJ/m²)</span></td> <td>${good.freely}</td> </tr>
-				<tr> <td>熔融指数<br><span>(g/10min)</span></td> <td>${good.lipolysis}</td> </tr>
-				<tr> <td>灰分<br><span>(%)</span></td> <td>${good.ash}</td> </tr>
-				<tr> <td>水分<br><span>(%)</span></td> <td>${good.water}</td> </tr>
-				<tr> <td>拉伸强度<br><span>(MPa)</span></td> <td>${good.tensile}</td> </tr>
-				<tr> <td>断裂伸长率<br><span>(%)</span></td> <td>${good.crack}</td> </tr>
-				<tr> <td>弯曲强度<br><span>(MPa)</span></td> <td>${good.bending}</td> </tr>
-				<tr> <td>弯曲模量<br><span>(MPa)</span></td> <td>${good.flexural}</td> </tr>
-				<tr> <td>燃烧等级</td> <td>${good.burning}</td> </tr>
+				<tr> <td>密度<br><span>(g/m³)</span></td> <td>${goodinfo.density}~${goodinfo.density}</td> </tr>
+				<tr> <td>悬臂梁缺口冲击<br><span>(KJ/m²)</span></td> <td>${goodinfo.cantilever}~${goodinfo.cantilever}</td> </tr>
+				<tr> <td>简支梁缺口冲击<br><span>(KJ/m²)</span></td> <td>${goodinfo.freely}~${goodinfo.freely}</td> </tr>
+				<tr> <td>熔融指数<br><span>(g/10min)</span></td> <td>${goodinfo.lipolysis}~${goodinfo.lipolysis}</td> </tr>
+				<tr> <td>灰分<br><span>(%)</span></td> <td>${goodinfo.ash}~${goodinfo.ash}</td> </tr>
+				<tr> <td>水分<br><span>(%)</span></td> <td>${goodinfo.water}~${goodinfo.water}</td> </tr>
+				<tr> <td>拉伸强度<br><span>(MPa)</span></td> <td>${goodinfo.tensile}~${goodinfo.tensile}</td> </tr>
+				<tr> <td>断裂伸长率<br><span>(%)</span></td> <td>${goodinfo.crack}~${goodinfo.crack}</td> </tr>
+				<tr> <td>弯曲强度<br><span>(MPa)</span></td> <td>${goodinfo.bending}~${goodinfo.bending}</td> </tr>
+				<tr> <td>弯曲模量<br><span>(MPa)</span></td> <td>${goodinfo.flexural}~${goodinfo.flexural2}</td> </tr>
+				<tr> <td>燃烧等级</td> <td>${good.burning}~${goodinfo.burning}</td> </tr>
 				<tr> <td>是否环保</td> <td>
 				<c:choose>
-				<c:when test="${good.protection eq true}">
+				<c:when test="${goodinfo.protection eq true}">
 					是
 				</c:when>
 				<c:otherwise>
@@ -53,10 +53,10 @@
 	</div>
 	<div class="blank10"></div>
 	<div class="ezsm-shopdesc-pannel">
-		<div class="ezsm-shopdesc-tit">详细描述</div>
-		<div class="ezsm-shopdesc-info">
+		<!-- <div class="ezsm-shopdesc-tit">详细描述</div> -->
+		<%-- <div class="ezsm-shopdesc-info">
 			${good.content}
-		</div>
+		</div> --%>
 	</div>
 	
 	<div class="ezsm-orderres-tit"><img src="front/resource/img/tit_002.png" /></div>
@@ -66,9 +66,11 @@
 				<c:if test="${(status.index)%2 eq 0}">
 				<tr> 
 				</c:if>
-					<td>
+					<td style=" height: 200px;">
 						<div class="ezsm-sameshop-box">
-							<div class="ezsm-sameshop-img" onclick="window.location.href='${baseurl}app/goods/toGoodsShow.htm?id=${cg.id}'"><img  src="${cg.path}"/></div>
+							<div class="ezsm-sameshop-img" onclick="window.location.href='${baseurl}app/goods/toGoodsShow.htm?id=${cg.id}'">
+							<img style="height: 70%;" src="${cg.path}"/>
+							</div>
 							<div class="ezsm-sameshop-tit">${cg.name}</div>
 							<div class="ezsm-sameshop-price">${cg.price}元/吨<span>${cg.inventory}</span></div>
 						</div>

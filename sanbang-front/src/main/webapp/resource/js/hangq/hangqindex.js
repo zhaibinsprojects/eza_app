@@ -53,6 +53,9 @@ function androidtophone() {
 function androidloadpdf() {
 	
 	$(".textOverflow_yzs").click(function() {
+		if(pdfname==""||pdfname==null){
+			return false;
+		}
 		var res=cppdf(pdfid);
 		if(!res){
 			layer.open({
@@ -98,6 +101,9 @@ function iostophone() {
 function iosloadpdf() {
 	
 	$(".textOverflow_yzs").click(function() {
+		if(pdfname==""||pdfname==null){
+			return false;
+		}
 		$("#fileName").val(pdfname);
 		$("#theForm2").submit();
 		return false;
@@ -107,6 +113,9 @@ function iosloadpdf() {
 
 //查看文件
 function  cppdf(id){
+	if(pdfname==""||pdfname==null){
+		return false;
+	}
 	var res=false;
 	$.ajax({
 		type : "post",

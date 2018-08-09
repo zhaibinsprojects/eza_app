@@ -5,10 +5,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class ezs_goods  implements Serializable{
-    /**
+
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2474604456549766873L;
+	private static final long serialVersionUID = 6010878233246195069L;
 
 	private Long id;
 
@@ -17,6 +18,8 @@ public class ezs_goods  implements Serializable{
     private Boolean deleteStatus;
 
     private String addess;
+
+    private String addess2;
 
     private String ash;
 
@@ -63,8 +66,6 @@ public class ezs_goods  implements Serializable{
     private String name;
 
     private BigDecimal price;
-    
-    private BigDecimal saleprice;
 
     private Boolean protection;
 
@@ -77,9 +78,7 @@ public class ezs_goods  implements Serializable{
     private String seo_description;
 
     private String source;
-    /**
-     * 商品状态1.下架 2.正常上架
-     */
+
     private Integer status;
 
     private String tensile;
@@ -112,9 +111,39 @@ public class ezs_goods  implements Serializable{
 
     private Long util_id;
 
-    private String addess2;
-    
-    private String lastuptime;
+    private Long supplier_id;
+
+    private String ash2;
+
+    private String bending2;
+
+    private String burning2;
+
+    private String cantilever2;
+
+    private String crack2;
+
+    private String density2;
+
+    private String flexural2;
+
+    private String freely2;
+
+    private String lipolysis2;
+
+    private BigDecimal saleprice;
+
+    private String tensile2;
+
+    private String water2;
+
+    private Integer review_status;
+
+    private String good_num;
+
+    private Integer manage_status;
+
+    private Integer protection_v;
 
     public Long getId() {
         return id;
@@ -146,6 +175,14 @@ public class ezs_goods  implements Serializable{
 
     public void setAddess(String addess) {
         this.addess = addess == null ? null : addess.trim();
+    }
+
+    public String getAddess2() {
+        return addess2;
+    }
+
+    public void setAddess2(String addess2) {
+        this.addess2 = addess2 == null ? null : addess2.trim();
     }
 
     public String getAsh() {
@@ -332,15 +369,7 @@ public class ezs_goods  implements Serializable{
         this.price = price;
     }
 
-    public BigDecimal getSaleprice() {
-		return saleprice;
-	}
-
-	public void setSaleprice(BigDecimal saleprice) {
-		this.saleprice = saleprice;
-	}
-
-	public Boolean getProtection() {
+    public Boolean getProtection() {
         return protection;
     }
 
@@ -516,40 +545,141 @@ public class ezs_goods  implements Serializable{
         this.util_id = util_id;
     }
 
-    public String getAddess2() {
-        return addess2;
+    public Long getSupplier_id() {
+        return supplier_id;
     }
 
-    public void setAddess2(String addess2) {
-        this.addess2 = addess2 == null ? null : addess2.trim();
+    public void setSupplier_id(Long supplier_id) {
+        this.supplier_id = supplier_id;
     }
 
-	public String getLastuptime() {
-		return lastuptime;
+    public String getAsh2() {
+        return ash2;
+    }
+
+    public void setAsh2(String ash2) {
+        this.ash2 = ash2 == null ? null : ash2.trim();
+    }
+
+    public String getBending2() {
+        return bending2;
+    }
+
+    public void setBending2(String bending2) {
+        this.bending2 = bending2 == null ? null : bending2.trim();
+    }
+
+    public String getBurning2() {
+        return burning2;
+    }
+
+    public void setBurning2(String burning2) {
+        this.burning2 = burning2 == null ? null : burning2.trim();
+    }
+
+    public String getCantilever2() {
+        return cantilever2;
+    }
+
+    public void setCantilever2(String cantilever2) {
+        this.cantilever2 = cantilever2 == null ? null : cantilever2.trim();
+    }
+
+    public String getCrack2() {
+        return crack2;
+    }
+
+    public void setCrack2(String crack2) {
+        this.crack2 = crack2 == null ? null : crack2.trim();
+    }
+
+    public String getDensity2() {
+        return density2;
+    }
+
+    public void setDensity2(String density2) {
+        this.density2 = density2 == null ? null : density2.trim();
+    }
+
+    public String getFlexural2() {
+        return flexural2;
+    }
+
+    public void setFlexural2(String flexural2) {
+        this.flexural2 = flexural2 == null ? null : flexural2.trim();
+    }
+
+    public String getFreely2() {
+        return freely2;
+    }
+
+    public void setFreely2(String freely2) {
+        this.freely2 = freely2 == null ? null : freely2.trim();
+    }
+
+    public String getLipolysis2() {
+        return lipolysis2;
+    }
+
+    public void setLipolysis2(String lipolysis2) {
+        this.lipolysis2 = lipolysis2 == null ? null : lipolysis2.trim();
+    }
+
+   
+
+    public BigDecimal getSaleprice() {
+		return saleprice;
 	}
 
-	public void setLastuptime(String lastuptime) {
-		this.lastuptime = lastuptime;
+	public void setSaleprice(BigDecimal saleprice) {
+		this.saleprice = saleprice;
 	}
 
-	@Override
-	public String toString() {
-		return "ezs_goods [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", addess=" + addess
-				+ ", ash=" + ash + ", bending=" + bending + ", burning=" + burning + ", cantilever=" + cantilever
-				+ ", click=" + click + ", cncl_num=" + cncl_num + ", collect=" + collect + ", content=" + content
-				+ ", crack=" + crack + ", density=" + density + ", flexural=" + flexural + ", freely=" + freely
-				+ ", good_no=" + good_no + ", good_self=" + good_self + ", goods_salenum=" + goods_salenum
-				+ ", inventory=" + inventory + ", keyword=" + keyword + ", lastModifyDate=" + lastModifyDate
-				+ ", lipolysis=" + lipolysis + ", lockStatus=" + lockStatus + ", memberLook=" + memberLook + ", name="
-				+ name + ", price=" + price + ", saleprice=" + saleprice + ", protection=" + protection + ", purpose="
-				+ purpose + ", recommend=" + recommend + ", recommend_time=" + recommend_time + ", seo_description="
-				+ seo_description + ", source=" + source + ", status=" + status + ", tensile=" + tensile + ", validity="
-				+ validity + ", water=" + water + ", area_id=" + area_id + ", classOfFinish_id=" + classOfFinish_id
-				+ ", color_id=" + color_id + ", form_id=" + form_id + ", goodClass_id=" + goodClass_id
-				+ ", goods_main_photo_id=" + goods_main_photo_id + ", logistics_id=" + logistics_id + ", quality_id="
-				+ quality_id + ", region_id=" + region_id + ", supply_id=" + supply_id + ", user_id=" + user_id
-				+ ", util_id=" + util_id + ", addess2=" + addess2 + ", lastuptime=" + lastuptime + "]";
-	}
-    
-    
+	public String getTensile2() {
+        return tensile2;
+    }
+
+    public void setTensile2(String tensile2) {
+        this.tensile2 = tensile2 == null ? null : tensile2.trim();
+    }
+
+    public String getWater2() {
+        return water2;
+    }
+
+    public void setWater2(String water2) {
+        this.water2 = water2 == null ? null : water2.trim();
+    }
+
+    public Integer getReview_status() {
+        return review_status;
+    }
+
+    public void setReview_status(Integer review_status) {
+        this.review_status = review_status;
+    }
+
+    public String getGood_num() {
+        return good_num;
+    }
+
+    public void setGood_num(String good_num) {
+        this.good_num = good_num == null ? null : good_num.trim();
+    }
+
+    public Integer getManage_status() {
+        return manage_status;
+    }
+
+    public void setManage_status(Integer manage_status) {
+        this.manage_status = manage_status;
+    }
+
+    public Integer getProtection_v() {
+        return protection_v;
+    }
+
+    public void setProtection_v(Integer protection_v) {
+        this.protection_v = protection_v;
+    }
 }

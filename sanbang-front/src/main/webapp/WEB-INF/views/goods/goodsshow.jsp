@@ -112,9 +112,16 @@
 	</div>
 	<div class="ezsm-mem-box-tit1">制作案例</div>
 	<div class="ezsm-shopdetail-case">
+	<c:choose>
+	<c:when test="${(not empty good.cartographys)&&(fn:length(good.cartographys) gt 0)}">
 		<c:forEach items="${good.cartographys}" var="cartographys">
 			<div class="ezsm-shopdetail-casebox"><img src="${cartographys.photo.path}"></div>
 		</c:forEach>
+	</c:when>
+	<c:otherwise>
+		     <h3 style="color: darkgrey;margin-left: 40%;margin-top: 5%;">暂无数据</h3>
+	</c:otherwise>
+	</c:choose>
 	</div>
 	<div class="blank10"></div>
 	<div class="ezsm-shopdetail-desctit">

@@ -18,7 +18,7 @@ public class BuyerReturnOrderServiceImpl implements BuyerReturnOrderService{
 
 	@Autowired
 	private  com.sanbang.dao.ezs_set_return_orderMapper ezs_set_return_orderMapper;
-	
+	@Autowired
 	private ezs_return_logisticsMapper   ezs_return_logisticsMapper;
 	
 	@Override
@@ -28,15 +28,9 @@ public class BuyerReturnOrderServiceImpl implements BuyerReturnOrderService{
 			if(pageNo<=0){
 				pageNo=1; 
 			}
+			int crtnum=ezs_set_return_orderMapper.returnOrderCountforBuyer(userid, (pageNo-1)*10);
 			List<ReturnOrderVO> list=ezs_set_return_orderMapper.returnOrderListforBuyer(userid, (pageNo-1)*10);
-			result.setMeta(new Page(pageNo, 10, 10*pageNo, 10*pageNo, 0, true,
-					true, true, true));
-			if (list.size() == 0) {
-				result.getMeta().setHasFirst(false);
-			}
-			if (pageNo == 1) {
-				result.getMeta().setHasPre(false);
-			}
+			result.setMeta(new Page(crtnum, 10));
 			result.setObj(list);
 			result.setSuccess(true);
 			result.setMsg("请求成功");
@@ -73,10 +67,17 @@ public class BuyerReturnOrderServiceImpl implements BuyerReturnOrderService{
 		Result result=Result.failure();
 		try {
 			ezs_return_logistics returnlogistics=ezs_return_logisticsMapper.selectReturnLogisticsForReturnNo(returnid);
-			result.setObj(returnlogistics);
-			result.setSuccess(true);
-			result.setMsg("请求成功");
-			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			if(null!=returnlogistics){
+				result.setSuccess(true);
+				result.setMsg("请求成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setObj(returnlogistics);
+			}else{
+				result.setObj(new ezs_return_logistics());
+				result.setSuccess(false);
+				result.setMsg("暂无数据");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

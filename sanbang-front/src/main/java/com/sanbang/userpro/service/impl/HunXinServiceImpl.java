@@ -15,6 +15,8 @@
 //import org.springframework.stereotype.Service;
 //
 //import com.alibaba.fastjson.JSONObject;
+//import com.sanbang.bean.ezs_huanxin;
+//import com.sanbang.dao.ezs_huanxinMapper;
 //import com.sanbang.userpro.service.HunXinService;
 //import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
 //
@@ -45,7 +47,7 @@
 //	private String hxbaseuri="https://a1.easemob.com/1140170718115940/ezaisheng/";
 //
 //	@Autowired
-//	UserProDao userProDao;
+//	private ezs_huanxinMapper ezs_huanxinMapper;
 //	
 //	@Override
 //	public void queryHuanxinToken(){
@@ -153,15 +155,15 @@
 //					if(jsonobjobj!=null&&jsonobjobj.has("uuid")){
 //						account=jsonobjobj.getString("uuid");
 //					}
-//					List<UserProInfo> userlistback=new ArrayList<>();
+//					List<ezs_huanxin> userlistback=new ArrayList<>();
 //					//单个注册
-//					UserProInfo upif=new UserProInfo();
+//					ezs_huanxin upif=new ezs_huanxin();
 //					upif.setUserid(userid);
 ////					upif.setUsername(userProInfo.getUsername());
 //					upif.setAccount(account);
 //					userlistback.add(upif);
-//					if(userProDao!=null){
-//						userProDao.updateUserYingYe(userlistback);
+//					if(ezs_huanxinMapper!=null){
+//						ezs_huanxinMapper.insertSelective(upif);
 //						log.info("更新用户环信id");
 //					}
 //				}
@@ -188,15 +190,15 @@
 //						if(jsonobjobj!=null&&jsonobjobj.has("uuid")){
 //							account=jsonobjobj.getString("uuid");
 //						}
-//						List<UserProInfo> userlistback=new ArrayList<>();
+//						List<ezs_huanxin> userlistback=new ArrayList<>();
 //						//单个注册
-//						UserProInfo upif=new UserProInfo();
+//						ezs_huanxin upif=new ezs_huanxin();
 //						upif.setUserid(userid);
 ////						upif.setUsername(userProInfo.getUsername());
 //						upif.setAccount(account);
 //						userlistback.add(upif);
-//						if(userProDao!=null){
-//							userProDao.updateUserYingYe(userlistback);
+//						if(ezs_huanxinMapper!=null){
+//							ezs_huanxinMapper.insertSelective(upif);
 //							log.info("更新用户环信id");
 //						}
 //					}
@@ -226,75 +228,78 @@
 //		
 //	}
 //	
-//	@Override
-//	@Async
+////	@Override
+////	@Async
 //	public void handlMemberData(){
-//		String pageNo="0";
-//		Short pageSize=40;
-//		UserProInfo userinfo=new UserProInfo();
-////		userinfo.setStatus((short) 4);
-//		userinfo.setGusersex(pageSize);
-////		userinfo.setGroupid((short) 6);
-//		String licensemark="";
-//		int totals=0;
-//		int totale=0;
-//		while(true){
-//			//取出数据，直到为空
-//			userinfo.setGuser(pageNo);
-//			List<UserProInfo> userlist=userProDao.queryusers(userinfo);
-//			List<UserProInfo> userlistback=new ArrayList<>();
-//			if(userlist.size()>0){
-//				try {
-//					
-//					for(UserProInfo userProInfo:userlist){
-//						System.out.println(userProInfo.getUserid());
-//						net.sf.json.JSONObject jsonobj=this.regHuanxinSinglesyn(userProInfo.getUsername(), HunXinServiceImpl.passwordefault);
-//						net.sf.json.JSONObject jsonobjobj=null;
-//						net.sf.json.JSONArray jsonarr=null;
-//						if(jsonobj!=null&&jsonobj.has("entities")){
-//							jsonarr=jsonobj.getJSONArray("entities");
-//							jsonobjobj=(net.sf.json.JSONObject) jsonarr.get(0);
-//						}
-//						String account=null;
-//						if(jsonobj==null||!jsonobj.getString("httpstatus").equals("200")){
-//							continue;
-//						}
-//						if(jsonobjobj!=null&&jsonobjobj.has("uuid")){
-//							account=jsonobjobj.getString("uuid");
-//						}
-////					try {
-//						UserProInfo upif=new UserProInfo();
-//						upif.setUserid(userProInfo.getUserid());
-////						upif.setUsername(userProInfo.getUsername());
-//						upif.setAccount(account);
-//						userlistback.add(upif);
-////						
-////					} catch (Exception e) {
-////						System.out.println("异常发生，"+userProInfo.getUserid()+"更新用户环信id失败");
-////						totale=totale+1;
+////		String pageNo="0";
+////		Short pageSize=40;
+////		UserProInfo userinfo=new UserProInfo();
+//////		userinfo.setStatus((short) 4);
+////		userinfo.setGusersex(pageSize);
+//////		userinfo.setGroupid((short) 6);
+////		String licensemark="";
+////		int totals=0;
+////		int totale=0;
+////		while(true){
+////			//取出数据，直到为空
+////			userinfo.setGuser(pageNo);
+////			List<UserProInfo> userlist=userProDao.queryusers(userinfo);
+////			List<UserProInfo> userlistback=new ArrayList<>();
+////			if(userlist.size()>0){
+////				try {
+////					
+////					for(UserProInfo userProInfo:userlist){
+////						System.out.println(userProInfo.getUserid());
+////						net.sf.json.JSONObject jsonobj=this.regHuanxinSinglesyn(userProInfo.getUsername(), HunXinServiceImpl.passwordefault);
+////						net.sf.json.JSONObject jsonobjobj=null;
+////						net.sf.json.JSONArray jsonarr=null;
+////						if(jsonobj!=null&&jsonobj.has("entities")){
+////							jsonarr=jsonobj.getJSONArray("entities");
+////							jsonobjobj=(net.sf.json.JSONObject) jsonarr.get(0);
+////						}
+////						String account=null;
+////						if(jsonobj==null||!jsonobj.getString("httpstatus").equals("200")){
+////							continue;
+////						}
+////						if(jsonobjobj!=null&&jsonobjobj.has("uuid")){
+////							account=jsonobjobj.getString("uuid");
+////						}
+//////					try {
+////						UserProInfo upif=new UserProInfo();
+////						upif.setUserid(userProInfo.getUserid());
+//////						upif.setUsername(userProInfo.getUsername());
+////						upif.setAccount(account);
+////						userlistback.add(upif);
+//////						
+//////					} catch (Exception e) {
+//////						System.out.println("异常发生，"+userProInfo.getUserid()+"更新用户环信id失败");
+//////						totale=totale+1;
+//////					}
 ////					}
-//					}
-//					int tempa=0;
-//					if(userlistback.size()!=0){
-//						
-//						tempa=userProDao.updateUserYingYe(userlistback);
-//						log.info("更新用户环信id");
-//					}
-//					totals=totals+tempa;
-//					System.out.println("成功处理"+totals+"条");
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}else{
-//				System.out.println("处理完毕");
-//				System.out.println("成功处理"+totals+"条");
-//				System.out.println("失败"+totale+"条");
-//				break;
-//			}
-//			
-//			pageNo=String.valueOf(Integer.parseInt(pageNo)+pageSize);
-//		}
+////					int tempa=0;
+////					if(userlistback.size()!=0){
+////						
+////						tempa=userProDao.updateUserYingYe(userlistback);
+////						log.info("更新用户环信id");
+////					}
+////					totals=totals+tempa;
+////					System.out.println("成功处理"+totals+"条");
+////				} catch (Exception e) {
+////					e.printStackTrace();
+////				}
+////			}else{
+////				System.out.println("处理完毕");
+////				System.out.println("成功处理"+totals+"条");
+////				System.out.println("失败"+totale+"条");
+////				break;
+////			}
+////			
+////			pageNo=String.valueOf(Integer.parseInt(pageNo)+pageSize);
+////		}
 //	}
+//	
+//
+//	
 //	public static void main(String[] args) {
 //		HunXinServiceImpl hxsi=new HunXinServiceImpl();
 ////		hxsi.regHuanxinSingle("w0007",passwordefault,23011l);

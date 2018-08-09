@@ -92,7 +92,7 @@
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
       <h2><span>价格走势</span>
-      <!-- <span id="priceAnalyse" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span> -->
+      <span id="getPriceMove" style="float: right;color: #9a9893;"><img style="height: 90%;" src="front/resource/img/right_icon.png"/></span>
       </h2>
     </div>
     <div id="container" class="nedHiCha_yzs" style="    min-width: 95%;"> 
@@ -115,10 +115,15 @@ $(document).ready(function(){
 	})
 	/* > */
 	$(".hTwoFater_yzs").find("span:eq(1)").click(function(){
-		if($(this).attr("id")=="priceInTime")
+		if($(this).attr("id")=="priceInTime"){
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1&kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
-		else
+		}else if($(this).attr("id")=="getPriceMove"){
+			window.location.href=baseurl+"/front/app/home/getPriceMove.htm";
+		}else{
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";
+			
+		}
+			
 	})
 })
 </script>
@@ -149,7 +154,7 @@ function getdate(classid){
 		   	echartInit(xdata, name, data);
 		  },
 		  error : function(errorMsg) {
-	            alert("无该品类实时成交数据!");
+	            
 	      },
 		  dataType : "json"
 		});

@@ -104,7 +104,7 @@ public class APPSellerGoodsController {
 				map = sellerGoodsService.queryGoodsListBySellerId(useId, status, currentPage);
 				if(null!=(List<ezs_goods>)map.get("Obj")){
 					list=(List<ezs_goods>)map.get("Obj");
-					page=(Page) map.get("page");
+					page=(Page) map.get("Page");
 				}
 			} catch (Exception e) {
 				list=new ArrayList<>();

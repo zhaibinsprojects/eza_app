@@ -1068,11 +1068,11 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	public Result getGoodsPdf(long goodsid) {
 		Result result=Result.failure();
-		String url=processgoodspdfurl;
+		String url="http://www.ezaisheng.com/look_good_quality.htm";
 		net.sf.json.JSONObject callBackRet = null;
 		HttpRequestParam httpParam = new HttpRequestParam();
 		try {
-			httpParam.addUrlParams(new BasicNameValuePair("goodsid",String.valueOf(goodsid)));
+			httpParam.addUrlParams(new BasicNameValuePair("goodid",String.valueOf(goodsid)));
 			
 				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
 				Map<String, Object> mv = new HashMap<>();
@@ -1522,5 +1522,10 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		
 		return sb.toString();
+	}
+	
+	public static void main(String[] args) {
+		GoodsService aa=new GoodsServiceImpl();
+		aa.getGoodsPdf(293);
 	}
 }
