@@ -235,16 +235,15 @@ function initTable(plist){
 	$("tbody").empty();
 	var html = "";	
 	for(var i=0;i<plist.length;i++){
-		html = html+"<tr><td><span>"+plist[i].dealDate+"</span></td>"+
-					"<td><span>"+plist[i].currentAVGPrice+"</span></td>";
+		html = html+"<tr><td><span>ABS</span></td><td><span>北京</span></td><td><span>"+plist[i].currentAVGPrice+"</span></td>";
 		if(plist[i].increaseValue > 0){			
-			html=html+"<td><span class='sup'>涨</span></td><td><span class='pup'>"+plist[i].sandByOne+"</span></td>";
+			html=html+"<td><span class='pup'>"+plist[i].sandByOne+"</span></td>";
 		}else if(plist[i].increaseValue < 0){
-			html=html+"<td><span class='sdown'>跌</span></td><td><span class='pdown'>"+plist[i].sandByOne+"</span></td>";			
+			html=html+"<td><span class='pdown'>"+plist[i].sandByOne+"</span></td>";			
 		}else {
-			html=html+"<td><span class='spin'>平</span></td><td><span class='ppin'>"+plist[i].sandByOne+"</span></td> ";
+			html=html+"<td><span class='ppin'>"+plist[i].sandByOne+"</span></td> ";
 		} 
-		html=html+"</tr>";
+		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 	}
 	$("tbody").append(html);
 }

@@ -165,7 +165,7 @@ public class StockHelper {
 	
 	public static void main(String[] args) {
 		System.out.println("访问U8库存");
-		JSONObject object = StockHelper.getStock("12221121232","1");
+		JSONObject object = StockHelper.getStock("GE17002110","02");
 		if (object != null) {
 			// 现有库存量
 			//System.out.println(object);

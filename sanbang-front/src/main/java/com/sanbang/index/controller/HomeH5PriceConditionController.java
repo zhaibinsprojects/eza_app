@@ -188,7 +188,7 @@ public class HomeH5PriceConditionController {
 				DecimalFormat df = new DecimalFormat("0.000");
 				DecimalFormat dftwo = new DecimalFormat("0.00%");
 				priceTrendIfo.setCurrentAVGPrice(Double.valueOf(df.format(priceTrendIfo.getCurrentAVGPrice())));
-				priceTrendIfo.setSandByOne(dftwo.format(priceTrendIfo.getIncreaseValue()));
+				priceTrendIfo.setSandByOne(dftwo.format(Math.abs(priceTrendIfo.getIncreaseValue())));
 				//priceList.add(BigDecimal.valueOf(priceTrendIfo.getCurrentAVGPrice()));
 				priceList.add(new BigDecimal(df.format(priceTrendIfo.getCurrentAVGPrice())));
 				try {
