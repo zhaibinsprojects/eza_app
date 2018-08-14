@@ -28,10 +28,8 @@
  <script src="front/resource/js/highcharts.js"></script>
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
-  <!--实时报价--->
-    <section class="secsty_yzs" style="height:50%">
-    <div class="hTwoFater_yzs">
-      <h2><span>价格趋势</span></h2>
+  	<div class="hTwoFater_yzs">
+    <h2><span>价格趋势</span></h2>
     <nav class="navAll_yzs" style="margin-top: 3%;/* margin-left: -5%; margin-right: -5%; */">
   	<ul class="nav_ulsty_yzs">
     	<li  id="showCityPicker" style="width: 25%;"><a id="cityResult" href="javascript:;">山东</a></li>
@@ -41,7 +39,9 @@
     </ul>
   	</nav>
     </div>
-    <div id="container" class="nedHiCha_yzs" style="min-width: 95%;height:80%;"> 
+  <!--实时报价--->
+    <section class="secsty_yzs" style="height:50%;margin-top: 3%">
+    <div id="container" class="nedHiCha_yzs" style="min-width: 95%;height:80%;">
     	<!-- <div id="main" style="width: 90%;height:40%;"></div> -->
     </div>
   </section>
@@ -56,26 +56,7 @@
             </tr>
         </thead>
         <tbody>
-        	<%-- <c:forEach items="${resultMap.Obj}" var="item">
-        		<tr>
-            		<td><span>${item.dealDate}</span></td>
-               	 	<td><span>${item.currentAVGPrice}</span></td>
-               	 	<c:choose>
-	               	 	<c:when test="${item.increaseValue gt 0.0 }">
-	               	 		<td><span class="sup">涨</span></td>
-	               	 		<td><span class="pup"><fmt:formatNumber value="${item.increaseValue}" type="percent" maxFractionDigits="4"  pattern="0.00%"/></span></td>
-	               	 	</c:when>
-	               	 	<c:when test="${item.increaseValue lt 0.0 }">
-		                	<td><span class="sdown">跌</span></td>
-		                	<td><span class="pdown"><fmt:formatNumber value="${item.increaseValue}" type="percent" maxFractionDigits="4"  pattern="0.00%"/></span></td>
-	               	 	</c:when>
-	               	 	<c:otherwise>
-	               	 		<td><span class="spin">平</span></td>
-	               	 		<td><span class="ppin"><fmt:formatNumber value="${item.increaseValue}" type="percent" maxFractionDigits="4"  pattern="0.00%"/></span></td>
-	               	 	</c:otherwise>
-               	 	</c:choose>
-            	</tr>
-        	</c:forEach> --%>
+        	
         </tbody>
     </table>
   </section>
@@ -94,7 +75,7 @@
 </body>
 <script type="text/javascript">
 var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/"; */
+/* var baseurl="http://10.10.10.232/";*/
 var goodClassId = "${kindId}";
 var areaId = "${areaId}";
 $(document).ready(function(){

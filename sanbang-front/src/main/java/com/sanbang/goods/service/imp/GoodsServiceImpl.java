@@ -636,7 +636,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	/**
 	 * 生成订单
-	 * @author zhaibin
+	 * @author
 	 * @param orderForm 订单对象
 	 * @param orderType 订单类型 ： GOODS 商品订单；SAMPLE 样品订单
 	 * @throws Exception 
