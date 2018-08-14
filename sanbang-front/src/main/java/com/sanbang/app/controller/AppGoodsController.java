@@ -464,7 +464,7 @@ public class AppGoodsController {
 				customized.setCombustion_grade(Double.valueOf((goods.getBurning()==null||goods.getBurning().equals(""))?"0":goods.getBurning()));//燃烧等级
 				customized.setElong_break(Double.valueOf((goods.getCrack()==null||goods.getCrack().equals(""))?"0":goods.getCrack()));//断裂伸长率
 				customized.setFlexural_modulus(Double.valueOf((goods.getFlexural()==null||goods.getFlexural().equals(""))?"0":goods.getFlexural()));//弯曲模量
-				customized.setIs_ep((goods.getProtection()==true||goods.getProtection().equals(""))?"1":"0");//是否环保
+				customized.setIs_ep(String.valueOf(goods.getProtection()));//是否环保
 				customized.setJzforce(Double.valueOf((goods.getFreely()==null||goods.getFreely().equals(""))?"0":goods.getFreely()));//简支梁缺口冲击
 				customized.setMelt_index(Double.valueOf((goods.getLipolysis()==null||goods.getLipolysis().equals(""))?"0":goods.getLipolysis()));//熔融指数
 				customized.setSource_type("0");//来源类型//0是预购  1是采购

@@ -193,14 +193,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		        String goods_no = "GE" + classid2str(Long.valueOf(goodClass_id));
 		        log.info("sss===>"+goods_no);
 		       
-		        if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
-		        	protection="false";
+		        //新加未检测  2018/8/13
+				if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
+		        	protection="2";
 		        }
-				if (Boolean.valueOf(protection)) {
-					goods.setProtection(true);
-				} else {
-					goods.setProtection(false);
-				} 
+		        goods.setProtection(Integer.valueOf(protection));
+		        
 				goods.setDensity(density);
 				goods.setCantilever(cantilever);
 				goods.setFreely(freely);
@@ -595,11 +593,13 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
-				if (Boolean.valueOf(protection)) {
-					goods.setProtection(true);
-				} else {
-					goods.setProtection(false);
-				}
+				
+				//新加未检测  2018/8/13
+				if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
+		        	protection="2";
+		        }
+		        goods.setProtection(Integer.valueOf(protection));
+		        
 				goods.setDensity(density);
 				goods.setCantilever(cantilever);
 				goods.setFreely(freely);

@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.area.service.AreaService;
-import com.sanbang.bean.ezs_accessory;
-import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_goods;
-import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goods_log;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;

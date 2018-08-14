@@ -37,7 +37,7 @@ public class ezs_price_trend {
 
     private String procurement_standard;
 
-    private Boolean protection;
+    private int protection;
 
     private String purpose;
 
@@ -53,7 +53,15 @@ public class ezs_price_trend {
 
     private String water;
 
-    private Long goodClass_id;
+    public int getProtection() {
+		return protection;
+	}
+
+	public void setProtection(int protection) {
+		this.protection = protection;
+	}
+
+	private Long goodClass_id;
 
     private Long region_id;
 
@@ -213,13 +221,7 @@ public class ezs_price_trend {
         this.procurement_standard = procurement_standard == null ? null : procurement_standard.trim();
     }
 
-    public Boolean getProtection() {
-        return protection;
-    }
-
-    public void setProtection(Boolean protection) {
-        this.protection = protection;
-    }
+  
 
     public String getPurpose() {
         return purpose;

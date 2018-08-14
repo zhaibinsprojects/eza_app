@@ -19,7 +19,7 @@
     <result column="lipolysis" property="lipolysis" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="procurement_standard" property="procurement_standard" jdbcType="VARCHAR" />
-    <result column="protection" property="protection" jdbcType="BIT" />
+    <result column="protection" property="protection" jdbcType="INTEGER" />
     <result column="purpose" property="purpose" jdbcType="VARCHAR" />
     <result column="source" property="source" jdbcType="VARCHAR" />
     <result column="source_tel" property="source_tel" jdbcType="VARCHAR" />

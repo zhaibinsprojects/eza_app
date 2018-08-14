@@ -30,7 +30,7 @@
     <result column="memberLook" property="memberLook" jdbcType="BIT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="protection" property="protection" jdbcType="BIT" />
+    <result column="protection" property="protection" jdbcType="INTEGER" />
     <result column="purpose" property="purpose" jdbcType="VARCHAR" />
     <result column="recommend" property="recommend" jdbcType="BIT" />
     <result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
@@ -100,7 +100,7 @@
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<!-- 收藏夹查看信息，price展示位销售价格，app取price字段，故此处用saleprice映射到实体类price上 -->
 		<result column="salePrice" jdbcType="DECIMAL" property="price" />
-		<result column="protection" jdbcType="BIT" property="protection" />
+		<result column="protection" jdbcType="INTEGER" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />
 		<result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
@@ -796,7 +796,7 @@
 		<result column="memberLook" property="memberLook" jdbcType="BIT" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
-		<result column="protection" property="protection" jdbcType="BIT" />
+		<result column="protection" property="protection" jdbcType="INTEGER" />
 		<result column="purpose" property="purpose" jdbcType="VARCHAR" />
 		<result column="recommend" property="recommend" jdbcType="BIT" />
 		<result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
@@ -1091,7 +1091,7 @@
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="price" jdbcType="DECIMAL" property="price" />
 		<result column="saleprice" jdbcType="DECIMAL" property="saleprice" />
-		<result column="protection" jdbcType="BIT" property="protection" />
+		<result column="protection" jdbcType="INTEGER" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />
 		<result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />

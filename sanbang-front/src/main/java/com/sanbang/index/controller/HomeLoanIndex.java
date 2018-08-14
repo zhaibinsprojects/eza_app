@@ -63,11 +63,12 @@ public class HomeLoanIndex {
 	 * @return
 	 */
 	@RequestMapping("/loadalert")
-	public String loadalert(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String loadalert(HttpServletRequest request, HttpServletResponse response, Model model,String userkey) {
 		// 地址
 		model.addAttribute("area", areaService.getAreaParentList());
 		// 公司类型
 		model.addAttribute("comtype", dictService.getDictByParentId(DictionaryCate.EZS_COMPANYTYPE));
+		model.addAttribute("userkey", userkey);
 		return view + "loadalert";
 	}
 
@@ -184,7 +185,7 @@ public class HomeLoanIndex {
 			}
 		}
 
-		if (Tools.isEmpty(address)) {
+		/*if (Tools.isEmpty(address)) {
 			result.setMsg("请输入详细地址");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			return result;
@@ -206,7 +207,7 @@ public class HomeLoanIndex {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				return result;
 			}
-		}
+		}*/
 		result.setSuccess(true);
 		return result;
 	}

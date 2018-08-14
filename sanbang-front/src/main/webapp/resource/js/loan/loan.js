@@ -1,17 +1,10 @@
+
 function loansubmit(){
 	
-	var area_id=0;
-	if($("#province").find("option:selected").attr("id")==-1){
+	var area_id=$(".areaId").val();
+	if(area_id==0){
 		layer.open({content : "请选择您所在城市",skin : 'msg',time : 2});
 		return false;
-	}else{
-		area_id=$("#province").find("option:selected").attr("id");
-	}
-	if($("#city").find("option:selected").attr("id")!=-1){
-		area_id=$("#city").find("option:selected").attr("id");
-	}
-	if($("#area").find("option:selected").attr("id")!=-1){
-		area_id=$("#area").find("option:selected").attr("id");
 	}
 	
 	$.ajax({

@@ -9,7 +9,7 @@ public class ezs_goods  implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6010878233246195069L;
+	private static final long serialVersionUID = -8100261341395037842L;
 
 	private Long id;
 
@@ -67,7 +67,7 @@ public class ezs_goods  implements Serializable{
 
     private BigDecimal price;
 
-    private Boolean protection;
+    private int protection;
 
     private String purpose;
 
@@ -369,15 +369,17 @@ public class ezs_goods  implements Serializable{
         this.price = price;
     }
 
-    public Boolean getProtection() {
-        return protection;
-    }
+    
 
-    public void setProtection(Boolean protection) {
-        this.protection = protection;
-    }
+    public int getProtection() {
+		return protection;
+	}
 
-    public String getPurpose() {
+	public void setProtection(int protection) {
+		this.protection = protection;
+	}
+
+	public String getPurpose() {
         return purpose;
     }
 
