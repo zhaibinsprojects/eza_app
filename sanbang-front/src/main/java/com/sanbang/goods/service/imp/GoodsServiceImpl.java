@@ -515,7 +515,7 @@ public class GoodsServiceImpl implements GoodsService{
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车不存在选购商品记录--添加记录end");
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "购物车添加成功");
+			mmp.put("Msg", "采购单添加成功");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1071,14 +1071,14 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	public Result getGoodsPdf(long goodsid) {
 		Result result=Result.failure();
-		String url=processgoodspdfurl;
+		String url="http://www.ezaisheng.com/look_good_quality.htm";
 		net.sf.json.JSONObject callBackRet = null;
 		HttpRequestParam httpParam = new HttpRequestParam();
 		try {
-			httpParam.addUrlParams(new BasicNameValuePair("goodsid",String.valueOf(goodsid)));
+			httpParam.addUrlParams(new BasicNameValuePair("goodid",String.valueOf(goodsid)));
 				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
 				Map<String, Object> mv = new HashMap<>();
-				//mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
+				mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
 				result.setObj(mv);
 				result.setSuccess(true);
 				result.setMsg("请求成功");
@@ -1550,5 +1550,10 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		
 		return sb.toString();
+	}
+	
+	public static void main(String[] args) {
+		GoodsService aa=new GoodsServiceImpl();
+		aa.getGoodsPdf(294);
 	}
 }

@@ -117,12 +117,16 @@ $(document).ready(function(){
 	})
 	/* > */
 	$(".hTwoFater_yzs").find("span:eq(1)").click(function(){
-		if($(this).attr("id")=="priceInTime")
+		if($(this).attr("id")=="priceInTime"){
 			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1&kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
-		else if($(this).attr("id")=="priceAnalyse"||$(this).attr("id")=="report")
-			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";
-		else if($(this).attr("id")=="priceTrend")
+		}else if($(this).attr("id")=="getPriceMove"){
+			window.location.href=baseurl+"/front/app/home/getPriceMove.htm";
+		}else if($(this).attr("id")=="priceAnalyse"||$(this).attr("id")=="report"){
+			window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+$(this).attr("id")+"&currentPage=1";}
+		else if($(this).attr("id")=="priceTrend"){
 			window.location.href=baseurl+"/front/app/home/turnToPriceMess.htm?kindId="+baojia_goodclass+"&areaId="+baojia_areaId;
+		}
+			
 	})
 })
 </script>
@@ -152,7 +156,6 @@ function getdate(classid){
 		   	echartInit(xdata, name, data);
 		  },
 		  error : function(errorMsg) {
-	            //alert("无该品类实时成交数据!");
 	      },
 		  dataType : "json"
 		});

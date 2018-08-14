@@ -11,15 +11,25 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
-<script type="text/javascript"
-	src="front/resource/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript"
-	src="front/resource/js/jquery.touchSlider.js"></script>
+<script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
+<link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" >
+<script type="text/javascript" src="front/resource/js/goods/mui.min.js"></script>
+<script src="front/resource/js/newAddjs/mui.picker.js"></script>
+<script src="front/resource/js/newAddjs/mui.poppicker.js"></script>
+<script src="front/resource/js/newAddjs/city.data.js" type="text/javascript"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
-<script type="text/javascript" src="front/resource/js/loan/area.js"></script>
-<script type="text/javascript" src="front/resource/js/loan/loan.js"></script>
+
 <script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
+
+<link href="front/resource/css/newAddcss/mui.picker.css" rel="stylesheet" />
+<link href="front/resource/css/newAddcss/mui.poppicker.css" rel="stylesheet" />
+
 <link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
+
+
+<script type="text/javascript" src="front/resource/js/loan/loan.js"></script>
+<script type="text/javascript" src="front/resource/js/loan/area.js"></script>
 <style type="text/css">
 .aicon_yzs{ width:100%; display:block; height:40px; background:url(front/resource/img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:16px; color:#fff; text-indent:20px;}
 </style>
@@ -72,7 +82,7 @@
 				</tr>
 				<tr>
 					<td>所在地</td>
-					<td>
+					<!-- <td>
 					<select id="province" name="province"  class="addresschoose"   style="width: 80px;">
 					</select>
 					<select id="city" name="city" class="addresschoose" style="width: 80px;">
@@ -84,7 +94,8 @@
 						getAddressInint(0,null,null,'province','city','area');
 					})
 					</script>
-					</td>
+					</td> -->
+					<td><input class="areaval" id="areaval" type="text" name="areaval" placeholder="请选择所在地"></td>
 				</tr>
 				<tr>
 					<td>详细地址</td>
@@ -102,6 +113,7 @@
 		</table>
 		<div class="me-alert-box-btn" id="btn_save" style="margin-top: 60%">提交资料</div>
 		<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
+		<input class="areaId" type="hidden"  value="0"    id="areaId" name="areaId" placeholder="">
 </body>
 <script type="text/javascript">
 	var baseurl = "${serurl}";

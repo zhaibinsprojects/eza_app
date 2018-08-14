@@ -102,7 +102,7 @@ public class GoodsVo {
 
 	private String burning;// 燃烧等级
 
-	private boolean protection;// 是否环保
+	private int protection;// 是否环保
 
 	private String content;// 描述
 
@@ -477,11 +477,13 @@ public class GoodsVo {
 		this.burning = burning;
 	}
 
-	public boolean isProtection() {
+	
+
+	public int getProtection() {
 		return protection;
 	}
 
-	public void setProtection(boolean protection) {
+	public void setProtection(int protection) {
 		this.protection = protection;
 	}
 

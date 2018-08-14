@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.bson.util.StringRangeSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.GoodsLogUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.StringUtil;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodsListInfo;
@@ -137,7 +139,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String goodClass_id = request.getParameter("goodClass_id");// 分类
 				String name = request.getParameter("name");// 货品名称
 				String price = request.getParameter("price");// 价格
-				String validity = request.getParameter("validity");// 有效期
+				//String validity = request.getParameter("validity");// 有效期
 				String cncl_num = request.getParameter("cncl_num");//样品库存数量
 				String inventory = request.getParameter("inventory");//商品库存数量
 				String area_id = request.getParameter("area_id");// 库存地区（县市）
@@ -172,7 +174,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				}else{
 					goods.setCncl_num(Double.valueOf(cncl_num));
 				}
-				goods.setValidity(Integer.valueOf(validity));
+				goods.setValidity(100);
 				goods.setInventory(Double.valueOf(inventory));
 				goods.setArea_id(Long.valueOf(area_id));
 				goods.setAddess(addess);
@@ -191,11 +193,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		        String goods_no = "GE" + classid2str(Long.valueOf(goodClass_id));
 		        log.info("sss===>"+goods_no);
 		       
-				if (Boolean.valueOf(protection)) {
-					goods.setProtection(true);
-				} else {
-					goods.setProtection(false);
-				} 
+		        //新加未检测  2018/8/13
+				if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
+		        	protection="2";
+		        }
+		        goods.setProtection(Integer.valueOf(protection));
+		        
 				goods.setDensity(density);
 				goods.setCantilever(cantilever);
 				goods.setFreely(freely);
@@ -215,7 +218,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setContent(content);
 				goods.setPurpose(purpose);
 				goods.setUser_id(upi.getId());
-				goods.setDeleteStatus(false);;
+				goods.setDeleteStatus(false);
+				goods.setSaleprice(new BigDecimal(0));
 				try {
 					goodsMapper.insert(goods);
 					result.setSuccess(true);
@@ -460,12 +464,12 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setMsg("请输入货品用途");
 			return result;
 		}
-		if (Tools.isEmpty(protection)) {
+		/*if (Tools.isEmpty(protection)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请选择货品是否环保");
 			return result;
-		}
+		}*/
 		result.setSuccess(true);
 		return result;
 	}
@@ -589,11 +593,13 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
-				if (Boolean.valueOf(protection)) {
-					goods.setProtection(true);
-				} else {
-					goods.setProtection(false);
-				}
+				
+				//新加未检测  2018/8/13
+				if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
+		        	protection="2";
+		        }
+		        goods.setProtection(Integer.valueOf(protection));
+		        
 				goods.setDensity(density);
 				goods.setCantilever(cantilever);
 				goods.setFreely(freely);

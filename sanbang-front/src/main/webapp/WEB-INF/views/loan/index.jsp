@@ -52,7 +52,8 @@
 							 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
 								 userk= data;
 								 if(userk!=""){
-									 window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
+									 $(".userkey").val(userk);
+									 $(".loanforalert").submit();
 								 }else{
 									var data = {}
 									var str = JSON.stringify(data);
@@ -85,7 +86,8 @@
 					 try {
 						 userk= window.android.isAndroidLogin();
 						 if(userk!=""){
-							 window.location.href=baseurl+"/front/app/home/loan/loadalert.htm";
+							 $(".userkey").val(userk);
+							 $(".loanforalert").submit();
 						 }else{
 							 window.android.androidnologin();
 						 }
@@ -144,7 +146,11 @@
    <div class="ezsm-normal-bottombtn">
  	立即申请
  </div>
-	<input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
+ 
+ <form action="${serurl}/front/app/home/loan/loadalert.htm" method="post" class="loanforalert">
+ <input name="userkey" type="hidden" class="userkey" value="${userkey}"/>
+ </form>
+	
 </body>
 
 <script type="text/javascript">

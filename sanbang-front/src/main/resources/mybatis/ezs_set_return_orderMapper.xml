@@ -467,6 +467,7 @@
 	LEFT JOIN ezs_goods C ON A.good_id = C.id
 	
 	WHERE  1=1
+	and   and A.orderType=0
   	and  B.user_id=#{userid}
   	limit #{totalpage},10
   	
@@ -502,6 +503,7 @@
 	LEFT JOIN ezs_goods C ON A.good_id = C.id
 	
 	WHERE  1=1
+	and   and A.orderType=1
   	and  B.user_id=#{userid}
   	limit #{totalpage},10
   	
@@ -569,6 +571,33 @@
 	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
 	LEFT JOIN ezs_goods C ON A.good_id = C.id
 	WHERE  1=1
+	and A.orderType=0
   	and  B.order_no=#{order_no}
+	</select>
+	
+	<select id="returnOrderCountforBuyer" resultType="int">
+		SELECT
+	    count(A.id)
+	FROM
+		ezs_set_return_order A
+	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
+	LEFT JOIN ezs_goods C ON A.good_id = C.id
+	
+	WHERE  1=1
+	and A.orderType=0
+  	and  B.user_id=#{userid}
+	</select>
+	
+	<select id="returnOrderCountforSeller" resultType="int">
+		SELECT
+	    count(A.id)
+	FROM
+		ezs_set_return_order A
+	LEFT JOIN ezs_orderform B ON A.orderForm_id = B.id
+	LEFT JOIN ezs_goods C ON A.good_id = C.id
+	
+	WHERE  1=1
+	and A.orderType=1
+  	and  B.user_id=#{userid}
 	</select>
 </mapper>

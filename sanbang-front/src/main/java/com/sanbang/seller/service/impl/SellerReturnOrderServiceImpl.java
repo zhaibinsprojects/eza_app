@@ -42,12 +42,13 @@ public class SellerReturnOrderServiceImpl implements SellerReturnOrderService {
 	public Result returnOrderList(int pageNo, long userid, int order_type, int state2) {
 		Result result = Result.failure();
 		try {
-			if (pageNo <= 0) {
+			if (pageNo <= 0) { 
 				pageNo = 1;
 			}
+			int retnum=ezs_set_return_orderMapper.returnOrderCountforSeller(userid, 10 * pageNo);
 			List<ReturnOrderVO> list = ezs_set_return_orderMapper.returnOrderListforSeller(userid, 10 * pageNo,
 					order_type, state2);
-			result.setMeta(new Page(pageNo, 10, 10 * pageNo, 10 * pageNo, 0, true, true, true, true));
+			result.setMeta(new Page(retnum,10));
 			if (list.size() == 0) {
 				result.getMeta().setHasFirst(false);
 			}
@@ -91,10 +92,17 @@ public class SellerReturnOrderServiceImpl implements SellerReturnOrderService {
 		try {
 			ezs_return_logistics returnlogistics = ezs_return_logisticsMapper
 					.selectReturnLogisticsForReturnNo(returnid);
-			result.setObj(returnlogistics);
-			result.setSuccess(true);
-			result.setMsg("请求成功");
-			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			if(null!=returnlogistics){
+				result.setSuccess(true);
+				result.setMsg("请求成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setObj(returnlogistics);
+			}else{
+				result.setObj(new ezs_return_logistics());
+				result.setSuccess(false);
+				result.setMsg("暂无数据");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

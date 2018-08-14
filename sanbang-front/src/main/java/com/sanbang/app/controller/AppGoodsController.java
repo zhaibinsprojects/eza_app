@@ -32,6 +32,7 @@ import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_goodscartMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
@@ -66,6 +67,8 @@ public class AppGoodsController {
 	private DictService dictService;
 	@Autowired
 	private ezs_goodscartMapper ezs_goodscartMapper;
+	@Autowired
+	private ezs_goodsMapper ezs_goodsMapper;
 
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
@@ -239,8 +242,8 @@ public class AppGoodsController {
 		model.addAttribute("userkey", null==upi?"":upi.getUserkey());
 		//用户校验end
 		
-		GoodsVo  goodsvo=goodsService.getgoodsinfo(goodsid,userid);
-		
+		 GoodsVo  goodsvo=goodsService.getgoodsinfo(goodsid,userid);
+		ezs_goods  goodinfo=ezs_goodsMapper.selectByPrimaryKey(goodsid);
 		//同类货品
 		List<GoodsVo> catalist = new ArrayList<GoodsVo>();
 		if(null != goodsvo){
@@ -248,6 +251,7 @@ public class AppGoodsController {
 		}
 		model.addAttribute("catalist", catalist);
 		model.addAttribute("good", goodsvo);
+		model.addAttribute("goodinfo", goodinfo);
 		return view+"goodsdec";
 	}
 	
@@ -460,7 +464,7 @@ public class AppGoodsController {
 				customized.setCombustion_grade(Double.valueOf((goods.getBurning()==null||goods.getBurning().equals(""))?"0":goods.getBurning()));//燃烧等级
 				customized.setElong_break(Double.valueOf((goods.getCrack()==null||goods.getCrack().equals(""))?"0":goods.getCrack()));//断裂伸长率
 				customized.setFlexural_modulus(Double.valueOf((goods.getFlexural()==null||goods.getFlexural().equals(""))?"0":goods.getFlexural()));//弯曲模量
-				customized.setIs_ep((goods.getProtection()==true||goods.getProtection().equals(""))?"1":"0");//是否环保
+				customized.setIs_ep(String.valueOf(goods.getProtection()));//是否环保
 				customized.setJzforce(Double.valueOf((goods.getFreely()==null||goods.getFreely().equals(""))?"0":goods.getFreely()));//简支梁缺口冲击
 				customized.setMelt_index(Double.valueOf((goods.getLipolysis()==null||goods.getLipolysis().equals(""))?"0":goods.getLipolysis()));//熔融指数
 				customized.setSource_type("0");//来源类型//0是预购  1是采购

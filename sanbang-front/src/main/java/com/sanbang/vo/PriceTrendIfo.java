@@ -31,7 +31,7 @@ public class PriceTrendIfo extends ezs_price_trend {
 
     private Double price;
 
-    private Boolean protection;
+    private int protection;
 
     private Integer type;
 
@@ -55,7 +55,15 @@ public class PriceTrendIfo extends ezs_price_trend {
         return addTime;
     }
 
-    public void setAddTime(Date addTime) {
+    public int getProtection() {
+		return protection;
+	}
+
+	public void setProtection(int protection) {
+		this.protection = protection;
+	}
+
+	public void setAddTime(Date addTime) {
         this.addTime = addTime;
     }
 
@@ -68,13 +76,9 @@ public class PriceTrendIfo extends ezs_price_trend {
         this.price = price;
     }
 
-    public Boolean getProtection() {
-        return protection;
-    }
+    
 
-    public void setProtection(Boolean protection) {
-        this.protection = protection;
-    }
+   
 
 
     public Integer getType() {
@@ -176,6 +180,8 @@ public class PriceTrendIfo extends ezs_price_trend {
 	public void setSandBytree(String sandBytree) {
 		this.sandBytree = sandBytree;
 	}
+	
+	
 	public PriceTrendIfo(String goodClassName, String goodColorName, String goodFormName, Double goodPrice,
 			String goodArea) {
 		super();

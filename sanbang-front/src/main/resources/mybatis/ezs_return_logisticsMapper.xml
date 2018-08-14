@@ -11,6 +11,7 @@
     <result column="logistics_name" property="logistics_name" jdbcType="VARCHAR" />
     <result column="logistics_no" property="logistics_no" jdbcType="VARCHAR" />
     <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="proples" property="proples" jdbcType="VARCHAR" />
     <result column="sendAddess" property="sendAddess" jdbcType="VARCHAR" />
@@ -21,7 +22,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, add_cart_time, car_no, end_time, logistics_name, logistics_no, 
-    msg, phone, proples, sendAddess, service_time, status, total_price, setorder_id
+    msg, order_no, phone, proples, sendAddess, service_time, status, total_price, setorder_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -37,15 +38,15 @@
     insert into ezs_return_logistics (id, addTime, deleteStatus, 
       add_cart_time, car_no, end_time, 
       logistics_name, logistics_no, msg, 
-      phone, proples, sendAddess, 
-      service_time, status, total_price, 
-      setorder_id)
+      order_no, phone, proples, 
+      sendAddess, service_time, status, 
+      total_price, setorder_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{add_cart_time,jdbcType=TIMESTAMP}, #{car_no,jdbcType=VARCHAR}, #{end_time,jdbcType=TIMESTAMP}, 
       #{logistics_name,jdbcType=VARCHAR}, #{logistics_no,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{proples,jdbcType=VARCHAR}, #{sendAddess,jdbcType=VARCHAR}, 
-      #{service_time,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, 
-      #{setorder_id,jdbcType=BIGINT})
+      #{order_no,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{proples,jdbcType=VARCHAR}, 
+      #{sendAddess,jdbcType=VARCHAR}, #{service_time,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{total_price,jdbcType=DECIMAL}, #{setorder_id,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_return_logistics" >
     insert into ezs_return_logistics
@@ -76,6 +77,9 @@
       </if>
       <if test="msg != null" >
         msg,
+      </if>
+      <if test="order_no != null" >
+        order_no,
       </if>
       <if test="phone != null" >
         phone,
@@ -127,6 +131,9 @@
       <if test="msg != null" >
         #{msg,jdbcType=VARCHAR},
       </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
       </if>
@@ -177,6 +184,9 @@
       <if test="msg != null" >
         msg = #{msg,jdbcType=VARCHAR},
       </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
       </if>
@@ -211,6 +221,7 @@
       logistics_name = #{logistics_name,jdbcType=VARCHAR},
       logistics_no = #{logistics_no,jdbcType=VARCHAR},
       msg = #{msg,jdbcType=VARCHAR},
+      order_no = #{order_no,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       proples = #{proples,jdbcType=VARCHAR},
       sendAddess = #{sendAddess,jdbcType=VARCHAR},

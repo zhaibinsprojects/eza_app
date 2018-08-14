@@ -143,6 +143,15 @@ public class HomeH5PriceConditionController {
 		return areaIdsList;
 	}
 	
+	/**
+	 * 价格走势
+	 * @param request
+	 * @param response
+	 * @param kindId
+	 * @param pageno
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="/getPriceTrendcyShow")
 	@ResponseBody
 	public Object getPriceTrendcyShow(HttpServletRequest request,HttpServletResponse response,
@@ -288,7 +297,8 @@ public class HomeH5PriceConditionController {
 	@ResponseBody
 	public Object getPriceTrend(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(name="kindId",defaultValue="1") String kindId,
-			@RequestParam(name="currentPage",defaultValue="1") int pageno){
+			@RequestParam(name="currentPage",defaultValue="1") int pageno,
+			Model model){
 		List<String> dateList = new ArrayList<>();
 		JSONObject json=new JSONObject();
 		Series seriesVo = new Series();
@@ -299,6 +309,20 @@ public class HomeH5PriceConditionController {
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 		//参数传递
 		tMp.put("kindId", kindId);
+		tMp.put("colorId", request.getParameter("colorId"));
+		tMp.put("formId", request.getParameter("formId"));
+		tMp.put("areaId", request.getParameter("areaId"));
+		
+		model.addAttribute("colorId", request.getParameter("colorId"));
+		model.addAttribute("kindId", kindId);
+		model.addAttribute("formId", request.getParameter("formId"));
+		model.addAttribute("areaId", request.getParameter("areaId"));
+		
+		
+		model.addAttribute("colorval", request.getParameter("colorval"));
+		model.addAttribute("kindval", request.getParameter("kindval"));
+		model.addAttribute("formval", request.getParameter("formval"));
+		model.addAttribute("areaval", request.getParameter("areaval"));
 		//修改为取近一个月数据
 		mmp = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
@@ -601,6 +625,19 @@ public class HomeH5PriceConditionController {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		return result;
+	}
+	
+	
+	/**
+	 * 价格
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/getPriceMove")
+	public String getPriceMove(HttpServletRequest request,Model model){
+		
+		 return view+"/pricemove";
 	}
 	
 }

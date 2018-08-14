@@ -132,8 +132,8 @@
 		</div>
 		<div class="layer" style="display: none;">
 			<div class="router">
-				<div style="font-size: 50px;color: #222222;font-weight: bold;">链接打不开？</div>
-				<div style="font-size: 28px;">由于微信限制，请点击右上角<br>选择<span>“在浏览器中打开”</span></div>
+				<div style="font-size: 70px;color: #222222;font-weight: bold;">链接打不开？</div>
+				<div style="font-size: 45px;">由于微信限制，请点击右上角<br>选择<span>“在浏览器中打开”</span></div>
 			</div>
 		</div>
 	</body>
@@ -141,7 +141,7 @@
 	<script>
 	$(document).ready(function(){
 		var ua = window.navigator.userAgent.toLowerCase(); 
-		if(ua.match(/MicroMessenger/i) != 'micromessenger'){ 
+		if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
 			$('.layer').fadeIn();
 		}else{ 
 		var u = navigator.userAgent; // 获取用户设备

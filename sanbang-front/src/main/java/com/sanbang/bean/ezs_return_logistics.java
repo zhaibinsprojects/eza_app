@@ -22,6 +22,8 @@ public class ezs_return_logistics {
 
     private String msg;
 
+    private String order_no;
+
     private String phone;
 
     private String proples;
@@ -106,6 +108,14 @@ public class ezs_return_logistics {
 
     public void setMsg(String msg) {
         this.msg = msg == null ? null : msg.trim();
+    }
+
+    public String getOrder_no() {
+        return order_no;
+    }
+
+    public void setOrder_no(String order_no) {
+        this.order_no = order_no == null ? null : order_no.trim();
     }
 
     public String getPhone() {

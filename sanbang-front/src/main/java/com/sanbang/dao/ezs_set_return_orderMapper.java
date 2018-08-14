@@ -53,4 +53,17 @@ public interface ezs_set_return_orderMapper {
      * @return
      */
     ReturnOrderVO returnOrderinfoByOrderno(String order_no);
+    
+    /**
+     * 退货数量
+     * @param userid
+     * @param totalpage
+     * @param order_type
+     * @param state2
+     * @return
+     */
+    int returnOrderCountforBuyer(@Param("userid")long userid,@Param("totalpage")int totalpage);
+    
+    
+    int returnOrderCountforSeller(@Param("userid")long userid,@Param("totalpage")int totalpage);
 }

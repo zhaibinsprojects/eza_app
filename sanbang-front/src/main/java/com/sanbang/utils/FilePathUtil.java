@@ -12,7 +12,7 @@ public class FilePathUtil {
 		
 	}
 	public static void main(String[] args) {
-		String url="http://10.10.10.148/upload/201806/14/19-32-42-49-56840.jpg";
+		String url="http://m.ezaisheng.com/test/upload/h5/201808/06/14-02-30-32-45113.jpg";
 		System.out.println(getmiddelPath(url));
 		System.out.println(getimageName(url));
 	}
