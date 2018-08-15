@@ -514,7 +514,7 @@ public class AppHomeGoodsMessController {
 				areaName = areaTemp.getAreaName() +"-"+ areaName;
 		}
 		//去掉最后的“-”
-		if(areaName.length()>0)
+		if(areaName.length()>0&&areaName.indexOf("-")>-1)
 			areaName = areaName.substring(0, areaName.length()-1);
 		return areaName;
 	}
