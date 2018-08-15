@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_accessory;
+import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customized;
 import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.index.service.CustomerService;
 import com.sanbang.index.service.CustomizedService;
@@ -62,6 +64,8 @@ public class AppHomeGoodsMessController {
 	private CustomerService customerService;
 	@Autowired
 	private DictService dictService;
+	@Autowired
+	private ezs_areaMapper areaMapper;
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -463,7 +467,9 @@ public class AppHomeGoodsMessController {
 					goodInfo.setMainPhoto(gVo.getMainPhoto());
 				//地址
 				//goodInfo.setAddess(gVo.getAddess());
-				goodInfo.setAreaName(gVo.getArea().getAreaName());
+				String areaName = getAreaName(gVo.getArea());
+				goodInfo.setAreaName(areaName);
+				//goodInfo.setAreaName(gVo.getArea().getAreaName());
 				//库存
 				goodInfo.setInventory(gVo.getInventory());
 				//单位
@@ -485,6 +491,35 @@ public class AppHomeGoodsMessController {
 		}
 		return rs;
 	}
+	
+	/**
+	 * 获取地址名称：XX省-XX市/XX市
+	 * @param areaId
+	 * @return
+	 */
+	private String getAreaName(ezs_area area){
+		String areaName = "";
+		ezs_area areaTemp = area;
+		while(areaTemp.getLevel()>0){
+			areaTemp = this.areaMapper.selectByPrimaryKey(areaTemp.getParent_id());
+			//判断是否为直辖市 
+			// 4521985-北京、4522004-天津、4522848-上海、4524461-重庆
+			if(areaTemp.getLevel()==1&&
+					(areaTemp.getId()==4521985||areaTemp.getId()==4522004||areaTemp.getId()==4522848||areaTemp.getId()==4524461)
+					){
+				areaName = areaTemp.getAreaName();
+				break;
+			}
+			if(areaTemp.getLevel()<2)
+				areaName = areaTemp.getAreaName() +"-"+ areaName;
+		}
+		//去掉最后的“-”
+		if(areaName.length()>0)
+			areaName = areaName.substring(0, areaName.length()-1);
+		return areaName;
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	private Result getPriceAnalyzeInfo(String currentPage){
 		log.info("行情分析查询begin..........................");
