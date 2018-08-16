@@ -198,8 +198,15 @@ public class HunXinServiceImpl implements HunXinService{
 						upif.setAccount(account);
 						userlistback.add(upif);
 						if(ezs_huanxinMapper!=null){
-							ezs_huanxinMapper.insertSelective(upif);
-							log.info("更新用户环信id");
+							List<ezs_huanxin> hinfol=ezs_huanxinMapper.gethuanxInfoByUserid(userid);
+							if(hinfol.size()>0){
+								ezs_huanxinMapper.insertSelective(hinfol.get(0));
+								log.info("更新用户环信id");
+							}else {
+								ezs_huanxinMapper.insertSelective(upif);
+								log.info("新增用户环信id");
+							}
+							
 						}
 					}
 					if(jsonobjstr!=null)
@@ -220,7 +227,7 @@ public class HunXinServiceImpl implements HunXinService{
 		return jsonobjstr;
 	}
 	
-	 * 同步请求
+	  同步请求
 	 
 	@Override
 	public net.sf.json.JSONObject regHuanxinSinglesyn(String username,String password){

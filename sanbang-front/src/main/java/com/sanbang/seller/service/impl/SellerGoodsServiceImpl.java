@@ -150,6 +150,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String source = request.getParameter("source");// 来源
 				String purpose = request.getParameter("purpose");// 用途
 				String protection = request.getParameter("protection");// 是否环保
+				
+				
 				String density = request.getParameter("density");// 密度
 				String cantilever = request.getParameter("cantilever");// 悬臂梁缺口冲击
 				String freely = request.getParameter("freely");// 简支梁缺口冲击
@@ -197,6 +199,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
 		        	protection="2";
 		        }
+				log.info("protection>>>>>>>>>"+protection);
 		        goods.setProtection(Integer.valueOf(protection));
 		        
 				goods.setDensity(density);

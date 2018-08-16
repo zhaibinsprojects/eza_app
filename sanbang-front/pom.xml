@@ -276,16 +276,33 @@
 		<dependency>
     		<groupId>com.microsoft.sqlserver</groupId>
     		<artifactId>sqljdbc4</artifactId>
-    		<version>4.0</version>
 		</dependency>
 		
 		<dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
-            <version>1.5.5</version>
         </dependency>
-		
-		
+		<!--极光推送相关 -->
+		  <dependency>
+	        <groupId>cn.jpush.api</groupId>
+	        <artifactId>jiguang-common</artifactId>
+	    </dependency>
+	    <dependency>
+	        <groupId>io.netty</groupId>
+	        <artifactId>netty-all</artifactId>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.google.code.gson</groupId>
+	        <artifactId>gson</artifactId>
+	    </dependency>
+		<dependency>
+		    <groupId>cn.jpush.api</groupId>
+		    <artifactId>jpush-client</artifactId>
+		</dependency>
+		 <dependency>
+	        <groupId>org.slf4j</groupId>
+	        <artifactId>slf4j-api</artifactId>
+  		  </dependency>
 	</dependencies>
 	<repositories>
 		<repository>

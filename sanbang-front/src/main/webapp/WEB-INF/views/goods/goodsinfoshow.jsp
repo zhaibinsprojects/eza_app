@@ -100,8 +100,11 @@
 			<tr> <td>来源</td> <td>${good.source}</td> </tr>
 			<tr> <td>用途</td> <td>${good.purpose}</td> </tr>
 			<c:choose>
-    			<c:when test="${good.protection}">
+    			<c:when test="${good.protection eq 1}">
         			<tr> <td>环保</td> <td>是</td> </tr>
+    			</c:when>
+    			<c:when test="${good.protection eq 2}">
+        			<tr> <td>环保</td> <td>未检测</td> </tr>
     			</c:when>
     			<c:otherwise>
         			<tr> <td>环保</td> <td>否</td> </tr>

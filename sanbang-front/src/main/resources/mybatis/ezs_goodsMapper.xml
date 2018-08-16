@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanbang.dao.ezs_goodsMapper">
 	<resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_goods">
-		<id column="id" property="id" jdbcType="BIGINT" />
+	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
     <result column="addess" property="addess" jdbcType="VARCHAR" />
@@ -30,7 +30,7 @@
     <result column="memberLook" property="memberLook" jdbcType="BIT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="protection" property="protection" jdbcType="INTEGER" />
+    <result column="protection_v" property="protection" jdbcType="INTEGER" />
     <result column="purpose" property="purpose" jdbcType="VARCHAR" />
     <result column="recommend" property="recommend" jdbcType="BIT" />
     <result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
@@ -68,10 +68,9 @@
     <result column="review_status" property="review_status" jdbcType="INTEGER" />
     <result column="good_num" property="good_num" jdbcType="VARCHAR" />
     <result column="manage_status" property="manage_status" jdbcType="INTEGER" />
-    <result column="protection_v" property="protection_v" jdbcType="INTEGER" />
 	</resultMap>
 	
-	<resultMap id="collection_BaseResultMap" type="com.sanbang.bean.ezs_goods">
+	<resultMap id="collection_BaseResultMap" type="com.sanbang.bean.ezs_goodsCollect">
 		<id column="id" jdbcType="BIGINT" property="id" />
 		<result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
 		<result column="deleteStatus" jdbcType="BIT" property="deleteStatus" />
@@ -100,7 +99,7 @@
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<!-- 收藏夹查看信息，price展示位销售价格，app取price字段，故此处用saleprice映射到实体类price上 -->
 		<result column="salePrice" jdbcType="DECIMAL" property="price" />
-		<result column="protection" jdbcType="INTEGER" property="protection" />
+		<result column="protection_v" jdbcType="BIT" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />
 		<result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
@@ -125,6 +124,7 @@
 		<result column="addess2" jdbcType="VARCHAR" property="addess2" />
 	</resultMap>
   
+  
 
   <resultMap id="BaseResultMap1" type="com.sanbang.vo.GoodsListInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -143,19 +143,19 @@
     id, addTime, deleteStatus, addess, addess2, ash, bending, burning, cantilever, click, 
     cncl_num, collect, content, crack, density, flexural, freely, good_no, good_self, 
     goods_salenum, inventory, keyword, lastModifyDate, lipolysis, lockStatus, memberLook, 
-    name, saleprice as price, protection, purpose, recommend, recommend_time, seo_description, source, 
+    name, saleprice as price, purpose, recommend, recommend_time, seo_description, source, 
     status, tensile, validity, water, area_id, classOfFinish_id, color_id, form_id, goodClass_id, 
     goods_main_photo_id, logistics_id, quality_id, region_id, supply_id, user_id, util_id, 
     supplier_id, ash2, bending2, burning2, cantilever2, crack2, density2, flexural2, 
     freely2, lipolysis2, salePrice, tensile2, water2, review_status, good_num, manage_status, 
-    protection_v
+    protection_v as protection
 	</sql>
   
   <sql id="Base_Column_List1">
     id, addTime, deleteStatus, addess, ash, bending, burning, cantilever, click, cncl_num, 
     collect, content, crack, density, flexural, freely, good_no, good_self, goods_salenum, 
     inventory, keyword, lastModifyDate, lipolysis, lockStatus, memberLook, name, price, 
-    protection, purpose, recommend, recommend_time, seo_description, source, status, 
+    protection_v as protection, purpose, recommend, recommend_time, seo_description, source, status, 
     tensile, validity, water, area_id, classOfFinish_id, color_id, form_id, goodClass_id, 
     goods_main_photo_id, logistics_id, quality_id, region_id, supply_id, user_id, util_id, 
     addess2
@@ -188,7 +188,7 @@
       goods_salenum, inventory, keyword, 
       lastModifyDate, lipolysis, lockStatus, 
       memberLook, name, price, 
-      protection, purpose, recommend, 
+      protection_v, purpose, recommend, 
       recommend_time, seo_description, source, 
       status, tensile, validity, 
       water, area_id, classOfFinish_id, 
@@ -299,7 +299,7 @@
         price,
 			</if>
 			<if test="protection != null">
-        protection,
+        protection_v,
 			</if>
 			<if test="purpose != null">
         purpose,
@@ -608,7 +608,7 @@
 			</if>
 			
 			<if test="protection != null">
-        protection = #{protection,jdbcType=BIT},
+        protection_v = #{protection,jdbcType=BIT},
 			</if>
 			<if test="purpose != null">
         purpose = #{purpose,jdbcType=VARCHAR},
@@ -707,7 +707,7 @@
       memberLook = #{memberLook,jdbcType=BIT},
       name = #{name,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
-      protection = #{protection,jdbcType=BIT},
+      protection_v = #{protection,jdbcType=BIT},
       purpose = #{purpose,jdbcType=VARCHAR},
       recommend = #{recommend,jdbcType=BIT},
       recommend_time = #{recommend_time,jdbcType=TIMESTAMP},
@@ -796,7 +796,7 @@
 		<result column="memberLook" property="memberLook" jdbcType="BIT" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
-		<result column="protection" property="protection" jdbcType="INTEGER" />
+		<result column="protection_v" property="protection" jdbcType="INTEGER" />
 		<result column="purpose" property="purpose" jdbcType="VARCHAR" />
 		<result column="recommend" property="recommend" jdbcType="BIT" />
 		<result column="recommend_time" property="recommend_time" jdbcType="TIMESTAMP" />
@@ -837,7 +837,7 @@
 	<sql id="Goods_Base_Column_List" >
     g.id, g.addTime, g.deleteStatus, g.addess, g.ash, g.bending, g.burning, g.cantilever, g.click, g.cncl_num, 
     g.collect, g.content, g.crack, g.density, g.flexural, g.freely, g.good_no, g.good_self, g.goods_salenum, 
-    g.inventory, g.keyword, g.lipolysis, g.memberLook, g.name, g.saleprice as price, g.protection, g.purpose, g.recommend, 
+    g.inventory, g.keyword, g.lipolysis, g.memberLook, g.name, g.saleprice as price, g.protection_v as protection, g.purpose, g.recommend, 
     g.recommend_time, g.seo_description, g.source, g.status,g.tensile, g.validity, g.water, g.area_id, 
     g.color_id, g.form_id, g.goodClass_id, g.goods_main_photo_id, g.logistics_id, g.quality_id, g.region_id, 
     g.supply_id, g.user_id, g.util_id, g.classOfFinish_id, g.lockStatus,g.lastModifyDate,
@@ -1091,7 +1091,7 @@
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="price" jdbcType="DECIMAL" property="price" />
 		<result column="saleprice" jdbcType="DECIMAL" property="saleprice" />
-		<result column="protection" jdbcType="INTEGER" property="protection" />
+		<result column="protection_v" jdbcType="INTEGER" property="protection" />
 		<result column="purpose" jdbcType="VARCHAR" property="purpose" />
 		<result column="recommend" jdbcType="BIT" property="recommend" />
 		<result column="recommend_time" jdbcType="TIMESTAMP" property="recommend_time" />
