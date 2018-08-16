@@ -594,7 +594,8 @@
     <result column="currentPrice" property="currentAVGPrice" jdbcType="VARCHAR" />
     <result column="prePrice" property="preAVGPrice" jdbcType="VARCHAR" />
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
-    <result column="className" property="sandBytwo" jdbcType="VARCHAR" />
+    <result column="className" property="goodClassName" jdbcType="VARCHAR" />
+    <result column="areaName" property="goodArea" jdbcType="VARCHAR" />
   </resultMap>
   
   <select id="getPriceConditionCount" resultType="java.lang.Integer">
@@ -636,6 +637,7 @@
 	IFNULL(AVG(a.price),0) currentPrice,
 	a.data_time dealDate,
 	gc.name className,
+	(select area.areaName from ezs_area area where area.id =  a.region_id) areaName ,
 	(
 	select IFNULL(AVG(p.price),0)
 	from ezs_price_trend p where p.type = '3' and p.goodClass_id = a.goodClass_id and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')

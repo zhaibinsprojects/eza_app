@@ -116,7 +116,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					increase = 0.00;
 				}
 				//涨幅
-				priceTrendIfo.setSandByOne(String.valueOf(increase));
+				priceTrendIfo.setSandByOne(String.valueOf(Math.abs(increase)));
 				priceTrendIfo.setIncreaseValue(increase);
 				ppList.add(priceTrendIfo);
 			}

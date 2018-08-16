@@ -5,8 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
-<!-- <base href="http://10.10.10.232/"/> -->
+<%-- <base href="${serurl}"/> --%>
+<base href="http://10.10.10.52/"/>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
@@ -25,14 +25,14 @@
 <link href="front/resource/css/newAddcss/mui.picker.css" rel="stylesheet" />
 <link href="front/resource/css/newAddcss/mui.poppicker.css" rel="stylesheet" />
 <script type="text/javascript" src="front/resource/js/newAddjs/pricezsDetail.js"></script>
- <script src="front/resource/js/highcharts.js"></script>
+<script src="front/resource/js/highcharts.js"></script>
 </head>
 <body style="background:#efefef;width: 100%;/* background:#efefef;overflow-x: hidden; */">
   	<div class="hTwoFater_yzs">
     <h2><span>价格趋势</span></h2>
-    <nav class="navAll_yzs" style="margin-top: 3%;/* margin-left: -5%; margin-right: -5%; */">
-  	<ul class="nav_ulsty_yzs">
-    	<li  id="showCityPicker" style="width: 25%;"><a id="cityResult" href="javascript:;">山东</a></li>
+    <nav class="navAll_yzs" style="margin-top: 3%; width: 100%;/* margin-left: -5%; margin-right: -5%; */">
+  	<ul class="nav_ulsty_yzs" style="width: 100%;">
+    	<li id="showCityPicker" style="width: 25%;"><a id="cityResult" href="javascript:;">山东</a></li>
         <li id="showUserPicker" style="width: 25%;"><a id="userResult" href="javascript:;">品类</a></li>
         <li id="showColorPicker" style="width: 25%;"><a id="colorResult" href="javascript:;">颜色</a></li>
         <li id="showFormPicker" style="width: 25%;"><a id="formResult" href="javascript:;">形态</a></li>
@@ -40,8 +40,8 @@
   	</nav>
     </div>
   <!--实时报价--->
-    <section class="secsty_yzs" style="height:50%;margin-top: 3%">
-    <div id="container" class="nedHiCha_yzs" style="min-width: 95%;height:80%;">
+    <section class="secsty_yzs" style="height:45%;margin-top: 3%">
+    <div id="container" class="nedHiCha_yzs" style="min-width: 95%;height:90%;">
     	<!-- <div id="main" style="width: 90%;height:40%;"></div> -->
     </div>
   </section>
@@ -49,10 +49,11 @@
   	<table class="tabl_yzs_ud" cellpadding="0" cellspacing="0">
     	<thead>
         	<tr>
-            	<th><span>日期</span></th>
-              	<th><span>均价</span></th>
-                <th><span>跌涨</span></th>
-                <th><span>幅度</span></th>
+                <th><span>品类</span></th>
+              	<th><span>地区</span></th>
+                <th><span>均价</span></th>
+                <th><span>涨跌幅</span></th>
+                <th><span>时间</span></th>
             </tr>
         </thead>
         <tbody>
@@ -74,8 +75,8 @@
   </form>   
 </body>
 <script type="text/javascript">
-var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/";*/
+/* var baseurl="${serurl}"; */
+ var baseurl="http://10.10.10.52/";
 var goodClassId = "${kindId}";
 var areaId = "${areaId}";
 $(document).ready(function(){
@@ -147,16 +148,17 @@ function initTable(plist){
 	$("tbody").empty();
 	var html = "";	
 	for(var i=0;i<plist.length;i++){
-		html = html+"<tr><td><span>"+plist[i].dealDate+"</span></td>"+
-					"<td><span>"+plist[i].currentAVGPrice+"</span></td>";
+		html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
+			"<td><span>"+plist[i].goodArea+"</span></td>"+
+			"<td><span>"+plist[i].currentAVGPrice+"</span></td>";
 		if(plist[i].increaseValue > 0){			
-			html=html+"<td><span class='sup'>涨</span></td><td><span class='pup'>"+plist[i].sandByOne+"</span></td>";
+			html=html+"<td><span class='pup'>"+plist[i].sandByOne+"</span></td>";
 		}else if(plist[i].increaseValue < 0){
-			html=html+"<td><span class='sdown'>跌</span></td><td><span class='pdown'>"+plist[i].sandByOne+"</span></td>";			
+			html=html+"<td><span class='pdown'>"+plist[i].sandByOne+"</span></td>";			
 		}else {
-			html=html+"<td><span class='spin'>平</span></td><td><span class='ppin'>"+plist[i].sandByOne+"</span></td> ";
+			html=html+"<td><span class='ppin'>"+plist[i].sandByOne+"</span></td> ";
 		} 
-		html=html+"</tr>";
+		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 	}
 	$("tbody").append(html);
 }
