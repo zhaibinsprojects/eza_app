@@ -1,4 +1,4 @@
-/*package com.sanbang.utils;
+package com.sanbang.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,13 +26,13 @@ import cn.jpush.api.push.model.notification.Notification;
 
 public class JiGuanPushUtils {
 
-	  *//**
+	  /**
      * 
      * @ClassName: MessagePushUtil
      * @Description: (消息推送工具类)
      * 
      *
-     *//*
+     */
     protected static Logger LOG = LoggerFactory.getLogger(JiGuanPushUtils.class);
     private static final String MASTER_SECRET = "60bb60ca8d9691c301497f8a";
     private static final String APP_KEY = "cb33d68a9f57eddfb0c33335";
@@ -53,7 +53,7 @@ public class JiGuanPushUtils {
     public static final String SOUND = "";
 
     public static final int BADGE = 1;
-    *//**
+    /**
      * @throws APIRequestException 
      * @throws APIConnectionException 
      * 
@@ -63,13 +63,13 @@ public class JiGuanPushUtils {
      * @param @return    设定文件 
      * @return HttpResponse    返回类型 
      * @throws
-     *//*
+     */
 	public static PushResult sendPush(PushPayload payload) throws APIConnectionException, APIRequestException {
 		JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
 		return jPushClient.sendPush(payload);
 	}
 
-    *//**
+    /**
     * @Title: sendPushTryCatch 
     * @Description: try catch 推送
     * @param @param payload
@@ -77,7 +77,7 @@ public class JiGuanPushUtils {
     * @param @return    设定文件 
     * @return String    返回类型 
     * @throws 
-    *//*
+    */
 	public static void sendPushTryCatch(PushPayload payload, Logger logger) {
 		JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
 		try {
@@ -95,7 +95,7 @@ public class JiGuanPushUtils {
 		}
 	}
 
-    *//**
+    /**
     * 
     * @Title: buildPushObjectAllAllAlert 
     * @Description: (快捷地构建推送对象：所有平台，所有设备，内容为 alert 的通知) 
@@ -103,13 +103,13 @@ public class JiGuanPushUtils {
     * @param @return    设定文件 
     * @return PushPayload    返回类型 
     * @throws
-    *//*
+    */
     @SuppressWarnings("static-access")
     public static PushPayload buildPushObjectAllAllAlert(String alert) {
        return pushPayload.alertAll(alert);
     }
 
-    *//** 
+    /** 
     * @Title: buildPushObjectAliasAlert 
     * @Description: (所有平台，推送目标是别名为 alias，通知内容为 alert) 
     * @param @param alert
@@ -117,7 +117,7 @@ public class JiGuanPushUtils {
     * @param @return    设定文件 
     * @return PushPayload    返回类型 
     * @throws 
-    *//*
+    */
 	public static PushPayload buildPushObjectAliasAlert(String days, String alert, String... alias) {
 		Builder builder = PushPayload.newBuilder();
 		return builder.setPlatform(Platform.android_ios()).setAudience(Audience.alias(alias))
@@ -128,7 +128,7 @@ public class JiGuanPushUtils {
 						.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build())
 				.build();
 	}
-    *//**
+    /**
     * 
     * @Title: buildPushObjectIos 
     * @Description: (iOS推送 badge  sound) 
@@ -138,7 +138,7 @@ public class JiGuanPushUtils {
     * @param @return    设定文件 
     * @return PushPayload    返回类型 
     * @throws
-    *//*
+    */
     public static PushPayload buildPushObjectIosAndroid(String days,Map<String, String> params,
         String[] alias, String alert, int badge, String sound, String msgContent) {
            Builder builder = PushPayload.newBuilder();
@@ -167,7 +167,7 @@ public class JiGuanPushUtils {
                    .build();
        }
 
-        *//** 
+        /** 
         * @Title: buildPushObjectAllAliasAlert 
         * @Description: (所有平台，推送目标是别名为 alias，通知标题为 title，通知内容为 alert) 
         * @param @param params
@@ -175,7 +175,7 @@ public class JiGuanPushUtils {
         * @param @return    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
     public static PushPayload buildPushObjectAllAliasAlert(String days,Map<String, String> params, String alert, String title,String... alias) {
         Builder builder = PushPayload.newBuilder();
         return builder
@@ -199,7 +199,7 @@ public class JiGuanPushUtils {
         }
 
 
-        *//** 
+        /** 
         * @Title: buildPushObjectAndroidTagAlertWithTitle 
         * @Description: (平台是 Android，目标是 tag 为 tag 的设备，内容是 Android 通知 alert，并且标题为 title) 
         * @param @param tag
@@ -208,7 +208,7 @@ public class JiGuanPushUtils {
         * @param @return    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
     public static PushPayload buildPushObjectAndroidTagAlertWithTitle(String days,String tag, String alert, String title) {
             Builder builder = PushPayload.newBuilder();
             return builder
@@ -222,7 +222,7 @@ public class JiGuanPushUtils {
                     .build();
         }
 
-        *//** 
+        /** 
         * @Title: buildPushObjectIosTagAndAlertWithExtrasAndMessage 
         * @Description: (
         * 构建推送对象：平台是 iOS，推送目标是 tag, tagAll 的交集，
@@ -240,7 +240,7 @@ public class JiGuanPushUtils {
         * @param @return    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
         public static PushPayload buildPushObjectIosTagAndAlertWithExtrasAndMessage(String days,
         String tag, String tagAll, int number, String alert, String msgContent) {
             Builder builder = PushPayload.newBuilder();
@@ -261,7 +261,7 @@ public class JiGuanPushUtils {
                      .build();
         }
 
-        *//** 
+        /** 
          * 构建推送对象：平台是 Andorid 与 iOS，
         * 推送目标是 （tag1 与 tag2 的并集），
         * 推送内容是 - 内容为 msgContent 的消息
@@ -272,7 +272,7 @@ public class JiGuanPushUtils {
         * @param @return    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
         public static PushPayload buildPushObjectIosAudienceMoreMessageWithExtras(String days,
         String tag1, String tag2, String msgContent) {
             Builder builder = PushPayload.newBuilder();
@@ -290,7 +290,7 @@ public class JiGuanPushUtils {
                             .build())
                     .build();
         }
-        *//** 
+        /** 
         * @Title: sendAndroidMessageWithAliasAndExtras 
         * @Description: 用户自定义消息类型,以及传递附属信息,发送给安卓和IOS特定用户 
         * @param @param extras
@@ -302,7 +302,7 @@ public class JiGuanPushUtils {
         * @param @throws APIRequestException    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
         public static PushPayload sendAndroidAndIosMessageWithAliasAndExtras(String days,Map<String, String>extras,String title, String msgContent, String... alias) 
                 throws APIConnectionException, APIRequestException {
                   Builder builder = PushPayload.newBuilder();
@@ -321,7 +321,7 @@ public class JiGuanPushUtils {
                             .build();
         }
 
-        *//** 
+        /** 
         * @Title: sendAndroidMessageWithAlias 
         * @Description: 用户自定义消息类型，无附加属性信息，发送给安卓和IOS特定用户 
         * @param @param title
@@ -332,7 +332,7 @@ public class JiGuanPushUtils {
         * @param @throws APIRequestException    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
         public static PushPayload sendAndroidAndIosMessageWithAlias(String days,Map<String,String> extras,String title, String msgContent, List<String> alias) 
                 throws APIConnectionException, APIRequestException {
                  Builder builder = PushPayload.newBuilder();
@@ -371,7 +371,7 @@ public class JiGuanPushUtils {
                             .build();
         }
 
-        *//** 
+        /** 
         * @Title: sendAndroidAndIosMessageAndNotification 
         * @Description: 推送消息和通知，发送给所有安卓和IOS用户 
         * @param @param title
@@ -379,7 +379,7 @@ public class JiGuanPushUtils {
         * @param @return    设定文件 
         * @return PushPayload    返回类型 
         * @throws 
-        *//*
+        */
         public static PushPayload sendAndroidAndIosMessageAndNotification(String days,String content,String alert){
             Builder builder = PushPayload.newBuilder();
             return builder
@@ -425,4 +425,3 @@ public class JiGuanPushUtils {
           
       }
 }
-*/
