@@ -376,7 +376,7 @@ public class UserProServiceImpl implements UserProService {
 							// 首次登录 应该跳转到 注册联系人资料
 							result.setSuccess(true);
 							result.setMsg("登录成功");
-							result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 							RedisResult<String> rrt;
 							rrt = (RedisResult<String>) RedisUtils.set(userKey, userProInfo,
 									Long.parseLong(redisuserkeyexpir));
@@ -1194,20 +1194,20 @@ public class UserProServiceImpl implements UserProService {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public Result userAddInfo(Result result, HttpServletRequest request, String userRole, String companyName,
 			String address, String area_id, String mianIndustry_id, String companyType_id, String trueName, long sex_id,
 			String tel, String email,ezs_user user ) {
-
+		
+		Map<String, Object> map=new HashMap<>();
 		// 校验
 		result = checkAdduserinfo(result, request, userRole, companyName, address, area_id, mianIndustry_id,
 				companyType_id, trueName, sex_id, tel, email);
 		if (!result.getSuccess()) {
 			return result;
 		}
-
-		
 
 		if (user != null) {
 			// 商铺信息
@@ -1277,7 +1277,24 @@ public class UserProServiceImpl implements UserProService {
 
 			if (aa > 0) {
 				ezs_user upi=ezs_userMapper.getUserInfoByUserNameFromBack(user.getName()).get(0);
-				RedisUserSession.updateUserInfo(user.getUserkey(), upi, Long.parseLong(redisuserkeyexpir));
+				//注册完成删除注册key
+				RedisUtils.del(user.getUserkey());
+				
+				//返回登录key
+				String str32 = RandomStr32.getStr32();
+				String userKey =""; 
+				userKey="app" + upi.getEzs_userinfo().getPhone() + str32;
+				map.put("token", userKey);
+				upi.setUserkey(userKey);
+				
+				RedisResult<String> rrt;
+				rrt = (RedisResult<String>) RedisUtils.set(userKey, upi,
+						Long.parseLong(redisuserkeyexpir));
+				if (rrt.getCode() == RedisConstants.SUCCESS) {
+					log.debug("用户" + upi.getName() + "：userKey保存到redis成功执行");
+				} else {
+					log.debug("用户" + upi.getName() + "：userKey保存到redis失败");
+				}
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REGIST_SUCCESS);
 				result.setSuccess(true);
 				result.setMsg("注册成功");
@@ -1291,7 +1308,7 @@ public class UserProServiceImpl implements UserProService {
 			result.setSuccess(false);
 			result.setMsg("请重新注册");
 		}
-
+		result.setObj(map);
 		return result;
 	}
 

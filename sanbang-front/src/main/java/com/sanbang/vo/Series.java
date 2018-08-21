@@ -10,6 +10,14 @@ public class Series {
     
     public List<BigDecimal> data;
     
+    public List<String> dateList;
+    
+	public List<String> getDateList() {
+		return dateList;
+	}
+	public void setDateList(List<String> dateList) {
+		this.dateList = dateList;
+	}
 	public String getName() {
 		return name;
 	}

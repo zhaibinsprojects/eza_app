@@ -17,6 +17,10 @@ public class PriceTrendIfo extends ezs_price_trend {
 	private Double preAVGPrice;
 	//成交日期
 	private String dealDate;
+    //当日价格
+    private Double currentPrice;
+    //前日价格
+    private Double prePrice;
 	//涨幅
 	private Double increaseValue;
 	
@@ -43,7 +47,23 @@ public class PriceTrendIfo extends ezs_price_trend {
 
     private Integer price_type;
 
-    public Long getId() {
+    public Double getCurrentPrice() {
+		return currentPrice;
+	}
+
+	public void setCurrentPrice(Double currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+
+	public Double getPrePrice() {
+		return prePrice;
+	}
+
+	public void setPrePrice(Double prePrice) {
+		this.prePrice = prePrice;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -55,7 +75,7 @@ public class PriceTrendIfo extends ezs_price_trend {
         return addTime;
     }
 
-    public int getProtection() {
+    public Integer getProtection() {
 		return protection;
 	}
 

@@ -542,7 +542,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 		ezs_store store=new ezs_store();
 		store.setStatus(1);
-		store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_AUTHENTICATION).getId());
+		store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_REGISTER).getId());
 		store.setId(upi.getEzs_store().getId());
 		store.setAccountType(upi.getEzs_store().getAccountType());
 		store.setRegisterDate(new Date());
@@ -567,7 +567,7 @@ public class AuthServiceImpl implements AuthService {
 			return result;
 		}
 		//企业信息
-		if(null==upi.getEzs_bill()&&Tools.isEmpty(upi.getEzs_bill().getBank())){
+		if(null==upi.getEzs_bill()||Tools.isEmpty(upi.getEzs_bill().getBank())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善开票信息");
@@ -605,7 +605,7 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("请完善个体基本信息");
 		}
 		//个体执照信息
-		if(null==upi.getEzs_bill()&&Tools.isEmpty(upi.getEzs_bill().getBank())){
+		if(null==upi.getEzs_bill()||Tools.isEmpty(upi.getEzs_bill().getBank())){
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("请完善开票信息");

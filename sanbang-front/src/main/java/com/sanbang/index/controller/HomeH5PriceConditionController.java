@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.varia.FallbackErrorHandler;
 import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -156,10 +157,35 @@ public class HomeH5PriceConditionController {
 	@ResponseBody
 	public Object getPriceTrendcyShow(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(name="currentPage",defaultValue="1") int pageno,
-			@RequestParam(name="kindId",defaultValue="1") String kindId,
-			@RequestParam(name="areaId",required=false) Long areaId,
-			@RequestParam(name="formId",required=false) Long formId,
-			@RequestParam(name="colorId",required=false) Long colorId ){
+			@RequestParam(name="kindId",defaultValue="1") String kindId,/*品类*/
+			@RequestParam(name="areaId",required=false) Long areaId,/*地区*/
+			@RequestParam(name="formId",required=false) Long formId,/*形态*/
+			@RequestParam(name="colorId",required=false) Long colorId,/*颜色*/
+			@RequestParam(name="dateBetweenType",required=true,defaultValue="WEEK") String dateBetweenType,/*展示区间：一周、一月、一季度、一年*/
+			@RequestParam(name="priceMin",required=false) String priceMin,/*价格区间*/
+			@RequestParam(name="priceMax",required=false) String priceMax,
+			@RequestParam(name="densityMin",required=false) String densityMin,/*密度区间*/
+			@RequestParam(name="densityMax",required=false) String densityMax,
+			@RequestParam(name="cantileverMin",required=false) String cantileverMin,/*悬梁区间*/
+			@RequestParam(name="cantileverMax",required=false) String cantileverMax,
+			@RequestParam(name="freelyMin",required=false) String freelyMin,/*简冲*/
+			@RequestParam(name="freelyMax",required=false) String freelyMax,
+			@RequestParam(name="lipolysisMin",required=false) String lipolysisMin,/*熔*/
+			@RequestParam(name="lipolysisMax",required=false) String lipolysisMax,
+			@RequestParam(name="ashMin",required=false) String ashMin,/*灰度*/
+			@RequestParam(name="ashMax",required=false) String ashMax,
+			@RequestParam(name="waterMin",required=false) String waterMin,/*水分*/
+			@RequestParam(name="waterMax",required=false) String waterMax,
+			@RequestParam(name="tensileMin",required=false) String tensileMin,/*拉伸*/
+			@RequestParam(name="tensileMax",required=false) String tensileMax,
+			@RequestParam(name="crackMin",required=false) String crackMin,/*断裂*/
+			@RequestParam(name="crackMax",required=false) String crackMax,
+			@RequestParam(name="bendingMin",required=false) String bendingMin,/*弯曲强度*/
+			@RequestParam(name="bendingMax",required=false) String bendingMax,
+			@RequestParam(name="flexuralMin",required=false) String flexuralMin,/*拉伸*/
+			@RequestParam(name="flexuralMax",required=false) String flexuralMax
+			){
+		
 		List<String> dateList = new ArrayList<>();
 		JSONObject json=new JSONObject();
 		Series seriesVo = new Series();
@@ -177,6 +203,32 @@ public class HomeH5PriceConditionController {
 		List<Long> areaIds = getAllChildrenAreaIDs(areaId);
 		if(areaIds.size()>0)
 			tMp.put("areaIds", areaIds);
+		//WEEK、MONTH、QUARTER、YEAR
+		//String dateBetweenType = "YEAR";
+		tMp.put("dateBetweenType", dateBetweenType);
+		//多条件赛选，暂时用不到
+		/*tMp.put("priceMin", priceMin);
+		tMp.put("priceMax", priceMax);
+		tMp.put("densityMin", densityMin);
+		tMp.put("densityMax", densityMax);
+		tMp.put("cantileverMin", cantileverMin);
+		tMp.put("cantileverMax", cantileverMax);
+		tMp.put("freelyMin", freelyMin);
+		tMp.put("freelyMax", freelyMax);
+		tMp.put("lipolysisMin", lipolysisMin);
+		tMp.put("lipolysisMax", lipolysisMax);
+		tMp.put("ashMin", ashMin);
+		tMp.put("ashMax", ashMax);
+		tMp.put("waterMin", waterMin);
+		tMp.put("waterMax", waterMax);
+		tMp.put("tensileMin", tensileMin);
+		tMp.put("tensileMax", tensileMax);
+		tMp.put("crackMin", crackMin);
+		tMp.put("crackMax", crackMax);
+		tMp.put("bendingMin", bendingMin);
+		tMp.put("bendingMax", bendingMax);
+		tMp.put("flexuralMin", flexuralMin);
+		tMp.put("flexuralMax", flexuralMax);*/
 		//修改为取近一个月数据
 		mmp = this.priceConditionService.getPriceTrendcy(tMp,pageno,10);
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");

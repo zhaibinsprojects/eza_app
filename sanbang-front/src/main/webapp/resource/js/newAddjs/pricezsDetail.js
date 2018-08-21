@@ -131,6 +131,7 @@ function csubmit(){
 	var formId = $("input[name='formId']").val();
 	var colorId = $("input[name='colorId']").val();
 	var areaId = $("input[name='areaId']").val();
+	var dateBetweenType = $("input[name='dateBetweenType']").val();
 	$.ajax({
 		  type: 'POST',
 		  url: baseurl+"/front/app/home/getPriceTrendcyShow.htm",
@@ -138,7 +139,8 @@ function csubmit(){
 			  kindId:baojia_goodclass,
 			  formId:formId,
 			  colorId:colorId,
-			  areaId:areaId
+			  areaId:areaId,
+			  dateBetweenType:dateBetweenType
 		  },
 		  success: function(result){
 			//进行请求后要数据

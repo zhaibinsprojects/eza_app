@@ -1,10 +1,14 @@
 package com.sanbang.index.service.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,6 +122,9 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 				//涨幅
 				priceTrendIfo.setSandByOne(String.valueOf(Math.abs(increase)));
 				priceTrendIfo.setIncreaseValue(increase);
+				//地址信息
+				String areaName = getAreaName(priceTrendIfo.getRegion_id());
+				priceTrendIfo.setGoodArea(areaName);
 				ppList.add(priceTrendIfo);
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -129,6 +136,21 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			mmp.put("Msg", "未查询到数据");
 		}
 		return mmp;
+	}
+	
+	/**
+	 * 获取地址名称：XX市
+	 * @param areaId
+	 * @return
+	 */
+	private String getAreaName(Long areaId){
+		ezs_area areaTemp = this.areaMapper.selectByPrimaryKey(areaId);
+		String areaName = areaTemp.getAreaName();
+		while(areaTemp.getLevel()>1){
+			areaTemp = this.areaMapper.selectByPrimaryKey(areaTemp.getParent_id());
+			areaName = areaTemp.getAreaName();
+		}
+		return areaName;
 	}
 	
 	/**
@@ -163,5 +185,99 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public Map<String, Object> priceInTimeNew(Long goodClassId) {
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> priceInTimelist = new ArrayList<>();
+		DecimalFormat df = new DecimalFormat("0.000");
+		DecimalFormat dftwo = new DecimalFormat("0.00%");
+		try {
+			priceInTimelist = this.priceTrendMapper.priceInTimeNew(goodClassId);
+			if(priceInTimelist!=null){
+				List<PriceTrendIfo> plistTemp = new ArrayList<>();
+				for (PriceTrendIfo item : priceInTimelist) {
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf(zf));
+					}
+					//item.setIncreaseValue(zf);
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(0, 10):"");
+					plistTemp.add(item);
+				}
+				mmp.put("Obj", plistTemp);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}else{
+				priceInTimelist=new ArrayList<>();
+				mmp.put("Obj", priceInTimelist);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
+
+
+	@Override
+	public Map<String, Object> getPriceTrendcyNew(Map<String, Object> mp, int currentPage, int pagesaize) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> ppList = new ArrayList<>();
+		List<PriceTrendIfo> pList = null;
+		DecimalFormat df = new DecimalFormat("0.000");
+		DecimalFormat dftwo = new DecimalFormat("0.00%");
+		SimpleDateFormat formattype01 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat formattype02 = new SimpleDateFormat("yyyy-MM-dd");
+		
+		//priceTrendIfo.setCurrentAVGPrice(Double.valueOf(df.format(priceTrendIfo.getCurrentAVGPrice())));
+		//priceTrendIfo.setSandByOne(dftwo.format(Math.abs(priceTrendIfo.getIncreaseValue())));
+		//priceList.add(new BigDecimal(df.format(priceTrendIfo.getCurrentAVGPrice())));
+		try {
+			pList = this.priceTrendMapper.getPriceTrendcyNew(mp);			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(pList!=null&&pList.size()>0){
+			for (PriceTrendIfo priceTrendIfo : pList) {
+				//涨幅
+				Double increase = null;
+				try {
+					increase = (priceTrendIfo.getCurrentPrice()-priceTrendIfo.getPrePrice())/priceTrendIfo.getPrePrice();				
+				} catch (Exception e) {
+					increase = 0.00;
+				}
+				//priceTrendIfo.setCurrentPrice(Double.valueOf(df.format(priceTrendIfo.getCurrentPrice())));
+				//涨幅
+				priceTrendIfo.setSandByOne(String.valueOf(Math.abs(increase)));
+				//前一日價格
+				priceTrendIfo.setPrePrice(priceTrendIfo.getPrePrice()==null?0.0:priceTrendIfo.getPrePrice());
+				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(0, 10):"");
+				System.out.println(increase);
+				priceTrendIfo.setSandByOne(dftwo.format(increase));
+				//地址信息
+				String areaName = getAreaName(priceTrendIfo.getRegion_id());
+				priceTrendIfo.setGoodArea(areaName);
+				ppList.add(priceTrendIfo);
+			}
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Obj", ppList);
+			mmp.put("Msg", "查询成功");
+		}else{
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Obj", ppList);
+			mmp.put("Msg", "未查询到数据");
+		}
+		return mmp;
 	}
 }

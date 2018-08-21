@@ -31,4 +31,8 @@ public interface ezs_price_trendMapper {
     List<PriceTrendIfo> selectByAreaIdAndOtherCondition(Map<String, Object> mp);
     
     int getPriceConditionCount(Map<String, Object> mp);
+    /*实时报价 新*/
+    List<PriceTrendIfo> priceInTimeNew(Long goodClassId);
+    /*价格趋势 新*/
+    List<PriceTrendIfo> getPriceTrendcyNew(Map<String, Object> mp);
 }

@@ -979,6 +979,23 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		return 0L;
 	}
+	/**
+	 * 获取商品的二级品类分类ID
+	 * @author zhaibin
+	 * @param goodClassId
+	 * @return
+	 */
+	private Long getSecondGoodClass(Long goodClassId){
+		ezs_goods_class goodsClass = null;
+		goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodClassId);
+		if(goodsClass!=null){
+			while(!goodsClass.getLevel().equals("1")&&goodsClass.getParent_id()!=null){
+				goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodsClass.getParent_id());
+			}
+			return goodsClass.getId();
+		}
+		return 0L;
+	}
 	
 	/**
 	 * 构建实时成交价
@@ -991,8 +1008,8 @@ public class GoodsServiceImpl implements GoodsService{
 	    pri.setPrice_type(1);
         pri.setRegion_id(goods.getArea_id());
         pri.setGoodClass_id(getRootOfTheGoodClass(goods.getGoodClass_id()));//一级分类
-        //pri.setGoodClass1(goodCart.getGoods().getGoodClass().getParent());//二级分类
-        //pri.setGoodClass2(goodCart.getGoods().getGoodClass());//三级分类
+        pri.setGoodClass1_id(getSecondGoodClass(goods.getGoodClass_id()));//二级分类ID
+        pri.setGoodClass2_id(goods.getGoodClass_id());//三级品类id
         pri.setPrice(goodCart.getPrice().doubleValue());  //单价/元
         pri.setColor_id(goods.getColor_id());
         pri.setForm_id(goods.getForm_id());

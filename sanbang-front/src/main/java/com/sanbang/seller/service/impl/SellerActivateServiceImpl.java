@@ -100,7 +100,7 @@ public class SellerActivateServiceImpl implements SellerActivateService {
 			store.setOpen_branch_name(open_branch_name);
 			store.setOpen_branch_no(open_branch_no);
 			store.setLocation_detail(location_detail);*/
-			store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_ACTIVATION).getId());
+			store.setAuditingusertype_id(dictService.getDictById(DictionaryCate.CRM_USR_TYPE_AUTHENTICATION).getId());
 			store.setUserType("SELLER");
 			store.setStatus(1); // 0 初始值， 1 待审核 ， 2 审核通过， 3 审核不通过
 			if (Boolean.valueOf(rent)) {
