@@ -872,7 +872,7 @@
 		goods.saleprice,
 		goods.inventory,
 		goods.goods_main_photo_id,
-		CONCAT("http://m.ezaisheng.com/",REPLACE(B.path,'\\','/'),"/",B.name) path
+		CONCAT("https://m.ezaisheng.com/",REPLACE(B.path,'\\','/'),"/",B.name) path
 	FROM
 		ezs_goods goods
 	LEFT JOIN ezs_goods_class gc ON goods.goodClass_id = gc. LEVEL
@@ -919,7 +919,7 @@
 		g.name,
 		IFNULL((select s.salePrice from ezs_goods_audit_process s where s.goods_id = g.id and s.deleteStatus = '0'),0.00) as price,
 		g.inventory,
-		CONCAT("http://m.ezaisheng.com/",REPLACE(a.path,'\\','/'),"/",a.name) picturePath,
+		CONCAT("https://m.ezaisheng.com/",REPLACE(a.path,'\\','/'),"/",a.name) picturePath,
 		d1.name colorName,
 		ar.areaName areaName,
 		d2.name utilName,

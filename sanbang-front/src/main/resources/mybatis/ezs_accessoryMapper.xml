@@ -17,7 +17,7 @@
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, ext, height, info, name, CONCAT("http://m.ezaisheng.com/",REPLACE(path,'\\','/'),"/",name) path, size, width, album_id 
+    id, addTime, deleteStatus, ext, height, info, name, CONCAT("https://m.ezaisheng.com/",REPLACE(path,'\\','/'),"/",name) path, size, width, album_id 
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -222,7 +222,7 @@
 			B.validDate,
 			C. NAME,
 			CONCAT(
-				"http://m.ezaisheng.com/",
+				"https://m.ezaisheng.com/",
 				REPLACE(C.path,'\\','/'),
 				"/",
 				C. NAME
@@ -241,7 +241,7 @@
 			B.validDate,
 			C. NAME,
 			CONCAT(
-				"http://m.ezaisheng.com/",
+				"https://m.ezaisheng.com/",
 				REPLACE(C.path,'\\','/'),
 				"/",
 				C. NAME

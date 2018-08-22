@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanbang.dao.ezs_hangqareaMapper">
+  <resultMap id="AreaResultMap" type="com.sanbang.vo.hangq.HangqParamCommonVo">
+    <id column="hot" jdbcType="BIGINT" property="hot" />
+    <result column="areaid" jdbcType="BIGINT" property="areaid" />
+    <result column="areaname" jdbcType="VARCHAR" property="areaname" />
+  </resultMap>
+  <!-- 定制列表地区展示 -->
+  <resultMap id="HangqDzAreaResultMap" type="com.sanbang.vo.hangq.HangqDzAreaVo">
+    <result column="areaid" jdbcType="BIGINT" property="areaid" />
+    <result column="areaname" jdbcType="VARCHAR" property="areaname" />
+    <result column="areanames" jdbcType="VARCHAR" property="areanames" />
+  </resultMap>
+  
+  <select id="getHangqAreaList" resultMap="AreaResultMap">
+  SELECT
+   		COUNT(F.id)  hot,
+	 	areaid,
+   		areaname
+	FROM
+		(
+			SELECT
+	      A.id,
+				IF(ISNULL(E.id),IF(ISNULL(D.id),IF(ISNULL(C.id),B.id,C.id),D.id),E.id) areaid,
+				IF(ISNULL(E.id),IF(ISNULL(D.id),IF(ISNULL(C.id),B.areaName,C.areaName),D.areaName),E.areaName) areaname
+			FROM
+				ezs_price_trend A
+			INNER JOIN ezs_area B ON A.region_id = B.id
+			LEFT JOIN ezs_area C ON C.id = B.parent_id
+			LEFT JOIN ezs_area D ON D.id = C.parent_id
+			LEFT JOIN ezs_area E ON E.id = D.parent_id
+			
+			WHERE A.`status`=#{status} AND A.data_sources in (${data_sources})
+		) F
+	GROUP BY
+				F.areaid
+	ORDER BY COUNT(F.id)  DESC
+  </select>
+ 
+ <select id="getAreaNamesByAreaids" resultMap="AreaResultMap">
+	 SELECT
+			F.areaid,
+			F.areanames,
+			IF(LOCATE(F.areaname,'上海市,福建省,浙江省,安徽省,江苏省,山东省')>0,"华东",
+	    IF(LOCATE(F.areaname,'广东省,广西壮族自治区,海南省')>0,"华南",
+			IF(LOCATE(F.areaname,'内蒙古自治区,天津市,山西省,河北省,北京市')>0,"华北",
+			IF(LOCATE(F.areaname,'湖南省,湖北省,河南省,江西省')>0,"华中",
+			IF(LOCATE(F.areaname,'新疆维吾尔自治区,青海省,宁夏回族自治区,甘肃省,陕西省')>0,"西北",
+			IF(LOCATE(F.areaname,'西藏自治区,重庆市,四川省,贵州市,云南省')>0,"西南",
+			IF(LOCATE(F.areaname,'辽宁省,吉林省,黑龙江省,香港')>0,"东北",
+			"")))))))  areaname
+	
+	FROM (SELECT
+		      A.id,
+					IF(ISNULL(E.id),
+	IF(ISNULL(D.id),
+	IF(ISNULL(C.id),B.id,C.id),D.id),E.id) areaid,
+					IF(ISNULL(E.id),
+	IF(ISNULL(D.id),
+	IF(ISNULL(C.id),B.areaName,CONCAT(B.areaName,"-",C.areaName)),CONCAT(D.areaName,"-",C.areaName,"-",B.areaName)), CONCAT(E.areaName,"-",D.areaName,"-",C.areaName,"-",B.areaName)) areanames,
+				  IF(ISNULL(E.id),
+					IF(ISNULL(D.id),
+					IF(ISNULL(C.id),B.areaName,C.areaName),D.areaName),E.areaName) areaname
+	
+				FROM
+					(SELECT * FROM ezs_area s WHERE  s.id in (#{areaids})) A
+				INNER JOIN ezs_area B ON A.id = B.id
+				LEFT JOIN ezs_area C ON C.id = B.parent_id
+				LEFT JOIN ezs_area D ON D.id = C.parent_id
+				LEFT JOIN ezs_area E ON E.id = D.parent_id) F
+	 
+ </select>
+ 
+ 
+</mapper>

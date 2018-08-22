@@ -382,7 +382,7 @@ public class TestServiceImpl  implements TestService {
 	}
 	
 	private static List<AuthImageVo> savepic(String param,List<AuthImageVo> list) throws ParseException{
-		param=param.replaceAll("http://www.ezaisheng.com/file/", "http://m.ezaisheng.com/");
+		param=param.replaceAll("http://www.ezaisheng.com/file/", "https://m.ezaisheng.com/");
 		if(!Tools.isEmpty(param)){
 		String[] aa=param.split(";");
 		if(null==aa||aa.length==0){

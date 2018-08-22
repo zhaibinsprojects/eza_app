@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.accountSafe.service.AccountSafeService;
-import com.sanbang.app.controller.AppUserSetupLinkController;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;

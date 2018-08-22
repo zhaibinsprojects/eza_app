@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_subscribehqMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_subscribehq" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="creditUserd" property="creditUserd" jdbcType="INTEGER" />
+    <result column="cycle" property="cycle" jdbcType="VARCHAR" />
+    <result column="openmode" property="openmode" jdbcType="INTEGER" />
+    <result column="payment" property="payment" jdbcType="DECIMAL" />
+    <result column="paymode" property="paymode" jdbcType="INTEGER" />
+    <result column="subType" property="subType" jdbcType="INTEGER" />
+    <result column="subtotal" property="subtotal" jdbcType="VARCHAR" />
+    <result column="totalMoney" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="buyLog_id" property="buyLog_id" jdbcType="BIGINT" />
+    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap id="InfoResultMap" type="com.sanbang.bean.ezs_subscribehq" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="creditUserd" property="creditUserd" jdbcType="INTEGER" />
+    <result column="cycle" property="cycle" jdbcType="VARCHAR" />
+    <result column="openmode" property="openmode" jdbcType="INTEGER" />
+    <result column="payment" property="payment" jdbcType="DECIMAL" />
+    <result column="paymode" property="paymode" jdbcType="INTEGER" />
+    <result column="subType" property="subType" jdbcType="INTEGER" />
+    <result column="subtotal" property="subtotal" jdbcType="VARCHAR" />
+    <result column="totalMoney" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="buyLog_id" property="buyLog_id" jdbcType="BIGINT" />
+    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+     <!--用户详情-->
+    <association property="memberorder" column="buyLog_id" select="com.sanbang.bean.ezs_memberorder.selectByPrimaryKey">
+    </association>
+  
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, creditUserd, cycle, openmode, payment, paymode, subType, 
+    subtotal, totalMoney, buyLog_id, store_id, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="InfoResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_subscribehq
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_subscribehq
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_subscribehq" >
+    insert into ezs_subscribehq (id, addTime, deleteStatus, 
+      creditUserd, cycle, openmode, 
+      payment, paymode, subType, 
+      subtotal, totalMoney, buyLog_id, 
+      store_id, user_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{creditUserd,jdbcType=INTEGER}, #{cycle,jdbcType=VARCHAR}, #{openmode,jdbcType=INTEGER}, 
+      #{payment,jdbcType=DECIMAL}, #{paymode,jdbcType=INTEGER}, #{subType,jdbcType=INTEGER}, 
+      #{subtotal,jdbcType=VARCHAR}, #{totalMoney,jdbcType=DECIMAL}, #{buyLog_id,jdbcType=BIGINT}, 
+      #{store_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_subscribehq" >
+    insert into ezs_subscribehq
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="creditUserd != null" >
+        creditUserd,
+      </if>
+      <if test="cycle != null" >
+        cycle,
+      </if>
+      <if test="openmode != null" >
+        openmode,
+      </if>
+      <if test="payment != null" >
+        payment,
+      </if>
+      <if test="paymode != null" >
+        paymode,
+      </if>
+      <if test="subType != null" >
+        subType,
+      </if>
+      <if test="subtotal != null" >
+        subtotal,
+      </if>
+      <if test="totalMoney != null" >
+        totalMoney,
+      </if>
+      <if test="buyLog_id != null" >
+        buyLog_id,
+      </if>
+      <if test="store_id != null" >
+        store_id,
+      </if>
+      <if test="user_id != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="creditUserd != null" >
+        #{creditUserd,jdbcType=INTEGER},
+      </if>
+      <if test="cycle != null" >
+        #{cycle,jdbcType=VARCHAR},
+      </if>
+      <if test="openmode != null" >
+        #{openmode,jdbcType=INTEGER},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=DECIMAL},
+      </if>
+      <if test="paymode != null" >
+        #{paymode,jdbcType=INTEGER},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=INTEGER},
+      </if>
+      <if test="subtotal != null" >
+        #{subtotal,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="buyLog_id != null" >
+        #{buyLog_id,jdbcType=BIGINT},
+      </if>
+      <if test="store_id != null" >
+        #{store_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_subscribehq" >
+    update ezs_subscribehq
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="creditUserd != null" >
+        creditUserd = #{creditUserd,jdbcType=INTEGER},
+      </if>
+      <if test="cycle != null" >
+        cycle = #{cycle,jdbcType=VARCHAR},
+      </if>
+      <if test="openmode != null" >
+        openmode = #{openmode,jdbcType=INTEGER},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment,jdbcType=DECIMAL},
+      </if>
+      <if test="paymode != null" >
+        paymode = #{paymode,jdbcType=INTEGER},
+      </if>
+      <if test="subType != null" >
+        subType = #{subType,jdbcType=INTEGER},
+      </if>
+      <if test="subtotal != null" >
+        subtotal = #{subtotal,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        totalMoney = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="buyLog_id != null" >
+        buyLog_id = #{buyLog_id,jdbcType=BIGINT},
+      </if>
+      <if test="store_id != null" >
+        store_id = #{store_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_subscribehq" >
+    update ezs_subscribehq
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      creditUserd = #{creditUserd,jdbcType=INTEGER},
+      cycle = #{cycle,jdbcType=VARCHAR},
+      openmode = #{openmode,jdbcType=INTEGER},
+      payment = #{payment,jdbcType=DECIMAL},
+      paymode = #{paymode,jdbcType=INTEGER},
+      subType = #{subType,jdbcType=INTEGER},
+      subtotal = #{subtotal,jdbcType=VARCHAR},
+      totalMoney = #{totalMoney,jdbcType=DECIMAL},
+      buyLog_id = #{buyLog_id,jdbcType=BIGINT},
+      store_id = #{store_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  </resultMap>
+  <!--订阅记录 -->
+  <select id="getDingyueRecoudList" resultMap="BaseResultMap">
+	 SELECT
+		A.id,
+		A.addTime,
+		A.user_id,
+		IF(ISNULL(A.buyLog_id),A.openmode,IF(B.openStatu=0,3,A.openmode)) openmode,
+		A.cycle,
+		A.payment,
+		A.paymode,
+		B.openStatu
+	FROM
+		ezs_subscribehq A
+	INNER  JOIN ezs_memberorder B ON A.buyLog_id=B.id
+	WHERE
+		A.user_id = #{userid}
+		
+		limit #{pageCount},#{pageSize}
+  </select>
+  
+  <select id="getDingyueRecoudCount" resultType="int">
+  SELECT
+        count(A.id)
+		
+	FROM
+		ezs_subscribehq A
+	INNER  JOIN ezs_memberorder B ON A.buyLog_id=B.id
+	WHERE
+		A.user_id = #{userid}
+  
+  </select>
+ 
+  
+</mapper>
