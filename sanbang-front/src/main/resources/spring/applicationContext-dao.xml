@@ -270,4 +270,11 @@
 			value="com.sanbang.dao.ezs_financial_service_loansMapper"/>
 	</bean>
 	
+	<!-- 新料-实时交易记录 -->
+	<bean id="ezs_price_trend_xlMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_price_trend_xlMapper"/>
+			
+	</bean>
+	
 </beans>

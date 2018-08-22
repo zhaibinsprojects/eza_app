@@ -13,11 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_area;
+import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.dao.ezs_columnMapper;
+import com.sanbang.dao.ezs_ezssubstanceMapper;
+import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.utils.Result;
@@ -36,10 +42,18 @@ public class HomeHangqIndexController {
 	private PriceConditionService priceConditionService;
 	@Autowired
 	private IndustryInfoService industryInfoService;
+	@Autowired
+	private ezs_columnMapper columnMapper;
+	@Autowired
+	private ezs_ezssubstanceMapper ezs_ezssubstanceMapper;
+	@Autowired
+	private AddressService addressService;
+	
+	private static String view="/hangq/";
 	
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
 	/**
-	 * 价格行情首页
+	 * 价格行情首页   （mapper.xml文件sql须在数据完整后调整）
 	 * @param request
 	 * @param response
 	 * @return
@@ -79,7 +93,6 @@ public class HomeHangqIndexController {
 		goodClassTypeList.add("6");//PS
 		goodClassTypeList.add("7");//PVC
 		//新料
-		
 		List<String> newGoodClassTypeList = new ArrayList<>();
 		newGoodClassTypeList.add("104");//LLDPE
 		newGoodClassTypeList.add("105");//LDPE
@@ -117,7 +130,7 @@ public class HomeHangqIndexController {
 		List<PriceInTimesVo> xpitvoList = new ArrayList<>();
 		for (String gKinds : newGoodClassTypeList) {
 			PriceInTimesVo pitvo = new PriceInTimesVo();
-			List<PriceTrendIfo> xplist = getPriceInTime(gKinds);
+			List<PriceTrendIfo> xplist = getPriceInTimeNew(gKinds);
 			pitvo.setGoodClassId(gKinds);
 			pitvo.setPriceList(xplist);
 			pitvo.setGoodClassName(goodClassMap.get(gKinds));
@@ -148,7 +161,7 @@ public class HomeHangqIndexController {
 		jReport.setReportName("价格评析");
 		jReport.setReportId(Long.valueOf(12));
 		List<ezs_ezssubstance> priceList = getPriceAnalyse(pageno,kindId);
-		jReport.setReportList(priceList);
+		jReport.setReportList1(priceList);
 		reportsList.add(jReport);
 		//研究报告 
 		ReportType yReport = new ReportType();
@@ -156,7 +169,7 @@ public class HomeHangqIndexController {
 		yReport.setReportName("研究报告");
 		yReport.setReportId(Long.valueOf(17));
 		List<ezs_ezssubstance> reportList = getPriceReport(pageno,kindId);
-		yReport.setReportList(reportList);
+		yReport.setReportList1(reportList);
 		reportsList.add(yReport);
 		hqm.setReportList(reportsList);
 		rs.setObj(hqm);
@@ -244,7 +257,7 @@ public class HomeHangqIndexController {
 		}
 		return glistTemp;
 	}
-	//实时报价
+	//再生料-实时报价
 	public List<PriceTrendIfo> getPriceInTime(String kindId){
 		List<PriceTrendIfo> plist = new ArrayList<>();
 		Map<String, Object> mmp = this.priceConditionService.priceInTimeNew(Long.valueOf(kindId));
@@ -254,6 +267,18 @@ public class HomeHangqIndexController {
 		}
 		return plist;
 	}
+	
+	//新料-实时报价
+	public List<PriceTrendIfo> getPriceInTimeNew(String kindId){
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		Map<String, Object> mmp = this.priceConditionService.priceInTimeNew2(Long.valueOf(kindId));
+		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			plist = (List<PriceTrendIfo>)mmp.get("Obj");
+		}
+		return plist;
+	}
+	
 	/**
 	 * 广告-活动展示时可启用，
 	 * @author zhaibin
@@ -274,4 +299,135 @@ public class HomeHangqIndexController {
 		adviceList.add(advice02);
 		return adviceList;
 	}
+	
+	/**
+	 * app H5页面展示内容（价格评析、研究报告 分页展示，页面大小-10）
+	 * @param type（priceAnalyse-价格评析，report-研究报告，priceInTime-实时报价）
+	 * @param currentPage
+	 * @return
+	 */
+	@RequestMapping("/analyseAndReport")
+	public String analyseAndReport(@RequestParam(name="type",required=true)String type,
+			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,Model model,HttpServletRequest request,
+			@RequestParam(name="ecId",required=false,defaultValue="0")Long ecId
+			){
+		String showpages = "analyseAndRepore";
+		Map<String, Object> resultMap = new HashMap<>();
+		int pagesize = 10;
+		if(currentPage<1) currentPage=1;
+		if(type.trim().endsWith("priceAnalyse")){
+			//展示价格评析
+			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds2(Long.valueOf(12),ecId,currentPage,pagesize);
+			//查询二级目录
+			List<ezs_column> columnList = this.columnMapper.getSecondThemeByFirstTheme(Long.valueOf(12));
+			resultMap.put("kinds", "priceAnalyse");
+			resultMap.put("columnList", columnList);
+		}else if(type.trim().endsWith("report")){
+			//研究报告
+			resultMap = this.industryInfoService.getAllIndustryInfoByParentKinds2(Long.valueOf(17),ecId,currentPage,pagesize);
+			List<ezs_column> columnList = this.columnMapper.getSecondThemeByFirstTheme(Long.valueOf(17));
+			resultMap.put("kinds", "report");
+			resultMap.put("columnList", columnList);
+		}
+		model.addAttribute("resultMap",resultMap);
+		return view+showpages;
+	}
+	/**
+	 * 查看文章详情
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/hangqShow")
+	public String wenzhangShow(@RequestParam(name="id",required=true)long id,
+			Model model){
+		ezs_ezssubstance show = ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		ezs_column column = columnMapper.selectByPrimaryKey(show.getEc_id());
+		ezs_ezssubstance boytton = ezs_ezssubstanceMapper.getButtomOneSubstanceByid(id, column.getParentEzsColumn_id());
+		ezs_ezssubstance top = ezs_ezssubstanceMapper.getTopOneSubstanceByid(id, column.getParentEzsColumn_id());
+		model.addAttribute("top", top);
+		model.addAttribute("button", boytton);
+		model.addAttribute("show", show);
+		model.addAttribute("title", column.getName());
+		return view+"infoshow";
+	}
+	//实时报价-再生料/新料-列表（筛选条件）
+	/**
+	 * 
+	 * @param type 新料/再生料  newClass/oldClass
+	 * @param goodClassId
+	 * @param areaId
+	 * @param currentPage
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/getPriceInTime")
+	public Result getPriceInTime(@RequestParam(name="type",required=true)String type,
+			@RequestParam(name="goodClassId",required=false,defaultValue="1")String goodClassId,
+			@RequestParam(name="areaId",required=false,defaultValue="4523541") String areaId,
+			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,Model model,HttpServletRequest request,
+			@RequestParam(name="ecId",required=false,defaultValue="0")Long ecId,
+			@RequestParam(name="kindId",required=false,defaultValue="0")String kindId,
+			@RequestParam(name="colorId",required=false,defaultValue="0")Long colorId,
+			@RequestParam(name="formId",required=false,defaultValue="0")Long formId
+			){
+		Result rs = Result.success();
+		Map<String, Object> resultMap = new HashMap<>();
+		//参数传递
+		Map<String, Object> tMp = new HashMap<>();
+		tMp.put("kindId", kindId);
+		tMp.put("colorId", colorId);
+		tMp.put("formId", formId);
+		tMp.put("areaId", areaId);
+		//获取相关地址ID
+		List<String> areaIdsList = new ArrayList<>();
+		Map<String, Object> areaIdsMap = null;
+		areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
+		Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+		if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_area> areaListTemp =new ArrayList<>();
+			areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+			for (ezs_area tarea : areaListTemp) {
+				areaIdsList.add(tarea.getId().toString());
+			}
+			tMp.put("areaIds", areaIdsList);
+		}
+		if(type.equals("newClass")){
+			resultMap = this.priceConditionService.getPriceInTimeNew(tMp,currentPage,10);
+		}else if(type.equals("oldClass")){
+			resultMap = this.priceConditionService.getPriceInTime(tMp,currentPage,10);
+		}
+		List<PriceTrendIfo> resultList = null;
+		Integer ErrorCode = (Integer)resultMap.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			resultList = (List<PriceTrendIfo>)resultMap.get("Obj");
+			rs.setObj(resultList);
+		}else{
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setObj(resultList);
+		}
+		return rs;
+	}
+	//获取areaId的所有子标签（包含本标签）
+		public List<Long> getAllChildrenAreaIDs(Long areaId){
+			//获取相关地址ID
+			List<Long> areaIdsList = new ArrayList<>();
+			Map<String, Object> areaIdsMap = null;
+			areaIdsMap = this.addressService.getAllChildID(areaId);
+			Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+			if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				List<ezs_area> areaListTemp =new ArrayList<>();
+				areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+				for (ezs_area tarea : areaListTemp) {
+					areaIdsList.add(tarea.getId());
+				}
+				//return areaIdsList;
+			}
+			return areaIdsList;
+		}
+	
+	
+	
 }

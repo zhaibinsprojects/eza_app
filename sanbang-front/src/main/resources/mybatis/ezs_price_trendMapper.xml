@@ -550,7 +550,7 @@
       </if>
     </trim>
   </select>
-  
+  <!-- 再生料-列表-多条件查询 -->
   <select id="selectByAreaIdAndOtherCondition" resultMap="PriceConditionResultMap">
     select DISTINCT 
     <include refid="PriceConditionColumnList" />
@@ -731,10 +731,27 @@
   </select>
   
   <!-- 从新修订 实时报价 -->
+  <select id="priceInTimeNewList" resultMap="PriceInTimeResultMap" parameterType="java.lang.Long">
+  	select 
+	a.price currentPrice,
+	a.goodClass2_id goodClass,
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
+	a.data_time dealDate,
+	a.region_id areaId,
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	from ezs_price_trend a 
+	where a.type = '1'
+	and a.data_sources in ('2','3') 
+	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+	and a.goodClass2_id = #{goodClassId} GROUP BY a.region_id LIMIT 5
+  </select>
+  
+  <!-- 从新修订 实时报价 -->
   <select id="priceInTimeNew" resultMap="PriceInTimeResultMap" parameterType="java.lang.Long">
   	select 
 	a.price currentPrice,
 	a.goodClass2_id goodClass,
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
 	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
@@ -749,12 +766,13 @@
     <result column="currentPrice" property="currentPrice" jdbcType="VARCHAR" />
     <result column="prePrice" property="prePrice" jdbcType="VARCHAR" />
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
+    <result column="className" property="goodClassName" jdbcType="VARCHAR" />
     <result column="areaId" property="region_id" jdbcType="VARCHAR" />
   </resultMap>
   <!-- 价格走势 新 -->
   <resultMap id="PriceTrendcyNewResultMap" type="com.sanbang.vo.PriceTrendIfo" >
     <result column="currentPrice" property="currentPrice" jdbcType="VARCHAR" />
-    <result column="prePrice" property="prePrice" jdbcType="VARCHAR" />
+    <!-- <result column="prePrice" property="prePrice" jdbcType="VARCHAR" /> -->
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
     <result column="className" property="goodClassName" jdbcType="VARCHAR" />
     <result column="areaName" property="goodArea" jdbcType="VARCHAR" />
@@ -767,8 +785,8 @@
 	a.data_time dealDate,
 	gc.name className,
 	(select area.areaName from ezs_area area where area.id =  a.region_id) areaName ,
-	a.region_id,
-	(
+	a.region_id
+	<!-- (
 	select IFNULL(AVG(p.price),0)
 	from ezs_price_trend p where p.type = '3' and p.goodClass2_id = a.goodClass2_id and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
       <if test="colorId != null" >
@@ -790,7 +808,7 @@
         and g.protection = #{protection}
       </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
-	) prePrice
+	) prePrice -->
 	from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass2_id = gc.id LEFT JOIN ezs_dict e1 on a.color_id = e1.id LEFT JOIN ezs_dict e2 on a.form_id = e2.id
 	where  a.type = '3'
       <if test="kindId != null" >

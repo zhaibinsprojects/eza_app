@@ -13,7 +13,8 @@ public class ReportType {
 	
 	private Date date;
 	//文章类型列表
-	private List<ezs_ezssubstance> reportList;
+	private List<ezs_ezssubstance> reportList1;
+	
 	public Long getReportId() {
 		return reportId;
 	}
@@ -32,10 +33,10 @@ public class ReportType {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public List<ezs_ezssubstance> getReportList() {
-		return reportList;
+	public List<ezs_ezssubstance> getReportList1() {
+		return reportList1;
 	}
-	public void setReportList(List<ezs_ezssubstance> reportList) {
-		this.reportList = reportList;
+	public void setReportList1(List<ezs_ezssubstance> reportList1) {
+		this.reportList1 = reportList1;
 	}
 }

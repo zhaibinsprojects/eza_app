@@ -17,7 +17,8 @@
 			 */
 			function pulldownRefresh() {
 				setTimeout(function() {
-					window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1";
+					//下拉从新加载，不要重定向
+					//window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1";
 					}, 1500);
 			}
 			var count = 0;
@@ -71,5 +72,4 @@
 				});
 				return html;
 			}
-			
 				
