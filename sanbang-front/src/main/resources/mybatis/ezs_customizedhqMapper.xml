@@ -188,7 +188,7 @@
     <result column="user_id" property="user_id" jdbcType="BIGINT" />
     <result column="area_id" property="area_id" jdbcType="BIGINT" />
     <result column="priceTrend_id" property="priceTrend_id" jdbcType="BIGINT" />
-  <collection property="areaids" column="areaids" select="com.sanbang.dao.ezs_hangqareaMapper.getAreaNamesByAreaids" >
+  <collection property="areaNames" column="{areaids=areaids}" select="com.sanbang.dao.ezs_hangqareaMapper.getAreaNamesByAreaids" >
   </collection>
   <collection property="categorys" column="category" select="com.sanbang.dao.ezs_goods_classVoMapper.getClassNamesByclasses" >
   </collection>

@@ -4,7 +4,7 @@
 				pullRefresh: {
 					container: '#pullrefresh',
 					down: {
-						callback: pulldownRefresh
+						//callback: pulldownRefresh
 					},
 					up: {
 						contentrefresh: '正在加载...',
@@ -16,9 +16,9 @@
 			 * 下拉刷新具体业务实现
 			 */
 			function pulldownRefresh() {
+				alert("下拉");
 				setTimeout(function() {
-					//下拉从新加载，不要重定向
-					//window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1";
+					window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1";
 					}, 1500);
 			}
 			var count = 0;
@@ -26,6 +26,7 @@
 			 * 上拉加载具体业务实现
 			 */
 			function pullupRefresh() {
+				alert("上拉");
 				setTimeout(function() {
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > pagecount)); //参数为true代表没有更多数据了。
 					var table = document.body.querySelector('.mui-table-view');
@@ -72,4 +73,5 @@
 				});
 				return html;
 			}
+			
 				

@@ -34,8 +34,11 @@ public class JiGuanPushUtils {
      *
      */
     protected static Logger LOG = LoggerFactory.getLogger(JiGuanPushUtils.class);
-    private static final String MASTER_SECRET = "60bb60ca8d9691c301497f8a";
-    private static final String APP_KEY = "cb33d68a9f57eddfb0c33335";
+//    private static final String MASTER_SECRET = "60bb60ca8d9691c301497f8a";
+//    private static final String APP_KEY = "cb33d68a9f57eddfb0c33335";
+    private static final String MASTER_SECRET = "c39d99bf9f54a4234fafa2b5";
+    private static final String APP_KEY = "b9eb8b895a4a5f9e7afaeb47";
+    
     private static final String TITLE = "易再生网";
     private static PushPayload pushPayload ;
 //  private static Builder builder; 
@@ -399,17 +402,37 @@ public class JiGuanPushUtils {
         }
 
       public static void main(String[] args) {
-    	  for (int i = 0; i < 50; i++) {
-    		  System.out.println(MD5Util.md5Encode("18500409847"+"123"));
-		}
-    	  
+    	 
+    	  System.out.println(MD5Util.md5Encode("aaaaaasdasdasdasd561"));
+    	  System.out.println(MD5Util.md5Encode("aaaaaasdasdasdasd561"));
           try {
         	  Map<String ,String> map = new HashMap<String, String>();
         	  map.put("tid", "1876");
         	  List<String> slist = new ArrayList<>();
-        	  //slist.add("18510044400");
-        	  //slist.add("shanshan");
-        	  slist.add("shanshan3");
+//        	  slist.add("18510044400");
+        	  slist.add("1ertfyioaaddssadasd");
+//        	  slist.add(MD5Util.md5Encode("aaaaaasdasdasdasd561"));
+              PushResult result =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, "三杯通大道，一斗合自然。",slist));
+              System.out.println("end .....");
+           } catch (APIConnectionException e) {
+              LOG.error("Connection error. Should retry later. ", e);
+          } catch (APIRequestException e) {
+              LOG.error("Error response from JPush server. Should review and fix it. ", e);
+              LOG.info("HTTP Status: " + e.getStatus());	
+              LOG.info("Error Code: " + e.getErrorCode());
+              LOG.info("Error Message: " + e.getErrorMessage());
+          }
+         
+    	  
+          
+      }
+      
+      public static void JiGangPushData(String content,String account) {
+    	  try {
+        	  Map<String ,String> map = new HashMap<String, String>();
+        	  map.put("tid", content);
+        	  List<String> slist = new ArrayList<>();
+        	  slist.add(account);
               PushResult result =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, "三杯通大道，一斗合自然。",slist));
               System.out.println("end .....");
            } catch (APIConnectionException e) {
@@ -420,8 +443,5 @@ public class JiGuanPushUtils {
               LOG.info("Error Code: " + e.getErrorCode());
               LOG.info("Error Message: " + e.getErrorMessage());
           }
-         
-    	  
-          
       }
 }

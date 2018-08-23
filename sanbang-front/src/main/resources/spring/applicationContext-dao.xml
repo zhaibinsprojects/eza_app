@@ -270,4 +270,36 @@
 			value="com.sanbang.dao.ezs_financial_service_loansMapper"/>
 	</bean>
 	
+	<!-- 新料-实时交易记录 -->
+	<bean id="ezs_price_trend_xlMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_price_trend_xlMapper"/>
+			
+	</bean>
+	
+	<bean id="ezs_hangqareaMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_hangqareaMapper"/>
+	</bean>
+	
+	<bean id="ezs_subscribehqMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_subscribehqMapper"/>
+	</bean>
+	
+	<bean id="ezs_goods_classVoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_classVoMapper"/>
+	</bean>
+	<bean id="ezs_memberorderMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_memberorderMapper"/>
+	</bean>
+	
+	<bean id="ezs_customizedhqMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customizedhqMapper"/>
+	</bean>
+	
+	
 </beans>

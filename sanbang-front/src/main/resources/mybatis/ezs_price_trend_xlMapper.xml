@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_price_trend_xlMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_price_trend_xl" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="data_time" property="data_time" jdbcType="TIMESTAMP" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="priceAttribute" property="priceAttribute" jdbcType="VARCHAR" />
+    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
+    <result column="region_id" property="region_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, content, data_time, price, priceAttribute, purpose, source, 
+    goodClass_id, region_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_price_trend_xl
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_price_trend_xl
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_price_trend_xl" >
+    insert into ezs_price_trend_xl (id, addTime, deleteStatus, 
+      content, data_time, price, 
+      priceAttribute, purpose, source, 
+      goodClass_id, region_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{content,jdbcType=VARCHAR}, #{data_time,jdbcType=TIMESTAMP}, #{price,jdbcType=DOUBLE}, 
+      #{priceAttribute,jdbcType=VARCHAR}, #{purpose,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{goodClass_id,jdbcType=BIGINT}, #{region_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_price_trend_xl" >
+    insert into ezs_price_trend_xl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="data_time != null" >
+        data_time,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="priceAttribute != null" >
+        priceAttribute,
+      </if>
+      <if test="purpose != null" >
+        purpose,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="goodClass_id != null" >
+        goodClass_id,
+      </if>
+      <if test="region_id != null" >
+        region_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="data_time != null" >
+        #{data_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="priceAttribute != null" >
+        #{priceAttribute,jdbcType=VARCHAR},
+      </if>
+      <if test="purpose != null" >
+        #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="goodClass_id != null" >
+        #{goodClass_id,jdbcType=BIGINT},
+      </if>
+      <if test="region_id != null" >
+        #{region_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_price_trend_xl" >
+    update ezs_price_trend_xl
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="data_time != null" >
+        data_time = #{data_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="priceAttribute != null" >
+        priceAttribute = #{priceAttribute,jdbcType=VARCHAR},
+      </if>
+      <if test="purpose != null" >
+        purpose = #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="goodClass_id != null" >
+        goodClass_id = #{goodClass_id,jdbcType=BIGINT},
+      </if>
+      <if test="region_id != null" >
+        region_id = #{region_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_price_trend_xl" >
+    update ezs_price_trend_xl
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      content = #{content,jdbcType=VARCHAR},
+      data_time = #{data_time,jdbcType=TIMESTAMP},
+      price = #{price,jdbcType=DOUBLE},
+      priceAttribute = #{priceAttribute,jdbcType=VARCHAR},
+      purpose = #{purpose,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      goodClass_id = #{goodClass_id,jdbcType=BIGINT},
+      region_id = #{region_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 从新修订 实时报价 -->
+  <select id="priceInTimeNew" resultMap="PriceInTimeResultMap" parameterType="java.lang.Long">
+  	select 
+	a.price currentPrice,
+	a.goodClass_id goodClass,
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className,
+	a.data_time dealDate,
+	a.region_id areaId,
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	from ezs_price_trend_xl a 
+	where a.deleteStatus = '0'
+	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+	and a.goodClass_id = #{goodClassId} GROUP BY a.region_id LIMIT 5
+  </select>
+  <!-- 实时报价 新 -->
+  <resultMap id="PriceInTimeResultMap" type="com.sanbang.vo.PriceTrendIfo" >
+    <result column="currentPrice" property="currentPrice" jdbcType="VARCHAR" />
+    <result column="prePrice" property="prePrice" jdbcType="VARCHAR" />
+    <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
+    <result column="className" property="goodClassName" jdbcType="VARCHAR" />
+    <result column="areaId" property="region_id" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 新料-实时报价-列表-多条件查询 -->
+  <!-- 实时报价分类列表展示 -->
+  <resultMap id="PriceConditionResultMap" type="com.sanbang.vo.PriceTrendIfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
+    <result column="region_id" property="region_id" jdbcType="BIGINT" />
+    <result column="goodClass" property="goodClassName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByAreaIdAndOtherCondition" resultMap="PriceConditionResultMap">
+    select DISTINCT g.* from ezs_price_trend_xl g where g.deleteStatus = '0' 
+    <if test="kindId != null and kindId != '' " >
+        and g.goodClass_id = #{kindId}
+    </if>
+    <if test="areaIds != null and areaIds.size > 0 " >
+        and g.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
+         #{areaIds}
+     	</foreach>
+    </if>
+   	and DATE_FORMAT(g.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+	ORDER BY g.addTime desc  
+	limit #{pagecount},#{pagesize}
+  </select>
+</mapper>

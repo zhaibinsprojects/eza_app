@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.vo.goods.GoodsClassVo;
+import com.sanbang.vo.goods.ezs_Dzgoods_classVo;
 import com.sanbang.vo.goods.ezs_goods_classVo;
 
 @Repository
@@ -32,4 +33,18 @@ public interface ezs_goods_classVoMapper {
     
     List<GoodsClassVo>  gethanqChildClassCheckAll(@Param("parentid")long parentid);
     
+    /**
+     * 
+     * @param parentid
+     * @param level
+     * @param reqtype
+     * @return
+     */
+    List<GoodsClassVo>  gethangqCataBylevel(@Param("parentid")long parentid,@Param("level")String level,@Param("reqtype")String reqtype);
+    /**
+     * 
+     * @param category
+     * @return
+     */
+    List<ezs_Dzgoods_classVo>  getClassNamesByclasses(@Param("category")String category);
 }

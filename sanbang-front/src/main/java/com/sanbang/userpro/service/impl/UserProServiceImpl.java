@@ -366,7 +366,7 @@ public class UserProServiceImpl implements UserProService {
 						userKey="app" + userProInfo.getEzs_userinfo().getPhone() + str32;
 						Map<String, Object> map=new HashMap<>();
 						map.put("token", userKey);
-						//map.put("account", MD5Util.md5Encode(userProInfo.getEzs_userinfo().getPhone()+userProInfo.getId()));
+						map.put("account", MD5Util.md5Encode(userProInfo.getEzs_userinfo().getPhone()+userProInfo.getId()));
 						result.setObj(map);
 					}
 					

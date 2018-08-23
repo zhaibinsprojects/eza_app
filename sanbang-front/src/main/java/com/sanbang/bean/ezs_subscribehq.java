@@ -18,7 +18,7 @@ public class ezs_subscribehq {
 
     private BigDecimal payment;//支付金额
 
-    private Integer paymode;//支付类型(0,线下；1，线上)
+    private Integer paymode;//支付方式 0:线上，1:转账汇款
 
     private Integer subType;//用户类型（0，试用用户；1，已购买）
 
@@ -31,6 +31,8 @@ public class ezs_subscribehq {
     private Long store_id;//商户
 
     private Long user_id;//用户
+    
+    private Long order_id;
     
     private ezs_memberorder memberorder;//订单支付记录
 
@@ -152,6 +154,14 @@ public class ezs_subscribehq {
 
 	public void setMemberorder(ezs_memberorder memberorder) {
 		this.memberorder = memberorder;
+	}
+
+	public Long getOrder_id() {
+		return order_id;
+	}
+
+	public void setOrder_id(Long order_id) {
+		this.order_id = order_id;
 	}
     
 }

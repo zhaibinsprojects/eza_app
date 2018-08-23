@@ -13,7 +13,7 @@
     <result column="areanames" jdbcType="VARCHAR" property="areanames" />
   </resultMap>
   
-  <select id="getHangqAreaList" resultMap="AreaResultMap">
+  <select id="getAreaBySourcesOrStatus" resultMap="AreaResultMap">
   SELECT
    		COUNT(F.id)  hot,
 	 	areaid,
@@ -38,7 +38,32 @@
 	ORDER BY COUNT(F.id)  DESC
   </select>
  
- <select id="getAreaNamesByAreaids" resultMap="AreaResultMap">
+ <select id="getHangqXlAreaList" resultMap="AreaResultMap">
+  SELECT
+   		COUNT(F.id)  hot,
+	 	areaid,
+   		areaname
+	FROM
+		(
+			SELECT
+	      A.id,
+				IF(ISNULL(E.id),IF(ISNULL(D.id),IF(ISNULL(C.id),B.id,C.id),D.id),E.id) areaid,
+				IF(ISNULL(E.id),IF(ISNULL(D.id),IF(ISNULL(C.id),B.areaName,C.areaName),D.areaName),E.areaName) areaname
+			FROM
+				ezs_price_trend_xl A
+			INNER JOIN ezs_area B ON A.region_id = B.id
+			LEFT JOIN ezs_area C ON C.id = B.parent_id
+			LEFT JOIN ezs_area D ON D.id = C.parent_id
+			LEFT JOIN ezs_area E ON E.id = D.parent_id
+			
+			WHERE A.deleteStatus=0
+		) F
+	GROUP BY
+				F.areaid
+	ORDER BY COUNT(F.id)  DESC
+  </select>
+
+ <select id="getAreaNamesByAreaids" resultMap="HangqDzAreaResultMap">
 	 SELECT
 			F.areaid,
 			F.areanames,
@@ -64,7 +89,7 @@
 					IF(ISNULL(C.id),B.areaName,C.areaName),D.areaName),E.areaName) areaname
 	
 				FROM
-					(SELECT * FROM ezs_area s WHERE  s.id in (#{areaids})) A
+					(SELECT * FROM ezs_area s WHERE  s.id in (${areaids})) A
 				INNER JOIN ezs_area B ON A.id = B.id
 				LEFT JOIN ezs_area C ON C.id = B.parent_id
 				LEFT JOIN ezs_area D ON D.id = C.parent_id

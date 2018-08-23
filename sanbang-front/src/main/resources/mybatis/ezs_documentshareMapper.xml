@@ -148,7 +148,7 @@
   </select>
   
   
-   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_documentshare" >
+   <resultMap id="HangqResultMap" type="com.sanbang.vo.hangq.HangqCollectedVo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
     <result column="give" property="give" jdbcType="INTEGER" />
@@ -161,7 +161,7 @@
 
 	<!-- （行情）收藏列表 -->
 	<select id="selectHangqCollectionedOwen"
-		resultMap="BaseResultMap">
+		resultMap="HangqResultMap">
 		SELECT
 		A.id,
 		A.give,
@@ -178,7 +178,7 @@
 	</select>
 	
 	<select id="selectHangqCollectionedCountOwen"
-		resultMap="int">
+		resultType="int">
 		SELECT
 		count(A.id)
 		FROM

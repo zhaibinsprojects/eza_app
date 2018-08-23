@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_goods_classVoMapper" >
-  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_goods_classVo" >
+  <resultMap id="BaseResultMap" type="com.sanbang.vo.goods.ezs_goods_classVo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -239,32 +239,19 @@
 		A.price
 	FROM
 		ezs_goods_class A
-	WHERE A.id in
+	WHERE  A.deleteStatus = 0 and A.id in
 	(SELECT B.subtotal FROM  ezs_subscribehq B WHERE B.id=#{userid})
 	AND A.parent_id=#{parentid}
   </select>
   <select id="gethanqParentClassCheckAll" resultMap="ClassCheckAllResultMap">
-   (
-		SELECT
-			A.id,A.parent_id,A.`name`,A.`level`,A.price
-		FROM
-			ezs_goods_class A
-		WHERE
-			A.`level` = 1
-		AND A.display = 0
-		AND A.deleteStatus = 0
-	)
-	UNION
-		(
-			SELECT
+   SELECT
 					A.id,A.parent_id,A.`name`,A.`level`,A.price
 			FROM
 				ezs_goods_class A
 			WHERE
 				A.`level` = 1
-			AND A.display = 1
+			<!-- AND A.display = 1 -->
 			AND A.deleteStatus = 0
-		)
   
   </select>
   
@@ -281,7 +268,7 @@
 	 A.parent_id=#{parentid}
   </select>
   
-  <resultMap id="ClassNamesResultMap" type="com.sanbang.bean.ezs_Dzgoods_classVo" >
+  <resultMap id="ClassNamesResultMap" type="com.sanbang.vo.goods.ezs_Dzgoods_classVo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="level" property="level" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -300,5 +287,46 @@
 	FROM
 		(SELECT C.id,C.`name`,C.parent_id,C.`level` FROM ezs_goods_class C WHERE C.id in (#{classids})) A 
 	INNER  JOIN ezs_goods_class B ON A.parent_id=B.id
+  </select>
+  
+  <select id="gethangqCataBylevel" resultMap="ClassNamesResultMap">
+   SELECT
+			B.id,
+			B.`name`,
+			B.price
+		FROM
+		(	
+		<if test="reqtype=='all' or reqtype=='zsbj'  or reqtype=='zszs'">
+		(
+			SELECT
+				E.goodClass_id
+			FROM
+				ezs_price_trend E
+				<if test="reqtype=='zsbj'">
+		        WHERE E.`status`=2 AND E.data_sources in (2,3)
+				</if>
+				<if test="reqtype=='zszs'">
+		        WHERE E.`status`=2 AND E.data_sources in (1)
+				</if>
+		)  
+		</if>
+		<if test="reqtype=='all' or reqtype=='xlbj'  or reqtype=='xlzs'">
+		 UNION	(
+			SELECT
+				E.goodClass_id
+			FROM
+				ezs_price_trend_xl E
+		) 
+		</if>
+		
+		 ) A
+	INNER JOIN ezs_goods_class B ON A.goodClass_id = B.id
+	WHERE
+		B.`level` in (${level})
+		AND B.deleteStatus=0
+		<if test="parentid!=null and parentid!=0">
+		and B.parent_id in (${parentid})
+		</if>
+		 GROUP BY B.id 
   </select>
 </mapper>

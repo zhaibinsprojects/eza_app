@@ -1,5 +1,7 @@
 package com.sanbang.hangq.servive;
 
+import java.math.BigDecimal;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.sanbang.bean.ezs_user;
@@ -54,5 +56,18 @@ public interface MyMenuHangqService {
 	 * @return
 	 */
 	public Result  saveDingyuePic(HttpServletRequest request,ezs_user upi,long id,String urlParam,Result result);
+	
+	
+	/**
+	 * 上传汇款凭证
+	 * @param request
+	 * @param upi
+	 * @param id
+	 * @param result
+	 * @return
+	 */
+	public Result  myDingYueAdd(HttpServletRequest request,ezs_user upi,String cycle,BigDecimal payment,String subtotal,int isall,Result result);
+	
+	
 	
 }
