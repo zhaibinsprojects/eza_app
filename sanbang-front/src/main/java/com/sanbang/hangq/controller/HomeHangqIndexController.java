@@ -445,50 +445,53 @@ public class HomeHangqIndexController {
 	//实时报价-再生料/新料-列表（筛选条件）
 	/**
 	 * 
-	 * @param type 新料/再生料  newClass/oldClass
+	 * @param type 新料/再生料  newclass/oldclass
 	 * @param goodClassId
 	 * @param areaId
+	 * @param colorId
+	 * @param formId
 	 * @param currentPage
-	 * @param model
-	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getPriceInTime")
+	@ResponseBody
 	public Result getPriceInTime(@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="goodClassId",required=false,defaultValue="1")String goodClassId,
-			@RequestParam(name="areaId",required=false,defaultValue="4523541") String areaId,
-			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,Model model,HttpServletRequest request,
-			@RequestParam(name="ecId",required=false,defaultValue="0")Long ecId,
-			@RequestParam(name="kindId",required=false,defaultValue="0")String kindId,
-			@RequestParam(name="colorId",required=false,defaultValue="0")Long colorId,
-			@RequestParam(name="formId",required=false,defaultValue="0")Long formId
+			@RequestParam(name="areaId",required=false) String areaId,
+			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,
+			@RequestParam(name="colorId",required=false)Long colorId,
+			@RequestParam(name="formId",required=false)Long formId
 			){
 		Result rs = Result.success();
 		Map<String, Object> resultMap = new HashMap<>();
 		//参数传递
 		Map<String, Object> tMp = new HashMap<>();
-		tMp.put("kindId", kindId);
-		tMp.put("colorId", colorId);
-		tMp.put("formId", formId);
-		tMp.put("areaId", areaId);
+		if(colorId!=null)
+			tMp.put("colorId", colorId);
+		if(formId!=null)
+			tMp.put("formId", formId);
 		//获取相关地址ID
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
-		areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
-		Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
-		if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-			List<ezs_area> areaListTemp =new ArrayList<>();
-			areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
-			for (ezs_area tarea : areaListTemp) {
-				areaIdsList.add(tarea.getId().toString());
+		if(areaId!=null){
+			areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
+			Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+			if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				List<ezs_area> areaListTemp =new ArrayList<>();
+				areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+				for (ezs_area tarea : areaListTemp) {
+					areaIdsList.add(tarea.getId().toString());
+				}
+				tMp.put("areaIds", areaIdsList);
 			}
-			tMp.put("areaIds", areaIdsList);
 		}
-		if(type.equals("newClass")){
+		if(type.equals("newclass")){
+			//新料
 			resultMap = this.priceConditionService.getPriceInTimeNew(tMp,currentPage,10);
-		}else if(type.equals("oldClass")){
-			resultMap = this.priceConditionService.getPriceInTime(tMp,currentPage,10);
+		}else if(type.equals("oldclass")){
+			//普通再生塑料
+			resultMap = this.priceConditionService.getPriceInTimeOld(tMp,currentPage,10);
 		}
 		List<PriceTrendIfo> resultList = null;
 		Integer ErrorCode = (Integer)resultMap.get("ErrorCode");
@@ -502,23 +505,21 @@ public class HomeHangqIndexController {
 		return rs;
 	}
 	//获取areaId的所有子标签（包含本标签）
-		public List<Long> getAllChildrenAreaIDs(Long areaId){
-			//获取相关地址ID
-			List<Long> areaIdsList = new ArrayList<>();
-			Map<String, Object> areaIdsMap = null;
-			areaIdsMap = this.addressService.getAllChildID(areaId);
-			Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
-			if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				List<ezs_area> areaListTemp =new ArrayList<>();
-				areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
-				for (ezs_area tarea : areaListTemp) {
-					areaIdsList.add(tarea.getId());
-				}
-				//return areaIdsList;
+	public List<Long> getAllChildrenAreaIDs(Long areaId){
+		//获取相关地址ID
+		List<Long> areaIdsList = new ArrayList<>();
+		Map<String, Object> areaIdsMap = null;
+		areaIdsMap = this.addressService.getAllChildID(areaId);
+		Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+		if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<ezs_area> areaListTemp =new ArrayList<>();
+			areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+			for (ezs_area tarea : areaListTemp) {
+				areaIdsList.add(tarea.getId());
 			}
-			return areaIdsList;
+			//return areaIdsList;
 		}
-	
-	
+		return areaIdsList;
+	}
 	
 }

@@ -33,6 +33,8 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	private ezs_columnMapper columnMapper;
 	@Autowired
 	private ezs_areaMapper areaMapper;
+	/*百分数格式化*/
+	private DecimalFormat dftwo = new DecimalFormat("0.00%");
 	
 	@Override
 	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno,int pagesaize) {
@@ -305,21 +307,27 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> plist = new ArrayList<>();
 		try {
-			mp.put("pagecount", (pageno-1)*pagesaize);
+			mp.put("pagestart", (pageno-1)*pagesaize);
 			mp.put("pagesize", pagesaize);
-			
-			//plist = this.priceTrendXLMapper
-			plist = this.priceTrendMapper.selectByAreaIdAndOtherCondition(mp);
+			plist = this.priceTrendXLMapper.priceInTimeNewList(mp);
 			if(plist!=null){
 				List<PriceTrendIfo> plistTemp = new ArrayList<>();
 				for (PriceTrendIfo item : plist) {
-					item.setGoodArea(getaddressinfo(item.getRegion_id()));
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(5, 10):"");
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf("0.00%"));
+					}
 					plistTemp.add(item);
 				}
-				int totalCount=priceTrendMapper.getPriceConditionCount(mmp);
-				ExPage page = new ExPage(totalCount, Integer.valueOf(pageno)); 
-				page.setPageSize(10);
-				mmp.put("Page", page);
+				//int totalCount=priceTrendMapper.getPriceConditionCount(mp);
+				//ExPage page = new ExPage(totalCount, Integer.valueOf(pageno)); 
+				//page.setPageSize(10);
+				//mmp.put("Page", page);
 				mmp.put("Obj", plistTemp);
 				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "查询成功");
@@ -334,4 +342,45 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		}
 		return mmp;
 	}
+	@Override
+	public Map<String, Object> getPriceInTimeOld(Map<String, Object> mp, int pageno, int pagesaize) {
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		try {
+			mp.put("pagestart", (pageno-1)*pagesaize);
+			mp.put("pagesize", pagesaize);
+			plist = this.priceTrendMapper.priceInTimeNewList(mp);
+			if(plist!=null){
+				List<PriceTrendIfo> plistTemp = new ArrayList<>();
+				for (PriceTrendIfo item : plist) {
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(5, 10):"");
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf("0.00%"));
+					}
+					plistTemp.add(item);
+				}
+				//int totalCount=priceTrendMapper.getPriceConditionCount(mp);
+				//ExPage page = new ExPage(totalCount, Integer.valueOf(pageno)); 
+				//page.setPageSize(10);
+				//mmp.put("Page", page);
+				mmp.put("Obj", plistTemp);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}else{
+				plist=new ArrayList<>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
+	
 }

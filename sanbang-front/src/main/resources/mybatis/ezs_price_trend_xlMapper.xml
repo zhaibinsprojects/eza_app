@@ -185,27 +185,28 @@
   </resultMap>
   <!-- 新料-实时报价-列表-多条件查询 -->
   <!-- 实时报价分类列表展示 -->
-  <resultMap id="PriceConditionResultMap" type="com.sanbang.vo.PriceTrendIfo" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
-    <result column="goodClass_id" property="goodClass_id" jdbcType="BIGINT" />
-    <result column="region_id" property="region_id" jdbcType="BIGINT" />
-    <result column="goodClass" property="goodClassName" jdbcType="VARCHAR" />
-  </resultMap>
-  <select id="selectByAreaIdAndOtherCondition" resultMap="PriceConditionResultMap">
-    select DISTINCT g.* from ezs_price_trend_xl g where g.deleteStatus = '0' 
-    <if test="kindId != null and kindId != '' " >
-        and g.goodClass_id = #{kindId}
+  <!-- 实时报价 新 -->
+  <select id="priceInTimeNewList" resultMap="PriceInTimeResultMap">
+    select 
+	a.price currentPrice,
+	a.goodClass_id goodClass,
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className,
+	a.data_time dealDate,
+	a.region_id areaId,
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	from ezs_price_trend_xl a 
+	where a.deleteStatus = '0'
+	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+    <if test="goodClassId != null and goodClassId != '' " >
+        and a.goodClass_id = #{goodClassId}
     </if>
     <if test="areaIds != null and areaIds.size > 0 " >
-        and g.region_id 
+        and a.region_id 
 		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
          #{areaIds}
      	</foreach>
     </if>
-   	and DATE_FORMAT(g.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
-	ORDER BY g.addTime desc  
-	limit #{pagecount},#{pagesize}
+	ORDER BY a.addTime desc  
+	limit #{pagestart},#{pagesize}
   </select>
 </mapper>

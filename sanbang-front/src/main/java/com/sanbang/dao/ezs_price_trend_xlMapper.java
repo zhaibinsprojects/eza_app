@@ -21,5 +21,5 @@ public interface ezs_price_trend_xlMapper {
     /*实时报价 新料*/
     List<PriceTrendIfo> priceInTimeNew(Long goodClassId);
     /*实时报价 新料-列表-多条件查询*/
-    List<PriceTrendIfo> selectByAreaIdAndOtherCondition(Map<String, Object> mp);
+    List<PriceTrendIfo> priceInTimeNewList(Map<String, Object> mp);
 }
