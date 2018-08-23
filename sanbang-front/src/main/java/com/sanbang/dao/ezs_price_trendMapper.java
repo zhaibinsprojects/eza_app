@@ -37,6 +37,8 @@ public interface ezs_price_trendMapper {
     List<PriceTrendIfo> priceInTimeNewList(Map<String, Object> mp);
     /*价格趋势 新*/
     List<PriceTrendIfo> getPriceTrendcyNew(Map<String, Object> mp);
-    
-    
+    /*再生料-实时报价-详情页面*/
+    List<PriceTrendIfo> priceInTimeNewDetail(Map<String, Object> mp);
+    /*再生料-实时报价-详情页面-分页展示*/
+    List<PriceTrendIfo> priceInTimeNewDetailPage(Map<String, Object> mp);
 }

@@ -82,9 +82,9 @@ public class HomeHangqIndexController {
 		goodClassMap.put("106", "HDPE");
 		goodClassMap.put("107", "PP");
 		goodClassMap.put("108", "PVC");
-		goodClassMap.put("109", "HIPS");
-		goodClassMap.put("110", "GPPS");
-		goodClassMap.put("111", "ABS");
+		//goodClassMap.put("109", "HIPS");
+		//goodClassMap.put("110", "GPPS");
+		//goodClassMap.put("111", "ABS");
 		//再生类
 		List<String> goodClassTypeList = new ArrayList<>();
 		goodClassTypeList.add("3");//ABS
@@ -99,9 +99,9 @@ public class HomeHangqIndexController {
 		newGoodClassTypeList.add("106");//HDPE
 		newGoodClassTypeList.add("107");//PP
 		newGoodClassTypeList.add("108");//PVC
-		newGoodClassTypeList.add("109");//HIPS
-		newGoodClassTypeList.add("110");//GPPS
-		newGoodClassTypeList.add("111");//ABS
+		//newGoodClassTypeList.add("109");//HIPS
+		//newGoodClassTypeList.add("110");//GPPS
+		//newGoodClassTypeList.add("111");//ABS
 		//banner 返回图片和连接
 		List<Advices> advices = getAdvicesInfo();
 		hqm.setAdviceList(advices);
@@ -426,9 +426,90 @@ public class HomeHangqIndexController {
 			for (ezs_area tarea : areaListTemp) {
 				areaIdsList.add(tarea.getId());
 			}
-			//return areaIdsList;
 		}
 		return areaIdsList;
+	}
+	//跳转至实时报价详情页面（详情页面通过js加载数据）
+	@RequestMapping(value="/priceInTimeDetailTurn")
+	public String priceInTimeDetailTurn(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="priceId",required=true)String priceId,
+			@RequestParam(name="type",required=true)String type,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType,Model model){
+		
+		model.addAttribute("dateBetweenType", "WEEK");
+		model.addAttribute("priceId", priceId);
+		model.addAttribute("type", type);
+		return view+"priceintimedetail";
+	}
+	
+	
+	/**
+	 * 实时报价详情页面(再生料、新料)(H5页面)
+	 * @param priceId 实时价格ID
+	 * @param type 新料/再生料  newclass/oldclass
+	 * @param dateBetweenType 展示区间：一周 WEEK、一月 MONTH、一季度 QUARTER、一年 YEAR
+	 * @return
+	 */
+	@RequestMapping(value="/priceInTimeDetail")
+	public String priceInTimeDetail(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="priceId",required=true)String priceId,
+			@RequestParam(name="type",required=true)String type,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		Map<String,Object> mmp = new HashMap<>();
+		//查询条件
+		Map<String,Object> tMp = new HashMap<>();
+		tMp.put("priceId", priceId);
+		tMp.put("dateBetweenType", dateBetweenType);
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		if(type!=null&&type.equals("newclass")){
+			//新料详情
+			mmp = this.priceConditionService.priceInTimeNewDetail(tMp);
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				plist = (List<PriceTrendIfo>)mmp.get("Obj");
+			}
+		}else if(type!=null&&type.equals("oldclass")){
+			//再生料详情查询
+			mmp = this.priceConditionService.priceInTimeOldDetail(tMp);
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				plist = (List<PriceTrendIfo>)mmp.get("Obj");
+			}
+		}
+		return "";
+	}
+	/**
+	 * 实时报价详情页面-分页展示(再生料、新料)
+	 * @param priceId 实时价格ID
+	 * @param type 新料/再生料  newclass/oldclass
+	 * @param dateBetweenType 展示区间：一周 WEEK、一月 MONTH、一季度 QUARTER、一年 YEAR
+	 * @return
+	 */
+	@RequestMapping(value="/priceInTimeDetailPage")
+	public String priceInTimeDetailPage(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="priceId",required=true)String priceId,
+			@RequestParam(name="type",required=true)String type,
+			@RequestParam(name="currentPage",required=false,defaultValue="1") int currentPage,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		//查询条件
+		Map<String,Object> tMp = new HashMap<>();
+		tMp.put("priceId", priceId);
+		tMp.put("dateBetweenType", dateBetweenType);
+		
+		if(type!=null&&type.equals("newclass")){
+			//新料详情
+			this.priceConditionService.priceInTimeNewDetailPage(tMp, currentPage, 10);
+		}else if(type!=null&&type.equals("oldclass")){
+			//再生料详情查询
+			this.priceConditionService.priceInTimeOldDetailPage(tMp, currentPage, 10);
+		}
+		return "";
+	}
+	//价格行情详情页面
+	@RequestMapping(value="/priceAnalyDetail")
+	public String priceAnalyDetail(){
+		
+		return "";
 	}
 	
 }

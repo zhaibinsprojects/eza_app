@@ -733,6 +733,7 @@
   <!-- 实时报价-再生类-列表-多条件查询 -->
   <select id="priceInTimeNewList" resultMap="PriceInTimeResultMap">
   	select 
+  	a.id,
 	a.price currentPrice,
 	a.goodClass2_id goodClass,
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
@@ -777,6 +778,7 @@
   <!-- 从新修订 实时报价 -->
   <select id="priceInTimeNew" resultMap="PriceInTimeResultMap" parameterType="java.lang.Long">
   	select 
+  	a.id,
 	a.price currentPrice,
 	a.goodClass2_id goodClass,
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
@@ -791,6 +793,7 @@
   </select>
   <!-- 实时报价 新 -->
   <resultMap id="PriceInTimeResultMap" type="com.sanbang.vo.PriceTrendIfo" >
+  	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="currentPrice" property="currentPrice" jdbcType="VARCHAR" />
     <result column="prePrice" property="prePrice" jdbcType="VARCHAR" />
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
@@ -886,5 +889,75 @@
       	</otherwise>
       </choose>
  	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(a.data_time,'%Y-%m-%d') desc <!-- LIMIT #{startPos},#{pageSize} -->
+  </select>
+  
+  
+  <!-- 实时报价-再生类-详情列表-折线图 -->
+  <select id="priceInTimeNewDetail" resultMap="PriceInTimeResultMap">
+  	select 
+  	a.id,
+	a.price currentPrice,
+	a.goodClass2_id goodClass,
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
+	a.data_time dealDate,
+	a.region_id areaId,
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	from ezs_price_trend a 
+	where a.type = '1'
+	and a.data_sources in ('2','3') 
+	and EXISTS (select 1 from ezs_price_trend b where a.color_id = b.color_id and a.form_id = b.form_id and a.region_id = b.region_id and a.goodClass2_id = b.goodClass2_id and b.id= #{priceId} )
+	<!-- 筛选条件：一周、一月、一季度、一年 -->
+     <choose>
+      	<when test="dateBetweenType != null and dateBetweenType == 'WEEK' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'MONTH' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 MONTH)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'QUARTER' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 QUARTER)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'YEAR' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 YEAR)
+      	</when>
+      	<otherwise>
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</otherwise>
+     </choose>
+     ORDER BY a.addTime desc
+  </select>
+  <!-- 实时报价-再生类-详情列表-折线图 -->
+  <select id="priceInTimeNewDetailPage" resultMap="PriceInTimeResultMap">
+  	select 
+  	a.id,
+	a.price currentPrice,
+	a.goodClass2_id goodClass,
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
+	a.data_time dealDate,
+	a.region_id areaId,
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	from ezs_price_trend a 
+	where a.type = '1'
+	and a.data_sources in ('2','3') 
+	and EXISTS (select 1 from ezs_price_trend b where a.color_id = b.color_id and a.form_id = b.form_id and a.region_id = b.region_id and a.goodClass2_id = b.goodClass2_id and b.id= #{priceId} )
+	<!-- 筛选条件：一周、一月、一季度、一年 -->
+     <choose>
+      	<when test="dateBetweenType != null and dateBetweenType == 'WEEK' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'MONTH' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 MONTH)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'QUARTER' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 QUARTER)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'YEAR' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 YEAR)
+      	</when>
+      	<otherwise>
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</otherwise>
+     </choose>
+     ORDER BY a.addTime desc limit #{pagestart},#{pagesize}
   </select>
 </mapper>
