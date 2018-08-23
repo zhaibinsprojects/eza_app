@@ -33,6 +33,10 @@ public interface ezs_price_trendMapper {
     int getPriceConditionCount(Map<String, Object> mp);
     /*实时报价 新*/
     List<PriceTrendIfo> priceInTimeNew(Long goodClassId);
+    /*实时报价 列表 多条件查询*/
+    List<PriceTrendIfo> priceInTimeNewList(Map<String, Object> mp);
     /*价格趋势 新*/
     List<PriceTrendIfo> getPriceTrendcyNew(Map<String, Object> mp);
+    
+    
 }

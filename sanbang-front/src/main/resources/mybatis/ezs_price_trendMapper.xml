@@ -730,8 +730,8 @@
 	from ezs_price_trend a2 where EXISTS (select 1 from ezs_goods g2 where a2.goodClass_id = g2.goodClass_id and g2.id = #{gId} ) and a2.type = '3' GROUP BY DATE_FORMAT(a2.data_time,'%Y-%m-%d') order by a2.data_time desc LIMIT 0,1
   </select>
   
-  <!-- 从新修订 实时报价 -->
-  <select id="priceInTimeNewList" resultMap="PriceInTimeResultMap" parameterType="java.lang.Long">
+  <!-- 实时报价-再生类-列表-多条件查询 -->
+  <select id="priceInTimeNewList" resultMap="PriceInTimeResultMap">
   	select 
 	a.price currentPrice,
 	a.goodClass2_id goodClass,
@@ -742,8 +742,36 @@
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
-	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
-	and a.goodClass2_id = #{goodClassId} GROUP BY a.region_id LIMIT 5
+	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT('2018-05-02','%Y-%m-%d')
+      <if test="goodClassId != null and goodClassId != '' " >
+        and a.goodClass2_id = #{goodClassId}
+      </if>
+      <if test="colorId != null and colorId != ''" >
+        and a.color_id = #{colorId}
+      </if>
+      <if test="formId != null and formId != ''" >
+        and a.form_id = #{formId}
+      </if>
+      <if test="source != null" >
+        and a.date_from = #{source}
+      </if>
+      <if test="purpose != null" >
+        and a.purpose = #{purpose}
+      </if>
+      <if test="burning != null" >
+        and a.burning = #{burning}
+      </if>
+      <if test="protection != null" >
+        and a.protection = #{protection}
+      </if>
+      <!-- 加入数组 -->
+      <if test="areaIds != null and areaIds.size > 0 " >
+        and a.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
+         #{areaIds}
+     	</foreach>
+      </if>
+      limit #{pagestart},#{pagesize}
   </select>
   
   <!-- 从新修订 实时报价 -->

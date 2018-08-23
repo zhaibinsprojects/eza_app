@@ -5,9 +5,11 @@ import java.util.Map;
 import com.sanbang.utils.Page;
 
 public interface PriceConditionService {
-	/*实时报价-再生料-列表*/
+	
 	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno,int pagesaize);
-	/*实时报价-新料-列表*/
+	/*实时报价-再生料-列表-多条件查询*/
+	public Map<String, Object> getPriceInTimeOld(Map<String, Object> mp,int pageno,int pagesaize);
+	/*实时报价-新料-列表-多条件查询*/
 	public Map<String, Object> getPriceInTimeNew(Map<String, Object> mp,int pageno,int pagesaize);
 	
 	public Map<String, Object> getSecondTheme(Long id);
