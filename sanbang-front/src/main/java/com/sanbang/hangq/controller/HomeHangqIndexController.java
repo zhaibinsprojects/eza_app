@@ -396,8 +396,10 @@ public class HomeHangqIndexController {
 			}
 		}
 		if(type.equals("newclass")){
+			//新料
 			resultMap = this.priceConditionService.getPriceInTimeNew(tMp,currentPage,10);
 		}else if(type.equals("oldclass")){
+			//普通再生塑料
 			resultMap = this.priceConditionService.getPriceInTimeOld(tMp,currentPage,10);
 		}
 		List<PriceTrendIfo> resultList = null;

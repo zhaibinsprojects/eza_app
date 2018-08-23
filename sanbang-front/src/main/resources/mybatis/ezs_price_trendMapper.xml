@@ -742,7 +742,7 @@
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
-	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT('2018-05-02','%Y-%m-%d')
+	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
       <if test="goodClassId != null and goodClassId != '' " >
         and a.goodClass2_id = #{goodClassId}
       </if>
@@ -786,7 +786,7 @@
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
-	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT('2018-05-03','%Y-%m-%d')
+	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
 	and a.goodClass2_id = #{goodClassId} GROUP BY a.region_id LIMIT 5
   </select>
   <!-- 实时报价 新 -->
@@ -882,7 +882,7 @@
       	</when>
       	<otherwise>
       		<!-- and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 MONTH) -->
-      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD('2018-05-01',INTERVAL -1 MONTH)
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 MONTH)
       	</otherwise>
       </choose>
  	GROUP BY DATE_FORMAT(a.data_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(a.data_time,'%Y-%m-%d') desc <!-- LIMIT #{startPos},#{pageSize} -->
