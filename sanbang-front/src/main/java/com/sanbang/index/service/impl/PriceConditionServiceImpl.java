@@ -320,7 +320,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
 						item.setSandByOne(dftwo.format(zf));						
 					}catch(Exception e){
-						item.setSandByOne(String.valueOf(zf));
+						item.setSandByOne(String.valueOf("0.00%"));
 					}
 					plistTemp.add(item);
 				}
@@ -360,7 +360,7 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
 						item.setSandByOne(dftwo.format(zf));						
 					}catch(Exception e){
-						item.setSandByOne(String.valueOf(zf));
+						item.setSandByOne(String.valueOf("0.00%"));
 					}
 					plistTemp.add(item);
 				}
