@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
 <%-- <base href="${serurl}"/> --%>
@@ -56,7 +56,7 @@
   			<tr>
   				<td><span>PE</span></td>
   				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
+  				<td><span class="colrRed">￥${priceId}</span></td>
   				<td><span>08-07</span></td>
   			</tr>
   			<tr>
@@ -117,223 +117,16 @@
   	</table>
   </section>
 </div>
-<!-------地区筛选-------->
-<div class="content_area">
-	<div class="ezsm-collection-top">
-    <div><a class="aicon_yzs aicon_yzsarea" href="#"></a></div>
-  </div>
-  <div class="area_modal">
-  	<div class="hot_area">
-  		<a href="javascript:;">全部地区</a>
-  	</div>
-  	<div class="hot_area">
-  		<p><label>您的位置 :</label><span>河北</span></p>
-  	</div>
-  	<div class="hot_city">
-  		<p>热门省市</p>
-  		<div class="hot_cityEvery">
-  			<ul>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="clearboth"></li>
-  			</ul>
-  		</div>
-  	</div>
-  	<div class="hot_city_check">
-  		<p>A</p>
-  		<div class="hot_cityEvery">
-  			<ul>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="clearboth"></li>
-  			</ul>
-  		</div>
-  	</div>
-  	<div class="hot_city_check">
-  		<p>B</p>
-  		<div class="hot_cityEvery">
-  			<ul>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="clearboth"></li>
-  			</ul>
-  		</div>
-  	</div>
-  	<div class="hot_city_check">
-  		<p>C</p>
-  		<div class="hot_cityEvery">
-  			<ul>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="clearboth"></li>
-  			</ul>
-  		</div>
-  	</div>
-  	<div class="hot_city_check">
-  		<p>D</p>
-  		<div class="hot_cityEvery">
-  			<ul>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="clearboth"></li>
-  			</ul>
-  		</div>
-  	</div>
-  	<div class="hot_city_check">
-  		<p>E</p>
-  		<div class="hot_cityEvery">
-  			<ul>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">北京</li>
-  				<li class="nexticker">上海</li>
-  				<li class="nexticker">广州</li>
-  				<li class="nexticker">上海</li>
-  				<li class="clearboth"></li>
-  			</ul>
-  		</div>
-  	</div>
-  </div>
-</div>
-<!---------品类筛选---------->
-<div class="protuyiod">
-	<div class="ezsm-collection-top">
-    <div><a class="aicon_yzs aicon_yzsproduy" href="#"></a></div>
-  </div>
-  <div class="area_modal">
-  	<div class="allProtuyiod">
-  		<span class="spanprodut">全部品类</span>
-  	</div>
-  	<div class="hot_protuyiod">
-  		<p>热门品类</p>
-  		<ul class="ul_protuy">
-  			<li><span class="spanprodut">再生通用塑料-PE</span></li>
-  			<li><span class="spanprodut">再生通用塑料-ABS</span></li>
-  			<li></li>
-  		</ul>
-  	</div>
-  	<div class="hot_protuyiod">
-  		<p>再生通用塑料</p>
-  		<ul class="ul_protuy">
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li></li>
-  		</ul>
-  	</div>
-  	<div class="hot_protuyiod">
-  		<p>再生通用塑料</p>
-  		<ul class="ul_protuy">
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li></li>
-  		</ul>
-  	</div>
-  </div>
-  <div class="btnGroup">
-  	<button class="registr">重置</button>
-  	<button class="agment">确定</button>
-  </div>
-</div>
-<!---筛选--->
-<div class="graytuiops"></div>
-<div class="shaxyuiop">
-	<div class="shaxyuig">
-		<div class="hot_protuyiod">
-  		<p>颜色</p>
-  		<ul class="ul_protuy">
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li></li>
-  		</ul>
-  	</div>
-  	<div class="hot_protuyiod">
-  		<p>形态</p>
-  		<ul class="ul_protuy">
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li><span class="spanprodut">LDPE</span></li>
-  			<li><span class="spanprodut">HDPE</span></li>
-  			<li></li>
-  		</ul>
-  	</div>
-	</div>
-	<div class="btnGroupsx">
-  	<button class="registrsx">重置</button>
-  	<button class="agmentsx">确定</button>
-  </div>
-</div>
-<input name="" value="">
+<input name="colorId" value="${colorId}" style="display:none">
+<input name="formId" value="${formId}" style="display:none">
+<input name="type" value="${type}" style="display:none">
+<input name="areaId" value="${areaId}" style="display:none">
+<input name="priceId" value="${priceId}" style="display:none">
 </body>
 <script type="text/javascript" src="front/resource/js/price/echarttaball.js" charset="utf-8"></script>
-<script type="text/javascript" src="front/resource/js/price/jg_public.js"></script>
+<script type="text/javascript">
+
+
+
+</script>
 </html>

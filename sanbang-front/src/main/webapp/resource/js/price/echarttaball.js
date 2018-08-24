@@ -56,11 +56,15 @@ myChart.showLoading();
 var namey = [];
 var numo = [];
 $.ajax({
-    type: 'get',
-    url: 'front/resource/json/city2.json',
+    type: 'post',
+    url: 'front/app/hangq/priceInTimeDetail.htm',
+    date:{
+    	"type":"oldclass",
+    	"priceId":'13530'
+    },
     dataType: "json",
     success: function (result) {
-        $.each(result.list, function (index, item) {
+       /* $.each(result.list, function (index, item) {
             namey.push(item.name);     
             numo.push(item.value);
         });
@@ -80,7 +84,8 @@ $.ajax({
                 data: numo
             }
             ]
-        });
+        });*/
+    	alert("hello");
     },
     error: function (errorMsg) {
         alert("图表数据请求失败!");

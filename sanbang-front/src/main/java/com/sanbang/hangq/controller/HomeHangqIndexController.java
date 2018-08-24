@@ -366,7 +366,7 @@ public class HomeHangqIndexController {
 	@RequestMapping(value="/getPriceInTime")
 	@ResponseBody
 	public Result getPriceInTime(@RequestParam(name="type",required=true)String type,
-			@RequestParam(name="goodClassId",required=false,defaultValue="1")String goodClassId,
+			@RequestParam(name="goodClassId",required=false)String goodClassId,
 			@RequestParam(name="areaId",required=false) String areaId,
 			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,
 			@RequestParam(name="colorId",required=false)Long colorId,
@@ -383,17 +383,21 @@ public class HomeHangqIndexController {
 		//获取相关地址ID
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
-		if(areaId!=null){
-			areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
-			Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
-			if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
-				List<ezs_area> areaListTemp =new ArrayList<>();
-				areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
-				for (ezs_area tarea : areaListTemp) {
-					areaIdsList.add(tarea.getId().toString());
+		try{
+			if(areaId!=null&&!areaId.trim().equals("")){
+				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
+				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+				if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+					List<ezs_area> areaListTemp =new ArrayList<>();
+					areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+					for (ezs_area tarea : areaListTemp) {
+						areaIdsList.add(tarea.getId().toString());
+					}
+					tMp.put("areaIds", areaIdsList);
 				}
-				tMp.put("areaIds", areaIdsList);
 			}
+		}catch(Exception e){
+			
 		}
 		if(type.equals("newclass")){
 			//新料
@@ -402,7 +406,7 @@ public class HomeHangqIndexController {
 			//普通再生塑料
 			resultMap = this.priceConditionService.getPriceInTimeOld(tMp,currentPage,10);
 		}
-		List<PriceTrendIfo> resultList = null;
+		List<PriceTrendIfo> resultList = new ArrayList<>();
 		Integer ErrorCode = (Integer)resultMap.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			resultList = (List<PriceTrendIfo>)resultMap.get("Obj");
@@ -435,7 +439,8 @@ public class HomeHangqIndexController {
 			@RequestParam(name="priceId",required=true)String priceId,
 			@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType,Model model){
-		
+		//获取token验证用户权限，符合-返回相关标志位
+		model.addAttribute("showFlag", "1");//00-未购、不在试用期（未试用），01-未购、在试用期，02-未购、不在试用期（已试用）；10 已购
 		model.addAttribute("dateBetweenType", "WEEK");
 		model.addAttribute("priceId", priceId);
 		model.addAttribute("type", type);
@@ -451,7 +456,8 @@ public class HomeHangqIndexController {
 	 * @return
 	 */
 	@RequestMapping(value="/priceInTimeDetail")
-	public String priceInTimeDetail(HttpServletRequest request,HttpServletResponse response,
+	@ResponseBody
+	public Object priceInTimeDetail(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(name="priceId",required=true)String priceId,
 			@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
@@ -476,7 +482,7 @@ public class HomeHangqIndexController {
 				plist = (List<PriceTrendIfo>)mmp.get("Obj");
 			}
 		}
-		return "";
+		return plist;
 	}
 	/**
 	 * 实时报价详情页面-分页展示(再生料、新料)

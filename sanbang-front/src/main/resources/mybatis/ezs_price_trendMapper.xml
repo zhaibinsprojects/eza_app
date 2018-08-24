@@ -739,7 +739,7 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
@@ -784,7 +784,7 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
@@ -901,7 +901,7 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
@@ -935,7 +935,7 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
