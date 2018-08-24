@@ -748,10 +748,10 @@
         and a.goodClass2_id = #{goodClassId}
       </if>
       <if test="colorId != null and colorId != ''" >
-        and a.color_id = #{colorId}
+        and a.color_id in ( #{colorId} )
       </if>
       <if test="formId != null and formId != ''" >
-        and a.form_id = #{formId}
+        and a.form_id in ( #{formId} )
       </if>
       <if test="source != null" >
         and a.date_from = #{source}

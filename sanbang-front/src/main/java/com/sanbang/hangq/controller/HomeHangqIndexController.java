@@ -442,9 +442,8 @@ public class HomeHangqIndexController {
 		model.addAttribute("title", column.getName());
 		return view+"infoshow";
 	}
-	//实时报价-再生料/新料-列表（筛选条件）
 	/**
-	 * 
+	 * //实时报价-再生料/新料-列表（筛选条件）
 	 * @param type 新料/再生料  newclass/oldclass
 	 * @param goodClassId
 	 * @param areaId
@@ -460,15 +459,15 @@ public class HomeHangqIndexController {
 			@RequestParam(name="goodClassId",required=false)String goodClassId,
 			@RequestParam(name="areaId",required=false) String areaId,
 			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,
-			@RequestParam(name="colorId",required=false)Long colorId,
-			@RequestParam(name="formId",required=false)Long formId
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId
 			){
 		Result rs = Result.success();
 		Map<String, Object> resultMap = new HashMap<>();
 		//参数传递
 		Map<String, Object> tMp = new HashMap<>();
 		if(colorId!=null)
-			tMp.put("colorId", colorId);
+			tMp.put("colorId", colorId);/*可传多个 ， 号隔开*/
 		if(formId!=null)
 			tMp.put("formId", formId);
 		//获取相关地址ID

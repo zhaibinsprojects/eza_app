@@ -201,7 +201,7 @@
 	where a.deleteStatus = '0'
 	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
     <if test="goodClassId != null and goodClassId != '' " >
-        and a.goodClass_id = #{goodClassId}
+        and a.goodClass_id in ( #{goodClassId} )
     </if>
     <if test="areaIds != null and areaIds.size > 0 " >
         and a.region_id 
