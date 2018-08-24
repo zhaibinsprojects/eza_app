@@ -19,5 +19,7 @@ public interface ezs_userinfoMapper {
 
     int updateByPrimaryKey(ezs_userinfo record);
     
+    int getUserNumforEmail(String  email);
+    
    
 }

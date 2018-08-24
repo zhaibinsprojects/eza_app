@@ -229,5 +229,8 @@
     from ezs_userinfo
     where name=${ezsuser.name} 
   </select>
-      
+   <!-- 查询邮箱 -->
+   <select id="getUserNumforEmail" resultType="int">
+   select count(1)  from ezs_userinfo where email= #{email,jdbcType=VARCHAR}
+   </select>   
 </mapper>

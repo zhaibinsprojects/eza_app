@@ -20,16 +20,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
+import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_goods_class;
+import com.sanbang.cata.service.CataService;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
+import com.sanbang.dict.service.DictService;
+import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
+import com.sanbang.redis.RedisConstants;
+import com.sanbang.redis.RedisResult;
+import com.sanbang.utils.JsonUtils;
+import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.Advices;
+import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodClassType;
+import com.sanbang.vo.GoodsClass;
 import com.sanbang.vo.HangqHomeMess;
 import com.sanbang.vo.PriceInTimesVo;
 import com.sanbang.vo.PriceTrendIfo;
@@ -51,13 +62,93 @@ public class HomeHangqIndexController {
 	
 	private static String view="/hangq/";
 	
+	@Autowired
+	private HangqAreaService hangqAreaService;
+	@Autowired
+	private DictService dictService;
+	@Autowired
+	private CataService cataService;
+	
+	/**
+	 * 行情数据标识
+	 */
+	private  static final String HANGQ_DATA="HANGQ_DATA";
+	
+	
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/getHangqHomeCata")
+	public Result getHangqHomeCata(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(defaultValue="bj")String reqtype){
+		Result result = Result.success();
+		result.setMsg("请求失败");
+		Map<String, Object> map=new HashMap<>();
+ 		try {
+ 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA,
+ 					Result.class);
+ 			if (redate.getCode() == RedisConstants.SUCCESS) {
+				log.debug("查询redis分类成功执行");
+				result=redate.getResult();
+			} else {
+					log.debug("查询redis分类执行失败");
+					map=hangqAreaService.getHangqParamDate(reqtype, map);
+					map.put("color", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_COLOR)));
+					//形态
+					map.put("form", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_FORM)));
+						
+					map.put("suppy", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY)));
+					
+					result.setSuccess(true);
+			 		result.setMsg("请求成功");
+			 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			 		result.setObj(map);
+			 		
+			 		RedisUtils.get(HANGQ_DATA, Result.class);
+					RedisResult<String> rrt;
+					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA, result,
+						Long.valueOf(3600*24));
+					if (rrt.getCode() == RedisConstants.SUCCESS) {
+						log.debug("行情分类保存到redis成功执行");
+					} else {
+						log.debug("行情分类保存到redis失败");
+					}
+			}
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+			result.setObj(map);
+		}
+ 		
+		return result;
+	}
+
+	/**
+	 * common
+	 * @return
+	 */
+	public Object commonToJson(List<ezs_dict> listp){
+		List<Map<String, Object>> list=new ArrayList<>();
+		 for (ezs_dict ezs_dict : listp) {
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", ezs_dict.getId());
+			map.put("name", ezs_dict.getName());
+			list.add(map);
+		}
+		return JsonUtils.jsonOut(list); 
+	}
+	
+	
+	
 	/**
 	 * 价格行情首页   （mapper.xml文件sql须在数据完整后调整）
 	 * @param request
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getHangqHomeMess")
 	@ResponseBody
 	public Result getHangqHomeMess(HttpServletRequest request,HttpServletResponse response,

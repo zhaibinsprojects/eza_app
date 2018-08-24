@@ -23,8 +23,8 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 
 	// 上下文地址
 	@Value("${config.orderform.advice}")
-//	public String orderformadviceurl="http://test.ezaisheng.com/ezs/adviceforout/adviceForH5.htm";
-	public String orderformadviceurl;
+	public String orderformadviceurl="http://test.ezaisheng.com/ezs/adviceforout/adviceForH5.htm";
+//	public String orderformadviceurl;
 		
 	private Logger log=Logger.getLogger(CommonOrderAdviceImpl.class);
 	@Override
@@ -34,7 +34,7 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 		try {
 			JSONObject callBackRet = null;
 			HttpRequestParam httpParam = new HttpRequestParam();
-			httpParam.addUrlParams(new BasicNameValuePair("order_no", order_no));
+		 	httpParam.addUrlParams(new BasicNameValuePair("order_no", order_no));
 			httpParam.addUrlParams(new BasicNameValuePair("advicetype", "orderstatus"));
 			callBackRet = HttpRemoteRequestUtils.doPost(orderformadviceurl, httpParam);
 			result.setSuccess(true);
@@ -78,7 +78,9 @@ public class CommonOrderAdviceImpl implements CommonOrderAdvice{
 	
 	public static void main(String[] args) {
 		CommonOrderAdviceImpl aa=new CommonOrderAdviceImpl();
-		aa.orderFormAdviceStatus("EU0218072400143", "");
+		aa.orderFormAdviceStatus("EU0418082200173", "");
+//		aa.orderFormAdviceStatus("EU0418081700165", "");
+//		aa.orderFormAdviceStatus("EU0418081700166", "");
 	}
 
 }

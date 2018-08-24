@@ -3,11 +3,8 @@ package com.sanbang.setup.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TooManyListenersException;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,29 +12,23 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement.UserSpecification;
 import com.sanbang.area.service.AreaService;
 import com.sanbang.bean.ezs_area;
-import com.sanbang.bean.ezs_contact;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.setup.service.AuthService;
 import com.sanbang.upload.sevice.FileUploadService;
-import com.sanbang.userpro.service.UserProService;
 import com.sanbang.utils.ImageUrlUtil;
 import com.sanbang.utils.RedisUserSession;
-import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.LinkUserVo;
 import com.sanbang.vo.userauth.AuthImageVo;
 
 @Controller
@@ -125,6 +116,7 @@ public class UserSetupAuthController {
 			map.put("accountType", upi.getEzs_store().getAccountType());
 			result.setObj(map);
 		}
+//		JiGuanPushUtils.JiGangPushData("aabbcc", MD5Util.md5Encode(upi.getEzs_userinfo().getPhone()+upi.getId()));
 		return result;
 	}
 	

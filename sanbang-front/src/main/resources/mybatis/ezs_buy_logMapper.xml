@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_buy_logMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_buy_log" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="buy_user" property="buy_user" jdbcType="VARCHAR" />
+    <result column="buy_way" property="buy_way" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="priceService_id" property="priceService_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, buy_user, buy_way, price, priceService_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_buy_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_buy_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_buy_log" >
+    insert into ezs_buy_log (id, addTime, deleteStatus, 
+      buy_user, buy_way, price, 
+      priceService_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{buy_user,jdbcType=VARCHAR}, #{buy_way,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{priceService_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_buy_log" >
+    insert into ezs_buy_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="buy_user != null" >
+        buy_user,
+      </if>
+      <if test="buy_way != null" >
+        buy_way,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="priceService_id != null" >
+        priceService_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="buy_user != null" >
+        #{buy_user,jdbcType=VARCHAR},
+      </if>
+      <if test="buy_way != null" >
+        #{buy_way,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="priceService_id != null" >
+        #{priceService_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_buy_log" >
+    update ezs_buy_log
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="buy_user != null" >
+        buy_user = #{buy_user,jdbcType=VARCHAR},
+      </if>
+      <if test="buy_way != null" >
+        buy_way = #{buy_way,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="priceService_id != null" >
+        priceService_id = #{priceService_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_buy_log" >
+    update ezs_buy_log
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      buy_user = #{buy_user,jdbcType=VARCHAR},
+      buy_way = #{buy_way,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      priceService_id = #{priceService_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

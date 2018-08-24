@@ -40,13 +40,16 @@
 				<tr> <td>燃烧等级</td> <td>${good.burning}~${goodinfo.burning}</td> </tr>
 				<tr> <td>是否环保</td> <td>
 				<c:choose>
-				<c:when test="${goodinfo.protection eq true}">
-					是
-				</c:when>
-				<c:otherwise>
-					否
-				</c:otherwise>
-				</c:choose>
+    			<c:when test="${good.protection eq 1}">
+        			是
+    			</c:when>
+    			<c:when test="${good.protection eq 2}">
+        			未检测
+    			</c:when>
+    			<c:otherwise>
+        			否
+    			</c:otherwise>
+			</c:choose>
 				</td> </tr>
 			</table>
 		</div>

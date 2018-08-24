@@ -68,4 +68,13 @@
       account = #{account,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+   
+   <!--得到账户信息 -->
+  <select id="gethuanxInfoByUserid" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from ezs_huanxin
+    where userid = #{userid,jdbcType=BIGINT}
+  </select>
+  
 </mapper>

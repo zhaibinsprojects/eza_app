@@ -29,4 +29,13 @@ public interface ezs_documentshareMapper {
     
     ezs_documentshare selectByGoodsIdUserid(@Param("id")Long id,@Param("userid")long userid);
     
+    /**
+     	* 行情收藏列表
+     * @param userid
+     * @return
+     */
+    List<ezs_documentshare> selectHangqCollectionedOwen(@Param("userid")Long userid,
+    		@Param("pageCount")int pageCount,@Param("pageSize")long pageSize);
+    int selectHangqCollectionedCountOwen(@Param("userid")Long userid);
+    
 }

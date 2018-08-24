@@ -221,7 +221,7 @@ public class AuthServiceImpl implements AuthService {
 			String phone = request.getParameter("phone");// 电话号码
 			String address = request.getParameter("address");// 单位地址
 			String bank = request.getParameter("bank");// 开户行
-
+			
 			ezs_bill ezs_bill=new com.sanbang.bean.ezs_bill();
 			if (null != upi.getEzs_bill()&&!Tools.isEmpty(upi.getEzs_bill().getBank())) {
 				upi.getEzs_bill().setId(upi.getEzs_bill().getId());
@@ -235,6 +235,12 @@ public class AuthServiceImpl implements AuthService {
 				upi.getEzs_store().setAccountType(1);
 				ezs_billMapper.updateByPrimaryKeySelective(upi.getEzs_bill());
 			} else {
+				if(!companyName.equals(upi.getEzs_store().getCompanyName())) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("请输入注册账号时所添公司名称");
+					return result;
+				}
 				ezs_bill.setUser_id(upi.getId());
 				ezs_bill.setCompanyName(companyName);
 				ezs_bill.setDutyNo(dutyNo);
@@ -288,6 +294,7 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("请输入公司名称");
 			return result;
 		}
+		
 		if (Tools.isEmpty(dutyNo)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
@@ -392,6 +399,12 @@ public class AuthServiceImpl implements AuthService {
 				upi.getEzs_store().setAccountType(1);
 				ezs_billMapper.updateByPrimaryKeySelective(upi.getEzs_bill());
 			} else {
+				if(!companyName.equals(upi.getEzs_store().getCompanyName())) {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("请输入注册账号时所添公司名称");
+					return result;
+				}
 				ezs_bill.setUser_id(upi.getId());
 				ezs_bill.setCompanyName(companyName);
 				ezs_bill.setDutyNo(dutyNo);
@@ -539,6 +552,9 @@ public class AuthServiceImpl implements AuthService {
 			result = saveCompanyAuth(result, request, upi);
 		} else {
 			result = saveDivAuth(result, request, upi);
+		}
+		if(!result.getSuccess()) {
+			return result;	
 		}
 		ezs_store store=new ezs_store();
 		store.setStatus(1);

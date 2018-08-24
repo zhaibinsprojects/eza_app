@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goodsCollect;
 import com.sanbang.buyer.service.GoodsCollectionService;
 import com.sanbang.dao.ezs_documentshareMapper;
 import com.sanbang.dao.ezs_goodsMapper;

@@ -366,6 +366,7 @@ public class UserProServiceImpl implements UserProService {
 						userKey="app" + userProInfo.getEzs_userinfo().getPhone() + str32;
 						Map<String, Object> map=new HashMap<>();
 						map.put("token", userKey);
+						map.put("account", MD5Util.md5Encode(userProInfo.getEzs_userinfo().getPhone()+userProInfo.getId()));
 						result.setObj(map);
 					}
 					
@@ -1404,6 +1405,13 @@ public class UserProServiceImpl implements UserProService {
 			result.setSuccess(false);
 			result.setMsg("邮箱格式不正确");
 			return result;
+		}else {
+			int num=ezs_userinfoMapper.getUserNumforEmail(email);
+			if(num>0){
+				result.setSuccess(false);
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setMsg("邮箱已存在！");
+			}
 		}
 		result.setSuccess(true);
 		return result;
@@ -1508,8 +1516,16 @@ public class UserProServiceImpl implements UserProService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("邮箱格式不正确！");
 			} else {
-				upuser.setEmail(linkvo.getEmail());
-				ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+				int num=ezs_userinfoMapper.getUserNumforEmail(linkvo.getEmail());
+				if(num>0){
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("邮箱已存在！");
+				}else {
+					upuser.setEmail(linkvo.getEmail());
+					ezs_userinfoMapper.updateByPrimaryKeySelective(upuser);
+				}
+				
 			}
 			break;
 		case "qq":

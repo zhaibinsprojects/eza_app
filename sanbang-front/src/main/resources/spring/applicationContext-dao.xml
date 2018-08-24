@@ -277,4 +277,29 @@
 			
 	</bean>
 	
+	<bean id="ezs_hangqareaMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_hangqareaMapper"/>
+	</bean>
+	
+	<bean id="ezs_subscribehqMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_subscribehqMapper"/>
+	</bean>
+	
+	<bean id="ezs_goods_classVoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_goods_classVoMapper"/>
+	</bean>
+	<bean id="ezs_memberorderMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_memberorderMapper"/>
+	</bean>
+	
+	<bean id="ezs_customizedhqMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_customizedhqMapper"/>
+	</bean>
+	
+	
 </beans>

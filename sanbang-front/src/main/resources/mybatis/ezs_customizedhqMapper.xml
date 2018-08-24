@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_customizedhqMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customizedhq" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="areaids" property="areaids" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="isPush" property="isPush" jdbcType="BIT" />
+    <result column="pushMethod" property="pushMethod" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="area_id" property="area_id" jdbcType="BIGINT" />
+    <result column="priceTrend_id" property="priceTrend_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, areaids, category, isPush, pushMethod, title, store_id, 
+    user_id, area_id, priceTrend_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_customizedhq
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_customizedhq
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_customizedhq" >
+    insert into ezs_customizedhq (id, addTime, deleteStatus, 
+      areaids, category, isPush, 
+      pushMethod, title, store_id, 
+      user_id, area_id, priceTrend_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{areaids,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{isPush,jdbcType=BIT}, 
+      #{pushMethod,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{store_id,jdbcType=BIGINT}, 
+      #{user_id,jdbcType=BIGINT}, #{area_id,jdbcType=BIGINT}, #{priceTrend_id,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customizedhq" >
+    insert into ezs_customizedhq
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="areaids != null" >
+        areaids,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="isPush != null" >
+        isPush,
+      </if>
+      <if test="pushMethod != null" >
+        pushMethod,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="store_id != null" >
+        store_id,
+      </if>
+      <if test="user_id != null" >
+        user_id,
+      </if>
+      <if test="area_id != null" >
+        area_id,
+      </if>
+      <if test="priceTrend_id != null" >
+        priceTrend_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="areaids != null" >
+        #{areaids,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="isPush != null" >
+        #{isPush,jdbcType=BIT},
+      </if>
+      <if test="pushMethod != null" >
+        #{pushMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="store_id != null" >
+        #{store_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="area_id != null" >
+        #{area_id,jdbcType=BIGINT},
+      </if>
+      <if test="priceTrend_id != null" >
+        #{priceTrend_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_customizedhq" >
+    update ezs_customizedhq
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="areaids != null" >
+        areaids = #{areaids,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="isPush != null" >
+        isPush = #{isPush,jdbcType=BIT},
+      </if>
+      <if test="pushMethod != null" >
+        pushMethod = #{pushMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="store_id != null" >
+        store_id = #{store_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="area_id != null" >
+        area_id = #{area_id,jdbcType=BIGINT},
+      </if>
+      <if test="priceTrend_id != null" >
+        priceTrend_id = #{priceTrend_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_customizedhq" >
+    update ezs_customizedhq
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      areaids = #{areaids,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      isPush = #{isPush,jdbcType=BIT},
+      pushMethod = #{pushMethod,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      store_id = #{store_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT},
+      area_id = #{area_id,jdbcType=BIGINT},
+      priceTrend_id = #{priceTrend_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <resultMap id="DingZResultMap" type="com.sanbang.bean.ezs_customizedhq" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="areaids" property="areaids" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="isPush" property="isPush" jdbcType="BIT" />
+    <result column="pushMethod" property="pushMethod" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="area_id" property="area_id" jdbcType="BIGINT" />
+    <result column="priceTrend_id" property="priceTrend_id" jdbcType="BIGINT" />
+  <collection property="areaNames" column="{areaids=areaids}" select="com.sanbang.dao.ezs_hangqareaMapper.getAreaNamesByAreaids" >
+  </collection>
+  <collection property="categorys" column="category" select="com.sanbang.dao.ezs_goods_classVoMapper.getClassNamesByclasses" >
+  </collection>
+  </resultMap>
+  
+  <!--我的定制列表 -->
+  <select id="getDingZhiListByParam" resultMap="DingZResultMap">
+  SELECT
+		A.id,
+		A.addTime,
+		A.areaids,
+		A.category,
+		A.deleteStatus,
+		A.isPush,
+	   CONCAT(IF(LOCATE("0",A.pushMethod)>0,"邮件","")," ",IF(LOCATE("2",A.pushMethod)>0,"短信","")," " ,IF(LOCATE("2",A.pushMethod)>0,"APP推送","")) pushMethod,
+		A.user_id
+		FROM
+			ezs_customizedhq A
+		WHERE
+			A.user_id = #{userid}
+		AND A.deleteStatus = 0
+		AND A.isPush = #{ispush}
+		limit #{pageCount},#{pageSize}
+  </select>
+  <select id="getDingZhiListByParamCount" resultType="int">
+  SELECT 
+     count(A.id)
+		FROM
+			ezs_customizedhq A
+		WHERE
+			A.user_id = #{userid}
+		AND A.deleteStatus = 0
+		AND A.isPush = #{ispush}
+  </select>
+  
+</mapper>

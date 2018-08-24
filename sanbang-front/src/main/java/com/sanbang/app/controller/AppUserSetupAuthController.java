@@ -25,6 +25,8 @@ import com.sanbang.setup.controller.UserSetupAuthController;
 import com.sanbang.setup.service.AuthService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.utils.ImageUrlUtil;
+import com.sanbang.utils.JiGuanPushUtils;
+import com.sanbang.utils.MD5Util;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
@@ -127,6 +129,7 @@ public class AppUserSetupAuthController {
 			map.put("accountType", upi.getEzs_store().getAccountType());
 			result.setObj(map);
 		}
+		JiGuanPushUtils.JiGangPushData("aabbcc", MD5Util.md5Encode(upi.getEzs_userinfo().getPhone()+upi.getId()));
 		return result;
 	}
 	

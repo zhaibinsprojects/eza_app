@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import java.util.List;
+
 import com.sanbang.bean.ezs_huanxin;
 
 public interface ezs_huanxinMapper {
@@ -14,4 +16,6 @@ public interface ezs_huanxinMapper {
     int updateByPrimaryKeySelective(ezs_huanxin record);
 
     int updateByPrimaryKey(ezs_huanxin record);
+    
+    List<ezs_huanxin> gethuanxInfoByUserid(long userid);  
 }

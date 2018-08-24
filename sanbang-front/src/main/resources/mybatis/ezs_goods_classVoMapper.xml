@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_goods_classVoMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.vo.goods.ezs_goods_classVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+    <result column="photo_id" property="photo_id" jdbcType="BIGINT" />
+    <result column="display" property="display" jdbcType="BIT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, level, name, sequence, parent_id, photo_id, display, code, 
+    grade, price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goods_class
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_goods_class
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_goods_class" >
+    insert into ezs_goods_class (id, addTime, deleteStatus, 
+      level, name, sequence, 
+      parent_id, photo_id, display, 
+      code, grade, price)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{level,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, 
+      #{parent_id,jdbcType=BIGINT}, #{photo_id,jdbcType=BIGINT}, #{display,jdbcType=BIT}, 
+      #{code,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_goods_class" >
+    insert into ezs_goods_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sequence != null" >
+        sequence,
+      </if>
+      <if test="parent_id != null" >
+        parent_id,
+      </if>
+      <if test="photo_id != null" >
+        photo_id,
+      </if>
+      <if test="display != null" >
+        display,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="parent_id != null" >
+        #{parent_id,jdbcType=BIGINT},
+      </if>
+      <if test="photo_id != null" >
+        #{photo_id,jdbcType=BIGINT},
+      </if>
+      <if test="display != null" >
+        #{display,jdbcType=BIT},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_goods_class" >
+    update ezs_goods_class
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="parent_id != null" >
+        parent_id = #{parent_id,jdbcType=BIGINT},
+      </if>
+      <if test="photo_id != null" >
+        photo_id = #{photo_id,jdbcType=BIGINT},
+      </if>
+      <if test="display != null" >
+        display = #{display,jdbcType=BIT},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_goods_class" >
+    update ezs_goods_class
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      level = #{level,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=INTEGER},
+      parent_id = #{parent_id,jdbcType=BIGINT},
+      photo_id = #{photo_id,jdbcType=BIGINT},
+      display = #{display,jdbcType=BIT},
+      code = #{code,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 个人中心详情选择 -->
+  <resultMap id="ClassCheckChildResultMap" type="com.sanbang.vo.goods.GoodsClassVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+  </resultMap>
+  
+   <resultMap id="ClassCheckResultMap" type="com.sanbang.vo.goods.GoodsClassVo"  extends="ClassCheckChildResultMap">
+    <collection property="childclasses"  javaType="ArrayList"  select="gethanqChildClassCheck"
+                column="{parentid=id,userid=userid}" ofType="com.sanbang.vo.goods.GoodsClassVo" >
+			     <id column="id" property="id" jdbcType="BIGINT" />
+			    <result column="level" property="level" jdbcType="VARCHAR" />
+			    <result column="name" property="name" jdbcType="VARCHAR" />
+			    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+			    <result column="price" property="price" jdbcType="DECIMAL" />
+     </collection>
+  </resultMap>
+  
+  <resultMap id="ClassCheckAllResultMap" type="com.sanbang.vo.goods.GoodsClassVo"  extends="ClassCheckChildResultMap">
+    <collection property="childclasses"  javaType="ArrayList"  select="gethanqChildClassCheckAll"
+                column="parentid=id" ofType="com.sanbang.vo.goods.GoodsClassVo" >
+			     <id column="id" property="id" jdbcType="BIGINT" />
+			    <result column="level" property="level" jdbcType="VARCHAR" />
+			    <result column="name" property="name" jdbcType="VARCHAR" />
+			    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+			    <result column="price" property="price" jdbcType="DECIMAL" />
+     </collection>
+  </resultMap>
+  <!-- 详情父级选择 -->
+  <select id="gethanqParentClassCheck" resultMap="ClassCheckResultMap">
+	  (
+		SELECT
+			A.id,A.parent_id,A.`name`,A.`level`,A.price
+		FROM
+			ezs_goods_class A
+		WHERE
+			A.`level` = 1
+		AND A.display = 0
+		AND A.deleteStatus = 0
+	)
+	UNION
+		(
+			SELECT
+					A.id,A.parent_id,A.`name`,A.`level`,A.price
+			FROM
+				ezs_goods_class A
+			WHERE
+				A.`level` = 1
+			AND A.display = 1
+			AND A.deleteStatus = 0
+		)
+  
+  </select>
+  
+  <!-- 详情子级选择 -->
+  <select id="gethanqChildClassCheck" resultMap="ClassCheckChildResultMap">
+	  SELECT
+		A.id,
+		A.parent_id,
+		A.`name`,
+		A.`level`,
+		A.price
+	FROM
+		ezs_goods_class A
+	WHERE  A.deleteStatus = 0 and A.id in
+	(SELECT B.subtotal FROM  ezs_subscribehq B WHERE B.id=#{userid})
+	AND A.parent_id=#{parentid}
+  </select>
+  <select id="gethanqParentClassCheckAll" resultMap="ClassCheckAllResultMap">
+   SELECT
+					A.id,A.parent_id,A.`name`,A.`level`,A.price
+			FROM
+				ezs_goods_class A
+			WHERE
+				A.`level` = 1
+			<!-- AND A.display = 1 -->
+			AND A.deleteStatus = 0
+  
+  </select>
+  
+  <select id="gethanqChildClassCheckAll" resultMap="ClassCheckChildResultMap">
+  SELECT
+		A.id,
+		A.parent_id,
+		A.`name`,
+		A.`level`,
+		A.price
+	FROM
+		ezs_goods_class A
+	WHERE 
+	 A.parent_id=#{parentid}
+  </select>
+  
+  <resultMap id="ClassNamesResultMap" type="com.sanbang.vo.goods.ezs_Dzgoods_classVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <!-- 得到品类全称 -->
+  <select id="getClassNamesByclasses" resultMap="ClassNamesResultMap">
+  SELECT
+	A.id,
+	IF(ISNULL(B.`name`),
+	A.`name`,
+	CONCAT(B.`name`,"-",A.`name`)) name,
+	A.parent_id,
+	A.`level`
+	FROM
+		(SELECT C.id,C.`name`,C.parent_id,C.`level` FROM ezs_goods_class C WHERE C.id in (#{classids})) A 
+	INNER  JOIN ezs_goods_class B ON A.parent_id=B.id
+  </select>
+  
+  <select id="gethangqCataBylevel" resultMap="ClassNamesResultMap">
+   SELECT
+			B.id,
+			B.`name`,
+			B.price
+		FROM
+		(	
+		<if test="reqtype=='all' or reqtype=='zsbj'  or reqtype=='zszs'">
+		(
+			SELECT
+				E.goodClass_id
+			FROM
+				ezs_price_trend E
+				<if test="reqtype=='zsbj'">
+		        WHERE E.`status`=2 AND E.data_sources in (2,3)
+				</if>
+				<if test="reqtype=='zszs'">
+		        WHERE E.`status`=2 AND E.data_sources in (1)
+				</if>
+		)  
+		</if>
+		<if test="reqtype=='all' or reqtype=='xlbj'  or reqtype=='xlzs'">
+		 UNION	(
+			SELECT
+				E.goodClass_id
+			FROM
+				ezs_price_trend_xl E
+		) 
+		</if>
+		
+		 ) A
+	INNER JOIN ezs_goods_class B ON A.goodClass_id = B.id
+	WHERE
+		B.`level` in (${level})
+		AND B.deleteStatus=0
+		<if test="parentid!=null and parentid!=0">
+		and B.parent_id in (${parentid})
+		</if>
+		 GROUP BY B.id 
+  </select>
+</mapper>

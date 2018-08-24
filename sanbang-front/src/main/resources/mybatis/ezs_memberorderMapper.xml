@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_memberorderMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_memberorder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="memberType" property="memberType" jdbcType="VARCHAR" />
+    <result column="totalMoney" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="creditUsed" property="creditUsed" jdbcType="INTEGER" />
+    <result column="payAmount" property="payAmount" jdbcType="DECIMAL" />
+    <result column="payMode" property="payMode" jdbcType="INTEGER" />
+    <result column="payState" property="payState" jdbcType="INTEGER" />
+    <result column="orderSource" property="orderSource" jdbcType="VARCHAR" />
+    <result column="openStatu" property="openStatu" jdbcType="INTEGER" />
+    <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="store_id" property="store_id" jdbcType="BIGINT" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="voucher" property="voucher" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, memberType, totalMoney, creditUsed, payAmount, payMode, 
+    payState, orderSource, openStatu, startTime, endTime, operator, store_id, order_no, 
+    voucher
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_memberorder
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_memberorder
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_memberorder"  useGeneratedKeys="true" keyProperty="id">
+    insert into ezs_memberorder (id, addTime, deleteStatus, 
+      memberType, totalMoney, creditUsed, 
+      payAmount, payMode, payState, 
+      orderSource, openStatu, startTime, 
+      endTime, operator, store_id, 
+      order_no, voucher)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{memberType,jdbcType=VARCHAR}, #{totalMoney,jdbcType=DECIMAL}, #{creditUsed,jdbcType=INTEGER}, 
+      #{payAmount,jdbcType=DECIMAL}, #{payMode,jdbcType=INTEGER}, #{payState,jdbcType=INTEGER}, 
+      #{orderSource,jdbcType=VARCHAR}, #{openStatu,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{store_id,jdbcType=BIGINT}, 
+      #{order_no,jdbcType=VARCHAR}, #{voucher,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_memberorder" useGeneratedKeys="true" keyProperty="id">
+    insert into ezs_memberorder
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="memberType != null" >
+        memberType,
+      </if>
+      <if test="totalMoney != null" >
+        totalMoney,
+      </if>
+      <if test="creditUsed != null" >
+        creditUsed,
+      </if>
+      <if test="payAmount != null" >
+        payAmount,
+      </if>
+      <if test="payMode != null" >
+        payMode,
+      </if>
+      <if test="payState != null" >
+        payState,
+      </if>
+      <if test="orderSource != null" >
+        orderSource,
+      </if>
+      <if test="openStatu != null" >
+        openStatu,
+      </if>
+      <if test="startTime != null" >
+        startTime,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="store_id != null" >
+        store_id,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+      <if test="voucher != null" >
+        voucher,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="memberType != null" >
+        #{memberType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="creditUsed != null" >
+        #{creditUsed,jdbcType=INTEGER},
+      </if>
+      <if test="payAmount != null" >
+        #{payAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payMode != null" >
+        #{payMode,jdbcType=INTEGER},
+      </if>
+      <if test="payState != null" >
+        #{payState,jdbcType=INTEGER},
+      </if>
+      <if test="orderSource != null" >
+        #{orderSource,jdbcType=VARCHAR},
+      </if>
+      <if test="openStatu != null" >
+        #{openStatu,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="store_id != null" >
+        #{store_id,jdbcType=BIGINT},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="voucher != null" >
+        #{voucher,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_memberorder" >
+    update ezs_memberorder
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="memberType != null" >
+        memberType = #{memberType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        totalMoney = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="creditUsed != null" >
+        creditUsed = #{creditUsed,jdbcType=INTEGER},
+      </if>
+      <if test="payAmount != null" >
+        payAmount = #{payAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payMode != null" >
+        payMode = #{payMode,jdbcType=INTEGER},
+      </if>
+      <if test="payState != null" >
+        payState = #{payState,jdbcType=INTEGER},
+      </if>
+      <if test="orderSource != null" >
+        orderSource = #{orderSource,jdbcType=VARCHAR},
+      </if>
+      <if test="openStatu != null" >
+        openStatu = #{openStatu,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        startTime = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="store_id != null" >
+        store_id = #{store_id,jdbcType=BIGINT},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="voucher != null" >
+        voucher = #{voucher,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_memberorder" >
+    update ezs_memberorder
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      memberType = #{memberType,jdbcType=VARCHAR},
+      totalMoney = #{totalMoney,jdbcType=DECIMAL},
+      creditUsed = #{creditUsed,jdbcType=INTEGER},
+      payAmount = #{payAmount,jdbcType=DECIMAL},
+      payMode = #{payMode,jdbcType=INTEGER},
+      payState = #{payState,jdbcType=INTEGER},
+      orderSource = #{orderSource,jdbcType=VARCHAR},
+      openStatu = #{openStatu,jdbcType=INTEGER},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      store_id = #{store_id,jdbcType=BIGINT},
+      order_no = #{order_no,jdbcType=VARCHAR},
+      voucher = #{voucher,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

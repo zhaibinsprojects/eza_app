@@ -70,7 +70,7 @@ public class ezs_goods  implements Serializable{
     private int protection;
 
     private String purpose;
-
+ 
     private Boolean recommend;
 
     private Date recommend_time;

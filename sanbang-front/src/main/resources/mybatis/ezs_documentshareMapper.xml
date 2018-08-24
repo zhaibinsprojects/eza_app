@@ -147,4 +147,46 @@
     where good_id = #{id,jdbcType=BIGINT}  and user_id = #{userid,jdbcType=BIGINT} 
   </select>
   
+  
+   <resultMap id="HangqResultMap" type="com.sanbang.vo.hangq.HangqCollectedVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="give" property="give" jdbcType="INTEGER" />
+    <result column="house" property="house" jdbcType="INTEGER" />
+    <result column="ezsSubstance_id" property="ezsSubstance_id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="doctime" property="doctime" jdbcType="TIMESTAMP" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+
+	<!-- （行情）收藏列表 -->
+	<select id="selectHangqCollectionedOwen"
+		resultMap="HangqResultMap">
+		SELECT
+		A.id,
+		A.give,
+		A.house,
+		A.user_id,
+		B.addTime doctime,
+		B.meta title
+		FROM
+		ezs_documentshare A
+		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id
+		WHERE
+		A.user_id = #{userid,jdbcType=BIGINT} and NOT isnull(A.ezsSubstance_id)
+		limit #{pageCount},#{pageSize}
+	</select>
+	
+	<select id="selectHangqCollectionedCountOwen"
+		resultType="int">
+		SELECT
+		count(A.id)
+		FROM
+		ezs_documentshare A
+		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id
+		WHERE
+		A.user_id = #{userid,jdbcType=BIGINT} and NOT isnull(A.ezsSubstance_id)
+	</select>
+  
+  
 </mapper>
