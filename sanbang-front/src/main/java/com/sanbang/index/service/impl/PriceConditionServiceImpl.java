@@ -382,5 +382,156 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		}
 		return mmp;
 	}
-	
+
+
+	@Override
+	public Map<String, Object> priceInTimeNewDetail(Map<String, Object> mp) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		try {
+			plist = this.priceTrendXLMapper.priceInTimeNewDetail(mp);
+			if(plist!=null){
+				List<PriceTrendIfo> plistTemp = new ArrayList<>();
+				for (PriceTrendIfo item : plist) {
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(5, 10):"");
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf("0.00%"));
+					}
+					plistTemp.add(item);
+				}
+				mmp.put("Obj", plistTemp);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}else{
+				plist=new ArrayList<>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
+
+
+	@Override
+	public Map<String, Object> priceInTimeNewDetailPage(Map<String, Object> mp, int currentPage, int pagesaize) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		mp.put("pagestart", (currentPage-1)*pagesaize);
+		mp.put("pagesize", pagesaize);
+		try {
+			plist = this.priceTrendXLMapper.priceInTimeNewDetailPage(mp);
+			if(plist!=null){
+				List<PriceTrendIfo> plistTemp = new ArrayList<>();
+				for (PriceTrendIfo item : plist) {
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(5, 10):"");
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf("0.00%"));
+					}
+					plistTemp.add(item);
+				}
+				mmp.put("Obj", plistTemp);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}else{
+				plist=new ArrayList<>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
+
+
+	@Override
+	public Map<String, Object> priceInTimeOldDetail(Map<String, Object> mp) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		try {
+			plist = this.priceTrendMapper.priceInTimeNewDetail(mp);
+			if(plist!=null){
+				List<PriceTrendIfo> plistTemp = new ArrayList<>();
+				for (PriceTrendIfo item : plist) {
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(5, 10):"");
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf("0.00%"));
+					}
+					plistTemp.add(item);
+				}
+				mmp.put("Obj", plistTemp);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}else{
+				plist=new ArrayList<>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
+
+
+	@Override
+	public Map<String, Object> priceInTimeOldDetailPage(Map<String, Object> mp, int currentPage, int pagesaize) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> plist = new ArrayList<>();
+		mp.put("pagestart", (currentPage-1)*pagesaize);
+		mp.put("pagesize", pagesaize);
+		try {
+			plist = this.priceTrendMapper.priceInTimeNewDetailPage(mp);
+			if(plist!=null){
+				List<PriceTrendIfo> plistTemp = new ArrayList<>();
+				for (PriceTrendIfo item : plist) {
+					item.setGoodArea(getAreaName(item.getRegion_id()));
+					item.setDealDate(item.getDealDate()!=null?item.getDealDate().substring(5, 10):"");
+					Double zf = 0.0;
+					try{
+						zf = (item.getCurrentPrice()-item.getPrePrice())/item.getPrePrice();
+						item.setSandByOne(dftwo.format(zf));						
+					}catch(Exception e){
+						item.setSandByOne(String.valueOf("0.00%"));
+					}
+					plistTemp.add(item);
+				}
+				mmp.put("Obj", plistTemp);
+				mmp.put("ErrorCode",DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				mmp.put("Msg", "查询成功");
+			}else{
+				plist=new ArrayList<>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "参数传递有误");
+		}
+		return mmp;
+	}
 }

@@ -164,12 +164,13 @@
   <!-- 从新修订 实时报价 -->
   <select id="priceInTimeNew" resultMap="PriceInTimeResultMap" parameterType="java.lang.Long">
   	select 
+  	a.id,
 	a.price currentPrice,
 	a.goodClass_id goodClass,
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend_xl a 
 	where a.deleteStatus = '0'
 	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
@@ -177,6 +178,7 @@
   </select>
   <!-- 实时报价 新 -->
   <resultMap id="PriceInTimeResultMap" type="com.sanbang.vo.PriceTrendIfo" >
+  	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="currentPrice" property="currentPrice" jdbcType="VARCHAR" />
     <result column="prePrice" property="prePrice" jdbcType="VARCHAR" />
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
@@ -188,17 +190,18 @@
   <!-- 实时报价 新 -->
   <select id="priceInTimeNewList" resultMap="PriceInTimeResultMap">
     select 
+    a.id,
 	a.price currentPrice,
 	a.goodClass_id goodClass,
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY)) prePrice
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend_xl a 
 	where a.deleteStatus = '0'
 	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
     <if test="goodClassId != null and goodClassId != '' " >
-        and a.goodClass_id = #{goodClassId}
+        and a.goodClass_id in ( #{goodClassId} )
     </if>
     <if test="areaIds != null and areaIds.size > 0 " >
         and a.region_id 
@@ -209,4 +212,74 @@
 	ORDER BY a.addTime desc  
 	limit #{pagestart},#{pagesize}
   </select>
+  
+  
+  <!-- 实时报价 新 详情+价格折线图 -->
+  <select id="priceInTimeNewDetail" resultMap="PriceInTimeResultMap">
+    select 
+	a.id, 
+	a.price currentPrice, 
+	a.goodClass_id goodClass, 
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className, 
+	a.data_time dealDate, 
+	a.region_id areaId, 
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice 
+	from ezs_price_trend_xl a 
+	where a.deleteStatus = '0' 
+	AND EXISTS (SELECT 1 from ezs_price_trend_xl b where a.region_id = b.region_id and a.goodClass_id = b.goodClass_id and b.id = #{priceId} )
+	<!-- 筛选条件：一周、一月、一季度、一年 -->
+      <choose>
+      	<when test="dateBetweenType != null and dateBetweenType == 'WEEK' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'MONTH' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 MONTH)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'QUARTER' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 QUARTER)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'YEAR' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 YEAR)
+      	</when>
+      	<otherwise>
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</otherwise>
+      </choose>
+	ORDER BY a.addTime desc
+  </select>
+  
+  <!-- 实时报价 新 详情+价格折线图 分页-->
+  <select id="priceInTimeNewDetailPage" resultMap="PriceInTimeResultMap">
+    select 
+	a.id, 
+	a.price currentPrice, 
+	a.goodClass_id goodClass, 
+	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className, 
+	a.data_time dealDate, 
+	a.region_id areaId, 
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice 
+	from ezs_price_trend_xl a 
+	where a.deleteStatus = '0' 
+	AND EXISTS (SELECT 1 from ezs_price_trend_xl b where a.region_id = b.region_id and a.goodClass_id = b.goodClass_id and b.id = #{priceId} )
+	<!-- 筛选条件：一周、一月、一季度、一年 -->
+      <choose>
+      	<when test="dateBetweenType != null and dateBetweenType == 'WEEK' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'MONTH' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 MONTH)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'QUARTER' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 QUARTER)
+      	</when>
+      	<when test="dateBetweenType != null and dateBetweenType == 'YEAR' ">
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 YEAR)
+      	</when>
+      	<otherwise>
+      		and DATE_FORMAT(a.data_time,'%Y-%m-%d') > DATE_ADD(NOW(),INTERVAL -1 WEEK)
+      	</otherwise>
+      </choose>
+	ORDER BY a.addTime desc limit #{pagestart},#{pagesize}
+  </select>
+  
 </mapper>

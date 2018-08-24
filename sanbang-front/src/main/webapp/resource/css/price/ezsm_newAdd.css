@@ -1,0 +1,135 @@
+html,body{
+	font-family: arial,'Microsoft YaHei','Hiragino Sans GB';
+	font-size:12px;
+}
+*{margin:0px;padding:0px;}
+a{text-decoration:none;}
+input{outline:none;}
+li{list-style-type:none;}
+.content_yzs{ width:100%; height:auto; background-color:#efefef; }
+.ezsm-collection-top{
+	width:100%;height:44px;line-height:44px;text-align:center;background:#00897c;font-size:18px;color:#fff;
+    background: -webkit-linear-gradient(135deg, #00ae9d, #00897c);
+    background: -o-linear-gradient(135deg,      #00ae9d, #00897c);
+    background: -moz-linear-gradient(135deg,    #00ae9d, #00897c);
+    background: linear-gradient(135deg,         #00ae9d, #00897c);
+}
+.ezsm-collection-top div{float:left;width:50%;height:44px;}
+.ezsm-collection-top div:first-child{width:25%;height:44px;}
+.ezsm-collection-top div:last-child{width:25%;height:44px;}
+.aicon_yzs{ width:100%; display:block; height:44px; background:url(../img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:18px; color:#fff; text-indent:20px;}
+
+.nav_style_jg{height: 40px; border-bottom: 1px solid #e5e5e5; background-color: #fff;}
+.nav_style_jg ul{height: 40px; line-height: 40px;display: flex;}
+.nav_style_jg ul li{flex: 1; text-align: center; height: 40px; line-height: 40px;}
+.nav_style_jg ul li a{display: block; text-align: center; font-size: 14px; color:#333; position: relative;}
+.nav_style_jg ul li a i.icon{ background: url(../img/icon_jgone.png) center center no-repeat; margin-left: 18px; background-size: 10px 8px;position: absolute; top: 0; left: 50%; width: 12px;height: 40px;}
+.div_sx_jg{ padding: 6px 15px; background-color: #fff;} 
+.echarts_inmgui{ margin-top: 10px; border-top: 1px solid #e5e5e5; padding-top: 10px; background-color: #fff;}
+.section_roptab{ padding: 0 14px;}
+.section_roptab ul{ height: 28px;}
+.section_roptab ul li{float: left; height: 24px; line-height: 24px; float: left; width: 70px; border:2px solid #999; margin-right: 15px;}
+.section_roptab ul li a{display: block; text-align: center; font-size: 12px; color: #333;}
+.section_roptab ul li:last-child{ margin: 0;}
+.section_roptab ul li.active{ border-color: #00897c; background-color: #00897c;}
+.section_roptab ul li.active a{ color: #fff;}
+.echartHeight{height: 190px;border-bottom: 1px solid #e5e5e5; position: relative;}
+.graybakhuio{ position: absolute; top: 0; left: 0; width: 100%; height: 190px; background: url(../img/grapbaksuio.jpg) 0 0 no-repeat; background-size:100% 100% ;}
+.tabFater_tsi{ width: 100%; height: auto; padding-top: 12px;}
+.tabghuioy{height: auto; width: 100%; border-top: 1px solid #e5e5e5;}
+.tabghuioy th{ padding: 4px 0; background-color: #f7f7f7; border-bottom: 1px solid #e5e5e5;}
+.tabghuioy th span{display: block; text-align: center; border-right: 1px solid #e5e5e5; height: 20px; line-height: 20px;font-size: 12px; color: #555;}
+.tabghuioy th:last-child span{ border: none;}
+.tabghuioy td{ border-bottom: 1px solid #e5e5e5; padding: 4px 0; background-color: #fff;}
+.tabghuioy td span{display: block; position: relative; text-align: center; border-right: 1px solid #e5e5e5;min-height: 22px; line-height: 22px;font-size: 14px; color: #333;}
+.tabghuioy td:last-child span{border: none;} 
+.lockyuip{display: block; position: absolute; top: 0; left: 0; width: 100%; height: 22px; background: url(../img/locukiop.jpg) center center no-repeat; background-size:22px 22px;}
+.tabghuioy td span.colrRed{ color: #ff6700;}
+.tabghuioy td span.colGreen{color: #00897c;}
+/*-------地区筛选------*/
+.content_area{ display: none;  width:100%; height:auto; background-color:#fff; position: absolute; top: 0; left: 100%;z-index: 2; }
+.area_modal{ height: auto; background-color: #fff; padding: 0 14px;}
+.hot_area{height: 40px; line-height: 40px; border-bottom: 1px solid #e5e5e5;}
+.hot_area a{display: block; height: 40px; line-height: 40px; color: #333; font-size: 14px;}
+.hot_area p{ height: 40px; line-height: 40px;}
+.hot_area p label{ background: url(../img/area_check.jpg) left center no-repeat; padding-left: 14px; background-size:12px 15px; float: left;height: 40px; line-height: 40px; color: #333; font-size: 14px;}
+.hot_area p span{color: #00897c; font-size: 14px; line-height: 40px; height: 40px;}
+.hot_city,.hot_city_check{height: auto;}
+.hot_city p{height: 40px; line-height: 40px; border-bottom: 1px solid #e5e5e5; color: #333; font-size: 14px;}
+.hot_city_check p{height: 34px; line-height: 34px; color: #333; font-size: 14px;}
+.hot_cityEvery{border-bottom: 1px solid #e5e5e5; height: auto;}
+.hot_cityEvery ul{ height: auto;}
+.hot_cityEvery ul li.clearboth{clear: both; height: 0; width: 0;}
+.hot_cityEvery ul li.nexticker{float: left;height: 34px; margin-right: 3px; line-height: 34px; padding: 0 20px;font-size: 12px; color: #333;}
+/*----------*/
+.protuyiod{ width:100%; height:auto; background-color:#fff; position: absolute; top: 0; left: 100%; display:none;z-index: 3; }
+.area_modal{ height: auto; background-color: #fff; padding: 0 14px;}
+.allProtuyiod{padding: 12px 0; height: 27px;}
+.spanprodut{ padding: 0 24px; height: 24px;float: left; border-radius: 3px; line-height: 26px; border: 1px solid #efefef; overflow: hidden; background-color: #efefef; color: #333; font-size: 12px;}
+.hot_protuyiod{height: auto;}
+.hot_protuyiod p{height: 34px; line-height: 34px;font-size: 14px; color:#333;}
+.ul_protuy{ height: auto;}
+.ul_protuy li{float: left; padding: 6px 0 12px; margin-right: 14px;}
+.ul_protuy li:last-child{float: none; clear: both; margin: 0; padding: 0;}
+.spanclikcor{border: 1px solid #00897c; background: url(../img/spanchecked.jpg) left center #fff no-repeat; background-size:14px 13px;}
+.btnGroup,.btnGroupsx{ height: 48px; line-height: 48px;}
+.btnGroup button,.btnGroupsx button{ width: 50%; margin: 0; float: left; height: 48px; line-height: 48px; outline: none;}
+.registr,.registrsx{ background-color: #fff; font-size: 14px; text-align: center; border: none;}
+.agment,.agmentsx{ background-color: #00897c; font-size: 14px; color:#fff; text-align: center; border: none;}
+/*----------------*/
+.graytuiops{background-color: #000; opacity: 0.6; position: absolute; z-index: 9; top: 0; left: 100%; width: 100%; height: 100%; display: none;}
+.shaxyuiop{width: 92%; min-height: 100%; background-color: #fff; z-index: 99; position: absolute; top: 0; left: 1000%; display: none;}
+.shaxyuig{ padding: 0 12px;}
+.btnGroupsx{ position: fixed; bottom: 0; left: 0; width: 100%;}
+
+.tabul_rirlr{height: 44px;}
+.tabul_rirlr li{float: left; height: 40px; line-height: 44px; width: 50%; text-align: center; font-size: 18px; color: #fffefe;}
+.tabul_rirlr li.active{color: #fff;font-size: 18px; border-bottom: 2px solid #fff;}
+.graybaksuio{display: none; height: 100%; width: 100%; background-color: #000; opacity: 0.6; position: absolute; top: 0; left: 0;}
+.tishxuyo{display:none;height: 160px; width: 320px; background-color: #fff; border-radius: 5px;overflow: hidden; position: fixed; top: 50%; left: 50%; margin-top: -80px; margin-left: -160px;z-index: 99;}
+.tishxuyo h2{ padding-top: 22px; height: 30px; line-height: 30px;font-size: 20px; color: #333; font-weight: normal; text-align: center;}
+.tishxuyo p{font-size: 14px; height: 36px; line-height: 36px; text-align: center; color: #333;}
+.sm_btngroup{ width: 100%; margin-top: 30px; height: 42px; line-height: 42px; }
+.sm_btngroup button{width: 50%; outline: none; float: left; height: 42px; line-height: 42px; text-align: center;font-size: 14px;}
+.ortyui{border:none;border-top: 1px solid #e5e5e5; color: #333; background-color: #fff;}
+.btnokiu{border:none; border-top: 1px solid #00897c; background-color: #00897c; color: #fff;}
+
+.bodysucess{ background-color: #fff; width: 100%; height: 100%;overflow: hidden;}
+.sucessImg{ margin-top: 80px; padding-top: 70px; width: 100%; background: url(../img/sucessg.png) center top no-repeat; background-size:70px 70px;}
+.sucessImg h3{font-size: 24px; text-align: center; color: #333; font-weight: normal; height: 40px; line-height: 40px; padding-top:10px;}
+.sucessImg p{font-size: 18px; color: #333; text-align: center; line-height: 32px;}
+.btnmuioy{padding: 90px 14px 0; height: 46px;}
+.btnmuioy button{height: 46px; outline: none; border: none; background-color: #00897c; line-height: 46px; text-align: center; width: 100%; color: #fff; font-size: 18px; border-radius: 5px;}
+.sucessImg p.wxtsng{font-size: 14px; color: #00897c; line-height: 22px;}
+.httpruio{ padding: 50px 34px 0;}
+.upLodert{font-size: 15px; color: #555; font-weight: bold; line-height: 24px;}
+.uphtpuirl{ height: 32px; line-height: 32px;}
+.uphtpuirl span{float: left; color: #00897c; float: left; line-height: 32px; font-size: 15px;}
+.uphtpuirl em{float: left; margin: 0 6px;line-height: 32px;font-size: 15px;}
+.uphtpuirl font{float: left; line-height: 32px;font-size: 15px;}
+.uphtpuirl font a{ color: #00897c;font-size: 15px;}
+.btnhbtwo{ padding: 44px 14px 0; height: auto;}
+.gohomeBtn{ width: 100%; background-color: #fff; outline: none; margin-bottom: 24px; font-size: 18px; color: #00897c; border: 1px solid #00897c; height: 42px; line-height: 42px; border-radius: 5px;}
+.seedytxt{width: 100%; background-color: #00897c; outline: none; font-size: 18px; color: #fff; border: 1px solid #00897c; height: 42px; line-height: 42px; border-radius: 5px;}
+.dycyuio{height: auto;}
+.cyuioH{ height: 34px; line-height: 34px; padding: 0 14px; border-bottom: 1px solid #e5e5e5;font-size: 14px; color: #333; font-weight: normal; background-color: #fff;}
+.gcheyuio{ padding: 14px; height: 42px; background-color: #fff;}
+.gcheyuio ul{ height: 42px;}
+.gcheyuio ul li{ height: 38px; line-height: 38px; float: left; padding: 0 14px; border-radius: 6px; margin: 0 4px;font-size: 14px; color: #555; background-color: #fff; border: 2px solid #ccc;}
+.gcheyuio ul li.active{color: #fff; background-color: #00897c; border: 2px solid #00897c;}
+.dspruyio{ margin-top: 10px; height: auto; background-color: #fff;}
+.dspruyio h3{ height: 34px; line-height: 34px; padding: 0 14px;font-size: 14px; color: #333;border-bottom: 1px solid #e5e5e5;}
+.certuiop{ width: 100%;}
+.uiopkli{float: left; width: 90px;}
+.cfhgyu{ margin-left: 100px;}
+.uiopkli li{ padding: 12px 0; border-left:10px solid #efefef ; background-color: #efefef;}
+.uiopkli li span{line-height: 18px; display: block; text-align: center;font-size: 14px; color: #666;}
+.uiopkli li.active{border-left: 10px solid #00897c; background-color: #fff;}
+.uiopkli li.active span{color: #00897c;}
+.makuio{float: left;}
+.makuio h4{font-size: 12px; color: #333; height: 28px; line-height: 28px; font-weight: normal;}
+.makuio ul{ height: auto;}
+.makuio ul li{float: left; height: 24px; line-height: 24px; margin:0 4px 4px 0; }
+.makuio ul li span{height: 22px; line-height: 22px;  padding: 0 18px; border: 1px solid #999; border-radius: 4px; display: block;}
+.makuio ul li span.active{ background: url(../img/dy_cheaks.png) 3px center #00897c no-repeat; color: #fff; background-size:9px 6px ;}
+.makuio ul li:last-child{ clear: both; margin: 0; height: 0; width: 0;}
