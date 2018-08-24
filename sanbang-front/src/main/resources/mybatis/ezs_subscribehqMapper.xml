@@ -260,7 +260,6 @@
 	INNER  JOIN ezs_memberorder B ON A.order_id=B.id
 	WHERE
 		A.user_id = #{userid}
-  
   </select>
  
   

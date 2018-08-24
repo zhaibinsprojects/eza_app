@@ -1,10 +1,12 @@
 package com.sanbang.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.sanbang.bean.ezs_customizedhq;
+import com.sanbang.vo.hangq.CataData;
 
 public interface ezs_customizedhqMapper {
     int deleteByPrimaryKey(Long id);
@@ -31,5 +33,14 @@ public interface ezs_customizedhqMapper {
     
     int  getDingZhiListByParamCount(@Param("userid")long userid,@Param("ispush")boolean ispush);
     
+    /**
+     * 用户定制品类
+     * @param userid
+     * @param catid
+     * @return
+     */
+    List<Map<String, Object>> getDingYueOwenCata(@Param("catid")long catid);
     
+    
+    List<CataData>  getDingZhiCataInitData(@Param("userid")long userid);
 }

@@ -3,6 +3,7 @@ package com.sanbang.hangq.servive.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.sanbang.dao.ezs_goods_classVoMapper;
 import com.sanbang.dao.ezs_hangqareaMapper;
 import com.sanbang.hangq.servive.HangqAreaService;
+import com.sanbang.utils.FastjsonUtils;
 import com.sanbang.utils.JsonUtils;
 import com.sanbang.vo.goods.GoodsClassVo;
 import com.sanbang.vo.hangq.HangqDzAreaVo;
@@ -33,8 +35,7 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 		try {
 			redate.put("area", getProvices(reqtype));
 			redate.put("cata", getDingYueCata());
-			redate.put("cata1", cataToJson());
-			
+			redate.put("cata1", getIndexCata(reqtype));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +44,7 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 	
 	
 	/**
-	 * 首页
+	 * 订阅行情
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -52,16 +53,69 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 		Map<String, Object> listone=(Map<String, Object>) calist.get(0);
 		Map<String, Object> listtwo=(Map<String, Object>) calist.get(1);
 		List<Map<String, Object>>  children=(List<Map<String, Object>>) listone.get("children");
+		List<Map<String, Object>> list=new ArrayList<>();
+		for (Map<String, Object> map : children) {
+			List<Map<String, Object>> listmap=new ArrayList<>();
+			Map<String, Object> map1=new HashMap<>();
+			listmap.add(map);
+			
+			map1.put("id", map.get("id"));
+			map1.put("price", map.get("price"));
+			map1.put("name",map.get("name"));
+			map1.put("children", listmap);
+			list.add(map1);
+		}
+		children=list;
 		children.add(listtwo);
 		Map<String, Object> map=new HashMap<>();
 		map.put("id", 0);
 		map.put("price", "0");
 		map.put("name", "全部分类");
-		map.put("children", cataToJson());
+		
+		List<Map<String, Object>> calist1=cataToJson();
+		List<Map<String, Object>> mapall=new ArrayList<>();
+		Map<String, Object> listthree=(Map<String, Object>) calist1.get(0);
+		Map<String, Object> listfour=(Map<String, Object>) calist1.get(1);
+		List<Map<String, Object>>  children1=(List<Map<String, Object>>) listthree.get("children");
+		List<Map<String, Object>>  children2=(List<Map<String, Object>>) listfour.get("children");
+		mapall.addAll(children1);
+		mapall.addAll(children2);
+		/*for (Map<String, Object> map2 : children1) {
+			List<Map<String, Object>>  chace=(List<Map<String, Object>>)map2.get("children");
+			mapall.addAll(chace);
+		}
+		for (Map<String, Object> map2 : children2) { 
+			List<Map<String, Object>>  chace=(List<Map<String, Object>>)map2.get("children");
+			mapall.addAll(chace);
+		}*/
+		
+		map.put("children",mapall);
 		children.add(map);
 		return children;
 	}
 	
+	/**
+	 * 首页行情
+	 * @param reqtype
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getIndexCata(String reqtype){
+		List<Map<String, Object>> calist=cataToJson();
+		Map<String, Object> listone=(Map<String, Object>) calist.get(0);
+		Map<String, Object> listtwo=(Map<String, Object>) calist.get(1);
+		List<Map<String, Object>>  children=new ArrayList<>();
+		//再生报价
+				if(reqtype.equals("zsbj")) {
+					  children=(List<Map<String, Object>>) listone.get("children");
+				//再生走势	
+				}else if(reqtype.equals("zszs")){
+					  children=(List<Map<String, Object>>) listone.get("children");
+				}else if(reqtype.equals("xlbj")) {
+					  children=(List<Map<String, Object>>) listtwo.get("children");
+				}
+				return children;
+	}
 	
 	/**
 	 * 分类  
@@ -181,13 +235,14 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 		map.put("7", "东北");
 		for (Entry<String, Object> index : map.entrySet()) {
 			Map<String, Object> chace=new HashMap<>();
-			chace.put(index.getKey(), index.getValue());
+			chace.put("id", index.getKey());
+			chace.put("AreaName", index.getValue());
 			list.add(chace);
 		}
 		return list;
 	}
 	
-	private Map<String, Object> getProvices(String reqtype){
+	private Map<String, Object> getProvices(String reqtype) throws Exception{
 		Map<String, Object> res=new HashMap<>();
 		List<HangqParamCommonVo> list=new ArrayList<>();
 		List<HangqDzAreaVo> areal=new ArrayList<>();
@@ -234,6 +289,27 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 		res.put("daqu", getdaQu());
 		res.put("provice", list1);
 		res.put("citys", areal1);
+		
+		List<Map<String, Object>> hotcitys=new ArrayList<>();
+		ListIterator<Map<String, Object>> aa=  list1.listIterator(list1.size()>=5?list1.size()-5:0);
+		ListIterator<Map<String, Object>> bb=areal1.listIterator(areal1.size()>=5?areal1.size()-5:0);
+		 while(aa.hasNext()) {
+			Map<String,Object> map=new HashMap<>();
+			 for (Entry<String, Object> map1 : aa.next().entrySet()) {
+				map.put(map1.getKey(), map1.getValue());
+			}
+			 hotcitys.add(map);
+		 }
+		 
+		 while(bb.hasNext()) {
+			 Map<String,Object> map=new HashMap<>();
+			 for (Entry<String, Object> map1 : bb.next().entrySet()) {
+				map.put(map1.getKey(), map1.getValue());
+			}
+			 hotcitys.add(map);
+		 }
+		 
+		res.put("hotcitys",hotcitys);
 		
 		return res;
 		

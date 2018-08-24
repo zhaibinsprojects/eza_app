@@ -226,8 +226,7 @@ public class MyMenuHanqController {
 			}
  			if(result.getSuccess()) {
  				Map<String, Object> map1=(Map<String, Object>) result.getObj();
- 				map1.remove("cata1");
- 				result.setObj(map1);
+ 				result.setObj(map1.get("cata"));
  			}
  			
 		} catch (Exception e) {
@@ -299,7 +298,7 @@ public class MyMenuHanqController {
 			 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			 		result.setObj(map);
 			 		
-			 		RedisUtils.get(HANGQ_DATA, Result.class);
+//			 		RedisUtils.get(HANGQ_DATA, Result.class);
 					RedisResult<String> rrt;
 					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA, result,
 						Long.valueOf(3600*24));

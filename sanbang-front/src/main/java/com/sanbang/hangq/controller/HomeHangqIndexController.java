@@ -101,7 +101,7 @@ public class HomeHangqIndexController {
 			 		
 			 		RedisUtils.get(HANGQ_DATA, Result.class);
 					RedisResult<String> rrt;
-					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA, result,
+					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA+reqtype, result,
 						Long.valueOf(3600*24));
 					if (rrt.getCode() == RedisConstants.SUCCESS) {
 						log.debug("行情分类保存到redis成功执行");
@@ -146,7 +146,6 @@ public class HomeHangqIndexController {
 	 * @param response
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getHangqHomeMess")
 	@ResponseBody
 	public Result getHangqHomeMess(HttpServletRequest request,HttpServletResponse response,

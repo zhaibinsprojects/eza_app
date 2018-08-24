@@ -1,6 +1,7 @@
 package com.sanbang.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -30,6 +31,7 @@ public interface ezs_subscribehqMapper {
      		@Param("pageCount")int pageCount,@Param("pageSize")long pageSize);
     
      int getDingyueRecoudCount(@Param("userid")long userid);
+     
      
      
 }

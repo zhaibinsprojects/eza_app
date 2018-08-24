@@ -224,4 +224,22 @@
 		AND A.isPush = #{ispush}
   </select>
   
+  <!-- 用户定制品类 -->
+  <select id="getDingYueOwenCata" resultType="map">
+	 SELECT
+		B.id,
+		B.`name`,
+		B.parent_id
+	FROM
+		ezs_subscribehq_child A
+	LEFT JOIN ezs_goods_class B ON A.goodsClass_id = B.id
+	WHERE
+		A.user_id = 561
+	AND A.endTime > NOW()
+ </select>
+  <select id="getDingZhiCataInitData" resultType="com.sanbang.vo.hangq.CataData">
+	(SELECT A.id,A.`name` FROM ezs_goods_class A  WHERE A.display=0 AND A.`level`=2)  
+			UNION
+	(SELECT A.id,A.`name`  FROM ezs_goods_class A  WHERE A.display=1 AND A.`level`=1) 
+  </select>
 </mapper>
