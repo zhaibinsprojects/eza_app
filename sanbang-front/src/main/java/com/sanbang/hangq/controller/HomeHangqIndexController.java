@@ -72,21 +72,22 @@ public class HomeHangqIndexController {
 	/**
 	 * 行情数据标识
 	 */
-	private  static final String HANGQ_DATA="HANGQ_DATA";
+	private  static final String HANGQ_DATA="HANGQ_INDEX_DATA";
 	
 	
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getHangqHomeCata")
+	@ResponseBody
 	public Result getHangqHomeCata(HttpServletRequest request,
 			HttpServletResponse response,
-			@RequestParam(defaultValue="bj")String reqtype){
+			@RequestParam(defaultValue="all")String reqtype){
 		Result result = Result.success();
 		result.setMsg("请求失败");
 		Map<String, Object> map=new HashMap<>();
  		try {
- 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA,
+ 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA+reqtype,
  					Result.class);
  			if (redate.getCode() == RedisConstants.SUCCESS) {
 				log.debug("查询redis分类成功执行");
@@ -94,11 +95,11 @@ public class HomeHangqIndexController {
 			} else {
 					log.debug("查询redis分类执行失败");
 					map=hangqAreaService.getHangqParamDate(reqtype, map);
-					map.put("color", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_COLOR)));
+					/*map.put("color", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_COLOR)));
 					//形态
 					map.put("form", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_FORM)));
 						
-					map.put("suppy", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY)));
+					map.put("suppy", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY)));*/
 					
 					result.setSuccess(true);
 			 		result.setMsg("请求成功");
@@ -121,7 +122,11 @@ public class HomeHangqIndexController {
 			result.setMsg("系统错误！");
 			result.setObj(map);
 		}
- 		
+ 		if(result.getSuccess()) {
+				Map<String, Object> map1=(Map<String, Object>) result.getObj();
+				map1.remove("cata");
+				result.setObj(map1);
+			}
 		return result;
 	}
 
@@ -173,9 +178,9 @@ public class HomeHangqIndexController {
 		goodClassMap.put("106", "HDPE");
 		goodClassMap.put("107", "PP");
 		goodClassMap.put("108", "PVC");
-		goodClassMap.put("109", "HIPS");
-		goodClassMap.put("110", "GPPS");
-		goodClassMap.put("111", "ABS");
+//		goodClassMap.put("109", "HIPS");
+//		goodClassMap.put("110", "GPPS");
+//		goodClassMap.put("111", "ABS");
 		//再生类
 		List<String> goodClassTypeList = new ArrayList<>();
 		goodClassTypeList.add("3");//ABS
@@ -190,9 +195,9 @@ public class HomeHangqIndexController {
 		newGoodClassTypeList.add("106");//HDPE
 		newGoodClassTypeList.add("107");//PP
 		newGoodClassTypeList.add("108");//PVC
-		newGoodClassTypeList.add("109");//HIPS
-		newGoodClassTypeList.add("110");//GPPS
-		newGoodClassTypeList.add("111");//ABS
+//		newGoodClassTypeList.add("109");//HIPS
+//		newGoodClassTypeList.add("110");//GPPS
+//		newGoodClassTypeList.add("111");//ABS
 		//banner 返回图片和连接
 		List<Advices> advices = getAdvicesInfo();
 		hqm.setAdviceList(advices);

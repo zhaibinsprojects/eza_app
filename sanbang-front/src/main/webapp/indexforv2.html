@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title></title>
+		<script type="text/javascript" src="resource/script/jquery-1.7.1.min.js"></script>  
+	</head>
+	<style type="text/css">
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #fff;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			
+		}
+		
+		body {
+			background: url(resource/img/v2bg.jpg)  #01685f  center top no-repeat;
+			background-size: 100%;
+			max-width: 450px;
+			margin: 0 auto;
+			position: relative;
+		}
+		
+		
+		.downloadBtn {
+			max-width: 400px;
+			width: 75%;
+			position: absolute;
+			bottom: 15%;
+			left: 50%;
+			margin-left: -37%;
+		}
+		/* iphone x */
+		
+		@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+			.downloadBtn {
+			bottom: 30%;
+		}
+		}
+		.layer {
+			background-color: rgba(0, 0, 0, 0.5);
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+		
+		.router {
+			background-color: rgba(255, 255, 255, 0.9);
+			background: url(resource/img/download_link.png) rgba(255, 255, 255, 0.9) 95% 5px no-repeat;
+			background-size: 17%;
+			height: 30%;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			font-size: 18px;
+			color: #222222;
+			text-align: center;
+			display: -webkit-flex; /* Safari */
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.router span {
+			color: #0f7468;
+		}
+		
+	</style>
+
+	<body>
+		<div>
+			<a href="javascript:;"><img src="resource/img/v2download_btn.png" class="downloadBtn" /></a>
+		</div>
+		<div class="layer" style="display: none;">
+			<div class="router">
+				<div style="/* font-size: 70px; */color: #222222;font-weight: bold;">链接打不开？</div>
+				<div style="/* font-size: 45px; */">由于微信限制，请点击右上角<br>选择<span>“在浏览器中打开”</span></div>
+			</div>
+		</div>
+		<script type="text/javascript">
+	$(document).ready(function(){
+		 var ua = window.navigator.userAgent.toLowerCase(); 
+		if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
+			$('.layer').fadeIn();
+		}else{ 
+		var u = navigator.userAgent; // 获取用户设备
+		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+		if (isIOS) {
+			 $(".downloadBtn").attr("name","https://m.ezaisheng.com/front"); 
+		} else {
+			$(".downloadBtn").attr("name","https://m.ezaisheng.com/front/app/version/download.htm");
+		}
+		
+		$(".downloadBtn").click(function(){
+			var url=$(".downloadBtn").attr("name");
+			window.location.href=url;
+		})
+		}  
+	})
+	
+	</script>
+	</body>
+
+</html>

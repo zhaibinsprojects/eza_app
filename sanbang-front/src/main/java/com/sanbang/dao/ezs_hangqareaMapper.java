@@ -42,4 +42,7 @@ public interface ezs_hangqareaMapper {
 	 */
 	List<HangqDzAreaVo> getAreaNamesByAreaids(@Param("areaids")String areaids);
 	
+	List<HangqDzAreaVo>  getPriceTrendCitys(@Param("data_sources")String data_sources,@Param("status")int status);
+	List<HangqDzAreaVo>  getPriceTrendXlCitys();
+	
 }
