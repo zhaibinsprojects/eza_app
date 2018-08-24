@@ -21,14 +21,14 @@
     <div>实时报价图表</div>
     <div></div>
   </header>
-  <nav class="nav_style_jg">
+  <!-- <nav class="nav_style_jg">
   	<ul>
   		<li class="cliksuo"><a href="javascript:;">河北<i class="icon"></i></a></li>
   		<li class="clickProtuy"><a href="javascript:;">品类<i class="icon"></i></a></li>
   		<li class="sclicksxsd"><a href="javascript:;">筛选</a></li>
   	</ul>
-  </nav>
-  <div class="div_sx_jg"></div>
+  </nav> -->
+  <!-- <div class="div_sx_jg"></div> -->
   <section class="echarts_inmgui">
   	<div class="section_roptab">
   		<ul>
@@ -46,87 +46,34 @@
   	<table class="tabghuioy" border="0" cellspacing="0" cellpadding="0">
   		<thead>
   			<tr>
-  				<th width="25%"><span>品类</span></th>
-  				<th width="25%"><span>区域</span></th>
-  				<th width="25%"><span>价格/吨</span></th>
-  				<th width="25%"><span>时间</span></th>
+  				<th width="20%"><span>品类</span></th>
+  				<th width="20%"><span>区域</span></th>
+  				<th width="20%"><span>价格/吨</span></th>
+  				<th width="20%"><span>涨跌幅</span></th>
+  				<th width="20%"><span>时间</span></th>
   			</tr>
   		</thead>
   		<tbody>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥${priceId}</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
-  			<tr>
-  				<td><span>PE</span></td>
-  				<td><span>石家庄</span></td>
-  				<td><span class="colrRed">￥5000</span></td>
-  				<td><span>08-07</span></td>
-  			</tr>
+  			<!-- 数据填充 -->
   		</tbody>
   	</table>
   </section>
 </div>
-<input name="colorId" value="${colorId}" style="display:none">
-<input name="formId" value="${formId}" style="display:none">
-<input name="type" value="${type}" style="display:none">
-<input name="areaId" value="${areaId}" style="display:none">
-<input name="priceId" value="${priceId}" style="display:none">
+<input name="type" value="${type}" type="hidden">
+<input name="priceId" value="${priceId}" type="hidden">
+<input name="dateBetweenType" value="${dateBetweenType}" type="hidden">
 </body>
 <script type="text/javascript" src="front/resource/js/price/echarttaball.js" charset="utf-8"></script>
 <script type="text/javascript">
-
-
-
+var type = $("imput[name=type]")
+var priceId = ${priceId};
+var dateBetweenType = ${dateBetweenType};
+$(document).ready(function(){
+	$(".section_roptab ul li").click(function(){
+		$(this).addClass("active");
+		$(this).siblings("li").removeClass("active")
+		alert(priceId);
+	});
+})
 </script>
 </html>

@@ -1,5 +1,6 @@
 package com.sanbang.goods.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,9 @@ public class GoodsController {
 	
 	@Autowired
 	private DictService dictService;
+	
+	private static int num = 100;
+	
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
 	/**
@@ -846,7 +850,9 @@ public class GoodsController {
 			}
 			}
 		}
-		mmp = this.goodsService.immediateAddOrderFormFunc(user, "GOODS",WeAddressId,goodsId, count);
+		ezs_orderform orderForm = new ezs_orderform();
+		orderForm.setOrder_no(getOrderNO());
+		mmp = this.goodsService.immediateAddOrderFormFunc(orderForm,user, "GOODS",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -890,7 +896,9 @@ public class GoodsController {
 			}
 			}
 		}
-		mmp = this.goodsService.immediateAddOrderFormFunc(user,"SAMPLE",WeAddressId,goodsId, count);
+		ezs_orderform orderForm = new ezs_orderform();
+		orderForm.setOrder_no(getOrderNO());
+		mmp = this.goodsService.immediateAddOrderFormFunc(orderForm,user,"SAMPLE",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -1266,5 +1274,16 @@ public class GoodsController {
 		}
 		
 		return sb.toString();
+	}
+	
+	public static synchronized String getOrderNO() {
+		SimpleDateFormat sf = new SimpleDateFormat("MMddHHmmss");
+		String str = sf.format(System.currentTimeMillis());
+		String result = "EM" + str + num;
+		num++;
+		if (num == 1000) {
+			num = 100;
+		}
+		return result;
 	}
 }

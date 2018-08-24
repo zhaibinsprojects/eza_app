@@ -987,4 +987,20 @@ public class Tools {
 			}
 			return result;
 		}
+		
+		/**
+		 * 交易保支付 批次号 类型:String,长度:不超过32位  交易保专用 支付货款
+		 * 
+		 * @return
+		 */
+		public static synchronized String getOrderNO() {
+			SimpleDateFormat sf = new SimpleDateFormat("MMddHHmmss");
+			String str = sf.format(System.currentTimeMillis());
+			String result = "EM" + str + num;
+			num++;
+			if (num == 1000) {
+				num = 100;
+			}
+			return result;
+		}
 }

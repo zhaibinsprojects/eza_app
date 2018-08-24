@@ -69,6 +69,8 @@ public class AppGoodsController {
 	private ezs_goodscartMapper ezs_goodscartMapper;
 	@Autowired
 	private ezs_goodsMapper ezs_goodsMapper;
+	
+	private static int num = 100;
 
 	// 日志
 	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
@@ -873,10 +875,9 @@ public class AppGoodsController {
 			}
 		}
 		try {
-			//JSONObject jsonObject = JSONObject.fromObject(orderForm);
-			//ezs_orderform tOrderForm = (ezs_orderform)JSONObject.toBean(jsonObject, ezs_orderform.class);
 			ezs_orderform tOrderForm = new ezs_orderform();
 			tOrderForm.setWeAddress_id(WeAddressId);
+			tOrderForm.setOrder_no(getOrderNO());
 			mmp = this.goodsService.addOrderFormFunc(tOrderForm, user, "SAMPLE",goodsCartId);
 			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -1098,7 +1099,9 @@ public class AppGoodsController {
 			}
 			}
 		}
-		mmp = this.goodsService.immediateAddOrderFormFunc(user, "GOODS",WeAddressId,goodsId, count);
+		ezs_orderform orderForm = new ezs_orderform();
+		orderForm.setOrder_no(getOrderNO());
+		mmp = this.goodsService.immediateAddOrderFormFunc(orderForm,user, "GOODS",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -1142,7 +1145,9 @@ public class AppGoodsController {
 			}
 			}
 		}
-		mmp = this.goodsService.immediateAddOrderFormFunc(user,"SAMPLE",WeAddressId,goodsId, count);
+		ezs_orderform orderForm = new ezs_orderform();
+		orderForm.setOrder_no(getOrderNO());
+		mmp = this.goodsService.immediateAddOrderFormFunc(orderForm,user,"SAMPLE",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			rs = Result.success();
@@ -1212,6 +1217,8 @@ public class AppGoodsController {
 					Map<String, Object> tmp = null;
 					//tOrderForm.setWeAddress_id(WeAddressId);
 					tOrderForm.setAddress_id(WeAddressId);
+					//订单号
+					tOrderForm.setOrder_no(getOrderNO());
 					//进行下单处理
 					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"GOODS",Long.valueOf(goodCartIdTemps[i]));
 					Integer ErrorCode = (Integer) tmp.get("ErrorCode");
@@ -1305,6 +1312,7 @@ public class AppGoodsController {
 					Map<String, Object> tmp = null;
 					//tOrderForm.setWeAddress_id(WeAddressId);
 					tOrderForm.setAddress_id(WeAddressId);
+					tOrderForm.setOrder_no(getOrderNO());
 					//进行下单处理
 					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"SAMPLE",Long.valueOf(goodCartIdTemps[i]));
 					Integer ErrorCode = (Integer) tmp.get("ErrorCode");
@@ -1613,5 +1621,16 @@ public class AppGoodsController {
 			sb = new StringBuilder().append(oneinfo).append("-").append(twoinfo).append("-").append(threeinfo);
 		}
 		return sb.toString();
+	}
+	
+	public static synchronized String getOrderNO() {
+		SimpleDateFormat sf = new SimpleDateFormat("MMddHHmmss");
+		String str = sf.format(System.currentTimeMillis());
+		String result = "EM" + str + num;
+		num++;
+		if (num == 1000) {
+			num = 100;
+		}
+		return result;
 	}
 }

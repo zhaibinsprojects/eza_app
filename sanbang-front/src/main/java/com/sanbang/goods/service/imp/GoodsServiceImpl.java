@@ -647,7 +647,7 @@ public class GoodsServiceImpl implements GoodsService{
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
 		//生成订单号码
-		String orderFormNo = null;
+		//String orderFormNo = null;
 		//createOrderNo();
 		if(orderType==null){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -683,14 +683,14 @@ public class GoodsServiceImpl implements GoodsService{
 				//更新店铺购物车，每单只有一种商品
 				storecart.setSc_status(1);//暂设定1标志 表示已生成订单
 				this.storecartMapper.updateByPrimaryKeySelective(storecart);
-				orderFormNo = createOrderNo(goodTemp);
-				orderForm.setOrder_no(orderFormNo);
+				//orderFormNo = createOrderNo(goodTemp);
+				//orderForm.setOrder_no(orderFormNo);
 				//写入订单编号
 				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
 				//同步U8库存
 				try {
 					log.info("下单逻辑+校验库存+更新本地库存");
-					checkGoodOrder(goodsCar,goodTemp,orderType,orderFormNo);
+					checkGoodOrder(goodsCar,goodTemp,orderType,orderForm.getOrder_no());
 					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
 				} catch (Exception e) {
 					System.out.println("同步库存异常");
@@ -727,12 +727,14 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "订单添加成功");
 			}else{
 				//购物车ID有误，未查询到商品购物车信息
+				//orderForm.setDeleteStatus(true);
+				//this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				//不可删除，会导致订单号重复
 				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				mmp.put("Msg", "商品购物车查询失败");
 				log.error("商品购物车查询失败");
 			}
-			
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 			
@@ -1298,12 +1300,12 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public synchronized Map<String, Object> immediateAddOrderFormFunc(ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
+	public synchronized Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
 		ezs_goodscart goodsCart = new ezs_goodscart();
-		ezs_orderform orderForm = new ezs_orderform();
+		//ezs_orderform orderForm = new ezs_orderform();
 		try {
 			//查询购买的商品
 			ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodId);
@@ -1345,8 +1347,8 @@ public class GoodsServiceImpl implements GoodsService{
 				orderForm.setOrder_type(CommUtil.order_sample_good);
 			}
 			//没卵用，仅为生成订单号码
-			String orderFormNo = createOrderNo(good);
-			orderForm.setOrder_no(orderFormNo);
+			//String orderFormNo = createOrderNo(good);
+			//orderForm.setOrder_no(orderFormNo);
 			this.ezs_orderformMapper.insert(orderForm);
 			//构建店铺购物车
 			//storeCart = new ezs_storecart();
@@ -1372,7 +1374,7 @@ public class GoodsServiceImpl implements GoodsService{
 			goodsCart.setGoods_id(good.getId());
 			goodsCart.setCount(count);
 			//进行库存校验并进行更新本地库存
-			boolean buyAbleFlag = checkGoodOrder(goodsCart,good,orderType,orderFormNo);
+			boolean buyAbleFlag = checkGoodOrder(goodsCart,good,orderType,orderForm.getOrder_no());
 			if(buyAbleFlag){
 				this.storecartMapper.insert(storeCart);
 				goodsCart.setSc_id(storeCart.getId());
@@ -1383,6 +1385,9 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "立即购买成功");
 				log.info("立即购买成功");
 			}else{
+				//orderForm.setDeleteStatus(true);
+				//this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
+				//不可删除，会导致订单号重复
 				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				mmp.put("Msg", "库存不足");
