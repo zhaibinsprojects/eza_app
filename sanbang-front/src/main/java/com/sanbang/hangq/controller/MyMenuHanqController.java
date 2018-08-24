@@ -21,7 +21,6 @@ import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
-import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller

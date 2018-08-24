@@ -431,5 +431,11 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 		result.setMsg("你的订单已提交,请到个人中心进行支付！");
 		return result;
 	}
+
+	@Override
+	public Result myDing(ezs_user upi, HttpServletRequest request, Result result) {
+		ezs_customizedhqMapper.getDingZhiCataInitData(upi.getId());
+		return null;
+	}
 }
 

@@ -69,5 +69,12 @@ public interface MyMenuHangqService {
 	public Result  myDingYueAdd(HttpServletRequest request,ezs_user upi,String cycle,BigDecimal payment,String subtotal,int isall,Result result);
 	
 	
-	
+	/**
+	 * 我的订阅详情
+	 * @param upi
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	public  Result myDing(ezs_user upi,HttpServletRequest request,Result result);
 }
