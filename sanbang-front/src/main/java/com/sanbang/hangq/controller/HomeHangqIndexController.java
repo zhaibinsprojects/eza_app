@@ -570,6 +570,8 @@ public class HomeHangqIndexController {
 				plist = (List<PriceTrendIfo>)mmp.get("Obj");
 			}
 		}
+		//集合反向排列
+		Collections.reverse(plist);
 		return plist;
 	}
 	/**
