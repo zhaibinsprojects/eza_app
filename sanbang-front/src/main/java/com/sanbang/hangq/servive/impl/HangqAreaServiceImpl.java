@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sanbang.bean.ezs_goods_class;
-import com.sanbang.cata.service.CataService;
 import com.sanbang.dao.ezs_goods_classVoMapper;
 import com.sanbang.dao.ezs_hangqareaMapper;
 import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.utils.JsonUtils;
-import com.sanbang.utils.mapCompanyPager;
-import com.sanbang.vo.GoodsClass;
 import com.sanbang.vo.goods.GoodsClassVo;
+import com.sanbang.vo.hangq.HangqDzAreaVo;
 import com.sanbang.vo.hangq.HangqParamCommonVo;
 
 
@@ -28,37 +26,14 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 	private ezs_hangqareaMapper ezs_hangqareaMapper;
 	@Autowired
 	private ezs_goods_classVoMapper ezs_goods_classVoMapper;
-	@Autowired
-	private CataService cataService;
 	
 	@Override
 	public Map<String, Object> getHangqParamDate(String reqtype,Map<String, Object> redate) {
 		
 		try {
-			
-			List<Map<String, Object>> calist=new ArrayList<>();
-			List<HangqParamCommonVo> list=new ArrayList<>();
-			//data_sources;// 数据来源  1 .实时成交价 2.供应商报价 3.站外市场价  4.网络数据 
-			//再生报价
-			if(reqtype.equals("zsbj")) {
-				list=ezs_hangqareaMapper.getAreaBySourcesOrStatus("2,3", 2);
-			//再生走势	
-			}else if(reqtype.equals("zszs")){
-				list=ezs_hangqareaMapper.getAreaBySourcesOrStatus("1", 2);
-			}else if(reqtype.equals("xlbj")) {
-				list=ezs_hangqareaMapper.getHangqXlAreaList();
-			}else if(reqtype.equals("all")) {
-				List<HangqParamCommonVo> zsbj=ezs_hangqareaMapper.getAreaBySourcesOrStatus("1,2,3", 2);
-				List<HangqParamCommonVo> xlbj=ezs_hangqareaMapper.getHangqXlAreaList();
-				xlbj.removeAll(zsbj);
-				xlbj.addAll(zsbj);
-				list=xlbj;
-			}
-			redate.put("area", list);
-			
-
+			redate.put("area", getProvices(reqtype));
 			redate.put("cata", getDingYueCata());
-			
+			redate.put("cata1", cataToJson());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,7 +47,7 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public  Map<String, Object> getDingYueCata(){
+	public 	List<Map<String, Object>> getDingYueCata(){
 		List<Map<String, Object>> calist=cataToJson();
 		Map<String, Object> listone=(Map<String, Object>) calist.get(0);
 		Map<String, Object> listtwo=(Map<String, Object>) calist.get(1);
@@ -84,7 +59,7 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 		map.put("name", "全部分类");
 		map.put("children", cataToJson());
 		children.add(map);
-		return listone;
+		return children;
 	}
 	
 	
@@ -198,57 +173,69 @@ public class HangqAreaServiceImpl implements HangqAreaService{
 		List<Map<String, Object>> list=new ArrayList<>();
 		Map<String, Object> map=new HashMap<>();
 		map.put("1", "华东");
-		list.add(map);
-		map.clear();
 		map.put("2", "华南");
-		list.add(map);
-		map.clear();
 		map.put("3", "华北");
-		list.add(map);
-		map.clear();
 		map.put("4", "华中");
-		list.add(map);
-		map.clear();
 		map.put("5", "西北");
-		list.add(map);
-		map.clear();
 		map.put("6", "西南");
-		list.add(map);
-		map.clear();
 		map.put("7", "东北");
-		list.add(map);
-		map.clear();
-		
+		for (Entry<String, Object> index : map.entrySet()) {
+			Map<String, Object> chace=new HashMap<>();
+			chace.put(index.getKey(), index.getValue());
+			list.add(chace);
+		}
 		return list;
 	}
 	
-	private List<Map<String, Object>> getProvices(String reqtype){
+	private Map<String, Object> getProvices(String reqtype){
+		Map<String, Object> res=new HashMap<>();
 		List<HangqParamCommonVo> list=new ArrayList<>();
+		List<HangqDzAreaVo> areal=new ArrayList<>();
 		List<Map<String, Object>> list1=new ArrayList<>();
+		List<Map<String, Object>> areal1=new ArrayList<>();
 		//data_sources;// 数据来源  1 .实时成交价 2.供应商报价 3.站外市场价  4.网络数据 
 		//再生报价
 		if(reqtype.equals("zsbj")) {
 			list=ezs_hangqareaMapper.getAreaBySourcesOrStatus("2,3", 2);
+			areal=ezs_hangqareaMapper.getPriceTrendCitys("2,3", 2);
 		//再生走势	
 		}else if(reqtype.equals("zszs")){
 			list=ezs_hangqareaMapper.getAreaBySourcesOrStatus("1", 2);
+			areal=ezs_hangqareaMapper.getPriceTrendCitys("1", 2);
 		}else if(reqtype.equals("xlbj")) {
 			list=ezs_hangqareaMapper.getHangqXlAreaList();
+			areal=ezs_hangqareaMapper.getPriceTrendXlCitys();
 		}else if(reqtype.equals("all")) {
 			List<HangqParamCommonVo> zsbj=ezs_hangqareaMapper.getAreaBySourcesOrStatus("1,2,3", 2);
 			List<HangqParamCommonVo> xlbj=ezs_hangqareaMapper.getHangqXlAreaList();
 			xlbj.removeAll(zsbj);
 			xlbj.addAll(zsbj);
 			list=xlbj;
+			List<HangqDzAreaVo> zsbj1=ezs_hangqareaMapper.getPriceTrendCitys("2,3", 2);
+			List<HangqDzAreaVo> xlbj1=ezs_hangqareaMapper.getPriceTrendXlCitys();
+			xlbj1.removeAll(zsbj1);
+			xlbj1.addAll(zsbj1);
+			areal=xlbj1;
 		}
-		Map<String, Object> cache=new HashMap<>();
+		
 		for (HangqParamCommonVo map : list) {
+			Map<String, Object> cache=new HashMap<>();
 			cache.put("id", map.getAreaid());
 			cache.put("AreaName", map.getAreaname());
 			list1.add(cache);
-			cache.clear();
 		}
-		return list1;
+		
+		for (HangqDzAreaVo map : areal) {
+			Map<String, Object> cache=new HashMap<>();
+			cache.put("id", map.getAreaid());
+			cache.put("AreaName", map.getAreaname());
+			areal1.add(cache);
+		}
+		res.put("daqu", getdaQu());
+		res.put("provice", list1);
+		res.put("citys", areal1);
+		
+		return res;
 		
 	} 
 }

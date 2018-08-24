@@ -226,7 +226,8 @@ public class MyMenuHanqController {
 			}
  			if(result.getSuccess()) {
  				Map<String, Object> map1=(Map<String, Object>) result.getObj();
- 				result.setObj(map1.get("cata"));
+ 				map1.remove("cata1");
+ 				result.setObj(map1);
  			}
  			
 		} catch (Exception e) {

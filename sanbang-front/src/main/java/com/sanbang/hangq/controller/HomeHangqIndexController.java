@@ -22,7 +22,6 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_ezssubstance;
-import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.cata.service.CataService;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
@@ -37,10 +36,8 @@ import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.Advices;
-import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodClassType;
-import com.sanbang.vo.GoodsClass;
 import com.sanbang.vo.HangqHomeMess;
 import com.sanbang.vo.PriceInTimesVo;
 import com.sanbang.vo.PriceTrendIfo;
@@ -64,29 +61,26 @@ public class HomeHangqIndexController {
 	
 	@Autowired
 	private HangqAreaService hangqAreaService;
-	@Autowired
-	private DictService dictService;
-	@Autowired
-	private CataService cataService;
 	
 	/**
 	 * 行情数据标识
 	 */
-	private  static final String HANGQ_DATA="HANGQ_DATA";
+	private  static final String HANGQ_DATA="HANGQ_INDEX_DATA";
 	
 	
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getHangqHomeCata")
+	@ResponseBody
 	public Result getHangqHomeCata(HttpServletRequest request,
 			HttpServletResponse response,
-			@RequestParam(defaultValue="bj")String reqtype){
+			@RequestParam(defaultValue="all")String reqtype){
 		Result result = Result.success();
 		result.setMsg("请求失败");
 		Map<String, Object> map=new HashMap<>();
  		try {
- 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA,
+ 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA+reqtype,
  					Result.class);
  			if (redate.getCode() == RedisConstants.SUCCESS) {
 				log.debug("查询redis分类成功执行");
@@ -94,11 +88,11 @@ public class HomeHangqIndexController {
 			} else {
 					log.debug("查询redis分类执行失败");
 					map=hangqAreaService.getHangqParamDate(reqtype, map);
-					map.put("color", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_COLOR)));
+					/*map.put("color", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_COLOR)));
 					//形态
 					map.put("form", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_FORM)));
 						
-					map.put("suppy", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY)));
+					map.put("suppy", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY)));*/
 					
 					result.setSuccess(true);
 			 		result.setMsg("请求成功");
@@ -121,7 +115,11 @@ public class HomeHangqIndexController {
 			result.setMsg("系统错误！");
 			result.setObj(map);
 		}
- 		
+ 		if(result.getSuccess()) {
+				Map<String, Object> map1=(Map<String, Object>) result.getObj();
+				map1.remove("cata");
+				result.setObj(map1);
+			}
 		return result;
 	}
 
@@ -190,6 +188,7 @@ public class HomeHangqIndexController {
 		newGoodClassTypeList.add("106");//HDPE
 		newGoodClassTypeList.add("107");//PP
 		newGoodClassTypeList.add("108");//PVC
+
 		//newGoodClassTypeList.add("109");//HIPS
 		//newGoodClassTypeList.add("110");//GPPS
 		//newGoodClassTypeList.add("111");//ABS
