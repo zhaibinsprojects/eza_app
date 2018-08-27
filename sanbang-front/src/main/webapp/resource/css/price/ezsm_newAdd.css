@@ -17,7 +17,7 @@ li{list-style-type:none;}
 .ezsm-collection-top div{float:left;width:50%;height:44px;}
 .ezsm-collection-top div:first-child{width:25%;height:44px;}
 .ezsm-collection-top div:last-child{width:25%;height:44px;}
-.aicon_yzs{ width:100%; display:block; height:44px; background:url(../img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:18px; color:#fff; text-indent:20px;}
+.aicon_yzs{ width:100%; display:block; height:44px; background:url(/front/resource/img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:18px; color:#fff; text-indent:20px;}
 
 .nav_style_jg{height: 40px; border-bottom: 1px solid #e5e5e5; background-color: #fff;}
 .nav_style_jg ul{height: 40px; line-height: 40px;display: flex;}

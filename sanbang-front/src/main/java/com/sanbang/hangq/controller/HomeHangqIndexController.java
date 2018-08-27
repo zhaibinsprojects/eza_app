@@ -469,6 +469,8 @@ public class HomeHangqIndexController {
 			tMp.put("colorId", colorId);/*可传多个 ， 号隔开*/
 		if(formId!=null)
 			tMp.put("formId", formId);
+		if(goodClassId!=null)
+			tMp.put("goodClassId", goodClassId);
 		//获取相关地址ID
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
@@ -490,10 +492,10 @@ public class HomeHangqIndexController {
 		}
 		if(type.equals("newclass")){
 			//新料
-			resultMap = this.priceConditionService.getPriceInTimeNew(tMp,currentPage,10);
+			resultMap = this.priceConditionService.getPriceInTimeNew(tMp,currentPage,20);
 		}else if(type.equals("oldclass")){
 			//普通再生塑料
-			resultMap = this.priceConditionService.getPriceInTimeOld(tMp,currentPage,10);
+			resultMap = this.priceConditionService.getPriceInTimeOld(tMp,currentPage,20);
 		}
 		List<PriceTrendIfo> resultList = new ArrayList<>();
 		Integer ErrorCode = (Integer)resultMap.get("ErrorCode");
@@ -583,24 +585,36 @@ public class HomeHangqIndexController {
 	 * @return
 	 */
 	@RequestMapping(value="/priceInTimeDetailPage")
-	public String priceInTimeDetailPage(HttpServletRequest request,HttpServletResponse response,
+	@ResponseBody
+	public Object priceInTimeDetailPage(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(name="priceId",required=true)String priceId,
 			@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="currentPage",required=false,defaultValue="1") int currentPage,
 			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		Map<String,Object> mmp = new HashMap<>();
 		//查询条件
 		Map<String,Object> tMp = new HashMap<>();
 		tMp.put("priceId", priceId);
 		tMp.put("dateBetweenType", dateBetweenType);
-		
+		List<PriceTrendIfo> plist = new ArrayList<>();
 		if(type!=null&&type.equals("newclass")){
 			//新料详情
-			this.priceConditionService.priceInTimeNewDetailPage(tMp, currentPage, 10);
+			mmp = this.priceConditionService.priceInTimeNewDetailPage(tMp, currentPage, 20);
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				plist = (List<PriceTrendIfo>)mmp.get("Obj");
+			}
 		}else if(type!=null&&type.equals("oldclass")){
 			//再生料详情查询
-			this.priceConditionService.priceInTimeOldDetailPage(tMp, currentPage, 10);
+			mmp = this.priceConditionService.priceInTimeOldDetailPage(tMp, currentPage, 20);
+			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+			if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+				plist = (List<PriceTrendIfo>)mmp.get("Obj");
+			}
 		}
-		return "";
+		//集合反向排列
+		//Collections.reverse(plist);
+		return plist;
 	}
 	//价格行情详情页面
 	@RequestMapping(value="/priceAnalyDetail")

@@ -745,7 +745,7 @@
 	and a.data_sources in ('2','3') 
 	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
       <if test="goodClassId != null and goodClassId != '' " >
-        and a.goodClass2_id = #{goodClassId}
+        and a.goodClass2_id in ( #{goodClassId} )
       </if>
       <if test="colorId != null and colorId != ''" >
         and a.color_id in ( #{colorId} )
