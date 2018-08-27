@@ -1,3 +1,4 @@
+
 package com.sanbang.dao;
 
 import java.util.List;
@@ -31,6 +32,16 @@ public interface ezs_subscribehqMapper {
      		@Param("pageCount")int pageCount,@Param("pageSize")long pageSize);
     
      int getDingyueRecoudCount(@Param("userid")long userid);
+     
+     
+     /**
+      * 
+      * @param userid
+      * @return
+      */
+     Map<String, Object> getDingYueTryStatusByUserid(long userid);
+     
+     Map<String, Object> getDingYueBuyStatusByUserid(long userid);
      
      
      

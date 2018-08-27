@@ -231,7 +231,6 @@
 	    <result column="parent_id" property="parent_id" jdbcType="BIGINT" />
 	    <result column="store_id" property="store_id" jdbcType="BIGINT" />
 	    <result column="userInfo_id" property="userInfo_id" jdbcType="BIGINT" />
-         
          <!--用户详情-->
          <association property="ezs_userinfo" column="userInfo_id" select="com.sanbang.dao.ezs_userinfoMapper.selectByPrimaryKey">
          </association>
@@ -241,11 +240,10 @@
          <!--联系人-->
           <association property="ezs_bill" column="id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
          </association>
+         <association property="hqpushstr" column="id" select="com.sanbang.dao.ezs_customizedhqMapper.getHangqUserPushClasses"></association>
          <!--资质-->
          <collection property="authimg" column="store_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
- 		<!-- 行情查看权限分类 -->
- 		<association property="hqpushstr" column="id" select="com.sanbang.dao.ezs_customizedhqMapper.getHangqUserPushClasses">
-        </association>
+ 		
   </resultMap>
   
   	<!--查看用户是否已存在 别删除了-->

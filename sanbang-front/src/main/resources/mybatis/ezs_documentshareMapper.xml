@@ -168,7 +168,7 @@
 		A.house,
 		A.user_id,
 		B.addTime doctime,
-		B.meta title
+		IF(ISNULL(B.meta),"",B.meta) title
 		FROM
 		ezs_documentshare A
 		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id

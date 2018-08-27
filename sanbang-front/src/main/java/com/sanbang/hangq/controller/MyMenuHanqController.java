@@ -21,7 +21,6 @@ import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
-import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
@@ -361,9 +360,51 @@ public class MyMenuHanqController {
 	}
 	
 	
+	/**
+	 * 推送接口
+	 * @param dzid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/HangqPushData")
+	public Result HangqPushData(@RequestParam(defaultValue="0") long dzid) {
+		Result result=Result.failure();
+		try {
+			result=myMenuHangqService.HangqPushData(dzid, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		return result;
+	}
 	
-	
-	
-	
+	/**
+	 * 查看试用状态
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/myTryStatus")
+	@ResponseBody
+	public Result myTryStatus(HttpServletRequest request) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.getDingYueStatusByUserid(upi, request, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
 	
 }
