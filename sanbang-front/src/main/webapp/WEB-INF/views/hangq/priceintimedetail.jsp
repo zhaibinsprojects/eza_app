@@ -26,7 +26,7 @@
 <div class="content_yzs">
   <header class="ezsm-collection-top">
     <div><a class="aicon_yzs" href="#"></a></div>
-    <div>实时报价图表</div>
+    <!-- <div>实时报价图表</div> -->
     <div></div>
   </header>
   <section class="echarts_inmgui">
@@ -84,7 +84,7 @@
 <input name="type" value="${type}" type="hidden">
 <input name="priceId" value="${priceId}" type="hidden">
 <input name="dateBetweenType" value="${dateBetweenType}" type="hidden">
-<input name="channelchanged" value="0" type="hidden">
+<input name="channelchanged" value="0" type="hidden"><!-- 记录是否进行展示时长挑转（一周、一月。。。。） -->
 <input name="pagecount" value="" type="hidden">
 </body>
 <script src="front/resource/js/price/echarttaball.js" type="text/javascript" charset="utf-8"></script>

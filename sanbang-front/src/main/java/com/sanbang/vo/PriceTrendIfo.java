@@ -46,8 +46,18 @@ public class PriceTrendIfo extends ezs_price_trend {
     private Date data_time;
 
     private Integer price_type;
+    //是否展示 0不展示，1展示
+    private Integer isshow;
 
-    public Double getCurrentPrice() {
+    public Integer getIsshow() {
+		return isshow;
+	}
+
+	public void setIsshow(Integer isshow) {
+		this.isshow = isshow;
+	}
+
+	public Double getCurrentPrice() {
 		return currentPrice;
 	}
 

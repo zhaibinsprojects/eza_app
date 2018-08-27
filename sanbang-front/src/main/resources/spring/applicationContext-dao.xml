@@ -301,5 +301,10 @@
 			value="com.sanbang.dao.ezs_customizedhqMapper"/>
 	</bean>
 	
+	<bean id="ezs_subscribehq_chilMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_subscribehq_chilMapper"/>
+	</bean>
+	
 	
 </beans>
