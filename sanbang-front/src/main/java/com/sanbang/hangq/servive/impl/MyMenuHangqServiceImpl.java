@@ -25,13 +25,19 @@ import com.sanbang.dao.ezs_customizedhqMapper;
 import com.sanbang.dao.ezs_documentshareMapper;
 import com.sanbang.dao.ezs_memberorderMapper;
 import com.sanbang.dao.ezs_subscribehqMapper;
+import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.hangq.servive.MyMenuHangqService;
 import com.sanbang.utils.DateUtils;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.StringUtil;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsClassVo;
+import com.sanbang.vo.goods.ezs_Dzgoods_classVo;
+import com.sanbang.vo.hangq.AreaData;
+import com.sanbang.vo.hangq.CataData;
+import com.sanbang.vo.hangq.HangqAreaData;
 import com.sanbang.vo.userauth.AuthImageVo;
 
 @Service("myMenuHangqService")
@@ -47,6 +53,8 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 	private ezs_memberorderMapper  ezs_memberorderMapper;
 	@Autowired
 	private ezs_customizedhqMapper ezs_customizedhqMapper;
+	@Autowired
+	private HangqAreaService hangqAreaService;
 	
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
@@ -375,12 +383,6 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 				result.setMsg("请选择订购品类！");
 				return result;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setSuccess(false);
-			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setMsg("系统错误！");
-		}
 		
 		//是否全选
 		if(isall==1) {
@@ -426,16 +428,136 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 		recoed.setOrder_id(order.getId());
 		ezs_subscribehqMapper.insertSelective(recoed);
 		
-		result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
 		result.setMsg("你的订单已提交,请到个人中心进行支付！");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
 		return result;
 	}
 
 	@Override
-	public Result myDing(ezs_user upi, HttpServletRequest request, Result result) {
-		ezs_customizedhqMapper.getDingZhiCataInitData(upi.getId());
-		return null;
+	public Result myDingZhi(ezs_user upi, HttpServletRequest request, Result result) {
+		try {
+			List<CataData> list=ezs_customizedhqMapper.getDingZhiCataInitData(upi.getId());
+			List<Map<String, Object>> list2=new ArrayList<>();
+			for (CataData cataData : list) {
+				 Map<String, Object> map=new HashMap<>();
+				 map.put("id", cataData.getId());
+				 map.put("name", cataData.getName());
+				 List<CataData> list3=new ArrayList<>();
+				 list3.add(cataData);
+				 map.put("children", list3);
+				 list2.add(map);
+				
+			}
+			List<HangqAreaData> alist=hangqAreaService.getAreaData();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+			Map<String, Object> map=new HashMap<>();
+			map.put("cata", list2);
+			map.put("area", alist);
+			map.put("phone", upi.getEzs_userinfo().getPhone());
+			map.put("email", upi.getEzs_userinfo().getEmail());
+			result.setObj(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		return result;
+	}
+
+	@Override
+	public Result myDingZhiIsPush(ezs_user upi, HttpServletRequest request, Result result, boolean isPush,long id) {
+		try {
+			ezs_customizedhq  pushrecode=ezs_customizedhqMapper.selectByPrimaryKey(id);
+			if(null==pushrecode) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("非法请求！");
+				return result;
+			}
+			
+			pushrecode.setIsPush(isPush);
+			if(isPush) {
+				result.setMsg("开通推送成功！");
+			}else {
+				result.setMsg("取消推送成功！");
+			}
+			ezs_customizedhqMapper.updateByPrimaryKeySelective(pushrecode);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		return result;
+	}
+
+	@Override
+	public Result myDingZhiSubmit(ezs_user upi, HttpServletRequest request, Result result, String areaids,
+			String category, String pushMethod) {
+		try {
+			ezs_customizedhq pushrecode=new ezs_customizedhq();
+			if(StringUtil.isEmpty(areaids)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请选择定制地区！");
+				return result;
+			}
+			
+			if(StringUtil.isEmpty(category)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请选择定制品类！");
+				return result;
+			}else {
+				String title="多品类推送";
+				List<ezs_Dzgoods_classVo>  classnames=	ezs_goods_classVoMapper.getParentNamesByClassIds(category);
+				StringBuffer sb=new StringBuffer();
+					if(classnames.size()>0) {
+						for (ezs_Dzgoods_classVo item : classnames) {
+							sb.append(item.getName());
+						}
+					}
+					title=sb.toString();
+					pushrecode.setTitle(title);
+			}
+			
+			if(StringUtil.isEmpty(pushMethod)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请选择推送地区！");
+				return result;
+			}
+			pushrecode.setAddTime(new Date());
+			pushrecode.setAreaids(areaids);
+			pushrecode.setCategory(category);
+			pushrecode.setDeleteStatus(false);
+			pushrecode.setIsPush(true);
+			pushrecode.setPushMethod(pushMethod);
+			pushrecode.setStore_id(upi.getStore_id());
+			pushrecode.setUser_id(upi.getId());
+			ezs_customizedhqMapper.insertSelective(pushrecode);
+			result.setSuccess(true);
+			result.setMsg("您的定制服务已提交成功！");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		return result;
 	}
 }
 

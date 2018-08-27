@@ -39,8 +39,15 @@ public interface ezs_customizedhqMapper {
      * @param catid
      * @return
      */
-    List<Map<String, Object>> getDingYueOwenCata(@Param("catid")long catid);
+    List<Map<String, Object>> getDingYueOwenCata(@Param("catid")long catid,@Param("parent_id")long parent_id);
     
     
     List<CataData>  getDingZhiCataInitData(@Param("userid")long userid);
+    
+    /**
+     * 行情查看权限分类
+     * @param userid
+     * @return
+     */
+    public String getHangqUserPushClasses(@Param("userid")long userid);
 }

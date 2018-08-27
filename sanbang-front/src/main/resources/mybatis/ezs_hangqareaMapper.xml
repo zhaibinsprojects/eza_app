@@ -145,4 +145,231 @@
 					F.areaid
 		ORDER BY COUNT(F.id)  DESC
  </select>
+ 
+ <resultMap id="AreaDataResultMap" type="com.sanbang.vo.hangq.HangqAreaData">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="AreaName" jdbcType="VARCHAR" property="AreaName" />
+    <collection property="children"  javaType="ArrayList"  select="getHangqAllCityList"
+                column="{parentid=id}" ofType="map" >
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="AreaName" jdbcType="VARCHAR" property="AreaName" />
+                </collection>
+  </resultMap>
+ 
+ <!-- hangq province -->
+ <select id="getHangqAllAreaList"  resultMap="AreaDataResultMap">
+ (
+	SELECT
+		areaid id,
+		areaname AreaName
+	FROM
+		(
+			SELECT
+				A.id,
+
+			IF (
+				ISNULL(E.id),
+
+			IF (
+				ISNULL(D.id),
+
+			IF (ISNULL(C.id), B.id, C.id),
+			D.id
+			),
+			E.id
+			) areaid,
+
+		IF (
+			ISNULL(E.id),
+
+		IF (
+			ISNULL(D.id),
+
+		IF (
+			ISNULL(C.id),
+			B.areaName,
+			C.areaName
+		),
+		D.areaName
+		),
+		E.areaName
+		) areaname
+		FROM
+			ezs_price_trend A
+		INNER JOIN ezs_area B ON A.region_id = B.id
+		LEFT JOIN ezs_area C ON C.id = B.parent_id
+		LEFT JOIN ezs_area D ON D.id = C.parent_id
+		LEFT JOIN ezs_area E ON E.id = D.parent_id
+		) F
+	GROUP BY
+		F.areaid
+	ORDER BY
+		COUNT(F.id) DESC
+)
+UNION
+	(
+		SELECT
+			areaid id,
+		areaname AreaName
+		FROM
+			(
+				SELECT
+					A.id,
+
+				IF (
+					ISNULL(E.id),
+
+				IF (
+					ISNULL(D.id),
+
+				IF (ISNULL(C.id), B.id, C.id),
+				D.id
+				),
+				E.id
+				) areaid,
+
+			IF (
+				ISNULL(E.id),
+
+			IF (
+				ISNULL(D.id),
+
+			IF (
+				ISNULL(C.id),
+				B.areaName,
+				C.areaName
+			),
+			D.areaName
+			),
+			E.areaName
+			) areaname
+			FROM
+				ezs_price_trend_xl A
+			INNER JOIN ezs_area B ON A.region_id = B.id
+			LEFT JOIN ezs_area C ON C.id = B.parent_id
+			LEFT JOIN ezs_area D ON D.id = C.parent_id
+			LEFT JOIN ezs_area E ON E.id = D.parent_id
+			WHERE
+				A.deleteStatus = 0
+			) F
+		GROUP BY
+			F.areaid
+		ORDER BY
+			COUNT(F.id) DESC
+	)
+ 
+ 
+ </select>
+  <!-- hangq citys -->
+ <select id="getHangqAllCityList" resultType="map">
+ (
+	SELECT
+		areaid id,
+		areaname AreaName
+	FROM
+		(
+			SELECT
+				A.id,
+
+			IF (
+				ISNULL(D.parent_id),
+				C.parent_id,
+
+			IF (
+				ISNULL(C.parent_id),
+				B.parent_id,
+				B.parent_id
+			)
+			) parent_id,
+
+		IF (
+			ISNULL(D.parent_id),
+			C.areaName,
+
+		IF (
+			ISNULL(C.parent_id),
+			B.areaName,
+			B.areaName
+		)
+		) areaname,
+
+	IF (
+		ISNULL(D.parent_id),
+		C.id,
+
+	IF (
+		ISNULL(C.parent_id),
+		B.id,
+		B.id
+	)
+	) areaid
+	FROM
+		ezs_price_trend A
+	INNER JOIN ezs_area B ON A.region_id = B.id
+	LEFT JOIN ezs_area C ON C.id = B.parent_id
+	LEFT JOIN ezs_area D ON D.id = C.parent_id
+		) F
+	WHERE
+		NOT ISNULL(F.parent_id)  and F.parent_id=#{parentid}
+	GROUP BY
+		F.areaid
+	ORDER BY
+		COUNT(F.id) DESC
+)
+UNION
+	(
+		SELECT
+			areaid id,
+		areaname AreaName
+		FROM
+			(
+				SELECT
+					A.id,
+
+				IF (
+					ISNULL(D.parent_id),
+					C.parent_id,
+
+				IF (
+					ISNULL(C.parent_id),
+					B.parent_id,
+					B.parent_id
+				)
+				) parent_id,
+
+			IF (
+				ISNULL(D.parent_id),
+				C.areaName,
+
+			IF (
+				ISNULL(C.parent_id),
+				B.areaName,
+				B.areaName
+			)
+			) areaname,
+
+		IF (
+			ISNULL(D.parent_id),
+			C.id,
+
+		IF (
+			ISNULL(C.parent_id),
+			B.id,
+			B.id
+		)
+		) areaid
+		FROM
+			ezs_price_trend_xl A
+		INNER JOIN ezs_area B ON A.region_id = B.id
+		LEFT JOIN ezs_area C ON C.id = B.parent_id
+		LEFT JOIN ezs_area D ON D.id = C.parent_id
+			) F
+		WHERE
+			NOT ISNULL(F.parent_id)  and F.parent_id=#{parentid}
+		GROUP BY
+			F.areaid
+		ORDER BY
+			COUNT(F.id) DESC
+	)
+ </select>
 </mapper>

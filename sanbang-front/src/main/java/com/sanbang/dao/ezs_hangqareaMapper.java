@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.sanbang.vo.hangq.HangqAreaData;
 import com.sanbang.vo.hangq.HangqDzAreaVo;
 import com.sanbang.vo.hangq.HangqParamCommonVo;
 
@@ -33,7 +34,17 @@ public interface ezs_hangqareaMapper {
 	 * @param status
 	 * @return
 	 */
-	List<HangqParamCommonVo>  getHangqAllAreaList();
+	List<HangqAreaData>  getHangqAllAreaList();
+	
+	
+	/**
+	 * 新料 再生料
+	 * @param data_sources
+	 * @param status
+	 * @return
+	 */
+	List<HangqAreaData>  getHangqAllCityList(@Param("parentid")long parentid);
+	
 	
 	/**
 	 * 得到地区全称  和  大区

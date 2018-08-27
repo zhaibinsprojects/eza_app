@@ -13,13 +13,9 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +28,8 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sanbang.bean.ezs_user;
+
 
 
 
@@ -43,6 +41,8 @@ public class Tools {
 	
 	
 	public static final String FOLDER = "uploads";
+	
+	public static final String HANGQ_PASS = "uploads";
 	/**
 	 * 检测字符串是否不为空(null,"","null")
 	 * 
@@ -1003,4 +1003,20 @@ public class Tools {
 			}
 			return result;
 		}
+		
+		
+		/**
+		 * HANGQ_PASS  默认通过权力
+		 * 查看行情权限
+		 * @return
+		 */
+		public static boolean HangqValidate(ezs_user upi,long cataid) {
+			boolean istrue=false;
+			if((StringUtil.isNotEmpty(upi.getHqpushstr())&&upi.getHqpushstr().indexOf(String.valueOf(cataid))>0)||
+					(HANGQ_PASS.indexOf(String.valueOf(cataid))>0)) {
+				istrue=true;
+			}
+			return istrue;
+		}
+		
 }

@@ -243,6 +243,9 @@
          </association>
          <!--资质-->
          <collection property="authimg" column="store_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
+ 		<!-- 行情查看权限分类 -->
+ 		<association property="hqpushstr" column="id" select="com.sanbang.dao.ezs_customizedhqMapper.getHangqUserPushClasses">
+        </association>
   </resultMap>
   
   	<!--查看用户是否已存在 别删除了-->

@@ -14,12 +14,10 @@ import com.sanbang.vo.userauth.AuthImageVo;
  */
 public class ezs_user implements Serializable {
 
-
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4407580224409222723L;
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 
@@ -69,6 +67,8 @@ public class ezs_user implements Serializable {
 	private boolean authimgstate;// 资质信息完成
 
 	private boolean authorfilestate;// 授权文件完成情况
+	
+	private String hqpushstr;//行情查看权限分类
 
 	public Long getId() {
 		return id;
@@ -262,6 +262,15 @@ public class ezs_user implements Serializable {
 		this.authorfilestate = authorfilestate;
 	}
 
+	
+	public String getHqpushstr() {
+		return hqpushstr;
+	}
+
+	public void setHqpushstr(String hqpushstr) {
+		this.hqpushstr = hqpushstr;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_user [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", lastLoginDate="
@@ -271,9 +280,8 @@ public class ezs_user implements Serializable {
 				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", authkey=" + authkey + ", isAvatar="
 				+ isAvatar + ", ezs_userinfo=" + ezs_userinfo + ", ezs_store=" + ezs_store + ", ezs_bill=" + ezs_bill
 				+ ", authimg=" + authimg + ", authimgstate=" + authimgstate + ", authorfilestate=" + authorfilestate
-				+ "]";
+				+ ", hqpushstr=" + hqpushstr + "]";
 	}
-
 
 	
 
