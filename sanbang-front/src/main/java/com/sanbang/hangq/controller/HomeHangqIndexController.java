@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.tools.Tool;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
 import com.sanbang.hangq.servive.HangqAreaService;
@@ -31,8 +33,10 @@ import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.JsonUtils;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.Advices;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.GoodClassType;
@@ -452,12 +456,27 @@ public class HomeHangqIndexController {
 			@RequestParam(name="areaId",required=false) String areaId,
 			@RequestParam(name="currentPage",required=false,defaultValue="1")int currentPage,
 			@RequestParam(name="colorId",required=false)String colorId,
-			@RequestParam(name="formId",required=false)String formId
+			@RequestParam(name="formId",required=false)String formId,
+			HttpServletRequest request
 			){
 		Result rs = Result.success();
 		Map<String, Object> resultMap = new HashMap<>();
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		//订购校验
+		if(null==upi){
+			List<PriceTrendIfo> resultListT = new ArrayList<>();
+			rs = Result.failure();
+			rs.setObj(resultListT);
+			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			rs.setMsg("用户未登录，不可查看");
+			return rs;
+		}
+		//权限校验
+		//boolean showFlag = Tools.HangqValidate(upi, Long.valueOf(goodClassId));
 		//参数传递
 		Map<String, Object> tMp = new HashMap<>();
+		//tMp.put("userId", "561");/*用户ID*/
+		tMp.put("userId", upi.getId());/*用户ID*/
 		if(colorId!=null)
 			tMp.put("colorId", colorId);/*可传多个 ， 号隔开*/
 		if(formId!=null)
