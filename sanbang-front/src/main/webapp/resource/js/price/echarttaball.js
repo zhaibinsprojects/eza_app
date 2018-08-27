@@ -57,12 +57,13 @@ $.ajax({
     type: 'post',
     url: 'front/app/hangq/priceInTimeDetail.htm',
     data:{
-    	"type":"oldclass",
-    	"priceId":'13530'
+    	"type":$("input[name=type]").val(),
+    	"priceId":$("input[name=priceId]").val()
     },
     dataType: "json",
     success: function (result) {
-    	//alert(result);
+    	//页数
+    	$("input[name=pagecount]").val(Math.ceil(result.length/20));
        $.each(result, function (index, item) {
             namey.push(item.dealDate);     
             numo.push(item.currentPrice);
@@ -85,7 +86,8 @@ $.ajax({
             ]
         });
         //初始化填充数据列表数据列表
-        initTable(result);
+        //initTable(result);
+        showdataByPage(type,$("input[name=priceId]").val(),"WEEK",1);
     },
     error: function (errorMsg) {
         alert("图表数据请求失败!");
@@ -113,4 +115,88 @@ function initTable(plist){
 		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 	}
 	$("tbody").append(html);
+}
+
+//选择显示周期：一周、一月、三月、一年
+$(document).ready(function(){
+	$(".section_roptab ul li").click(function(){
+		$(this).addClass("active");
+		$(this).siblings("li").removeClass("active")
+		$("input[name=dateBetweenType]").val($(this).attr("name"));
+		$("input[name=channelchanged]").val("1");
+		//获取选定月份
+		//加载则线图数据
+		showdatas(type,priceId,$(this).attr("name"));
+		//加载表格数据列表，默认加载首页
+		showdataByPage(type,priceId,$(this).attr("name"),1);
+		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
+	});
+})
+function showdatas(type,priceId,dateBetweenType){
+	$.ajax({
+	    type: 'post',
+	    url: 'front/app/hangq/priceInTimeDetail.htm',
+	    data:{
+	    	"type":type,
+	    	"priceId":priceId,
+	    	"dateBetweenType":dateBetweenType
+	    },
+	    dataType: "json",
+	    success: function (result) {
+	    //清空数组
+	    namey=[];
+	    numo=[];
+	    //页数
+	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
+	       $.each(result, function (index, item) {
+	            namey.push(item.dealDate);     
+	            numo.push(item.currentPrice);
+	            classname = item.goodClassName;
+	        });
+	        myChart.hideLoading();
+	        myChart.setOption({
+	            xAxis: {
+	                data: namey
+	            },
+	            yAxis: {
+	                data: numo
+	            },
+	            series: [{
+	            	name:classname,
+	                type:'line',
+	                smooth: true,
+	                data: numo
+	            }
+	            ]
+	        });
+	        //初始化填充数据列表数据列表
+	        //initTable(result);
+	    },
+	    error: function (errorMsg) {
+	        alert("图表数据请求失败!");
+	        myChart.hideLoading();
+	    }
+	});
+}
+//实时报价详情列表-分页展示 
+function showdataByPage(type,priceId,dateBetweenType,currentPage){
+	$.ajax({
+	    type: 'post',
+	    url: 'front/app/hangq/priceInTimeDetailPage.htm',
+	    data:{
+	    	"type":type,
+	    	"priceId":priceId,
+	    	"dateBetweenType":dateBetweenType,
+	    	"currentPage":currentPage
+	    },
+	    dataType: "json",
+	    success: function (result) {
+	       //初始化填充数据列表数据列表
+	       initTable(result);
+	    },
+	    error: function (errorMsg) {
+	        alert("图表数据请求失败!");
+	        myChart.hideLoading();
+	    }
+	});
 }
