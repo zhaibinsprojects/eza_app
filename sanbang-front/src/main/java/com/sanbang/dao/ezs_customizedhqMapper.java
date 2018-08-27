@@ -49,5 +49,5 @@ public interface ezs_customizedhqMapper {
      * @param userid
      * @return
      */
-    public String getHangqUserPushClasses(@Param("userid")long userid);
+    public String getHangqUserPushClasses(@Param("id")long userid);
 }

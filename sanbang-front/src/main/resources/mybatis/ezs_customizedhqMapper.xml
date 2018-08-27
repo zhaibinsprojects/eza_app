@@ -256,12 +256,12 @@
   <!--用户推送分类 -->
   <select id="getHangqUserPushClasses"  resultType="String">
 	  SELECT
-		GROUP_CONCAT(B.id)
+		GROUP_CONCAT(B.id) hqpushstr
 	FROM
 		ezs_subscribehq_child A
 	LEFT JOIN ezs_goods_class B ON A.goodsClass_id = B.id
 	WHERE
-		A.user_id = #{userid}
+		A.user_id = #{id}
 	AND A.endTime > NOW()
   </select>
   

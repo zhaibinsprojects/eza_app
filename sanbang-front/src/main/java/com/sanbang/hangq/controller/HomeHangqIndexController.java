@@ -86,12 +86,6 @@ public class HomeHangqIndexController {
 			} else {
 					log.debug("查询redis分类执行失败");
 					map=hangqAreaService.getHangqParamDate(reqtype, map);
-					/*map.put("color", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_COLOR)));
-					//形态
-					map.put("form", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_FORM)));
-						
-					map.put("suppy", commonToJson(dictService.getDictByParentId(DictionaryCate.EZS_SUPPLY)));*/
-					
 					result.setSuccess(true);
 			 		result.setMsg("请求成功");
 			 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);

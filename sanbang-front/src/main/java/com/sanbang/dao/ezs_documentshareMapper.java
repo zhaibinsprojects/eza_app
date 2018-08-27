@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_documentshare;
+import com.sanbang.vo.hangq.HangqCollectedVo;
 
 @Repository
 public interface ezs_documentshareMapper {
@@ -34,7 +35,7 @@ public interface ezs_documentshareMapper {
      * @param userid
      * @return
      */
-    List<ezs_documentshare> selectHangqCollectionedOwen(@Param("userid")Long userid,
+    List<HangqCollectedVo> selectHangqCollectionedOwen(@Param("userid")Long userid,
     		@Param("pageCount")int pageCount,@Param("pageSize")long pageSize);
     int selectHangqCollectionedCountOwen(@Param("userid")Long userid);
     

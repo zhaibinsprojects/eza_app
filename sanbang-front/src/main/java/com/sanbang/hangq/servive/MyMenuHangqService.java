@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
 
@@ -96,4 +98,14 @@ public interface MyMenuHangqService {
 	 * @return
 	 */
 	public  Result myDingZhiSubmit(ezs_user upi,HttpServletRequest request,Result result, String areaids,String category,String pushMethod);
+	
+	/**
+	 * 定制推送 app req
+	 * @param dzid
+	 * @return
+	 */
+	public Result HangqPushData(long dzid,Result result);
+	
+	
+	public Result getDingYueStatusByUserid(ezs_user upi,HttpServletRequest request,Result result);
 }
