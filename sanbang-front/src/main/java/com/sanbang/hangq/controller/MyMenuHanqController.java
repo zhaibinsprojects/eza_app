@@ -21,7 +21,7 @@ import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
-import com.sanbang.vo.DictionaryCate;
+import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 
 @Controller
@@ -187,6 +187,7 @@ public class MyMenuHanqController {
 	
 	
 	
+	
 	/**
 	 * 我要定阅初始化
 	 * @param request
@@ -226,8 +227,7 @@ public class MyMenuHanqController {
 			}
  			if(result.getSuccess()) {
  				Map<String, Object> map1=(Map<String, Object>) result.getObj();
- 				map1.remove("cata1");
- 				result.setObj(map1);
+ 				result.setObj(map1.get("cata"));
  			}
  			
 		} catch (Exception e) {
@@ -277,50 +277,93 @@ public class MyMenuHanqController {
 	 * @param request
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/myDingZhiInit")
 	@ResponseBody
 	public Result myDingZhiInit(HttpServletRequest request) {
-
-		Result result = Result.failure();
-		result.setMsg("请求失败");
-		Map<String, Object> map=new HashMap<>();
- 		try {
- 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA,
- 					Result.class);
- 			if (redate.getCode() == RedisConstants.SUCCESS) {
-				log.debug("查询redis分类成功执行");
-				result=redate.getResult();
-			} else {
-					log.debug("查询redis分类执行失败");
-					map=hangqAreaService.getHangqParamDate("all", map);
-					result.setSuccess(true);
-			 		result.setMsg("请求成功");
-			 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			 		result.setObj(map);
-			 		
-			 		RedisUtils.get(HANGQ_DATA, Result.class);
-					RedisResult<String> rrt;
-					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA, result,
-						Long.valueOf(3600*24));
-					if (rrt.getCode() == RedisConstants.SUCCESS) {
-						log.debug("行情分类保存到redis成功执行");
-					} else {
-						log.debug("行情分类保存到redis失败");
-					}
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
 			}
- 			if(result.getSuccess()) {
- 				Map<String, Object> map1=(Map<String, Object>) result.getObj();
- 				result.setObj(map1.get("cata"));
- 			}
- 			
+			result=myMenuHangqService.myDingZhi(upi, request, result);
 		} catch (Exception e) {
-			result.setSuccess(false);
+			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
-			result.setMsg("系统错误！");
-			result.setObj(map);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
 		}
- 		
+		
 		return result;
 	}
+	
+	
+	/**
+	 * 我的定制是否推送
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/myDingZhiIsPush")
+	@ResponseBody
+	public Result myDingZhiIsPush(HttpServletRequest request,
+			@RequestParam(defaultValue="0",name="id")int id,
+			@RequestParam(defaultValue="true",name="ispush")boolean ispush) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.myDingZhiIsPush(upi, request, result, ispush, id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * 我的定制添加
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/myDingZhiSubmit")
+	@ResponseBody
+	public Result myDingZhiSubmit(HttpServletRequest request,
+			@RequestParam(defaultValue="",name="areaids")String areaids,
+			@RequestParam(defaultValue="",name="category")String category,
+			@RequestParam(defaultValue="",name="pushMethod")String pushMethod) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.myDingZhiSubmit(upi, request, result, areaids, category, pushMethod);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
+	
+	
+	
+	
+	
+	
 }

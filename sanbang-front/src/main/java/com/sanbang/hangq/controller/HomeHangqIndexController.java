@@ -22,10 +22,8 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_ezssubstance;
-import com.sanbang.cata.service.CataService;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
-import com.sanbang.dict.service.DictService;
 import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
@@ -101,7 +99,7 @@ public class HomeHangqIndexController {
 			 		
 			 		RedisUtils.get(HANGQ_DATA, Result.class);
 					RedisResult<String> rrt;
-					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA, result,
+					rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA+reqtype, result,
 						Long.valueOf(3600*24));
 					if (rrt.getCode() == RedisConstants.SUCCESS) {
 						log.debug("行情分类保存到redis成功执行");
@@ -146,7 +144,6 @@ public class HomeHangqIndexController {
 	 * @param response
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getHangqHomeMess")
 	@ResponseBody
 	public Result getHangqHomeMess(HttpServletRequest request,HttpServletResponse response,
@@ -348,6 +345,7 @@ public class HomeHangqIndexController {
 		return glistTemp;
 	}
 	//再生料-实时报价
+	@SuppressWarnings("unchecked")
 	public List<PriceTrendIfo> getPriceInTime(String kindId){
 		List<PriceTrendIfo> plist = new ArrayList<>();
 		Map<String, Object> mmp = this.priceConditionService.priceInTimeNew(Long.valueOf(kindId));
@@ -359,6 +357,7 @@ public class HomeHangqIndexController {
 	}
 	
 	//新料-实时报价
+	@SuppressWarnings("unchecked")
 	public List<PriceTrendIfo> getPriceInTimeNew(String kindId){
 		List<PriceTrendIfo> plist = new ArrayList<>();
 		Map<String, Object> mmp = this.priceConditionService.priceInTimeNew2(Long.valueOf(kindId));
@@ -509,6 +508,7 @@ public class HomeHangqIndexController {
 		return rs;
 	}
 	//获取areaId的所有子标签（包含本标签）
+	@SuppressWarnings("unchecked")
 	public List<Long> getAllChildrenAreaIDs(Long areaId){
 		//获取相关地址ID
 		List<Long> areaIdsList = new ArrayList<>();
@@ -546,6 +546,7 @@ public class HomeHangqIndexController {
 	 * @param dateBetweenType 展示区间：一周 WEEK、一月 MONTH、一季度 QUARTER、一年 YEAR
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/priceInTimeDetail")
 	@ResponseBody
 	public Object priceInTimeDetail(HttpServletRequest request,HttpServletResponse response,

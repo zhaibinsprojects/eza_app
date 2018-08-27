@@ -19,7 +19,7 @@ public class ezs_customizedhq {
 
     private Boolean isPush;//是否推送
 
-    private String pushMethod;//推送方式
+    private String pushMethod;//推送方式  0 邮件 1 短信  2 app
 
     private String title;//栏目
 

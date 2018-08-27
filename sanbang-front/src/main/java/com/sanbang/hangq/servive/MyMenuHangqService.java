@@ -69,5 +69,31 @@ public interface MyMenuHangqService {
 	public Result  myDingYueAdd(HttpServletRequest request,ezs_user upi,String cycle,BigDecimal payment,String subtotal,int isall,Result result);
 	
 	
+	/**
+	 * 我的订阅详情
+	 * @param upi
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	public  Result myDingZhi(ezs_user upi,HttpServletRequest request,Result result);
 	
+	/**
+	 * 我的定制是否推送
+	 * @param upi
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	public  Result myDingZhiIsPush(ezs_user upi,HttpServletRequest request,Result result,boolean isPush,long id);
+	
+	
+	/**
+	 * 我的定制提交
+	 * @param upi
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	public  Result myDingZhiSubmit(ezs_user upi,HttpServletRequest request,Result result, String areaids,String category,String pushMethod);
 }

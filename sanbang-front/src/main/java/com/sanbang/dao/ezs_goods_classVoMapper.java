@@ -47,4 +47,11 @@ public interface ezs_goods_classVoMapper {
      * @return
      */
     List<ezs_Dzgoods_classVo>  getClassNamesByclasses(@Param("category")String category);
+    
+    /**
+     * 得到父级品类
+     * @param category
+     * @return
+     */
+    List<ezs_Dzgoods_classVo>  getParentNamesByClassIds(@Param("category")String category);
 }

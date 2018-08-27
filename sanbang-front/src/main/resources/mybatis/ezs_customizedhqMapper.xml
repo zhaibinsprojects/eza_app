@@ -203,7 +203,7 @@
 		A.category,
 		A.deleteStatus,
 		A.isPush,
-	   CONCAT(IF(LOCATE("0",A.pushMethod)>0,"邮件","")," ",IF(LOCATE("2",A.pushMethod)>0,"短信","")," " ,IF(LOCATE("2",A.pushMethod)>0,"APP推送","")) pushMethod,
+	   CONCAT(IF(LOCATE("0",A.pushMethod)>0,"邮件","")," ",IF(LOCATE("1",A.pushMethod)>0,"短信","")," " ,IF(LOCATE("2",A.pushMethod)>0,"APP推送","")) pushMethod,
 		A.user_id
 		FROM
 			ezs_customizedhq A
@@ -222,6 +222,47 @@
 			A.user_id = #{userid}
 		AND A.deleteStatus = 0
 		AND A.isPush = #{ispush}
+  </select>
+  
+  
+  <resultMap id="DingZhiCataInitResultMap" type="com.sanbang.vo.hangq.CataData" >
+     <id column="id" property="id" jdbcType="BIGINT" />
+     <result column="name" property="name" jdbcType="VARCHAR" />
+     <collection property="children"  javaType="ArrayList"  select="getDingYueOwenCata"
+                column="{parent_id=id,userid=userid}" ofType="map" ></collection>
+  </resultMap>
+  
+  <!-- 用户定制品类 -->
+  <select id="getDingYueOwenCata" resultType="map">
+	 SELECT
+		B.id,
+		B.`name`,
+		B.parent_id 
+	FROM
+		ezs_subscribehq_child A
+	LEFT JOIN ezs_goods_class B ON A.goodsClass_id = B.id
+	WHERE
+		A.user_id = #{userid}
+		and B.parent_id=#{parent_id}
+	AND A.endTime > NOW()
+ </select>
+ 
+  <select id="getDingZhiCataInitData" resultMap="DingZhiCataInitResultMap">
+	(SELECT A.id,A.`name`,B.userid  FROM ezs_goods_class A ,(SELECT #{userid} AS userid ) B  WHERE A.display=0 AND A.`level`=2)  
+			UNION
+	(SELECT A.id,A.`name`,B.userid  FROM ezs_goods_class A ,(SELECT #{userid} AS userid ) B   WHERE A.display=1 AND A.`level`=1) 
+  </select>
+  
+  <!--用户推送分类 -->
+  <select id="getHangqUserPushClasses"  resultType="String">
+	  SELECT
+		GROUP_CONCAT(B.id)
+	FROM
+		ezs_subscribehq_child A
+	LEFT JOIN ezs_goods_class B ON A.goodsClass_id = B.id
+	WHERE
+		A.user_id = #{userid}
+	AND A.endTime > NOW()
   </select>
   
 </mapper>

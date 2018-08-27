@@ -1010,8 +1010,8 @@ public class GoodsServiceImpl implements GoodsService{
 	    pri.setPrice_type(1);
         pri.setRegion_id(goods.getArea_id());
         pri.setGoodClass_id(getRootOfTheGoodClass(goods.getGoodClass_id()));//一级分类
-        pri.setGoodClass1_id(getSecondGoodClass(goods.getGoodClass_id()));//二级分类ID
-        pri.setGoodClass2_id(goods.getGoodClass_id());//三级品类id
+//        pri.setGoodClass1_id(getSecondGoodClass(goods.getGoodClass_id()));//二级分类ID
+//        pri.setGoodClass2_id(goods.getGoodClass_id());//三级品类id
         pri.setPrice(goodCart.getPrice().doubleValue());  //单价/元
         pri.setColor_id(goods.getColor_id());
         pri.setForm_id(goods.getForm_id());
@@ -1026,7 +1026,7 @@ public class GoodsServiceImpl implements GoodsService{
         pri.setBending(goods.getBending());// 弯曲强度	
         pri.setFlexural(goods.getFlexural());// 弯曲模量	 
         pri.setBurning(goods.getBurning());// 燃烧等级
-        pri.setProtection(goods.getProtection());  //环保
+//        pri.setProtection(goods.getProtection());  //环保
         pri.setData_time(new Date());
         pri.setStatus(2);
         pri.setAddTime(new Date());
