@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -941,10 +942,10 @@ public class Tools {
 			return result;
 		}
 		
-		public static void main(String[] args) {
+		/*public static void main(String[] args) {
 			System.out.println(Tools.isNum(""));
 			
-		}
+		}*/
 		
 		/**
 		 * 产生订单序列号
@@ -1012,11 +1013,38 @@ public class Tools {
 		 */
 		public static boolean HangqValidate(ezs_user upi,long cataid) {
 			boolean istrue=false;
-			if((StringUtil.isNotEmpty(upi.getHqpushstr())&&upi.getHqpushstr().indexOf(String.valueOf(cataid))>0)||
-					(HANGQ_PASS.indexOf(String.valueOf(cataid))>0)) {
-				istrue=true;
+			
+			if(HANGQ_PASS.indexOf(String.valueOf(cataid))>0) {
+				return true;
 			}
+			if((StringUtil.isNotEmpty(upi.getHqpushstr())&&upi.getHqpushstr().indexOf(String.valueOf(cataid))>0)) {
+				istrue=true;
+			}else {
+				if(null!=upi.getHqtrytime()) {
+					Calendar calendar = Calendar.getInstance();
+					 Date today = upi.getHqtrytime();
+					calendar.setTime(today);
+			        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 7);
+			        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			        String result = format.format(today);
+					if(calendar.getTime().after(new Date())) {
+						istrue=true;
+					}
+				}
+			} 
+			
+			
 			return istrue;
+		}
+		
+		public static void main(String[] args) {
+			Calendar c = Calendar.getInstance();  
+            c.setTime(new Date());  
+            c.add(Calendar.MONTH, 7);  
+	        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	        String result = format.format(c.getTime());
+
+		    System.out.println(result);
 		}
 		
 }

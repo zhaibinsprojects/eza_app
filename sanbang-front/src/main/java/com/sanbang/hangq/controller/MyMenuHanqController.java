@@ -407,4 +407,62 @@ public class MyMenuHanqController {
 		return result;
 	}
 	
+	
+	/**
+	 * pay pic
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getDingyuePayPic")
+	@ResponseBody
+	public  Result getDingyuePayPic(@RequestParam("id") long id,
+			HttpServletRequest request) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.getDingyuePayPic(request, upi, id, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * 提交订阅订单
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/myDingYueTryAdd")
+	@ResponseBody
+	public Result myDingYueAdd(HttpServletRequest request) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.myDingYueTryAdd(request, upi, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
 }

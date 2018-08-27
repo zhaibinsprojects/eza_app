@@ -241,6 +241,7 @@
           <association property="ezs_bill" column="id" select="com.sanbang.dao.ezs_billMapper.selectByPrimaryKey">
          </association>
          <association property="hqpushstr" column="id" select="com.sanbang.dao.ezs_customizedhqMapper.getHangqUserPushClasses"></association>
+         <association property="hqtrytime" column="id" select="com.sanbang.dao.ezs_subscribehqMapper.getDingYueTryAddTimeStatusByUserid"></association>
          <!--资质-->
          <collection property="authimg" column="store_id" select="com.sanbang.dao.ezs_accessoryMapper.getAuthImgListByStoreid" ></collection>
  		

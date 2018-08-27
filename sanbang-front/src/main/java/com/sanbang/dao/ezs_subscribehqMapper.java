@@ -1,6 +1,7 @@
 
 package com.sanbang.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public interface ezs_subscribehqMapper {
      * @param userid
      * @return
      */
-    List<ezs_subscribehq> getDingyueRecoudList(@Param("userid")long userid,
+    List<ezs_subscribehq> getDingyueRecoudList(@Param("userid")long userid,@Param("subtype")int subtype,
      		@Param("pageCount")int pageCount,@Param("pageSize")long pageSize);
     
      int getDingyueRecoudCount(@Param("userid")long userid);
@@ -42,6 +43,13 @@ public interface ezs_subscribehqMapper {
      Map<String, Object> getDingYueTryStatusByUserid(long userid);
      
      Map<String, Object> getDingYueBuyStatusByUserid(long userid);
+     
+     /**
+      * 订阅时间
+      * @param userid
+      * @return
+      */
+     Date getDingYueTryAddTimeStatusByUserid(long id);
      
      
      

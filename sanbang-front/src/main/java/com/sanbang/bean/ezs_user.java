@@ -69,6 +69,8 @@ public class ezs_user implements Serializable {
 	private boolean authorfilestate;// 授权文件完成情况
 	
 	private String hqpushstr;//行情查看权限分类
+	
+	private Date hqtrytime;
 
 	public Long getId() {
 		return id;
@@ -271,6 +273,14 @@ public class ezs_user implements Serializable {
 		this.hqpushstr = hqpushstr;
 	}
 
+	public Date getHqtrytime() {
+		return hqtrytime;
+	}
+
+	public void setHqtrytime(Date hqtrytime) {
+		this.hqtrytime = hqtrytime;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_user [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", lastLoginDate="
@@ -280,9 +290,7 @@ public class ezs_user implements Serializable {
 				+ ", userInfo_id=" + userInfo_id + ", userkey=" + userkey + ", authkey=" + authkey + ", isAvatar="
 				+ isAvatar + ", ezs_userinfo=" + ezs_userinfo + ", ezs_store=" + ezs_store + ", ezs_bill=" + ezs_bill
 				+ ", authimg=" + authimg + ", authimgstate=" + authimgstate + ", authorfilestate=" + authorfilestate
-				+ ", hqpushstr=" + hqpushstr + "]";
+				+ ", hqpushstr=" + hqpushstr + ", hqtrytime=" + hqtrytime + "]";
 	}
-
-	
 
 }

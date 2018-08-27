@@ -72,7 +72,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 	
 	@Override
 	public Result myDingyueListShow(ezs_user upi, HttpServletRequest request, Result result,int pageNo) {
-		List<ezs_subscribehq> list=ezs_subscribehqMapper.getDingyueRecoudList(upi.getId(),(pageNo<0?0:pageNo-1)*10,10);
+		List<ezs_subscribehq> list=ezs_subscribehqMapper.getDingyueRecoudList(upi.getId(),1,(pageNo<0?0:pageNo-1)*10,10);
 		int count=ezs_subscribehqMapper.getDingyueRecoudCount(upi.getId());
 		Map<String, Object> map=new HashMap<>();
 		map.put("dylist", list);
@@ -132,7 +132,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 				map.put("opentime", DateUtils.getFormattedString(subscribehq.getAddTime(), "yyyy-MM-dd"));
 				Calendar c=Calendar.getInstance();
 				c.setTime(subscribehq.getAddTime());
-				c.add(Integer.valueOf(subscribehq.getCycle()),Calendar.MONTH);
+				c.add(Calendar.MONTH,Integer.valueOf(subscribehq.getCycle()));
 				
 				map.put("timecycle", "预计服务有效时间为"+DateUtils.getFormattedString(new Date(), "yyyy-MM-dd")+"-"
 				+DateUtils.getFormattedString(c.getTime(), "yyyy-MM-dd"));
@@ -168,7 +168,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 					map.put("opentime", DateUtils.getFormattedString(new Date(), "yyyy-MM-dd"));
 					Calendar c=Calendar.getInstance();
 					c.setTime(new Date());
-					c.add(Integer.valueOf(subscribehq.getCycle()),Calendar.MONTH);
+					c.add(Calendar.MONTH,Integer.valueOf(subscribehq.getCycle()));
 					map.put("timecycle", "预计服务有效时间为"+DateUtils.getFormattedString(new Date(), "yyyy-MM-dd")+"-"
 					+DateUtils.getFormattedString(c.getTime(), "yyyy-MM-dd"));
 					map.put("openmode", 2);
@@ -179,7 +179,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 				map.put("opentime", subscribehq.getCycle()+"个月");
 				Calendar c=Calendar.getInstance();
 				c.setTime(new Date());
-				c.add(Integer.valueOf(subscribehq.getCycle()),Calendar.MONTH);
+				c.add(Calendar.MONTH,Integer.valueOf(subscribehq.getCycle()));
 				map.put("timecycle", "预计服务有效时间为"+DateUtils.getFormattedString(new Date(), "yyyy-MM-dd")+"-"
 						+DateUtils.getFormattedString(c.getTime(), "yyyy-MM-dd"));
 						map.put("openmode", 2);
@@ -687,9 +687,9 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 		try {
 			Map<String, Object> map=ezs_subscribehqMapper.getDingYueTryStatusByUserid(upi.getId());
 			Map<String, Object> map1=ezs_subscribehqMapper.getDingYueBuyStatusByUserid(upi.getId());
-			String id=String.valueOf(map.get("id"));
-			String addtime=String.valueOf(map.get("addTime"));
-			String count=String.valueOf(map1.get("count"));
+			String id=map==null?"":String.valueOf(map.get("id"));
+			String addtime=map==null?"":String.valueOf(map.get("addTime"));
+			String count=map1==null?"":String.valueOf(map1.get("count"));
 			
 			if(StringUtil.isNotEmpty(count)) {
 				if(Long.valueOf(count)>0) {
@@ -715,6 +715,100 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
  		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
  		result.setObj(resmap);
 		
+		return result;
+	}
+
+	@Override
+	public Result getDingyuePayPic(HttpServletRequest request, ezs_user upi, long id, Result result) {
+		try {
+			Map<String, Object> map=new HashMap<>();
+			ezs_subscribehq  recoed=ezs_subscribehqMapper.selectByPrimaryKey(id);
+			if(null==recoed) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("订阅记录不存在");
+				result.setObj(map);
+				return result;
+			}
+			ezs_memberorder order =ezs_memberorderMapper.selectByPrimaryKey(recoed.getOrder_id());
+			
+			
+			if(null==order) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("支付记录不存在");
+				result.setObj(map);
+				return result;
+			}
+			map.put("imgurl", order.getVoucher());
+			result.setSuccess(true);
+	 		result.setMsg("请求成功");
+	 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+	 		result.setObj(map);
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Result myDingYueTryAdd(HttpServletRequest request, ezs_user upi, Result result) {
+		
+		try {
+			List<ezs_subscribehq> list=ezs_subscribehqMapper.getDingyueRecoudList(upi.getId(),0,(1<0?0:1-1)*10,10);
+			if(list.size()>0) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("您已试用过本产品！");
+				return result;
+			}
+			
+			ezs_memberorder	order=new ezs_memberorder();
+			order.setAddTime(new Date());
+			order.setCreditUsed(Integer.valueOf(String.valueOf(upi.getId())));
+			order.setDeleteStatus(false);
+			order.setMemberType("价格行情");
+			order.setOpenStatu(0);
+			order.setOperator(upi.getTrueName());
+			order.setOrder_no(Tools.getHangqOrderNO());
+			order.setOrderSource("APP");
+			order.setPayAmount(new BigDecimal(0));
+			order.setPayMode(1);
+			order.setPayState(0);
+			order.setStartTime(new Date());
+			order.setStore_id(upi.getStore_id());
+			order.setVoucher("");
+			
+		     ezs_memberorderMapper.insertSelective(order);
+		
+			ezs_subscribehq recoed=new ezs_subscribehq();
+			recoed.setAddTime(new Date());
+			recoed.setCreditUserd(Integer.valueOf(String.valueOf(upi.getId())));
+			recoed.setCycle("7");
+			recoed.setDeleteStatus(false);
+			recoed.setOpenmode(0);
+			recoed.setPayment(new BigDecimal(0));
+			recoed.setPaymode(1);
+			recoed.setStore_id(upi.getStore_id());
+			recoed.setSubtotal("0");
+			recoed.setSubType(0);
+			recoed.setTotalMoney(new BigDecimal(0));
+			recoed.setUser_id(upi.getId());
+			recoed.setOrder_id(order.getId());
+			ezs_subscribehqMapper.insertSelective(recoed);
+			
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("申请试用成功！");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
 		return result;
 	}
 	
