@@ -106,6 +106,27 @@ public interface MyMenuHangqService {
 	 */
 	public Result HangqPushData(long dzid,Result result);
 	
-	
+	/**
+	 * 查看试用状态
+	 * @param upi
+	 * @param request
+	 * @param result
+	 * @return
+	 */
 	public Result getDingYueStatusByUserid(ezs_user upi,HttpServletRequest request,Result result);
+	
+	/**
+	 * 订阅支付凭证
+	 * @param request
+	 * @param upi
+	 * @param id
+	 * @param urlParam
+	 * @param result
+	 * @return
+	 */
+	public  Result getDingyuePayPic(HttpServletRequest request,ezs_user upi,long id,Result result);
+	
+	
+	
+	public Result myDingYueTryAdd(HttpServletRequest request, ezs_user upi, Result result);
 }

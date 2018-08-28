@@ -247,7 +247,8 @@
 	INNER  JOIN ezs_memberorder B ON A.order_id=B.id
 	WHERE
 		A.user_id = #{userid}
-		
+		and  A.subType=#{subtype}
+ 		
 		limit #{pageCount},#{pageSize}
   </select>
   
@@ -275,7 +276,7 @@
 		AND D.user_id = #{userid}
  </select>
   
-   <select id="getDingYueBuyStatusByUserid" resultType="map">
+  <select id="getDingYueBuyStatusByUserid" resultType="map">
 	SELECT
 			COUNT(B.id) count
 		FROM
@@ -283,6 +284,19 @@
 		WHERE
 			B.subType = 1
 		AND B.user_id =  #{userid}
+ </select>
+ 
+ 
+ <select id="getDingYueTryAddTimeStatusByUserid" resultType="date">
+	SELECT
+			B.addTime hqtrytime
+		FROM
+			ezs_subscribehq B
+		WHERE
+			B.subType = 1
+		AND B.user_id =  #{id}
+
+	LIMIT 1
  </select>
   
 </mapper>
