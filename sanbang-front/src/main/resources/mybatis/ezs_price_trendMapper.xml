@@ -739,8 +739,8 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice,
-	IFNULL((select 1 from ezs_subscribehq_child cd where cd.user_id = #{userId} and cd.goodsClass_id = a.goodClass2_id and DATE_FORMAT(cd.endTime,'%Y-%m-%d') >= DATE_FORMAT(NOW(),'%Y-%m-%d')),0) isshow
+	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
+	<!-- ,IFNULL((select 1 from ezs_subscribehq_child cd where cd.user_id = #{userId} and cd.goodsClass_id = a.goodClass2_id and DATE_FORMAT(cd.endTime,'%Y-%m-%d') >= DATE_FORMAT(NOW(),'%Y-%m-%d')),0) isshow -->
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
@@ -800,7 +800,8 @@
     <result column="dealDate" property="dealDate" jdbcType="TIMESTAMP" />
     <result column="className" property="goodClassName" jdbcType="VARCHAR" />
     <result column="areaId" property="region_id" jdbcType="VARCHAR" />
-    <result column="isshow" property="isshow" jdbcType="VARCHAR" />
+    <!-- <result column="isshow" property="isshow" jdbcType="VARCHAR" /> -->
+    <result column="goodClass" property="trueGoodClassId" jdbcType="VARCHAR" />
   </resultMap>
   <!-- 价格走势 新 -->
   <resultMap id="PriceTrendcyNewResultMap" type="com.sanbang.vo.PriceTrendIfo" >

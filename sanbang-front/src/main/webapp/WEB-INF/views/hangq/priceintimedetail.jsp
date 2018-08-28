@@ -24,11 +24,11 @@
 </head>
 <body>
 <div class="content_yzs">
-  <header class="ezsm-collection-top">
+  <!-- <header class="ezsm-collection-top">
     <div><a class="aicon_yzs" href="#"></a></div>
-    <!-- <div>实时报价图表</div> -->
+    <div>实时报价图表</div>
     <div></div>
-  </header>
+  </header> -->
   <section class="echarts_inmgui">
   	<div class="section_roptab">
   		<ul>
@@ -59,7 +59,7 @@
   	</table>
   </section> -->
 </div>
-	  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:75%;">
+	  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:65%;">
     <div class="mui-scroll"> 
     <section class="secNeiron mui-table-view mui-table-view-chevron">
 	<div class="cont">

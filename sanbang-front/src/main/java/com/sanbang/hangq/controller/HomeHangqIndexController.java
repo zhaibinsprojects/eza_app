@@ -206,7 +206,7 @@ public class HomeHangqIndexController {
 			zspitvoList.add(pitvo);
 		}
 		zsGoodClassType.setClassId(Long.valueOf(1));
-		zsGoodClassType.setClassName("再生类塑料");
+		zsGoodClassType.setClassName("再生塑料");
 		zsGoodClassType.setDate(new Date());
 		zsGoodClassType.setPriceInTimeList(zspitvoList);
 		baojia.add(zsGoodClassType);
@@ -463,20 +463,16 @@ public class HomeHangqIndexController {
 		Map<String, Object> resultMap = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		//订购校验
-		if(null==upi){
+		/*if(null==upi){
 			List<PriceTrendIfo> resultListT = new ArrayList<>();
 			rs = Result.failure();
 			rs.setObj(resultListT);
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			rs.setMsg("用户未登录，不可查看");
 			return rs;
-		}
-		//权限校验
-		//boolean showFlag = Tools.HangqValidate(upi, Long.valueOf(goodClassId));
+		}*/
 		//参数传递
 		Map<String, Object> tMp = new HashMap<>();
-		//tMp.put("userId", "561");/*用户ID*/
-		tMp.put("userId", upi.getId());/*用户ID*/
 		if(colorId!=null)
 			tMp.put("colorId", colorId);/*可传多个 ， 号隔开*/
 		if(formId!=null)
@@ -512,8 +508,21 @@ public class HomeHangqIndexController {
 		List<PriceTrendIfo> resultList = new ArrayList<>();
 		Integer ErrorCode = (Integer)resultMap.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> returnList = new ArrayList<>();
 			resultList = (List<PriceTrendIfo>)resultMap.get("Obj");
-			rs.setObj(resultList);
+			for (PriceTrendIfo priceTrendIfo : resultList) {
+				try{
+					boolean showFlag = Tools.HangqValidate(upi,priceTrendIfo.getTrueGoodClassId());
+					if(showFlag)
+						priceTrendIfo.setIsshow(1);
+					else
+						priceTrendIfo.setIsshow(0);
+				}catch(Exception e){
+					priceTrendIfo.setIsshow(0);
+				}
+				returnList.add(priceTrendIfo);
+			}
+			rs.setObj(returnList);
 		}else{
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			rs.setObj(resultList);
