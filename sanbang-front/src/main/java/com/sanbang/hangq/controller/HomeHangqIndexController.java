@@ -639,11 +639,76 @@ public class HomeHangqIndexController {
 		//Collections.reverse(plist);
 		return plist;
 	}
-	//价格行情详情页面
-	@RequestMapping(value="/priceAnalyDetail")
-	public String priceAnalyDetail(){
+	
+	//跳转至价格走势详情页面（详情页面通过js加载数据）
+	@RequestMapping(value="/priceTrendDetailTurn")
+	public String priceTrendDetailTurn(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="goodClassId",required=true)String goodClassId,
+			@RequestParam(name="areaId",required=false)String areaId,
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType,Model model){
+		//获取token验证用户权限，符合-返回相关标志位
+		model.addAttribute("showFlag", "1");//00-未购、不在试用期（未试用），01-未购、在试用期，02-未购、不在试用期（已试用）；10 已购
+		model.addAttribute("dateBetweenType", dateBetweenType);
+		model.addAttribute("goodClassId", goodClassId);
+		model.addAttribute("areaId", areaId);
+		model.addAttribute("colorId", colorId);
+		model.addAttribute("formId", formId);
 		
-		return "";
+		return view+"pricetrenddetail";
+	}
+	
+	//价格走势详情页面
+	@RequestMapping(value="/priceTrendDetail")
+	@ResponseBody
+	public Object priceTrendDetail(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="goodClassId",required=true)String goodClassId,
+			@RequestParam(name="areaId",required=false)String areaId,
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		Map<String, Object> tMap = new HashMap<>();
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> ppList = new ArrayList<>();
+		tMap.put("kindId", goodClassId);
+		tMap.put("areaId", areaId);
+		tMap.put("colorId", colorId);
+		tMap.put("formId", formId);
+		tMap.put("dateBetweenType", dateBetweenType);
+		mmp = this.priceConditionService.getPriceTrendcyNew(tMap, 0, 20);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+		}
+		Collections.reverse(ppList);
+		return ppList;
+	}
+	//价格走势详情页面-分页加载更多
+	@RequestMapping(value="/priceTrendDetailPage")
+	@ResponseBody
+	public Object priceTrendDetailPage(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="goodClassId",required=true)String goodClassId,
+			@RequestParam(name="areaId",required=false)String areaId,
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId,
+			@RequestParam(name="currentPage",required=false,defaultValue="1") int currentPage,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		Map<String, Object> tMap = new HashMap<>();
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> ppList = new ArrayList<>();
+		tMap.put("kindId", goodClassId);
+		tMap.put("areaId", areaId);
+		tMap.put("colorId", colorId);
+		tMap.put("formId", formId);
+		tMap.put("currentPage", currentPage);
+		tMap.put("dateBetweenType", dateBetweenType);
+		mmp = this.priceConditionService.getPriceTrendcyNewPage(tMap,currentPage,20);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+		}
+		return ppList;
 	}
 	
 }

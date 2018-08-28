@@ -1,74 +1,3 @@
-function echartInit(xdata,name,mydata){
-	Highcharts.chart('container', {
-	        chart: {
-	            zoomType: 'x'
-	        },
-	        title: {
-	            text: ''
-	        },
-	        subtitle: {
-	            text: ''
-	        },
-			colors: ['#4cd4c8'],
-	        xAxis: {
-	        	 tickInterval: 8,
-	        categories: xdata
-	    },
-			credits: {
-	          enabled:false
-	},
-	       exporting: {
-	            enabled:false
-	},
-	        yAxis: {
-	        	allowDecimals:false,//tickPositions: [0, 5, 10, 15,20,25,30],
-	        	title: {
-	            	text: ''
-	        	}
-	    	},
-	        legend: {
-	            enabled: false
-	        },
-			
-	        plotOptions: {
-	            area: {
-	                fillColor: {
-	                    linearGradient: {
-	                        x1: 0,
-	                        y1: 0,
-	                        x2: 0,
-	                        y2: 1
-	                    },
-	                    stops: [
-	                        [0, '#4cd4c8'],
-	                        [1, Highcharts.Color('#4cd4c8').setOpacity(0).get('rgba')]
-	                    ]
-	                },
-	                marker: {
-	                    radius: 1,
-						lineWidth: 1,
-						fillColor: '#fff',//点填充色
-						lineColor: '#4cd4c8',//点边框色
-	                },
-	                lineWidth: 1,
-					
-	                states: {
-	                    hover: {
-	                        lineWidth: 1
-	                    }
-	                },
-	                threshold: null
-	            }
-	        },
-	        series: [{
-				type: 'area',
-		        name: name,
-		        data: mydata,
-		        lineWidth:1
-	    }]
-	    });
-};
-
 var myChart = echarts.init(document.getElementById('mainAll'));
 myChart.setOption({
 	title : {
@@ -126,10 +55,9 @@ var numo = [];
 var classname = "";
 $.ajax({
     type: 'post',
-    url: 'front/app/hangq/priceInTimeDetail.htm',
+    url: 'front/app/hangq/priceTrendDetail.htm',
     data:{
-    	"type":$("input[name=type]").val(),
-    	"priceId":$("input[name=priceId]").val()
+    	"goodClassId":$("input[name=goodClassId]").val()
     },
     dataType: "json",
     success: function (result) {
@@ -137,7 +65,7 @@ $.ajax({
     	$("input[name=pagecount]").val(Math.ceil(result.length/20));
        $.each(result, function (index, item) {
             namey.push(item.dealDate);     
-            numo.push(item.currentPrice);
+            numo.push(item.currentAVGPrice);
             classname = item.goodClassName;
         });
         myChart.hideLoading();
@@ -156,13 +84,9 @@ $.ajax({
             }
             ]
         });
-	    /*var xdata =result.dealDate;
-	   	var data = result.currentPrice;
-	   	var name=result.goodClassName;
-    	echartInit(xdata, name, data);*/
         //初始化填充数据列表数据列表
         //initTable(result);
-        showdataByPage(type,$("input[name=priceId]").val(),"WEEK",1);
+        showdataByPage($("input[name=goodClassId]").val(),"WEEK",1);
     },
     error: function (errorMsg) {
         //alert("图表数据请求失败!");
@@ -178,11 +102,11 @@ function initTable(plist){
 	for(var i=0;i<plist.length;i++){
 		html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
 			"<td><span>"+plist[i].goodArea+"</span></td>"+
-			"<td><span class='colrRed'>￥"+plist[i].currentPrice+"</span></td>";
+			"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
 		
-		if(plist[i].currentPrice > plist[i].prePrice){			
+		if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
 			html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
-		}else if(plist[i].currentPrice < plist[i].prePrice){
+		}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
 			html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
 		}else {
 			html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
@@ -201,19 +125,18 @@ $(document).ready(function(){
 		$("input[name=channelchanged]").val("1");
 		//获取选定月份
 		//加载则线图数据
-		showdatas(type,priceId,$(this).attr("name"));
+		showdatas(goodClassId,$(this).attr("name"));
 		//加载表格数据列表，默认加载首页
-		showdataByPage(type,priceId,$(this).attr("name"),1);
+		showdataByPage(goodClassId,$(this).attr("name"),1);
 		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
 	});
 })
-function showdatas(type,priceId,dateBetweenType){
+function showdatas(goodClassId,dateBetweenType){
 	$.ajax({
 	    type: 'post',
-	    url: 'front/app/hangq/priceInTimeDetail.htm',
+	    url: 'front/app/hangq/priceTrendDetail.htm',
 	    data:{
-	    	"type":type,
-	    	"priceId":priceId,
+	    	"goodClassId":goodClassId,
 	    	"dateBetweenType":dateBetweenType
 	    },
 	    dataType: "json",
@@ -225,7 +148,7 @@ function showdatas(type,priceId,dateBetweenType){
 	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
 	       $.each(result, function (index, item) {
 	            namey.push(item.dealDate);     
-	            numo.push(item.currentPrice);
+	            numo.push(item.currentAVGPrice);
 	            classname = item.goodClassName;
 	        });
 	        myChart.hideLoading();
@@ -254,13 +177,12 @@ function showdatas(type,priceId,dateBetweenType){
 	});
 }
 //实时报价详情列表-分页展示 
-function showdataByPage(type,priceId,dateBetweenType,currentPage){
+function showdataByPage(goodClassId,dateBetweenType,currentPage){
 	$.ajax({
 	    type: 'post',
-	    url: 'front/app/hangq/priceInTimeDetailPage.htm',
+	    url: 'front/app/hangq/priceTrendDetailPage.htm',
 	    data:{
-	    	"type":type,
-	    	"priceId":priceId,
+	    	"goodClassId":goodClassId,
 	    	"dateBetweenType":dateBetweenType,
 	    	"currentPage":currentPage
 	    },

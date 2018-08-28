@@ -37,7 +37,6 @@ $(function() {
 						 getCartNum();
 					 }
 					});
-				
 				 
 			} catch (e) {
 			}
