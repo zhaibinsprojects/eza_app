@@ -99,11 +99,12 @@ function initTable(plist){
 	$("tbody").empty();
 	var html = "";	
 	//plist.length
+	//<td><span><i class="lockyuip"></i></span></td> 权限小锁
 	for(var i=0;i<plist.length;i++){
 		html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
 			"<td><span>"+plist[i].goodArea+"</span></td>"+
-			"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
-		
+			//"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+			"<td><span><i class='lockyuip'></i></span></td>";
 		if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
 			html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
 		}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){

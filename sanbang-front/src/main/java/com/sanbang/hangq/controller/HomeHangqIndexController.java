@@ -671,10 +671,14 @@ public class HomeHangqIndexController {
 		Map<String, Object> tMap = new HashMap<>();
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> ppList = new ArrayList<>();
-		tMap.put("kindId", goodClassId);
-		tMap.put("areaId", areaId);
-		tMap.put("colorId", colorId);
-		tMap.put("formId", formId);
+		if(goodClassId!=null&&!goodClassId.trim().equals(""))
+			tMap.put("kindId", goodClassId);
+		if(areaId!=null&&!areaId.trim().equals(""))
+			tMap.put("areaId", areaId);
+		if(colorId!=null&&!colorId.trim().equals(""))
+			tMap.put("colorId", colorId);
+		if(formId!=null&&!formId.trim().equals(""))
+			tMap.put("formId", formId);
 		tMap.put("dateBetweenType", dateBetweenType);
 		mmp = this.priceConditionService.getPriceTrendcyNew(tMap, 0, 20);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
@@ -697,10 +701,14 @@ public class HomeHangqIndexController {
 		Map<String, Object> tMap = new HashMap<>();
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> ppList = new ArrayList<>();
-		tMap.put("kindId", goodClassId);
-		tMap.put("areaId", areaId);
-		tMap.put("colorId", colorId);
-		tMap.put("formId", formId);
+		if(goodClassId!=null&&!goodClassId.trim().equals(""))
+			tMap.put("kindId", goodClassId);
+		if(areaId!=null&&!areaId.trim().equals(""))
+			tMap.put("areaId", areaId);
+		if(colorId!=null&&!colorId.trim().equals(""))
+			tMap.put("colorId", colorId);
+		if(formId!=null&&!formId.trim().equals(""))
+			tMap.put("formId", formId);
 		tMap.put("currentPage", currentPage);
 		tMap.put("dateBetweenType", dateBetweenType);
 		mmp = this.priceConditionService.getPriceTrendcyNewPage(tMap,currentPage,20);

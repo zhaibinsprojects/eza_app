@@ -34,7 +34,7 @@ li{list-style-type:none;}
 .section_roptab ul li.active{ border-color: #00897c; background-color: #00897c;}
 .section_roptab ul li.active a{ color: #fff;}
 .echartHeight{height: 190px;border-bottom: 1px solid #e5e5e5; position: relative;}
-.graybakhuio{ position: absolute; top: 0; left: 0; width: 100%; height: 190px; background: url(../img/grapbaksuio.jpg) 0 0 no-repeat; background-size:100% 100% ;}
+.graybakhuio{ position: absolute; top: 0; left: 0; width: 100%; height: 190px; background: url(/front/resource/img/price/grapbaksuio.jpg) 0 0 no-repeat; background-size:100% 100% ;}
 .tabFater_tsi{ width: 100%; height: auto; padding-top: 12px;}
 .tabghuioy{height: auto; width: 100%; border-top: 1px solid #e5e5e5;}
 .tabghuioy th{ padding: 4px 0; background-color: #f7f7f7; border-bottom: 1px solid #e5e5e5;}
@@ -43,7 +43,7 @@ li{list-style-type:none;}
 .tabghuioy td{ border-bottom: 1px solid #e5e5e5; padding: 4px 0; background-color: #fff;}
 .tabghuioy td span{display: block; position: relative; text-align: center; border-right: 1px solid #e5e5e5;min-height: 22px; line-height: 22px;font-size: 14px; color: #333;}
 .tabghuioy td:last-child span{border: none;} 
-.lockyuip{display: block; position: absolute; top: 0; left: 0; width: 100%; height: 22px; background: url(../img/locukiop.jpg) center center no-repeat; background-size:22px 22px;}
+.lockyuip{display: block; position: absolute; top: 0; left: 0; width: 100%; height: 22px; background: url(/front/resource/img/price/locukiop.jpg) center center no-repeat; background-size:22px 22px;}
 .tabghuioy td span.colrRed{ color: #ff6700;}
 .tabghuioy td span.colGreen{color: #00897c;}
 /*-------地区筛选------*/
