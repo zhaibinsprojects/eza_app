@@ -174,13 +174,13 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 			
 			//是否支付
 			ezs_memberorder order=subscribehq.getMemberorder();
-			if(null!=order) {
+			if(null!=order&&order.getPayState()==1) {
 				//是否开通
 				if(subscribehq.getMemberorder().getOpenStatu()==1) {
 					//已支付已开通
 					map.put("opentime", DateUtils.getFormattedString(subscribehq.getMemberorder().getStartTime(), "yyyy-MM-dd"));
 					map.put("timecycle", "服务有效时间为"+subscribehq.getMemberorder().getStartTime()+"-"+subscribehq.getMemberorder().getEndTime());
-					map.put("openmode", subscribehq.getOpenmode());
+					map.put("openmode", 1);
 				}else {
 					//已支付未开通
 					map.put("opentime", DateUtils.getFormattedString(new Date(), "yyyy-MM-dd"));
@@ -200,8 +200,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 				c.add(Calendar.MONTH,Integer.valueOf(subscribehq.getCycle()));
 				map.put("timecycle", "预计服务有效时间为"+DateUtils.getFormattedString(new Date(), "yyyy-MM-dd")+"-"
 						+DateUtils.getFormattedString(c.getTime(), "yyyy-MM-dd"));
-						map.put("openmode", 2);
-				map.put("openmode", subscribehq.getOpenmode());
+				map.put("openmode", 0);
 			}
 			
 			List<CataData> list=ezs_customizedhqMapper.getDingZhiCataInitData(upi.getId());

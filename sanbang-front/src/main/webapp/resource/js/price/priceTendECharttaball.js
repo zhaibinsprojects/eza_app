@@ -63,6 +63,7 @@ function initTable(plist){
 		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 	}
 	$("tbody").append(html);
+	doclick();
 }
 
 //选择显示周期：一周、一月、三月、一年

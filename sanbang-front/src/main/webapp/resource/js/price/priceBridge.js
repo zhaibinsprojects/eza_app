@@ -163,7 +163,7 @@ function initTable(plist){
 
 /*点击列表项*/
 function doclick(){
-	$(".lockyuip").click(function(){
+	$(".lockyuip").on('tap',function(){
 		var u = navigator.userAgent; // 获取用户设备
 		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 		if ("" == $("input[name=token]").val()) {
@@ -198,6 +198,7 @@ function iosnologin() {
 };
 /*android订阅*/
 function androidtodingyue() {
+	var data = {}
 	var str = JSON.stringify(data);
 	window.android.androidtodingyue();
 	return false;
