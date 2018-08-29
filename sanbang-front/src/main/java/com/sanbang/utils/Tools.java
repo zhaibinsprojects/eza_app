@@ -13,10 +13,13 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1037,14 +1040,62 @@ public class Tools {
 			return istrue;
 		}
 		
-		public static void main(String[] args) {
-			Calendar c = Calendar.getInstance();  
+		public static String getDatePoor(Date endDate, Date nowDate) {
+			 
+		    long nd = 1000 * 24 * 60 * 60;
+		    long nh = 1000 * 60 * 60;
+		    long nm = 1000 * 60;
+		    long ns = 1000 ;
+		    // long ns = 1000;
+		    // 获得两个时间的毫秒时间差异
+		    long diff = endDate.getTime() - nowDate.getTime();
+		    // 计算差多少天
+		    long day = diff / nd;
+		    // 计算差多少小时
+		    long hour = diff % nd / nh;
+		    // 计算差多少分钟
+		    long min = diff % nd % nh / nm;
+		    // 计算差多少秒//输出结果
+		     //long sec = diff % nd % nh % nm / ns;
+		    return day + "天" + hour + "小时" + min + "分钟";
+		}
+		
+		public static String getDatens(Date endDate, Date nowDate) {
+			 
+		    long nd = 1000 * 24 * 60 * 60;
+		    long nh = 1000 * 60 * 60;
+		    long nm = 1000 * 60;
+		    long ns = 1000 ;
+		    // long ns = 1000;
+		    // 获得两个时间的毫秒时间差异
+		    long diff = endDate.getTime() - nowDate.getTime();
+		    // 计算差多少天
+		    long day = diff / nd;
+		    // 计算差多少小时
+		    long hour = diff % nd / nh;
+		    // 计算差多少分钟
+		    long min = diff % nd % nh / nm;
+		    // 计算差多少秒//输出结果
+		     //long sec = diff % nd % nh % nm / ns;
+		    return String.valueOf(diff/1000);
+		}
+		
+		
+		static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		public static void main(String[] args) throws ParseException {
+			/*Calendar c = Calendar.getInstance();  
             c.setTime(new Date());  
             c.add(Calendar.MONTH, 7);  
 	        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-	        String result = format.format(c.getTime());
-
-		    System.out.println(result);
+	        String result = format.format(c.getTime());*/
+			Date gaa=sdf.parse("2018-08-28 09:36:22".substring(0, 19));
+			Calendar c=Calendar.getInstance();
+			c.setTime(gaa);
+			c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+		    System.out.println(sdf.format(c.getTime()));
 		}
+		
+		
+		
 		
 }

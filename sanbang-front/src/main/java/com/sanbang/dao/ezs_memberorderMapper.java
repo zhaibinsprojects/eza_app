@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sanbang.bean.ezs_memberorder;
 
 public interface ezs_memberorderMapper {
@@ -9,7 +11,7 @@ public interface ezs_memberorderMapper {
 
     int insertSelective(ezs_memberorder record);
 
-    ezs_memberorder selectByPrimaryKey(Long id);
+    ezs_memberorder selectByPrimaryKey(@Param("id")Long id);
 
     int updateByPrimaryKeySelective(ezs_memberorder record);
 

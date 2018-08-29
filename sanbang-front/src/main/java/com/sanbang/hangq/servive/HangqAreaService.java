@@ -15,6 +15,6 @@ public interface HangqAreaService {
 	public Map<String, Object> getHangqParamDate(String reqtype,Map<String, Object> redate);
 	
 	
-	public List<HangqAreaData> getAreaData();
+	public List<Map<String, Object>> getAreaData();
 	
 }

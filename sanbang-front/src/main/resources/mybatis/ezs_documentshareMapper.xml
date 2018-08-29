@@ -168,6 +168,7 @@
 		A.house,
 		A.user_id,
 		B.addTime doctime,
+		A.ezsSubstance_id,
 		IF(ISNULL(B.meta),"",B.meta) title
 		FROM
 		ezs_documentshare A
@@ -175,6 +176,23 @@
 		WHERE
 		A.user_id = #{userid,jdbcType=BIGINT} and NOT isnull(A.ezsSubstance_id)
 		limit #{pageCount},#{pageSize}
+	</select>
+	
+	<!-- 单条记录查询 -->
+	<select id="getSubstanceInfoById" resultMap="HangqResultMap">
+		SELECT
+		A.id,
+		A.give,
+		A.house,
+		A.user_id,
+		B.addTime doctime,
+		A.ezsSubstance_id,
+		IF(ISNULL(B.meta),"",B.meta) title
+		FROM
+		ezs_documentshare A
+		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id
+		WHERE
+		A.user_id = #{userid}  AND B.id=#{docid}
 	</select>
 	
 	<select id="selectHangqCollectionedCountOwen"

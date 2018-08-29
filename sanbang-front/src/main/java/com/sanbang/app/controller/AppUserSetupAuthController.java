@@ -129,7 +129,7 @@ public class AppUserSetupAuthController {
 			map.put("accountType", upi.getEzs_store().getAccountType());
 			result.setObj(map);
 		}
-		JiGuanPushUtils.JiGangPushData("aabbcc", MD5Util.md5Encode(upi.getEzs_userinfo().getPhone()+upi.getId()));
+		//JiGuanPushUtils.JiGangPushData("aabbcc", MD5Util.md5Encode(upi.getEzs_userinfo().getPhone()+upi.getId()));
 		return result;
 	}
 	

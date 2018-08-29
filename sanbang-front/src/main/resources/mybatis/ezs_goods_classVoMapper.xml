@@ -286,7 +286,7 @@
 	A.parent_id,
 	A.`level`
 	FROM
-		(SELECT C.id,C.`name`,C.parent_id,C.`level` FROM ezs_goods_class C WHERE C.id in (#{category})) A 
+		(SELECT C.id,C.`name`,C.parent_id,C.`level` FROM ezs_goods_class C WHERE C.id in (${category})) A 
 	INNER  JOIN ezs_goods_class B ON A.parent_id=B.id
   </select>
   
@@ -341,7 +341,7 @@
 		ezs_goods_class A
 	LEFT JOIN ezs_goods_class B ON A.parent_id = B.id
 	WHERE
-		A.id IN (#{classids})
+		A.id IN (#{category})
 	GROUP BY
 		B.id
   </select>

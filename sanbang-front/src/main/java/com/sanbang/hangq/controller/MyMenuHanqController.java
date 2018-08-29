@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.bean.ezs_column;
+import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.hangq.servive.MyMenuHangqService;
@@ -38,6 +41,8 @@ public class MyMenuHanqController {
 	 * 行情定制数据标识
 	 */
 	private  static final String HANGQ_DATA="DINGZHIINIT001";
+	
+	private static String view="/hangqv2/";
 	
 	
 	/**
@@ -164,7 +169,7 @@ public class MyMenuHanqController {
 	@ResponseBody
 	public Result myDingzhiListShow(HttpServletRequest request,
 			@RequestParam(defaultValue="1",name="pageNo")int pageNo,
-			@RequestParam(defaultValue="true",name="ispush")boolean ispush) {
+			@RequestParam(defaultValue="true",name="isuse")boolean isuse) {
 		Result result=Result.failure();
 		try {
 			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -173,7 +178,7 @@ public class MyMenuHanqController {
 				result.setMsg("用户未登录");
 				return result;
 			}
-			result=myMenuHangqService.myDingzhiListShow(upi, request, result, ispush, pageNo);
+			result=myMenuHangqService.myDingzhiListShow(upi, request, result, isuse, pageNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -309,6 +314,8 @@ public class MyMenuHanqController {
 	public Result myDingZhiIsPush(HttpServletRequest request,
 			@RequestParam(defaultValue="0",name="id")int id,
 			@RequestParam(defaultValue="true",name="ispush")boolean ispush) {
+		
+		log.info("我的定制是否推送请求====》id:"+id+"ispush:"+ispush);
 		Result result=Result.failure();
 		try {
 			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -463,6 +470,111 @@ public class MyMenuHanqController {
 		}
 		
 		return result;
+	}
+	
+	/**
+	  * 订阅提交订单
+	 * @param request   
+	 * @return
+	 */
+	@RequestMapping("/submitOrder")
+	@ResponseBody
+	public Result submitOrder(HttpServletRequest request,
+			@RequestParam(defaultValue="",name="recoedid")int recoedid,
+			@RequestParam(defaultValue="1",name="paymode")int paymode) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.submitOrder(request, upi, recoedid, paymode, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	  * 订阅提交订单
+	 * @param request   
+	 * @return
+	 */
+	@RequestMapping("/getDocStatusForUser")
+	@ResponseBody
+	public Result getDocStatusForUser(HttpServletRequest request,
+			@RequestParam(defaultValue="",name="docid")int docid
+			) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.getDocStatusForUser(request, upi, docid, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	  * 点赞 /收藏
+	  *give;// 文章的状态,0表示初始化，1表示点赞，2表示踩
+	  * house;// 收藏状态 0表示未收藏1收藏
+	 * @param request   
+	 * @return
+	 */
+	@RequestMapping("/doGiveOrHouse")
+	@ResponseBody
+	public Result doGiveOrHouse(HttpServletRequest request,
+			@RequestParam(defaultValue="",name="docid")int docid,
+			@RequestParam(defaultValue="",name="reqtype")String reqtype
+			) {
+		Result result=Result.failure();
+		try {
+			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+			if(upi==null){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				result.setMsg("用户未登录");
+				return result;
+			}
+			result=myMenuHangqService.doGiveOrHouse(request, upi, docid, result, reqtype);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 查看文章详情
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/hangqShow")
+	public String hangqgShow(@RequestParam(name="id",required=true)long id,
+			Model model){
+		myMenuHangqService.hangqgShow(id, model);
+		return view+"infoshow";
 	}
 	
 }

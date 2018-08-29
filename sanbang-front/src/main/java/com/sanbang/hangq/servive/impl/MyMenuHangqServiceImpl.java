@@ -10,24 +10,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
 
+import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customizedhq;
 import com.sanbang.bean.ezs_documentshare;
+import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_memberorder;
 import com.sanbang.bean.ezs_subscribehq;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_customizedhqMapper;
 import com.sanbang.dao.ezs_documentshareMapper;
+import com.sanbang.dao.ezs_ezssubstanceMapper;
 import com.sanbang.dao.ezs_memberorderMapper;
 import com.sanbang.dao.ezs_subscribehqMapper;
+import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.hangq.controller.HomeHangqIndexController;
 import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.hangq.servive.MyMenuHangqService;
@@ -35,6 +41,7 @@ import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.DateUtils;
 import com.sanbang.utils.Page;
+import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.StringUtil;
@@ -42,15 +49,18 @@ import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCode;
 import com.sanbang.vo.goods.GoodsClassVo;
 import com.sanbang.vo.goods.ezs_Dzgoods_classVo;
+import com.sanbang.vo.goods.ezs_goods_classVo;
 import com.sanbang.vo.hangq.AreaData;
 import com.sanbang.vo.hangq.CataData;
-import com.sanbang.vo.hangq.HangqAreaData;
 import com.sanbang.vo.hangq.HangqCollectedVo;
 import com.sanbang.vo.userauth.AuthImageVo;
 
 @Service("myMenuHangqService")
 public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 
+// rediskey有效期
+	@Value("${consparam.redis.redisuserkeyexpir}")
+	private String redisuserkeyexpir;
 	@Autowired
 	private ezs_subscribehqMapper ezs_subscribehqMapper;
 	@Autowired
@@ -63,11 +73,18 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 	private ezs_customizedhqMapper ezs_customizedhqMapper;
 	@Autowired
 	private HangqAreaService hangqAreaService;
+	@Autowired
+	private ezs_ezssubstanceMapper ezs_ezssubstanceMapper;
+	@Autowired
+	private ezs_columnMapper columnMapper;
+	// 用户登陆信息
+	@Resource(name = "ezs_userMapper")
+	private ezs_userMapper ezs_userMapper;
 	
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
 	
 	
-	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Override
@@ -156,7 +173,8 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 			
 			
 			//是否支付
-			if(null!=subscribehq.getMemberorder()) {
+			ezs_memberorder order=subscribehq.getMemberorder();
+			if(null!=order) {
 				//是否开通
 				if(subscribehq.getMemberorder().getOpenStatu()==1) {
 					//已支付已开通
@@ -187,18 +205,50 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 			}
 			
 			List<CataData> list=ezs_customizedhqMapper.getDingZhiCataInitData(upi.getId());
-			List<Map<String, Object>> list2=new ArrayList<>();
+			List<Map<String, Object>> datalist=new ArrayList<>();
 			for (CataData cataData : list) {
+				
 				 Map<String, Object> map1=new HashMap<>();
+				 List<CataData> list1=new ArrayList<>();
+				 
 				 map1.put("id", cataData.getId());
 				 map1.put("name", cataData.getName());
-				 List<CataData> list3=new ArrayList<>();
-				 list3.add(cataData);
-				 map1.put("children", list3);
-				 list2.add(map1);
+				 
+				 ezs_goods_classVo vo= ezs_goods_classVoMapper.selectByPrimaryKey(cataData.getId());
+				 
+				if(vo.getLevel().equals("1")){
+					List<GoodsClassVo> temp1= ezs_goods_classVoMapper.gethanqChildClassCheckAll(cataData.getId());
+					 List<Map<String, Object>> list4p=new ArrayList<>();
+					 for (GoodsClassVo tempc1 : temp1) {
+						 Map<String, Object> chale1=new HashMap<>();
+						 chale1.put("id", tempc1.getId());
+						 chale1.put("name", tempc1.getName());
+						 
+						 List<Map<String, Object>> tempcc1= ezs_customizedhqMapper.getDingYueOwenCata(upi.getId(), tempc1.getId());
+						 List<Map<String, Object>> list4=new ArrayList<>();
+						 for (Map<String, Object> tempccc1 : tempcc1) {
+							 Map<String, Object> chale2=new HashMap<>();
+							 chale2.put("id", tempccc1.get("id"));
+							 chale2.put("name",tempccc1.get("name"));
+							 list4.add(chale2);
+						}
+						 if(list4.size()>0) {
+							 chale1.put("children", list4);
+							 list4p.add(chale1);
+						 }
+						 
+					 }
+					 map1.put("children", list4p);
+					 datalist.add(map1);
+				}else {
+					 list1.add(cataData);
+					 map1.put("children", list1);
+					 datalist.add(map1);
+				}
+				 
 				
 			}
-			map.put("cata", list2);
+			map.put("cata", datalist);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
@@ -268,9 +318,11 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 					order.setStore_id(upi.getStore_id());
 					order.setVoucher(vo.getImgurl());
 				int st=	ezs_memberorderMapper.insertSelective(order);
-					recoed.setOrder_id(order.getId());
-					recoed.setPaymode(1);
-					ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed);
+				ezs_subscribehq  recoed1=new ezs_subscribehq();
+					recoed1.setId(recoed.getId());
+					recoed1.setOrder_id(order.getId());
+					recoed1.setPaymode(1);
+					ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
 					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 					result.setSuccess(true);
 					result.setMsg("你的支付记录已提交,请耐心等待客服审核！");
@@ -295,9 +347,12 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 							order.setStore_id(upi.getStore_id());
 							order.setVoucher(vo.getImgurl());
 						int st=	ezs_memberorderMapper.insertSelective(order);
-						recoed.setOrder_id(order.getId());
-						recoed.setPaymode(1);
-						ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed);
+						
+						ezs_subscribehq  recoed1=new ezs_subscribehq();
+						recoed1.setId(recoed.getId());
+						recoed1.setOrder_id(order.getId());
+						recoed1.setPaymode(1);
+						ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
 						result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 						result.setSuccess(true);
 						result.setMsg("你的支付记录已提交,请耐心等待客服审核！");
@@ -313,9 +368,11 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 							    order.setPayState(1);
 								order.setVoucher(vo.getImgurl());
 							int st=	ezs_memberorderMapper.updateByPrimaryKeySelective(order);
-								recoed.setOrder_id(order.getId());
-								recoed.setPaymode(1);
-								ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed);
+							ezs_subscribehq  recoed1=new ezs_subscribehq();
+								recoed1.setId(recoed.getId());
+								recoed1.setOrder_id(order.getId());
+								recoed1.setPaymode(1);
+								ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
 								result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 								result.setSuccess(true);
 								result.setMsg("你的支付记录已提交,请耐心等待客服审核！");
@@ -333,9 +390,11 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 								order.setPayState(1);
 								order.setPayMode(1);
 							int st=	ezs_memberorderMapper.updateByPrimaryKeySelective(order);
-								recoed.setOrder_id(order.getId());
-								recoed.setPaymode(1);
-								ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed);
+								ezs_subscribehq  recoed1=new ezs_subscribehq();
+								recoed1.setId(recoed.getId());
+								recoed1.setOrder_id(order.getId());
+								recoed1.setPaymode(1);
+								ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
 								result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 								result.setSuccess(true);
 								result.setMsg("你的支付记录已提交,请耐心等待客服审核！");
@@ -388,41 +447,44 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 	@Transactional(rollbackFor=Exception.class)
 	public Result myDingYueAdd(HttpServletRequest request, ezs_user upi, String cycle, BigDecimal payment,
 			String subtotal,int isall, Result result) {
-		
+		Map<String, Object> map=new HashMap<>();
 		try {
-			if(Tools.isEmpty(cycle)){
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("先选择订购周期！");
-				return result;
-			}
+			
 			if(null==payment){
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("支付金额不能为空！");
 				return result;
 			}
+			if(Tools.isEmpty(cycle)){
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("先选择订购周期！");
+				return result;
+			}
+		
+		//是否全选
+		if(isall==1) {
+			List<ezs_Dzgoods_classVo>  listp=	ezs_goods_classVoMapper.gethangqCataBylevel(0, "3", "all");
+			StringBuffer sb=new StringBuffer();
+			for (ezs_Dzgoods_classVo goodsClassVo : listp) {
+				sb.append(goodsClassVo.getId()).append(",");
+			}
+			subtotal=sb.substring(0, sb.toString().lastIndexOf(","));
+		}else {
+			
 			if(Tools.isEmpty(subtotal)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("请选择订购品类！");
 				return result;
 			}
-		
-		//是否全选
-		if(isall==1) {
-			List<GoodsClassVo>  listp=	ezs_goods_classVoMapper.gethangqCataBylevel(0, "3", "all");
-			StringBuffer sb=new StringBuffer();
-			for (GoodsClassVo goodsClassVo : listp) {
-				sb.append(goodsClassVo.getId()).append(",");
-			}
-			subtotal=sb.substring(0, sb.toString().lastIndexOf(","));
 		}
 		
 		ezs_memberorder	order=new ezs_memberorder();
 		order.setAddTime(new Date());
 		order.setCreditUsed(Integer.valueOf(String.valueOf(upi.getId())));
-		order.setDeleteStatus(false);
+		order.setDeleteStatus(true);
 		order.setMemberType("价格行情");
 		order.setOpenStatu(0);
 		order.setOperator(upi.getTrueName());
@@ -441,7 +503,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 		recoed.setAddTime(new Date());
 		recoed.setCreditUserd(Integer.valueOf(String.valueOf(upi.getId())));
 		recoed.setCycle(cycle);
-		recoed.setDeleteStatus(false);
+		recoed.setDeleteStatus(true);
 		recoed.setOpenmode(0);
 		recoed.setPayment(payment);
 		recoed.setPaymode(1);
@@ -455,13 +517,15 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 		
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setSuccess(true);
-		result.setMsg("你的订单已提交,请到个人中心进行支付！");
+		result.setMsg("生成订单成功！");
+		map.put("recoedid", recoed.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误！");
 		}
+		result.setObj(map);
 		return result;
 	}
 
@@ -469,24 +533,56 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 	public Result myDingZhi(ezs_user upi, HttpServletRequest request, Result result) {
 		try {
 			List<CataData> list=ezs_customizedhqMapper.getDingZhiCataInitData(upi.getId());
-			List<Map<String, Object>> list2=new ArrayList<>();
+			List<Map<String, Object>> datalist=new ArrayList<>();
 			for (CataData cataData : list) {
-				 Map<String, Object> map=new HashMap<>();
-				 map.put("id", cataData.getId());
-				 map.put("name", cataData.getName());
-				 List<CataData> list3=new ArrayList<>();
-				 list3.add(cataData);
-				 map.put("children", list3);
-				 list2.add(map);
+				
+				 Map<String, Object> map1=new HashMap<>();
+				 List<CataData> list1=new ArrayList<>();
+				 
+				 map1.put("id", cataData.getId());
+				 map1.put("name", cataData.getName());
+				 
+				 ezs_goods_classVo vo= ezs_goods_classVoMapper.selectByPrimaryKey(cataData.getId());
+				 
+				if(vo.getLevel().equals("1")){
+					List<GoodsClassVo> temp1= ezs_goods_classVoMapper.gethanqChildClassCheckAll(cataData.getId());
+					 List<Map<String, Object>> list4p=new ArrayList<>();
+					 for (GoodsClassVo tempc1 : temp1) {
+						 Map<String, Object> chale1=new HashMap<>();
+						 chale1.put("id", tempc1.getId());
+						 chale1.put("name", tempc1.getName());
+						 
+						 List<Map<String, Object>> tempcc1= ezs_customizedhqMapper.getDingYueOwenCata(upi.getId(), tempc1.getId());
+						 List<Map<String, Object>> list4=new ArrayList<>();
+						 for (Map<String, Object> tempccc1 : tempcc1) {
+							 Map<String, Object> chale2=new HashMap<>();
+							 chale2.put("id", tempccc1.get("id"));
+							 chale2.put("name",tempccc1.get("name"));
+							 list4.add(chale2);
+						}
+							 chale1.put("children", list4);
+							 list4p.add(chale1);
+						 
+					 }
+					 map1.put("children", list4p);
+					 datalist.add(map1);
+				}else {
+					 list1.add(cataData);
+					 map1.put("children", list1);
+					 datalist.add(map1);
+				}
+				 
 				
 			}
-			List<HangqAreaData> alist=hangqAreaService.getAreaData();
+			List<Map<String, Object>> alist=hangqAreaService.getAreaData();
+			List<Map<String, Object>>  listm=AreaData.getDaQuArea(alist);
+			
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setSuccess(true);
 			result.setMsg("请求成功");
 			Map<String, Object> map=new HashMap<>();
-			map.put("cata", list2);
-			map.put("area", alist);
+			map.put("cata", datalist);
+			map.put("area", listm);
 			map.put("phone", upi.getEzs_userinfo().getPhone());
 			map.put("email", upi.getEzs_userinfo().getEmail());
 			result.setObj(map);
@@ -685,28 +781,37 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 	public Result getDingYueStatusByUserid(ezs_user upi, HttpServletRequest request, Result result) {
 		Map<String,Object> resmap=new HashMap<>();
 		try {
-			Map<String, Object> map=ezs_subscribehqMapper.getDingYueTryStatusByUserid(upi.getId());
-			Map<String, Object> map1=ezs_subscribehqMapper.getDingYueBuyStatusByUserid(upi.getId());
-			String id=map==null?"":String.valueOf(map.get("id"));
-			String addtime=map==null?"":String.valueOf(map.get("addTime"));
-			String count=map1==null?"":String.valueOf(map1.get("count"));
-			
-			if(StringUtil.isNotEmpty(count)) {
-				if(Long.valueOf(count)>0) {
-					resmap.put("try", 3);//已订阅
-				}
-			}else {
-				if(StringUtil.isEmpty(id)) {
+			String  hqpushstr=upi.getHqpushstr();
+			Date hqtrytime=upi.getHqtrytime();
+			log.info("try**********"+upi.getName()+"==="+upi.getTrueName());
+			log.info("try**********hqpushstr="+hqpushstr+"===hqtrytime="+hqtrytime);
+			if(Tools.isEmpty(hqpushstr)) {
+				if(null==hqtrytime) {
 					resmap.put("try", 0);//未使用
+					resmap.put("overdate", "");
+					resmap.put("getDatens", "");
 				}else {
-					Date gaa=sdf.parse(addtime);
-					if(sdf.parse(addtime).before(new Date())) {
+					Calendar c=Calendar.getInstance();
+					c.setTime(hqtrytime);
+					c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+					if(c.getTime().after(new Date())) {
 						resmap.put("try", 1);//使用中
+						resmap.put("overdate", Tools.getDatePoor(c.getTime(), new Date()));
+						resmap.put("getDatens", Tools.getDatens(c.getTime(), new Date()));
 					}else {
 						resmap.put("try", 2);//过期
+						resmap.put("overdate", "");
+						resmap.put("getDatens", "");
 					}
+				
 				}
+			}else {
+				resmap.put("try", 3);//已订阅
+				resmap.put("overdate", "");
+				resmap.put("getDatens", "");
 			}
+			log.info("try**********"+resmap.toString());
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -809,6 +914,155 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误！");
 		}
+		
+		if(result.getSuccess()){
+			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+			RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
+		}
+		return result;
+	}
+
+	@Override
+	public void hangqgShow(long id, Model model) {
+		ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		ezs_column column=columnMapper.selectByPrimaryKey(show.getEc_id());
+		model.addAttribute("show", show);
+		model.addAttribute("title", column.getName());
+		model.addAttribute("docid", id);
+	}
+	
+	public static void main(String[] args) throws ParseException {
+		Date starttime=sdf.parse("2018-08-28 14:30:48");
+		Date gaa=sdf.parse("2018-08-28 14:30:48");
+		Calendar c=Calendar.getInstance();
+		c.setTime(gaa);
+		c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+		
+		System.err.println(sdf.format(c.getTime()));
+		System.err.println(Tools.getDatePoor(c.getTime(), new Date()));
+	}
+
+	@Override
+	public Result submitOrder(HttpServletRequest request, ezs_user upi, long id,int paymode, Result result) {
+		try {
+			ezs_subscribehq  recoed=ezs_subscribehqMapper.selectByPrimaryKey(id);
+			if(null==recoed) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("提交订单失败！");
+				return result;
+			}
+			ezs_subscribehq  recoed1=new ezs_subscribehq();
+			recoed1.setDeleteStatus(false);
+			recoed1.setPaymode(1);
+			recoed1.setId(recoed.getId());
+			ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
+			
+			ezs_memberorder order=	ezs_memberorderMapper.selectByPrimaryKey(recoed.getOrder_id());
+			
+			if(null==order) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("提交订单失败！");
+				return result;
+			}  
+			ezs_memberorder order1=new ezs_memberorder();
+			order1.setId(order.getId());
+			order1.setPayMode(1);
+			order1.setDeleteStatus(false);
+		    int st=	ezs_memberorderMapper.updateByPrimaryKeySelective(order1);
+			
+		    result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("您的订单已提交,请到个人中心进行支付!");
+		    
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Result getDocStatusForUser(HttpServletRequest request, ezs_user upi, long id, Result result) {
+		Map<String, Object> map=new HashMap<>();
+		try {
+			HangqCollectedVo share=ezs_documentshareMapper.getSubstanceInfoById(id, upi.getId());
+			ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+			boolean  ispass=Tools.HangqValidate(upi, show.getEc_id());
+			map.put("ispass", ispass);
+			if(null==share) {
+				map.put("give", 0);
+				map.put("house", 0);
+			}else {
+				map.put("give", share.getGive());
+				map.put("house", share.getHouse());
+			}
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		result.setObj(map);
+		return result;
+	}
+
+	@Override
+	public Result doGiveOrHouse(HttpServletRequest request, ezs_user upi, long id, Result result,String reqtype) {
+		Map<String, Object> map=new HashMap<>();
+		try {
+			HangqCollectedVo share=ezs_documentshareMapper.getSubstanceInfoById(id, upi.getId());
+			if(reqtype.equals("give")) {
+				if(null==share) {
+					ezs_documentshare share1=new ezs_documentshare();
+					share1.setAddTime(new Date());
+					share1.setDeleteStatus(false);
+					share1.setEzsSubstance_id(id);
+					share1.setGive(1);
+					share1.setGood_id(null);
+					share1.setHouse(0);
+					share1.setUser_id(upi.getId());
+					ezs_documentshareMapper.insertSelective(share1);
+				}else {
+					ezs_documentshare share1=new ezs_documentshare();
+					share1.setId(share.getId());
+					share1.setGive(share.getGive()==1?0:1);
+					ezs_documentshareMapper.updateByPrimaryKeySelective(share1);
+				}
+			}else {
+				if(null==share) {
+					ezs_documentshare share1=new ezs_documentshare();
+					share1.setAddTime(new Date());
+					share1.setDeleteStatus(false);
+					share1.setEzsSubstance_id(id);
+					share1.setGive(0);
+					share1.setGood_id(null);
+					share1.setHouse(1);
+					share1.setUser_id(upi.getId());
+					ezs_documentshareMapper.insertSelective(share1);
+				}else {
+					ezs_documentshare share1=new ezs_documentshare();
+					share1.setId(share.getId());
+					share1.setHouse(share.getHouse()==1?0:1);
+					ezs_documentshareMapper.updateByPrimaryKeySelective(share1);
+				}
+			}
+			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			result.setSuccess(true);
+			result.setMsg("请求成功");
+		} catch (Exception e) {
+			e.getStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("系统错误！");
+		}
+		result.setObj(map);
 		return result;
 	}
 	

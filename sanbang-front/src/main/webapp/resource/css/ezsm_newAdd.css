@@ -1,0 +1,78 @@
+html,body{
+	font-family: arial,'Microsoft YaHei','Hiragino Sans GB';
+	font-size:12px;
+}
+*{margin:0px;padding:0px;}
+a{text-decoration:none;}
+input{outline:none;}
+li{list-style-type:none;}
+.content_dzself{ width:100%; height:auto; background-color:#efefef; }
+.content_hqzx{ width:100%; height:auto; background-color:#fff;font-family: '黑体'; padding-bottom: 52px; }
+.ezsm-collection-top{
+	width:100%;height:44px;line-height:44px;text-align:center;background:#00897c;font-size:18px;color:#fff;
+    background: -webkit-linear-gradient(135deg, #00ae9d, #00897c);
+    background: -o-linear-gradient(135deg, #00ae9d, #00897c);
+    background: -moz-linear-gradient(135deg,#00ae9d, #00897c);
+    background: linear-gradient(135deg,#00ae9d, #00897c);
+}
+.ezsm-collection-top div{float:left;width:50%;height:44px;}
+.ezsm-collection-top div:first-child{width:25%;height:44px;}
+.ezsm-collection-top div:last-child{width:25%;height:44px;}
+.aicon_yzs{ width:100%; display:block; height:44px; background:url(../img/go_home.png) 15px center no-repeat; background-size:20px 20px; font-size:18px; color:#fff; text-indent:20px;}
+
+.hqzx_uiop{ padding: 10px 15px;}
+.hqzx_uiop h2{font-size: 18px; line-height: 20px; color: #333;font-family: '黑体';}
+.hqzx_uiop span{font-size: 12px; line-height: 18px; color: #999; padding: 4px 0; display: block;}
+.vuetpso{ position: relative; width: 100%; height: auto;}
+.vuetpso p{font-size: 15px; line-height: 20px; color: #999; padding-bottom: 30px;}
+.gtayfffbak{ background-color: #fff; opacity: 0.1; position: absolute; top: 0; left: 0; height: 200px; width: 100%;}
+.fontwithgry{ opacity: 0.6; text-shadow:1px 1px 4px #000;}
+.djdigxuz{width: 100%; height: 46px; line-height: 46px; border: none;font-size: 18px; color: #fff; background-color: #009183; text-align: center; border-radius: 6px; outline: none;}
+.vuesdxjd{ position: fixed; bottom: 0px; left: 0px; height: 50px; line-height: 50px; width: 100%; border-top: 1px solid #f5f5f5; box-shadow: 1px 1px 5px #ccc;}
+.vuesdxjd ul{ height: 50px; width: 100%; display: flex;}
+.vuesdxjd ul li{ flex: 1; height: 50px;}
+.astyuiop{ background: url(../img/fenxiangs.png) center center no-repeat; background-size:22px 22px; display: block; width: 100%; height: 50px;outline: none;}
+.xx_yuiop{ background: url(../img/xingxing.png) center 12px no-repeat; background-size:20px 70px; display: block; width: 100%; height: 50px;outline: none;}
+.xx_yuiop.active{background: url(../img/xingxing.png) center -38px no-repeat; background-size:20px 70px;}
+.dz_uiop{ background: url(../img/keyupzan.png) center 12px no-repeat; background-size:22px 70px; display: block; width: 100%; height: 50px;outline: none;}
+.dz_uiop.active{ background: url(../img/keyupzan.png) center -38px no-repeat; background-size:22px 70px; }
+.artyuiosuccess,.artyuioerror,.adzuioerror,.dzuiosuccess{ display: none; width: 100px; height: 70px; position: fixed; top: 50%; left: 50%; margin-left: -50px; margin-top: -35px; background-color: rgba(0,0,0,0.5); border-radius: 8px;}
+.artyuiosuccess img,.artyuioerror img,.adzuioerror img,.dzuiosuccess img{ height: 36px; width: 36px; display: block; margin: 5px auto;}
+.artyuiosuccess p,.artyuioerror ,.adzuioerror p,.dzuiosuccess p{font-size: 15px; line-height: 18px; text-align: center; color: #fff; font-family: "微软雅黑";}
+
+/*----------*/
+.ulioxpfhgs{ height: 40px; line-height: 40px; display: flex; width: 100%;}
+.ulioxpfhgs li{ flex: 1; text-align: center;}
+.ulioxpfhgs li a{ display:inline-block; color: #333; font-size: 15px;}
+.ulioxpfhgs li a::after{ content:''; background:url(../img/icon_jgone.png) right center no-repeat; background-size:10px 8px ; width:10px; height: 8px; padding-left: 3px; display:inherit;}
+#grad {height: 48px; width: 100%;
+  background: -webkit-linear-gradient(left, #2ef29d , #01a0fa); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #2ef29d, #01a0fa); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #2ef29d, #01a0fa); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #2ef29d , #01a0fa); /* 标准的语法 */
+ border-bottom: 1px solid #e5e5e5;
+}
+#grad p,#grad p span{ height: 48px; line-height: 48px; text-align: center;font-size: 24px; color: #fff;}
+#grad p span{display: inline-block;}
+.shdgjcueio{ height: auto;}
+.shdgjcueio h3{ height: 40px; line-height: 40px; padding: 0 10px; border-bottom: 1px solid #e5e5e5;font-size: 18px; color: #00897d; font-weight: bold;}
+.shdgjcueio h3 span{float: left; margin-top: 9px; margin-right: 4px; width: 5px; height: 21px;background: -webkit-linear-gradient(#2ef29d , #01a0fa); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#2ef29d, #01a0fa); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient( #2ef29d, #01a0fa); /* Firefox 3.6 - 15 */
+  background: linear-gradient(#2ef29d , #01a0fa); /* 标准的语法 */}
+.gtuceifop{ padding:0px 10px; background-color: #fff; height: auto;}
+.gtuceifop h4{font-weight: bold; font-size: 15px; color: #333; line-height: 22px; height: 22px; padding: 15px 0 8px;}
+.vdutydiop{ border: 1px solid #e5e5e5; box-shadow: 0px 0px 6px #ddd; border-radius: 6px; overflow: hidden;}
+.vdutydiop table{width: 100%; height: auto;}
+.vdutydiop table th{ padding: 5px 0; height: 20px; line-height: 20px; background-color:#f7f7f7; border-bottom: 1px solid #e5e5e5;}
+.vdutydiop table th span{ line-height: 20px; text-align: center; display: block; border-right: 1px solid #ccc;font-size: 12px; color: #555;}
+.vdutydiop table th:last-child span{ border: none;}
+.vdutydiop table tr td{ padding: 12px 2px; line-height: 28px; border-bottom: 1px solid #e5e5e5;}
+.vdutydiop table tr td span{ line-height: 16px;font-size: 15px; color: #333; border-right: 1px solid #ccc; display: inline-block; width: 100%; text-align: center;}
+.vdutydiop table tr td:last-child span{ border: none;}
+.vdutydiop table tr:last-child td{ border: none;}
+.vdutydiop table tr td span.redcolor{ color: #ff6700;}
+.vdutydiop table tr td span.greencolor{color: #00897c;}
+.ukyuioghs{ height: auto;}
+.ukyuioghs li{ height: 43px; line-height: 43px; border-bottom: 1px solid #e5e5e5;}
+.ukyuioghs li a{display: block; width: 100%; overflow: hidden; white-space:nowrap; text-overflow: ellipsis; font-size: 15px; color: #333;}
