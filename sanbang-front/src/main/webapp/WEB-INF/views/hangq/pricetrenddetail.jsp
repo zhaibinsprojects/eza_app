@@ -15,6 +15,7 @@
 <!-- <script src="front/resource/js/price/echarts.js" type="text/javascript" charset="utf-8"></script> -->
 <script src="front/resource/js/highcharts.js"></script>
 
+
 <script type="text/javascript" src="front/resource/js/price/mui.min.js"></script>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>

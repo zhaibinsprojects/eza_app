@@ -24,8 +24,8 @@ $.ajax({
     	   $("#container").css('display','block');//显示  
     	   $("#containerLock").css('display','none');//隐藏   
        }else{
-    	   $("#container").css('display','none');//显示  
-    	   $("#containerLock").css('display','block');//隐藏   
+    	   $("#container").css('display','none');//隐藏 
+    	   $("#containerLock").css('display','block');//显示   
        }
        	//heighchart
        	echartInit(namey, classname, numo);   
@@ -53,9 +53,10 @@ function initTable(plist){
 			}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
 				html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
 			}else {
-				html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
+				html=html+"<td><span>"+plist[i].sandByOne+"</span></td> ";
 			} 
-			
+			$("#container").css('display','block');//隐藏
+			$("#containerLock").css('display','none');//显示   
 		}else{
 			html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 			"<td><span><i class='lockyuip'></i></span></td>";
