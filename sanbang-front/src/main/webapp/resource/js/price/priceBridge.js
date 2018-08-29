@@ -1,4 +1,5 @@
 /** *init* */
+var  userk="";
 $(function() {
 	// APP点击
 	var u = navigator.userAgent; // 获取用户设备
@@ -6,21 +7,20 @@ $(function() {
 	
 	if (isIOS) {
 		setupWebViewJavascriptBridge(function(bridge) {
-			//筛选显示内容
-			/*var data = {};
-			pricetrend(str);
-			//判断权限
-			try {
-				 WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
-					 userk= data;
-					 if(userk!=""){
-						 $(".userkey").val(data);
-						 //iscollcc(goodsid, data);
-						 //getCartNum();
-					 }
-					});
-				 
-			} catch (e) { }*/
+		//筛选显示内容
+		var data = {};
+		var str = JSON.stringify(data);
+		doclick();
+		//判断权限
+		try {
+			WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
+				userk= data;
+				if(userk!=""){
+					//$(".userkey").val(data);
+					$("input[name=token]").val(data);
+				}
+			});		 
+		} catch (e) { }
 		});
 		// ios app 设备才执行
 		//这段代码是固定的，必须要放到js中
@@ -36,35 +36,24 @@ $(function() {
 		}
         // 与OC交互的所有JS方法都要放在此处注册，才能调用通过JS调用OC或者让OC调用这里的JS
 		var bridge =setupWebViewJavascriptBridge();
-		//data = {"areaid":"452022","colorid":"75,16","formid":"15,89","pinleiid":"4"};
-		//var str = JSON.stringify(data);
-		//pricetrend(str);
+		
 		} else {
 		//安卓侨联
-		//首先获取移动端传回的data,在后要进行判断此品类是否可展示，而后进行筛选信息的展示
-		//筛选显示内容
-//		var data = {};
-//		//var data = {"areaid":"452022","colorid":"75","formid":"15","pinleiid":"4"};
-//		var str = JSON.stringify(data);
-		//pricetrend(str);
-		//判断权限
 		 try {
 			 userk= window.android.isAndroidLogin();
 			 if(userk!=""){
-				 $(".userkey").val(userk);
-				 //iscollcc(goodsid, userk);
-				 //getCartNum();
+				 //$(".userkey").val(userk);
+				 $("input[name=token]").val(userk);
 			 }
-		} catch (e) {
-		}
+		} catch (e) { }
+		doclick();
 	};
 });
-
+//移动端调用-筛选
 function pricetrend(data){
 	var str = JSON.stringify(data);
 	if(str==null||str==''||str=='{}')
 		return ;
-	//var obj = data.parseJSON(); //由JSON字符串转换为JSON对象
 	var obj = $.parseJSON(str);
 	
 	var areaId = obj.areaid;
@@ -108,22 +97,7 @@ function pricetrend(data){
 	    	   $("#mainAll").css('display','none');//显示  
 	    	   $("#mainAllLock").css('display','block');//隐藏   
 	       }
-	        myChart.hideLoading();
-	        myChart.setOption({
-	            xAxis: {
-	                data: namey
-	            },
-	            yAxis: {
-	                data: numo
-	            },
-	            series: [{
-	            	name:classname,
-	                type:'line',
-	                smooth: true,
-	                data: numo
-	            }
-	            ]
-	        });
+	        echartInit(namey, classname, numo);
 	        //初始化填充数据列表数据列表
 	        showdataByPage($("input[name=goodClassId]").val(),"WEEK",1,areaId,colorId,formId);
 	    },
@@ -186,3 +160,56 @@ function initTable(plist){
 	}
 	$("tbody").append(html);
 }
+
+/*点击列表项*/
+function doclick(){
+	$(".lockyuip").click(function(){
+		var u = navigator.userAgent; // 获取用户设备
+		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+		if ("" == $("input[name=token]").val()) {
+			if (isIOS) {
+				iosnologin();
+			} else {
+				androidnologin();
+			}
+			return false;
+		}else{
+			//已登录 去订阅
+			if (isIOS) {
+				iostodingyue();
+			} else {
+				androidtodingyue();
+			}
+		}
+	});
+};
+
+/*android未登录*/
+function androidnologin() {
+	window.android.androidnologin();
+	return false;
+}; 
+/*IOS未登录*/
+function iosnologin() {
+	var data = {}
+	var str = JSON.stringify(data);
+	WebViewJavascriptBridge.callHandler('iosnologin', str, function() { });
+	return false;
+};
+/*android订阅*/
+function androidtodingyue() {
+	var str = JSON.stringify(data);
+	window.android.androidtodingyue();
+	return false;
+}
+
+/*IOS订阅*/
+function iostodingyue() {
+	var data = {}
+	var str = JSON.stringify(data);
+	WebViewJavascriptBridge.callHandler('iostodingyue', "", function() { });
+	return false;
+}
+
+
+

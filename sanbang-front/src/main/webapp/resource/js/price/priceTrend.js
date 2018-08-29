@@ -73,6 +73,7 @@ $(document).ready(function(){
 function changeDates(type){
 	getdate(goodClassId,type);
 }
+
 function getdate(classid,dateBetweenType){
 	var xdata="";
 	var name="";
@@ -102,6 +103,7 @@ function getdate(classid,dateBetweenType){
 		  dataType : "json"
 		});
 }
+
 function initTable(plist){
 	$("tbody").empty();
 	var html = "";	
@@ -121,24 +123,7 @@ function initTable(plist){
 	}
 	$("tbody").append(html);
 }
-//上拉加载更多
-function addMoreTable(plist){
-	var html = "";	
-	for(var i=0;i<plist.length;i++){
-		html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
-			"<td><span>"+plist[i].goodArea+"</span></td>"+
-			"<td><span>"+plist[i].currentAVGPrice+"</span></td>";
-		if(plist[i].increaseValue > 0){			
-			html=html+"<td><span class='pup'>"+plist[i].sandByOne+"</span></td>";
-		}else if(plist[i].increaseValue < 0){
-			html=html+"<td><span class='pdown'>"+plist[i].sandByOne+"</span></td>";			
-		}else {
-			html=html+"<td><span class='ppin'>"+plist[i].sandByOne+"</span></td> ";
-		} 
-		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
-	}
-	$("tbody").append(html);
-}
+
 function echartInit(xdata,name,mydata){
 	Highcharts.chart('container', {
 	        chart: {
@@ -209,3 +194,22 @@ function echartInit(xdata,name,mydata){
 	    }]
 	    });
 };
+
+//上拉加载更多
+function addMoreTable(plist){
+	var html = "";	
+	for(var i=0;i<plist.length;i++){
+		html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
+			"<td><span>"+plist[i].goodArea+"</span></td>"+
+			"<td><span>"+plist[i].currentAVGPrice+"</span></td>";
+		if(plist[i].increaseValue > 0){			
+			html=html+"<td><span class='pup'>"+plist[i].sandByOne+"</span></td>";
+		}else if(plist[i].increaseValue < 0){
+			html=html+"<td><span class='pdown'>"+plist[i].sandByOne+"</span></td>";			
+		}else {
+			html=html+"<td><span class='ppin'>"+plist[i].sandByOne+"</span></td> ";
+		} 
+		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
+	}
+	$("tbody").append(html);
+}

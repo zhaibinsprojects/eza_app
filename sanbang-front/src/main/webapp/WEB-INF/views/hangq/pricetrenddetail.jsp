@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="front/resource/css/price/ezsm_newAdd.css"/>
 <!--App自定义的css-->
 <script src="front/resource/js/jquery-1.9.1.min.js"></script>
-<script src="front/resource/js/price/echarts.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="front/resource/js/price/echarts.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="front/resource/js/highcharts.js"></script>
 
 <script type="text/javascript" src="front/resource/js/price/mui.min.js"></script>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
@@ -26,7 +27,7 @@
 <body>
 <div class="content_yzs">
   <section class="echarts_inmgui">
-  	<div class="section_roptab">
+  	<div class="section_roptab" style="z-index:auto auto">
   		<ul>
   			<li name="WEEK" class="active"><a href="javascript:;">一周</a></li>
   			<li name="MONTH"><a href="javascript:;">一个月</a></li>
@@ -35,8 +36,8 @@
   		</ul>
   	</div>
   	<div class="echartHeight">
-  		<div id="mainAll" style="height: 190px; width:100%;"></div>
-  		<div id="mainAllLock" class="graybakhuio" style="display: none"></div>
+  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;"></div>
+  		<div id="containerLock" class="graybakhuio" style="display: none"></div>
   	</div>
   </section>
 </div>
@@ -71,6 +72,7 @@
 <input name="pagecount" value="" type="hidden">
 <input name="token" value="${token}" type="hidden">
 <input name="isshow" value="" type="hidden">
+<input class="userkey" value="" type="hidden">
 </body>
 <!-- 展示时间区间调整 -->
 <script src="front/resource/js/price/priceTendECharttaball.js" type="text/javascript" charset="utf-8"></script>
