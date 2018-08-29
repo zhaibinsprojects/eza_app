@@ -57,17 +57,28 @@ $.ajax({
     type: 'post',
     url: 'front/app/hangq/priceTrendDetail.htm',
     data:{
-    	"goodClassId":$("input[name=goodClassId]").val()
+    	"goodClassId":$("input[name=goodClassId]").val(),
+    	"token":$("input[name=token]").val()
     },
     dataType: "json",
     success: function (result) {
     	//页数
     	$("input[name=pagecount]").val(Math.ceil(result.length/20));
+    	var isshow = 0;
        $.each(result, function (index, item) {
             namey.push(item.dealDate);     
             numo.push(item.currentAVGPrice);
             classname = item.goodClassName;
+            isshow = item.isshow;
         });
+       if(isshow=='1'){
+    	   //展示走势图
+    	   $("#mainAll").css('display','block');//显示  
+    	   $("#mainAllLock").css('display','none');//隐藏   
+       }else{
+    	   $("#mainAll").css('display','none');//显示  
+    	   $("#mainAllLock").css('display','block');//隐藏   
+       }
         myChart.hideLoading();
         myChart.setOption({
             xAxis: {
@@ -98,20 +109,25 @@ $.ajax({
 function initTable(plist){
 	$("tbody").empty();
 	var html = "";	
-	//plist.length
-	//<td><span><i class="lockyuip"></i></span></td> 权限小锁
 	for(var i=0;i<plist.length;i++){
 		html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
-			"<td><span>"+plist[i].goodArea+"</span></td>"+
-			//"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+			"<td><span>"+plist[i].goodArea+"</span></td>";
+		
+		if(plist[i].isshow=='1'){
+			html = html+"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+			
+			if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
+				html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
+			}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
+				html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
+			}else {
+				html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
+			} 
+			
+		}else{
+			html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 			"<td><span><i class='lockyuip'></i></span></td>";
-		if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
-			html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
-		}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
-			html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
-		}else {
-			html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
-		} 
+		}
 		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 	}
 	$("tbody").append(html);
@@ -138,7 +154,8 @@ function showdatas(goodClassId,dateBetweenType){
 	    url: 'front/app/hangq/priceTrendDetail.htm',
 	    data:{
 	    	"goodClassId":goodClassId,
-	    	"dateBetweenType":dateBetweenType
+	    	"dateBetweenType":dateBetweenType,
+	    	"token":$("input[name=token]").val()
 	    },
 	    dataType: "json",
 	    success: function (result) {
@@ -185,7 +202,8 @@ function showdataByPage(goodClassId,dateBetweenType,currentPage){
 	    data:{
 	    	"goodClassId":goodClassId,
 	    	"dateBetweenType":dateBetweenType,
-	    	"currentPage":currentPage
+	    	"currentPage":currentPage,
+	    	"token":$("input[name=token]").val()
 	    },
 	    dataType: "json",
 	    success: function (result) {

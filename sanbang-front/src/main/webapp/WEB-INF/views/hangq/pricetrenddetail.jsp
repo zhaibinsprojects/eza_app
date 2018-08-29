@@ -20,8 +20,8 @@
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css" />
 <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" > 
-<script type="text/javascript" src="front/resource/js/price/priceTrendy.js"></script>
-<!-- <script type="text/javascript" src="front/resource/js/price/priceBridge.js"></script> -->
+<script type="text/javascript" src="front/resource/js/price/priceTrendy.js"></script><!-- 上下拉刷新 -->
+<script type="text/javascript" src="front/resource/js/price/priceBridge.js"></script><!-- 移动端桥连 -->
 </head>
 <body>
 <div class="content_yzs">
@@ -36,6 +36,7 @@
   	</div>
   	<div class="echartHeight">
   		<div id="mainAll" style="height: 190px; width:100%;"></div>
+  		<div id="mainAllLock" class="graybakhuio" style="display: none"></div>
   	</div>
   </section>
 </div>
@@ -68,7 +69,10 @@
 <input name="dateBetweenType" value="${dateBetweenType}" type="hidden">
 <input name="channelchanged" value="0" type="hidden"><!-- 记录是否进行展示时长挑转（一周、一月。。。。） -->
 <input name="pagecount" value="" type="hidden">
+<input name="token" value="${token}" type="hidden">
+<input name="isshow" value="" type="hidden">
 </body>
+<!-- 展示时间区间调整 -->
 <script src="front/resource/js/price/priceTendECharttaball.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 var goodClassId = $("input[name=goodClassId]").val();

@@ -462,7 +462,7 @@ public class HomeHangqIndexController {
 		Result rs = Result.success();
 		Map<String, Object> resultMap = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		//订购校验
+		//无需校验，未登录相当于没权限
 		/*if(null==upi){
 			List<PriceTrendIfo> resultListT = new ArrayList<>();
 			rs = Result.failure();
@@ -649,13 +649,19 @@ public class HomeHangqIndexController {
 			@RequestParam(name="formId",required=false)String formId,
 			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType,Model model){
 		//获取token验证用户权限，符合-返回相关标志位
-		model.addAttribute("showFlag", "1");//00-未购、不在试用期（未试用），01-未购、在试用期，02-未购、不在试用期（已试用）；10 已购
 		model.addAttribute("dateBetweenType", dateBetweenType);
 		model.addAttribute("goodClassId", goodClassId);
 		model.addAttribute("areaId", areaId);
 		model.addAttribute("colorId", colorId);
 		model.addAttribute("formId", formId);
-		
+		//获取token
+		model.addAttribute("token", request.getParameter("token"));			
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		boolean showFlag = false;
+		try{
+			showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+		}catch(Exception e){}
+		model.addAttribute("showFlag", showFlag==true?1:0);//0- 走势图不展示，1-走势图展示
 		return view+"pricetrenddetail";
 	}
 	
@@ -671,6 +677,10 @@ public class HomeHangqIndexController {
 		Map<String, Object> tMap = new HashMap<>();
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> ppList = new ArrayList<>();
+		List<PriceTrendIfo> returnppList = new ArrayList<>();
+		//获取用户信息
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
 		if(areaId!=null&&!areaId.trim().equals(""))
@@ -684,9 +694,21 @@ public class HomeHangqIndexController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+			for (PriceTrendIfo priceTrendIfo : ppList) {
+				try{
+					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+					if(showFlag)
+						priceTrendIfo.setIsshow(1);
+					else
+						priceTrendIfo.setIsshow(0);
+				}catch(Exception e){
+					priceTrendIfo.setIsshow(0);
+				}
+				returnppList.add(priceTrendIfo);
+			}
 		}
-		Collections.reverse(ppList);
-		return ppList;
+		Collections.reverse(returnppList);
+		return returnppList;
 	}
 	//价格走势详情页面-分页加载更多
 	@RequestMapping(value="/priceTrendDetailPage")
@@ -701,6 +723,9 @@ public class HomeHangqIndexController {
 		Map<String, Object> tMap = new HashMap<>();
 		Map<String, Object> mmp = new HashMap<>();
 		List<PriceTrendIfo> ppList = new ArrayList<>();
+		List<PriceTrendIfo> returnppList = new ArrayList<>();
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
 		if(areaId!=null&&!areaId.trim().equals(""))
@@ -715,8 +740,19 @@ public class HomeHangqIndexController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+			for (PriceTrendIfo priceTrendIfo : ppList) {
+				try{
+					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+					if(showFlag)
+						priceTrendIfo.setIsshow(1);
+					else
+						priceTrendIfo.setIsshow(0);
+				}catch(Exception e){
+					priceTrendIfo.setIsshow(0);
+				}
+				returnppList.add(priceTrendIfo);
+			}
 		}
-		return ppList;
+		return returnppList;
 	}
-	
 }

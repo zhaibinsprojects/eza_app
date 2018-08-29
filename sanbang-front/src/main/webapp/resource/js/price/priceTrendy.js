@@ -65,7 +65,8 @@ mui.init({
 					    "dateBetweenType":$("input[name=dateBetweenType]").val(),
 					    "areaId":$("input[name=areaId]").val(),
 					    "formId":$("input[name=formId]").val(),
-					    "colorId":$("input[name=colorId]").val()
+					    "colorId":$("input[name=colorId]").val(),
+					    "token":$("input[name=token]").val()
 					},
 					dataType : "json",
 					async : false,
@@ -90,7 +91,8 @@ mui.init({
 					    "dateBetweenType":$("input[name=dateBetweenType]").val(),
 					    "areaId":$("input[name=areaId]").val(),
 					    "formId":$("input[name=formId]").val(),
-					    "colorId":$("input[name=colorId]").val()
+					    "colorId":$("input[name=colorId]").val(),
+					    "token":$("input[name=token]").val()
 					},
 					dataType : "json",
 					async : false,
@@ -109,16 +111,23 @@ mui.init({
 				var html = "";	
 				for(var i=0;i<plist.length;i++){
 					html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
-						"<td><span>"+plist[i].goodArea+"</span></td>"+
-						"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+						"<td><span>"+plist[i].goodArea+"</span></td>";
 					
-					if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
-						html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
-					}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
-						html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
-					}else {
-						html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
-					} 
+					if(plist[i].isshow=='1'){
+						html = html+"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+						
+						if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
+							html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
+						}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
+							html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
+						}else {
+							html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
+						} 
+						
+					}else{
+						html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
+						"<td><span><i class='lockyuip'></i></span></td>";
+					}
 					html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 				}
 				$("tbody").append(html);
@@ -130,16 +139,23 @@ mui.init({
 				var html = "";	
 				for(var i=0;i<plist.length;i++){
 					html = html+"<tr><td><span>"+plist[i].goodClassName+"</span></td>"+
-						"<td><span>"+plist[i].goodArea+"</span></td>"+
-						"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+						"<td><span>"+plist[i].goodArea+"</span></td>";
 					
-					if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
-						html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
-					}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
-						html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
-					}else {
-						html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
-					} 
+					if(plist[i].isshow=='1'){
+						html = html+"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
+						
+						if(plist[i].currentAVGPrice > plist[i].preAVGPrice){			
+							html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
+						}else if(plist[i].currentAVGPrice < plist[i].preAVGPrice){
+							html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
+						}else {
+							html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
+						} 
+						
+					}else{
+						html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
+						"<td><span><i class='lockyuip'></i></span></td>";
+					}
 					html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 				}
 				$("tbody").append(html);
