@@ -35,6 +35,8 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	private ezs_areaMapper areaMapper;
 	/*百分数格式化*/
 	private DecimalFormat dftwo = new DecimalFormat("0.00%");
+	/*格式化数据-保留两位小数*/
+	private DecimalFormat dfone = new DecimalFormat("0.00");
 	
 	@Override
 	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno,int pagesaize) {
@@ -242,6 +244,66 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		}
 		if(pList!=null&&pList.size()>0){
 			for (PriceTrendIfo priceTrendIfo : pList) {
+				Double zf = 0.0;
+				try{
+					zf = (priceTrendIfo.getCurrentAVGPrice()-priceTrendIfo.getPreAVGPrice())/priceTrendIfo.getPreAVGPrice();
+					priceTrendIfo.setSandByOne(dftwo.format(zf));						
+				}catch(Exception e){
+					priceTrendIfo.setSandByOne(String.valueOf("0.00%"));
+				}
+				try{
+					//数据格式化
+					String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
+					String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
+					priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
+					priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
+				}catch(Exception e){}
+				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
+				//地址信息
+				String areaName = getAreaName(priceTrendIfo.getRegion_id());
+				priceTrendIfo.setGoodArea(areaName);
+				ppList.add(priceTrendIfo);
+			}
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Obj", ppList);
+			mmp.put("Msg", "查询成功");
+		}else{
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Obj", ppList);
+			mmp.put("Msg", "未查询到数据");
+		}
+		return mmp;
+	}
+	
+	@Override
+	public Map<String, Object> getPriceTrendcyNewPage(Map<String, Object> mp, int currentPage, int pagesaize) {
+		// TODO Auto-generated method stub
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> ppList = new ArrayList<>();
+		List<PriceTrendIfo> pList = null;
+		try {
+			mp.put("pagestart", (currentPage-1)*pagesaize);
+			mp.put("pagesize", pagesaize);
+			pList = this.priceTrendMapper.getPriceTrendcyNewPage(mp);	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(pList!=null&&pList.size()>0){
+			for (PriceTrendIfo priceTrendIfo : pList) {
+				Double zf = 0.0;
+				try{
+					zf = (priceTrendIfo.getCurrentAVGPrice()-priceTrendIfo.getPreAVGPrice())/priceTrendIfo.getPreAVGPrice();
+					priceTrendIfo.setSandByOne(dftwo.format(zf));						
+				}catch(Exception e){
+					priceTrendIfo.setSandByOne(String.valueOf("0.00%"));
+				}
+				try{
+					//数据格式化
+					String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
+					String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
+					priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
+					priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
+				}catch(Exception e){}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
 				//地址信息
 				String areaName = getAreaName(priceTrendIfo.getRegion_id());
@@ -534,4 +596,5 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 		}
 		return mmp;
 	}
+	
 }

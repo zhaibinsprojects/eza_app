@@ -12,25 +12,22 @@
 <link rel="stylesheet" href="front/resource/css/price/ezsm_newAdd.css"/>
 <!--App自定义的css-->
 <script src="front/resource/js/jquery-1.9.1.min.js"></script>
-<script src="front/resource/js/price/echarts.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="front/resource/js/price/echarts.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="front/resource/js/highcharts.js"></script>
 
 <script type="text/javascript" src="front/resource/js/price/mui.min.js"></script>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
-</script><script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
+<script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css" />
 <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" > 
-<script type="text/javascript" src="front/resource/js/price/priceInTime.js"></script>
+<script type="text/javascript" src="front/resource/js/price/priceTrendy.js"></script><!-- 上下拉刷新 -->
+<script type="text/javascript" src="front/resource/js/price/priceBridge.js"></script><!-- 移动端桥连 -->
 </head>
 <body>
 <div class="content_yzs">
-  <!-- <header class="ezsm-collection-top">
-    <div><a class="aicon_yzs" href="#"></a></div>
-    <div>实时报价图表</div>
-    <div></div>
-  </header> -->
   <section class="echarts_inmgui">
-  	<div class="section_roptab">
+  	<div class="section_roptab" style="z-index:auto auto">
   		<ul>
   			<li name="WEEK" class="active"><a href="javascript:;">一周</a></li>
   			<li name="MONTH"><a href="javascript:;">一个月</a></li>
@@ -39,28 +36,12 @@
   		</ul>
   	</div>
   	<div class="echartHeight">
-  		<div id="mainAll" style="height: 190px; width:100%;"></div>
+  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;"></div>
+  		<div id="containerLock" class="graybakhuio" style="display: none"></div>
   	</div>
   </section>
- 
-<!--   <section class="tabFater_tsi">
-  	<table class="tabghuioy" border="0" cellspacing="0" cellpadding="0">
-  		<thead>
-  			<tr>
-  				<th width="20%"><span>品类</span></th>
-  				<th width="20%"><span>区域</span></th>
-  				<th width="20%"><span>价格/吨</span></th>
-  				<th width="20%"><span>涨跌幅</span></th>
-  				<th width="20%"><span>时间</span></th>
-  			</tr>
-  		</thead>
-  		<tbody>
-  			数据填充
-  		</tbody>
-  	</table>
-  </section> -->
 </div>
-	  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 65%">
+<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 65%">
     <div class="mui-scroll"> 
     <section class="secNeiron mui-table-view mui-table-view-chevron" style="padding:0 0 0;">
 	<div class="cont">
@@ -80,18 +61,26 @@
   	</table>    
 	</div>
     </section>
-    </div>
-    </div>
-<input name="type" value="${type}" type="hidden">
-<input name="priceId" value="${priceId}" type="hidden">
+  </div>
+</div>
+<input name="goodClassId" value="${goodClassId}" type="hidden">
+<input name="areaId" value="${areaId}" type="hidden">
+<input name="colorId" value="${colorId}" type="hidden">
+<input name="formId" value="${formId}" type="hidden">
 <input name="dateBetweenType" value="${dateBetweenType}" type="hidden">
 <input name="channelchanged" value="0" type="hidden"><!-- 记录是否进行展示时长挑转（一周、一月。。。。） -->
 <input name="pagecount" value="" type="hidden">
+<input name="token" value="${token}" type="hidden">
+<input name="isshow" value="" type="hidden">
+<input class="userkey" value="" type="hidden">
 </body>
-<script src="front/resource/js/price/echarttaball.js" type="text/javascript" charset="utf-8"></script>
+<!-- 展示时间区间调整 -->
+<script src="front/resource/js/price/priceTendECharttaball.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-var type = $("input[name=type]").val();
-var priceId = $("input[name=priceId]").val();
+var goodClassId = $("input[name=goodClassId]").val();
+var areaId = $("input[name=areaId]").val();
+var colorId = $("input[name=colorId]").val();
+var formId = $("input[name=formId]").val();
 var dateBetweenType = $("input[name=dateBetweenType]").val();
 var pagecount = $("input[name=pagecount]").val();
 </script>

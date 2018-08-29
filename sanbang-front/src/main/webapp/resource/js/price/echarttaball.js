@@ -1,3 +1,74 @@
+function echartInit(xdata,name,mydata){
+	Highcharts.chart('container', {
+	        chart: {
+	            zoomType: 'x'
+	        },
+	        title: {
+	            text: ''
+	        },
+	        subtitle: {
+	            text: ''
+	        },
+			colors: ['#4cd4c8'],
+	        xAxis: {
+	        	 tickInterval: 8,
+	        categories: xdata
+	    },
+			credits: {
+	          enabled:false
+	},
+	       exporting: {
+	            enabled:false
+	},
+	        yAxis: {
+	        	allowDecimals:false,//tickPositions: [0, 5, 10, 15,20,25,30],
+	        	title: {
+	            	text: ''
+	        	}
+	    	},
+	        legend: {
+	            enabled: false
+	        },
+			
+	        plotOptions: {
+	            area: {
+	                fillColor: {
+	                    linearGradient: {
+	                        x1: 0,
+	                        y1: 0,
+	                        x2: 0,
+	                        y2: 1
+	                    },
+	                    stops: [
+	                        [0, '#4cd4c8'],
+	                        [1, Highcharts.Color('#4cd4c8').setOpacity(0).get('rgba')]
+	                    ]
+	                },
+	                marker: {
+	                    radius: 1,
+						lineWidth: 1,
+						fillColor: '#fff',//点填充色
+						lineColor: '#4cd4c8',//点边框色
+	                },
+	                lineWidth: 1,
+					
+	                states: {
+	                    hover: {
+	                        lineWidth: 1
+	                    }
+	                },
+	                threshold: null
+	            }
+	        },
+	        series: [{
+				type: 'area',
+		        name: name,
+		        data: mydata,
+		        lineWidth:1
+	    }]
+	    });
+};
+
 var myChart = echarts.init(document.getElementById('mainAll'));
 myChart.setOption({
 	title : {
@@ -85,12 +156,16 @@ $.ajax({
             }
             ]
         });
+	    /*var xdata =result.dealDate;
+	   	var data = result.currentPrice;
+	   	var name=result.goodClassName;
+    	echartInit(xdata, name, data);*/
         //初始化填充数据列表数据列表
         //initTable(result);
         showdataByPage(type,$("input[name=priceId]").val(),"WEEK",1);
     },
     error: function (errorMsg) {
-        alert("图表数据请求失败!");
+        //alert("图表数据请求失败!");
         myChart.hideLoading();
     }
 });
@@ -173,7 +248,7 @@ function showdatas(type,priceId,dateBetweenType){
 	        //initTable(result);
 	    },
 	    error: function (errorMsg) {
-	        alert("图表数据请求失败!");
+	        //alert("图表数据请求失败!");
 	        myChart.hideLoading();
 	    }
 	});
@@ -195,7 +270,7 @@ function showdataByPage(type,priceId,dateBetweenType,currentPage){
 	       initTable(result);
 	    },
 	    error: function (errorMsg) {
-	        alert("图表数据请求失败!");
+	        //alert("图表数据请求失败!");
 	        myChart.hideLoading();
 	    }
 	});

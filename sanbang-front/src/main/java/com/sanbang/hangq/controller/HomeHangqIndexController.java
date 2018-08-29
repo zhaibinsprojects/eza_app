@@ -206,7 +206,7 @@ public class HomeHangqIndexController {
 			zspitvoList.add(pitvo);
 		}
 		zsGoodClassType.setClassId(Long.valueOf(1));
-		zsGoodClassType.setClassName("再生类塑料");
+		zsGoodClassType.setClassName("再生塑料");
 		zsGoodClassType.setDate(new Date());
 		zsGoodClassType.setPriceInTimeList(zspitvoList);
 		baojia.add(zsGoodClassType);
@@ -462,21 +462,17 @@ public class HomeHangqIndexController {
 		Result rs = Result.success();
 		Map<String, Object> resultMap = new HashMap<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		//订购校验
-		if(null==upi){
+		//无需校验，未登录相当于没权限
+		/*if(null==upi){
 			List<PriceTrendIfo> resultListT = new ArrayList<>();
 			rs = Result.failure();
 			rs.setObj(resultListT);
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			rs.setMsg("用户未登录，不可查看");
 			return rs;
-		}
-		//权限校验
-		//boolean showFlag = Tools.HangqValidate(upi, Long.valueOf(goodClassId));
+		}*/
 		//参数传递
 		Map<String, Object> tMp = new HashMap<>();
-		//tMp.put("userId", "561");/*用户ID*/
-		tMp.put("userId", upi.getId());/*用户ID*/
 		if(colorId!=null)
 			tMp.put("colorId", colorId);/*可传多个 ， 号隔开*/
 		if(formId!=null)
@@ -512,8 +508,21 @@ public class HomeHangqIndexController {
 		List<PriceTrendIfo> resultList = new ArrayList<>();
 		Integer ErrorCode = (Integer)resultMap.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			List<PriceTrendIfo> returnList = new ArrayList<>();
 			resultList = (List<PriceTrendIfo>)resultMap.get("Obj");
-			rs.setObj(resultList);
+			for (PriceTrendIfo priceTrendIfo : resultList) {
+				try{
+					boolean showFlag = Tools.HangqValidate(upi,priceTrendIfo.getTrueGoodClassId());
+					if(showFlag)
+						priceTrendIfo.setIsshow(1);
+					else
+						priceTrendIfo.setIsshow(0);
+				}catch(Exception e){
+					priceTrendIfo.setIsshow(0);
+				}
+				returnList.add(priceTrendIfo);
+			}
+			rs.setObj(returnList);
 		}else{
 			rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			rs.setObj(resultList);
@@ -630,11 +639,120 @@ public class HomeHangqIndexController {
 		//Collections.reverse(plist);
 		return plist;
 	}
-	//价格行情详情页面
-	@RequestMapping(value="/priceAnalyDetail")
-	public String priceAnalyDetail(){
-		
-		return "";
+	
+	//跳转至价格走势详情页面（详情页面通过js加载数据）
+	@RequestMapping(value="/priceTrendDetailTurn")
+	public String priceTrendDetailTurn(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="goodClassId",required=true)String goodClassId,
+			@RequestParam(name="areaId",required=false)String areaId,
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType,Model model){
+		//获取token验证用户权限，符合-返回相关标志位
+		model.addAttribute("dateBetweenType", dateBetweenType);
+		model.addAttribute("goodClassId", goodClassId);
+		model.addAttribute("areaId", areaId);
+		model.addAttribute("colorId", colorId);
+		model.addAttribute("formId", formId);
+		//获取token
+		model.addAttribute("token", request.getParameter("token"));			
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		boolean showFlag = false;
+		try{
+			showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+		}catch(Exception e){}
+		model.addAttribute("showFlag", showFlag==true?1:0);//0- 走势图不展示，1-走势图展示
+		return view+"pricetrenddetail";
 	}
 	
+	//价格走势详情页面
+	@RequestMapping(value="/priceTrendDetail")
+	@ResponseBody
+	public Object priceTrendDetail(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="goodClassId",required=true)String goodClassId,
+			@RequestParam(name="areaId",required=false)String areaId,
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		Map<String, Object> tMap = new HashMap<>();
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> ppList = new ArrayList<>();
+		List<PriceTrendIfo> returnppList = new ArrayList<>();
+		//获取用户信息
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		
+		if(goodClassId!=null&&!goodClassId.trim().equals(""))
+			tMap.put("kindId", goodClassId);
+		if(areaId!=null&&!areaId.trim().equals(""))
+			tMap.put("areaId", areaId);
+		if(colorId!=null&&!colorId.trim().equals(""))
+			tMap.put("colorId", colorId);
+		if(formId!=null&&!formId.trim().equals(""))
+			tMap.put("formId", formId);
+		tMap.put("dateBetweenType", dateBetweenType);
+		mmp = this.priceConditionService.getPriceTrendcyNew(tMap, 0, 20);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+			for (PriceTrendIfo priceTrendIfo : ppList) {
+				try{
+					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+					if(showFlag)
+						priceTrendIfo.setIsshow(1);
+					else
+						priceTrendIfo.setIsshow(0);
+				}catch(Exception e){
+					priceTrendIfo.setIsshow(0);
+				}
+				returnppList.add(priceTrendIfo);
+			}
+		}
+		Collections.reverse(returnppList);
+		return returnppList;
+	}
+	//价格走势详情页面-分页加载更多
+	@RequestMapping(value="/priceTrendDetailPage")
+	@ResponseBody
+	public Object priceTrendDetailPage(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(name="goodClassId",required=true)String goodClassId,
+			@RequestParam(name="areaId",required=false)String areaId,
+			@RequestParam(name="colorId",required=false)String colorId,
+			@RequestParam(name="formId",required=false)String formId,
+			@RequestParam(name="currentPage",required=false,defaultValue="1") int currentPage,
+			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType){
+		Map<String, Object> tMap = new HashMap<>();
+		Map<String, Object> mmp = new HashMap<>();
+		List<PriceTrendIfo> ppList = new ArrayList<>();
+		List<PriceTrendIfo> returnppList = new ArrayList<>();
+		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		
+		if(goodClassId!=null&&!goodClassId.trim().equals(""))
+			tMap.put("kindId", goodClassId);
+		if(areaId!=null&&!areaId.trim().equals(""))
+			tMap.put("areaId", areaId);
+		if(colorId!=null&&!colorId.trim().equals(""))
+			tMap.put("colorId", colorId);
+		if(formId!=null&&!formId.trim().equals(""))
+			tMap.put("formId", formId);
+		tMap.put("currentPage", currentPage);
+		tMap.put("dateBetweenType", dateBetweenType);
+		mmp = this.priceConditionService.getPriceTrendcyNewPage(tMap,currentPage,20);
+		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
+		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+			for (PriceTrendIfo priceTrendIfo : ppList) {
+				try{
+					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+					if(showFlag)
+						priceTrendIfo.setIsshow(1);
+					else
+						priceTrendIfo.setIsshow(0);
+				}catch(Exception e){
+					priceTrendIfo.setIsshow(0);
+				}
+				returnppList.add(priceTrendIfo);
+			}
+		}
+		return returnppList;
+	}
 }

@@ -19,6 +19,8 @@ public interface PriceConditionService {
 	public Map<String, Object> priceInTimeNew(Long goodClassId);
 	/*价格趋势-新-再生料*/
 	public Map<String, Object> getPriceTrendcyNew(Map<String, Object> mp,int currentPage,int pagesaize);
+	/*价格趋势-新-再生料-分页*/
+	public Map<String, Object> getPriceTrendcyNewPage(Map<String, Object> mp,int currentPage,int pagesaize);
 	/*实时报价-新-新料*/
 	public Map<String, Object> priceInTimeNew2(Long goodClassId);
 	

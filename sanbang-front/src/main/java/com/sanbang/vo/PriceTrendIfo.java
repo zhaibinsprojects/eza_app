@@ -48,8 +48,18 @@ public class PriceTrendIfo extends ezs_price_trend {
     private Integer price_type;
     //是否展示 0不展示，1展示
     private Integer isshow;
+    
+    private Long trueGoodClassId;
 
-    public Integer getIsshow() {
+    public Long getTrueGoodClassId() {
+		return trueGoodClassId;
+	}
+
+	public void setTrueGoodClassId(Long trueGoodClassId) {
+		this.trueGoodClassId = trueGoodClassId;
+	}
+
+	public Integer getIsshow() {
 		return isshow;
 	}
 
