@@ -30,11 +30,12 @@ $.ajax({
        	//heighchart
        	echartInit(namey, classname, numo);   
        	showdataByPage($("input[name=goodClassId]").val(),"WEEK",1);
+    	
     },
     error: function (errorMsg) {
         //alert("图表数据请求失败!");
-        myChart.hideLoading();
     }
+
 });
 
 //初始化填充表格
@@ -107,7 +108,6 @@ function showdatas(goodClassId,dateBetweenType){
 	     echartInit(namey, classname, numo);  
 	    },
 	    error: function (errorMsg) {
-	        myChart.hideLoading();
 	    }
 	});
 }
@@ -127,7 +127,6 @@ function showdataByPage(goodClassId,dateBetweenType,currentPage){
 	       initTable(result);
 	    },
 	    error: function (errorMsg) {
-	        myChart.hideLoading();
 	    }
 	});
 }

@@ -1,5 +1,7 @@
 package com.sanbang.index.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +37,6 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 	private ezs_areaMapper areaMapper;
 	/*百分数格式化*/
 	private DecimalFormat dftwo = new DecimalFormat("0.00%");
-	/*格式化数据-保留两位小数*/
-	private DecimalFormat dfone = new DecimalFormat("0.00");
 	
 	@Override
 	public Map<String, Object> getPriceInTime(Map<String, Object> mp,int pageno,int pagesaize) {
@@ -253,11 +253,28 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 				}
 				try{
 					//数据格式化
-					String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
-					String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
-					priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
-					priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
-				}catch(Exception e){}
+					//String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
+					//String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
+					//priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
+					//priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
+					BigDecimal currentavgpage = new BigDecimal(0);
+					BigDecimal preavgpage = new BigDecimal(0);
+					if(priceTrendIfo.getCurrentAVGPrice()!=null&&priceTrendIfo.getCurrentAVGPrice()!=0)
+						currentavgpage = new BigDecimal(priceTrendIfo.getCurrentAVGPrice()).setScale(2, RoundingMode.UP);
+					if(priceTrendIfo.getPreAVGPrice()!=null&&priceTrendIfo.getPreAVGPrice()!=0)
+						preavgpage = new BigDecimal(priceTrendIfo.getPreAVGPrice()).setScale(2, RoundingMode.UP);
+					
+					priceTrendIfo.setCurrentAVGPrice(currentavgpage.doubleValue());
+					priceTrendIfo.setPreAVGPrice(preavgpage.doubleValue());
+					//首页-走势app由这两个字段取值
+					priceTrendIfo.setCurrentPrice(currentavgpage.doubleValue());
+					priceTrendIfo.setPrePrice(preavgpage.doubleValue());
+				}catch(Exception e){
+					//若上面转化异常，则直接取avg值放入price字段
+					priceTrendIfo.setCurrentPrice(priceTrendIfo.getCurrentAVGPrice());
+					priceTrendIfo.setPrePrice(priceTrendIfo.getPreAVGPrice());
+					e.printStackTrace();
+				}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
 				//地址信息
 				String areaName = getAreaName(priceTrendIfo.getRegion_id());
@@ -299,11 +316,31 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 				}
 				try{
 					//数据格式化
-					String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
-					String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
-					priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
-					priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
-				}catch(Exception e){}
+					//String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
+					//String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
+					//priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
+					//priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
+					//首页-走势app由这两个字段取值
+					//priceTrendIfo.setCurrentPrice(Double.valueOf(currentavgprice));
+					//priceTrendIfo.setPrePrice(Double.valueOf(preavgprice));
+					
+					BigDecimal currentavgpage = new BigDecimal(0);
+					BigDecimal preavgpage = new BigDecimal(0);
+					if(priceTrendIfo.getCurrentAVGPrice()!=null&&priceTrendIfo.getCurrentAVGPrice()!=0)
+						currentavgpage = new BigDecimal(priceTrendIfo.getCurrentAVGPrice()).setScale(2, RoundingMode.UP);
+					if(priceTrendIfo.getPreAVGPrice()!=null&&priceTrendIfo.getPreAVGPrice()!=0)
+						preavgpage = new BigDecimal(priceTrendIfo.getPreAVGPrice()).setScale(2, RoundingMode.UP);
+					
+					priceTrendIfo.setCurrentAVGPrice(currentavgpage.doubleValue());
+					priceTrendIfo.setPreAVGPrice(preavgpage.doubleValue());
+					//首页-走势app由这两个字段取值
+					priceTrendIfo.setCurrentPrice(currentavgpage.doubleValue());
+					priceTrendIfo.setPrePrice(preavgpage.doubleValue());
+				}catch(Exception e){
+					//若上面转化异常，则直接取avg值放入price字段
+					priceTrendIfo.setCurrentPrice(priceTrendIfo.getCurrentAVGPrice());
+					priceTrendIfo.setPrePrice(priceTrendIfo.getPreAVGPrice());
+				}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
 				//地址信息
 				String areaName = getAreaName(priceTrendIfo.getRegion_id());

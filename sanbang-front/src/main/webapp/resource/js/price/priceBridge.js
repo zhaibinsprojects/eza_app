@@ -82,6 +82,17 @@ function pricetrend(data){
 	    success: function (result) {
 	    //页数
 	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
+	    //设置时间跨度区间恢复为 一周 WEEK
+	    $("input[name=dateBetweenType]").val("WEEK");
+	    $("input[name=channelchanged]").val("1");
+	    $('ul li:first-child').css('class', 'active');
+	    //$("ul li").removeClass("active");
+	    //$("WEEK").removeClass("active");
+	    $("MONTH").removeClass("active");
+	    $("QUARTER").removeClass("active");
+	    $("YEAR").removeClass("active");
+		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
+	    
 	    var isshow = 0;
 	       $.each(result, function (index, item) {
 	            namey.push(item.dealDate);     
@@ -102,7 +113,6 @@ function pricetrend(data){
 	        showdataByPage($("input[name=goodClassId]").val(),"WEEK",1,areaId,colorId,formId);
 	    },
 	    error: function (errorMsg) {
-	        myChart.hideLoading();
 	    }
 	});
 	
@@ -128,7 +138,6 @@ function showdataByPage(goodClassId,dateBetweenType,currentPage,areaId,colorId,f
 	    },
 	    error: function (errorMsg) {
 	        //alert("图表数据请求失败!");
-	        myChart.hideLoading();
 	    }
 	});
 }
@@ -182,7 +191,7 @@ function doclick(){
 				androidtodingyue();
 			}
 		}
-	});
+	})
 };
 
 /*android未登录*/
@@ -199,7 +208,7 @@ function iosnologin() {
 };
 /*android订阅*/
 function androidtodingyue() {
-	var data = {}
+	var data = {};
 	var str = JSON.stringify(data);
 	window.android.androidtodingyue();
 	return false;
