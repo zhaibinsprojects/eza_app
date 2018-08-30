@@ -40,7 +40,7 @@ public interface ezs_goods_classVoMapper {
      * @param reqtype
      * @return
      */
-    List<GoodsClassVo>  gethangqCataBylevel(@Param("parentid")long parentid,@Param("level")String level,@Param("reqtype")String reqtype);
+    List<ezs_Dzgoods_classVo>  gethangqCataBylevel(@Param("parentid")long parentid,@Param("level")String level,@Param("reqtype")String reqtype);
     /**
      * 
      * @param category

@@ -11,9 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.sanbang.area.service.AreaService;
-import com.sanbang.bean.ezs_area;
 import com.sanbang.dao.ezs_goods_classVoMapper;
 import com.sanbang.dao.ezs_hangqareaMapper;
 import com.sanbang.hangq.servive.HangqAreaService;
@@ -23,6 +21,8 @@ import com.sanbang.utils.JsonUtils;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.goods.GoodsClassVo;
+import com.sanbang.vo.goods.ezs_Dzgoods_classVo;
+import com.sanbang.vo.goods.ezs_goods_classVo;
 import com.sanbang.vo.hangq.HangqAreaData;
 import com.sanbang.vo.hangq.HangqDzAreaVo;
 import com.sanbang.vo.hangq.HangqParamCommonVo;
@@ -42,7 +42,7 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 	/**
 	 * 行情定制数据标识
 	 */
-	private static final String HANGQ_AREA_DATA = "HANGQAREADATA";
+	private static final String HANGQ_AREA_DATA = "HANGQAREADATA001";
 
 	@Override
 	public Map<String, Object> getHangqParamDate(String reqtype, Map<String, Object> redate) {
@@ -195,12 +195,13 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 	 */
 	public List<Map<String, Object>> cataToJson(long parentid, String level, String reqtype) {
 		List<Map<String, Object>> list = new ArrayList<>();
-		List<GoodsClassVo> listp = ezs_goods_classVoMapper.gethangqCataBylevel(parentid, level, reqtype);
-		for (GoodsClassVo ezs_goods_class : listp) {
+		List<ezs_Dzgoods_classVo> listp = ezs_goods_classVoMapper.gethangqCataBylevel(parentid, level, reqtype);
+		for (ezs_Dzgoods_classVo ezs_goods_class : listp) {
 			Map<String, Object> map = new HashMap<>();
+			ezs_goods_classVo  aa=ezs_goods_classVoMapper.selectByPrimaryKey(ezs_goods_class.getId());
 			map.put("id", ezs_goods_class.getId());
 			map.put("name", ezs_goods_class.getName());
-			map.put("price", ezs_goods_class.getPrice());
+			map.put("price", aa.getPrice());
 			map.put("children", getcataarraytwo(ezs_goods_class, reqtype));
 			list.add(map);
 		}
@@ -208,15 +209,16 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 		return list;
 	}
 
-	private List<Map<String, Object>> getcataarraytwo(GoodsClassVo ezs_goods_class, String reqtype) {
+	private List<Map<String, Object>> getcataarraytwo(ezs_Dzgoods_classVo ezs_goods_class, String reqtype) {
 		List<Map<String, Object>> list = new ArrayList<>();
-		List<GoodsClassVo> listp = ezs_goods_classVoMapper.gethangqCataBylevel(ezs_goods_class.getId(), "2", reqtype);
+		List<ezs_Dzgoods_classVo> listp = ezs_goods_classVoMapper.gethangqCataBylevel(ezs_goods_class.getId(), "2", reqtype);
 
-		for (GoodsClassVo ezs_area : listp) {
+		for (ezs_Dzgoods_classVo ezs_area : listp) {
 			Map<String, Object> map = new HashMap<>();
+			ezs_goods_classVo  aa=ezs_goods_classVoMapper.selectByPrimaryKey(ezs_area.getId());
 			map.put("id", ezs_area.getId());
 			map.put("name", ezs_area.getName());
-			map.put("price", ezs_area.getPrice());
+			map.put("price", aa.getPrice());
 			map.put("children", getcataarraythree(ezs_area, reqtype));
 			list.add(map);
 		}
@@ -224,15 +226,16 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 		return list;
 	}
 
-	private List<Map<String, Object>> getcataarraythree(GoodsClassVo GoodsClass, String reqtype) {
+	private List<Map<String, Object>> getcataarraythree(ezs_Dzgoods_classVo GoodsClass, String reqtype) {
 		List<Map<String, Object>> list = new ArrayList<>();
-		List<GoodsClassVo> listp1 = ezs_goods_classVoMapper.gethangqCataBylevel(GoodsClass.getId(), "3", reqtype);
+		List<ezs_Dzgoods_classVo> listp1 = ezs_goods_classVoMapper.gethangqCataBylevel(GoodsClass.getId(), "3", reqtype);
 
-		for (GoodsClassVo ezs_area : listp1) {
+		for (ezs_Dzgoods_classVo ezs_area : listp1) {
 			Map<String, Object> map = new HashMap<>();
+			ezs_goods_classVo  aa=ezs_goods_classVoMapper.selectByPrimaryKey(ezs_area.getId());
 			map.put("id", ezs_area.getId());
 			map.put("name", ezs_area.getName());
-			map.put("price", ezs_area.getPrice());
+			map.put("price", aa.getPrice());
 			list.add(map);
 		}
 		return list;
@@ -337,24 +340,27 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<HangqAreaData> getAreaData() {
-		List<HangqAreaData> listp= new ArrayList<>();
+	public List<Map<String, Object>> getAreaData() {
+		 List<Map<String, Object>> listp= new ArrayList<>();
 		try {
 			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_AREA_DATA, Result.class);
 			if (redate.getCode() == RedisConstants.SUCCESS) {
 				log.debug("查询redis分类成功执行");
 				Result	result=redate.getResult();
-				listp=(List<HangqAreaData>) result.getObj();
+				listp=(List<Map<String, Object>>) result.getObj();
 			} else {
 				Result	result=Result.success();
-				listp = ezs_hangqareaMapper.getHangqAllAreaList();
-				result.setObj(listp);
-				RedisUtils.get(HANGQ_AREA_DATA, Result.class);
+				
+				 List<HangqAreaData> listp1 = ezs_hangqareaMapper.getHangqAllAreaList();
+				result.setObj(listp1);
 				RedisResult<String> rrt;
 				rrt = (RedisResult<String>) RedisUtils.set(HANGQ_AREA_DATA, result,
 					Long.valueOf(3600*24));
 				if (rrt.getCode() == RedisConstants.SUCCESS) {
 					log.debug("行情分类保存到redis成功执行");
+					redate=(RedisResult<Result>)RedisUtils.get(HANGQ_AREA_DATA, Result.class);
+					result=redate.getResult();
+					listp=(List<Map<String, Object>>) result.getObj();
 				} else {
 					log.debug("行情分类保存到redis失败");
 				}

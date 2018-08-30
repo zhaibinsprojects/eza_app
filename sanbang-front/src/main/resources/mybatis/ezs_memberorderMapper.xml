@@ -25,11 +25,11 @@
     payState, orderSource, openStatu, startTime, endTime, operator, store_id, order_no, 
     voucher
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
     from ezs_memberorder
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_memberorder

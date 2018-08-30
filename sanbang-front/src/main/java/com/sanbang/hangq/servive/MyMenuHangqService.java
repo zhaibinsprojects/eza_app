@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
 
 import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
@@ -127,6 +127,50 @@ public interface MyMenuHangqService {
 	public  Result getDingyuePayPic(HttpServletRequest request,ezs_user upi,long id,Result result);
 	
 	
-	
+	/**
+	 * 试用开通
+	 * @param request
+	 * @param upi
+	 * @param result
+	 * @return
+	 */
 	public Result myDingYueTryAdd(HttpServletRequest request, ezs_user upi, Result result);
+	
+	/**
+	 * 提交订单
+	 * @param request
+	 * @param upi
+	 * @param id
+	 * @param result
+	 * @return
+	 */
+	public Result  submitOrder(HttpServletRequest request,ezs_user upi,long id,int paymode,Result result);
+	
+	/**
+	 * 行情  查看
+	 * @param id
+	 * @param model
+	 */
+	void hangqgShow(long id,Model model);
+	
+	/**
+	 * 查看文章状态  和权限
+	 * @param request
+	 * @param upi
+	 * @param id
+	 * @param result
+	 * @return
+	 */
+	public Result  getDocStatusForUser(HttpServletRequest request,ezs_user upi,long id,Result result);
+	
+	/**
+	 * 查看文章状态  和权限
+	 * @param request
+	 * @param upi
+	 * @param id
+	 * @param result
+	 * @return
+	 */
+	public Result  doGiveOrHouse(HttpServletRequest request,ezs_user upi,long id,Result result,String reqtype);
+	
 }

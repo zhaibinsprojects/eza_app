@@ -162,7 +162,7 @@ function initTable(plist){
 
 /*点击列表项*/
 function doclick(){
-	mui('.lockyuip').on('tap', function() {
+	$(".lockyuip").on('tap',function(){
 		var u = navigator.userAgent; // 获取用户设备
 		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 		if ("" == $("input[name=token]").val()) {

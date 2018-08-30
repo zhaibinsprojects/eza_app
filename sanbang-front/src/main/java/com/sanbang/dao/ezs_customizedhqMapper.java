@@ -39,7 +39,7 @@ public interface ezs_customizedhqMapper {
      * @param catid
      * @return
      */
-    List<Map<String, Object>> getDingYueOwenCata(@Param("catid")long catid,@Param("parent_id")long parent_id);
+    List<Map<String, Object>> getDingYueOwenCata(@Param("userid")long userid,@Param("parent_id")long parent_id);
     
     
     List<CataData>  getDingZhiCataInitData(@Param("userid")long userid);

@@ -190,7 +190,7 @@
     <result column="priceTrend_id" property="priceTrend_id" jdbcType="BIGINT" />
   <collection property="areaNames" column="{areaids=areaids}" select="com.sanbang.dao.ezs_hangqareaMapper.getAreaNamesByAreaids" >
   </collection>
-  <collection property="categorys" column="category" select="com.sanbang.dao.ezs_goods_classVoMapper.getClassNamesByclasses" >
+  <collection property="categorys" column="{category=category}" select="com.sanbang.dao.ezs_goods_classVoMapper.getClassNamesByclasses" >
   </collection>
   </resultMap>
   
@@ -204,13 +204,16 @@
 		A.deleteStatus,
 		A.isPush,
 	   CONCAT(IF(LOCATE("0",A.pushMethod)>0,"邮件","")," ",IF(LOCATE("1",A.pushMethod)>0,"短信","")," " ,IF(LOCATE("2",A.pushMethod)>0,"APP推送","")) pushMethod,
-		A.user_id
+		A.user_id,
+    	IF(COUNT(B.goodsClass_id)>0,1,0) isuse
 		FROM
-			ezs_customizedhq A
-		WHERE
+			ezs_customizedhq A   LEFT JOIN   ezs_subscribehq_child  B  ON (A.user_id=B.user_id  AND  LOCATE(B.goodsClass_id,A.category)>0)
+		GROUP BY A.id
+		HAVING
 			A.user_id = #{userid}
 		AND A.deleteStatus = 0
-		AND A.isPush = #{ispush}
+		AND IF(COUNT(B.goodsClass_id)>0,1,0) = #{ispush}
+		ORDER BY A.addTime desc
 		limit #{pageCount},#{pageSize}
   </select>
   <select id="getDingZhiListByParamCount" resultType="int">

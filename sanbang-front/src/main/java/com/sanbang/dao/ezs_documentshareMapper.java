@@ -39,4 +39,12 @@ public interface ezs_documentshareMapper {
     		@Param("pageCount")int pageCount,@Param("pageSize")long pageSize);
     int selectHangqCollectionedCountOwen(@Param("userid")Long userid);
     
+    /**
+     * 行情接口
+     * @param docid
+     * @param userid
+     * @return
+     */
+    HangqCollectedVo getSubstanceInfoById(@Param("docid")Long docid,@Param("userid")long userid);
+    
 }
