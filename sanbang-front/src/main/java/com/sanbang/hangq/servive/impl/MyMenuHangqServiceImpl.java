@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -223,13 +224,16 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 						 chale1.put("id", tempc1.getId());
 						 chale1.put("name", tempc1.getName());
 						 
-						 List<Map<String, Object>> tempcc1= ezs_customizedhqMapper.getDingYueOwenCata(upi.getId(), tempc1.getId());
+						 List<GoodsClassVo> tempcc1= ezs_goods_classVoMapper.gethanqChildClassCheckAll(tempc1.getId());
 						 List<Map<String, Object>> list4=new ArrayList<>();
-						 for (Map<String, Object> tempccc1 : tempcc1) {
+						 for (GoodsClassVo tempccc1 : tempcc1) {
 							 Map<String, Object> chale2=new HashMap<>();
-							 chale2.put("id", tempccc1.get("id"));
-							 chale2.put("name",tempccc1.get("name"));
-							 list4.add(chale2);
+							 chale2.put("id", tempccc1.getId());
+							 chale2.put("name",tempccc1.getName());
+							 if(subscribehq.getSubtotal().indexOf(String.valueOf(tempccc1.getId()))>0) {
+								 list4.add(chale2);
+									}
+							
 						}
 						 if(list4.size()>0) {
 							 chale1.put("children", list4);
@@ -240,7 +244,18 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 					 map1.put("children", list4p);
 					 datalist.add(map1);
 				}else {
-					 list1.add(cataData);
+					List<Map<String, Object>> list5=new ArrayList<>();
+					List<GoodsClassVo> tempcc1= ezs_goods_classVoMapper.gethanqChildClassCheckAll(cataData.getId());
+					for (GoodsClassVo map2 : tempcc1) {
+						Map<String, Object> chale2=new HashMap<>();
+						 chale2.put("id", map2.getId());
+						 chale2.put("name",map2.getName());
+						 if(subscribehq.getSubtotal().indexOf(String.valueOf(map2.getId()))>0) {
+							 list5.add(chale2);
+								}
+					}
+					cataData.setChildren(list5);
+					list1.add(cataData);
 					 map1.put("children", list1);
 					 datalist.add(map1);
 				}
