@@ -56,6 +56,8 @@ import com.sanbang.vo.hangq.CataData;
 import com.sanbang.vo.hangq.HangqCollectedVo;
 import com.sanbang.vo.userauth.AuthImageVo;
 
+import cn.jiguang.common.utils.Base64;
+
 @Service("myMenuHangqService")
 public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 
@@ -703,37 +705,79 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService{
 			if(dzrecord==null) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
-				result.setMsg("地址记录不存在");
+				result.setMsg("定制记录不存在");
 				return  result;
 			}
+			String  catp= ezs_customizedhqMapper.getHangqUserPushClasses(dzrecord.getUser_id());
+			//每个用户定时容器
+			List<Map<String, Object>> oldList=new ArrayList<>();
 			
+			//每个用户唯一标识key
 			String push_key="pushforapp"+dzrecord.getUser_id();
-			List<String> pushids=new ArrayList<>();
-			pushids.add(String.valueOf(dzid));
-
-				RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(push_key,
-						Result.class);
+				
+				//缓存获取用户推送记录列表
+				RedisResult<List<Map<String, Object>>> redate = (RedisResult<List<Map<String, Object>>>) RedisUtils.get(push_key,
+						List.class);
 				if (redate.getCode() == RedisConstants.SUCCESS) {
-						log.debug("查询redis分类成功执行");
-						List<String> oldList=new ArrayList<>();
-						oldList=(List<String>) result.getObj();
-				 		if(!oldList.contains(String.valueOf(dzid))) {
-				 			result.setObj(oldList.addAll(pushids));
-				 		}
-						
-					} else {
-						log.debug("查询redis分类执行失败");
-				 		result.setObj(pushids);
-					}
+						log.debug("redis查询用户推送记录成功");
+						 oldList=redate.getResult();
+						if(oldList.size()>60) {
+							oldList.remove(0);//最多保存（30）天
+						}
+				}
+				
+				 //本次推送记录数据
+				Map<String, Object> data=new HashMap<>();
+				data.put("title", "您的行情定制推送("+sdf1.format(new Date())+")已更新，点我查看");
+				data.put("pushtime", sdf1.format(new Date()));
+				data.put("pushareaids",dzrecord.getAreaids());
+				StringBuffer sb=new StringBuffer();
+				String []  pushckpt=dzrecord.getCategory().split(",");
+				for (String inc : pushckpt) {
+					 if(catp.indexOf(inc)>0) {
+						 sb.append(inc).append(",") ;
+					 }
+				}
+				data.put("pushcataids",sb.toString().length()>0?sb.subSequence(0, sb.toString().length()):sb.toString());
+				
+				Map<String, Object> map=new HashMap<>();
+				StringBuffer sb1=new StringBuffer();
+				sb1.append("push").append(dzid).append(sdf1.format(new Date()));//本次记录标识定制
+				//添加本次推送记录
+				map.put(Base64.encode(sb1.toString().getBytes()).toString(), data);
+				oldList.add(map);
+				
+				//重新存入本地记录(永久有效)
 				RedisUtils.del(push_key);
 				RedisResult<String> rrt;
-				rrt = (RedisResult<String>) RedisUtils.set(push_key, result,
-					Long.valueOf(3600*24));
+				rrt = (RedisResult<String>) RedisUtils.set(push_key, oldList,(long)0);
 				if (rrt.getCode() == RedisConstants.SUCCESS) {
 					log.debug("行情分类保存到redis成功执行");
 				} else {
 					log.debug("行情分类保存到redis失败");
 				}
+				
+				
+				//推送总记录操作
+				String needpushusers="needpushusers";
+				Map<String, Object> zongpush=new HashMap<>();
+				RedisResult<Map<String, Object>> reneedpushusers = (RedisResult<Map<String, Object>>) RedisUtils.get(needpushusers,
+						List.class);
+				if (redate.getCode() == RedisConstants.SUCCESS) {
+						log.debug("redis查询用户推送记录成功");
+						zongpush=reneedpushusers.getResult();
+						List<Map<String, Object>> userpush=new ArrayList<>();
+						if(zongpush.containsKey(push_key)) {
+							Map<String, Object> pushuserinfo=(Map<String, Object>) zongpush.get(push_key);
+							pushuserinfo.put("weidu", (long)pushuserinfo.get("weidu")+1);
+						}else {
+							Map<String, Object> pushuserinfo=new HashMap<>();
+							pushuserinfo.put("weidu", 1);
+							pushuserinfo.put("weidu", 1);
+						}
+						
+				}
+				
 				result.setSuccess(true);
 		 		result.setMsg("推送成功");
 		 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);

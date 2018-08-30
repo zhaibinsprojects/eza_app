@@ -174,7 +174,7 @@
 		ezs_documentshare A
 		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id
 		WHERE
-		A.user_id = #{userid,jdbcType=BIGINT} and NOT isnull(A.ezsSubstance_id) and NOT isnull(B.meta) and ''!=B.meta
+		A.user_id = #{userid,jdbcType=BIGINT} and NOT isnull(A.ezsSubstance_id) and NOT isnull(B.meta) and ''!=B.meta  and A.house=1
 		 ORDER BY A.addTime   desc
 		limit #{pageCount},#{pageSize}
 	</select>
