@@ -66,6 +66,19 @@ function pricetrend(data){
 	$("input[name=areaId]").val(areaId);
 	$("input[name=colorId]").val(colorId);
 	$("input[name=formId]").val(formId);
+	
+    //设置时间跨度区间恢复为 一周 WEEK
+    $("input[name=dateBetweenType]").val("WEEK");
+    $("input[name=channelchanged]").val("1");
+    //默认选着一周
+    $("ul li:eq(0)").addClass('active');
+    //去掉兄弟节点样式
+    $("ul li:eq(0)").siblings('li').removeClass('active');
+	mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
+	
+	//初始化填充数据列表数据列表
+	showdataByPage(goodClassId,"WEEK",1,areaId,colorId,formId);
+	
 	var namey=[];
     var numo=[];
 	$.ajax({
@@ -82,16 +95,6 @@ function pricetrend(data){
 	    success: function (result) {
 	    //页数
 	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
-	    //设置时间跨度区间恢复为 一周 WEEK
-	    $("input[name=dateBetweenType]").val("WEEK");
-	    $("input[name=channelchanged]").val("1");
-	    $('ul li:first-child').css('class', 'active');
-	    //$("ul li").removeClass("active");
-	    //$("WEEK").removeClass("active");
-	    $("MONTH").removeClass("active");
-	    $("QUARTER").removeClass("active");
-	    $("YEAR").removeClass("active");
-		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
 	    
 	    var isshow = 0;
 	       $.each(result, function (index, item) {
@@ -109,8 +112,6 @@ function pricetrend(data){
 	    	   $("#mainAllLock").css('display','block');// 显示
 	       }
 	        echartInit(namey, classname, numo);
-	        //初始化填充数据列表数据列表
-	        showdataByPage($("input[name=goodClassId]").val(),"WEEK",1,areaId,colorId,formId);
 	    },
 	    error: function (errorMsg) {
 	    }
@@ -126,9 +127,9 @@ function showdataByPage(goodClassId,dateBetweenType,currentPage,areaId,colorId,f
 	    	"goodClassId":goodClassId,
 	    	"dateBetweenType":dateBetweenType,
 	    	"currentPage":currentPage,
-	    	"areaId":areaId,
-	    	"colorId":colorId,
-	    	"formId":formId,
+	    	"areaId":$("input[name=areaId]").val(),
+	    	"colorId":$("input[name=colorId]").val(),
+	    	"formId":$("input[name=formId]").val(),
 	    	"token":$("input[name=token]").val()
 	    },
 	    dataType: "json",

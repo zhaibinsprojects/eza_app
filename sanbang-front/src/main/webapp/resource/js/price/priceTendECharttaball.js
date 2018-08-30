@@ -120,6 +120,9 @@ function showdataByPage(goodClassId,dateBetweenType,currentPage){
 	    	"goodClassId":goodClassId,
 	    	"dateBetweenType":dateBetweenType,
 	    	"currentPage":currentPage,
+	    	"areaId":$("input[name=areaId]").val(),
+	    	"colorId":$("input[name=colorId]").val(),
+	    	"formId":$("input[name=formId]").val(),
 	    	"token":$("input[name=token]").val()
 	    },
 	    dataType: "json",

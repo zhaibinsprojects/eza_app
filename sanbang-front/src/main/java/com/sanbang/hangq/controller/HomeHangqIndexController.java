@@ -742,6 +742,8 @@ public class HomeHangqIndexController {
 		List<PriceTrendIfo> returnppList = new ArrayList<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		
+		areaId = request.getParameter("areaId");
+		
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
 		if(colorId!=null&&!colorId.trim().equals(""))
