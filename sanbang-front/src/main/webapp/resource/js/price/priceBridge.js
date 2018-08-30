@@ -102,7 +102,6 @@ function pricetrend(data){
 	        showdataByPage($("input[name=goodClassId]").val(),"WEEK",1,areaId,colorId,formId);
 	    },
 	    error: function (errorMsg) {
-	        myChart.hideLoading();
 	    }
 	});
 	
@@ -128,7 +127,6 @@ function showdataByPage(goodClassId,dateBetweenType,currentPage,areaId,colorId,f
 	    },
 	    error: function (errorMsg) {
 	        //alert("图表数据请求失败!");
-	        myChart.hideLoading();
 	    }
 	});
 }
@@ -164,7 +162,7 @@ function initTable(plist){
 
 /*点击列表项*/
 function doclick(){
-	$(".lockyuip").click(function(){
+	mui('.lockyuip').on('tap', function() {
 		var u = navigator.userAgent; // 获取用户设备
 		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 		if ("" == $("input[name=token]").val()) {
@@ -182,7 +180,7 @@ function doclick(){
 				androidtodingyue();
 			}
 		}
-	});
+	})
 };
 
 /*android未登录*/
@@ -199,6 +197,7 @@ function iosnologin() {
 };
 /*android订阅*/
 function androidtodingyue() {
+	var data = {};
 	var str = JSON.stringify(data);
 	window.android.androidtodingyue();
 	return false;

@@ -257,7 +257,15 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
 					priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
 					priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
-				}catch(Exception e){}
+					//首页-走势app由这两个字段取值
+					priceTrendIfo.setCurrentPrice(Double.valueOf(currentavgprice));
+					priceTrendIfo.setPrePrice(Double.valueOf(preavgprice));
+				}catch(Exception e){
+					//若上面转化异常，则直接取avg值放入price字段
+					priceTrendIfo.setCurrentPrice(priceTrendIfo.getCurrentAVGPrice());
+					priceTrendIfo.setPrePrice(priceTrendIfo.getPreAVGPrice());
+					e.printStackTrace();
+				}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
 				//地址信息
 				String areaName = getAreaName(priceTrendIfo.getRegion_id());
@@ -303,7 +311,14 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
 					priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
 					priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
-				}catch(Exception e){}
+					//首页-走势app由这两个字段取值
+					priceTrendIfo.setCurrentPrice(Double.valueOf(currentavgprice));
+					priceTrendIfo.setPrePrice(Double.valueOf(preavgprice));
+				}catch(Exception e){
+					//若上面转化异常，则直接取avg值放入price字段
+					priceTrendIfo.setCurrentPrice(priceTrendIfo.getCurrentAVGPrice());
+					priceTrendIfo.setPrePrice(priceTrendIfo.getPreAVGPrice());
+				}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
 				//地址信息
 				String areaName = getAreaName(priceTrendIfo.getRegion_id());
