@@ -94,8 +94,8 @@ function pricetrend(data){
 	    	   $("#mainAll").css('display','block');//显示  
 	    	   $("#mainAllLock").css('display','none');//隐藏   
 	       }else{
-	    	   $("#mainAll").css('display','none');//显示  
-	    	   $("#mainAllLock").css('display','block');//隐藏   
+	    	   $("#mainAll").css('display','none');//隐藏   
+	    	   $("#mainAllLock").css('display','block');// 显示
 	       }
 	        echartInit(namey, classname, numo);
 	        //初始化填充数据列表数据列表
@@ -151,7 +151,8 @@ function initTable(plist){
 			}else {
 				html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
 			} 
-			
+			$("#container").css('display','block');//隐藏
+			$("#containerLock").css('display','none');//显示   
 		}else{
 			html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 			"<td><span><i class='lockyuip'></i></span></td>";
