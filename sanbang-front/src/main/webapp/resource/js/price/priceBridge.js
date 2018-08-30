@@ -82,6 +82,17 @@ function pricetrend(data){
 	    success: function (result) {
 	    //页数
 	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
+	    //设置时间跨度区间恢复为 一周 WEEK
+	    $("input[name=dateBetweenType]").val("WEEK");
+	    $("input[name=channelchanged]").val("1");
+	    $('ul li:first-child').css('class', 'active');
+	    //$("ul li").removeClass("active");
+	    //$("WEEK").removeClass("active");
+	    $("MONTH").removeClass("active");
+	    $("QUARTER").removeClass("active");
+	    $("YEAR").removeClass("active");
+		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
+	    
 	    var isshow = 0;
 	       $.each(result, function (index, item) {
 	            namey.push(item.dealDate);     

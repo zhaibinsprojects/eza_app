@@ -683,13 +683,29 @@ public class HomeHangqIndexController {
 		
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
-		if(areaId!=null&&!areaId.trim().equals(""))
-			tMap.put("areaId", areaId);
 		if(colorId!=null&&!colorId.trim().equals(""))
 			tMap.put("colorId", colorId);
 		if(formId!=null&&!formId.trim().equals(""))
 			tMap.put("formId", formId);
 		tMap.put("dateBetweenType", dateBetweenType);
+		//获取相关地址ID
+		List<String> areaIdsList = new ArrayList<>();
+		Map<String, Object> areaIdsMap = null;
+		try{
+			if(areaId!=null&&!areaId.trim().equals("")){
+				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
+				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+				if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+					List<ezs_area> areaListTemp =new ArrayList<>();
+					areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+					for (ezs_area tarea : areaListTemp) {
+						areaIdsList.add(tarea.getId().toString());
+					}
+					tMap.put("areaIds", areaIdsList);
+				}
+			}
+		}catch(Exception e){  }
+		
 		mmp = this.priceConditionService.getPriceTrendcyNew(tMap, 0, 20);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -728,14 +744,30 @@ public class HomeHangqIndexController {
 		
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
-		if(areaId!=null&&!areaId.trim().equals(""))
-			tMap.put("areaId", areaId);
 		if(colorId!=null&&!colorId.trim().equals(""))
 			tMap.put("colorId", colorId);
 		if(formId!=null&&!formId.trim().equals(""))
 			tMap.put("formId", formId);
 		tMap.put("currentPage", currentPage);
 		tMap.put("dateBetweenType", dateBetweenType);
+		//获取相关地址ID
+		List<String> areaIdsList = new ArrayList<>();
+		Map<String, Object> areaIdsMap = null;
+		try{
+			if(areaId!=null&&!areaId.trim().equals("")){
+				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
+				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+				if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+					List<ezs_area> areaListTemp =new ArrayList<>();
+					areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+					for (ezs_area tarea : areaListTemp) {
+						areaIdsList.add(tarea.getId().toString());
+					}
+					tMap.put("areaIds", areaIdsList);
+				}
+			}
+		}catch(Exception e){  }
+		
 		mmp = this.priceConditionService.getPriceTrendcyNewPage(tMap,currentPage,20);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
