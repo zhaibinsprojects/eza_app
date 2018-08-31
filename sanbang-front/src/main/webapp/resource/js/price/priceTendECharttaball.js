@@ -29,7 +29,7 @@ $.ajax({
        }
        	//heighchart
        	echartInit(namey, classname, numo);   
-       	showdataByPage($("input[name=goodClassId]").val(),"WEEK",1);
+       	showdataByPageOne("WEEK",1);
     	
     },
     error: function (errorMsg) {
@@ -56,8 +56,8 @@ function initTable(plist){
 			}else {
 				html=html+"<td><span>"+plist[i].sandByOne+"</span></td> ";
 			} 
-			$("#container").css('display','block');//隐藏
-			$("#containerLock").css('display','none');//显示   
+			$("#container").css('display','block');//显示
+			$("#containerLock").css('display','none');//隐藏   
 		}else{
 			html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 			"<td><span><i class='lockyuip'></i></span></td>";
@@ -76,20 +76,23 @@ $(document).ready(function(){
 		$("input[name=dateBetweenType]").val($(this).attr("name"));
 		$("input[name=channelchanged]").val("1");
 		//获取选定月份
-		//加载则线图数据
-		showdatas(goodClassId,$(this).attr("name"));
 		//加载表格数据列表，默认加载首页
-		showdataByPage(goodClassId,$(this).attr("name"),1);
 		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
+		showdataByPageOne($(this).attr("name"),1);
+		//加载则线图数据
+		showdatas($(this).attr("name"));
 	});
 })
-function showdatas(goodClassId,dateBetweenType){
+function showdatas(dateBetweenType){
 	$.ajax({
 	    type: 'post',
 	    url: 'front/app/hangq/priceTrendDetail.htm',
 	    data:{
-	    	"goodClassId":goodClassId,
+	    	"goodClassId":$("input[name=goodClassId]").val(),
 	    	"dateBetweenType":dateBetweenType,
+	    	"areaId":$("input[name=areaId]").val(),
+	    	"colorId":$("input[name=colorId]").val(),
+	    	"formId":$("input[name=formId]").val(),
 	    	"token":$("input[name=token]").val()
 	    },
 	    dataType: "json",
@@ -112,14 +115,14 @@ function showdatas(goodClassId,dateBetweenType){
 	});
 }
 //实时报价详情列表-分页展示 
-function showdataByPage(goodClassId,dateBetweenType,currentPage){
+function showdataByPageOne(dateBetweenType,currentPage){
 	$.ajax({
 	    type: 'post',
 	    url: 'front/app/hangq/priceTrendDetailPage.htm',
 	    data:{
-	    	"goodClassId":goodClassId,
+	    	"goodClassId":$("input[name=goodClassId]").val(),
 	    	"dateBetweenType":dateBetweenType,
-	    	"currentPage":currentPage,
+	    	"currentPage":"1",
 	    	"areaId":$("input[name=areaId]").val(),
 	    	"colorId":$("input[name=colorId]").val(),
 	    	"formId":$("input[name=formId]").val(),
@@ -161,9 +164,15 @@ function echartInit(xdata,name,mydata){
 	        	title: {
 	            	text: ''
 	        	}
+	        	/*labels: {
+		            formatter: function () {
+		            	return this.value + "%";
+		            }
+		        }*/
 	    	},
 	        legend: {
 	            enabled: false
+	        	//enabled: true
 	        },
 			
 	        plotOptions: {
@@ -194,6 +203,12 @@ function echartInit(xdata,name,mydata){
 	                    }
 	                },
 	                threshold: null
+	            },
+	            tooltip: {
+	            	formatter: function () {
+	            	var s = "haha";
+	            	return s;
+	            	}
 	            }
 	        },
 	        series: [{
