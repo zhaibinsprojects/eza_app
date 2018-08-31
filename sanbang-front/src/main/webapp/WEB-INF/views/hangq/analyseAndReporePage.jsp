@@ -22,7 +22,8 @@ var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){
 	mui('body').on('tap', '.text_yzs', function() {
-		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		//window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		window.location.href=baseurl+"/front/app/menuhq/hangqShow.htm?id="+$(this).attr("id");
 	});
 })
 </script>

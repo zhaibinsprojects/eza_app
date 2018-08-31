@@ -4,8 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
-<!-- <base href="http://10.10.10.52/"/> -->
+<%-- <base href="${serurl}"/> --%>
+<base href="http://10.10.10.52/"/>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
@@ -22,6 +22,14 @@
 <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" > 
 <script type="text/javascript" src="front/resource/js/price/priceTrendy.js"></script><!-- 上下拉刷新 -->
 <script src="front/resource/js/price/priceTendECharttaball.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+td span{
+font-size: 13px !important;
+}
+tbody tr{
+	height: 40px !important;
+}
+</style>
 </head>
 <body>
 <div class="content_yzs">

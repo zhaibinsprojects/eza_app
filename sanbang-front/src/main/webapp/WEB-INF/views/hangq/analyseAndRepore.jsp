@@ -5,8 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<%-- <base href="${serurl}"/> --%>
-<base href="http://10.10.10.52/"/>
+<base href="${serurl}"/>
+<!-- <base href="http://10.10.10.52/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -74,13 +74,14 @@
     </div>
 </body>
 <script type="text/javascript">
-/* var baseurl="${serurl}"; */
-var baseurl="http://10.10.10.52/";
+var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.52/"; */
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){
 	mui('body').on('tap', '.text_yzs', function() {
-		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		//window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		window.location.href=baseurl+"/front/app/menuhq/hangqShow.htm?id="+$(this).attr("id");
 	});
 })
 $(function(){

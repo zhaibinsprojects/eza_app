@@ -11,6 +11,7 @@ $(function() {
 		var data = {};
 		var str = JSON.stringify(data);
 		doclick();
+		doclickTwo();
 		//判断权限
 		try {
 			WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
