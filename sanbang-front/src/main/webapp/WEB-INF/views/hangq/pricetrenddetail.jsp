@@ -75,10 +75,6 @@
 </body>
 <!-- 展示时间区间调整 -->
 <script type="text/javascript">
-/* var goodClassId = $("input[name=goodClassId]").val();
-var areaId = $("input[name=areaId]").val();
-var colorId = $("input[name=colorId]").val();
-var formId = $("input[name=formId]").val(); */
 var dateBetweenType = $("input[name=dateBetweenType]").val();
 var pagecount = $("input[name=pagecount]").val();
 </script>

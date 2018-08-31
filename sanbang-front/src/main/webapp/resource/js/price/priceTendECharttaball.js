@@ -74,6 +74,7 @@ function doclick(){
 };
 //列表锁-点击事件
 function doclickTwo(){
+	$(".lockyuip").unbind(); //移除之前所有绑定的事件
 	//列表锁
 	$(".lockyuip").on('tap',function(){
 		var u = navigator.userAgent; // 获取用户设备
@@ -420,6 +421,8 @@ function showdataByPage(goodClassId,currentPage,areaId,colorId,formId){
 	    success: function (result) {
 	       //初始化填充数据列表数据列表
 	       initTable(result);
+	       //列表添加成功-添加事件
+	       doclickTwo();
 	    },
 	    error: function (errorMsg) {
 	        //alert("图表数据请求失败!");
