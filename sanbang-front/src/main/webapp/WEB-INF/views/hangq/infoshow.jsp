@@ -88,7 +88,8 @@ var  pdfname="${show.attachment}";
 var pdfid="${show.id}"
 $(document).ready(function(){
 	$(".text_yzs").click(function(){
-		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		//window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		window.location.href=baseurl+"/front/app/menuhq/hangqShow.htm?id="+$(this).attr("id");
 	})
 	$(".MsoNormalTable").css("width","100%");
 	
