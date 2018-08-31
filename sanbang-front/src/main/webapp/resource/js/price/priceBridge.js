@@ -10,7 +10,7 @@ $(function() {
 		//筛选显示内容
 		var data = {};
 		var str = JSON.stringify(data);
-		doclick();
+		//doclick();
 		//判断权限
 		try {
 			WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
@@ -46,7 +46,7 @@ $(function() {
 				 $("input[name=token]").val(userk);
 			 }
 		} catch (e) { }
-		doclick();
+		//doclick();
 	};
 });
 //移动端调用-筛选
