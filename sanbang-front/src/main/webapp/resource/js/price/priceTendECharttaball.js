@@ -51,26 +51,6 @@ $(function() {
 });
 /*点击列表项*/
 function doclick(){
-	/*//列表锁
-	$(".lockyuip").on('tap',function(){
-		var u = navigator.userAgent; // 获取用户设备
-		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
-		if ("" == $("input[name=token]").val()) {
-			if (isIOS) {
-				iosnologin();
-			} else {
-				androidnologin();
-			}
-			return false;
-		}else{
-			//已登录 去订阅
-			if (isIOS) {
-				iostodingyue();
-			} else {
-				androidtodingyue();
-			}
-		}
-	})*/
 	//走势图锁
 	$(".graybakhuio").on('tap',function(){
 		var u = navigator.userAgent; // 获取用户设备
@@ -116,7 +96,6 @@ function doclickTwo(){
 	})
 }
 
-
 /*------------------------------------*/
 
 var namey = [];
@@ -159,46 +138,7 @@ $(document).ready(function(){
 	    }
 
 	});	
-	
-	
 })
-
-/*$.ajax({
-    type: 'post',
-    url: 'front/app/hangq/priceTrendDetail.htm',
-    data:{
-    	"goodClassId":$("input[name=goodClassId]").val(),
-    	"token":$("input[name=token]").val()
-    },
-    dataType: "json",
-    success: function (result) {
-    	//页数
-    	$("input[name=pagecount]").val(Math.ceil(result.length/20));
-    	var isshow = 0;
-       $.each(result, function (index, item) {
-            namey.push(item.dealDate);     
-            numo.push(item.currentAVGPrice);
-            classname = item.goodClassName;
-            isshow = item.isshow;
-        });
-       if(isshow=='1'){
-    	   //展示走势图
-    	   $("#container").css('display','block');//显示  
-    	   $("#containerLock").css('display','none');//隐藏   
-       }else{
-    	   $("#container").css('display','none');//隐藏 
-    	   $("#containerLock").css('display','block');//显示   
-       }
-       	//heighchart
-       	echartInit(namey, classname, numo);   
-       	showdataByPageOne("WEEK",1);
-    	
-    },
-    error: function (errorMsg) {
-        //alert("图表数据请求失败!");
-    }
-
-});*/
 
 //初始化填充表格
 function initTable(plist){
@@ -461,8 +401,6 @@ function pricetrend(data){
 	    	window.android.affection();
 	    }
 	});
-	
- 	//affection();
 }
 //实时报价详情列表-分页展示 
 function showdataByPage(goodClassId,currentPage,areaId,colorId,formId){

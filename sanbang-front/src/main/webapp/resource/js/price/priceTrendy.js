@@ -72,6 +72,7 @@ mui.init({
 					async : false,
 					success : function(data) {
 						addTable(data);
+						doclickTwo();
 					},
 					error:function(e){
 						html=e;
@@ -98,6 +99,7 @@ mui.init({
 					async : false,
 					success : function(data) {
 						initTable(data);
+						doclickTwo();
 					},
 					error:function(e){
 						html=e;
