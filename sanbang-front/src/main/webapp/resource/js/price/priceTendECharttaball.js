@@ -7,22 +7,31 @@ $(function() {
 	
 	if (isIOS) {
 		setupWebViewJavascriptBridge(function(bridge) {
-		//筛选显示内容
-		var data = {};
-		var str = JSON.stringify(data);
-		doclick();
-		doclickTwo();
-		//判断权限
-		try {
-			WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
-				userk= data;
-				if(userk!=""){
-					//$(".userkey").val(data);
-					$("input[name=token]").val(data);
-				}
-			});		 
-		} catch (e) { }
+			//筛选显示内容
+			var data = {};
+			var str = JSON.stringify(data);
+			doclick();
+			doclickTwo();
+			//pricetrend(str);
+			//判断权限
+			try {
+				WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
+					userk= data;
+					if(userk!=""){
+						//$(".userkey").val(data);
+						$("input[name=token]").val(data);
+					}
+				});		 
+			} catch (e) { }
+		
+			// 注册一个"functionInJs",
+			bridge.registerHandler("pricetrend", function(data, responseCallback) {
+				pricetrend(data);
+				//responseCallback(responseData);
+			});
+		
 		});
+		
 		// ios app 设备才执行
 		//这段代码是固定的，必须要放到js中
 		function setupWebViewJavascriptBridge(callback) {
@@ -37,7 +46,6 @@ $(function() {
 		}
         // 与OC交互的所有JS方法都要放在此处注册，才能调用通过JS调用OC或者让OC调用这里的JS
 		var bridge =setupWebViewJavascriptBridge();
-		
 		} else {
 		//安卓侨联
 		 try {

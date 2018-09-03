@@ -197,8 +197,8 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice,
-	IFNULL((select 1 from ezs_subscribehq_child cd where cd.user_id = #{userId} and cd.goodsClass_id = a.goodClass_id and DATE_FORMAT(cd.endTime,'%Y-%m-%d') >= DATE_FORMAT(NOW(),'%Y-%m-%d')),0) isshow
+	(select d.price from ezs_price_trend_xl d where d.region_id = a.region_id and d.goodClass_id = a.goodClass_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
+	<!-- IFNULL((select 1 from ezs_subscribehq_child cd where cd.user_id = #{userId} and cd.goodsClass_id = a.goodClass_id and DATE_FORMAT(cd.endTime,'%Y-%m-%d') >= DATE_FORMAT(NOW(),'%Y-%m-%d')),0) isshow -->
 	from ezs_price_trend_xl a 
 	where a.deleteStatus = '0'
 	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
