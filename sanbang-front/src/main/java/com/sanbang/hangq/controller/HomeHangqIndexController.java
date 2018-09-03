@@ -553,7 +553,7 @@ public class HomeHangqIndexController {
 			@RequestParam(name="type",required=true)String type,
 			@RequestParam(name="dateBetweenType",required=false,defaultValue="WEEK") String dateBetweenType,Model model){
 		//获取token验证用户权限，符合-返回相关标志位
-		model.addAttribute("showFlag", "1");//00-未购、不在试用期（未试用），01-未购、在试用期，02-未购、不在试用期（已试用）；10 已购
+		model.addAttribute("showFlag", "1");
 		model.addAttribute("dateBetweenType", "WEEK");
 		model.addAttribute("priceId", priceId);
 		model.addAttribute("type", type);

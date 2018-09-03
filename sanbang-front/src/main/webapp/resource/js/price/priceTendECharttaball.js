@@ -10,11 +10,9 @@ $(function() {
 			//筛选显示内容
 			var data = {};
 			var str = JSON.stringify(data);
-			doclick();
-			doclickTwo();
-			//pricetrend(str);
 			//判断权限
 			try {
+				//调用IOS方法“isiosLogin”
 				WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
 					userk= data;
 					if(userk!=""){
@@ -24,14 +22,13 @@ $(function() {
 				});		 
 			} catch (e) { }
 		
-			// 注册一个"functionInJs",
+			//注册一个"pricetrend"JS函数到IOS，供IOS调用
 			bridge.registerHandler("pricetrend", function(data, responseCallback) {
 				pricetrend(data);
 				//responseCallback(responseData);
 			});
 		
 		});
-		
 		// ios app 设备才执行
 		//这段代码是固定的，必须要放到js中
 		function setupWebViewJavascriptBridge(callback) {
@@ -60,6 +57,7 @@ $(function() {
 });
 /*点击列表项*/
 function doclick(){
+	$(".graybakhuio").unbind(); //移除之前所有绑定的事件
 	//走势图锁
 	$(".graybakhuio").on('tap',function(){
 		var u = navigator.userAgent; // 获取用户设备
@@ -140,6 +138,7 @@ $(document).ready(function(){
 	       }
 	       	//heighchart
 	       	echartInit(namey, classname, numo);   
+	       	doclick();
 	       	showdataByPageOne("WEEK",1);
 	    	
 	    },
@@ -220,7 +219,8 @@ function showdatas(dateBetweenType){
 	            classname = item.goodClassName;
 	        });
 	     //heighchart
-	     echartInit(namey, classname, numo);  
+	     echartInit(namey, classname, numo); 
+	     doclick();
 	    },
 	    error: function (errorMsg) {
 	    }
