@@ -1,174 +1,34 @@
-function echartInit(xdata,name,mydata){
-	Highcharts.chart('container', {
-	        chart: {
-	            zoomType: 'x'
-	        },
-	        title: {
-	            text: ''
-	        },
-	        subtitle: {
-	            text: ''
-	        },
-			colors: ['#4cd4c8'],
-	        xAxis: {
-	        	 tickInterval: 8,
-	        categories: xdata
-	    },
-			credits: {
-	          enabled:false
-	},
-	       exporting: {
-	            enabled:false
-	},
-	        yAxis: {
-	        	allowDecimals:false,//tickPositions: [0, 5, 10, 15,20,25,30],
-	        	title: {
-	            	text: ''
-	        	}
-	    	},
-	        legend: {
-	            enabled: false
-	        },
-			
-	        plotOptions: {
-	            area: {
-	                fillColor: {
-	                    linearGradient: {
-	                        x1: 0,
-	                        y1: 0,
-	                        x2: 0,
-	                        y2: 1
-	                    },
-	                    stops: [
-	                        [0, '#4cd4c8'],
-	                        [1, Highcharts.Color('#4cd4c8').setOpacity(0).get('rgba')]
-	                    ]
-	                },
-	                marker: {
-	                    radius: 1,
-						lineWidth: 1,
-						fillColor: '#fff',//点填充色
-						lineColor: '#4cd4c8',//点边框色
-	                },
-	                lineWidth: 1,
-					
-	                states: {
-	                    hover: {
-	                        lineWidth: 1
-	                    }
-	                },
-	                threshold: null
-	            }
-	        },
-	        series: [{
-				type: 'area',
-		        name: name,
-		        data: mydata,
-		        lineWidth:1
-	    }]
-	    });
-};
-
-var myChart = echarts.init(document.getElementById('mainAll'));
-myChart.setOption({
-	title : {
-        show:false
-    },
-	 tooltip: {
-        trigger: 'axis',
-        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-            type : 'none'        // 默认为直线，可选为：'line' | 'shadow'
-        }
-    },
-    grid: {
-        left: '0%',
-        right: '0%',
-        bottom: '4%',
-        top:'6%',
-        containLabel: true
-    },
-    calculable : true,
-     xAxis : [
-        {
-            type : 'category',
-            axisLabel: {
-                show: true,
-                textStyle: {
-                    color: '#000'
-                }
-            },
-  			data:[],
-  			 axisLabel:{
-            inside:true,
-        },
-    	}
-	],
-	yAxis : [
-    	{
-        	type : 'value',
-        	 axisLabel:{
-            inside:true,
-        },
-    	}
-	],
-    series : [
-    	{
-        	name:'',
-        	type:'bar',
-        	smooth: true,
-        	data:[],
-        }
-    ]
-});
-myChart.showLoading();
 var namey = [];
 var numo = [];
 var classname = "";
-$.ajax({
-    type: 'post',
-    url: 'front/app/hangq/priceInTimeDetail.htm',
-    data:{
-    	"type":$("input[name=type]").val(),
-    	"priceId":$("input[name=priceId]").val()
-    },
-    dataType: "json",
-    success: function (result) {
-    	//页数
-    	$("input[name=pagecount]").val(Math.ceil(result.length/20));
-       $.each(result, function (index, item) {
-            namey.push(item.dealDate);     
-            numo.push(item.currentPrice);
-            classname = item.goodClassName;
-        });
-        myChart.hideLoading();
-        myChart.setOption({
-            xAxis: {
-                data: namey
-            },
-            yAxis: {
-                data: numo
-            },
-            series: [{
-            	name:classname,
-                type:'line',
-                smooth: true,
-                data: numo
-            }
-            ]
-        });
-	    /*var xdata =result.dealDate;
-	   	var data = result.currentPrice;
-	   	var name=result.goodClassName;
-    	echartInit(xdata, name, data);*/
-        //初始化填充数据列表数据列表
-        //initTable(result);
-        showdataByPage(type,$("input[name=priceId]").val(),"WEEK",1);
-    },
-    error: function (errorMsg) {
-        //alert("图表数据请求失败!");
-        myChart.hideLoading();
-    }
-});
+$(document).ready(function(){
+	$.ajax({
+	    type: 'post',
+	    url: 'front/app/hangq/priceInTimeDetail.htm',
+	    data:{
+	    	"type":$("input[name=type]").val(),
+	    	"priceId":$("input[name=priceId]").val()
+	    },
+	    dataType: "json",
+	    success: function (result) {
+	    	//页数
+	    	$("input[name=pagecount]").val(Math.ceil(result.length/20));
+	    	var isshow = 0;
+	    	$.each(result, function (index, item) {
+	            namey.push(item.dealDate);     
+	            numo.push(item.currentPrice);
+	            classname = item.goodClassName;
+	        });
+	       	//heighchart
+	       	echartInit(namey, classname, numo);   
+	       	showdataByPage(type,$("input[name=priceId]").val(),"WEEK",1);
+	    },
+	    error: function (errorMsg) {
+	        //alert("图表数据请求失败!");
+	    }
+
+	});	
+})
 
 //初始化填充表格
 function initTable(plist){
@@ -228,22 +88,7 @@ function showdatas(type,priceId,dateBetweenType){
 	            numo.push(item.currentPrice);
 	            classname = item.goodClassName;
 	        });
-	        myChart.hideLoading();
-	        myChart.setOption({
-	            xAxis: {
-	                data: namey
-	            },
-	            yAxis: {
-	                data: numo
-	            },
-	            series: [{
-	            	name:classname,
-	                type:'line',
-	                smooth: true,
-	                data: numo
-	            }
-	            ]
-	        });
+	       echartInit(namey, classname, numo);  
 	        //初始化填充数据列表数据列表
 	        //initTable(result);
 	    },
@@ -271,7 +116,89 @@ function showdataByPage(type,priceId,dateBetweenType,currentPage){
 	    },
 	    error: function (errorMsg) {
 	        //alert("图表数据请求失败!");
-	        myChart.hideLoading();
 	    }
 	});
 }
+
+
+
+
+
+//---------------------修改为highchart
+function echartInit(xdata,name,mydata){
+	Highcharts.chart('container', {
+	        chart: {
+	            zoomType: 'x'
+	        },
+	        title: {
+	            text: ''
+	        },
+	        subtitle: {
+	            text: ''
+	        },
+			colors: ['#4cd4c8'],
+	        xAxis: {
+	        	 tickInterval: 8,
+	        categories: xdata
+	    },
+			credits: {
+	          enabled:false
+	},
+	       exporting: {
+	            enabled:false
+	},
+	        yAxis: {
+	        	allowDecimals:false,//tickPositions: [0, 5, 10, 15,20,25,30],
+	        	title: {
+	            	text: ''
+	        	}
+	    	},
+	        legend: {
+	            enabled: false
+	        	//enabled: true
+	        },
+			
+	        plotOptions: {
+	            area: {
+	                fillColor: {
+	                    linearGradient: {
+	                        x1: 0,
+	                        y1: 0,
+	                        x2: 0,
+	                        y2: 1
+	                    },
+	                    stops: [
+	                        [0, '#4cd4c8'],
+	                        [1, Highcharts.Color('#4cd4c8').setOpacity(0).get('rgba')]
+	                    ]
+	                },
+	                marker: {
+	                    radius: 1,
+						lineWidth: 1,
+						fillColor: '#fff',//点填充色
+						lineColor: '#4cd4c8',//点边框色
+	                },
+	                lineWidth: 1,
+					
+	                states: {
+	                    hover: {
+	                        lineWidth: 1
+	                    }
+	                },
+	                threshold: null
+	            },
+	            tooltip: {
+	            	formatter: function () {
+	            	var s = "haha";
+	            	return s;
+	            	}
+	            }
+	        },
+	        series: [{
+				type: 'area',
+		        name: name,
+		        data: mydata,
+		        lineWidth:1
+	    }]
+	    });
+};

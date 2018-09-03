@@ -10,7 +10,7 @@ $(function() {
 		//筛选显示内容
 		var data = {};
 		var str = JSON.stringify(data);
-		doclick();
+		//doclick();
 		//判断权限
 		try {
 			WebViewJavascriptBridge.callHandler('isiosLogin', str, function(data) {
@@ -46,7 +46,7 @@ $(function() {
 				 $("input[name=token]").val(userk);
 			 }
 		} catch (e) { }
-		doclick();
+		//doclick();
 	};
 });
 //移动端调用-筛选
@@ -61,11 +61,29 @@ function pricetrend(data){
 	var formId = obj.formid;
 	var goodClassId = obj.pinleiid;
 	
+	$("input[name=goodClassId]").val('');
+	$("input[name=areaId]").val('');
+	$("input[name=colorId]").val('');
+	$("input[name=formId]").val('');
+	
 	//参数暂存
 	$("input[name=goodClassId]").val(goodClassId);
 	$("input[name=areaId]").val(areaId);
 	$("input[name=colorId]").val(colorId);
 	$("input[name=formId]").val(formId);
+	
+    //设置时间跨度区间恢复为 一周 WEEK
+    $("input[name=dateBetweenType]").val("WEEK");
+    $("input[name=channelchanged]").val("1");
+    //默认选着一周
+    $("ul li:eq(0)").addClass('active');
+    //去掉兄弟节点样式
+    $("ul li:eq(0)").siblings('li').removeClass('active');
+	mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
+	
+	//初始化填充数据列表数据列表
+	showdataByPage(goodClassId,1,areaId,colorId,formId);
+	
 	var namey=[];
     var numo=[];
 	$.ajax({
@@ -82,16 +100,6 @@ function pricetrend(data){
 	    success: function (result) {
 	    //页数
 	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
-	    //设置时间跨度区间恢复为 一周 WEEK
-	    $("input[name=dateBetweenType]").val("WEEK");
-	    $("input[name=channelchanged]").val("1");
-	    $('ul li:first-child').css('class', 'active');
-	    //$("ul li").removeClass("active");
-	    //$("WEEK").removeClass("active");
-	    $("MONTH").removeClass("active");
-	    $("QUARTER").removeClass("active");
-	    $("YEAR").removeClass("active");
-		mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
 	    
 	    var isshow = 0;
 	       $.each(result, function (index, item) {
@@ -109,26 +117,29 @@ function pricetrend(data){
 	    	   $("#mainAllLock").css('display','block');// 显示
 	       }
 	        echartInit(namey, classname, numo);
-	        //初始化填充数据列表数据列表
-	        showdataByPage($("input[name=goodClassId]").val(),"WEEK",1,areaId,colorId,formId);
+	        //调用移动端函数，通知加载完成
+	        window.android.affection();
 	    },
 	    error: function (errorMsg) {
+	    	//调用移动端函数，通知加载完成
+	    	window.android.affection();
 	    }
 	});
 	
+ 	//affection();
 }
 //实时报价详情列表-分页展示 
-function showdataByPage(goodClassId,dateBetweenType,currentPage,areaId,colorId,formId){
+function showdataByPage(goodClassId,currentPage,areaId,colorId,formId){
 	$.ajax({
 	    type: 'post',
 	    url: 'front/app/hangq/priceTrendDetailPage.htm',
 	    data:{
 	    	"goodClassId":goodClassId,
-	    	"dateBetweenType":dateBetweenType,
+	    	"dateBetweenType":"WEEK",
 	    	"currentPage":currentPage,
-	    	"areaId":areaId,
-	    	"colorId":colorId,
-	    	"formId":formId,
+	    	"areaId":$("input[name=areaId]").val(),
+	    	"colorId":$("input[name=colorId]").val(),
+	    	"formId":$("input[name=formId]").val(),
 	    	"token":$("input[name=token]").val()
 	    },
 	    dataType: "json",
@@ -160,8 +171,8 @@ function initTable(plist){
 			}else {
 				html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
 			} 
-			$("#container").css('display','block');//隐藏
-			$("#containerLock").css('display','none');//显示   
+			$("#container").css('display','block');//显示
+			$("#containerLock").css('display','none');//隐藏   
 		}else{
 			html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 			"<td><span><i class='lockyuip'></i></span></td>";
@@ -173,7 +184,28 @@ function initTable(plist){
 
 /*点击列表项*/
 function doclick(){
+	//列表锁
 	$(".lockyuip").on('tap',function(){
+		var u = navigator.userAgent; // 获取用户设备
+		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+		if ("" == $("input[name=token]").val()) {
+			if (isIOS) {
+				iosnologin();
+			} else {
+				androidnologin();
+			}
+			return false;
+		}else{
+			//已登录 去订阅
+			if (isIOS) {
+				iostodingyue();
+			} else {
+				androidtodingyue();
+			}
+		}
+	})
+	//走势图锁
+	$(".graybakhuio").on('tap',function(){
 		var u = navigator.userAgent; // 获取用户设备
 		var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
 		if ("" == $("input[name=token]").val()) {
@@ -221,6 +253,3 @@ function iostodingyue() {
 	WebViewJavascriptBridge.callHandler('iostodingyue', "", function() { });
 	return false;
 }
-
-
-

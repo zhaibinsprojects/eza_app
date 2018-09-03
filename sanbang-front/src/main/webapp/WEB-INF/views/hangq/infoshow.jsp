@@ -6,7 +6,7 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
-<!-- <base href="http://10.10.10.232/"/> -->
+<!-- <base href="http://10.10.10.52/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -88,7 +88,8 @@ var  pdfname="${show.attachment}";
 var pdfid="${show.id}"
 $(document).ready(function(){
 	$(".text_yzs").click(function(){
-		window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		//window.location.href=baseurl+"/front/app/home/hangqShow.htm?id="+$(this).attr("id");
+		window.location.href=baseurl+"/front/app/menuhq/hangqShow.htm?id="+$(this).attr("id");
 	})
 	$(".MsoNormalTable").css("width","100%");
 	

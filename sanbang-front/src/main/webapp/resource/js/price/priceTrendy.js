@@ -72,6 +72,7 @@ mui.init({
 					async : false,
 					success : function(data) {
 						addTable(data);
+						doclickTwo();
 					},
 					error:function(e){
 						html=e;
@@ -98,6 +99,7 @@ mui.init({
 					async : false,
 					success : function(data) {
 						initTable(data);
+						doclickTwo();
 					},
 					error:function(e){
 						html=e;
@@ -123,8 +125,8 @@ mui.init({
 						}else {
 							html=html+"<td><span>"+plist[i].sandByOne+"</span></td> ";
 						} 
-						$("#container").css('display','block');//隐藏
-						$("#containerLock").css('display','none');//显示   
+						$("#container").css('display','block');//显示
+						$("#containerLock").css('display','none');//隐藏   
 					}else{
 						html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 						"<td><span><i class='lockyuip'></i></span></td>";
@@ -152,8 +154,8 @@ mui.init({
 						}else {
 							html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
 						} 
-						$("#container").css('display','block');//隐藏
-						$("#containerLock").css('display','none');//显示   
+						$("#container").css('display','block');//显示
+						$("#containerLock").css('display','none');//隐藏   
 					}else{
 						html = html+ "<td><span><i class='lockyuip'></i></span></td>"+
 						"<td><span><i class='lockyuip'></i></span></td>";
