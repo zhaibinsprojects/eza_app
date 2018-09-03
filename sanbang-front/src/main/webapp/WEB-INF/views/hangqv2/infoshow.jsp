@@ -10,7 +10,8 @@
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<title>易再生-中国再生资源交易平台</title>
+<meta name="share-description" content="${description}">
+<title>${show.meta}</title>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
 <link rel="stylesheet" href="front/resource/css/ezsm_newAdd.css?v=1" />
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>

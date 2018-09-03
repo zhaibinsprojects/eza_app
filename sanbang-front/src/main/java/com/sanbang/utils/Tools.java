@@ -13,13 +13,10 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1014,8 +1011,11 @@ public class Tools {
 		 * 查看行情权限
 		 * @return
 		 */
-		public static boolean HangqValidate(ezs_user upi,long cataid) {
+		public synchronized static boolean HangqValidate(ezs_user upi,long cataid) {
 			boolean istrue=false;
+			if(null==upi) {
+				return istrue;
+			}
 			
 			if(HANGQ_PASS.indexOf(String.valueOf(cataid))>0) {
 				return true;
@@ -1097,5 +1097,20 @@ public class Tools {
 		
 		
 		
-		
+		/**
+	     * 获取当前日期是星期几<br>
+	     * 
+	     * @param dt
+	     * @return 当前日期是星期几
+	     */
+	    public static String getWeekOfDate(Date dt) {
+	        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+	        Calendar cal = Calendar.getInstance();
+	        cal.setTime(dt);
+	        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+	        if (w < 0)
+	            w = 0;
+	        return weekDays[w];
+	    }
+	
 }

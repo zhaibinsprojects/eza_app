@@ -2,6 +2,7 @@ package com.sanbang.hangq.servive;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
 
 public interface HangqPushService {
@@ -14,4 +15,17 @@ public interface HangqPushService {
 	 */
 	public  Result getPushDate(HttpServletRequest request,String pushcode,Result result);
 	
+	/**
+	 * 推送接口
+	 */
+	public void handleHangqPush();
+	
+	/**
+	 * hangq 消息查看
+	 * @param pageNo
+	 * @param upi
+	 * @param result
+	 * @return
+	 */
+	public  Result  HangqMessagePage(int pageNo,ezs_user upi,Result result);
 }

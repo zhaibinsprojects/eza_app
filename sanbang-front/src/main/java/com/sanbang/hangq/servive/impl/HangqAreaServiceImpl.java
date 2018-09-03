@@ -83,7 +83,7 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 		children.add(listtwo);
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", 0);
-		map.put("price", "0");
+		map.put("price", 3000);
 		map.put("name", "全部分类");
 
 		List<Map<String, Object>> calist1 = cataToJson();

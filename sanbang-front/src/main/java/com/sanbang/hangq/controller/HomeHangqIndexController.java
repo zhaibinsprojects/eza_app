@@ -513,11 +513,13 @@ public class HomeHangqIndexController {
 			for (PriceTrendIfo priceTrendIfo : resultList) {
 				try{
 					boolean showFlag = Tools.HangqValidate(upi,priceTrendIfo.getTrueGoodClassId());
-					if(showFlag)
+					if(showFlag) {
 						priceTrendIfo.setIsshow(1);
-					else
-						priceTrendIfo.setIsshow(0);
+						}else {
+							priceTrendIfo.setIsshow(0);
+							}
 				}catch(Exception e){
+					e.printStackTrace();
 					priceTrendIfo.setIsshow(0);
 				}
 				returnList.add(priceTrendIfo);

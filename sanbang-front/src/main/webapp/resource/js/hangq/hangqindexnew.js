@@ -185,9 +185,10 @@ function iostodingyue() {
 			return false;
 		}
 		var data = {
+				"docid":pdfid
 			}
 			var str = JSON.stringify(data);
-			WebViewJavascriptBridge.callHandler('iostodingyue', "", function() {
+			WebViewJavascriptBridge.callHandler('iostodingyue', data, function() {
 			});
 			return false;
 	})

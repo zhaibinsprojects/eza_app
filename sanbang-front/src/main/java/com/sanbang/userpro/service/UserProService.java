@@ -206,4 +206,12 @@ public interface UserProService {
 	 */
 	Result upStoreInfo(HttpServletRequest request,ezs_store store,ezs_user upi);
 	
+	
+	/**
+	 * 开通推送
+	 * @param push_key
+	 * @return
+	 */
+	Result setOpenPush(String push_key);
+	
 }

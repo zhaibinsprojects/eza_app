@@ -8,6 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanbang.vo.DictionaryCode;
+
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jpush.api.JPushClient;
@@ -423,25 +425,32 @@ public class JiGuanPushUtils {
               LOG.info("Error Message: " + e.getErrorMessage());
           }
          
-    	  
-          
       }
       
-      public static void JiGangPushData(String content,String account) {
+      /**
+       * 
+       * @param content  地址
+       * @param account  别名
+       * @param title  标题
+       */
+      public static Result JiGangPushData(String content,String account,String title) {
+    	  Result result=Result.failure();
+    	  PushResult res=null;
     	  try {
         	  Map<String ,String> map = new HashMap<String, String>();
-        	  map.put("tid", content);
+        	  map.put("openurl", content);
         	  List<String> slist = new ArrayList<>();
         	  slist.add(account);
-              PushResult result =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, "三杯通大道，一斗合自然。",slist));
-              System.out.println("end .....");
-           } catch (APIConnectionException e) {
-              LOG.error("Connection error. Should retry later. ", e);
-          } catch (APIRequestException e) {
-              LOG.error("Error response from JPush server. Should review and fix it. ", e);
-              LOG.info("HTTP Status: " + e.getStatus());
-              LOG.info("Error Code: " + e.getErrorCode());
-              LOG.info("Error Message: " + e.getErrorMessage());
+        	  res =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, title,slist));
+        	  LOG.info("end .....");
+              result.setMsg("推送成功");
+              result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+              result.setSuccess(true);
+           } catch (Exception e) {
+              LOG.error("推送失败");
+              result.setMsg("推送失败");
+              result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
           }
+		return result;
       }
 }
