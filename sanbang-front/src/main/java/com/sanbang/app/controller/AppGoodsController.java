@@ -73,7 +73,7 @@ public class AppGoodsController {
 	private static int num = 100;
 
 	// 日志
-	private static Logger log = Logger.getLogger(FileUploadServiceImpl.class);
+	private static Logger log = Logger.getLogger(AppGoodsController.class);
 	private static final String view="/goods/";
 	/**
 	 * @author langjf

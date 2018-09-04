@@ -746,13 +746,13 @@
 	and a.data_sources in ('2','3') 
 	and DATE_FORMAT(a.data_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
       <if test="goodClassId != null and goodClassId != '' " >
-        and a.goodClass2_id in ( #{goodClassId} )
+        and a.goodClass2_id in ( ${goodClassId} )
       </if>
       <if test="colorId != null and colorId != ''" >
-        and a.color_id in ( #{colorId} )
+        and a.color_id in ( ${colorId} )
       </if>
       <if test="formId != null and formId != ''" >
-        and a.form_id in ( #{formId} )
+        and a.form_id in ( ${formId} )
       </if>
       <if test="source != null" >
         and a.date_from = #{source}
@@ -773,7 +773,7 @@
          #{areaIds}
      	</foreach>
       </if>
-      limit #{pagestart},#{pagesize}
+      ORDER BY a.goodClass2_id,a.data_time DESC limit #{pagestart},#{pagesize}
   </select>
   
   <!-- 从新修订 实时报价 -->
