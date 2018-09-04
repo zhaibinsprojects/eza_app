@@ -4,8 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<base href="${serurl}"/>
-<!-- <base href="http://10.10.10.52/"/> -->
+<%-- <base href="${serurl}"/> --%>
+<base href="http://10.10.10.52/"/>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
@@ -48,7 +48,7 @@ tbody tr{
   	</div>
   </section>
 </div>
-<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 65%">
+<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 60%">
 	    <div class="mui-scroll"> 
 	    <section class="secNeiron mui-table-view mui-table-view-chevron" style="padding:0 0 0;">
 		<div class="cont">

@@ -30,20 +30,20 @@ h3{
 }
 </style>
 </head>
-<body style="background:#efefef;width: 100%;">
+<div class="mui-fullscreen">
   <!--价格评析-->
     <div class="hTwoFater_yzs">
-      <h2>
+      <h2 style="margin-top: 0px;">
       <c:if test="${resultMap.kinds=='priceAnalyse'}">
-      	<span>价格评析</span>      
+      	<span style="margin-top: 0px;">价格评析</span>      
       </c:if>
       <c:if test="${resultMap.kinds=='report'}">
-      	<span>研究报告</span>
+      	<span style="margin-top: 0px;">研究报告</span>
       </c:if>
       </h2>
     </div> 
     <!-- 显示标题 -->
-    <div class="ezsm-normal-tab" style="z-index:auto;width: 100% ;height: 30%">
+    <div class="ezsm-normal-tab" style="z-index:auto;width: 100% ;">
 		<ul style="width: 100%;">
 			<li id="0" class="ezsm-normal-tab-sel">全部</li>
 			<c:choose>
@@ -62,7 +62,8 @@ h3{
 			</c:choose>
 		</ul>
 	</div>
-  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:23%;">
+	
+  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:21%;">
     <div class="mui-scroll"> 
       <!--数据列表-->
     <section class="secNeiron mui-table-view mui-table-view-chevron">
@@ -94,11 +95,7 @@ $(document).ready(function(){
 	});
 })
 $(function(){
-			$(".ezsm-normal-tab ul li").each(function(){
-				/* var width_li = $(this).width()+36;
-				var width_ul = $(".ezsm-normal-tab ul").width();
-				$(".ezsm-normal-tab ul").css("width",(width_li+width_ul)+"px") */
-			});
+			
 			$(".ezsm-normal-tab ul li").click(function(){
 				$(".ezsm-normal-tab ul li").removeClass("ezsm-normal-tab-sel");
 				$(this).addClass("ezsm-normal-tab-sel");
