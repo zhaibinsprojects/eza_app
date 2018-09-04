@@ -252,11 +252,6 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					priceTrendIfo.setSandByOne(String.valueOf("0.00%"));
 				}
 				try{
-					//数据格式化
-					//String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
-					//String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
-					//priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
-					//priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
 					BigDecimal currentavgpage = new BigDecimal(0);
 					BigDecimal preavgpage = new BigDecimal(0);
 					if(priceTrendIfo.getCurrentAVGPrice()!=null&&priceTrendIfo.getCurrentAVGPrice()!=0)
@@ -276,9 +271,9 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					e.printStackTrace();
 				}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
-				//地址信息
+				/*//地址信息
 				String areaName = getAreaName(priceTrendIfo.getRegion_id());
-				priceTrendIfo.setGoodArea(areaName);
+				priceTrendIfo.setGoodArea(areaName);*/
 				ppList.add(priceTrendIfo);
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -315,15 +310,6 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 					priceTrendIfo.setSandByOne(String.valueOf("0.00%"));
 				}
 				try{
-					//数据格式化
-					//String currentavgprice = dfone.format(priceTrendIfo.getCurrentAVGPrice());
-					//String preavgprice = dfone.format(priceTrendIfo.getPreAVGPrice());
-					//priceTrendIfo.setCurrentAVGPrice(Double.valueOf(currentavgprice));
-					//priceTrendIfo.setPreAVGPrice(Double.valueOf(preavgprice));
-					//首页-走势app由这两个字段取值
-					//priceTrendIfo.setCurrentPrice(Double.valueOf(currentavgprice));
-					//priceTrendIfo.setPrePrice(Double.valueOf(preavgprice));
-					
 					BigDecimal currentavgpage = new BigDecimal(0);
 					BigDecimal preavgpage = new BigDecimal(0);
 					if(priceTrendIfo.getCurrentAVGPrice()!=null&&priceTrendIfo.getCurrentAVGPrice()!=0)
@@ -343,8 +329,8 @@ public class PriceConditionServiceImpl implements PriceConditionService {
 				}
 				priceTrendIfo.setDealDate(priceTrendIfo.getDealDate()!=null?priceTrendIfo.getDealDate().substring(5, 10):"");
 				//地址信息
-				String areaName = getAreaName(priceTrendIfo.getRegion_id());
-				priceTrendIfo.setGoodArea(areaName);
+				/*String areaName = getAreaName(priceTrendIfo.getRegion_id());
+				priceTrendIfo.setGoodArea(areaName);*/
 				ppList.add(priceTrendIfo);
 			}
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

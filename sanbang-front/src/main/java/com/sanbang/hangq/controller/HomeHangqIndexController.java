@@ -24,6 +24,7 @@ import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
 import com.sanbang.hangq.servive.HangqAreaService;
@@ -58,6 +59,8 @@ public class HomeHangqIndexController {
 	private ezs_ezssubstanceMapper ezs_ezssubstanceMapper;
 	@Autowired
 	private AddressService addressService;
+	@Autowired
+	private ezs_areaMapper areaMapper;
 	
 	private static String view="/hangq/";
 	
@@ -691,8 +694,11 @@ public class HomeHangqIndexController {
 		//获取相关地址ID
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
+		//记录筛选根地址
+		ezs_area areaRoot = null;
 		try{
 			if(areaId!=null&&!areaId.trim().equals("")){
+				areaRoot = this.areaMapper.selectByPrimaryKey(Long.valueOf(areaId));
 				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
 				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
 				if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -710,6 +716,14 @@ public class HomeHangqIndexController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+			//地址判断
+			//地址信息
+			String areaNameTemp = null;
+			Long areaIdTemp = 0L;
+			if(areaRoot!=null){
+				areaNameTemp = areaRoot.getAreaName();
+				areaIdTemp = areaRoot.getId();
+			}
 			for (PriceTrendIfo priceTrendIfo : ppList) {
 				try{
 					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
@@ -720,6 +734,16 @@ public class HomeHangqIndexController {
 				}catch(Exception e){
 					priceTrendIfo.setIsshow(0);
 				}
+				
+				//地址信息,若未利用地址参数进行筛选
+				if(areaId!=null&&!areaId.trim().equals("")){
+					priceTrendIfo.setGoodArea(areaNameTemp);
+					priceTrendIfo.setRegion_id(areaIdTemp);
+				}else{
+					String areaName = getAreaName(priceTrendIfo.getRegion_id());
+					priceTrendIfo.setGoodArea(areaName);
+				}
+				
 				returnppList.add(priceTrendIfo);
 			}
 		}
@@ -755,8 +779,10 @@ public class HomeHangqIndexController {
 		//获取相关地址ID
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
+		ezs_area areaRoot = null;
 		try{
 			if(areaId!=null&&!areaId.trim().equals("")){
+				areaRoot = this.areaMapper.selectByPrimaryKey(Long.valueOf(areaId));
 				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
 				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
 				if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -774,6 +800,13 @@ public class HomeHangqIndexController {
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			ppList = (List<PriceTrendIfo>)mmp.get("Obj");
+			//地址信息
+			String areaNameTemp = null;
+			Long areaIdTemp = 0L;
+			if(areaRoot!=null){
+				areaNameTemp = areaRoot.getAreaName();
+				areaIdTemp = areaRoot.getId();
+			}
 			for (PriceTrendIfo priceTrendIfo : ppList) {
 				try{
 					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
@@ -784,9 +817,31 @@ public class HomeHangqIndexController {
 				}catch(Exception e){
 					priceTrendIfo.setIsshow(0);
 				}
+				//地址信息,若未利用地址参数进行筛选
+				if(areaId!=null&&!areaId.trim().equals("")){
+					priceTrendIfo.setGoodArea(areaNameTemp);
+					priceTrendIfo.setRegion_id(areaIdTemp);
+				}else{
+					String areaName = getAreaName(priceTrendIfo.getRegion_id());
+					priceTrendIfo.setGoodArea(areaName);
+				}
 				returnppList.add(priceTrendIfo);
 			}
 		}
 		return returnppList;
+	}
+	/**
+	 * 获取地址名称：XX市
+	 * @param areaId
+	 * @return
+	 */
+	private String getAreaName(Long areaId){
+		ezs_area areaTemp = this.areaMapper.selectByPrimaryKey(areaId);
+		String areaName = areaTemp.getAreaName();
+		while(areaTemp.getLevel()>1){
+			areaTemp = this.areaMapper.selectByPrimaryKey(areaTemp.getParent_id());
+			areaName = areaTemp.getAreaName();
+		}
+		return areaName;
 	}
 }
