@@ -20,6 +20,15 @@
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
 <link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css"/>
 <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" >
+<style type="text/css">
+h3{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.text_yzs{
+	padding: 0px 0px 0px 0;
+}
+</style>
 </head>
 <body style="background:#efefef;width: 100%;">
   <!--价格评析-->
@@ -34,7 +43,7 @@
       </h2>
     </div> 
     <!-- 显示标题 -->
-    <div class="ezsm-normal-tab" style="z-index:auto; margin-top:4%; width: 100%">
+    <div class="ezsm-normal-tab" style="z-index:auto;width: 100% ;height: 30%">
 		<ul style="width: 100%;">
 			<li id="0" class="ezsm-normal-tab-sel">全部</li>
 			<c:choose>
@@ -53,7 +62,7 @@
 			</c:choose>
 		</ul>
 	</div>
-  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:24%;">
+  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:23%;">
     <div class="mui-scroll"> 
       <!--数据列表-->
     <section class="secNeiron mui-table-view mui-table-view-chevron">
