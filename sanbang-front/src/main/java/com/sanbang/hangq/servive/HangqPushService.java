@@ -28,4 +28,13 @@ public interface HangqPushService {
 	 * @return
 	 */
 	public  Result  HangqMessagePage(int pageNo,ezs_user upi,Result result);
+	
+	/**
+	 * 检查推送状态
+	 * @param request
+	 * @param pushcode
+	 * @param result
+	 * @return
+	 */
+	public Result checkPushStatus(HttpServletRequest request, String pushcode, Result result);
 }

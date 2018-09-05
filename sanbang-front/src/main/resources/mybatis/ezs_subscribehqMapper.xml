@@ -247,6 +247,7 @@
 	INNER  JOIN ezs_memberorder B ON A.order_id=B.id
 	WHERE
 		A.user_id = #{userid}
+		and A.deleteStatus=0
 		and  A.subType=#{subtype}
  		ORDER BY A.addTime desc
 		limit #{pageCount},#{pageSize}
@@ -261,6 +262,7 @@
 	INNER  JOIN ezs_memberorder B ON A.order_id=B.id
 	WHERE
 		A.user_id = #{userid}
+		and A.deleteStatus=0
   </select>
  
  <!-- 判断试用权限 -->
@@ -289,12 +291,11 @@
  
  <select id="getDingYueTryAddTimeStatusByUserid" resultType="date">
 	SELECT
-			B.addTime hqtrytime
+			B.startTime hqtrytime
 		FROM
-			ezs_subscribehq B
+			ezs_probation B
 		WHERE
-			B.subType = 1
-		AND B.user_id =  #{id}
+		 B.user_id =  #{id}
 
 	LIMIT 1
  </select>

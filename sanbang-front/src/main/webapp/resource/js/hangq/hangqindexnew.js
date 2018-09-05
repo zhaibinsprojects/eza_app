@@ -158,7 +158,10 @@ function iosnologin() {
 function iostoshare() {
 	$(".astyuiop").click(function() {
 		var data = {
-				"sharurl" :baseurl+ "/front/app/menuhq/hangqShow.htm?id="+$("docid").val()
+				"sharurl":baseurl + "/front/app/menuhq/hangqShow.htm?id"+pdfid,
+				"sharimg":baseurl +"/front/resource/img/shareimg.png",
+				"title":title,
+				"description":description.length>20?description:description.substring(0,20)
 			}
 			var str = JSON.stringify(data);
 			WebViewJavascriptBridge.callHandler('iostoshare', str, function() {
@@ -185,7 +188,7 @@ function iostodingyue() {
 			return false;
 		}
 		var data = {
-				"docid":pdfid
+				
 			}
 			var str = JSON.stringify(data);
 			WebViewJavascriptBridge.callHandler('iostodingyue', data, function() {

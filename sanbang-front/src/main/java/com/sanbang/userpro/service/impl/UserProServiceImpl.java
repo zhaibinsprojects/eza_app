@@ -1293,6 +1293,7 @@ public class UserProServiceImpl implements UserProService {
 				String userKey =""; 
 				userKey="app" + upi.getEzs_userinfo().getPhone() + str32;
 				map.put("token", userKey);
+				map.put("account", MD5Util.md5Encode("pushcode"+upi.getId()));
 				upi.setUserkey(userKey);
 				
 				RedisResult<String> rrt;

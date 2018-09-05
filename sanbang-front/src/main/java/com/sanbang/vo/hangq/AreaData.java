@@ -12,6 +12,9 @@ import java.util.Map.Entry;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 public class AreaData {
 
 	
@@ -23,8 +26,135 @@ public class AreaData {
 	public  static String area6="6:西南@西藏自治区,重庆市,四川省,贵州市,云南省";
 	public  static String area7="7:东北@辽宁省,吉林省,黑龙江省,香港";
 	
-	
-	
+	private static String provincejson="{\r\n" + 
+			"'RECORDS':[\r\n" + 
+			"{\r\n" + 
+			"'id':4521984,\r\n" + 
+			"'name':'北京市'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522003,\r\n" + 
+			"'name':'天津市'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522022,\r\n" + 
+			"'name':'河北省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522217,\r\n" + 
+			"'name':'山西省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522359,\r\n" + 
+			"'name':'内蒙古自治区'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522482,\r\n" + 
+			"'name':'辽宁省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522611,\r\n" + 
+			"'name':'吉林省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522689,\r\n" + 
+			"'name':'黑龙江省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522847,\r\n" + 
+			"'name':'上海市'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4522868,\r\n" + 
+			"'name':'江苏省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523000,\r\n" + 
+			"'name':'浙江省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523113,\r\n" + 
+			"'name':'安徽省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523253,\r\n" + 
+			"'name':'福建省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523357,\r\n" + 
+			"'name':'江西省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523480,\r\n" + 
+			"'name':'山东省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523655,\r\n" + 
+			"'name':'河南省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523850,\r\n" + 
+			"'name':'湖北省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4523980,\r\n" + 
+			"'name':'湖南省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524130,\r\n" + 
+			"'name':'广东省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524292,\r\n" + 
+			"'name':'广西壮族自治区'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524431,\r\n" + 
+			"'name':'海南省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524460,\r\n" + 
+			"'name':'重庆市'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524503,\r\n" + 
+			"'name':'四川省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524724,\r\n" + 
+			"'name':'贵州省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524825,\r\n" + 
+			"'name':'云南省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4524979,\r\n" + 
+			"'name':'西藏自治区'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4525061,\r\n" + 
+			"'name':'陕西省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4525189,\r\n" + 
+			"'name':'甘肃省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4525302,\r\n" + 
+			"'name':'青海省'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4525355,\r\n" + 
+			"'name':'宁夏回族自治区'\r\n" + 
+			"},\r\n" + 
+			"{\r\n" + 
+			"'id':4525388,\r\n" + 
+			"'name':'新疆维吾尔自治区'\r\n" + 
+			"}\r\n" + 
+			"]\r\n" + 
+			"}";
+
 	public static String[] getareaName(String areaName) {
 		String[] aa=new String[2];
 		if(area1.indexOf(areaName)>0) {
@@ -102,7 +232,7 @@ public class AreaData {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
 		List<Map<String, Object>> listdaq=getdaQu();
@@ -115,7 +245,7 @@ public class AreaData {
 				children.add(hangqAreaData);
 			}
 		}
-	}
+	}*/
 	
 	
 	 public static <T> List<T> convertListMap2ListBean(List<Map<String,Object>> listMap, Class T) throws Exception {  
@@ -173,4 +303,19 @@ public class AreaData {
 	        }  
 	        return bean;  
 	    } 
+	    
+	    
+	    public static void getprovinceids() {
+	    	JSONObject json=new JSONObject();
+	    	
+	    	json.compareTo(provincejson);
+	    	 JSONArray arrays= (JSONArray) json.get("RECORDS");
+	    	 
+	    	 System.out.println(arrays.get(0).toString());
+	    }
+	    
+	    public static void main(String[] args) {
+	    	getprovinceids();
+	    	
+		}
 }

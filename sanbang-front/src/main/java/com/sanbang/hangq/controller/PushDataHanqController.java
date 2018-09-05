@@ -35,8 +35,11 @@ public class PushDataHanqController {
 	 * @return
 	 */
 	@RequestMapping("/dataShow/{pushcode}")
-	public String hangqgShow(@PathVariable String pushcode, Model model) {
+	public String hangqgShow(@PathVariable String pushcode, Model model,HttpServletRequest request) {
+		Result	result=Result.failure();
+			result = hangqPushService.checkPushStatus(request, pushcode, result);
 		model.addAttribute("pushcode", pushcode);
+		model.addAttribute("result", result);
 		return view + "pushData";
 	}
 
@@ -82,4 +85,20 @@ public class PushDataHanqController {
 	}
 		return result;
 	}
+	
+	/**
+	 * 定制查看
+	 * 
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/checkPushStatus/{pushcode}")
+	@ResponseBody
+	public Result checkPushStatus(@PathVariable String pushcode, HttpServletRequest request) {
+		Result result = Result.failure();
+		result = hangqPushService.checkPushStatus(request, pushcode, result);
+		return result;
+	}
+	
 }

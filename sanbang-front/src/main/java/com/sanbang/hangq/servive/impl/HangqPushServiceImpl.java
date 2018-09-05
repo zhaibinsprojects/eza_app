@@ -464,58 +464,64 @@ public class HangqPushServiceImpl implements HangqPushService {
 				LinkedHashMap<String, Object> oldList = new LinkedHashMap<String, Object>();
 				
 				
-				List<String> doneedpush = needpush;
-				for (String thispushkey : needpush) {
-					// 缓存获取用户推送记录列表
-					RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(push_key, Result.class);
-					if (redate.getCode() == RedisConstants.SUCCESS) {
-						log.debug("redis查询用户推送记录成功");
-						Result re = redate.getResult();
-						oldList = (LinkedHashMap<String, Object>) re.getObj();
-						// 本次推送记录数据
-						Map<String, Object> data = (Map<String, Object>) oldList.get(thispushkey);
+				List<String> li=new ArrayList<>();
+				
+			Iterator<String> iterretor=needpush.iterator();
+			if(iterretor.hasNext()) {
+				String thispushkey=iterretor.next();
+				// 缓存获取用户推送记录列表
+				RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(push_key, Result.class);
+				if (redate.getCode() == RedisConstants.SUCCESS) {
+					log.debug("redis查询用户推送记录成功");
+					Result re = redate.getResult();
+					oldList = (LinkedHashMap<String, Object>) re.getObj();
+					// 本次推送记录数据
+					Map<String, Object> data = (Map<String, Object>) oldList.get(thispushkey);
 
-						String title = String.valueOf(data.get("title"));// 标题
-						String pushtime = String.valueOf(data.get("pushtime"));// 推送时间
-						push_key = String.valueOf(data.get("push_key"));// 推送用户key(用户打开时用)
-						String pushareaids = String.valueOf(data.get("pushareaids"));// 推送地区
-						int ispush = Integer.valueOf(String.valueOf(data.get("ispush")));// 是否推送
-						int islook = Integer.valueOf(String.valueOf(data.get("islook")));// 是否查看
-						String account = String.valueOf(data.get("account"));// 推送标识
-						Result result1 = Result.failure();
-						if (islook == 1) {
-							result1 = Result.success();
-						} else {
-							String pushurl = BASEURL+"app/hangq/pushData/" + thispushkey + ".htm";
-							log.info("开始推送，查看地址" + pushurl);
-							result1 = JiGuanPushUtils.JiGangPushData(pushurl, account, title);
-						}
-
-						if (result1.getSuccess()) {
-							data.put("ispush", 1);// 是否推送
-							doneedpush.remove(needpush.indexOf(thispushkey));
-
-							oldList.put(thispushkey, data);
-							RedisUtils.del(push_key);
-							RedisResult<String> rrt;
-							Result c = Result.success();
-							c.setObj(oldList);
-							rrt = (RedisResult<String>) RedisUtils.set(push_key, c, (long) 0);
-							if (rrt.getCode() == RedisConstants.SUCCESS) {
-								log.debug("推送记录保存到redis成功执行");
-							} else {
-								log.debug("推送记录保存到redis失败");
-							}
-
-						}
-
+					String title = String.valueOf(data.get("title"));// 标题
+					String pushtime = String.valueOf(data.get("pushtime"));// 推送时间
+					push_key = String.valueOf(data.get("push_key"));// 推送用户key(用户打开时用)
+					String pushareaids = String.valueOf(data.get("pushareaids"));// 推送地区
+					int ispush = Integer.valueOf(String.valueOf(data.get("ispush")));// 是否推送
+					int islook = Integer.valueOf(String.valueOf(data.get("islook")));// 是否查看
+					String account = String.valueOf(data.get("account"));// 推送标识
+					Result result1 = Result.failure();
+					if (islook == 1) {
+						result1 = Result.success();
+					} else {
+						String pushurl = BASEURL+"app/hangq/dataShow/" + thispushkey + ".htm";
+						log.info("开始推送，查看地址" + pushurl);
+						result1 = JiGuanPushUtils.JiGangPushData(pushurl, account, title);
 					}
 
+
+					data.put("ispush", 1);// 是否推送
+					//doneedpush.remove(doneedpush.indexOf(thispushkey));
+					iterretor.remove();
+					oldList.put(thispushkey, data);
+					RedisUtils.del(push_key);
+					RedisResult<String> rrt;
+					Result c = Result.success();
+					c.setObj(oldList);
+					rrt = (RedisResult<String>) RedisUtils.set(push_key, c, (long) 0);
+					if (rrt.getCode() == RedisConstants.SUCCESS) {
+						log.debug("推送记录保存到redis成功执行");
+					} else {
+						log.debug("推送记录保存到redis失败");
+					}
+
+				
+
 				}
+
+				
+				
+			}
+				
 				push.put("weidu", weidu);
 				push.put("zongweidu", zongweidu);
 				push.put("isopenpush", 1);
-				push.put("needpush", doneedpush);
+				push.put("needpush", needpush);
 				zongpush.put(push_key, push);
 				RedisUtils.del(needpushusers);
 				RedisResult<String> rrt;
@@ -555,13 +561,13 @@ public class HangqPushServiceImpl implements HangqPushService {
 				oldList = (LinkedHashMap<String, Object>) re.getObj();
 				int i = 0;
 				for (Entry<String, Object> info : oldList.entrySet()) {
+					// 是否查看
+					Map<String, Object> onedata = (Map<String, Object>) info.getValue();
+					int islook = (int) onedata.get("islook");
+					if (islook == 0 && (!resm.containsKey("isshow"))) {
+						resm.put("isshow", 1);
+					}
 					if (i >= startPosion && i <= stopPositon) {
-						Map<String, Object> onedata = (Map<String, Object>) info.getValue();
-						// 是否查看
-						int islook = (int) onedata.get("islook");
-						if (islook == 0 && (!resm.containsKey("isshow"))) {
-							resm.put("isshow", 1);
-						}
 						String pushurl = BASEURL+"app/hangq/dataShow/" + info.getKey() + ".htm";
 						onedata.put("requrl",pushurl );
 						mlist.add(onedata);
@@ -606,5 +612,63 @@ public class HangqPushServiceImpl implements HangqPushService {
 			areaName = areaTemp.getAreaName();
 		}
 		return areaName;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Result checkPushStatus(HttpServletRequest request, String pushcode, Result result) {
+		Map<String, Object> resm = new HashMap<>();
+		try {
+			RedisResult<Result> tempCached = (RedisResult<Result>) RedisUtils.get(pushcode, Result.class);
+			if (tempCached != null && tempCached.getCode() == RedisConstants.SUCCESS) {
+				// 缓存中已经存在了 说明该用户已经登陆了
+				Result re = tempCached.getResult();
+				String push_key = (String) re.getObj();
+				RedisResult<Result> thispush = (RedisResult<Result>) RedisUtils.get(push_key, Result.class);
+				if (thispush != null && thispush.getCode() == RedisConstants.SUCCESS) {
+					// 缓存中已经存在了 说明该用户已经登陆了
+					Result re8 = thispush.getResult();
+
+					// 当前用户所有推送记录
+					LinkedHashMap<String, Object> oldList = new LinkedHashMap<String, Object>();
+					oldList = (LinkedHashMap<String, Object>) re8.getObj();
+					if (oldList == null || oldList.size() == 0) {
+						throw new Exception();
+					}
+					// 当前推送记录
+					for (Entry<String, Object> info : oldList.entrySet()) {
+						// 是否查看
+						Map<String, Object> onedata = (Map<String, Object>) info.getValue();
+						int islook = (int) onedata.get("islook");
+						if (islook == 0 && (!resm.containsKey("isshow"))) {
+							resm.put("isshow", 1);
+						}
+					}
+				} else {
+					resm.put("isshow", 0);
+				}
+				
+				result.setSuccess(true);
+				result.setMsg("请求成功");
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setObj(resm);
+			} else {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				result.setSuccess(false);
+				result.setMsg("链接已失效");
+				resm.put("isshow", 0);
+				result.setObj(resm);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setSuccess(false);
+			result.setMsg("链接已失效");
+			resm.put("isshow", 0);
+			result.setObj(resm);
+
+		}
+		return result;
 	}
 }

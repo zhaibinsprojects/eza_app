@@ -1,5 +1,6 @@
 package com.sanbang.hangq.servive.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,8 +83,13 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 		children = list;
 		children.add(listtwo);
 		Map<String, Object> map = new HashMap<>();
+		BigDecimal pric=new BigDecimal("3000");
+		ezs_goods_classVo alc=ezs_goods_classVoMapper.selectByPrimaryKey((long)126);
+		if(null!=alc) {
+			pric=alc.getPrice();
+		}
 		map.put("id", 0);
-		map.put("price", 3000);
+		map.put("price", pric);
 		map.put("name", "全部分类");
 
 		List<Map<String, Object>> calist1 = cataToJson();
@@ -94,13 +100,7 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 		List<Map<String, Object>> children2 = (List<Map<String, Object>>) listfour.get("children");
 		mapall.addAll(children1);
 		mapall.addAll(children2);
-		/*
-		 * for (Map<String, Object> map2 : children1) { List<Map<String, Object>>
-		 * chace=(List<Map<String, Object>>)map2.get("children"); mapall.addAll(chace);
-		 * } for (Map<String, Object> map2 : children2) { List<Map<String, Object>>
-		 * chace=(List<Map<String, Object>>)map2.get("children"); mapall.addAll(chace);
-		 * }
-		 */
+		
 
 		map.put("children", mapall);
 		children.add(map);

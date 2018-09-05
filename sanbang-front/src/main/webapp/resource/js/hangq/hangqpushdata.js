@@ -234,3 +234,90 @@ function echartInit(xdata,name,mydata,classname){
 	    }]
 	    });
 };
+
+
+
+
+
+$(function() {
+	// APP点击
+	var u = navigator.userAgent; // 获取用户设备
+	var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+	if (isIOS) {
+		setupWebViewJavascriptBridge(function(bridge) {
+			ioscheckisshow(isshow);
+		});
+		// ios app 设备才执行
+		//这段代码是固定的，必须要放到js中
+		function setupWebViewJavascriptBridge(callback) {
+		    if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+		    if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+		    window.WVJBCallbacks = [callback];
+		    var WVJBIframe = document.createElement('iframe');
+		    WVJBIframe.style.display = 'none';
+		    WVJBIframe.src = 'https://__bridge_loaded__';
+		    document.documentElement.appendChild(WVJBIframe);
+		    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+		}
+        // 与OC交互的所有JS方法都要放在此处注册，才能调用通过JS调用OC或者让OC调用这里的JS
+		
+		var bridge =setupWebViewJavascriptBridge();
+		
+		} 
+});
+
+
+function checkisshow(isshow){
+	var data = {
+			"isshow" : isshow
+		}
+		var str = JSON.stringify(data);
+		window.android.checkisshow(str);
+		return false;
+}
+
+function ioscheckisshow(isshow){
+	var data = {
+			"isshow" : isshow	
+	}
+	var str = JSON.stringify(data);
+	WebViewJavascriptBridge.callHandler('checkisshow', str, function() {
+	});
+	return false;
+	
+}
+
+
+
+/**
+ * 执行状态桥接
+ * @returns
+ */
+$(document).ready(function(){
+	
+	/*$.ajax({
+		type : "post",
+		url : baseurl + "front/app/hangq/checkPushStatus/"+pushcode+".htm",
+		data : {
+		},
+		dataType : "json",
+		async : false,
+		success : function(data) {
+			if (data.success) {} 
+		},
+		error : function(e) {
+		}
+	});*/
+	
+
+	/*var isshow=data.obj.isshow;*/
+	var u = navigator.userAgent; // 获取用户设备
+	
+	var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+	if (isIOS) {
+		ioscheckisshow(isshow);
+	} else {
+		checkisshow(isshow);
+		
+	}
+});

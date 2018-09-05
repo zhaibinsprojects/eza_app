@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,12 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import com.jcraft.jsch.jce.MD5;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customizedhq;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_memberorder;
+import com.sanbang.bean.ezs_probation;
 import com.sanbang.bean.ezs_subscribehq;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_columnMapper;
@@ -36,6 +35,7 @@ import com.sanbang.dao.ezs_customizedhqMapper;
 import com.sanbang.dao.ezs_documentshareMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
 import com.sanbang.dao.ezs_memberorderMapper;
+import com.sanbang.dao.ezs_probationMapper;
 import com.sanbang.dao.ezs_subscribehqMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.hangq.controller.HomeHangqIndexController;
@@ -60,8 +60,6 @@ import com.sanbang.vo.hangq.AreaData;
 import com.sanbang.vo.hangq.CataData;
 import com.sanbang.vo.hangq.HangqCollectedVo;
 import com.sanbang.vo.userauth.AuthImageVo;
-
-import cn.jiguang.common.utils.Base64;
 
 @Service("myMenuHangqService")
 public class MyMenuHangqServiceImpl implements MyMenuHangqService {
@@ -88,6 +86,8 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 	// 用户登陆信息
 	@Resource(name = "ezs_userMapper")
 	private ezs_userMapper ezs_userMapper;
+	@Autowired
+	private ezs_probationMapper ezs_probationMapper;
 
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
 
@@ -241,8 +241,16 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 							Map<String, Object> chale2 = new HashMap<>();
 							chale2.put("id", tempccc1.getId());
 							chale2.put("name", tempccc1.getName());
-							if (subscribehq.getSubtotal().indexOf(String.valueOf(tempccc1.getId())) > 0) {
+							
+							String subtotal=subscribehq.getSubtotal();
+							String indexid=String.valueOf(tempccc1.getId());
+							System.err.println(subtotal+"===="+indexid);
+							
+							if (getCataIsTrue(subscribehq.getSubtotal().split(","), String.valueOf(tempccc1.getId()))) {
 								list4.add(chale2);
+								System.err.println("true");
+							}else {
+								System.err.println("false");
 							}
 
 						}
@@ -261,9 +269,18 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 						Map<String, Object> chale2 = new HashMap<>();
 						chale2.put("id", map2.getId());
 						chale2.put("name", map2.getName());
-						if (subscribehq.getSubtotal().indexOf(String.valueOf(map2.getId())) > 0) {
+						
+						String subtotal=subscribehq.getSubtotal();
+						String indexid=String.valueOf(map2.getId());
+						System.err.println(subtotal+"===="+indexid);
+						
+						if (getCataIsTrue(subscribehq.getSubtotal().split(","), String.valueOf(map2.getId()))) {
 							list5.add(chale2);
+							System.err.println("true");
+						}else {
+							System.err.println("false");
 						}
+						
 					}
 					cataData.setChildren(list5);
 					list1.add(cataData);
@@ -285,6 +302,17 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 		return result;
 	}
 
+	
+	private boolean  getCataIsTrue(String[] parc,String cli) {
+		boolean istrue=false;
+		for (String str : parc) {
+			if(str.equals(cli)) {
+				istrue=true;
+			}
+		}
+		return istrue;
+	}
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Result saveDingyuePic(HttpServletRequest request, ezs_user upi, long id, String urlParam, Result result) {
@@ -519,7 +547,8 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 			order.setStartTime(new Date());
 			order.setStore_id(upi.getStore_id());
 			order.setVoucher("");
-
+			order.setUser_id(upi.getId());
+			
 			ezs_memberorderMapper.insertSelective(order);
 
 			ezs_subscribehq recoed = new ezs_subscribehq();
@@ -980,49 +1009,27 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 	public Result myDingYueTryAdd(HttpServletRequest request, ezs_user upi, Result result) {
 
 		try {
-			List<ezs_subscribehq> list = ezs_subscribehqMapper.getDingyueRecoudList(upi.getId(), 0,
-					(1 < 0 ? 0 : 1 - 1) * 10, 10);
-			if (list.size() > 0) {
+			ezs_probation probation = ezs_probationMapper.selectProbationByUserId(upi.getId());
+			if (null!=probation) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("您已试用过本产品！");
 				return result;
 			}
-
-			ezs_memberorder order = new ezs_memberorder();
-			order.setAddTime(new Date());
-			order.setCreditUsed(Integer.valueOf(String.valueOf(upi.getId())));
-			order.setDeleteStatus(false);
-			order.setMemberType("价格行情");
-			order.setOpenStatu(0);
-			order.setOperator(upi.getTrueName());
-			order.setOrder_no(Tools.getHangqOrderNO());
-			order.setOrderSource("APP");
-			order.setPayAmount(new BigDecimal(0));
-			order.setPayMode(1);
-			order.setPayState(0);
-			order.setStartTime(new Date());
-			order.setStore_id(upi.getStore_id());
-			order.setVoucher("");
-
-			ezs_memberorderMapper.insertSelective(order);
-
-			ezs_subscribehq recoed = new ezs_subscribehq();
-			recoed.setAddTime(new Date());
-			recoed.setCreditUserd(Integer.valueOf(String.valueOf(upi.getId())));
-			recoed.setCycle("7");
-			recoed.setDeleteStatus(false);
-			recoed.setOpenmode(0);
-			recoed.setPayment(new BigDecimal(0));
-			recoed.setPaymode(1);
-			recoed.setStore_id(upi.getStore_id());
-			recoed.setSubtotal("0");
-			recoed.setSubType(0);
-			recoed.setTotalMoney(new BigDecimal(0));
-			recoed.setUser_id(upi.getId());
-			recoed.setOrder_id(order.getId());
-			ezs_subscribehqMapper.insertSelective(recoed);
-
+			
+			 probation=new  ezs_probation();
+			 probation.setAddTime(new Date());
+			 probation.setDeleteStatus(false);
+			 
+			 Calendar c = Calendar.getInstance();
+			 c.setTime(new Date());
+			 c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+			 
+			 probation.setEndTime(c.getTime());
+			 probation.setIsDiscontinuation(0);
+			 probation.setStartTime(new Date());
+			 probation.setUser_id(upi.getId());
+			 ezs_probationMapper.insertSelective(probation);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setSuccess(true);
 			result.setMsg("申请试用成功！");

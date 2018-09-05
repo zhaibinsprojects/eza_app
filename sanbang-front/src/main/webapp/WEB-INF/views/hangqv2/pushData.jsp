@@ -19,6 +19,9 @@
 <script src="front/resource/js/newAddjs/mui.pullToRefresh.material.js"></script> 
 <script type="text/javascript" src="front/resource/js/hangq/hangqpushdata.js"></script>
 <link rel="stylesheet" href="front/resource/css/ezsm_newAdd.css?v=1" />
+
+<link rel="stylesheet" href="front/resource/script/layer/mobile/need/layer.css" />
+<script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
 </head>
 <body>
 <div class="content_dzself">
@@ -96,5 +99,6 @@
 <script type="text/javascript">
 	var  pushcode="${pushcode}";
 	var baseurl="${serurl}";
+	var isshow="${result.obj.isshow}";
   </script> 
 </html>

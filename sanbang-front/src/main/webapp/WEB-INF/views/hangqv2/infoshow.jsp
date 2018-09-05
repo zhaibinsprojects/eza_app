@@ -115,40 +115,12 @@
 var baseurl="${serurl}";
 var  pdfname="${show.attachment}";
 var pdfid="${show.id}";
+var title="${show.meta}";
+var description="${description}";
+
+
 	$(document).ready(function(){
 		$(".gtayfffbak").height($(".vuetpso p").height());
-		/* $(".xx_yuiop").click(function(){
-			$(this).toggleClass("active");
-			if($(this).hasClass("active")){
-				$(".artyuioerror").hide();
-				$(".artyuiosuccess").show().delay (3000).fadeOut ();;
-			}else{
-				$(".artyuiosuccess").hide();
-				$(".artyuioerror").show().delay (3000).fadeOut ();;
-			}
-		});
-		$(".dz_uiop").click(function(){
-			$(this).toggleClass("active");
-			if($(this).hasClass("active")){
-				$(".adzuioerror").hide();
-				$(".dzuiosuccess").show().delay (3000).fadeOut ();;
-			}else{
-				$(".dzuiosuccess").hide();
-				$(".adzuioerror").show().delay (3000).fadeOut ();;
-			}
-		}); */
-		
-		/* if(true){
-			$(".contenttrue").show();
-			$(".contentfalse").hide();
-			$(".djdigxuz").hide();
-		}else{
-			$(".contenttrue").hide();
-			$(".contentfalse").show();
-			$(".vuetpso p").addClass("fontwithgry");
-			
-		} */
-		
 	});
 </script>
 </html>
