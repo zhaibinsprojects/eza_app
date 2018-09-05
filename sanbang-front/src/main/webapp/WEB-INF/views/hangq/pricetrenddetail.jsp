@@ -34,7 +34,7 @@ tbody tr{
 <body>
 <div class="content_yzs">
   <section class="echarts_inmgui">
-  	<div class="section_roptab" style="z-index:auto auto">
+  	<div class="section_roptab" style="z-index:auto auto;">
   		<ul>
   			<li name="WEEK" class="active"><a href="javascript:;">一周</a></li>
   			<li name="MONTH"><a href="javascript:;">一个月</a></li>
@@ -43,33 +43,33 @@ tbody tr{
   		</ul>
   	</div>
   	<div class="echartHeight">
-  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;"></div>
-  		<div id="containerLock" class="graybakhuio" style="display: none"></div>
+  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;display: none;"></div>
+  		<div id="containerLock" class="graybakhuio" style="display: block;"></div>
   	</div>
   </section>
 </div>
-<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 65%">
-    <div class="mui-scroll"> 
-    <section class="secNeiron mui-table-view mui-table-view-chevron" style="padding:0 0 0;">
-	<div class="cont">
-		<table class="tabghuioy" border="0" cellspacing="0" cellpadding="0">
-  		<thead>
-  			<tr>
-  				<th width="20%"><span>名称</span></th>
-  				<th width="20%"><span>区域</span></th>
-  				<th width="20%"><span>价格/吨</span></th>
-  				<th width="20%"><span>涨跌幅</span></th>
-  				<th width="20%"><span>时间</span></th>
-  			</tr>
-  		</thead>
-  		<tbody>
-  			
-  		</tbody>
-  	</table>    
+<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top: 60%">
+	    <div class="mui-scroll"> 
+	    <section class="secNeiron mui-table-view mui-table-view-chevron" style="padding:0 0 0;">
+		<div class="cont">
+			<table class="tabghuioy" border="0" cellspacing="0" cellpadding="0">
+	  		<thead>
+	  			<tr>
+	  				<th width="20%"><span>名称</span></th>
+	  				<th width="20%"><span>区域</span></th>
+	  				<th width="20%"><span>价格/吨</span></th>
+	  				<th width="20%"><span>涨跌幅</span></th>
+	  				<th width="20%"><span>时间</span></th>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+	  			
+	  		</tbody>
+	  	</table>    
+		</div>
+	    </section>
+	  </div>
 	</div>
-    </section>
-  </div>
-</div>
 <input name="goodClassId" value="${goodClassId}" type="hidden">
 <input name="areaId" value="${areaId}" type="hidden">
 <input name="colorId" value="${colorId}" type="hidden">

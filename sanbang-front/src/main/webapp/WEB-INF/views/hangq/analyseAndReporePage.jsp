@@ -3,21 +3,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
    <!--数据列表-->
    <c:forEach var="item" items="${resultMap.Obj}">
-    <div class="text_yzs" id="${item.id}">
-      <h3>${item.name}</h3>
+    <div class="text_yzs" id="${item.id}" style="padding: 0px 0px 0px 0;">
+      <h3 style="margin-top: 0px;margin-bottom: 0px;">${item.name}</h3>
       <div class="textOverflow_yzs" style="-webkit-line-clamp: 3;">
         <p>${item.meta}</p>
       </div>
-      <h5><fmt:formatDate pattern="yyyy-MM-dd" 
-            value="${item.addTime}" /></h5>
+      <h3><fmt:formatDate pattern="yyyy-MM-dd" 
+            value="${item.addTime}" /></h3>
     </div>
   </c:forEach>
 <script type="text/javascript">
 var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.232/"; */
+/* var baseurl="http://10.10.10.52/"; */
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){

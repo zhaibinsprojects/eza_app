@@ -25,7 +25,7 @@ li{list-style-type:none;}
 .nav_style_jg ul li a{display: block; text-align: center; font-size: 14px; color:#333; position: relative;}
 .nav_style_jg ul li a i.icon{ background: url(../img/icon_jgone.png) center center no-repeat; margin-left: 18px; background-size: 10px 8px;position: absolute; top: 0; left: 50%; width: 12px;height: 40px;}
 .div_sx_jg{ padding: 6px 15px; background-color: #fff;} 
-.echarts_inmgui{ margin-top: 10px; border-top: 1px solid #e5e5e5; padding-top: 10px; background-color: #fff;}
+.echarts_inmgui{ /* margin-top: 10px; border-top: 1px solid #e5e5e5; */ padding-top: 10px; background-color: #fff;}
 .section_roptab{ padding: 0 14px;}
 .section_roptab ul{ height: 28px;}
 .section_roptab ul li{float: left; height: 24px; line-height: 24px; float: left; width: 70px; border:2px solid #999; margin-right: 15px;}

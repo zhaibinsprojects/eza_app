@@ -20,40 +20,50 @@
 <link rel="stylesheet" href="front/resource/css/newAddcss/ezsm_newAdd.css?v=2"/>
 <link href="front/resource/css/pagercss/toPush.css" rel="stylesheet" type="text/css"/>
 <link href="front/resource/css/pagercss/mui.min.css" rel="stylesheet" >
+<style type="text/css">
+h3{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.text_yzs{
+	padding: 0px 0px 0px 0;
+}
+</style>
 </head>
-<body style="background:#efefef;width: 100%;">
+<div class="mui-fullscreen">
   <!--价格评析-->
-    <div class="hTwoFater_yzs">
-      <h2>
+    <%-- <div class="hTwoFater_yzs">
+      <h2 style="margin-top: 0px;">
       <c:if test="${resultMap.kinds=='priceAnalyse'}">
-      	<span>价格评析</span>      
+      	<span style="margin-top: 0px;">价格评析</span>      
       </c:if>
       <c:if test="${resultMap.kinds=='report'}">
-      	<span>研究报告</span>
+      	<span style="margin-top: 0px;">研究报告</span>
       </c:if>
       </h2>
-    </div> 
+    </div>  --%>
     <!-- 显示标题 -->
-    <div class="ezsm-normal-tab" style="z-index:auto; margin-top:4%; width: 100%">
-		<ul style="width: 100%;">
-			<li id="0" class="ezsm-normal-tab-sel">全部</li>
+    <div class="ezsm-normal-tab" style="z-index:auto;width: auto ;">
+		<ul style="width: 150%;">
+			<li id="0" class="ezsm-normal-tab-sel" >全部</li>
 			<c:choose>
 				<c:when test="${resultMap.kinds=='priceAnalyse'}">
 					<c:forEach var="item" items="${resultMap.columnList}" varStatus="i">
 						<c:if test="${i.index < 2}">
-							<li id="${item.id}">${item.name}</li>
+							<li id="${item.id}" >${item.name}</li>
 						</c:if>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
 					<c:forEach var="item" items="${resultMap.columnList}" varStatus="i">
-						<li id="${item.id}">${item.name}</li>
+						<li id="${item.id}" >${item.name}</li>
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
 		</ul>
 	</div>
-  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:24%;">
+	
+  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:11%;">
     <div class="mui-scroll"> 
       <!--数据列表-->
     <section class="secNeiron mui-table-view mui-table-view-chevron">
@@ -74,8 +84,8 @@
     </div>
 </body>
 <script type="text/javascript">
-var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.52/"; */
+var baseurl="${serurl}"; 
+/*  var baseurl="http://10.10.10.52/"; */
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){
@@ -85,11 +95,7 @@ $(document).ready(function(){
 	});
 })
 $(function(){
-			$(".ezsm-normal-tab ul li").each(function(){
-				/* var width_li = $(this).width()+36;
-				var width_ul = $(".ezsm-normal-tab ul").width();
-				$(".ezsm-normal-tab ul").css("width",(width_li+width_ul)+"px") */
-			});
+			
 			$(".ezsm-normal-tab ul li").click(function(){
 				$(".ezsm-normal-tab ul li").removeClass("ezsm-normal-tab-sel");
 				$(this).addClass("ezsm-normal-tab-sel");

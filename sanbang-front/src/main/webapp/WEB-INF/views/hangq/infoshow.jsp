@@ -82,8 +82,8 @@
 </body>
 
 <script type="text/javascript">
-var baseurl="${serurl}";
-/* var baseurl= "http://10.10.10.232/"; */
+ var baseurl="${serurl}"; 
+/* var baseurl= "http://10.10.10.52/"; */
 var  pdfname="${show.attachment}";
 var pdfid="${show.id}"
 $(document).ready(function(){

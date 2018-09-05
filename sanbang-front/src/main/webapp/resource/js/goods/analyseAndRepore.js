@@ -19,6 +19,8 @@
 				setTimeout(function() {
 					//下拉从新加载，不要重定向
 					//window.location.href=baseurl+"/front/app/home/analyseAndReport.htm?type="+type+"&currentPage=1";
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(true);
+					mui('#pullrefresh').pullRefresh().enablePullupToRefresh(true);
 					}, 1500);
 			}
 			var count = 0;

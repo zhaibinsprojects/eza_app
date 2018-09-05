@@ -467,22 +467,6 @@ public class GoodsServiceImpl implements GoodsService{
 				}
 			}else{
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车不存在选购商品记录--添加记录beginning");
-				//商铺Id
-				//每个订单对应一种商品，即每种商品购物车对应一种店铺购物车，即在本用户商品购物车无此商品时，店铺购车亦如此；故注此代码
-				/*queryCondition.setUserId(user.getId());
-				queryCondition.setStoreCarStatus(0);
-				List<ezs_storecart> storeCarList = this.storecartMapper.getByUserId(queryCondition);
-				if(storeCarList!=null&&storeCarList.size()>0){
-					storeCart = storeCarList.get(0);
-				}else{
-					storeCart = new ezs_storecart();
-					storeCart.setStore_id(user.getStore_id());
-					storeCart.setDeleteStatus(false);
-					storeCart.setAddTime(new Date());
-					storeCart.setUser_id(user.getId());
-					storeCart.setSc_status(0);
-					this.storecartMapper.insert(storeCart);	
-				}*/
 				
 				storeCart = new ezs_storecart();
 				storeCart.setStore_id(user.getStore_id());
@@ -643,7 +627,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public synchronized Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId) {
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId) {
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
 		//生成订单号码
@@ -737,85 +721,6 @@ public class GoodsServiceImpl implements GoodsService{
 			}
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			
-			//已购商品按store分类
-			//获取购物车信息
-			/*QueryCondition queryCondition = new QueryCondition();
-			queryCondition.setUserId(user.getId());
-			queryCondition.setStoreCarStatus(0);
-			List<ezs_storecart> storeCarList = this.storecartMapper.getByUserId(queryCondition);
-			if(storeCarList!=null&&storeCarList.size()>0){
-				//每个订单仅产生一条ezs_storecart记录（一条ezs_storecart 对应多条 ezs_goodscart）
-				ezs_storecart storeCartTemp = storeCarList.get(0);
-				totalMoney += storeCartTemp.getTotal_price().doubleValue();
-				//更新商铺记录状态
-				storeCartTemp.setSc_status(1);//暂设定1标志 表示已生成订单
-				this.storecartMapper.updateByPrimaryKeySelective(storeCartTemp);
-				//更新商品购物车
-				QueryCondition queryCondition01 = new QueryCondition();
-				queryCondition01.setUserId(user.getId());
-				queryCondition01.setStoreCarId(storeCartTemp.getId());
-				List<ezs_goodscart> goodsCarList = this.ezs_goodscartMapper.selectByStoreCarId(queryCondition01);
-				//没卵用，仅为生成订单号码
-				ezs_goods goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCarList.get(0).getGoods_id());
-				orderFormNo = createOrderNo(goodTemp);
-				for (ezs_goodscart goodscart : goodsCarList) {
-					//更新库存
-					ezs_goods tGood = this.ezs_goodsMapper.selectByPrimaryKey(goodscart.getGoods_id());
-					//tGood.setInventory(tGood.getInventory()-goodscart.getCount());
-					//this.ezs_goodsMapper.updateByPrimaryKeySelective(tGood);
-					
-					//同步U8库存
-					boolean goodCountCheckFlag = false;
-					try {
-						goodCountCheckFlag = checkGoods(goodscart,tGood);
-						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
-					} catch (Exception e) {
-						System.out.println("同步库存异常");
-						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
-						e.printStackTrace();
-						throw e;
-					}
-					if(goodCountCheckFlag==true){
-						//锁库记录并更新本地库存
-						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存开始...");
-						addStockRecord(goodscart,tGood,orderFormNo);
-						log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"锁库并更新库存成功...");
-					}
-					//更新设置订单外键
-					goodscart.setOf_id(orderForm.getId());
-					//更新设置购物车类型
-					if(orderType.trim().equals("GOODS")){
-						goodscart.setCart_type((tGood.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
-					}else if(orderType.trim().equals("SAMPLE")){
-						//样品
-						goodscart.setCart_type(CommUtil.sample_goods);
-					}
-					this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodscart);
-					//构建实时成交价
-					savePriceTrend(goodscart,tGood,user);
-					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
-				}
-				//订单类型：10.自营商品订单 20.撮合商品订单
-				//判断是否为自营：true-自营，false-非自营
-				if(orderType.trim().equals("GOODS")){
-					orderForm.setOrder_type((goodTemp.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
-				}else if(orderType.trim().equals("SAMPLE")){
-					//样品订单
-					orderForm.setOrder_type(CommUtil.order_sample_good);
-				}
-				orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
-				orderForm.setOrder_no(orderFormNo);
-				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
-				
-				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				mmp.put("Msg", "订单添加成功");
-			}else{
-				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				mmp.put("Msg", "购物车无数据");
-			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
@@ -1300,7 +1205,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public synchronized Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
@@ -1388,6 +1293,9 @@ public class GoodsServiceImpl implements GoodsService{
 				//orderForm.setDeleteStatus(true);
 				//this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
 				//不可删除，会导致订单号重复
+				log.debug("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
+				log.error("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
+				log.info("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
 				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				mmp.put("Msg", "库存不足");
@@ -1414,7 +1322,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public synchronized Map<String, Object> modifyGoodCars(String[] goodsCartIds, String[] counts, ezs_user user) {
+	public Map<String, Object> modifyGoodCars(String[] goodsCartIds, String[] counts, ezs_user user) {
 		Map<String, Object> mmp = new HashMap<String, Object>();
 		//Map<String, Object> resultMP = new HashMap<String, Object>();
 		List<String> checkResultList = new ArrayList<>();
