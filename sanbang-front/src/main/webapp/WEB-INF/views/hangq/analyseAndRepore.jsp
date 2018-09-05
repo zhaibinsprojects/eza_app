@@ -32,7 +32,7 @@ h3{
 </head>
 <div class="mui-fullscreen">
   <!--价格评析-->
-    <div class="hTwoFater_yzs">
+    <%-- <div class="hTwoFater_yzs">
       <h2 style="margin-top: 0px;">
       <c:if test="${resultMap.kinds=='priceAnalyse'}">
       	<span style="margin-top: 0px;">价格评析</span>      
@@ -41,29 +41,29 @@ h3{
       	<span style="margin-top: 0px;">研究报告</span>
       </c:if>
       </h2>
-    </div> 
+    </div>  --%>
     <!-- 显示标题 -->
-    <div class="ezsm-normal-tab" style="z-index:auto;width: 100% ;">
-		<ul style="width: 100%;">
-			<li id="0" class="ezsm-normal-tab-sel">全部</li>
+    <div class="ezsm-normal-tab" style="z-index:auto;width: auto ;">
+		<ul style="width: 150%;">
+			<li id="0" class="ezsm-normal-tab-sel" >全部</li>
 			<c:choose>
 				<c:when test="${resultMap.kinds=='priceAnalyse'}">
 					<c:forEach var="item" items="${resultMap.columnList}" varStatus="i">
 						<c:if test="${i.index < 2}">
-							<li id="${item.id}">${item.name}</li>
+							<li id="${item.id}" >${item.name}</li>
 						</c:if>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
 					<c:forEach var="item" items="${resultMap.columnList}" varStatus="i">
-						<li id="${item.id}">${item.name}</li>
+						<li id="${item.id}" >${item.name}</li>
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
 		</ul>
 	</div>
 	
-  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:21%;">
+  <div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-top:11%;">
     <div class="mui-scroll"> 
       <!--数据列表-->
     <section class="secNeiron mui-table-view mui-table-view-chevron">
@@ -84,8 +84,8 @@ h3{
     </div>
 </body>
 <script type="text/javascript">
-var baseurl="${serurl}";
-/* var baseurl="http://10.10.10.52/"; */
+var baseurl="${serurl}"; 
+/*  var baseurl="http://10.10.10.52/"; */
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){
