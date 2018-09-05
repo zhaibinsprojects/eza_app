@@ -304,18 +304,62 @@ public class AreaData {
 	        return bean;  
 	    } 
 	    
-	    
-	    public static void getprovinceids() {
-	    	JSONObject json=new JSONObject();
-	    	
-	    	json.compareTo(provincejson);
-	    	 JSONArray arrays= (JSONArray) json.get("RECORDS");
+	    /**
+	     * 得到省id
+	     * @param id
+	     * @return
+	     */
+	    public static  List<String> getprovinceids(int id) {
+	    	 List<String> list=new ArrayList<>();
+	    	 if(id>8) {
+	    		 list.add(String.valueOf(id));
+	    		 return list;
+	    	 }
 	    	 
-	    	 System.out.println(arrays.get(0).toString());
+	    	JSONObject json=JSONObject.fromObject(provincejson);
+	    	Object  o=json.get("RECORDS");
+	    	JSONArray array=JSONArray.fromObject(o);
+	    	String provinces="";
+	    	switch (id) {
+		case 1:
+			provinces=area1.split("@")[1];
+			break;
+		case 2:
+			provinces=area2.split("@")[1];
+			break;
+		case 3:
+			provinces=area3.split("@")[1];
+			break;
+		case 4:
+			provinces=area4.split("@")[1];
+			break;
+		case 5:
+			provinces=area5.split("@")[1];
+			break;
+		case 6:
+			provinces=area6.split("@")[1];
+			break;
+		case 7:
+			provinces=area7.split("@")[1];
+			break;
+			default:
+				break;
+			}
+	    	for (Object object : array) {
+	    		JSONObject js=JSONObject.fromObject(object);
+				for (String p : provinces.split(",")) {
+					if(js.get("name").equals(p)) {
+						list.add(String.valueOf(js.get("id")));
+					}
+				}
+			}
+			return list;
 	    }
 	    
 	    public static void main(String[] args) {
-	    	getprovinceids();
-	    	
+	    	List<String> list=getprovinceids(3);
+	    	for (String string : list) {
+	    		System.out.println(string);
+			}
 		}
 }
