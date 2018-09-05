@@ -8,6 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanbang.vo.DictionaryCode;
+
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jpush.api.JPushClient;
@@ -36,8 +38,8 @@ public class JiGuanPushUtils {
     protected static Logger LOG = LoggerFactory.getLogger(JiGuanPushUtils.class);
 //    private static final String MASTER_SECRET = "60bb60ca8d9691c301497f8a";
 //    private static final String APP_KEY = "cb33d68a9f57eddfb0c33335";
-    private static final String MASTER_SECRET = "c39d99bf9f54a4234fafa2b5";
-    private static final String APP_KEY = "b9eb8b895a4a5f9e7afaeb47";
+    private static final String MASTER_SECRET = "8705ead391a24a08de3a9045";
+    private static final String APP_KEY = "2a18e7aba9a9b9616d3f7571";
     
     private static final String TITLE = "易再生网";
     private static PushPayload pushPayload ;
@@ -402,46 +404,34 @@ public class JiGuanPushUtils {
         }
 
       public static void main(String[] args) {
-    	 
-    	  System.out.println(MD5Util.md5Encode("aaaaaasdasdasdasd561"));
-    	  System.out.println(MD5Util.md5Encode("aaaaaasdasdasdasd561"));
-          try {
-        	  Map<String ,String> map = new HashMap<String, String>();
-        	  map.put("tid", "1876");
-        	  List<String> slist = new ArrayList<>();
-//        	  slist.add("18510044400");
-        	  slist.add("1ertfyioaaddssadasd");
-//        	  slist.add(MD5Util.md5Encode("aaaaaasdasdasdasd561"));
-              PushResult result =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, "三杯通大道，一斗合自然。",slist));
-              System.out.println("end .....");
-           } catch (APIConnectionException e) {
-              LOG.error("Connection error. Should retry later. ", e);
-          } catch (APIRequestException e) {
-              LOG.error("Error response from JPush server. Should review and fix it. ", e);
-              LOG.info("HTTP Status: " + e.getStatus());	
-              LOG.info("Error Code: " + e.getErrorCode());
-              LOG.info("Error Message: " + e.getErrorMessage());
-          }
-         
-    	  
-          
+    	
+    	  JiGangPushData("ea64e81456bc1a55ded7bb6ed5dfdf83", "ea64e81456bc1a55ded7bb6ed5dfdf83", "易再生网");
       }
       
-      public static void JiGangPushData(String content,String account) {
+      /**
+       * 
+       * @param content  地址
+       * @param account  别名
+       * @param title  标题
+       */
+      public static Result JiGangPushData(String content,String account,String title) {
+    	  Result result=Result.failure();
+    	  PushResult res=null;
     	  try {
         	  Map<String ,String> map = new HashMap<String, String>();
-        	  map.put("tid", content);
+        	  map.put("openurl", content);
         	  List<String> slist = new ArrayList<>();
         	  slist.add(account);
-              PushResult result =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, "三杯通大道，一斗合自然。",slist));
-              System.out.println("end .....");
-           } catch (APIConnectionException e) {
-              LOG.error("Connection error. Should retry later. ", e);
-          } catch (APIRequestException e) {
-              LOG.error("Error response from JPush server. Should review and fix it. ", e);
-              LOG.info("HTTP Status: " + e.getStatus());
-              LOG.info("Error Code: " + e.getErrorCode());
-              LOG.info("Error Message: " + e.getErrorMessage());
+        	  res =  sendPush(sendAndroidAndIosMessageWithAlias("1", map,TITLE, title,slist));
+        	  LOG.info("end .....");
+              result.setMsg("推送成功");
+              result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+              result.setSuccess(true);
+           } catch (Exception e) {
+              LOG.error("推送失败");
+              result.setMsg("推送失败");
+              result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
           }
+		return result;
       }
 }

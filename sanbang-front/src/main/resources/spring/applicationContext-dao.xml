@@ -306,5 +306,8 @@
 			value="com.sanbang.dao.ezs_subscribehq_chilMapper"/>
 	</bean>
 	
-	
+	<bean id="ezs_probationMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_probationMapper"/>
+	</bean>
 </beans>

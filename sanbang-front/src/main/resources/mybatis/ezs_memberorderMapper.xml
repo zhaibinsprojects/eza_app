@@ -41,13 +41,13 @@
       payAmount, payMode, payState, 
       orderSource, openStatu, startTime, 
       endTime, operator, store_id, 
-      order_no, voucher)
+      order_no, voucher,user_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{memberType,jdbcType=VARCHAR}, #{totalMoney,jdbcType=DECIMAL}, #{creditUsed,jdbcType=INTEGER}, 
       #{payAmount,jdbcType=DECIMAL}, #{payMode,jdbcType=INTEGER}, #{payState,jdbcType=INTEGER}, 
       #{orderSource,jdbcType=VARCHAR}, #{openStatu,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
       #{endTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{store_id,jdbcType=BIGINT}, 
-      #{order_no,jdbcType=VARCHAR}, #{voucher,jdbcType=VARCHAR})
+      #{order_no,jdbcType=VARCHAR}, #{voucher,jdbcType=VARCHAR},#{user_id,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_memberorder" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_memberorder
@@ -103,6 +103,9 @@
       <if test="voucher != null" >
         voucher,
       </if>
+      <if test="user_id != null" >
+        user_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -155,6 +158,9 @@
       </if>
       <if test="voucher != null" >
         #{voucher,jdbcType=VARCHAR},
+      </if>
+      <if test="user_id != null" >
+        #{user_id,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_subscribehq;
+import com.sanbang.vo.PriceTrendIfo;
 
 @Repository
 public interface ezs_subscribehqMapper {
@@ -50,6 +51,30 @@ public interface ezs_subscribehqMapper {
       * @return
       */
      Date getDingYueTryAddTimeStatusByUserid(long id);
+     
+     /**
+      * 实时报价再生料
+      * @param mp
+      * @return
+      */
+     List<PriceTrendIfo> priceInTimeNewList(Map<String, Object> mp);
+     
+     
+     
+     /**
+      * 实时报价新料
+      * @param mp
+      * @return
+      */
+     List<PriceTrendIfo> priceInTimeNewXLList(Map<String, Object> mp);
+     
+     
+     /**
+      * 价格趋势 新
+      * @param mp
+      * @return
+      */
+     List<PriceTrendIfo> getPriceTrendcyNew(Map<String, Object> mp);
      
      
      

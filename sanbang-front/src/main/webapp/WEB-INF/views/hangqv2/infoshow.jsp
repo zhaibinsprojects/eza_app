@@ -10,7 +10,8 @@
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<title>易再生-中国再生资源交易平台</title>
+<meta name="share-description" content="${description}">
+<title>${show.meta}</title>
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
 <link rel="stylesheet" href="front/resource/css/ezsm_newAdd.css?v=1" />
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
@@ -115,40 +116,12 @@
 /* var baseurl= "http://10.10.10.52/"; */
 var  pdfname="${show.attachment}";
 var pdfid="${show.id}";
+var title="${show.meta}";
+var description="${description}";
+
+
 	$(document).ready(function(){
 		$(".gtayfffbak").height($(".vuetpso p").height());
-		/* $(".xx_yuiop").click(function(){
-			$(this).toggleClass("active");
-			if($(this).hasClass("active")){
-				$(".artyuioerror").hide();
-				$(".artyuiosuccess").show().delay (3000).fadeOut ();;
-			}else{
-				$(".artyuiosuccess").hide();
-				$(".artyuioerror").show().delay (3000).fadeOut ();;
-			}
-		});
-		$(".dz_uiop").click(function(){
-			$(this).toggleClass("active");
-			if($(this).hasClass("active")){
-				$(".adzuioerror").hide();
-				$(".dzuiosuccess").show().delay (3000).fadeOut ();;
-			}else{
-				$(".dzuiosuccess").hide();
-				$(".adzuioerror").show().delay (3000).fadeOut ();;
-			}
-		}); */
-		
-		/* if(true){
-			$(".contenttrue").show();
-			$(".contentfalse").hide();
-			$(".djdigxuz").hide();
-		}else{
-			$(".contenttrue").hide();
-			$(".contentfalse").show();
-			$(".vuetpso p").addClass("fontwithgry");
-			
-		} */
-		
 	});
 </script>
 </html>

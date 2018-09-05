@@ -37,6 +37,16 @@ public class ezs_memberorder {
     private String order_no;//订单编号
 
     private String voucher;//支付凭证
+    
+    public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	private Long user_id;//用户
 
     public Long getId() {
         return id;

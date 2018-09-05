@@ -185,6 +185,7 @@
     <result column="className" property="goodClassName" jdbcType="VARCHAR" />
     <result column="areaId" property="region_id" jdbcType="VARCHAR" />
     <result column="isshow" property="isshow" jdbcType="VARCHAR" />
+    <result column="goodClass" property="trueGoodClassId" jdbcType="BIGINT" />
   </resultMap>
   <!-- 新料-实时报价-列表-多条件查询 -->
   <!-- 实时报价分类列表展示 -->

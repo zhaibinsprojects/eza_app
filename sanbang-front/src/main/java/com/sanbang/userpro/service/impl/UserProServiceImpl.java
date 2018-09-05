@@ -1,6 +1,7 @@
 package com.sanbang.userpro.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,12 +14,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.tools.Tool;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -366,7 +367,7 @@ public class UserProServiceImpl implements UserProService {
 						userKey="app" + userProInfo.getEzs_userinfo().getPhone() + str32;
 						Map<String, Object> map=new HashMap<>();
 						map.put("token", userKey);
-						map.put("account", MD5Util.md5Encode(userProInfo.getEzs_userinfo().getPhone()+userProInfo.getId()));
+						map.put("account", MD5Util.md5Encode("pushcode"+userProInfo.getId()));
 						result.setObj(map);
 					}
 					
@@ -385,6 +386,11 @@ public class UserProServiceImpl implements UserProService {
 								log.debug("用户" + userName + "：userKey保存到redis成功执行");
 							} else {
 								log.debug("用户" + userName + "：userKey保存到redis失败");
+							}
+							//开通推送
+							if(result.getSuccess()) {
+								String push_key="pushforapp"+userProInfo.getId();
+								setOpenPush(push_key);
 							}
 						} else {
 							result.setSuccess(false);
@@ -406,6 +412,7 @@ public class UserProServiceImpl implements UserProService {
 				}
 			}
 		}
+		
 	}
 
 	/**
@@ -1286,6 +1293,7 @@ public class UserProServiceImpl implements UserProService {
 				String userKey =""; 
 				userKey="app" + upi.getEzs_userinfo().getPhone() + str32;
 				map.put("token", userKey);
+				map.put("account", MD5Util.md5Encode("pushcode"+upi.getId()));
 				upi.setUserkey(userKey);
 				
 				RedisResult<String> rrt;
@@ -1899,6 +1907,72 @@ public class UserProServiceImpl implements UserProService {
 
 		}
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Async
+	public Result setOpenPush(String push_key) {
+		Result result=Result.failure();
+		try {
+			String needpushusers="needpushusers";//总记录标识
+			Map<String, Object> zongpush=new HashMap<>();
+			RedisResult<Result> reneedpushusers = (RedisResult<Result>) RedisUtils.get(needpushusers,
+					Result.class);
+			if (reneedpushusers.getCode() == RedisConstants.SUCCESS) {
+					log.debug("redis查询用户推送记录成功");
+					Result re=reneedpushusers.getResult();
+					zongpush=(Map<String, Object>) re.getObj();
+					if(zongpush.containsKey(push_key)) {
+						
+						Map<String, Object> push=(Map<String, Object>) zongpush.get(push_key);//用户推送记录
+						//是否注册极光
+						int isopenpush=Integer.valueOf(String.valueOf(push.get("isopenpush")));
+						Integer weidu=Integer.valueOf(String.valueOf(push.get("weidu")));
+						Integer zongweidu=Integer.valueOf(String.valueOf(push.get("zongweidu")));
+						
+						if(1==isopenpush) {
+							result.setSuccess(true);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							result.setMsg("请求成功");
+							return result;
+						}
+						List<String> needpush=new ArrayList<>();
+						needpush=(List<String>) push.get("needpush");//需推送记录key
+						
+						push.put("weidu", weidu);
+						push.put("zongweidu",zongweidu);
+						push.put("isopenpush", 1);
+						push.put("needpush",needpush);
+						zongpush.put(push_key, push);
+						RedisUtils.del(needpushusers);
+						RedisResult<String> rrt;
+						Result res=Result.success();
+						res.setObj(zongpush);
+						rrt = (RedisResult<String>) RedisUtils.set(needpushusers, res,(long)0);
+						if (rrt.getCode() == RedisConstants.SUCCESS) {
+							log.debug("推送记录保存到redis成功执行");
+							result.setSuccess(true);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+							result.setMsg("请求成功");
+						} else {
+							log.debug("推送记录保存到redis失败");
+							result.setSuccess(false);
+							result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+							result.setMsg("请求成功");
+						}
+					
+					}
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+			result.setMsg("请求成功");
+		}
+		
+		return result;
+		
 	}
 
 	

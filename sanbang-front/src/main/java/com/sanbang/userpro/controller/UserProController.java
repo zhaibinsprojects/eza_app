@@ -111,9 +111,6 @@ public class UserProController {
 		String ip = IpUtils.getIpAddr(request);
 		result = userProService.login(userName, passwd, code, userAgent, ip,
 					request, response,null,"h5");
-		if(result.getSuccess()) {
-			
-		}
 		return result;
 	}
 	
@@ -140,6 +137,7 @@ public class UserProController {
 		
 		result = userProService.login(userName, passwd, code, userAgent, ip,
 					request, response,1,"h5");
+		
 		return result;
 	}
 	
