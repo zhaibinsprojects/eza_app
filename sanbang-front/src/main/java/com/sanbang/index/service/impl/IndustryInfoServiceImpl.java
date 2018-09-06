@@ -165,4 +165,14 @@ public class IndustryInfoServiceImpl implements IndustryInfoService {
 		}
 		return mmp;
 	}
+
+	@Override
+	public Map<String, Object> getEzsTouTiao() {
+		// TODO Auto-generated method stub
+		Map<String,Object> mmp = new HashMap<>();
+		List<ezs_ezssubstance> glist = this.ezssubstanceMapper.getEzsTouTiao();
+		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		mmp.put("Obj", glist);
+		return mmp;
+	}
 }

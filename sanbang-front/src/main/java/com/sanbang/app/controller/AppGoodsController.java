@@ -449,10 +449,8 @@ public class AppGoodsController {
 					e.printStackTrace();
 				}
 				customized.setAddress(goods.getAddess());//收货地址
-				customized.setColour_id(goods.getColor_id());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
-				//Double dd = Double.valueOf(density);
-				customized.setDensity(Double.valueOf((goods.getDensity()==null||goods.getDensity().equals(""))?"0":goods.getDensity()));
-				//customized.setDensity(Double.valueOf(0));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				customized.setColour_id(goods.getColor_id());//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				customized.setDensity(goods.getDensity());
 				customized.setPurpose(goods.getPurpose());//用途
 				//customized.setBudget(goods);//采购预算-前台传
 				//customized.setPre_num(Double.valueOf(goods.getCrack()));//预订数量-前台传
@@ -461,24 +459,24 @@ public class AppGoodsController {
 				customized.setDeleteStatus(false);
 				customized.setGoods_id(goods.getId());
 				customized.setCategory_id(goods.getGoodClass_id());//商品种类
-				customized.setAsh_content(Double.valueOf((goods.getAsh()==null||goods.getAsh().equals(""))?"0":goods.getAsh()));
-				customized.setBend_strength(Double.valueOf((goods.getBending()==null||goods.getBending().equals(""))?"0":goods.getBending()));//弯曲强度
-				customized.setCombustion_grade(Double.valueOf((goods.getBurning()==null||goods.getBurning().equals(""))?"0":goods.getBurning()));//燃烧等级
-				customized.setElong_break(Double.valueOf((goods.getCrack()==null||goods.getCrack().equals(""))?"0":goods.getCrack()));//断裂伸长率
-				customized.setFlexural_modulus(Double.valueOf((goods.getFlexural()==null||goods.getFlexural().equals(""))?"0":goods.getFlexural()));//弯曲模量
-				customized.setIs_ep(String.valueOf(goods.getProtection()));//是否环保
-				customized.setJzforce(Double.valueOf((goods.getFreely()==null||goods.getFreely().equals(""))?"0":goods.getFreely()));//简支梁缺口冲击
-				customized.setMelt_index(Double.valueOf((goods.getLipolysis()==null||goods.getLipolysis().equals(""))?"0":goods.getLipolysis()));//熔融指数
+				customized.setAsh_content(goods.getAsh());
+				customized.setBendStrength(goods.getBending());
+				customized.setCombustionGrade(goods.getBurning());
+				customized.setElongBreak(goods.getCrack());//断裂伸长率
+				customized.setFlexuralModulus(goods.getFlexural());//弯曲模量
+				customized.setIs_ep(""+goods.getProtection_v());//是否环保
+				customized.setIsEp(""+goods.getProtection_v());//是否环保
+				customized.setJzforce(goods.getFreely());//简支梁缺口冲击
+				customized.setMeltIndex(goods.getLipolysis());//熔融指数
 				customized.setSource_type("0");//来源类型//0是预购  1是采购
 				customized.setSourcefrom(goods.getSource());//来源
-				customized.setTensile(Double.valueOf((goods.getTensile()==null||goods.getTensile().equals(""))?"0":goods.getTensile()));//拉伸强度
-				customized.setWater_content(Double.valueOf((goods.getWater()==null||goods.getWater().equals(""))?"0":goods.getWater()));//水分
-				customized.setXbforce(Double.valueOf((goods.getCantilever()==null||goods.getCantilever().equals(""))?"0":goods.getCantilever()));//悬臂梁缺口冲击
+				customized.setTensile(goods.getTensile());//拉伸强度
+				customized.setWaterContent(goods.getWater());
+				customized.setXbforce(goods.getCantilever());//悬臂梁缺口冲击
 				customized.setPurchaser_id(user.getId());
 				customized.setStatus("0");
-				customized.setColour(dictService.getDictByThisId(goods.getColor_id()).getName());
-				customized.setShape(dictService.getDictByThisId(goods.getForm_id()).getName());	//形态
-				customized.setShape_id(goods.getForm_id());
+				customized.setColour_id(goods.getColor_id());
+				customized.setShape_id(goods.getForm_id());//形态
 				
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);

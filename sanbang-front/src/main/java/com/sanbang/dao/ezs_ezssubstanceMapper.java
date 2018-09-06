@@ -67,6 +67,10 @@ public interface ezs_ezssubstanceMapper {
      */
     List<ezs_ezssubstance>  getButtomOneSubstanceBycatid(@Param("pagecount")long pagecount ,@Param("pagesize")long pagesize ,@Param("catid")long catid);
     
-    
+    /**
+     * 小易头条
+     * @return
+     */
+    List<ezs_ezssubstance> getEzsTouTiao();
     
 }

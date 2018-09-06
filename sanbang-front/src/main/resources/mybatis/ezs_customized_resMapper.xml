@@ -3,16 +3,23 @@
 <mapper namespace="com.sanbang.dao.ezs_customized_resMapper" >
   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customized_res" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="DATE" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="attr1" property="attr1" jdbcType="VARCHAR" />
+    <result column="attr2" property="attr2" jdbcType="VARCHAR" />
+    <result column="attr3" property="attr3" jdbcType="VARCHAR" />
     <result column="customized_status" property="customized_status" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="updateDate" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="customized_id" property="customized_id" jdbcType="BIGINT" />
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="supplier_id" property="supplier_id" jdbcType="BIGINT" />
+    <result column="updateUser_id" property="updateUser_id" jdbcType="BIGINT" />
+    <result column="storeId" property="storeId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, customized_status, remark, customized_id, goods_id, supplier_id
+    id, addTime, deleteStatus, attr1, attr2, attr3, customized_status, remark, updateDate, 
+    customized_id, goods_id, supplier_id, updateUser_id, storeId
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -26,11 +33,15 @@
   </delete>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_customized_res" >
     insert into ezs_customized_res (id, addTime, deleteStatus, 
-      customized_status, remark, customized_id, 
-      goods_id, supplier_id)
+      attr1, attr2, attr3, 
+      customized_status, remark, updateDate, 
+      customized_id, goods_id, supplier_id, 
+      updateUser_id, storeId)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{customized_status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{customized_id,jdbcType=BIGINT}, 
-      #{goods_id,jdbcType=BIGINT}, #{supplier_id,jdbcType=BIGINT})
+      #{attr1,jdbcType=VARCHAR}, #{attr2,jdbcType=VARCHAR}, #{attr3,jdbcType=VARCHAR}, 
+      #{customized_status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{customized_id,jdbcType=BIGINT}, #{goods_id,jdbcType=BIGINT}, #{supplier_id,jdbcType=BIGINT}, 
+      #{updateUser_id,jdbcType=BIGINT}, #{storeId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized_res" >
     insert into ezs_customized_res
@@ -44,11 +55,23 @@
       <if test="deleteStatus != null" >
         deleteStatus,
       </if>
+      <if test="attr1 != null" >
+        attr1,
+      </if>
+      <if test="attr2 != null" >
+        attr2,
+      </if>
+      <if test="attr3 != null" >
+        attr3,
+      </if>
       <if test="customized_status != null" >
         customized_status,
       </if>
       <if test="remark != null" >
         remark,
+      </if>
+      <if test="updateDate != null" >
+        updateDate,
       </if>
       <if test="customized_id != null" >
         customized_id,
@@ -58,6 +81,12 @@
       </if>
       <if test="supplier_id != null" >
         supplier_id,
+      </if>
+      <if test="updateUser_id != null" >
+        updateUser_id,
+      </if>
+      <if test="storeId != null" >
+        storeId,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -70,11 +99,23 @@
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
       </if>
+      <if test="attr1 != null" >
+        #{attr1,jdbcType=VARCHAR},
+      </if>
+      <if test="attr2 != null" >
+        #{attr2,jdbcType=VARCHAR},
+      </if>
+      <if test="attr3 != null" >
+        #{attr3,jdbcType=VARCHAR},
+      </if>
       <if test="customized_status != null" >
         #{customized_status,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="customized_id != null" >
         #{customized_id,jdbcType=BIGINT},
@@ -84,6 +125,12 @@
       </if>
       <if test="supplier_id != null" >
         #{supplier_id,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser_id != null" >
+        #{updateUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -96,11 +143,23 @@
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
       </if>
+      <if test="attr1 != null" >
+        attr1 = #{attr1,jdbcType=VARCHAR},
+      </if>
+      <if test="attr2 != null" >
+        attr2 = #{attr2,jdbcType=VARCHAR},
+      </if>
+      <if test="attr3 != null" >
+        attr3 = #{attr3,jdbcType=VARCHAR},
+      </if>
       <if test="customized_status != null" >
         customized_status = #{customized_status,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        updateDate = #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="customized_id != null" >
         customized_id = #{customized_id,jdbcType=BIGINT},
@@ -111,6 +170,12 @@
       <if test="supplier_id != null" >
         supplier_id = #{supplier_id,jdbcType=BIGINT},
       </if>
+      <if test="updateUser_id != null" >
+        updateUser_id = #{updateUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null" >
+        storeId = #{storeId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -118,18 +183,24 @@
     update ezs_customized_res
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
+      attr1 = #{attr1,jdbcType=VARCHAR},
+      attr2 = #{attr2,jdbcType=VARCHAR},
+      attr3 = #{attr3,jdbcType=VARCHAR},
       customized_status = #{customized_status,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      updateDate = #{updateDate,jdbcType=TIMESTAMP},
       customized_id = #{customized_id,jdbcType=BIGINT},
       goods_id = #{goods_id,jdbcType=BIGINT},
-      supplier_id = #{supplier_id,jdbcType=BIGINT}
+      supplier_id = #{supplier_id,jdbcType=BIGINT},
+      updateUser_id = #{updateUser_id,jdbcType=BIGINT},
+      storeId = #{storeId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  
   <select id="selectByCustomizedId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_customized_res
     where customized_id = #{customized_id,jdbcType=BIGINT}
   </select>
+  
 </mapper>

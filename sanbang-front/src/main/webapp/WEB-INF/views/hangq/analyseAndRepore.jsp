@@ -72,8 +72,8 @@ h3{
     </div>
 </body>
 <script type="text/javascript">
-var baseurl="${serurl}"; 
-/*  var baseurl="http://10.10.10.52/"; */
+var baseurl="${serurl}";
+/* var baseurl="http://10.10.10.52/"; */
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){

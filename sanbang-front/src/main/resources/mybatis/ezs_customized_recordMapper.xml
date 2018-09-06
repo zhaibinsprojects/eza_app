@@ -3,18 +3,19 @@
 <mapper namespace="com.sanbang.dao.ezs_customized_recordMapper" >
   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_customized_record" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="addTime" property="addTime" jdbcType="DATE" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="deal_time" property="deal_time" jdbcType="DATE" />
+    <result column="deal_time" property="deal_time" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="flagMsg" property="flagMsg" jdbcType="BIT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="customized_id" property="customized_id" jdbcType="BIGINT" />
     <result column="operater_id" property="operater_id" jdbcType="BIGINT" />
     <result column="purchaser_id" property="purchaser_id" jdbcType="BIGINT" />
-    <association property="ezs_user" column="operater_id" select="com.sanbang.dao.ezs_userMapper.selectByPrimaryKey">
-    </association>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, deal_time, remark, customized_id, operater_id, purchaser_id
+    id, addTime, deleteStatus, deal_time, flag, flagMsg, remark, customized_id, operater_id, 
+    purchaser_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -28,11 +29,13 @@
   </delete>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_customized_record" >
     insert into ezs_customized_record (id, addTime, deleteStatus, 
-      deal_time, remark, customized_id, 
-      operater_id, purchaser_id)
+      deal_time, flag, flagMsg, 
+      remark, customized_id, operater_id, 
+      purchaser_id)
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{deal_time,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{customized_id,jdbcType=BIGINT}, 
-      #{operater_id,jdbcType=BIGINT}, #{purchaser_id,jdbcType=BIGINT})
+      #{deal_time,jdbcType=TIMESTAMP}, #{flag,jdbcType=VARCHAR}, #{flagMsg,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{customized_id,jdbcType=BIGINT}, #{operater_id,jdbcType=BIGINT}, 
+      #{purchaser_id,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_customized_record" >
     insert into ezs_customized_record
@@ -48,6 +51,12 @@
       </if>
       <if test="deal_time != null" >
         deal_time,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="flagMsg != null" >
+        flagMsg,
       </if>
       <if test="remark != null" >
         remark,
@@ -75,6 +84,12 @@
       <if test="deal_time != null" >
         #{deal_time,jdbcType=TIMESTAMP},
       </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="flagMsg != null" >
+        #{flagMsg,jdbcType=BIT},
+      </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
@@ -101,6 +116,12 @@
       <if test="deal_time != null" >
         deal_time = #{deal_time,jdbcType=TIMESTAMP},
       </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="flagMsg != null" >
+        flagMsg = #{flagMsg,jdbcType=BIT},
+      </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -121,6 +142,8 @@
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
       deal_time = #{deal_time,jdbcType=TIMESTAMP},
+      flag = #{flag,jdbcType=VARCHAR},
+      flagMsg = #{flagMsg,jdbcType=BIT},
       remark = #{remark,jdbcType=VARCHAR},
       customized_id = #{customized_id,jdbcType=BIGINT},
       operater_id = #{operater_id,jdbcType=BIGINT},
@@ -134,4 +157,5 @@
     from ezs_customized_record
     where customized_id = #{customized_id,jdbcType=BIGINT}
   </select>
+  
 </mapper>

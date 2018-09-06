@@ -233,10 +233,10 @@ public class GoodsController {
 			ezs_goods goods = goodsService.selectByPrimaryKey(Long.valueOf(goodsId));
 			if(null != goods){
 				customized.setAddress(goods.getAddess());
-				customized.setColour(goods.getColor_id().toString());	//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
-				customized.setDensity(Double.valueOf(goods.getDensity()));	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
+				customized.setColour_id(goods.getColor_id());//这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
+				customized.setDensity(goods.getDensity());	//还有这一块儿，goods设计商品表时这个字段是字符类型，预约预定这一块儿同样的字段却又是浮点型，何故？？？
 				customized.setPurpose(goods.getPurpose());
-				customized.setShape(goods.getForm_id().toString());	//同理
+				customized.setShape_id(goods.getForm_id());
 				//剩下的需要塞的字段，劳烦彬哥了
 			}else{
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
