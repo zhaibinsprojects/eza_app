@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import com.sanbang.alipay.api.MainDoAlipayUtil;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customizedhq;
 import com.sanbang.bean.ezs_documentshare;
@@ -44,6 +45,7 @@ import com.sanbang.hangq.servive.MyMenuHangqService;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.DateUtils;
+import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.Html2TextUtil;
 import com.sanbang.utils.MD5Util;
 import com.sanbang.utils.Page;
@@ -64,7 +66,12 @@ import com.sanbang.vo.userauth.AuthImageVo;
 @Service("myMenuHangqService")
 public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 
-// rediskey有效期
+	@Value("${consparam.ezaisheng.base.url}")
+	public String BASEURL;
+	@Value("${consparam.imgs.baseurl}")
+	public String BASEIMGURL;
+	
+	// rediskey有效期
 	@Value("${consparam.redis.redisuserkeyexpir}")
 	private String redisuserkeyexpir;
 	@Autowired
@@ -241,15 +248,15 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 							Map<String, Object> chale2 = new HashMap<>();
 							chale2.put("id", tempccc1.getId());
 							chale2.put("name", tempccc1.getName());
-							
-							String subtotal=subscribehq.getSubtotal();
-							String indexid=String.valueOf(tempccc1.getId());
-							System.err.println(subtotal+"===="+indexid);
-							
+
+							String subtotal = subscribehq.getSubtotal();
+							String indexid = String.valueOf(tempccc1.getId());
+							System.err.println(subtotal + "====" + indexid);
+
 							if (getCataIsTrue(subscribehq.getSubtotal().split(","), String.valueOf(tempccc1.getId()))) {
 								list4.add(chale2);
 								System.err.println("true");
-							}else {
+							} else {
 								System.err.println("false");
 							}
 
@@ -269,18 +276,18 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 						Map<String, Object> chale2 = new HashMap<>();
 						chale2.put("id", map2.getId());
 						chale2.put("name", map2.getName());
-						
-						String subtotal=subscribehq.getSubtotal();
-						String indexid=String.valueOf(map2.getId());
-						System.err.println(subtotal+"===="+indexid);
-						
+
+						String subtotal = subscribehq.getSubtotal();
+						String indexid = String.valueOf(map2.getId());
+						System.err.println(subtotal + "====" + indexid);
+
 						if (getCataIsTrue(subscribehq.getSubtotal().split(","), String.valueOf(map2.getId()))) {
 							list5.add(chale2);
 							System.err.println("true");
-						}else {
+						} else {
 							System.err.println("false");
 						}
-						
+
 					}
 					cataData.setChildren(list5);
 					list1.add(cataData);
@@ -302,17 +309,16 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 		return result;
 	}
 
-	
-	private boolean  getCataIsTrue(String[] parc,String cli) {
-		boolean istrue=false;
+	private boolean getCataIsTrue(String[] parc, String cli) {
+		boolean istrue = false;
 		for (String str : parc) {
-			if(str.equals(cli)) {
-				istrue=true;
+			if (str.equals(cli)) {
+				istrue = true;
 			}
 		}
 		return istrue;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Result saveDingyuePic(HttpServletRequest request, ezs_user upi, long id, String urlParam, Result result) {
@@ -367,7 +373,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				order.setPayState(1);
 				order.setStartTime(new Date());
 				order.setStore_id(upi.getStore_id());
-				order.setVoucher(vo.getImgurl());
+				order.setVoucher(FilePathUtil.getHangqPath(vo.getImgurl()));
 				int st = ezs_memberorderMapper.insertSelective(order);
 				ezs_subscribehq recoed1 = new ezs_subscribehq();
 				recoed1.setId(recoed.getId());
@@ -396,7 +402,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 					order.setPayState(1);
 					order.setStartTime(new Date());
 					order.setStore_id(upi.getStore_id());
-					order.setVoucher(vo.getImgurl());
+					order.setVoucher(FilePathUtil.getHangqPath(vo.getImgurl()));
 					int st = ezs_memberorderMapper.insertSelective(order);
 
 					ezs_subscribehq recoed1 = new ezs_subscribehq();
@@ -417,7 +423,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 							return result;
 						} else {
 							order.setPayState(1);
-							order.setVoucher(vo.getImgurl());
+							order.setVoucher(FilePathUtil.getHangqPath(vo.getImgurl()));
 							int st = ezs_memberorderMapper.updateByPrimaryKeySelective(order);
 							ezs_subscribehq recoed1 = new ezs_subscribehq();
 							recoed1.setId(recoed.getId());
@@ -437,7 +443,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 							result.setMsg("你线上支付已完成,请勿重复支付！");
 							return result;
 						} else {
-							order.setVoucher(vo.getImgurl());
+							order.setVoucher(FilePathUtil.getHangqPath(vo.getImgurl()));
 							order.setPayState(1);
 							order.setPayMode(1);
 							int st = ezs_memberorderMapper.updateByPrimaryKeySelective(order);
@@ -548,7 +554,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 			order.setStore_id(upi.getStore_id());
 			order.setVoucher("");
 			order.setUser_id(upi.getId());
-			
+
 			ezs_memberorderMapper.insertSelective(order);
 
 			ezs_subscribehq recoed = new ezs_subscribehq();
@@ -766,7 +772,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 						oldList.remove(old.getKey());// 最多保存（60）天
 						break;
 					}
-					
+
 				}
 			}
 
@@ -804,9 +810,6 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				log.debug("推送记录保存到redis失败");
 			}
 
-			
-			
-			
 			// 本次请求链接记录重新存入本地记录(永久有效)
 			RedisUtils.del(thispushkey);
 			RedisResult<String> thisre;
@@ -818,7 +821,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 			} else {
 				log.debug("推送记录保存到redis失败");
 			}
-			
+
 			// 推送总记录操作
 			String needpushusers = "needpushusers";// 总记录标识
 			Map<String, Object> zongpush = new HashMap<>();
@@ -940,7 +943,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				} else {
 					Calendar c = Calendar.getInstance();
 					c.setTime(hqtrytime);
-					c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+					c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 30);
 					if (c.getTime().after(new Date())) {
 						resmap.put("try", 1);// 使用中
 						resmap.put("overdate", Tools.getDatePoor(c.getTime(), new Date()));
@@ -991,7 +994,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				result.setObj(map);
 				return result;
 			}
-			map.put("imgurl", order.getVoucher());
+			map.put("imgurl", BASEIMGURL + order.getVoucher());
 			result.setSuccess(true);
 			result.setMsg("请求成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -1010,26 +1013,26 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 
 		try {
 			ezs_probation probation = ezs_probationMapper.selectProbationByUserId(upi.getId());
-			if (null!=probation) {
+			if (null != probation) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(false);
 				result.setMsg("您已试用过本产品！");
 				return result;
 			}
-			
-			 probation=new  ezs_probation();
-			 probation.setAddTime(new Date());
-			 probation.setDeleteStatus(false);
-			 
-			 Calendar c = Calendar.getInstance();
-			 c.setTime(new Date());
-			 c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
-			 
-			 probation.setEndTime(c.getTime());
-			 probation.setIsDiscontinuation(0);
-			 probation.setStartTime(new Date());
-			 probation.setUser_id(upi.getId());
-			 ezs_probationMapper.insertSelective(probation);
+
+			probation = new ezs_probation();
+			probation.setAddTime(new Date());
+			probation.setDeleteStatus(false);
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 30);
+
+			probation.setEndTime(c.getTime());
+			probation.setIsDiscontinuation(0);
+			probation.setStartTime(new Date());
+			probation.setUser_id(upi.getId());
+			ezs_probationMapper.insertSelective(probation);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			result.setSuccess(true);
 			result.setMsg("申请试用成功！");
@@ -1050,34 +1053,42 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 	@Override
 	public void hangqgShow(long id, Model model) {
 		ezs_ezssubstance show = ezs_ezssubstanceMapper.selectByPrimaryKey(id);
-		String description="";
+		String description = "";
 		try {
-			description=Html2TextUtil.Html2Text(show.getContent()==null?"":show.getContent());
+			description = Html2TextUtil.Html2Text(show.getContent() == null ? "" : show.getContent());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-				
+
 		ezs_column column = columnMapper.selectByPrimaryKey(show.getEc_id());
 		model.addAttribute("show", show);
 		model.addAttribute("title", column.getName());
-		model.addAttribute("description", StringUtil.isEmpty(description)?column.getName():description);
+		model.addAttribute("description", StringUtil.isEmpty(description) ? column.getName() : description);
 		model.addAttribute("docid", id);
 	}
 
 	public static void main(String[] args) throws ParseException {
-		Date starttime = sdf.parse("2018-08-28 14:30:48");
-		Date gaa = sdf.parse("2018-08-28 14:30:48");
+		Date starttime = sdf.parse("2018-09-04 16:08:06");
+		Date gaa = sdf.parse("2018-09-04 16:08:06");
 		Calendar c = Calendar.getInstance();
 		c.setTime(gaa);
-		c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+		c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 30);
 
 		System.err.println(sdf.format(c.getTime()));
 		System.err.println(Tools.getDatePoor(c.getTime(), new Date()));
 	}
 
 	@Override
-	public Result submitOrder(HttpServletRequest request, ezs_user upi, long id, int paymode, Result result) {
+	@Transactional(rollbackFor = Exception.class)
+	public Result submitOrder(HttpServletRequest request, ezs_user upi, long id, int paymode1, Result result) {
 		try {
+			Map<String, Object> map=new HashMap<>();
+			result.setObj(map);
+			int paymode = paymode1;
+			if (paymode1 != 1) {
+				paymode = 0;
+			}
+
 			ezs_subscribehq recoed = ezs_subscribehqMapper.selectByPrimaryKey(id);
 			if (null == recoed) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -1085,12 +1096,6 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				result.setMsg("提交订单失败！");
 				return result;
 			}
-			ezs_subscribehq recoed1 = new ezs_subscribehq();
-			recoed1.setDeleteStatus(false);
-			recoed1.setPaymode(1);
-			recoed1.setId(recoed.getId());
-			ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
-
 			ezs_memberorder order = ezs_memberorderMapper.selectByPrimaryKey(recoed.getOrder_id());
 
 			if (null == order) {
@@ -1099,15 +1104,41 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				result.setMsg("提交订单失败！");
 				return result;
 			}
-			ezs_memberorder order1 = new ezs_memberorder();
-			order1.setId(order.getId());
-			order1.setPayMode(1);
-			order1.setDeleteStatus(false);
-			int st = ezs_memberorderMapper.updateByPrimaryKeySelective(order1);
 
-			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			result.setSuccess(true);
-			result.setMsg("您的订单已提交,请到个人中心进行支付!");
+			if (paymode == 1) {
+				ezs_subscribehq recoed1 = new ezs_subscribehq();
+				recoed1.setDeleteStatus(false);
+				recoed1.setPaymode(paymode);
+				recoed1.setId(recoed.getId());
+				ezs_subscribehqMapper.updateByPrimaryKeySelective(recoed1);
+
+				ezs_memberorder order1 = new ezs_memberorder();
+				order1.setId(order.getId());
+				order1.setPayMode(paymode);
+				order1.setDeleteStatus(false);
+				int st = ezs_memberorderMapper.updateByPrimaryKeySelective(order1);
+
+				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				result.setSuccess(true);
+				result.setMsg("您的订单已提交,请到个人中心进行支付!");
+			} else {
+				// 支付宝
+				if (paymode1 == 2) {
+					result = MainDoAlipayUtil.DoPayAli("我的订阅支付确认", "价格行情", order.getOrder_no(), order.getPayAmount(),
+							"", result);
+					log.info("价格行情支付宝支付======返回结果" + result.toString());
+					if (result.getSuccess()) {
+						return result;
+					} else {
+						throw new Exception("价格行情支付宝支付请求支付宝支付失败");
+					}
+				} else {
+					result.setSuccess(false);
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setMsg("暂不支持微信支付！");
+				}
+
+			}
 
 		} catch (Exception e) {
 			result.setSuccess(false);
@@ -1199,4 +1230,6 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 		return result;
 	}
 
+	
+	
 }

@@ -33,7 +33,6 @@ import com.sanbang.index.service.PriceConditionService;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.JiGuanPushUtils;
-import com.sanbang.utils.MD5Util;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUtils;
 import com.sanbang.utils.Result;
@@ -45,7 +44,8 @@ import com.sanbang.vo.goods.ezs_goods_classVo;
 
 @Service("hangqPushService")
 public class HangqPushServiceImpl implements HangqPushService {
-
+	private Logger log = Logger.getLogger(HangqPushServiceImpl.class);
+	
 	private static SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
@@ -63,7 +63,7 @@ public class HangqPushServiceImpl implements HangqPushService {
 	/*百分数格式化*/
 	private DecimalFormat dftwo = new DecimalFormat("0.00%");
 
-	private Logger log = Logger.getLogger(HangqPushServiceImpl.class);
+	
 	
 	private static SimpleDateFormat smfh = new SimpleDateFormat("yyyy年MM月dd日");
 	

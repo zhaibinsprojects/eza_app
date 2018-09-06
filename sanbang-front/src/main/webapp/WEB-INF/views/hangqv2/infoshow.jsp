@@ -6,7 +6,6 @@
 <html class="page-login">
 <head>
 <base href="${serurl}"/>
-<!-- <base href="http://10.10.10.52/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -113,7 +112,6 @@
 	  </c:if>
 <script type="text/javascript">
  var baseurl="${serurl}"; 
-/* var baseurl= "http://10.10.10.52/"; */
 var  pdfname="${show.attachment}";
 var pdfid="${show.id}";
 var title="${show.meta}";

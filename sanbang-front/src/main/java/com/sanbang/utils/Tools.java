@@ -1027,7 +1027,7 @@ public class Tools {
 					Calendar calendar = Calendar.getInstance();
 					 Date today = upi.getHqtrytime();
 					calendar.setTime(today);
-			        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 7);
+			        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 30);
 			        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			        String result = format.format(today);
 					if(calendar.getTime().after(new Date())) {
@@ -1060,6 +1060,10 @@ public class Tools {
 		    return day + "天" + hour + "小时" + min + "分钟";
 		}
 		
+		
+		
+		
+		
 		public static String getDatens(Date endDate, Date nowDate) {
 			 
 		    long nd = 1000 * 24 * 60 * 60;
@@ -1091,7 +1095,7 @@ public class Tools {
 			Date gaa=sdf.parse("2018-08-28 09:36:22".substring(0, 19));
 			Calendar c=Calendar.getInstance();
 			c.setTime(gaa);
-			c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 7);
+			c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 30);
 		    System.out.println(sdf.format(c.getTime()));
 		}
 		

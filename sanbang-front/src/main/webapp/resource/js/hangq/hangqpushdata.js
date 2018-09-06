@@ -295,29 +295,34 @@ function ioscheckisshow(isshow){
  */
 $(document).ready(function(){
 	
-	/*$.ajax({
+	$.ajax({
 		type : "post",
 		url : baseurl + "front/app/hangq/checkPushStatus/"+pushcode+".htm",
 		data : {
 		},
 		dataType : "json",
 		async : false,
-		success : function(data) {
-			if (data.success) {} 
+		success : function(data) {  
+			if (data.success) {
+				var isshow=data.obj.isshow;
+				if(isshow==""||isshow==undefined){
+					isshow=0;
+				}
+				var u = navigator.userAgent; // 获取用户设备
+				
+				var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+				if (isIOS) {
+					ioscheckisshow(isshow);
+				} else {
+					checkisshow(isshow);
+					
+				}
+			} 
 		},
 		error : function(e) {
 		}
-	});*/
+	});
 	
 
-	/*var isshow=data.obj.isshow;*/
-	var u = navigator.userAgent; // 获取用户设备
 	
-	var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
-	if (isIOS) {
-		ioscheckisshow(isshow);
-	} else {
-		checkisshow(isshow);
-		
-	}
 });
