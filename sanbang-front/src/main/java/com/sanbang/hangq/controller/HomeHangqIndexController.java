@@ -379,16 +379,12 @@ public class HomeHangqIndexController {
 	private List<Advices> getAdvicesInfo(){
 		List<Advices> adviceList = new ArrayList<Advices>();
 		Advices advice01 = new Advices();
-		advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/title005.jpg");
+		//advice01.setPath("https://m.ezaisheng.com/front/resource/images/app-banner01.png");
+		advice01.setPath("http://10.10.10.148/front/resource/images/app-banner01.png");
 		advice01.setLink("");
-		advice01.setpName("title005.jpg");
-		
-		Advices advice02 = new Advices();
-		advice02.setPath("https://m.ezaisheng.com/front/resource/indeximg/title006.jpg");
-		advice02.setLink("");
-		advice02.setpName("title006.jpg");
+		advice01.setpName("app-banner01.png");
+
 		adviceList.add(advice01);
-		adviceList.add(advice02);
 		return adviceList;
 	}
 	
