@@ -31,6 +31,7 @@ import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
 import com.sanbang.index.service.PriceConditionService;
+import com.sanbang.index.service.ReportEssayServer;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 import com.sanbang.utils.JsonUtils;
@@ -45,6 +46,7 @@ import com.sanbang.vo.HangqHomeMess;
 import com.sanbang.vo.PriceInTimesVo;
 import com.sanbang.vo.PriceTrendIfo;
 import com.sanbang.vo.ReportType;
+import com.sanbang.vo.hangq.AreaData;
 
 @Controller
 @RequestMapping("/app/hangq/")
@@ -331,7 +333,7 @@ public class HomeHangqIndexController {
 	public List<ezs_ezssubstance> getTouTiao(){
 		List<ezs_ezssubstance> glist = null;
 		List<ezs_ezssubstance> glistTemp = new ArrayList<>();
-		Map<String, Object> mmp = this.industryInfoService.getAllIndustryInfoByParentKinds(Long.valueOf(12),1,3);
+		Map<String, Object> mmp = this.industryInfoService.getEzsTouTiao();
 		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
 			glist = (List<ezs_ezssubstance>)mmp.get("Obj");
@@ -377,16 +379,12 @@ public class HomeHangqIndexController {
 	private List<Advices> getAdvicesInfo(){
 		List<Advices> adviceList = new ArrayList<Advices>();
 		Advices advice01 = new Advices();
-		advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/title005.jpg");
+		//advice01.setPath("https://m.ezaisheng.com/front/resource/images/app-banner01.png");
+		advice01.setPath("http://10.10.10.148/front/resource/images/app-banner01.png");
 		advice01.setLink("");
-		advice01.setpName("title005.jpg");
-		
-		Advices advice02 = new Advices();
-		advice02.setPath("https://m.ezaisheng.com/front/resource/indeximg/title006.jpg");
-		advice02.setLink("");
-		advice02.setpName("title006.jpg");
+		advice01.setpName("app-banner01.png");
+
 		adviceList.add(advice01);
-		adviceList.add(advice02);
 		return adviceList;
 	}
 	
@@ -486,7 +484,7 @@ public class HomeHangqIndexController {
 		List<String> areaIdsList = new ArrayList<>();
 		Map<String, Object> areaIdsMap = null;
 		try{
-			if(areaId!=null&&!areaId.trim().equals("")){
+			if(areaId!=null&&!areaId.trim().equals("")&&Long.valueOf(areaId)>7){
 				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
 				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
 				if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -497,6 +495,21 @@ public class HomeHangqIndexController {
 					}
 					tMp.put("areaIds", areaIdsList);
 				}
+			}else if(areaId!=null&&!areaId.trim().equals("")&&Long.valueOf(areaId)<=7){
+				//大区查询
+				List<String> areaIdList = AreaData.getprovinceids(Integer.valueOf(areaId));
+				for (String provinceId : areaIdList) {
+					areaIdsMap = this.addressService.getAllChildID(Long.valueOf(provinceId));
+					Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+					if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+						List<ezs_area> areaListTemp =new ArrayList<>();
+						areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+						for (ezs_area tarea : areaListTemp) {
+							areaIdsList.add(tarea.getId().toString());
+						}
+					}
+				}
+				tMp.put("areaIds", areaIdsList);
 			}
 		}catch(Exception e){
 			
@@ -699,7 +712,7 @@ public class HomeHangqIndexController {
 		//记录筛选根地址
 		ezs_area areaRoot = null;
 		try{
-			if(areaId!=null&&!areaId.trim().equals("")){
+			if(areaId!=null&&!areaId.trim().equals("")&&Long.valueOf(areaId)>7){
 				areaRoot = this.areaMapper.selectByPrimaryKey(Long.valueOf(areaId));
 				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
 				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
@@ -711,6 +724,24 @@ public class HomeHangqIndexController {
 					}
 					tMap.put("areaIds", areaIdsList);
 				}
+			}else if(areaId!=null&&!areaId.trim().equals("")&&Long.valueOf(areaId)<=7){
+				//大区查询
+				areaRoot = new ezs_area();
+				areaRoot.setId(Long.valueOf(areaId));
+				log.info("areaId-------------------大区ID:"+areaId);
+				List<String> areaIdList = AreaData.getprovinceids(Integer.valueOf(areaId));
+				for (String provinceId : areaIdList) {
+					areaIdsMap = this.addressService.getAllChildID(Long.valueOf(provinceId));
+					Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+					if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+						List<ezs_area> areaListTemp =new ArrayList<>();
+						areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+						for (ezs_area tarea : areaListTemp) {
+							areaIdsList.add(tarea.getId().toString());
+						}
+					}
+				}
+				tMap.put("areaIds", areaIdsList);
 			}
 		}catch(Exception e){  }
 		
@@ -722,9 +753,14 @@ public class HomeHangqIndexController {
 			//地址信息
 			String areaNameTemp = null;
 			Long areaIdTemp = 0L;
-			if(areaRoot!=null){
+			if(areaRoot!=null&&areaRoot.getId()>7){
 				areaNameTemp = areaRoot.getAreaName();
 				areaIdTemp = areaRoot.getId();
+			}else if(areaRoot!=null&&areaRoot.getId()<=7){
+				//此为大区,获取大区的name
+				areaNameTemp = AreaData.getAreaName(areaRoot.getId());
+				areaIdTemp = areaRoot.getId();
+				log.info("areaName-------------------大区Name:"+areaNameTemp);
 			}
 			for (PriceTrendIfo priceTrendIfo : ppList) {
 				try{
@@ -741,6 +777,7 @@ public class HomeHangqIndexController {
 				if(areaId!=null&&!areaId.trim().equals("")){
 					priceTrendIfo.setGoodArea(areaNameTemp);
 					priceTrendIfo.setRegion_id(areaIdTemp);
+					log.info("areaName-------------------大区Name:"+areaNameTemp);
 				}else{
 					String areaName = getAreaName(priceTrendIfo.getRegion_id());
 					priceTrendIfo.setGoodArea(areaName);
@@ -769,6 +806,7 @@ public class HomeHangqIndexController {
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
 		
 		areaId = request.getParameter("areaId");
+		log.info("areaId-------------------------:"+areaId);
 		
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
@@ -783,7 +821,7 @@ public class HomeHangqIndexController {
 		Map<String, Object> areaIdsMap = null;
 		ezs_area areaRoot = null;
 		try{
-			if(areaId!=null&&!areaId.trim().equals("")){
+			if(areaId!=null&&!areaId.trim().equals("")&&Long.valueOf(areaId)>7){
 				areaRoot = this.areaMapper.selectByPrimaryKey(Long.valueOf(areaId));
 				areaIdsMap = this.addressService.getAllChildID(Long.valueOf(areaId));
 				Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
@@ -795,6 +833,23 @@ public class HomeHangqIndexController {
 					}
 					tMap.put("areaIds", areaIdsList);
 				}
+			}else if(areaId!=null&&!areaId.trim().equals("")&&Long.valueOf(areaId)<=7){
+				//大区查询
+				areaRoot = new ezs_area();
+				areaRoot.setId(Long.valueOf(areaId));
+				List<String> areaIdList = AreaData.getprovinceids(Integer.valueOf(areaId));
+				for (String provinceId : areaIdList) {
+					areaIdsMap = this.addressService.getAllChildID(Long.valueOf(provinceId));
+					Integer AreaErrorCode = (Integer) areaIdsMap.get("ErrorCode");
+					if(AreaErrorCode!=null&&AreaErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
+						List<ezs_area> areaListTemp =new ArrayList<>();
+						areaListTemp = (List<ezs_area>) areaIdsMap.get("Obj");
+						for (ezs_area tarea : areaListTemp) {
+							areaIdsList.add(tarea.getId().toString());
+						}
+					}
+				}
+				tMap.put("areaIds", areaIdsList);
 			}
 		}catch(Exception e){  }
 		
@@ -805,9 +860,14 @@ public class HomeHangqIndexController {
 			//地址信息
 			String areaNameTemp = null;
 			Long areaIdTemp = 0L;
-			if(areaRoot!=null){
+			if(areaRoot!=null&&areaRoot.getId()>7){
 				areaNameTemp = areaRoot.getAreaName();
 				areaIdTemp = areaRoot.getId();
+			}else if(areaRoot!=null&&areaRoot.getId()<=7){
+				//此为大区,获取大区的name
+				areaNameTemp = AreaData.getAreaName(areaRoot.getId());
+				areaIdTemp = areaRoot.getId();
+				log.info("大区名称---------------------------:"+areaNameTemp);
 			}
 			for (PriceTrendIfo priceTrendIfo : ppList) {
 				try{

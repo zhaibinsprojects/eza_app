@@ -18,4 +18,6 @@ public interface IndustryInfoService {
 	 * @return
 	 */
 	public Map<String, Object> getEssayBySecondTheme(Long parentKindsId,String currentPage);
+	
+	public Map<String, Object> getEzsTouTiao();
 }

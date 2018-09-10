@@ -173,4 +173,11 @@
     id,level,name,photo_id
      from ezs_goods_class where level = '3' and photo_id is NOT null ORDER BY ADDTIME DESC
   </select>
+  
+  <select id="queryRootGoodClass" resultMap="GoodClassResultMap" parameterType="java.lang.Long">
+     select
+     <include refid="Base_Column_List" />
+     from ezs_goods_class a where EXISTS (select 1 from ezs_goods_class b where a.id = b.parent_id and b.deleteStatus = '0' and b.id = #{goodClassId}) and a.deleteStatus = '0';
+  </select>
+  
 </mapper>

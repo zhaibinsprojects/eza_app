@@ -609,4 +609,12 @@
 	order by addTime  desc LIMIT  #{pagecount},#{pagesize}
   </select>
   
+  <!-- 小易头条 -->
+  <select id="getEzsTouTiao" resultType="com.sanbang.bean.ezs_ezssubstance">
+  	select 
+  	id, addTime, author, linkPort, linkUrl, meta, name, origin, 
+	originUrl, pcView, photos, status, childEc_id, ec_id, ss_id,  user_id
+	from ezs_ezssubstance a where  a.ec_id = '5' and a.attribute = 1 and a.`status` = 2 and a.deleteStatus = '0' ORDER BY a.addTime LIMIT 3
+  </select>
+  
 </mapper>

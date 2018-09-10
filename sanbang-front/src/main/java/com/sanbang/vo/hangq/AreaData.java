@@ -356,6 +356,21 @@ public class AreaData {
 			return list;
 	    }
 	    
+	    public static String getAreaName(Long index){
+	    	Map<Long, String> map = new HashMap<>();
+	    	map.put(1L, "华东");
+			map.put(2L, "华南");
+			map.put(3L, "华北");
+			map.put(4L, "华中");
+			map.put(5L, "西北");
+			map.put(6L, "西南");
+			map.put(7L, "东北");
+			if(index>0&&index<=7)
+				return map.get(Long.valueOf(index));
+			else
+				return null;
+	    } 
+	    
 	    public static void main(String[] args) {
 	    	List<String> list=getprovinceids(3);
 	    	for (String string : list) {

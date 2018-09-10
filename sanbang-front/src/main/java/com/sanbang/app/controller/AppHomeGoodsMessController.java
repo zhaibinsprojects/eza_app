@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_accessory;
@@ -25,6 +26,7 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.index.service.CustomerService;
@@ -66,6 +68,7 @@ public class AppHomeGoodsMessController {
 	private DictService dictService;
 	@Autowired
 	private ezs_areaMapper areaMapper;
+
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -163,11 +166,30 @@ public class AppHomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,
-			String ash_content,String bend_strength,String budget,String colour,String combustion_grade,
-			String density,String elong_break,String flexural_modulus,String is_ep,String jzforce,String melt_index,
-			String pre_num,String pre_time,String purpose,String remark,String shape,String source_type,String sourcefrom,
-			String tensile,String water_content,String xbforce,String category_id,String address,
-			String ppre_time) throws Exception{
+			@RequestParam(name="ash_content") String ash_content,
+			@RequestParam(name="bend_strength") String bend_strength,
+			@RequestParam(name="budget") String budget,
+			@RequestParam(name="colour") String colour,
+			@RequestParam(name="combustion_grade") String combustion_grade,
+			@RequestParam(name="density") String density,
+			@RequestParam(name="elong_break") String elong_break,
+			@RequestParam(name="flexural_modulus") String flexural_modulus,
+			@RequestParam(name="is_ep") String is_ep,
+			@RequestParam(name="jzforce") String jzforce,
+			@RequestParam(name="melt_index") String melt_index,
+			@RequestParam(name="pre_num") String pre_num,
+			@RequestParam(name="pre_time") String pre_time,
+			@RequestParam(name="purpose") String purpose,
+			@RequestParam(name="remark") String remark,
+			@RequestParam(name="shape") String shape,
+			@RequestParam(name="source_type") String source_type,
+			@RequestParam(name="sourcefrom") String sourcefrom,
+			@RequestParam(name="tensile") String tensile,
+			@RequestParam(name="water_content") String water_content,
+			@RequestParam(name="xbforce") String xbforce,
+			@RequestParam(name="category_id",required=true) String category_id,
+			@RequestParam(name="address") String address,
+			@RequestParam(name="ppre_time",required=true) String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
@@ -186,37 +208,45 @@ public class AppHomeGoodsMessController {
 		}
 		try {
 			ezs_customized customized = new ezs_customized();
-			customized.setAsh_content(Double.valueOf((ash_content==null||ash_content.trim().equals(""))?"0":ash_content));
-			customized.setBend_strength(Double.valueOf((bend_strength==null||bend_strength.trim().equals(""))?"0":bend_strength));
-			customized.setBudget(Double.valueOf((budget==null||budget.trim().equals(""))?"0":budget));
-			//customized.setColour(colour);
-			customized.setColour_id(Long.valueOf(colour));
-			//燃烧等级(PC端商品表类型为varchar 采购定制为 double 转化会发生异常)
-			customized.setCombustion_grade(Double.valueOf((combustion_grade==null||combustion_grade.trim().equals(""))?"0":combustion_grade));
-			customized.setDensity(Double.valueOf((density==null||density.trim().equals(""))?"0":density));
-			customized.setElong_break(Double.valueOf((elong_break==null||elong_break.trim().equals(""))?"0":elong_break));
-			customized.setFlexural_modulus(Double.valueOf((flexural_modulus==null||flexural_modulus.trim().equals(""))?"0":flexural_modulus));
-			customized.setIs_ep(is_ep);
-			customized.setJzforce(Double.valueOf((jzforce==null||jzforce.trim().equals(""))?"0":jzforce));
-			customized.setMelt_index(Double.valueOf((melt_index==null||melt_index.trim().equals(""))?"0":melt_index));
-			customized.setPre_num(Double.valueOf((pre_num==null||pre_num.trim().equals(""))?"0":pre_num));
+			customized.setAshContent(ash_content);
+			customized.setBendStrength(bend_strength);
+			if(budget!=null&&!budget.trim().equals("")){
+				try{
+					customized.setBudget(Double.valueOf(budget));
+				}catch(Exception e){}
+			}
+			if(colour!=null&&!colour.trim().equals(""))
+				customized.setColour_id(Long.valueOf(colour));
+			customized.setCombustionGrade(combustion_grade);
+			customized.setDensity(density);
+			customized.setElongBreak(elong_break);
+			customized.setFlexuralModulus(flexural_modulus);
+			customized.setIsEp(is_ep);
+			customized.setJzforce(jzforce);
+			customized.setMeltIndex(melt_index);
+			if(pre_num!=null&&!pre_num.trim().equals(""))
+				customized.setPreNum(Double.valueOf(pre_num));
 			customized.setPurpose(purpose);
 			customized.setRemark(remark);
 			//customized.setShape(shape);
-			customized.setShape_id(Long.valueOf(shape));
-			customized.setSource_type(source_type);
+			if(shape!=null&&!shape.trim().equals(""))
+				customized.setShape_id(Long.valueOf(shape));
+			customized.setSourceType(source_type);
 			customized.setSourcefrom(sourcefrom);
-			customized.setTensile(Double.valueOf((tensile==null||tensile.trim().equals(""))?"0":tensile));
-			customized.setWater_content(Double.valueOf((water_content==null||water_content.trim().equals(""))?"0":water_content));
-			customized.setXbforce(Double.valueOf((xbforce==null||xbforce.trim().equals(""))?"0":xbforce));
-			customized.setCategory_id(Long.valueOf((category_id==null||category_id.trim().equals(""))?"0":category_id));
-			customized.setAddress(address);
-			customized.setColour(dictService.getDictByThisId(Long.valueOf(colour)).getName());
-			customized.setShape(dictService.getDictByThisId(Long.valueOf(shape)).getName());	//形态
+			customized.setTensile(tensile);
+			customized.setWaterContent(water_content);
+			customized.setXbforce(xbforce);
+			if(category_id!=null&&!category_id.trim().equals(""))
+				customized.setCategory_id(Long.valueOf(category_id));
+			//customized.setAddress(address);
+			if(colour!=null&&!colour.trim().equals(""))
+				customized.setColour_id(Long.valueOf(colour));
+			if(shape!=null&&!shape.trim().equals(""))
+				customized.setShape_id(Long.valueOf(shape));
 			//格式化时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = sdf.parse(ppre_time);
-			customized.setPre_time(date);
+			customized.setPreTime(date);
 			ezs_customized_record customizedrecord = new ezs_customized_record();
 			mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 			Integer ErrorCode = (Integer)mmp.get("ErrorCode");

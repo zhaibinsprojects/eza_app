@@ -71,7 +71,7 @@ h3{
     </div>
 </body>
 <script type="text/javascript">
-var baseurl="${serurl}"; 
+var baseurl="${serurl}";
 var type="${resultMap.kinds}";
 var pagecount="${resultMap.Page.totalPageCount}";
 $(document).ready(function(){

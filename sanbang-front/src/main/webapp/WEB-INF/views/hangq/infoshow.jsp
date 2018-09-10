@@ -55,7 +55,7 @@
 </div>
 <div class="content_yzs">
       <!--研究报告--->
-  <section class="secsty_yzs" style="margin-top: 60%;margin-bottom: -20%;">
+  <%-- <section class="secsty_yzs" style="margin-top: 60%;margin-bottom: -20%;">
      <c:if test="${not empty top}">
      <div class="text_yzs" id="${top.id}">
       <h3>上一篇：${top.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
@@ -71,7 +71,7 @@
             </h3>
     </div>
      </c:if>
-  </section>
+  </section> --%>
 	  <c:if test="${ not empty show.attachment}">
 		  <form action="http://www.ezaisheng.com/contentDown.htm" method="post" id="theForm2">
 				       <input type="hidden" name="fileName"  id="fileName"  value="" />
