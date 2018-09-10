@@ -53,7 +53,7 @@
   		</div>
   		
   	</div>
-  	<button class="djdigxuz">点击订阅</button>
+  	<button class="djdigxuz"><!-- 点击订阅 -->申请试用</button>
   	
   	<c:if test="${ not empty show.attachment}">
 	    <button class="download"  style="width: 100%;

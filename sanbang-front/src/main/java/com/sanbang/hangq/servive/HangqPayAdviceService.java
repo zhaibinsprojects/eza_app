@@ -14,6 +14,6 @@ public interface HangqPayAdviceService {
 	 * @param result
 	 * @return
 	 */
-	public  Result aliPayAdvice(HttpServletRequest request,Map<String, Object> param,Result result);
+	public  Result aliPayAdvice(HttpServletRequest request,Map<String, String> param,Result result);
 	
 }

@@ -30,18 +30,6 @@ h3{
 </style>
 </head>
 <div class="mui-fullscreen">
-  <!--价格评析-->
-    <%-- <div class="hTwoFater_yzs">
-      <h2 style="margin-top: 0px;">
-      <c:if test="${resultMap.kinds=='priceAnalyse'}">
-      	<span style="margin-top: 0px;">价格评析</span>      
-      </c:if>
-      <c:if test="${resultMap.kinds=='report'}">
-      	<span style="margin-top: 0px;">研究报告</span>
-      </c:if>
-      </h2>
-    </div>  --%>
-    <!-- 显示标题 -->
     <div class="ezsm-normal-tab" style="z-index:auto;width: auto ;">
 		<ul style="width: 150%;">
 			<li id="0" class="ezsm-normal-tab-sel" >全部</li>

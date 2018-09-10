@@ -1255,6 +1255,7 @@ public class GoodsServiceImpl implements GoodsService{
 			//String orderFormNo = createOrderNo(good);
 			//orderForm.setOrder_no(orderFormNo);
 			this.ezs_orderformMapper.insert(orderForm);
+			log.info("立即购买-订单记录生成-----------------------订单ID："+orderForm.getId());
 			//构建店铺购物车
 			//storeCart = new ezs_storecart();
 			storeCart.setStore_id(user.getStore_id());
@@ -1282,8 +1283,10 @@ public class GoodsServiceImpl implements GoodsService{
 			boolean buyAbleFlag = checkGoodOrder(goodsCart,good,orderType,orderForm.getOrder_no());
 			if(buyAbleFlag){
 				this.storecartMapper.insert(storeCart);
+				log.info("storecart记录生成："+storeCart.getId());
 				goodsCart.setSc_id(storeCart.getId());
 				this.ezs_goodscartMapper.insert(goodsCart);
+				log.info("goodsCart记录生成");
 				//构建实时成交价记录
 				savePriceTrend(goodsCart,good,user);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);

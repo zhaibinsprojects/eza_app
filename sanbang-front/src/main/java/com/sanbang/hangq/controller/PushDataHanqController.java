@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sanbang.hangq.servive.HangqPayAdviceService;
 import com.sanbang.hangq.servive.HangqPushService;
 import com.sanbang.utils.Result;
 
@@ -22,13 +23,14 @@ import com.sanbang.utils.Result;
  *
  */
 @Controller
-@RequestMapping("/app/hangq")
+@RequestMapping("/app/payAdvice")
 public class PushDataHanqController {
 
 	private static Logger log = Logger.getLogger(PushDataHanqController.class);
 	@Autowired
 	private HangqPushService hangqPushService;
-
+	@Autowired
+	private HangqPayAdviceService hangqPayAdviceService;
 
 	/**
 	 * alipayAdvice
@@ -36,9 +38,9 @@ public class PushDataHanqController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(name="/AliPayAdvice",method=RequestMethod.POST)
+	@RequestMapping("/aliPayAdvice")
 	@ResponseBody
-	public Result AliPayAdvice(@RequestParam Map<String, Object> param,HttpServletRequest request) {
+	public Result AliPayAdvice(@RequestParam Map<String, String> param,HttpServletRequest request) {
 		Result	result=Result.failure();
 		String aa="https://api.xx.com/receive_notify.htm?"
 				+ "total_amount=2.00"
@@ -62,12 +64,10 @@ public class PushDataHanqController {
 				+ "&seller_id=2088102119685838"
 				+ "&notify_id=4a91b7a78a503640467525113fb7d8bg8e";
 		
-		
-		
-		
-		for (Entry<String, Object> map : param.entrySet()) {
+		for (Entry<String, String> map : param.entrySet()) {
 			log.info(map.getKey()+ map.getValue());
 		}
+		result=hangqPayAdviceService.aliPayAdvice(request, param, result);
 		return result;
 	}
 

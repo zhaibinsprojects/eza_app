@@ -1,8 +1,16 @@
 package com.sanbang.alipay.api;
 
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.net.util.Base64;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -18,12 +26,12 @@ public class MainDoAlipayUtil {
 	// 新易appId
 	private static final String APP_ID = "2018081561035437";
 	// 新易私钥
-	private static final String APP_PRIVATE_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDLLPUe7MbR85If5BDRM7cs8/RbEs8lWy42pJvauHHrom1Fi7eefdW7CbuimPiyF2MlcUawvWhOv5NdExlqg+/Ow4oW3xIxXthPAz8t573U5bk1EgavqH/t13bTY4NnY7pHeProcQC7Gj99rHh5YIlJlqSH+42dtaXCWwUFwPlqJ+L78GCRsUBe/ZExUJZF9iBSlIaLk7WK3iVdem3Xf6DvTWdDfInpCIObb3109PR6/GUCdZVt4jJtgy0iahTiDSeEXaPvzWiyAo2G3KuJADEqnqIwi6CH5Gp3ZyMDvzrOUJrXg/48mDGyX8fOH4yNvi2/rx4WizgkpgZT3YOZCJudAgMBAAECggEBAMBnDKGCfC1qSWCl6z8RiE+rniV4xG2N0U+xxl3z+P25zVzkmLggVfxPlT6/OhP8jclxYg4Q7+xTA0xKv/DcjIXzKpvKF0JlnNYGLxhbsqsf+KnHLkm+eZdUSZSZUmDgUhFJAeKI0LZefu2WHGhlAN2NKLYVg+BrmlNZOoJeYlMhTdIu9shAFQkyiAUIGl7BXjxYPVKc2kB8gH6gNmh6OikgasF0PXCRRjIPjvNHGv0cBgG63zeU9IiXwwwBgPDrPjBnzm9o8xODoqW3OctnD2tTjRLSnloKlWpidEhFqGhTX+fYTZ9lo97ulA8yJKzrYnE2dlZVBfyqdW3IFsZHEMECgYEA8ngKnXP7BzPwfyvhF6JH+UjbWM4/DW4gAK6j8osBmEhGdV4P1/eVN+L+Yf3qrxMgM3Ne+VElmIDYg5GtgUeRQiohGOQLhECPmzS0xDvvKzTC3xrzSORNKhFlrbbqUjLyTTrv2w1t1KWsdL0EUju65WVP53FtmzWnrE2auv/3ZrUCgYEA1oOQdIG+2OmMn78hTi9GxznPP5BcN9waMuz9L30IF4E5XkZIFCdkmYb3/NJdhvMYqP4WAPCKsH1VjO5k/h11D3xZeMacJ9vV73gbBPLCsBpcIKTauUf26yyDZfXx4y24kloxCNw9y3iU2pRHD0KcNC4EZr8Sfa8+0tVwwewcSkkCgYEAmigN/6tUh3DTT9dTBhasEebrZlvCpMRGXoiqPbN5MRuKiGZkRlfnrB+KwjyQr/zF9VA9qt+Xuoz4mzXMjSw2Q03LuyqJ0+zEINZys2yzk9G4r+ZPlSFpmfxzm+12rworGUUGaEvyb0diDNp729iT6/LsyWZJXGvRje/NF2VUIx0CgYAq6UqeY83/qkidNCi/cSmhdOkGeCRacEc1ZL8JHuPdf9YwC7MjhPXU2HEHPDXFZx/Jvno8WeIEiC3y8UV2qAHgxSlIxcI7Hvje3JHbHYzgmYVQamnuony8cr0eSmLG5UCE1lH0ycn6x/ZO+1ZzsQl6TrJGs3ZJeiMBHf1ebZMDMQKBgQCG9qFuyR9s1R77Yl6HmQ6A0AF8Hx6h+Dk8w9/ueQfIL8Ekug2zDtCBxdSQdix/sqEfxKGz5lnk3GYoY5Cp+8eYFjfBAiis8vYCl3d1amtI7obFw7YQBTYLWItPUkQ18Z0mzhumMVKWs9eLDkX4yFoo+BQL9r0EIQpudSP3+hWIcQ==";
+	public static final String APP_PRIVATE_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDLLPUe7MbR85If5BDRM7cs8/RbEs8lWy42pJvauHHrom1Fi7eefdW7CbuimPiyF2MlcUawvWhOv5NdExlqg+/Ow4oW3xIxXthPAz8t573U5bk1EgavqH/t13bTY4NnY7pHeProcQC7Gj99rHh5YIlJlqSH+42dtaXCWwUFwPlqJ+L78GCRsUBe/ZExUJZF9iBSlIaLk7WK3iVdem3Xf6DvTWdDfInpCIObb3109PR6/GUCdZVt4jJtgy0iahTiDSeEXaPvzWiyAo2G3KuJADEqnqIwi6CH5Gp3ZyMDvzrOUJrXg/48mDGyX8fOH4yNvi2/rx4WizgkpgZT3YOZCJudAgMBAAECggEBAMBnDKGCfC1qSWCl6z8RiE+rniV4xG2N0U+xxl3z+P25zVzkmLggVfxPlT6/OhP8jclxYg4Q7+xTA0xKv/DcjIXzKpvKF0JlnNYGLxhbsqsf+KnHLkm+eZdUSZSZUmDgUhFJAeKI0LZefu2WHGhlAN2NKLYVg+BrmlNZOoJeYlMhTdIu9shAFQkyiAUIGl7BXjxYPVKc2kB8gH6gNmh6OikgasF0PXCRRjIPjvNHGv0cBgG63zeU9IiXwwwBgPDrPjBnzm9o8xODoqW3OctnD2tTjRLSnloKlWpidEhFqGhTX+fYTZ9lo97ulA8yJKzrYnE2dlZVBfyqdW3IFsZHEMECgYEA8ngKnXP7BzPwfyvhF6JH+UjbWM4/DW4gAK6j8osBmEhGdV4P1/eVN+L+Yf3qrxMgM3Ne+VElmIDYg5GtgUeRQiohGOQLhECPmzS0xDvvKzTC3xrzSORNKhFlrbbqUjLyTTrv2w1t1KWsdL0EUju65WVP53FtmzWnrE2auv/3ZrUCgYEA1oOQdIG+2OmMn78hTi9GxznPP5BcN9waMuz9L30IF4E5XkZIFCdkmYb3/NJdhvMYqP4WAPCKsH1VjO5k/h11D3xZeMacJ9vV73gbBPLCsBpcIKTauUf26yyDZfXx4y24kloxCNw9y3iU2pRHD0KcNC4EZr8Sfa8+0tVwwewcSkkCgYEAmigN/6tUh3DTT9dTBhasEebrZlvCpMRGXoiqPbN5MRuKiGZkRlfnrB+KwjyQr/zF9VA9qt+Xuoz4mzXMjSw2Q03LuyqJ0+zEINZys2yzk9G4r+ZPlSFpmfxzm+12rworGUUGaEvyb0diDNp729iT6/LsyWZJXGvRje/NF2VUIx0CgYAq6UqeY83/qkidNCi/cSmhdOkGeCRacEc1ZL8JHuPdf9YwC7MjhPXU2HEHPDXFZx/Jvno8WeIEiC3y8UV2qAHgxSlIxcI7Hvje3JHbHYzgmYVQamnuony8cr0eSmLG5UCE1lH0ycn6x/ZO+1ZzsQl6TrJGs3ZJeiMBHf1ebZMDMQKBgQCG9qFuyR9s1R77Yl6HmQ6A0AF8Hx6h+Dk8w9/ueQfIL8Ekug2zDtCBxdSQdix/sqEfxKGz5lnk3GYoY5Cp+8eYFjfBAiis8vYCl3d1amtI7obFw7YQBTYLWItPUkQ18Z0mzhumMVKWs9eLDkX4yFoo+BQL9r0EIQpudSP3+hWIcQ==";
 	// 新易公钥
-	private static final String APP_PUBLIC_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDLLPUe7MbR85If5BDRM7cs8/RbEs8lWy42pJvauHHrom1Fi7eefdW7CbuimPiyF2MlcUawvWhOv5NdExlqg+/Ow4oW3xIxXthPAz8t573U5bk1EgavqH/t13bTY4NnY7pHeProcQC7Gj99rHh5YIlJlqSH+42dtaXCWwUFwPlqJ+L78GCRsUBe/ZExUJZF9iBSlIaLk7WK3iVdem3Xf6DvTWdDfInpCIObb3109PR6/GUCdZVt4jJtgy0iahTiDSeEXaPvzWiyAo2G3KuJADEqnqIwi6CH5Gp3ZyMDvzrOUJrXg/48mDGyX8fOH4yNvi2/rx4WizgkpgZT3YOZCJudAgMBAAECggEBAMBnDKGCfC1qSWCl6z8RiE+rniV4xG2N0U+xxl3z+P25zVzkmLggVfxPlT6/OhP8jclxYg4Q7+xTA0xKv/DcjIXzKpvKF0JlnNYGLxhbsqsf+KnHLkm+eZdUSZSZUmDgUhFJAeKI0LZefu2WHGhlAN2NKLYVg+BrmlNZOoJeYlMhTdIu9shAFQkyiAUIGl7BXjxYPVKc2kB8gH6gNmh6OikgasF0PXCRRjIPjvNHGv0cBgG63zeU9IiXwwwBgPDrPjBnzm9o8xODoqW3OctnD2tTjRLSnloKlWpidEhFqGhTX+fYTZ9lo97ulA8yJKzrYnE2dlZVBfyqdW3IFsZHEMECgYEA8ngKnXP7BzPwfyvhF6JH+UjbWM4/DW4gAK6j8osBmEhGdV4P1/eVN+L+Yf3qrxMgM3Ne+VElmIDYg5GtgUeRQiohGOQLhECPmzS0xDvvKzTC3xrzSORNKhFlrbbqUjLyTTrv2w1t1KWsdL0EUju65WVP53FtmzWnrE2auv/3ZrUCgYEA1oOQdIG+2OmMn78hTi9GxznPP5BcN9waMuz9L30IF4E5XkZIFCdkmYb3/NJdhvMYqP4WAPCKsH1VjO5k/h11D3xZeMacJ9vV73gbBPLCsBpcIKTauUf26yyDZfXx4y24kloxCNw9y3iU2pRHD0KcNC4EZr8Sfa8+0tVwwewcSkkCgYEAmigN/6tUh3DTT9dTBhasEebrZlvCpMRGXoiqPbN5MRuKiGZkRlfnrB+KwjyQr/zF9VA9qt+Xuoz4mzXMjSw2Q03LuyqJ0+zEINZys2yzk9G4r+ZPlSFpmfxzm+12rworGUUGaEvyb0diDNp729iT6/LsyWZJXGvRje/NF2VUIx0CgYAq6UqeY83/qkidNCi/cSmhdOkGeCRacEc1ZL8JHuPdf9YwC7MjhPXU2HEHPDXFZx/Jvno8WeIEiC3y8UV2qAHgxSlIxcI7Hvje3JHbHYzgmYVQamnuony8cr0eSmLG5UCE1lH0ycn6x/ZO+1ZzsQl6TrJGs3ZJeiMBHf1ebZMDMQKBgQCG9qFuyR9s1R77Yl6HmQ6A0AF8Hx6h+Dk8w9/ueQfIL8Ekug2zDtCBxdSQdix/sqEfxKGz5lnk3GYoY5Cp+8eYFjfBAiis8vYCl3d1amtI7obFw7YQBTYLWItPUkQ18Z0mzhumMVKWs9eLDkX4yFoo+BQL9r0EIQpudSP3+hWIcQ==";
+	public static final String APP_PUBLIC_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDLLPUe7MbR85If5BDRM7cs8/RbEs8lWy42pJvauHHrom1Fi7eefdW7CbuimPiyF2MlcUawvWhOv5NdExlqg+/Ow4oW3xIxXthPAz8t573U5bk1EgavqH/t13bTY4NnY7pHeProcQC7Gj99rHh5YIlJlqSH+42dtaXCWwUFwPlqJ+L78GCRsUBe/ZExUJZF9iBSlIaLk7WK3iVdem3Xf6DvTWdDfInpCIObb3109PR6/GUCdZVt4jJtgy0iahTiDSeEXaPvzWiyAo2G3KuJADEqnqIwi6CH5Gp3ZyMDvzrOUJrXg/48mDGyX8fOH4yNvi2/rx4WizgkpgZT3YOZCJudAgMBAAECggEBAMBnDKGCfC1qSWCl6z8RiE+rniV4xG2N0U+xxl3z+P25zVzkmLggVfxPlT6/OhP8jclxYg4Q7+xTA0xKv/DcjIXzKpvKF0JlnNYGLxhbsqsf+KnHLkm+eZdUSZSZUmDgUhFJAeKI0LZefu2WHGhlAN2NKLYVg+BrmlNZOoJeYlMhTdIu9shAFQkyiAUIGl7BXjxYPVKc2kB8gH6gNmh6OikgasF0PXCRRjIPjvNHGv0cBgG63zeU9IiXwwwBgPDrPjBnzm9o8xODoqW3OctnD2tTjRLSnloKlWpidEhFqGhTX+fYTZ9lo97ulA8yJKzrYnE2dlZVBfyqdW3IFsZHEMECgYEA8ngKnXP7BzPwfyvhF6JH+UjbWM4/DW4gAK6j8osBmEhGdV4P1/eVN+L+Yf3qrxMgM3Ne+VElmIDYg5GtgUeRQiohGOQLhECPmzS0xDvvKzTC3xrzSORNKhFlrbbqUjLyTTrv2w1t1KWsdL0EUju65WVP53FtmzWnrE2auv/3ZrUCgYEA1oOQdIG+2OmMn78hTi9GxznPP5BcN9waMuz9L30IF4E5XkZIFCdkmYb3/NJdhvMYqP4WAPCKsH1VjO5k/h11D3xZeMacJ9vV73gbBPLCsBpcIKTauUf26yyDZfXx4y24kloxCNw9y3iU2pRHD0KcNC4EZr8Sfa8+0tVwwewcSkkCgYEAmigN/6tUh3DTT9dTBhasEebrZlvCpMRGXoiqPbN5MRuKiGZkRlfnrB+KwjyQr/zF9VA9qt+Xuoz4mzXMjSw2Q03LuyqJ0+zEINZys2yzk9G4r+ZPlSFpmfxzm+12rworGUUGaEvyb0diDNp729iT6/LsyWZJXGvRje/NF2VUIx0CgYAq6UqeY83/qkidNCi/cSmhdOkGeCRacEc1ZL8JHuPdf9YwC7MjhPXU2HEHPDXFZx/Jvno8WeIEiC3y8UV2qAHgxSlIxcI7Hvje3JHbHYzgmYVQamnuony8cr0eSmLG5UCE1lH0ycn6x/ZO+1ZzsQl6TrJGs3ZJeiMBHf1ebZMDMQKBgQCG9qFuyR9s1R77Yl6HmQ6A0AF8Hx6h+Dk8w9/ueQfIL8Ekug2zDtCBxdSQdix/sqEfxKGz5lnk3GYoY5Cp+8eYFjfBAiis8vYCl3d1amtI7obFw7YQBTYLWItPUkQ18Z0mzhumMVKWs9eLDkX4yFoo+BQL9r0EIQpudSP3+hWIcQ==";
 	// 阿里公钥
-	private static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk5XVz4Bt0BqxjmUASWwYZ9pak3SXf3t4yKFSlFq7KCWCMnYxyOmB9tFhW5+gvngHykFwfqEpUbNWJiWhQXptOVJl4rpMPe/23xt9sFwS3zE7u9VOfDOeEN5TkGxFELcL0xlUWXmQfG/lpSXpGnhBuZsraCO1xFgPymXsjlMBYpMnN5QGmj/FoiUePaN+vS7qjj1ruNmQyGl+ZfiF/XDDr4igwoug6S79qkIWTyogmtiZYOxic1UasuPqVEGGYNzGvQlvbJ8WO+3WcupdVlt/d+hkh+YQNjm+gYEgTMj9xDce0gF1gO3y4Frq1NCTVsgOreu5d9ULuZFoTcgs8+NUNQIDAQAB";
-	private static final String CHARSET = "UTF-8";
+	public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk5XVz4Bt0BqxjmUASWwYZ9pak3SXf3t4yKFSlFq7KCWCMnYxyOmB9tFhW5+gvngHykFwfqEpUbNWJiWhQXptOVJl4rpMPe/23xt9sFwS3zE7u9VOfDOeEN5TkGxFELcL0xlUWXmQfG/lpSXpGnhBuZsraCO1xFgPymXsjlMBYpMnN5QGmj/FoiUePaN+vS7qjj1ruNmQyGl+ZfiF/XDDr4igwoug6S79qkIWTyogmtiZYOxic1UasuPqVEGGYNzGvQlvbJ8WO+3WcupdVlt/d+hkh+YQNjm+gYEgTMj9xDce0gF1gO3y4Frq1NCTVsgOreu5d9ULuZFoTcgs8+NUNQIDAQAB";
+	public static final String CHARSET = "UTF-8";
 	// 阿里服务地址
 	private static final String ALIPAY_SERVERURL = "https://openapi.alipay.com/gateway.do";
 	private static final String DATA_TYPE = "json";
@@ -107,6 +115,34 @@ public class MainDoAlipayUtil {
     }
 	
    
+	public static String getFormatParams(Map<String,String> params){
+	    List<Map.Entry<String, String>> infoIds = new ArrayList<Map.Entry<String, String>>(params.entrySet());
+	    Collections.sort(infoIds, new Comparator<Map.Entry<String, String>>() {
+	        public int compare(Map.Entry<String, String> arg0, Map.Entry<String, String> arg1) {
+	            return (arg0.getKey()).compareTo(arg1.getKey());
+	        }
+	    });
+	    String ret = "";
+
+	    for (Map.Entry<String, String> entry : infoIds) {
+	        ret += entry.getKey();
+	        ret += "=";
+	        ret += URLDecoder.decode(entry.getValue());
+	        ret += "&";
+	    }
+	    ret = ret.substring(0, ret.length() - 1);
+	    return ret;
+	}
+	
+	
+	public static Map<String, String>  getCheckSignFormatParams(Map<String,String> params){
+		
+		Map<String, String>  chahe=new HashMap<>();
+		for (Entry<String, String> c : params.entrySet()) {
+			chahe.put(c.getKey(), URLDecoder.decode(Base64.decodeBase64(c.getValue()).toString()));
+		}
+		return chahe;
+	}
 	
 	
 	public static void main(String[] args) {

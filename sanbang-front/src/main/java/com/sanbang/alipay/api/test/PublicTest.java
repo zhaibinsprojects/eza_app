@@ -35,7 +35,7 @@ public class PublicTest {
       * @param args
       * @throws Exception 
       */
-
+/*
     public static void main(String[] args) throws Exception {
         // 公众号菜单查询
         //menuGet();
@@ -51,7 +51,7 @@ public class PublicTest {
 
         // 公众号加密&加签
         encryptAndSign();
-    }
+    }*/
 
     /*
     public static void accountAdd() throws AlipayApiException {
@@ -151,7 +151,6 @@ public class PublicTest {
         params.put("service", "alipay.mobile.public.message.notify");
         params.put("sign_type", "RSA");
         params.put("sign", AlipaySignature.rsaSign(params, privateKey, "UTF-8"));
-
         // 验签&解密
         String resultContent = AlipaySignature.checkSignAndDecrypt(params, publicKey, privateKey,
             true, true);
@@ -181,7 +180,9 @@ public class PublicTest {
 
     }
     
-    
+    public static void main(String[] args) throws AlipayApiException {
+    	checkSignAndDecrypt();
+	}
     
     
     

@@ -1128,6 +1128,8 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 							"", result);
 					log.info("价格行情支付宝支付======返回结果" + result.toString());
 					if (result.getSuccess()) {
+						//TODO
+						//支付系统插入数据
 						return result;
 					} else {
 						throw new Exception("价格行情支付宝支付请求支付宝支付失败");

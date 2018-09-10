@@ -107,7 +107,9 @@ function androidtodingyue() {
 		var data = {
 		}
 		var str = JSON.stringify(data);
-		window.android.androidtodingyue();
+		//订阅弃用 改为 开通试用 2018910
+		//window.android.androidtodingyue();
+		window.android.androidtoshiyong();
 		return false;
 	})
 }
@@ -190,9 +192,12 @@ function iostodingyue() {
 		var data = {
 				
 			}
-			var str = JSON.stringify(data);
+			/*var str = JSON.stringify(data);
 			WebViewJavascriptBridge.callHandler('iostodingyue', data, function() {
-			});
+			});*/
+		var str = JSON.stringify(data);
+		WebViewJavascriptBridge.callHandler('iostoshiyong', data, function() {
+		});
 			return false;
 	})
 }
