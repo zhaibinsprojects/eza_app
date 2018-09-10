@@ -9,10 +9,11 @@ import java.util.Date;
 
 public class ezs_store implements Serializable {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8981319690444399032L;
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 
@@ -100,8 +101,58 @@ public class ezs_store implements Serializable {
 
 	private int name_status;// 是否白名单
 
+	private Boolean business;// 是否有效 true 长期有效 false 不是长期有效
+
+	private Date businessCardTime; // 有效期时间
+
+	private Integer adjust_status;
+
+	private String adjust_type;
+
+	private Long currentAdjustApply_id;
+
+	private Integer operateYear;
+
+	private String child_company_status;
+
+	private Date auditDate;
+
+	private String temporary;
+
 	public Long getId() {
 		return id;
+	}
+
+	public Integer getOperateYear() {
+		return operateYear;
+	}
+
+	public void setOperateYear(Integer operateYear) {
+		this.operateYear = operateYear;
+	}
+
+	public String getChild_company_status() {
+		return child_company_status;
+	}
+
+	public void setChild_company_status(String child_company_status) {
+		this.child_company_status = child_company_status;
+	}
+
+	public Date getAuditDate() {
+		return auditDate;
+	}
+
+	public void setAuditDate(Date auditDate) {
+		this.auditDate = auditDate;
+	}
+
+	public String getTemporary() {
+		return temporary;
+	}
+
+	public void setTemporary(String temporary) {
+		this.temporary = temporary;
 	}
 
 	public void setId(Long id) {
@@ -444,6 +495,46 @@ public class ezs_store implements Serializable {
 		this.name_status = name_status;
 	}
 
+	public Boolean getBusiness() {
+		return business;
+	}
+
+	public void setBusiness(Boolean business) {
+		this.business = business;
+	}
+
+	public Date getBusinessCardTime() {
+		return businessCardTime;
+	}
+
+	public void setBusinessCardTime(Date businessCardTime) {
+		this.businessCardTime = businessCardTime;
+	}
+
+	public Integer getAdjust_status() {
+		return adjust_status;
+	}
+
+	public void setAdjust_status(Integer adjust_status) {
+		this.adjust_status = adjust_status;
+	}
+
+	public String getAdjust_type() {
+		return adjust_type;
+	}
+
+	public void setAdjust_type(String adjust_type) {
+		this.adjust_type = adjust_type;
+	}
+
+	public Long getCurrentAdjustApply_id() {
+		return currentAdjustApply_id;
+	}
+
+	public void setCurrentAdjustApply_id(Long currentAdjustApply_id) {
+		this.currentAdjustApply_id = currentAdjustApply_id;
+	}
+
 	@Override
 	public String toString() {
 		return "ezs_store [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus + ", address="
@@ -459,7 +550,11 @@ public class ezs_store implements Serializable {
 				+ ", unifyCode=" + unifyCode + ", person=" + person + ", regArea_id=" + regArea_id + ", regAddress="
 				+ regAddress + ", idCardNum=" + idCardNum + ", creditScore=" + creditScore + ", number=" + number
 				+ ", snumber=" + snumber + ", customerAudit_id=" + customerAudit_id + ", creditLevel=" + creditLevel
-				+ ", location_id=" + location_id + ", name_status=" + name_status + "]";
+				+ ", location_id=" + location_id + ", name_status=" + name_status + ", business=" + business
+				+ ", businessCardTime=" + businessCardTime + ", adjust_status=" + adjust_status + ", adjust_type="
+				+ adjust_type + ", currentAdjustApply_id=" + currentAdjustApply_id + ", operateYear=" + operateYear
+				+ ", child_company_status=" + child_company_status + ", auditDate=" + auditDate + ", temporary="
+				+ temporary + "]";
 	}
 
 }

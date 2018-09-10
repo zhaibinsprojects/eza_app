@@ -42,14 +42,17 @@
     <result column="regAddress" property="regAddress" jdbcType="VARCHAR" />
     <result column="idCardNum" property="idCardNum" jdbcType="VARCHAR" />
     <result column="name_status" property="name_status" jdbcType="INTEGER" />
+    <result column="business" property="business" jdbcType="BIT" />
+    <result column="businessCardTime" property="businessCardTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, account, accountType, address, admin_status, assets, capitalPrice, 
-    companyName, covered, creditScore, device_num, employee_num, fixed_assets, location_detail, 
-    number, obtainYear, openBankNo, open_bank_name, open_branch_name, open_branch_no, 
-    person, registerDate, rent, status, userType, yTurnover, area_id, auditingusertype_id, 
-    cardType_id, customerAudit_id, unifyCode, creditLevel, location_id, regArea_id, regAddress, 
-    idCardNum,snumber
+    id, addTime, deleteStatus, account, accountType, address, admin_status, assets, business, 
+    businessCardTime, capitalPrice, companyName, covered, creditLevel, creditScore, device_num, 
+    employee_num, fixed_assets, idCardNum, location_detail, number, obtainYear, openBankNo, 
+    open_bank_name, open_branch_name, open_branch_no, person, regAddress, registerDate, 
+    rent, snumber, status, unifyCode, userType, yTurnover, area_id, auditingusertype_id, 
+    cardType_id, customerAudit_id, location_id, regArea_id, adjust_status, adjust_type, 
+    currentAdjustApply_id, operateYear, name_status, child_company_status, auditDate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -356,6 +359,12 @@
       <if test="assets != null" >
         assets = #{assets,jdbcType=DOUBLE},
       </if>
+      <if test="business != null" >
+        business = #{business,jdbcType=BIT},
+      </if>
+      <if test="businessCardTime != null" >
+        businessCardTime = #{businessCardTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="capitalPrice != null" >
         capitalPrice = #{capitalPrice,jdbcType=DOUBLE},
       </if>
@@ -364,6 +373,9 @@
       </if>
       <if test="covered != null" >
         covered = #{covered,jdbcType=DOUBLE},
+      </if>
+      <if test="creditLevel != null" >
+        creditLevel = #{creditLevel,jdbcType=VARCHAR},
       </if>
       <if test="creditScore != null" >
         creditScore = #{creditScore,jdbcType=INTEGER},
@@ -376,6 +388,9 @@
       </if>
       <if test="fixed_assets != null" >
         fixed_assets = #{fixed_assets,jdbcType=DOUBLE},
+      </if>
+      <if test="idCardNum != null" >
+        idCardNum = #{idCardNum,jdbcType=VARCHAR},
       </if>
       <if test="location_detail != null" >
         location_detail = #{location_detail,jdbcType=VARCHAR},
@@ -401,14 +416,23 @@
       <if test="person != null" >
         person = #{person,jdbcType=VARCHAR},
       </if>
+      <if test="regAddress != null" >
+        regAddress = #{regAddress,jdbcType=VARCHAR},
+      </if>
       <if test="registerDate != null" >
         registerDate = #{registerDate,jdbcType=TIMESTAMP},
       </if>
       <if test="rent != null" >
         rent = #{rent,jdbcType=BIT},
       </if>
+      <if test="snumber != null" >
+        snumber = #{snumber,jdbcType=VARCHAR},
+      </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="unifyCode != null" >
+        unifyCode = #{unifyCode,jdbcType=VARCHAR},
       </if>
       <if test="userType != null" >
         userType = #{userType,jdbcType=VARCHAR},
@@ -428,23 +452,35 @@
       <if test="customerAudit_id != null" >
         customerAudit_id = #{customerAudit_id,jdbcType=BIGINT},
       </if>
-      <if test="unifyCode != null" >
-        unifyCode = #{unifyCode,jdbcType=VARCHAR},
-      </if>
-      <if test="creditLevel != null" >
-        creditLevel = #{creditLevel,jdbcType=VARCHAR},
-      </if>
       <if test="location_id != null" >
         location_id = #{location_id,jdbcType=BIGINT},
       </if>
       <if test="regArea_id != null" >
         regArea_id = #{regArea_id,jdbcType=BIGINT},
       </if>
-      <if test="regAddress != null" >
-        regAddress = #{regAddress,jdbcType=VARCHAR},
+      <if test="adjust_status != null" >
+        adjust_status = #{adjust_status,jdbcType=INTEGER},
       </if>
-      <if test="idCardNum != null" >
-        idCardNum = #{idCardNum,jdbcType=VARCHAR},
+      <if test="adjust_type != null" >
+        adjust_type = #{adjust_type,jdbcType=VARCHAR},
+      </if>
+      <if test="currentAdjustApply_id != null" >
+        currentAdjustApply_id = #{currentAdjustApply_id,jdbcType=BIGINT},
+      </if>
+      <if test="operateYear != null" >
+        operateYear = #{operateYear,jdbcType=INTEGER},
+      </if>
+      <if test="name_status != null" >
+        name_status = #{name_status,jdbcType=INTEGER},
+      </if>
+      <if test="child_company_status != null" >
+        child_company_status = #{child_company_status,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDate != null" >
+        auditDate = #{auditDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="temporary != null" >
+        temporary = #{temporary,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

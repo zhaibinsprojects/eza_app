@@ -99,6 +99,6 @@
 <script type="text/javascript">
 	var  pushcode="${pushcode}";
 	var baseurl="${serurl}";
-	var isshow="${result.obj.isshow}";
+	//var isshow="${result.obj.isshow}";
   </script> 
 </html>

@@ -995,14 +995,14 @@ public class GoodsServiceImpl implements GoodsService{
 	@Override
 	public Result getGoodsPdf(long goodsid) {
 		Result result=Result.failure();
-		String url="http://test.ezaisheng.com/ezs/look_good_quality.htm";
+		String url="http://www.ezaisheng.com/look_good_quality.htm";
 		net.sf.json.JSONObject callBackRet = null;
 		HttpRequestParam httpParam = new HttpRequestParam();
 		try {
 			httpParam.addUrlParams(new BasicNameValuePair("goodid",String.valueOf(goodsid)));
 				callBackRet= HttpRemoteRequestUtils.doPost(url, httpParam);
 				Map<String, Object> mv = new HashMap<>();
-				mv.put("pdfurl", "http://test.ezaisheng.com/ezs/upload/pdf/quality.pdf?"+System.currentTimeMillis());
+				mv.put("pdfurl", "http://www.ezaisheng.com/upload/pdf/quality.pdf?"+System.currentTimeMillis());
 				result.setObj(mv);
 				result.setSuccess(true);
 				result.setMsg("请求成功");

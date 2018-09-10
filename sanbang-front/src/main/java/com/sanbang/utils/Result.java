@@ -96,5 +96,14 @@ public class Result implements Serializable{
 		this.errorcode = errorcode;
 		this.meta = meta;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Result [success=" + success + ", msg=" + msg + ", obj=" + obj + ", errorcode=" + errorcode + ", meta="
+				+ meta + ", count=" + count + "]";
+	}
+	
+	
 	
 }

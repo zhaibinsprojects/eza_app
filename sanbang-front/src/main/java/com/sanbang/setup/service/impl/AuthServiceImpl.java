@@ -36,6 +36,7 @@ import com.sanbang.setup.service.AuthService;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
+import com.sanbang.utils.StringUtil;
 import com.sanbang.utils.Tools;
 import com.sanbang.vo.DictionaryCate;
 import com.sanbang.vo.DictionaryCode;
@@ -100,49 +101,73 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private DictService dictService;
 
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	@Override
 	public Result saveComAuth(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response) {
-		result = savecomvali(request);
-		if (result.getSuccess()) {
-			String companyName = request.getParameter("companyName");// 企业名称
-			String area_id = request.getParameter("area_id");// 经营地址区县
-			String address = request.getParameter("address");// 经营地址
-			String capitalPrice = request.getParameter("capitalPrice");// 注册资本
-			String unifyCode = request.getParameter("unifyCode");// 社会信用代码
-			String persion = request.getParameter("persion");// 法人
-			String trueName = request.getParameter("trueName");// 联系人
-			
-			upi.getEzs_store().setCompanyName(companyName);
-			upi.getEzs_store().setArea_id(Long.valueOf(area_id));
-			upi.getEzs_store().setAddress(address);
-			upi.getEzs_store().setCapitalPrice(Double.valueOf(capitalPrice));
-			upi.getEzs_store().setUnifyCode(unifyCode);
-			upi.getEzs_store().setPerson(persion);
-			upi.setTrueName(trueName);
-			upi.getEzs_store().setAccountType(1);
-			//truename
-			upi.setId(upi.getId());
-			upi.setLastLoginDate(new Date());
-			ezs_userMapper.updateByPrimaryKeySelective(upi);
+		try {
+			result = savecomvali(request);
+			if (result.getSuccess()) {
+				String companyName = request.getParameter("companyName");// 企业名称
+				String area_id = request.getParameter("area_id");// 经营地址区县
+				String address = request.getParameter("address");// 经营地址
+				String capitalPrice = request.getParameter("capitalPrice");// 注册资本
+				String unifyCode = request.getParameter("unifyCode");// 社会信用代码
+				String persion = request.getParameter("persion");// 法人
+				String trueName = request.getParameter("trueName");// 联系人
+				
+				//认证有效期 增加 2018 9 10
+				//begin
+				String businessval =request.getParameter("business");
+				boolean business=false;
+				if("1".equals(businessval)) {
+					business=true;
+				}
+				String businessCardTime = request.getParameter("businessCardTime");
+				if(business) {
+					upi.getEzs_store().setBusiness(true);
+					upi.getEzs_store().setBusinessCardTime(null);
+				}else {
+					upi.getEzs_store().setBusiness(false);
+					upi.getEzs_store().setBusinessCardTime(sdf.parse(businessCardTime));
+				}
+				//end
+				
+				upi.getEzs_store().setCompanyName(companyName);
+				upi.getEzs_store().setArea_id(Long.valueOf(area_id));
+				upi.getEzs_store().setAddress(address);
+				upi.getEzs_store().setCapitalPrice(Double.valueOf(capitalPrice));
+				upi.getEzs_store().setUnifyCode(unifyCode);
+				upi.getEzs_store().setPerson(persion);
+				upi.setTrueName(trueName);
+				upi.getEzs_store().setAccountType(1);
+				//truename
+				upi.setId(upi.getId());
+				upi.setLastLoginDate(new Date());
+				ezs_userMapper.updateByPrimaryKeySelective(upi);
 
-			//企业个体信息
-			upi.getEzs_store().setId(upi.getStore_id());
-			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
+				//企业个体信息
+				upi.getEzs_store().setId(upi.getStore_id());
+				ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
 
-			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
-					Long.parseLong(redisuserkeyexpir));
+				boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+						Long.parseLong(redisuserkeyexpir));
 
-			if (res) {
-				result.setSuccess(true);
-				result.setMsg("保存成功");
-				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			} else {
-				result.setSuccess(false);
-				result.setMsg("系统错误");
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				if (res) {
+					result.setSuccess(true);
+					result.setMsg("保存成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				} else {
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				}
 			}
-		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		} 
 
 		return result;
 	}
@@ -207,6 +232,24 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("请输入法人");
 			return result;
 		}
+		
+		//认证有效期 增加 2018 9 10
+		//begin
+		String businessval =request.getParameter("business");
+		boolean business=false;
+		if("1".equals(businessval)) {
+			business=true;
+		}
+		String businessCardTime = request.getParameter("businessCardTime");
+		if(!business) {
+			if(StringUtil.isEmpty(businessCardTime)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入营业期限");
+				return result;
+			}
+		}
+		//end
 
 		return result;
 	}
@@ -331,47 +374,72 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public Result saveindivAuth(Result result, HttpServletRequest request, ezs_user upi, HttpServletResponse response) {
-		result = saveindivvali(request);
-		if (result.getSuccess()) {
-			String companyName = request.getParameter("companyName");// 企业名称
-			String trueName = request.getParameter("trueName");// 联系人
-			String area_id = request.getParameter("area_id");// 经营地址区县
-			String address = request.getParameter("address");// 经营地址
-			String idCardNum = request.getParameter("idCardNum");// 经营者省份证号
-			String account = request.getParameter("account");// 注册号
-			String persion = request.getParameter("persion");// 经营者
+		try {
+			result = saveindivvali(request);
+			if (result.getSuccess()) {
+				String companyName = request.getParameter("companyName");// 企业名称
+				String trueName = request.getParameter("trueName");// 联系人
+				String area_id = request.getParameter("area_id");// 经营地址区县
+				String address = request.getParameter("address");// 经营地址
+				String idCardNum = request.getParameter("idCardNum");// 经营者省份证号
+				String account = request.getParameter("account");// 注册号
+				String persion = request.getParameter("persion");// 经营者
 
-			upi.getEzs_store().setCompanyName(companyName);
-			upi.getEzs_store().setArea_id(Long.valueOf(area_id));
-			upi.getEzs_store().setAddress(address);
-			upi.getEzs_store().setPerson(persion);
-			upi.setTrueName(trueName);
-			upi.getEzs_store().setIdCardNum(idCardNum);
-			upi.getEzs_store().setAccount(account);
-			upi.getEzs_store().setAccountType(2);
+				upi.getEzs_store().setCompanyName(companyName);
+				upi.getEzs_store().setArea_id(Long.valueOf(area_id));
+				upi.getEzs_store().setAddress(address);
+				upi.getEzs_store().setPerson(persion);
+				upi.setTrueName(trueName);
+				upi.getEzs_store().setIdCardNum(idCardNum);
+				upi.getEzs_store().setAccount(account);
+				upi.getEzs_store().setAccountType(2);
 
-			//truename
-			upi.setId(upi.getId());
-			upi.setLastLoginDate(new Date());
-			ezs_userMapper.updateByPrimaryKeySelective(upi);
+				
+				//认证有效期 增加 2018 9 10
+				//begin
+				String businessval =request.getParameter("business");
+				boolean business=false;
+				if("1".equals(businessval)) {
+					business=true;
+				}
+				String businessCardTime = request.getParameter("businessCardTime");
+				if(business) {
+					upi.getEzs_store().setBusiness(true);
+					upi.getEzs_store().setBusinessCardTime(null);
+				}else {
+					upi.getEzs_store().setBusiness(false);
+					upi.getEzs_store().setBusinessCardTime(sdf.parse(businessCardTime));
+				}
+				//end
+				
+				//truename
+				upi.setId(upi.getId());
+				upi.setLastLoginDate(new Date());
+				ezs_userMapper.updateByPrimaryKeySelective(upi);
 
-			//企业个体信息
-			upi.getEzs_store().setId(upi.getStore_id());
-			ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
+				//企业个体信息
+				upi.getEzs_store().setId(upi.getStore_id());
+				ezs_storeMapper.updateByPrimaryKeySelective(upi.getEzs_store());
 
-			boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
-					Long.parseLong(redisuserkeyexpir));
+				boolean res = RedisUserSession.updateUserInfo(upi.getUserkey(), upi,
+						Long.parseLong(redisuserkeyexpir));
 
-			if (res) {
-				result.setSuccess(true);
-				result.setMsg("保存成功");
-				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			} else {
-				result.setSuccess(false);
-				result.setMsg("系统错误");
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				if (res) {
+					result.setSuccess(true);
+					result.setMsg("保存成功");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				} else {
+					result.setSuccess(false);
+					result.setMsg("系统错误");
+					result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+				}
 			}
-		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("系统错误");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		} 
 		return result;
 	}
 
@@ -541,6 +609,24 @@ public class AuthServiceImpl implements AuthService {
 			result.setMsg("请输入经营者");
 			return result;
 		}
+		
+		//认证有效期 增加 2018 9 10
+		//begin
+		String businessval =request.getParameter("business");
+		boolean business=false;
+		if("1".equals(businessval)) {
+			business=true;
+		}
+		String businessCardTime = request.getParameter("businessCardTime");
+		if(!business) {
+			if(StringUtil.isEmpty(businessCardTime)) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("请输入营业期限");
+				return result;
+			}
+		}
+		//end
 
 		return result;
 	}
@@ -666,7 +752,7 @@ public class AuthServiceImpl implements AuthService {
 				i++;	
 				}
 			}
-			if(i==3){
+			if(i>=1){
 				authupi.setAuthorfilestate(true);
 			}
 		}
@@ -875,7 +961,7 @@ public class AuthServiceImpl implements AuthService {
 		return list;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		List<AuthImageVo> list=new ArrayList<>();
 		try {
 			savepic("pic,url1;pic2,url2,",list );
@@ -883,7 +969,7 @@ public class AuthServiceImpl implements AuthService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	@Override
 	public Result saveAuthPicUrl(Result result, HttpServletRequest request, ezs_user upi,
@@ -1076,6 +1162,10 @@ public class AuthServiceImpl implements AuthService {
 		}
 		
 		return result;
+	}
+	
+	public static void main(String[] args) throws ParseException {
+		sdf.parse("2020-10-14");
 	}
 	
 }

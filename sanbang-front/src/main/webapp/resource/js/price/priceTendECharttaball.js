@@ -464,7 +464,8 @@ function iosnologin() {
 function androidtodingyue() {
 	var data = {};
 	var str = JSON.stringify(data);
-	window.android.androidtodingyue();
+	//window.android.androidtodingyue();
+	window.android.androidtoshiyong();
 	return false;
 }
 
@@ -472,6 +473,7 @@ function androidtodingyue() {
 function iostodingyue() {
 	var data = {}
 	var str = JSON.stringify(data);
-	WebViewJavascriptBridge.callHandler('iostodingyue', "", function() { });
+//	WebViewJavascriptBridge.callHandler('iostodingyue', "", function() { });
+	WebViewJavascriptBridge.callHandler('iostoshiyong', "", function() { });
 	return false;
 }

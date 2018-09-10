@@ -1,6 +1,7 @@
 package com.sanbang.setup.controller;
 
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +81,7 @@ public class UserSetupAuthController {
 	@Resource(name="fileUploadService")
 	private FileUploadService fileUploadService;
 	
+	private static SimpleDateFormat smfh = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/**
 	 * 买家会员中心
@@ -153,6 +155,8 @@ public class UserSetupAuthController {
 		if("companyshow".equals(typevalue)){
 			
 			//初始化地址
+			map.put("business", upi.getEzs_store().getBusiness()==null?0:upi.getEzs_store().getBusiness()?1:0);
+			map.put("businessCardTime", upi.getEzs_store().getBusinessCardTime()==null?"":smfh.format(upi.getEzs_store().getBusinessCardTime()));
 			map.put("initarea", areaService.getAreaParentList());
 			
 			map.put("companyName", upi.getEzs_store().getCompanyName());// 企业名称
@@ -302,6 +306,8 @@ public class UserSetupAuthController {
 		map.put("status", upi.getEzs_store().getStatus());// 0:初始数据无业务 审核状态 1:需要审核 2.审核通过,3审核未通过
 		//公司信息
 		if("companyshow".equals(typevalue)){
+			map.put("business", upi.getEzs_store().getBusiness()==null?0:upi.getEzs_store().getBusiness()?1:0);
+			map.put("businessCardTime", upi.getEzs_store().getBusinessCardTime()==null?"":smfh.format(upi.getEzs_store().getBusinessCardTime()));
 			//初始化地址
 			map.put("initarea", areaService.getAreaParentList());
 			

@@ -18,7 +18,7 @@ public class ezs_memberorder {
 
     private BigDecimal payAmount;//实付金额
 
-    private Integer payMode;//支付方式 0:线上，1:转账汇款
+    private Integer payMode;//支付方式 0:线上，1:转账汇款  
 
     private Integer payState;//支付状态 0:未支付，1:已支付
 
