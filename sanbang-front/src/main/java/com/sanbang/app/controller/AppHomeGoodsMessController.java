@@ -26,6 +26,7 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
+import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.index.service.CustomerService;
@@ -67,6 +68,7 @@ public class AppHomeGoodsMessController {
 	private DictService dictService;
 	@Autowired
 	private ezs_areaMapper areaMapper;
+
 	/**
 	 * 根据商品名称进行商品列表的查询
 	 * @param request
@@ -185,9 +187,9 @@ public class AppHomeGoodsMessController {
 			@RequestParam(name="tensile") String tensile,
 			@RequestParam(name="water_content") String water_content,
 			@RequestParam(name="xbforce") String xbforce,
-			@RequestParam(name="category_id") String category_id,
+			@RequestParam(name="category_id",required=true) String category_id,
 			@RequestParam(name="address") String address,
-			@RequestParam(name="ppre_time") String ppre_time) throws Exception{
+			@RequestParam(name="ppre_time",required=true) String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
@@ -219,7 +221,6 @@ public class AppHomeGoodsMessController {
 			customized.setDensity(density);
 			customized.setElongBreak(elong_break);
 			customized.setFlexuralModulus(flexural_modulus);
-			customized.setIs_ep(is_ep);
 			customized.setIsEp(is_ep);
 			customized.setJzforce(jzforce);
 			customized.setMeltIndex(melt_index);
@@ -237,7 +238,7 @@ public class AppHomeGoodsMessController {
 			customized.setXbforce(xbforce);
 			if(category_id!=null&&!category_id.trim().equals(""))
 				customized.setCategory_id(Long.valueOf(category_id));
-			customized.setAddress(address);
+			//customized.setAddress(address);
 			if(colour!=null&&!colour.trim().equals(""))
 				customized.setColour_id(Long.valueOf(colour));
 			if(shape!=null&&!shape.trim().equals(""))
@@ -245,7 +246,7 @@ public class AppHomeGoodsMessController {
 			//格式化时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = sdf.parse(ppre_time);
-			customized.setPre_time(date);
+			customized.setPreTime(date);
 			ezs_customized_record customizedrecord = new ezs_customized_record();
 			mmp = this.customizedService.addCustomized(user, customized, customizedrecord);
 			Integer ErrorCode = (Integer)mmp.get("ErrorCode");
