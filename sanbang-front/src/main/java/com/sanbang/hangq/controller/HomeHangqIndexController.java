@@ -13,6 +13,7 @@ import javax.tools.Tool;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -380,6 +381,7 @@ public class HomeHangqIndexController {
 		List<Advices> adviceList = new ArrayList<Advices>();
 		Advices advice01 = new Advices();
 		//advice01.setPath("https://m.ezaisheng.com/front/resource/images/app-banner01.png");
+		//advice01.setPath(baseurl+"/front/resource/images/app-banner01.png");
 		advice01.setPath("http://10.10.10.148/front/resource/images/app-banner01.png");
 		advice01.setLink("");
 		advice01.setpName("app-banner01.png");

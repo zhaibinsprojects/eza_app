@@ -6,7 +6,12 @@
    <!--数据列表-->
    <c:forEach var="item" items="${resultMap.Obj}">
     <div class="text_yzs" id="${item.id}" style="padding: 0px 0px 0px 0;">
-      <h3 style="margin-top: 0px;margin-bottom: 0px;">${item.name}</h3>
+    
+    	<div class="textOverflow_yzs" style="-webkit-line-clamp: 1;">
+		      	<h3 style="margin-top: 0px;margin-bottom: 0px;">${item.name}</h3>
+		</div>
+    
+      
       <div class="textOverflow_yzs" style="-webkit-line-clamp: 3;">
         <p>${item.meta}</p>
       </div>

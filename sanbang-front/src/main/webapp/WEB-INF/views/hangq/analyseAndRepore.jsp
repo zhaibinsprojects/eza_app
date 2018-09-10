@@ -28,6 +28,9 @@ h3{
 .text_yzs{
 	padding: 0px 0px 0px 0;
 }
+.textOverflow_yzs{
+	padding: 0 0 0;
+}
 </style>
 </head>
 <div class="mui-fullscreen">
@@ -58,7 +61,9 @@ h3{
 		<div class="cont">
 		    <c:forEach var="item" items="${resultMap.Obj}">
 		    <div class="text_yzs" id="${item.id}">
-		      <h3>${item.name}</h3>
+		      <div class="textOverflow_yzs" style="-webkit-line-clamp: 1;height: 40%">
+		      	<h3>${item.name}</h3>
+		      </div>
 		      <div class="textOverflow_yzs" style="-webkit-line-clamp: 3;">
 		        <p>${item.meta}</p>
 		      </div>
