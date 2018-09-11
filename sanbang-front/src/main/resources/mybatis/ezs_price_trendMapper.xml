@@ -842,9 +842,9 @@
         and g.protection = #{protection}
       </if>
       <if test="areaIds != null and areaIds.size > 0 " >
-        and g.region_id 
-		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
-         #{areaIds}
+        and p.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds_1" open="in (" close=")" separator=",">
+         #{areaIds_1}
      	</foreach>
       </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
@@ -874,8 +874,8 @@
       </if>
       <if test="areaIds != null and areaIds.size > 0 " >
         and a.region_id 
-		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
-         #{areaIds}
+		<foreach collection="areaIds" index="index" item="areaIds_2" open="in (" close=")" separator=",">
+         #{areaIds_2}
      	</foreach>
       </if>
       <!-- 筛选条件：一周、一月、一季度、一年 -->
@@ -930,9 +930,9 @@
         and g.protection = #{protection}
       </if>
       <if test="areaIds != null and areaIds.size > 0 " >
-        and g.region_id 
-		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
-         #{areaIds}
+        and p.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds_1" open="in (" close=")" separator=",">
+         #{areaIds_1}
      	</foreach>
       </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
@@ -962,8 +962,8 @@
       </if>
       <if test="areaIds != null and areaIds.size > 0 " >
         and a.region_id 
-		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
-         #{areaIds}
+		<foreach collection="areaIds" index="index" item="areaIds_2" open="in (" close=")" separator=",">
+         #{areaIds_2}
      	</foreach>
       </if>
       <!-- 筛选条件：一周、一月、一季度、一年 -->
