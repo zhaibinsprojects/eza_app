@@ -120,6 +120,11 @@ var description="${description}";
 
 	$(document).ready(function(){
 		$(".gtayfffbak").height($(".vuetpso p").height());
+		$(".hqzx_uiop").find("img").css("width","200px");
+		$(".hqzx_uiop").find("img").css("height","200px");
+		$(".MsoNormalTable").css("width","100%");
+		$(".hqzx_uiop").find("span").css("display","");
+		
 	});
 </script>
 </html>

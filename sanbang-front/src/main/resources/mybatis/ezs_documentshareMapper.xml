@@ -169,7 +169,7 @@
 		A.user_id,
 		B.addTime doctime,
 		A.ezsSubstance_id,
-		IF(ISNULL(B.meta),"",B.meta) title
+		IF(ISNULL(B.name),B.meta,B.name) title
 		FROM
 		ezs_documentshare A
 		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id
@@ -188,7 +188,7 @@
 		A.user_id,
 		B.addTime doctime,
 		A.ezsSubstance_id,
-		IF(ISNULL(B.meta),"",B.meta) title
+		IF(ISNULL(B.name),B.meta,B.name) title
 		FROM
 		ezs_documentshare A
 		LEFT JOIN ezs_ezssubstance B ON A.ezsSubstance_id = B.id
