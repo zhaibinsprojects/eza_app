@@ -1029,7 +1029,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 			c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 30);
 
 			probation.setEndTime(c.getTime());
-			probation.setIsDiscontinuation(0);
+			probation.setIsDiscontinuation(1);
 			probation.setStartTime(new Date());
 			probation.setUser_id(upi.getId());
 			ezs_probationMapper.insertSelective(probation);
