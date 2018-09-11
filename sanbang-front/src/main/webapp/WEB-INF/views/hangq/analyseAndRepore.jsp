@@ -60,7 +60,7 @@ h3{
 		<div class="cont">
 		    <c:forEach var="item" items="${resultMap.Obj}">
 		    <div class="text_yzs" id="${item.id}">
-		      <div class="textOverflow_yzs" style="-webkit-line-clamp: 1;height: 40%">
+		      <div class="textOverflow_yzs" style="-webkit-line-clamp: 1;">
 		      	<h3>${item.name}</h3>
 		      </div>
 		      <div class="textOverflow_yzs" style="-webkit-line-clamp: 3;">
