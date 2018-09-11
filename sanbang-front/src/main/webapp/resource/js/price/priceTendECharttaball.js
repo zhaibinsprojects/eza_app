@@ -160,9 +160,9 @@ function initTable(plist){
 		if(plist[i].isshow=='1'){
 			html = html+"<td><span class='colrRed'>￥"+plist[i].currentAVGPrice+"</span></td>";
 			
-			if( (plist[i].preAVGPrice!=null)&&(plist[i].currentAVGPrice > plist[i].preAVGPrice)){			
+			if( (plist[i].preAVGPrice!=null&&plist[i].preAVGPrice!='')&&(plist[i].currentAVGPrice > plist[i].preAVGPrice)){			
 				html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td>";
-			}else if((plist[i].preAVGPrice!=null)&&(plist[i].currentAVGPrice < plist[i].preAVGPrice)){
+			}else if((plist[i].preAVGPrice!=null&&plist[i].preAVGPrice!='')&&(plist[i].currentAVGPrice < plist[i].preAVGPrice)){
 				html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
 			}else {
 				html=html+"<td><span>"+plist[i].sandByOne+"</span></td> ";
