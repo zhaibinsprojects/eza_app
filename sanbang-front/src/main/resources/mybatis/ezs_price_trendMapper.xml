@@ -785,7 +785,7 @@
 	(select gc.`name` from ezs_goods_class gc where gc.id = a.goodClass2_id) className,
 	a.data_time dealDate,
 	a.region_id areaId,
-	(select d.price from ezs_price_trend d where d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
+	(select d.price from ezs_price_trend d where d.color_id = a.color_id and d.form_id = a.form_id and d.region_id = a.region_id and d.goodClass2_id = a.goodClass2_id and DATE_FORMAT(d.data_time,'%Y-%m-%d') = DATE_ADD(DATE_FORMAT(a.data_time,'%Y-%m-%d'),interval -1 DAY) limit 1 ) prePrice
 	from ezs_price_trend a 
 	where a.type = '1'
 	and a.data_sources in ('2','3') 
@@ -819,7 +819,7 @@
 	a.data_time dealDate,
 	gc.name className,
 	(select area.areaName from ezs_area area where area.id =  a.region_id) areaName ,
-	a.region_id,
+	a.region_id,IFNULL( 
 	(
 	select IFNULL(AVG(p.price),0)
 	from ezs_price_trend p where p.status = '2' and p.goodClass2_id = a.goodClass2_id and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
@@ -842,7 +842,7 @@
         and g.protection = #{protection}
       </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
-	) prePrice
+	) ,0) prePrice
 	from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass2_id = gc.id
 	where  a.status = '2'
       <if test="kindId != null" >
@@ -901,7 +901,7 @@
 	a.data_time dealDate,
 	gc.name className,
 	(select area.areaName from ezs_area area where area.id =  a.region_id) areaName ,
-	a.region_id,
+	a.region_id,IFNULL(
 	(
 	select IFNULL(AVG(p.price),0)
 	from ezs_price_trend p where p.status = '2' and p.goodClass2_id = a.goodClass2_id and date_add(DATE_FORMAT(p.data_time,'%Y-%m-%d'),interval 1 day) = DATE_FORMAT(a.data_time,'%Y-%m-%d')
@@ -924,7 +924,7 @@
         and g.protection = #{protection}
       </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
-	) prePrice
+	) ,0)  prePrice
 	from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass2_id = gc.id
 	where  a.status = '2'
       <if test="kindId != null" >
