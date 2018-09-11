@@ -45,7 +45,7 @@ function initTable(plist){
 		}else if(plist[i].currentPrice < plist[i].prePrice){
 			html=html+"<td><span class='colGreen'>"+plist[i].sandByOne+"</span></td>";			
 		}else {
-			html=html+"<td><span class='colrRed'>"+plist[i].sandByOne+"</span></td> ";
+			html=html+"<td><span>"+plist[i].sandByOne+"</span></td> ";
 		} 
 		html=html+"<td><span>"+plist[i].dealDate+"</span></td></tr>";
 	}
