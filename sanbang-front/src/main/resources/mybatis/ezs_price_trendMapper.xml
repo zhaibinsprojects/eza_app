@@ -841,6 +841,12 @@
       <if test="protection != null" >
         and g.protection = #{protection}
       </if>
+      <if test="areaIds != null and areaIds.size > 0 " >
+        and g.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
+         #{areaIds}
+     	</foreach>
+      </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
 	) prePrice
 	from ezs_price_trend a LEFT JOIN ezs_goods_class gc on a.goodClass2_id = gc.id
@@ -922,6 +928,12 @@
       </if>
       <if test="protection != null" >
         and g.protection = #{protection}
+      </if>
+      <if test="areaIds != null and areaIds.size > 0 " >
+        and g.region_id 
+		<foreach collection="areaIds" index="index" item="areaIds" open="in (" close=")" separator=",">
+         #{areaIds}
+     	</foreach>
       </if>
  	GROUP BY DATE_FORMAT(p.data_time,'%Y-%m-%d')
 	)  prePrice
