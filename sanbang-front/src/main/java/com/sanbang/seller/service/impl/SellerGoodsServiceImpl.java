@@ -584,7 +584,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				}else{
 					goods.setCncl_num(Double.valueOf(cncl_num));
 				}
-				goods.setValidity(Integer.valueOf(validity));
+				goods.setValidity(Integer.valueOf(100));
 				goods.setInventory(Double.valueOf(inventory));
 				goods.setArea_id(Long.valueOf(area_id));
 				goods.setAddess(addess);

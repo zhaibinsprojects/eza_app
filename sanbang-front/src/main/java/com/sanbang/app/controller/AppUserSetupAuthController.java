@@ -3,6 +3,7 @@ package com.sanbang.app.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -119,7 +120,16 @@ public class AppUserSetupAuthController {
 			result.setObj(map);
 			return result;
 		}else{
-			ezs_user upi1=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName()).get(0);
+			ezs_user upi1=null;
+					
+			List<ezs_user> userProInfolist=ezs_userMapper.getUserInfoByUserNameFromBack(upi.getName());
+			if(userProInfolist.size()==0) {
+				userProInfolist = ezs_userMapper.getUserInfoByUserNameFromPhone(upi.getName());
+			}
+			if(userProInfolist.size()>0) {
+				upi1=userProInfolist.get(0);
+			}
+			
 			if(null!=upi1){
 				RedisUserSession.updateUserInfo(upi.getUserkey(), upi1, Long.parseLong(redisuserkeyexpir));
 				upi=upi1;

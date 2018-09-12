@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import com.sanbang.alipay.MainDoAlipayUtil;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_customizedhq;
 import com.sanbang.bean.ezs_documentshare;
@@ -1120,7 +1121,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				result.setSuccess(true);
 				result.setMsg("您的订单已提交,请到个人中心进行支付!");
-			} else {/*
+			} else {
 				// 支付宝
 				if (paymode1 == 2) {
 					result = MainDoAlipayUtil.DoPayAli("我的订阅支付确认", "价格行情", order.getOrder_no(), order.getPayAmount(),
@@ -1139,7 +1140,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 					result.setMsg("暂不支持微信支付！");
 				}
 
-			*/}
+			}
 
 		} catch (Exception e) {
 			result.setSuccess(false);
