@@ -4,8 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html class="page-login">
 <head>
-<%-- <base href="${serurl}"/> --%>
-<base href="http://10.10.10.52/"/>
+<base href="${serurl}"/>
+<!-- <base href="http://10.10.10.52/"/> -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
@@ -43,8 +43,9 @@ tbody tr{
   		</ul>
   	</div>
   	<div class="echartHeight">
-  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;display: none;"></div>
-  		<div id="containerLock" class="graybakhuio" style="display: block;"></div>
+  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;"></div>
+  		<div id="containerLock" class="graybakhuio" ></div>
+  		<!-- style="display: block;" -->
   	</div>
   </section>
 </div>

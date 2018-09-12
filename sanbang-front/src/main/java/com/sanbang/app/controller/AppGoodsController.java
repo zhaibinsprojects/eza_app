@@ -27,17 +27,20 @@ import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_documentshare;
 import com.sanbang.bean.ezs_dvaluate;
 import com.sanbang.bean.ezs_goods;
+import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_goodsMapper;
+import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.dao.ezs_goodscartMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.upload.sevice.FileUploadService;
 import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.CommUtil;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -69,6 +72,10 @@ public class AppGoodsController {
 	private ezs_goodscartMapper ezs_goodscartMapper;
 	@Autowired
 	private ezs_goodsMapper ezs_goodsMapper;
+	@Autowired
+	private ezs_goods_classMapper goodsClassMapper;
+	@Autowired
+	private com.sanbang.dao.ezs_orderformMapper ezs_orderformMapper;
 	
 	private static int num = 100;
 
@@ -1098,7 +1105,11 @@ public class AppGoodsController {
 			}
 		}
 		ezs_orderform orderForm = new ezs_orderform();
-		orderForm.setOrder_no(getOrderNO());
+		//orderForm.setOrder_no(getOrderNO());
+		//修改订单号生成规则
+		ezs_goods buyGoods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
+		orderForm.setOrder_no(createOrderNo(buyGoods));
+		
 		mmp = this.goodsService.immediateAddOrderFormFunc(orderForm,user, "GOODS",WeAddressId,goodsId, count);
 		Integer ErrorCode = (Integer)mmp.get("ErrorCode");
 		if(ErrorCode!=null&&ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)){
@@ -1216,7 +1227,17 @@ public class AppGoodsController {
 					//tOrderForm.setWeAddress_id(WeAddressId);
 					tOrderForm.setAddress_id(WeAddressId);
 					//订单号
-					tOrderForm.setOrder_no(getOrderNO());
+					//tOrderForm.setOrder_no(getOrderNO());
+					//生成订单号：createOrderNo();
+					try{
+						ezs_goodscart buyGoodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(Long.valueOf(goodCartIdTemps[i]));
+						ezs_goods buyGoods = this.ezs_goodsMapper.selectByPrimaryKey(buyGoodsCar.getGoods_id());
+						tOrderForm.setOrder_no(createOrderNo(buyGoods));
+						
+					}catch(Exception e){
+						log.info("订单号生成失败。。。。。。。。。。。。。。。。。。。。。。。");
+					}
+					
 					//进行下单处理
 					tmp = this.goodsService.addOrderFormFunc(tOrderForm,user,"GOODS",Long.valueOf(goodCartIdTemps[i]));
 					Integer ErrorCode = (Integer) tmp.get("ErrorCode");
@@ -1631,4 +1652,40 @@ public class AppGoodsController {
 		}
 		return result;
 	}
+	
+	public synchronized String createOrderNo(ezs_goods goods) {
+		// TODO Auto-generated method stub
+		try {
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号。。。。。。。");
+			int folwnum = this.ezs_orderformMapper.selectOrderNumByDate();
+			Long rootGoodsClass = getRootOfTheGoodClass(goods.getGoodClass_id());
+			//移动端EMM PC端EMP
+			StringBuffer orderNo = new StringBuffer("EMM");
+			orderNo.append(CommUtil.getNumber(rootGoodsClass, "00"));
+			orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
+			orderNo.append(CommUtil.getNumber(folwnum+1, "00000"));
+			log.info("FunctionName:"+"createOrderNo "+",context:"+"创建订单号成功");
+			return orderNo.toString();
+		} catch (Exception e) {
+			log.error("生成订单号失败："+e.toString());
+			throw e;
+		}
+	}
+		/**
+		 * 循环获取最高级商品种类ID
+		 * @author 
+		 * @param goodClassId
+		 * @return
+		 */
+		private Long getRootOfTheGoodClass(Long goodClassId){
+			ezs_goods_class goodsClass = null;
+			goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodClassId);
+			if(goodsClass!=null){
+				while(!goodsClass.getLevel().equals("1")){
+					goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodsClass.getParent_id());
+				}
+				return goodsClass.getId();
+			}
+			return 0L;
+		}
 }
