@@ -105,7 +105,27 @@ public class ezs_customized {
     //新增字段
     private String shape;
     
-    public String getColour() {
+    private String cname;
+    
+    private String catname;
+    
+    public String getCname() {
+		return cname;
+	}
+
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+
+	public String getCatname() {
+		return catname;
+	}
+
+	public void setCatname(String catname) {
+		this.catname = catname;
+	}
+
+	public String getColour() {
 		return colour;
 	}
 
