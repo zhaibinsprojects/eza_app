@@ -671,7 +671,7 @@
 	LEFT JOIN ezs_goods B ON A.goods_id = B.id
 	LEFT JOIN ezs_goods_class C ON A.category_id=C.id
 	WHERE A.purchaser_id= #{userId} 
-    ORDER BY A.addTime
+    ORDER BY A.addTime desc
 	limit #{pageCount},#{pageSize}
 	</select>
 	<select id="getPurchaseById" resultMap="BaseResultMap" parameterType="java.lang.Long" >

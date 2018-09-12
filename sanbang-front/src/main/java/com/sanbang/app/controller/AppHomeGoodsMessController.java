@@ -166,33 +166,34 @@ public class AppHomeGoodsMessController {
 	@RequestMapping("/customGoods") 
 	@ResponseBody
 	public Object customGoods(HttpServletRequest request,HttpServletResponse response,
-			@RequestParam(name="ash_content") String ash_content,
-			@RequestParam(name="bend_strength") String bend_strength,
-			@RequestParam(name="budget") String budget,
+			@RequestParam(name="ash_content",required=false) String ash_content,
+			@RequestParam(name="bend_strength",required=false) String bend_strength,
+			@RequestParam(name="budget",required=false) String budget,
 			@RequestParam(name="colour") String colour,
-			@RequestParam(name="combustion_grade") String combustion_grade,
-			@RequestParam(name="density") String density,
-			@RequestParam(name="elong_break") String elong_break,
-			@RequestParam(name="flexural_modulus") String flexural_modulus,
-			@RequestParam(name="is_ep") String is_ep,
-			@RequestParam(name="jzforce") String jzforce,
-			@RequestParam(name="melt_index") String melt_index,
+			@RequestParam(name="combustion_grade",required=false) String combustion_grade,
+			@RequestParam(name="density",required=false) String density,
+			@RequestParam(name="elong_break",required=false) String elong_break,
+			@RequestParam(name="flexural_modulus",required=false) String flexural_modulus,
+			@RequestParam(name="is_ep",required=false) String is_ep,
+			@RequestParam(name="jzforce",required=false) String jzforce,
+			@RequestParam(name="melt_index",required=false) String melt_index,
 			@RequestParam(name="pre_num") String pre_num,
-			@RequestParam(name="pre_time") String pre_time,
-			@RequestParam(name="purpose") String purpose,
-			@RequestParam(name="remark") String remark,
+			@RequestParam(name="pre_time",required=false) String pre_time,
+			@RequestParam(name="purpose",required=false) String purpose,
+			@RequestParam(name="remark",required=false) String remark,
 			@RequestParam(name="shape") String shape,
-			@RequestParam(name="source_type") String source_type,
-			@RequestParam(name="sourcefrom") String sourcefrom,
-			@RequestParam(name="tensile") String tensile,
-			@RequestParam(name="water_content") String water_content,
-			@RequestParam(name="xbforce") String xbforce,
+			@RequestParam(name="source_type",required=false) String source_type,
+			@RequestParam(name="sourcefrom",required=false) String sourcefrom,
+			@RequestParam(name="tensile",required=false) String tensile,
+			@RequestParam(name="water_content",required=false) String water_content,
+			@RequestParam(name="xbforce",required=false) String xbforce,
 			@RequestParam(name="category_id",required=true) String category_id,
-			@RequestParam(name="address") String address,
+			@RequestParam(name="address",required=false) String address,
 			@RequestParam(name="ppre_time",required=true) String ppre_time) throws Exception{
 		Map<String, Object> mmp = null;
 		Result rs = null;
 		//判断用户是否登录
+		log.info("进来了。。。。。。。。。。。。。。。");
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
