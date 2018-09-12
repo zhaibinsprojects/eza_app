@@ -42,8 +42,9 @@ tbody tr{
   		</ul>
   	</div>
   	<div class="echartHeight">
-  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;display: none;"></div>
-  		<div id="containerLock" class="graybakhuio" style="display: block;"></div>
+  		<div id="container" class="nedHiCha_yzs" style="width: 95%;height:95%;"></div>
+  		<div id="containerLock" class="graybakhuio" ></div>
+  		<!-- style="display: block;" -->
   	</div>
   </section>
 </div>

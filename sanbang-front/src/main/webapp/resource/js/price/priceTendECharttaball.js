@@ -122,20 +122,31 @@ $(document).ready(function(){
 	    	//页数
 	    	$("input[name=pagecount]").val(Math.ceil(result.length/20));
 	    	var isshow = 0;
+	    	if(result.length>0){
+	    		isshow = result[0].isshow;
+	    	}
+	    	if(isshow=='1'){
+		    	//展示走势图
+	    		$("#container").css('display','block');//显示  
+	    		$("#containerLock").css('display','none');//隐藏   
+		    }else{
+		    	$("#containerLock").css('display','block');//显示   
+		    	$("#container").css('display','none');//隐藏 
+		    }
 	       $.each(result, function (index, item) {
 	            namey.push(item.dealDate);     
 	            numo.push(item.currentAVGPrice);
 	            classname = item.goodClassName;
-	            isshow = item.isshow;
+	            //isshow = item.isshow;
 	        });
-	       if(isshow=='1'){
+	      /* if(isshow=='1'){
 	    	   //展示走势图
 	    	   $("#container").css('display','block');//显示  
 	    	   $("#containerLock").css('display','none');//隐藏   
 	       }else{
 	    	   $("#container").css('display','none');//隐藏 
 	    	   $("#containerLock").css('display','block');//显示   
-	       }
+	       }*/
 	       	//heighchart
 	       	echartInit(namey, classname, numo);   
 	       	doclick();

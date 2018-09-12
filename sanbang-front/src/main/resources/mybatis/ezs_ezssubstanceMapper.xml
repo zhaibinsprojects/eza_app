@@ -614,7 +614,7 @@
   	select 
   	id, addTime, author, linkPort, linkUrl, meta, name, origin, 
 	originUrl, pcView, photos, status, childEc_id, ec_id, ss_id,  user_id
-	from ezs_ezssubstance a where  a.ec_id = '5' and a.attribute = 1 and a.`status` = 2 and a.deleteStatus = '0' ORDER BY a.addTime LIMIT 3
+	from ezs_ezssubstance a where  a.ec_id = '100' and a.attribute = 1 and a.`status` = 2 and a.deleteStatus = '0' ORDER BY a.addTime desc LIMIT 3
   </select>
   
 </mapper>
