@@ -32,6 +32,7 @@ import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.OrderEvaluateService;
+import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.dao.ezs_goods_classMapper;
@@ -76,6 +77,8 @@ public class AppGoodsController {
 	private ezs_goods_classMapper goodsClassMapper;
 	@Autowired
 	private com.sanbang.dao.ezs_orderformMapper ezs_orderformMapper;
+	@Autowired
+	private ezs_addressMapper addressMapper; 
 	
 	private static int num = 100;
 
@@ -1578,16 +1581,31 @@ public class AppGoodsController {
 		page.setPageNow(1);
 		List<ezs_address> addressList = addressService.findAddressByUserId(upi.getId(),page);
 		Map<String, Object> map=new HashMap<>();
-		if(null!=addressList&&addressList.size()>0){
+		
+		//首先获取默认地址
+		List<ezs_address> DefaultList = this.addressMapper.getAddressByUserIdAndBestow(upi.getId(),false);
+		if(DefaultList!=null&&DefaultList.size()>0){
+			DefaultList=SetAddressInfo(DefaultList);
+			map.put("readdress", DefaultList.get(0));
+			map.put("hasd", true);		
+		}else if(null!=addressList&&addressList.size()>0){
 			//area地址
 			addressList=SetAddressInfo(addressList);
-		    map.put("readdress", addressList.get(0));
-		    map.put("hasd", true);
+			map.put("readdress", addressList.get(0));
+			map.put("hasd", true);		
 		}else{
 			map.put("readdress", null);
 			map.put("hasd", false);
 		}
-		
+		/*if(null!=addressList&&addressList.size()>0){
+			//area地址
+			addressList=SetAddressInfo(addressList);
+			map.put("readdress", addressList.get(0));
+			map.put("hasd", true);
+		}else{
+			map.put("readdress", null);
+			map.put("hasd", false);
+		}*/
 		if(null==upi.getEzs_bill()){
 			map.put("hasb", false);
 		}else{
