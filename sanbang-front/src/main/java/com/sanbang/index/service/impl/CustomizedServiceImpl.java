@@ -111,10 +111,14 @@ public class CustomizedServiceImpl implements CustomizedService {
 	
 	private String getProName(Long goodClassId,Long colorId,Long shapeId){
 		ezs_goods_class rootGoodClass = getRootGoodClass(goodClassId);
+		ezs_goods_class goodClassp=null;
+		if(null!=rootGoodClass.getParent_id()&&rootGoodClass.getParent_id()>0) {
+			goodClassp = this.goodsclassMapper.selectByPrimaryKey(rootGoodClass.getParent_id());
+		}
 		ezs_goods_class goodClass = this.goodsclassMapper.selectByPrimaryKey(goodClassId);
 		ezs_dict color = this.dictMapper.selectByPrimaryKey(colorId);
 		ezs_dict shape = this.dictMapper.selectByPrimaryKey(shapeId);
-		String rootGoodClassName = rootGoodClass.getName()+"-"+goodClass.getName()+"-"+color.getName()+"-"+shape.getName();
+		String rootGoodClassName = (goodClassp!=null?goodClassp.getName()+"-":"")+rootGoodClass.getName()+"-"+goodClass.getName()+"-"+color.getName()+"-"+shape.getName();
 		return rootGoodClassName; 
 	}
 	
