@@ -172,7 +172,8 @@
   	select 
   	<include refid="Base_Column_List" />
   	from ezs_address 
-  	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0  ORDER BY  bestow ASC limit ${startPos},${pageSize}
+  	<!-- where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0  ORDER BY  bestow ASC limit ${startPos},${pageSize} -->
+  	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0 ORDER BY addTime desc limit ${startPos},${pageSize}
   </select>
   <select id="getCountAddressByUserId"  resultType="java.lang.Integer">
   	select count(*) from ezs_address where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0
@@ -194,7 +195,7 @@
   <select id="findAddressByUseridAndBes" resultType="ezs_address">
   	select 
   	<include refid="Base_Column_List"/>
-  	from ezs_address where user_id = #{userId} and bestow = ${bestow}
+  	from ezs_address where user_id = #{userId} and bestow = ${bestow} and deleteStatus = '0'
   </select>	
   
 </mapper>
