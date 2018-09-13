@@ -393,6 +393,7 @@ public class GoodsServiceImpl implements GoodsService{
 			}else{
 				map.put("Msg", "插入失败");
 			}
+			map.put("Msg", "插入成功");
 		}catch(Exception e){
 			e.printStackTrace();
 			map.put("Msg", "插入异常");
