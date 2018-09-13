@@ -377,22 +377,22 @@ public class GoodsServiceImpl implements GoodsService{
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Map<String,Object> insertCustomized(ezs_customized customized,ezs_user user){
 		Map<String,Object> map = new HashMap<String,Object>();
-		ezs_customized_record record = new ezs_customized_record();
+		/*ezs_customized_record record = new ezs_customized_record();
 		record.setAddTime(new Date());
 		record.setDeleteStatus(false);
 		record.setOperater_id(user.getId());
 		record.setPurchaser_id(user.getId());
-		record.setRemark("您的需求已经提交成功");
+		record.setRemark("您的需求已经提交成功");*/
 		try{
 			int n = ezs_customizedMapper.insertSelective(customized);
 			
-			record.setCustomized_id(customized.getId());
-			int m = ezs_customized_recordMapper.insertSelective(record);
-			if(n>0 && m>0){
+			/*record.setCustomized_id(customized.getId());
+			int m = ezs_customized_recordMapper.insertSelective(record);*/
+			/*if(n>0 && m>0){
 				map.put("Msg", "插入成功");
 			}else{
 				map.put("Msg", "插入失败");
-			}
+			}*/
 			map.put("Msg", "插入成功");
 		}catch(Exception e){
 			e.printStackTrace();
