@@ -23,7 +23,7 @@
     select 
     <include refid="Base_Column_List" />
     from ezs_address
-    where id = #{id,jdbcType=BIGINT} and deleteStatus = '0'
+    where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from ezs_address
@@ -173,7 +173,7 @@
   	<include refid="Base_Column_List" />
   	from ezs_address 
   	<!-- where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0  ORDER BY  bestow ASC limit ${startPos},${pageSize} -->
-  	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0 ORDER BY addTime  limit ${startPos},${pageSize}
+  	where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0 ORDER BY addTime desc limit ${startPos},${pageSize}
   </select>
   <select id="getCountAddressByUserId"  resultType="java.lang.Integer">
   	select count(*) from ezs_address where user_id = #{userid,jdbcType=BIGINT} and deleteStatus = 0
