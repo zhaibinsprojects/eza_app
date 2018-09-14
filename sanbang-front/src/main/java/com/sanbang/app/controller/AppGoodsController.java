@@ -1740,7 +1740,7 @@ public class AppGoodsController {
 		return result;
 	}
 
-	public synchronized String createOrderNo(ezs_goods goods) {
+	public String createOrderNo(ezs_goods goods) {
 		// TODO Auto-generated method stub
 		try {
 			log.info("FunctionName:" + "createOrderNo " + ",context:" + "创建订单号。。。。。。。");
