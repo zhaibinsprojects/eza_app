@@ -1,6 +1,7 @@
 package com.sanbang.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class ezs_customized {
     private Long id;
@@ -108,6 +109,10 @@ public class ezs_customized {
     private String cname;
     
     private String catname;
+    
+    private List<ezs_customized_record> recordlist;
+    
+    private List<ezs_customized_res> reslist;
     
     public String getCname() {
 		return cname;
@@ -532,4 +537,22 @@ public class ezs_customized {
     public void setWater_content(String water_content) {
         this.water_content = water_content == null ? null : water_content.trim();
     }
+
+	public List<ezs_customized_record> getRecordlist() {
+		return recordlist;
+	}
+
+	public void setRecordlist(List<ezs_customized_record> recordlist) {
+		this.recordlist = recordlist;
+	}
+
+	public List<ezs_customized_res> getReslist() {
+		return reslist;
+	}
+
+	public void setReslist(List<ezs_customized_res> reslist) {
+		this.reslist = reslist;
+	}
+    
+    
 }

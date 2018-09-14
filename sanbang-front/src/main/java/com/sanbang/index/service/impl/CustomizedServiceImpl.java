@@ -72,14 +72,15 @@ public class CustomizedServiceImpl implements CustomizedService {
 			this.customizedMapper.insertSelective(customized);
 			log.info("定制：返回id"+customized.getId());
 			//此表用于和采购商交互
-			/*customizedRecord.setRemark("您的需求已经提交成功");
+			customizedRecord.setRemark("您的需求已经提交成功");
 			customizedRecord.setCustomized_id(customized.getId());
 			customizedRecord.setAddTime(new Date());
 			customizedRecord.setOperater_id(user.getId());
 			customizedRecord.setPurchaser_id(user.getId());
 			customizedRecord.setFlagMsg(false);
+			customizedRecord.setFlag("-1");
 			customizedRecord.setDeleteStatus(false);
-			this.customizedRecordMapper.insertSelective(customizedRecord);*/
+			this.customizedRecordMapper.insertSelective(customizedRecord);
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "订制采购添加成功");
 		} catch (Exception e) {
@@ -110,10 +111,14 @@ public class CustomizedServiceImpl implements CustomizedService {
 	
 	private String getProName(Long goodClassId,Long colorId,Long shapeId){
 		ezs_goods_class rootGoodClass = getRootGoodClass(goodClassId);
+		ezs_goods_class goodClassp=null;
+		if(null!=rootGoodClass.getParent_id()&&rootGoodClass.getParent_id()>0) {
+			goodClassp = this.goodsclassMapper.selectByPrimaryKey(rootGoodClass.getParent_id());
+		}
 		ezs_goods_class goodClass = this.goodsclassMapper.selectByPrimaryKey(goodClassId);
 		ezs_dict color = this.dictMapper.selectByPrimaryKey(colorId);
 		ezs_dict shape = this.dictMapper.selectByPrimaryKey(shapeId);
-		String rootGoodClassName = rootGoodClass.getName()+"-"+goodClass.getName()+"-"+color.getName()+"-"+shape.getName();
+		String rootGoodClassName = (goodClassp!=null?goodClassp.getName()+"-":"")+rootGoodClass.getName()+"-"+goodClass.getName()+"-"+color.getName()+"-"+shape.getName();
 		return rootGoodClassName; 
 	}
 	
