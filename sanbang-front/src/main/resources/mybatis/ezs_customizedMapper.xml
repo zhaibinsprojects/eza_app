@@ -697,17 +697,7 @@
 	IFNULL(A.sourceType, '') source_type,
 	A.addTime,
 	IFNULL(A.preNum, 0) pre_num,
-	IFNULL(
-		IFNULL(
-			B.`name`,
-			CONCAT(
-				D1.`name`,
-				C.`name`,
-				D2.`name`
-			)
-		),
-		''
-	) cname,
+	A.proName cname,
 	IFNULL(C.`name`, '') NAME,
 	IFNULL(A.preTime, null) pre_time,
 	IFNULL(A.remark, '') remark,
