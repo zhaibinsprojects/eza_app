@@ -156,11 +156,11 @@ public class AppHomeGoodsMessController {
 		return rs;
 	}
 	/**
-	 * 采购定制
+	 * 采购订制
 	 * @param request
 	 * @param response
-	 * @param customizedrecord  定制采购产品记录
-	 * @param customized 定制采购产品
+	 * @param customizedrecord  采购订制产品记录
+	 * @param customized 采购订制产品
 	 * @return
 	 */
 	@RequestMapping("/customGoods") 
@@ -269,7 +269,7 @@ public class AppHomeGoodsMessController {
 		}
 		return rs;
 	}
-	//////////////////////////////////采购定制页面初始化\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	//////////////////////////////////采购订制页面初始化\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	/**
 	 * 不启用
 	 * 获取商品分类（一二三级别）

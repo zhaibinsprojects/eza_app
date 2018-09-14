@@ -95,9 +95,9 @@ public class MainDoAlipayUtil {
 	
 	public static void encryptAndSign(String bizContent) throws AlipayApiException {
         
-       /* String responseContent = AlipaySignature.encryptAndSign(bizContent, ALIPAY_PUBLIC_KEY, APP_PRIVATE_KEY,
+        String responseContent = AlipaySignature.encryptAndSign(bizContent, ALIPAY_PUBLIC_KEY, APP_PRIVATE_KEY,
             "UTF-8", true, true);
-        System.out.println(responseContent);*/
+        System.out.println(responseContent);
         
         Map<String, String> params = new HashMap<String, String>();
         params.put("biz_content", AlipaySignature.rsaEncrypt(bizContent, ALIPAY_PUBLIC_KEY, "UTF-8"));
@@ -146,10 +146,10 @@ public class MainDoAlipayUtil {
 	
 	
 	public static void main(String[] args) {
-		/*Result result = Result.failure();
+		Result result = Result.failure();
 		result = DoPayAli("test", "miaoshu", "hq123456789", new BigDecimal("0.01"),
 				"http://test.ezaisheng.com/website/certSign/forout/signContractFast.do", result);
-		System.out.println(result.toString());*/
+		System.out.println(result.toString());
 		String bizContent="%7B%22body%22%3A%22%E6%88%91%E7%9A%84%E8%AE%A2%E9%98%85%E6%94%AF%E4%BB%98%E7%A1%AE%E8%AE%A4%22%2C%22out_trade_no%22%3A%22HQ1536167129761102%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22subject%22%3A%22%E4%BB%B7%E6%A0%BC%E8%A1%8C%E6%83%85%22%2C%22timeout_express%22%3A%2230m%22%2C%22total_amount%22%3A%221620.00%22%7D";
 		//String bizContent="<?xml version=\"1.0\" encoding=\"UTF-8\"?><alipay><response>QEmvbqZvLtVjisrBidsIdIS2uVnRzrVELQ5982dCTai1frKqxWDo2I+Wl+aoLV4zCCIy0tVfuOTT25XD8aVUAuvDBT177NMk9353jcHAoz2rxM+1Dw+GiiOwpQxtG1EiTkCD1UGVplJETz7ozrisfsd/8YrYHW5MF4viihbuO9fMSvlO/75c3KTZoZPqjlcpsYc1Rus55nHflSBbLPLMVFm3yTff9B2HVi+DdxEsgl8Ap+v+4MdJw3HbTMJDJnW6XMy/jeMNfFio756O+XSdmn6FbMA/CU3zMM455Um0gKyaxVyUA5fh5C4P+H+SW/8dWFKimiB1I8tZPgsDocfk7RLreSG9EUhcoXlaR9MWAtjBaC5mc+JV+k/CSoDQDD3BrRo6cBSe7ZgL9Lax586JwViN0EmEFDE1aIRgzvrBBvzbNnQ4Resby7yM8YTbVxq7uCoSzM5+E0/z/dWiU/ENuI4rlUGqprGirjWnr0fFkJEvw1OjFYZJ6asIrgDrQjD6CETtVn9AFY9zvFg+WIK49p7J7StN32KU+vXNo0rOY0xcp8iBoQWdDr862bNUvm8lwZ1FtD8Tfv/bOeiWzPt50NgGtBneXnp5Xt1jZ00tlvGcaqeBZB0ugWAODch2EzdvwG1XMrr7GQM3PfMmFYp3wM4+BFCD9L3d9XoaFxbD0f4IZKQlMFfLRyO/8reuzZ9OsbyYMr2QKEOqR7CHarTrOaiv3eJb0Xm5tW1M+NIKyfzrzYnB4uqOXq9PjOObbJ+Kk/rAo8y7YHlh2out4lb0JRL83tgdh3/H9QiX8UqZJeGeDOxWcZSdUB6DCrnjzz22YeRZ8OLRrX1r8amPOAFkTF5ALQkJKdXe1oBltA1GKXJuFlwtoQ4Z4zgZ5OtPebfThlbCo4i8LQPIeUw/SsHWdv4dM9UPN70t/omK2Hhj2Cjwte5gCv833sMmiSEudHGHcLTdIqzHGoz8d0YXjpMJieZXtE6RGPZa2Wx2bcsBT0+rG3AWTJUaRLP4d4zhlVR8</response><encryption_type>RSA</encryption_type><sign>dY+IOyyS9uq+uqwFYiYA32116yrC4NHOXu6vdBrDlERPOK4+fSV014VcHxIgiZb2MxKqKlH2vqP+khqmQ1RzfnmmFLT4sXYjF7nJtE69L1lPbpFvWbXP+bmVJ2ySZ5FF32pqOA2riPZ/FiGaJw4MgXCjRfu5aF+SiohK2dGR3YtmZYf7mmqrfqmZVJfEZYXp3s/tzpULGIJ9IiV/0iImcMW08HU4q49JrML7A5KhfurpG9CNG4+kwddp14HHm+sNqKlQhHBAiuSsqiKaNiPs8AcCcP3Pj31oP4cDBfdYlbqcFGQmOu/FU/3vQT5YGy7YMmotFFNiKy3lrBIAhneDaw==</sign><sign_type>RSA</sign_type></alipay>";
 		try {

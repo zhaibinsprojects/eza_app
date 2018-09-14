@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -463,11 +464,17 @@ public class AppGoodsController {
 
 					Page page = new Page();
 					page.setPageNow(1);
-
-					List<ezs_address> addressList = addressService.findAddressByUserId(user.getId(), page);
+					
+					//List<ezs_address> addressList = addressService.findAddressByUserId(user.getId(), page);
+					List<ezs_address> addressList = addressMapper.getAddressByUserIdAndBestow(user.getId(), false);
 					// area地址
 					addressList = SetAddressInfo(addressList);
-
+					if(addressList==null||addressList.size() <= 0){
+						result.setMsg("请设置默认收货地址");
+						result.setSuccess(false);
+						return result;
+					}
+					
 					customized.setAddress(addressList.size() > 0 ? addressList.get(0).getArea() : "客户无默认收货地址");// 收货地址
 					customized.setColour_id(goods.getColor_id());// 这一块儿呢，有的说要存名称，哥们儿我觉得要存id（因为查询效率问题）
 					customized.setDensity(goods.getDensity());

@@ -149,7 +149,7 @@ public class MyMenuHangqServiceImpl implements MyMenuHangqService {
 	public Result myDingyueInfoShow(ezs_user upi, HttpServletRequest request, Result result, long id) {
 		Map<String, Object> map = new HashMap<>();
 		ezs_subscribehq subscribehq = ezs_subscribehqMapper.selectByPrimaryKey(id);
-		if (null == subscribehq/* ||(subscribehq!=null&&subscribehq.getStore_id()!=upi.getStore_id()) */) {
+		if (null == subscribehq ||(subscribehq!=null&&subscribehq.getStore_id()!=upi.getStore_id()) ) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("非法请求");
