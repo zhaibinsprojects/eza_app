@@ -14,13 +14,13 @@
 	</context-param>
 	<!-- 监听器 -->
 	<listener>
+		<listener-class>com.sanbang.system.ProjectBaseListener</listener-class>
+	</listener>
+	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-	</listener>
-	<listener>
-		<listener-class>com.sanbang.system.ProjectBaseListener</listener-class>
 	</listener>
 	<!-- 编码过滤器 -->
 	<filter>

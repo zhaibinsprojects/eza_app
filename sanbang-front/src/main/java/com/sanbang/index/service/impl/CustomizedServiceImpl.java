@@ -81,7 +81,7 @@ public class CustomizedServiceImpl implements CustomizedService {
 			customizedRecord.setDeleteStatus(false);
 			this.customizedRecordMapper.insertSelective(customizedRecord);*/
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "定制采购添加成功");
+			mmp.put("Msg", "订制采购添加成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
