@@ -709,7 +709,7 @@
 		''
 	) cname,
 	IFNULL(C.`name`, '') NAME,
-	IFNULL(A.preime, null) pre_time,
+	IFNULL(A.preTime, null) pre_time,
 	IFNULL(A.remark, '') remark,
 	IFNULL(D1.`name`, '') colour,
 	IFNULL(D2.`name`, '') shape,

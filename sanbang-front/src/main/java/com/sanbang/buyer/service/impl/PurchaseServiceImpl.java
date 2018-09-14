@@ -66,8 +66,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 			List<ezs_customized_record> recordlist=customized.getRecordlist();
 			List<ezs_customized_res>  reslist=new ArrayList<>();
 			
-			int i=0;
-			for (ezs_customized_record record : recordlist) {
+			
+			
+			
+			for (int j = 0; j < recordlist.size(); j++) {
+				ezs_customized_record record=recordlist.get(j);
 				if("1".equals(record.getFlag())) {
 					String goodsid= "";
 					try {
@@ -86,12 +89,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 						res.setRemark("已解决");
 						res.setSupplier_id(record.getPurchaser_id());
 						reslist.add(res);
-						recordlist.remove(i);
+						recordlist.remove(j);
 					}
 					
 				}
-				i++;
 			}
+			
+			for (ezs_customized_record record : recordlist) {}
 			customized.setRecordlist(recordlist);
 			customized.setReslist(reslist);
 			
