@@ -262,4 +262,12 @@
      </foreach>
   	</where>
   </delete>
+  <!-- 查询未提交订单的购物车记录 -->
+  <select id="queryNoCommitOrder" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_goodscart
+    where id = #{id,jdbcType=BIGINT} and of_id is null
+  </select>
+  
 </mapper>

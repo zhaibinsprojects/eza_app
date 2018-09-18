@@ -687,7 +687,7 @@
 		ezs_customized A
 	LEFT JOIN ezs_goods B ON A.goods_id = B.id
 	LEFT JOIN ezs_goods_class C ON A.category_id=C.id
-	WHERE A.purchaser_id= #{userId} 
+	WHERE A.purchaser_id= #{userId} and A.deleteStatus = '0'
     ORDER BY A.addTime desc
 	limit #{pageCount},#{pageSize}
 	</select>
@@ -738,6 +738,6 @@ FROM
 	LEFT JOIN ezs_goods_class C ON A.category_id = C.id
 	LEFT JOIN ezs_dict D1 ON A.colour_id = D1.id
 	LEFT JOIN ezs_dict D2 ON A.shape_id = D2.id
-	WHERE  A.id = #{id,jdbcType=BIGINT}
+	WHERE  A.id = #{id,jdbcType=BIGINT} and A.deleteStatus = '0'
 	</select>
 </mapper>

@@ -113,7 +113,7 @@ public class ezs_store implements Serializable {
 
 	private Integer operateYear;
 
-	private String child_company_status;
+	private String child_company_status;//是否子公司；0：是；1：否
 
 	private Date auditDate;
 
