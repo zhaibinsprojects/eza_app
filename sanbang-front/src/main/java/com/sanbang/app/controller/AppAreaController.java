@@ -69,6 +69,7 @@ public class AppAreaController {
 			map.put("cities", getarraytwo(ezs_area));
 			list.add(map);
 		}
+		 System.out.println(JsonUtils.jsonOut(list));
 		return JsonUtils.jsonOut(list); 
 	}
 	
@@ -80,6 +81,19 @@ public class AppAreaController {
 			map.put("areaId", ezs_area.getId());
 			map.put("areaName", ezs_area.getAreaName());
 			map.put("counties", getarraythree(ezs_area));
+			list.add(map);
+		}
+		if(listp.size()==0) {
+			Map<String, Object> map=new HashMap<>();
+			map.put("areaId", arae.getId());
+			map.put("areaName", "其他");
+			List<Map<String, Object>> list5=new ArrayList<>();
+			Map<String, Object> map1=new HashMap<>();
+			map1.put("areaId", arae.getId());
+			map1.put("areaName", "其他");
+			list5.add(map1);
+			
+			map.put("counties", list5);
 			list.add(map);
 		}
 		
@@ -95,6 +109,13 @@ public class AppAreaController {
 			Map<String, Object> map=new HashMap<>();
 			map.put("areaName", ezs_area.getAreaName());
 			map.put("areaId", ezs_area.getId());
+			list.add(map);
+		}
+		
+		if(listp1.size()==0) {
+			Map<String, Object> map=new HashMap<>();
+			map.put("areaId", arae.getId());
+			map.put("areaName", "其他");
 			list.add(map);
 		}
 		return list;

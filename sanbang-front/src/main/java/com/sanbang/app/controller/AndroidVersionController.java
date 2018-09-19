@@ -35,7 +35,7 @@ public class AndroidVersionController {
     //小版本号
     private int serviceCode=4;
     //更新内容
-    private String update_content="1.系统性能提升\n2.实名认证优化\n3.采购定制功能优化"; 
+    private String update_content="1.系统性能提升\n2.用户体验优化\n3.采购定制功能完善"; 
     
     @Value("${consparam.app.versionspath}")
     public String filebasepath;

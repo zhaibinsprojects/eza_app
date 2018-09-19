@@ -37,8 +37,6 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 	private ezs_hangqareaMapper ezs_hangqareaMapper;
 	@Autowired
 	private ezs_goods_classVoMapper ezs_goods_classVoMapper;
-	@Autowired
-	private AreaService areaService;
 
 	/**
 	 * 行情定制数据标识
@@ -124,7 +122,7 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 	public List<Map<String, Object>> getIndexCata(String reqtype) {
 		List<Map<String, Object>> calist = cataToJson();
 		Map<String, Object> listone = (Map<String, Object>) calist.get(0);
-		Map<String, Object> listtwo = (Map<String, Object>) calist.get(1);
+		Map<String, Object> listtwo = (Map<String, Object>) calist.get(2);
 		List<Map<String, Object>> children = new ArrayList<>();
 		// 再生报价
 		if (reqtype.equals("zsbj")) {

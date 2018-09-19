@@ -177,7 +177,7 @@
   <select id="queryRootGoodClass" resultMap="GoodClassResultMap" parameterType="java.lang.Long">
      select
      <include refid="Base_Column_List" />
-     from ezs_goods_class a where EXISTS (select 1 from ezs_goods_class b where a.id = b.parent_id and b.deleteStatus = '0' and b.id = #{goodClassId}) and a.deleteStatus = '0';
+     from ezs_goods_class a where EXISTS (select 1 from ezs_goods_class b where a.id = b.parent_id and   b.id = #{goodClassId}) and a.deleteStatus = '0';
   </select>
   
 </mapper>

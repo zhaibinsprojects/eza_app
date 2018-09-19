@@ -73,5 +73,19 @@ public interface ezs_goodsMapper {
 	List<GoodsInfo> goodsIntroduceTwo(Page page);
 	
 	List<GoodsInfo> getGoodsInCollectionByName(String goodsName,Long userId);
+	
+	
+	
+	/**
+	 * 得到自营商品
+	 * @return
+	 */
+	List<Map<String, Object>>  getSelfGoodsList();
+	
+	/**
+	 * 得到自营商品
+	 * @return
+	 */
+	Map<String, Object> getSelfGoodsListByGoodsNo(@Param("goodsno")String goodsno);
 
 }

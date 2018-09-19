@@ -432,5 +432,14 @@ function commondo(docid, data){
 			});
 		}
 		});
+	
+	
+	$(document).ready(function(){
+		layer.open({
+		    type: 2
+		    ,time: 1
+		    ,content: '小e努力加载中'
+		  });
+	});
 
 }

@@ -93,5 +93,6 @@
 
 <script type="text/javascript">
 var baseurl="${serurl}";
+var status="${good.status}";
 </script>
 </html>

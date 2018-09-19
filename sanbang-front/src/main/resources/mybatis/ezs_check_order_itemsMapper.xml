@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_check_order_itemsMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_check_order_items" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="lastModifyDate" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="deliveryDate" property="deliveryDate" jdbcType="TIMESTAMP" />
+    <result column="item_name" property="item_name" jdbcType="VARCHAR" />
+    <result column="item_count" property="item_count" jdbcType="DECIMAL" />
+    <result column="item_price" property="item_price" jdbcType="DECIMAL" />
+    <result column="item_totalmoney" property="item_totalmoney" jdbcType="DECIMAL" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="checkOrderMain_id" property="checkOrderMain_id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, lastModifyDate, deliveryDate, item_name, item_count, item_price, 
+    item_totalmoney, flag, checkOrderMain_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_check_order_items
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_check_order_items
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_check_order_items" >
+    insert into ezs_check_order_items (id, addTime, deleteStatus, 
+      lastModifyDate, deliveryDate, item_name, 
+      item_count, item_price, item_totalmoney, 
+      flag, checkOrderMain_id)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{deliveryDate,jdbcType=TIMESTAMP}, #{item_name,jdbcType=VARCHAR}, 
+      #{item_count,jdbcType=DECIMAL}, #{item_price,jdbcType=DECIMAL}, #{item_totalmoney,jdbcType=DECIMAL}, 
+      #{flag,jdbcType=VARCHAR}, #{checkOrderMain_id,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_check_order_items" >
+    insert into ezs_check_order_items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="lastModifyDate != null" >
+        lastModifyDate,
+      </if>
+      <if test="deliveryDate != null" >
+        deliveryDate,
+      </if>
+      <if test="item_name != null" >
+        item_name,
+      </if>
+      <if test="item_count != null" >
+        item_count,
+      </if>
+      <if test="item_price != null" >
+        item_price,
+      </if>
+      <if test="item_totalmoney != null" >
+        item_totalmoney,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="checkOrderMain_id != null" >
+        checkOrderMain_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item_name != null" >
+        #{item_name,jdbcType=VARCHAR},
+      </if>
+      <if test="item_count != null" >
+        #{item_count,jdbcType=DECIMAL},
+      </if>
+      <if test="item_price != null" >
+        #{item_price,jdbcType=DECIMAL},
+      </if>
+      <if test="item_totalmoney != null" >
+        #{item_totalmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOrderMain_id != null" >
+        #{checkOrderMain_id,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_check_order_items" >
+    update ezs_check_order_items
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="lastModifyDate != null" >
+        lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryDate != null" >
+        deliveryDate = #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item_name != null" >
+        item_name = #{item_name,jdbcType=VARCHAR},
+      </if>
+      <if test="item_count != null" >
+        item_count = #{item_count,jdbcType=DECIMAL},
+      </if>
+      <if test="item_price != null" >
+        item_price = #{item_price,jdbcType=DECIMAL},
+      </if>
+      <if test="item_totalmoney != null" >
+        item_totalmoney = #{item_totalmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOrderMain_id != null" >
+        checkOrderMain_id = #{checkOrderMain_id,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_check_order_items" >
+    update ezs_check_order_items
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      deliveryDate = #{deliveryDate,jdbcType=TIMESTAMP},
+      item_name = #{item_name,jdbcType=VARCHAR},
+      item_count = #{item_count,jdbcType=DECIMAL},
+      item_price = #{item_price,jdbcType=DECIMAL},
+      item_totalmoney = #{item_totalmoney,jdbcType=DECIMAL},
+      flag = #{flag,jdbcType=VARCHAR},
+      checkOrderMain_id = #{checkOrderMain_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
