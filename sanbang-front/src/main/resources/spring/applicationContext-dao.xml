@@ -310,4 +310,16 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_probationMapper"/>
 	</bean>
+	
+	
+	<!-- 对账单 -->
+	<bean id="ezs_check_order_itemsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_check_order_itemsMapper"/>
+	</bean>
+	
+	<bean id="ezs_check_order_mainMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_check_order_mainMapper"/>
+	</bean>
 </beans>

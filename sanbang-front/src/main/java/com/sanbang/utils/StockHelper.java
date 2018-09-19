@@ -5,11 +5,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+
 import com.alibaba.fastjson.JSONObject;
+import com.sanbang.vo.CertSignInfoBean;
 
 /**
  * 链接erp商品实际库存量
@@ -135,6 +145,46 @@ public class StockHelper {
 		}
 		return object;
 	}
+	
+	/**
+	 * 得到自营库存
+	 * @return
+	 */
+	public  static  List<Map<String, Object>> getSelfListForSqlServer(String goodsNums) {
+		// 01样品库存，02商品库存
+			Connection connm = null;
+			Statement pstmt = null;
+			ResultSet rs = null;
+			List<Map<String, Object>> list = null;
+		try {
+			String sql="SELECT cInvAddCode,a.cInvCode,b.cInvName,sum(a.iQuantity) AS iQuantity	FROM CurrentStock a"
+					+ "  LEFT JOIN inventory b ON a.cInvCode = b.cInvCode LEFT JOIN Warehouse c ON "
+					+ "a.cwhcode = c.cWhCode WHERE  SUBSTRING(c.cWhCode, 3, 2) = '02'  AND b.cInvAddCode"
+					+ " in ("+goodsNums+")  GROUP BY b.cInvAddCode, a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress";
+			System.out.println(sql);
+			connm = getConnection();
+			pstmt = connm.createStatement();
+			rs = pstmt.executeQuery(sql);
+			list=convertList(rs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	private static List<Map<String, Object>> convertList(ResultSet rs) throws SQLException{
+		List<Map<String, Object>> list = new ArrayList<>();
+		ResultSetMetaData md = rs.getMetaData();//获取键名
+		int columnCount = md.getColumnCount();//获取行的数量
+		while (rs.next()) {
+			Map<String, Object> rowData = new HashMap<>();
+			for (int i = 1; i <= columnCount; i++) {
+			rowData.put(md.getColumnName(i), rs.getObject(i));//获取键名及值
+			}
+			list.add(rowData);
+		}
+		return list;
+		}
 
 	public static double getStockNum(String goodno, String strockType) {
 		double stockNum = 0.0;
@@ -149,7 +199,6 @@ public class StockHelper {
 			sqlBuffer.append("from(select b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,sum(a.iQuantity) as iQuantity,cProvince,cCity,cCounty ");
 			sqlBuffer.append("from CurrentStock a left join  inventory b on a.cInvCode=b.cInvCode left join  Warehouse  c on a.cwhcode=c.cWhCode ");
 			sqlBuffer.append("where SUBSTRING(c.cWhCode,3,2)='"+strockType+"' and b.cInvAddCode ='"+goodno+"'  group by b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,cProvince,cCity,cCounty)a");
-			//sqlBuffer.append("where SUBSTRING(c.cWhCode,3,2)='?' and b.cInvAddCode =?  group by b.cInvAddCode,a.cInvCode,b.cInvName,c.cWhCode,c.cWhName,c.cWhAddress,cProvince,cCity,cCounty)a");
 			connm = getConnection();
 			pstmt = (PreparedStatement) connm.prepareStatement(sqlBuffer.toString());
 			rs = pstmt.executeQuery();
@@ -163,7 +212,7 @@ public class StockHelper {
 	}
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {/*
 		System.out.println("访问U8库存");
 		JSONObject object = StockHelper.getStock("GE17002110","02");
 		if (object != null) {
@@ -174,5 +223,12 @@ public class StockHelper {
 			System.out.println("结果集为NULL");
 		}
 		
+	*/
+		List<Map<String, Object>> list=getSelfListForSqlServer("'ZGE05000691'");
+	for (Map<String, Object> map : list) {
+		for (Entry<String, Object> map2 : map.entrySet()) {
+			System.out.println(map2.getKey()+map2.getValue());
+		}
+	}
 	}
 }

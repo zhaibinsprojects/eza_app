@@ -148,6 +148,7 @@ public class GoodsServiceImpl implements GoodsService{
 	/**
 	 * 多条件查询
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public List<GoodsInfo> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,
 			String[] formIds,String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,
 			String[] lipolysises,String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
@@ -345,6 +346,10 @@ public class GoodsServiceImpl implements GoodsService{
 		map.put("pageStart", pageStart);	//起始页
 		map.put("pageSize", 10);	//每页10条
 		list = ezs_goodsMapper.queryGoodsList(map);
+		
+		//TODO 同步商品库存
+		
+		
 		return list;
 	}
 	/**

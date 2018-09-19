@@ -31,11 +31,11 @@ public class AndroidVersionController {
 	private static List<String> versions;
 	
 	//1 不用更新  2必须更新
-    private int forbidden=2;
+    private int forbidden=1;
     //小版本号
-    private int serviceCode=3;
+    private int serviceCode=4;
     //更新内容
-    private String update_content="1.系统性能提升\n2.用户体验优化\n3.价格行情产品全新改版,掌握一手再生行情资讯"; 
+    private String update_content="1.系统性能提升\n2.用户体验优化\n3.采购定制功能完善"; 
     
     @Value("${consparam.app.versionspath}")
     public String filebasepath;
@@ -50,7 +50,8 @@ public class AndroidVersionController {
 		versions.add("1.0.0");
 		versions.add("1.0.1");
 		versions.add("1.0.2");
-		filebasepath=filebasepath+"ezaisheng1.0.2.apk";
+		versions.add("1.0.3");
+		filebasepath=filebasepath+"ezaisheng1.0.3.apk";
 		baseurl+="front/app/version/download.htm";
 	}
 	

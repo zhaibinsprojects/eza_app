@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_check_order_mainMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_check_order_main" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="lastModifyDate" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="order_money" property="order_money" jdbcType="DECIMAL" />
+    <result column="imblance_money" property="imblance_money" jdbcType="DECIMAL" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, lastModifyDate, order_no, order_money, imblance_money, 
+    memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_check_order_main
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_check_order_main
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_check_order_main" >
+    insert into ezs_check_order_main (id, addTime, deleteStatus, 
+      lastModifyDate, order_no, order_money, 
+      imblance_money, memo)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{order_no,jdbcType=VARCHAR}, #{order_money,jdbcType=DECIMAL}, 
+      #{imblance_money,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_check_order_main" >
+    insert into ezs_check_order_main
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="lastModifyDate != null" >
+        lastModifyDate,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+      <if test="order_money != null" >
+        order_money,
+      </if>
+      <if test="imblance_money != null" >
+        imblance_money,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="order_money != null" >
+        #{order_money,jdbcType=DECIMAL},
+      </if>
+      <if test="imblance_money != null" >
+        #{imblance_money,jdbcType=DECIMAL},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_check_order_main" >
+    update ezs_check_order_main
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="lastModifyDate != null" >
+        lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="order_money != null" >
+        order_money = #{order_money,jdbcType=DECIMAL},
+      </if>
+      <if test="imblance_money != null" >
+        imblance_money = #{imblance_money,jdbcType=DECIMAL},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_check_order_main" >
+    update ezs_check_order_main
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      lastModifyDate = #{lastModifyDate,jdbcType=TIMESTAMP},
+      order_no = #{order_no,jdbcType=VARCHAR},
+      order_money = #{order_money,jdbcType=DECIMAL},
+      imblance_money = #{imblance_money,jdbcType=DECIMAL},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!--对账单查询 -->
+  <resultMap id="BaseResultMapForOrder" type="com.sanbang.bean.ezs_check_order_main" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="lastModifyDate" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="order_money" property="order_money" jdbcType="DECIMAL" />
+    <result column="imblance_money" property="imblance_money" jdbcType="DECIMAL" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <collection property="items"  column="{checkOrderMain_id=id}" select="com.sanbang.dao.ezs_check_order_itemsMapper.selectByPrimaryKey">
+    </collection>
+  </resultMap>
+  
+  <select id="getCheckOrderForOrderNO" resultMap="BaseResultMapForOrder">
+   select 
+    <include refid="Base_Column_List" />
+    from ezs_check_order_main
+    where order_no = #{orderno,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

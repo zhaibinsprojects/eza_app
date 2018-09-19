@@ -71,4 +71,16 @@ mui.init({
 				return html;
 			}
 			
-				
+			var londing="";
+			$(function(){
+				 londing=layer.open({
+				    type: 2
+				    ,time: 1
+				    ,content: '小e努力加载中'
+				  });
+			})
+			
+			
+			$(document).ready(function(){
+				//layer.close(londing);
+			});		

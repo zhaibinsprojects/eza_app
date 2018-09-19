@@ -365,6 +365,7 @@ public class GoodsController {
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
 		Result result = Result.failure();
+		try{
 		List<Long> areaList = new ArrayList<Long>();
 		if(!"".equals(areaId) && null != areaId){
 			Long area = Long.valueOf(areaId);
@@ -443,7 +444,7 @@ public class GoodsController {
 			burnings = burning.split(",");
 		}
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
-		try{
+		
 			List<GoodsInfo> list = new ArrayList<GoodsInfo>();
 			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
 					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);

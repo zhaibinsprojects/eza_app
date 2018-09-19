@@ -1060,6 +1060,10 @@
 		<if test="inventory != null and inventory == 1">
 	        ORDER BY g.inventory asc
 		</if>
+		
+		<if test="inventory == null">
+	        ORDER BY g.inventory DESC
+		</if>
 	    limit #{pageStart},#{pageSize}
 	</select>
 	
@@ -1247,4 +1251,70 @@
 		 from ezs_goods g,ezs_accessory a where g.goods_main_photo_id = a.id and g.`name` like #{0} and EXISTS (select 1 from ezs_documentshare e where e.user_id= #{1} and e.house = '1' and e.good_id = g.id)
 	</select>
 	
+	<!-- 得到自营商品 -->
+	<select id="getSelfGoodsList" resultType="map">
+				SELECT
+			A.id,
+			A.good_no,
+		
+		IF (
+			ISNULL(stocknum),
+			0,
+			stocknum
+		) stocknum,
+		
+		IF (
+			ISNULL(stocknum),
+			A.inventory,
+			A.inventory + stocknum
+		) inventory
+		FROM
+			ezs_goods A
+		LEFT JOIN (
+			SELECT
+				SUM(B.buyNum) stocknum,
+				B.goodid
+			FROM
+				ezs_stock B
+			WHERE
+				B.`status` = 0
+			GROUP BY
+				B.goodid
+		) C ON A.id = C.goodid
+		WHERE
+			A.good_self = 1
+	</select>
+	
+	<select id="getSelfGoodsListByGoodsNo" resultType="map">
+	SELECT
+			A.id,
+			A.good_no,
+		
+		IF (
+			ISNULL(stocknum),
+			0,
+			stocknum
+		) stocknum,
+		
+		IF (
+			ISNULL(stocknum),
+			A.inventory,
+			A.inventory + stocknum
+		) inventory
+		FROM
+			ezs_goods A
+		LEFT JOIN (
+			SELECT
+				SUM(B.buyNum) stocknum,
+				B.goodid
+			FROM
+				ezs_stock B
+			WHERE
+				B.`status` = 0
+			GROUP BY
+				B.goodid
+		) C ON A.id = C.goodid
+		WHERE
+			A.good_no = #{goodsno}
+	</select>
 </mapper>

@@ -499,7 +499,7 @@ public class AppGoodsController {
 							: goods.getCrack()) + "-" +( goods.getCrack2() == null ? "" : goods.getCrack2()));// 断裂伸长率
 					customized.setFlexuralModulus((goods.getFlexural() == null ? ""
 							: goods.getFlexural()) + "-" + (goods.getFlexural2() == null ? "" : goods.getFlexural2()));// 弯曲模量
-					customized.setIsEp(String.valueOf(goods.getProtection_v() == null ? 0 : 1));// 是否环保
+					customized.setIsEp(goods.getProtection_v()==null?"1":(goods.getProtection_v()==1?"0":"1"));
 					customized.setJzforce((goods.getFreely() == null ? ""
 							: goods.getFreely()) + "-" + (goods.getFreely2() == null ? "" : goods.getFreely2()));// 简支梁缺口冲击
 					customized.setMeltIndex((goods.getLipolysis() == null ? ""

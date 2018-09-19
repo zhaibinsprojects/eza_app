@@ -10,13 +10,13 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>易再生-中国再生资源交易平台</title>
+<script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
 <link rel="stylesheet" href="front/resource/css/ezsm.css?v=1" />
 <script type="text/javascript" src="front/resource/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="front/resource/js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="front/resource/js/ezsm.js?v=1"></script>
 <script type="text/javascript" src="front/resource/js/goods/goods.js"></script>
-<script type="text/javascript" src="front/resource/script/layer/mobile/layer.js" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css"  href="front/resource/script/layer/mobile/need/layer.css" />
 <script type="text/javascript">
 		$(function(){
 			$(".ezsm-normal-top-nav li").click(function(){
@@ -167,6 +167,7 @@
 
 <script type="text/javascript">
 var baseurl="${serurl}";
+var status="${good.status}";
 $(document).ready(function(){
 	var imghref=$(".ezsm-shopdetail-desc").find("img").eq(0).attr("src");
 	if(imghref!="undefined"&&imghref!=""){

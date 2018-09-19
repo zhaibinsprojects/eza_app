@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_user;
+import com.sanbang.goods.service.GoodTaskService;
 import com.sanbang.hangq.servive.HangqPushService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -24,6 +25,8 @@ public class HanqPayAdviceController {
 	private static Logger log = Logger.getLogger(HomeHangqIndexController.class);
 	@Autowired
 	private HangqPushService hangqPushService;
+	@Autowired
+	private GoodTaskService goodTaskService;
 
 	private static String view = "/hangqv2/";
 
@@ -100,5 +103,15 @@ public class HanqPayAdviceController {
 		result = hangqPushService.checkPushStatus(request, pushcode, result);
 		return result;
 	}
+	
+	
+	@RequestMapping("/goodTaskService")
+	@ResponseBody
+	public Result goodTaskService( HttpServletRequest request) {
+		Result result=Result.success();
+		goodTaskService.syncGoodsInventory();
+		return result;
+	}
+	
 	
 }

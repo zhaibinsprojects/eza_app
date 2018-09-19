@@ -69,6 +69,7 @@ public class CustomizedServiceImpl implements CustomizedService {
 			//goodsClass.getParent().getName()+"-"+goodsClass.getName()+"-"+color.getName()+"-"+shape.getName()
 			customized.setProName(getProName(customized.getCategory_id(),customized.getColour_id(),customized.getShape_id()));
 			customized.setAddress(addressMess(user.getId()));
+			customized.setIsEp(customized.getIsEp().equals("0")?"1":"0");
 			this.customizedMapper.insertSelective(customized);
 			log.info("定制：返回id"+customized.getId());
 			//此表用于和采购商交互
