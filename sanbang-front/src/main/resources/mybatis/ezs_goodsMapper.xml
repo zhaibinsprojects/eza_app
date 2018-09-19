@@ -138,6 +138,7 @@
     <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
     <result column="lastModifyDate" jdbcType="VARCHAR" property="lastModifyDate" />
     <result column="pickup_date" property="pickup_date" jdbcType="TIMESTAMP" />
+    <result column="pickup_cycle" property="pickup_cycle" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -760,7 +761,8 @@
   	A.status status,
   	B.status audit_status,
   	B.priceStatus priceStatus,
-  	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date 
+  	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date,
+  	A.pickup_cycle 
 	FROM ezs_goods A 
 	LEFT JOIN ezs_goods_audit_process B on
 	A.id = B.goods_id
@@ -1249,7 +1251,8 @@
 		),
 		2
 	)*100 highp,
-	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date
+	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date,
+	A.pickup_cycle
 	FROM
 		ezs_goods A
 	WHERE
