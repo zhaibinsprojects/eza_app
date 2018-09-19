@@ -222,7 +222,14 @@ public class AppHomeGoodsMessController {
 			customized.setDensity(density);
 			customized.setElongBreak(elong_break);
 			customized.setFlexuralModulus(flexural_modulus);
-			customized.setIsEp(is_ep);
+			//customized.setIsEp(is_ep);
+			//0-不环保，1-环保，2-未检测；app传来 0-环保，1-不环保
+			if(is_ep!=null&&is_ep.trim().equals("0"))
+				customized.setIsEp("1");
+			else if(is_ep!=null&&is_ep.trim().equals("1"))
+				customized.setIsEp("0");
+			else
+				customized.setIsEp(is_ep);
 			customized.setJzforce(jzforce);
 			customized.setMeltIndex(melt_index);
 			if(pre_num!=null&&!pre_num.trim().equals(""))

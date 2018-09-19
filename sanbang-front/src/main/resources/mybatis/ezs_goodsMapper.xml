@@ -137,6 +137,7 @@
     <result column="audit_status" jdbcType="INTEGER" property="audit_status" />
     <result column="priceStatus" jdbcType="INTEGER" property="priceStatus" />
     <result column="lastModifyDate" jdbcType="VARCHAR" property="lastModifyDate" />
+    <result column="pickup_date" property="pickup_date" jdbcType="TIMESTAMP" />
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -747,7 +748,8 @@
   	A.inventory,
   	A.status status,
   	B.status audit_status,
-  	B.priceStatus priceStatus
+  	B.priceStatus priceStatus,
+  	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date 
 	FROM ezs_goods A 
 	LEFT JOIN ezs_goods_audit_process B on
 	A.id = B.goods_id
@@ -1118,6 +1120,10 @@
 		<result column="user_id" jdbcType="BIGINT" property="user_id" />
 		<result column="util_id" jdbcType="BIGINT" property="util_id" />
 		<result column="addess2" jdbcType="VARCHAR" property="addess2" />
+		
+		<result column="pickup_cycle" jdbcType="BIGINT" property="pickup_cycle" />
+		<result column="pickup_date" jdbcType="TIMESTAMP" property="pickup_date" />
+		
 		<!--单位-->
 		<association property="util" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
 		</association>
@@ -1231,8 +1237,8 @@
 			)
 		),
 		2
-	)*100 highp
-	
+	)*100 highp,
+	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date
 	FROM
 		ezs_goods A
 	WHERE

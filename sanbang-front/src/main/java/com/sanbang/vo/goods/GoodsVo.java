@@ -171,6 +171,26 @@ public class GoodsVo {
     private String areaName;
     
     private ezs_goods_class gclass;
+    //提货周期
+    private Integer pickup_cycle;
+    //提货时间
+    private Date pickup_date;
+    
+	public Date getPickup_date() {
+		return pickup_date;
+	}
+
+	public void setPickup_date(Date pickup_date) {
+		this.pickup_date = pickup_date;
+	}
+
+	public Integer getPickup_cycle() {
+		return pickup_cycle;
+	}
+
+	public void setPickup_cycle(Integer pickup_cycle) {
+		this.pickup_cycle = pickup_cycle;
+	}
 
 	public Long getId() {
 		return id;
