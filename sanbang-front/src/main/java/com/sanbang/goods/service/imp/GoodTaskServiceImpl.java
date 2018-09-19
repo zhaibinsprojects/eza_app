@@ -17,12 +17,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysql.fabric.xmlrpc.base.Data;
 import com.sanbang.bean.ezs_goods;
 import com.sanbang.dao.ezs_goodsMapper;
 import com.sanbang.goods.service.GoodTaskService;
 import com.sanbang.utils.Result;
-import com.sanbang.utils.SendMobileMessage;
 import com.sanbang.utils.StockHelper;
 import com.sanbang.vo.DictionaryCode;
 
@@ -68,11 +66,11 @@ public class GoodTaskServiceImpl implements GoodTaskService {
 			// 待处理数据清洗
 			for (Map<String, Object> map : u8selflist) {
 				String good_no = String.valueOf(map.get("cInvAddCode"));
-				Double inventory = divide(Double.valueOf(String.valueOf(map.get("iQuantity"))), (double) 1000);
+				Double inventory = round(divide(Double.valueOf(String.valueOf(map.get("iQuantity"))), (double) 1000), DEF_DIV_SCALE);;
 				if (!localhistory.containsKey(good_no)) {
 					continue;
 				}
-				Double loinventory = Double.valueOf(String.valueOf(localhistory.get(good_no)));
+				Double loinventory = round(Double.valueOf(String.valueOf(localhistory.get(good_no))), DEF_DIV_SCALE);;
 				if (localhistory.containsKey(good_no)) {
 					if (sub(inventory, loinventory) != 0) {
 						Map<String, Object> chace = new HashMap<>();

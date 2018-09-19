@@ -27,7 +27,7 @@
 		 <task:scheduled ref="hangqPushService" method="handleHangqPush"
 				cron="0 0/1 15,* * * ?" />
 		<task:scheduled ref="goodTaskService" method="syncGoodsInventory"
-				cron="0 0/5 15,* * * ?" /> 
+				cron="0 0/10 15,* * * ?" /> 
 		<!--
 		
 		<task:scheduled ref="sellBuyTaskService" method="downbuylostgoods"
