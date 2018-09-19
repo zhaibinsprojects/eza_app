@@ -368,6 +368,9 @@
 			<if test="addess2 != null">
         addess2,
 			</if>
+			<if test="pickup_cycle != null">
+        pickup_cycle,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -519,6 +522,9 @@
 			</if>
 			<if test="addess2 != null">
         #{addess2,jdbcType=VARCHAR},
+			</if>
+			<if test="pickup_cycle != null">
+        #{pickup_cycle,jdbcType=BIGINT},
 			</if>
 		</trim>
 	</insert>
@@ -677,6 +683,10 @@
 			<if test="addess2 != null">
         addess2 = #{addess2,jdbcType=VARCHAR},
 			</if>
+			<if test="pickup_cycle != null">
+        pickup_cycle = #{pickup_cycle,jdbcType=BIGINT},
+			</if>
+			
 		</set>
     where id = #{id,jdbcType=BIGINT}
 	</update>
@@ -730,7 +740,8 @@
       supply_id = #{supply_id,jdbcType=BIGINT},
       user_id = #{user_id,jdbcType=BIGINT},
       util_id = #{util_id,jdbcType=BIGINT},
-      addess2 = #{addess2,jdbcType=VARCHAR}
+      addess2 = #{addess2,jdbcType=VARCHAR},
+      pickup_cycle = #{pickup_cycle,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
 	</update>
 	<!-- 总页数 -->

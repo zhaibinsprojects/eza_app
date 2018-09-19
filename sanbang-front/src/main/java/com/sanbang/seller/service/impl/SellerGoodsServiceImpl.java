@@ -380,6 +380,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 		String source = request.getParameter("source");// 来源
 		String purpose = request.getParameter("purpose");// 用途
 		String protection = request.getParameter("protection");// 是否环保
+		//提货周期
+		String pickupcycle = request.getParameter("pickup_cycle");
 		// 非必填
 		/*String density = request.getParameter("density");// 密度
 		String cantilever = request.getParameter("cantilever");// 悬臂梁缺口冲击
@@ -471,6 +473,13 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 			result.setMsg("请输入货品用途");
 			return result;
 		}
+		if (Tools.isEmpty(pickupcycle)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("请输入提货周期");
+			return result;
+		}
+		
 		/*if (Tools.isEmpty(protection)) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
@@ -603,7 +612,7 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
 				
-				if(pickupcycle!=null)
+				if(pickupcycle!=null&&pickupcycle!="")
 					goods.setPickup_cycle(Integer.valueOf(pickupcycle));
 				
 				//新加未检测  2018/8/13
