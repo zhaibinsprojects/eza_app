@@ -190,6 +190,8 @@
     <result column="gAreaId" property="areaId" jdbcType="BIGINT" />
     <result column="utilName" property="utilName" jdbcType="VARCHAR" />
     <result column="picturePath" property="picturePath" jdbcType="VARCHAR" />
+    <result column="pickup_cycle" property="pickup_cycle" jdbcType="BIGINT" />
+    <result column="pickup_date" property="pickup_date" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <!---->
@@ -229,7 +231,8 @@
 		gs.area_id gAreaId,
 		CONCAT("https://m.ezaisheng.com/",REPLACE(ga.path,'\\','/'),"/",ga.`name`) picturePath, 
 		d.name utilName,
-		a2.areaName 
+		a2.areaName,
+		DATE_ADD(NOW(),INTERVAL gs.pickup_cycle DAY) pickup_date 
 	 FROM ezs_goodscart g LEFT JOIN ezs_goods gs on g.goods_id = gs.id LEFT JOIN ezs_accessory ga on gs.goods_main_photo_id = ga.id LEFT JOIN ezs_dict d on gs.util_id = d.id 
 	 LEFT JOIN ezs_area a2 on gs.area_id = a2.id 
 	 WHERE g.id 

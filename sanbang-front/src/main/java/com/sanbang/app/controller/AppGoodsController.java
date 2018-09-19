@@ -187,6 +187,8 @@ public class AppGoodsController {
 			map.put("price", goodsvo.getSaleprice());
 			map.put("inventory", goodsvo.getInventory());
 			map.put("unit", goodsvo.getUtil() == null ? "吨" : goodsvo.getUtil().getName());
+			//add by zhaibin 添加提货时间字段
+			map.put("pickup_date",goodsvo.getPickup_date());
 			result.setSuccess(true);
 			result.setMsg("请求成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);

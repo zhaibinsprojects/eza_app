@@ -144,8 +144,22 @@ public class ezs_goods  implements Serializable{
     private Integer manage_status;
 
     private Integer protection_v;
+    //取货周期
+    private Integer pickup_cycle;
+    
+    public Integer getPickup_cycle() {
+		return pickup_cycle;
+	}
 
-    public Long getId() {
+	public void setPickup_cycle(Integer pickup_cycle) {
+		this.pickup_cycle = pickup_cycle;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public Long getId() {
         return id;
     }
 

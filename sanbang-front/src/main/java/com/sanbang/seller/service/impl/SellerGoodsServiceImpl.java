@@ -165,6 +165,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String burning = request.getParameter("burning");// 燃烧等级
 				String seo_description = request.getParameter("seo_description");// 货品详细描述（武汉方面设计，这个字段没有使用）
 				String content = request.getParameter("content");// 货品详细描述（PC端含有富文本编辑器，手机端只接收纯文字使用，不考虑图片相关信息）
+				//提货周期
+				String pickupcycle = request.getParameter("pickup_cycle");
 					
 				ezs_goods goods = new ezs_goods();
 				goods.setAddTime(new Date());
@@ -223,6 +225,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setUser_id(upi.getId());
 				goods.setDeleteStatus(false);
 				goods.setSaleprice(new BigDecimal(0));
+				if(pickupcycle!=null)
+					goods.setPickup_cycle(Integer.valueOf(pickupcycle));
 				try {
 					goodsMapper.insert(goods);
 					result.setSuccess(true);
@@ -572,6 +576,8 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				String burning = request.getParameter("burning");// 燃烧等级
 				String seo_description = request.getParameter("seo_description");// 货品详细描述（武汉方面设计，这个字段没有使用）
 				String content = request.getParameter("content");// 货品详细描述（PC端含有富文本编辑器，手机端只接收纯文字使用，不考虑图片相关信息）
+				//提货周期
+				String pickupcycle = request.getParameter("pickup_cycle");
 				
 				ezs_goods goods = goodsMapper.selectByPrimaryKey(goodsId);
 				goods.setDeleteStatus(false);
@@ -596,6 +602,9 @@ public class SellerGoodsServiceImpl implements SellerGoodsService {
 				goods.setCollect(0);
 				goods.setGoods_salenum(0);
 				goods.setStatus(0);
+				
+				if(pickupcycle!=null)
+					goods.setPickup_cycle(Integer.valueOf(pickupcycle));
 				
 				//新加未检测  2018/8/13
 				if(StringUtil.isEmpty(protection)||StringUtil.isBlank(protection)){
