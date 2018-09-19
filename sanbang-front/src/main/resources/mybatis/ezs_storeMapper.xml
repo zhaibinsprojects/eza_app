@@ -44,6 +44,7 @@
     <result column="name_status" property="name_status" jdbcType="INTEGER" />
     <result column="business" property="business" jdbcType="BIT" />
     <result column="businessCardTime" property="businessCardTime" jdbcType="TIMESTAMP" />
+    <result column="child_company_status" property="child_company_status" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, addTime, deleteStatus, account, accountType, address, admin_status, assets, business, 

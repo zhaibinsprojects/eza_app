@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.inst2xsd.SalamiSliceStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,13 +29,17 @@ import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_price_trend;
+import com.sanbang.bean.ezs_price_trend_xl;
 import com.sanbang.bean.ezs_stock;
+import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_storecart;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.dao.ezs_price_trendMapper;
+import com.sanbang.dao.ezs_price_trend_xlMapper;
 import com.sanbang.dao.ezs_stockMapper;
+import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
@@ -92,7 +97,10 @@ public class GoodsServiceImpl implements GoodsService{
 	private ezs_goods_classMapper goodsClassMapper;
 	@Autowired
 	private ezs_price_trendMapper priceTrendMapper; 
-	
+	@Autowired
+	private ezs_price_trend_xlMapper priceTrendXLMapper;
+	@Autowired 
+	private ezs_storeMapper storeMapper;
 	@Autowired
 	private com.sanbang.dao.ezs_areaMapper ezs_areaMapper;
 	
@@ -635,12 +643,9 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId) {
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId,ezs_goods good) {
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
-		//生成订单号码
-		//String orderFormNo = null;
-		//createOrderNo();
 		if(orderType==null){
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "订单类型不能为null");
@@ -665,68 +670,57 @@ public class GoodsServiceImpl implements GoodsService{
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 			//逻辑修改，通过购物车Id进行订单添加 start........
 			ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
-			ezs_goods goodTemp = null;
+			//ezs_goods goodTemp = null;
 			ezs_storecart storecart = null; 
-			if(goodsCar!=null){
-				log.info("获取购物车内商品信息");
-				goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCar.getGoods_id());
-				storecart = this.storecartMapper.selectByPrimaryKey(goodsCar.getSc_id());
-				orderForm.setTotal_price(storecart.getTotal_price());
-				//更新店铺购物车，每单只有一种商品
-				storecart.setSc_status(1);//暂设定1标志 表示已生成订单
-				this.storecartMapper.updateByPrimaryKeySelective(storecart);
-				//orderFormNo = createOrderNo(goodTemp);
-				//orderForm.setOrder_no(orderFormNo);
-				//写入订单编号
-				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
-				//同步U8库存
-				try {
-					log.info("下单逻辑+校验库存+更新本地库存");
-					checkGoodOrder(goodsCar,goodTemp,orderType,orderForm.getOrder_no());
-					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
-				} catch (Exception e) {
-					System.out.println("同步库存异常");
-					log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
-					e.printStackTrace();
-					throw e;
-				}
-				//更新设置订单外键
-				goodsCar.setOf_id(orderForm.getId());
-				//更新设置购物车类型
-				if(orderType.trim().equals("GOODS")){
-					goodsCar.setCart_type((goodTemp.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
-				}else if(orderType.trim().equals("SAMPLE")){
-					//样品
-					goodsCar.setCart_type(CommUtil.sample_goods);
-				}
-				this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCar);
-				//构建实时成交价
-				log.info("生成实时交易记录");
-				savePriceTrend(goodsCar,goodTemp,user);
-				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
-				//订单类型：10.自营商品订单 20.撮合商品订单
-				//判断是否为自营：true-自营，false-非自营
-				if(orderType.trim().equals("GOODS")){
-					orderForm.setOrder_type((goodTemp.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
-				}else if(orderType.trim().equals("SAMPLE")){
-					//样品订单
-					orderForm.setOrder_type(CommUtil.order_sample_good);
-				}
-				this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
-				
-				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				mmp.put("Msg", "订单添加成功");
-			}else{
-				//购物车ID有误，未查询到商品购物车信息
-				//orderForm.setDeleteStatus(true);
-				//this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
-				//不可删除，会导致订单号重复
-				this.ezs_orderformMapper.deleteByPrimaryKey(orderForm.getId());
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				mmp.put("Msg", "商品购物车查询失败");
-				log.error("商品购物车查询失败");
+
+			log.info("获取购物车内商品信息");
+			//goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCar.getGoods_id());
+			storecart = this.storecartMapper.selectByPrimaryKey(goodsCar.getSc_id());
+			orderForm.setTotal_price(storecart.getTotal_price());
+			//更新店铺购物车，每单只有一种商品
+			storecart.setSc_status(1);//暂设定1标志 表示已生成订单
+			this.storecartMapper.updateByPrimaryKeySelective(storecart);
+			//写入订单编号
+			this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
+			//同步U8库存
+			try {
+				log.info("下单逻辑+校验库存+更新本地库存");
+				checkGoodOrder(goodsCar,good,orderType,orderForm.getOrder_no());
+				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
+			} catch (Exception e) {
+				System.out.println("同步库存异常");
+				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
+				e.printStackTrace();
+				throw e;
 			}
+			//更新设置订单外键
+			goodsCar.setOf_id(orderForm.getId());
+			//更新设置购物车类型
+			if(orderType.trim().equals("GOODS")){
+				goodsCar.setCart_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
+			}else if(orderType.trim().equals("SAMPLE")){
+				//样品
+				goodsCar.setCart_type(CommUtil.sample_goods);
+			}
+			this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCar);
+			//构建实时成交价
+			log.info("生成实时交易记录");
+			//需判断是否为新料
+			savePriceTrend(goodsCar,good,user);
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
+			//订单类型：10.自营商品订单 20.撮合商品订单
+			//判断是否为自营：true-自营，false-非自营
+			if(orderType.trim().equals("GOODS")){
+				orderForm.setOrder_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
+			}else if(orderType.trim().equals("SAMPLE")){
+				//样品订单
+				orderForm.setOrder_type(CommUtil.order_sample_good);
+			}
+			this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
+			
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+			mmp.put("Msg", "订单添加成功");
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		} catch (Exception e) {
@@ -761,7 +755,9 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		try {
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"预提交订单校验开始...");
-			ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
+			//修改-校验-验证该购物车内购物车是否已下单 根据 of_id 是否为null进行校验
+			//ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
+			ezs_goodscart goodsCar = this.ezs_goodscartMapper.queryNoCommitOrder(goodsCartId);
 			ezs_goods goodTemp = null;
 			if(goodsCar!=null){
 				goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCar.getGoods_id());
@@ -886,9 +882,14 @@ public class GoodsServiceImpl implements GoodsService{
 	private Long getRootOfTheGoodClass(Long goodClassId){
 		ezs_goods_class goodsClass = null;
 		goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodClassId);
+		int i = 0;
 		if(goodsClass!=null){
 			while(!goodsClass.getLevel().equals("1")){
+				i++;
 				goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodsClass.getParent_id());
+				//防止死循环
+				if(i>5)
+					break;
 			}
 			return goodsClass.getId();
 		}
@@ -903,9 +904,13 @@ public class GoodsServiceImpl implements GoodsService{
 	private Long getSecondGoodClass(Long goodClassId){
 		ezs_goods_class goodsClass = null;
 		goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodClassId);
+		int i = 0;
 		if(goodsClass!=null){
-			while(!goodsClass.getLevel().equals("1")&&goodsClass.getParent_id()!=null){
+			while(!goodsClass.getLevel().equals("2")&&goodsClass.getParent_id()!=null){
 				goodsClass = this.goodsClassMapper.selectByPrimaryKey(goodsClass.getParent_id());
+				i++;
+				if(i>5)
+					break;
 			}
 			return goodsClass.getId();
 		}
@@ -918,38 +923,63 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	public void savePriceTrend(ezs_goodscart goodCart,ezs_goods goods,ezs_user user){
 		ezs_price_trend pri= new ezs_price_trend();
-        pri.setData_sources(0); // 数据来源
-        pri.setType(3);
-	    pri.setPrice_type(1);
-        pri.setRegion_id(goods.getArea_id());
-        pri.setGoodClass_id(getRootOfTheGoodClass(goods.getGoodClass_id()));//一级分类
-//        pri.setGoodClass1_id(getSecondGoodClass(goods.getGoodClass_id()));//二级分类ID
-//        pri.setGoodClass2_id(goods.getGoodClass_id());//三级品类id
-        pri.setPrice(goodCart.getPrice().doubleValue());  //单价/元
-        pri.setColor_id(goods.getColor_id());
-        pri.setForm_id(goods.getForm_id());
-        pri.setDensity(goods.getDensity()); // 密度	
-        pri.setCantilever(goods.getCantilever());// 悬臂梁缺口冲击	
-        pri.setFreely(goods.getFreely());// 简支梁缺口冲击 
-        pri.setLipolysis(goods.getLipolysis()); // 	溶脂 
-        pri.setAsh(goods.getAsh());  // 	灰分	
-        pri.setWater(goods.getWater()); // 水分	 
-        pri.setTensile(goods.getTensile());// 拉伸强度	
-        pri.setCrack(goods.getCrack()); // 断裂伸长率	 
-        pri.setBending(goods.getBending());// 弯曲强度	
-        pri.setFlexural(goods.getFlexural());// 弯曲模量	 
-        pri.setBurning(goods.getBurning());// 燃烧等级
-//        pri.setProtection(goods.getProtection());  //环保
-        pri.setData_time(new Date());
-        pri.setStatus(2);
-        pri.setAddTime(new Date());
-        pri.setUser_id(user.getId());
-        pri.setDeleteStatus(false);
+		ezs_price_trend_xl prixl= new ezs_price_trend_xl();
+		Long rootId = getRootOfTheGoodClass(goods.getGoodClass_id());
+		if(rootId==101){
+			//新料记录
+			log.info("------------新料记录--------------");
+	        prixl.setAddTime(new Date());
+	        prixl.setDeleteStatus(false);
+	        prixl.setData_time(new Date());
+	        prixl.setContent("实时交易价格");
+	        prixl.setGoodClass_id(goods.getGoodClass_id());
+	        prixl.setPrice(goods.getSaleprice().doubleValue());
+	        prixl.setPriceAttribute(""+goods.getSaleprice().doubleValue());
+	        prixl.setPurpose("新料实时交易价格");
+	        prixl.setRegion_id(goods.getArea_id());
+		}else{
+			//再生料记录
+			log.info("------------再生料记录--------------");
+	        pri.setData_sources(0); // 数据来源
+	        pri.setType(3);
+		    pri.setPrice_type(1);
+	        pri.setRegion_id(goods.getArea_id());
+	        pri.setGoodClass_id(getRootOfTheGoodClass(goods.getGoodClass_id()));//一级分类
+	        pri.setGoodClass1_id(getSecondGoodClass(goods.getGoodClass_id()));//二级分类ID
+	        pri.setGoodClass2_id(goods.getGoodClass_id());//三级品类id
+	        pri.setPrice(goodCart.getPrice().doubleValue());  //单价/元
+	        pri.setColor_id(goods.getColor_id());
+	        pri.setForm_id(goods.getForm_id());
+	        pri.setDensity(goods.getDensity()); // 密度	
+	        pri.setCantilever(goods.getCantilever());// 悬臂梁缺口冲击	
+	        pri.setFreely(goods.getFreely());// 简支梁缺口冲击 
+	        pri.setLipolysis(goods.getLipolysis()); // 	溶脂 
+	        pri.setAsh(goods.getAsh());  // 	灰分	
+	        pri.setWater(goods.getWater()); // 水分	 
+	        pri.setTensile(goods.getTensile());// 拉伸强度	
+	        pri.setCrack(goods.getCrack()); // 断裂伸长率	 
+	        pri.setBending(goods.getBending());// 弯曲强度	
+	        pri.setFlexural(goods.getFlexural());// 弯曲模量	 
+	        pri.setBurning(goods.getBurning());// 燃烧等级
+	        pri.setProtection(goods.getProtection());  //环保
+	        pri.setData_time(new Date());
+	        pri.setStatus(2);
+	        pri.setAddTime(new Date());
+	        pri.setUser_id(user.getId());
+	        pri.setDeleteStatus(false);
+		}
         try {
         	ezs_user seller = this.userMapper.getUserInfoByUserId(goods.getUser_id());
-        	pri.setSource(seller.getName()); // 来源公司或个人	
-        	pri.setSource_tel(seller.getEzs_userinfo().getTel());  // 来源者电话	
-        	this.priceTrendMapper.insert(pri); 
+        	if(rootId==101){
+        		prixl.setSource(seller.getName());
+        		this.priceTrendXLMapper.insert(prixl);
+        		log.info("------------新料实时交易记录--------------");
+        	}else{
+        		pri.setSource(seller.getName()); // 来源公司或个人	
+        		pri.setSource_tel(seller.getEzs_userinfo().getTel());  // 来源者电话
+        		this.priceTrendMapper.insert(pri); 
+        		log.info("------------再生料实时交易记录--------------");
+        	}
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("FunctionName:"+"savePriceTrend "+",context:"+e.toString());
@@ -1056,7 +1086,9 @@ public class GoodsServiceImpl implements GoodsService{
 					}
 				}else{
 					//参考PC，U8查不到，不做同步处理
-					return true;
+					log.info("U8库查询失败，校验失败");
+					//return true;
+					return false;
 				}
 			} else {
 				// 供应商锁库
@@ -1131,7 +1163,9 @@ public class GoodsServiceImpl implements GoodsService{
 					}
 				}else{
 					//参考PC，U8查不到，不做同步处理
-					return true;
+					log.debug("U8查不到记录-校验失败！");
+					//return true;
+					return false;
 				}
 			} else {
 				//非自营商品，按实际库存量计算，不用ezs_stock记录计算剩余量，但需要添加此记录
@@ -1213,15 +1247,14 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, Long goodId, Double count) {
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, ezs_goods good, Double count) {
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
 		ezs_goodscart goodsCart = new ezs_goodscart();
-		//ezs_orderform orderForm = new ezs_orderform();
 		try {
 			//查询购买的商品
-			ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodId);
+			//ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodId);
 			//计算总价
 			double totalMoney = good.getPrice().doubleValue()*count;
 			if(orderType==null){
@@ -1250,7 +1283,6 @@ public class GoodsServiceImpl implements GoodsService{
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
-			
 			//orderForm.setWeAddress_id(WeAddressId);
 			orderForm.setAddress_id(WeAddressId);
 			if(orderType.trim().equals("GOODS")){
@@ -1259,9 +1291,6 @@ public class GoodsServiceImpl implements GoodsService{
 				//样品订单
 				orderForm.setOrder_type(CommUtil.order_sample_good);
 			}
-			//没卵用，仅为生成订单号码
-			//String orderFormNo = createOrderNo(good);
-			//orderForm.setOrder_no(orderFormNo);
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("立即购买-订单记录生成-----------------------订单ID："+orderForm.getId());
 			//构建店铺购物车
@@ -1301,8 +1330,6 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "立即购买成功");
 				log.info("立即购买成功");
 			}else{
-				//orderForm.setDeleteStatus(true);
-				//this.ezs_orderformMapper.updateByPrimaryKey(orderForm);
 				//不可删除，会导致订单号重复
 				log.debug("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
 				log.error("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
@@ -1402,7 +1429,9 @@ public class GoodsServiceImpl implements GoodsService{
 						//ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					}
 				}else{
-					return true;
+					log.info("访问U8库无数据，校验失败");
+					//return true;
+					return false;
 				}
 			} else {
 				// 供应商锁库

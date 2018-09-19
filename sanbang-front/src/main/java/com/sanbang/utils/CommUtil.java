@@ -64,6 +64,8 @@ public class CommUtil {
 
 	public static final String order_sample_good = "ORDER_SAMPLE_GOOD";		// 样品订单
 	public static final String order_sample_match_good = "ORDER_SAMPLE_MATCH_GOOD";// 样品撮合订单
+	
+	public static final String order_child_company_good = "ORDER_CHILDCOMPANY_GOOD";//子公司商品订单
 
 	/**
 	 * 数据字典中：性别>>男 的Code值

@@ -66,7 +66,9 @@
       price, procurement_standard, protection, 
       purpose, source, source_tel, 
       specification, tensile, type, 
-      water, goodClass_id, region_id, 
+      water, goodClass_id, 
+      goodClass1_id,goodClass2_id,
+      region_id, 
       user_id, provider, status, 
       color_id, form_id, data_time, 
       goodClass_sources, data_sources_new, price_type, 
@@ -79,7 +81,9 @@
       #{price,jdbcType=DOUBLE}, #{procurement_standard,jdbcType=VARCHAR}, #{protection,jdbcType=BIT}, 
       #{purpose,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{source_tel,jdbcType=VARCHAR}, 
       #{specification,jdbcType=VARCHAR}, #{tensile,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{water,jdbcType=VARCHAR}, #{goodClass_id,jdbcType=BIGINT}, #{region_id,jdbcType=BIGINT}, 
+      #{water,jdbcType=VARCHAR}, #{goodClass_id,jdbcType=BIGINT}, 
+      #{goodClass1_id,jdbcType=BIGINT},#{goodClass2_id,jdbcType=BIGINT},
+      #{region_id,jdbcType=BIGINT}, 
       #{user_id,jdbcType=BIGINT}, #{provider,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{color_id,jdbcType=BIGINT}, #{form_id,jdbcType=BIGINT}, #{data_time,jdbcType=TIMESTAMP}, 
       #{goodClass_sources,jdbcType=VARCHAR}, #{data_sources_new,jdbcType=VARCHAR}, #{price_type,jdbcType=INTEGER}, 
@@ -165,6 +169,12 @@
       </if>
       <if test="goodClass_id != null" >
         goodClass_id,
+      </if>
+      <if test="goodClass1_id != null" >
+        goodClass1_id,
+      </if>
+      <if test="goodClass2_id != null" >
+        goodClass2_id,
       </if>
       <if test="region_id != null" >
         region_id,
@@ -278,6 +288,12 @@
       </if>
       <if test="goodClass_id != null" >
         #{goodClass_id,jdbcType=BIGINT},
+      </if>
+      <if test="goodClass1_id != null" >
+        #{goodClass1_id,jdbcType=BIGINT},
+      </if>
+      <if test="goodClass2_id != null" >
+        #{goodClass2_id,jdbcType=BIGINT},
       </if>
       <if test="region_id != null" >
         #{region_id,jdbcType=BIGINT},

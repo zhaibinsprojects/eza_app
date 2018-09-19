@@ -45,4 +45,6 @@ public interface ezs_goodscartMapper {
     int deleteGoodCar(String[] ids);
     
     List<GoodsCarInfo> selectByGoodCarIds(String[] ids);
+    //根据id查询未下单的购物车记录
+    ezs_goodscart queryNoCommitOrder(Long id);
 }
