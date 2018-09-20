@@ -108,6 +108,7 @@
 			<%-- <tr> <td>物流方式</td> <td>${good.logistics.name}</td> </tr> --%>
 			<tr> <td>上批货品质检结果</td> <td><span    class="colorgreen" style="margin-right:20px;">质检报告</span></td> </tr>
 			<tr> <td>推荐度</td> <td><span class="colororange" style="font-size:15px;"> 98%</span></td> </tr>
+			<tr> <td>销量</td> <td><span class="colororange" style="font-size:15px;"> ${good.salecount}吨</span></td> </tr>
 		</table>
 	</div>
 	<div class="ezsm-mem-box-tit1">制作案例</div>

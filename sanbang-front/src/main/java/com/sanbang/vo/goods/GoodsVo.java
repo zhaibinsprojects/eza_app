@@ -175,7 +175,17 @@ public class GoodsVo {
     private Integer pickup_cycle;
     //提货时间
     private Date pickup_date;
+    //商品销量
+    private Long salecount;
     
+	public Long getSalecount() {
+		return salecount;
+	}
+
+	public void setSalecount(Long salecount) {
+		this.salecount = salecount;
+	}
+
 	public Date getPickup_date() {
 		return pickup_date;
 	}

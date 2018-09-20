@@ -938,7 +938,8 @@
 		d1.name colorName,
 		ar.areaName areaName,
 		d2.name utilName,
-		g.area_id
+		g.area_id ,
+		(select IFNULL(SUM(gc.count),0) from ezs_orderform ef LEFT JOIN ezs_goodscart gc on ef.id = gc.of_id where ef.deleteStatus = '0' and gc.goods_id = g.id and (ef.order_status BETWEEN 50 AND 110 and ef.order_status &lt;&gt; 100)) as salecount 
 		from ezs_goods g,ezs_accessory a,ezs_dict d1,ezs_area ar,ezs_dict d2
 		where g.goods_main_photo_id = a.id and g.color_id = d1.id and g.area_id = ar.id and g.util_id = d2.id AND g.`status`=2 and g.deleteStatus = '0'
 		<if test="areaList.size>0">
@@ -1061,7 +1062,6 @@
 		<if test="flexural2 != null and flexural2 != ''">
 	        and g.flexural &lt;= ${flexural2}
 		</if>
-	    
 		<!-- 默认：传值0，按照添加时间降序排列 -->
 		<if test="defaultId != null and addTime == 0">
 	        ORDER BY g.addTime desc
@@ -1073,9 +1073,11 @@
 		<if test="inventory != null and inventory == 1">
 	        ORDER BY g.inventory asc
 		</if>
-		
-		<if test="inventory == null">
+		<!-- <if test="inventory == null">
 	        ORDER BY g.inventory DESC
+		</if> -->
+		<if test="sales != null and sales == 1">
+			ORDER BY salecount DESC
 		</if>
 	    limit #{pageStart},#{pageSize}
 	</select>
@@ -1136,6 +1138,7 @@
 		
 		<result column="pickup_cycle" jdbcType="BIGINT" property="pickup_cycle" />
 		<result column="pickup_date" jdbcType="TIMESTAMP" property="pickup_date" />
+		<result column="salecount" jdbcType="BIGINT" property="salecount" />
 		
 		<!--单位-->
 		<association property="util" column="util_id" select="com.sanbang.dao.ezs_dictMapper.selectByPrimaryKey">
@@ -1252,7 +1255,8 @@
 		2
 	)*100 highp,
 	DATE_ADD(NOW(),INTERVAL A.pickup_cycle DAY) pickup_date,
-	A.pickup_cycle
+	A.pickup_cycle,
+	(select IFNULL(SUM(gc.count),0) from ezs_orderform of LEFT JOIN ezs_goodscart gc on of.id = gc.of_id where of.deleteStatus = '0' and gc.goods_id = A.id and of.order_status BETWEEN 50 AND 110 and of.order_status &lt;&gt; 100 ) salecount
 	FROM
 		ezs_goods A
 	WHERE

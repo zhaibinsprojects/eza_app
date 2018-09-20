@@ -621,6 +621,7 @@ public class AppGoodsController {
 			@RequestParam(name = "typeId", required = false) String typeId,
 			@RequestParam(name = "defaultId", required = false) String defaultId, // 默认值（添加时间）
 			@RequestParam(name = "inventory", required = false) String inventory, // 库存量
+			@RequestParam(name = "sales", required = false) String sales,//销量    sales=1    按销量排序-（默认、库存、销量 此三种排序方式互斥）
 			@RequestParam(name = "colorId", required = false) String colorId,
 			@RequestParam(name = "formId", required = false) String formId,
 			@RequestParam(name = "source", required = false) String source,
@@ -639,6 +640,7 @@ public class AppGoodsController {
 			@RequestParam(name = "burning", required = false) String burning, // 燃烧等级
 			@RequestParam(name = "goodsName", required = false) String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow) {
+		log.info("AppGoodsController---商品列表查询");
 		Result result = Result.failure();
 		List<Long> areaList = new ArrayList<Long>();
 		if (!"".equals(areaId) && null != areaId) {
@@ -721,19 +723,26 @@ public class AppGoodsController {
 		try {
 			List<GoodsInfo> list = new ArrayList<GoodsInfo>();
 			List<GoodsInfo> listTemp = new ArrayList<GoodsInfo>();
-			list = goodsService.queryGoodsList(areaList, typeIds, defaultId, inventory, colorIds, formIds, source,
+			list = goodsService.queryGoodsList(areaList, typeIds, defaultId, inventory, sales, colorIds, formIds, source,
 					purpose, prices, densitys, cantilevers, freelys, lipolysises, ashs, waters, tensiles, cracks,
 					bendings, flexurals, burnings, goodsName, pageStart);
 			if (null != list && list.size() > 0) {
 				result.setSuccess(true);
 				result.setMsg("筛选成功");
 				// 地址修改 修改areaName 为省份
-				for (GoodsInfo goodInfo : list) {
+				for (int i = 0,size=list.size(); i < size; i++) {
+					GoodsInfo goodInfo = list.get(i);
 					ezs_area areaTemp = getCityMess(goodInfo.getArea_id());
 					String goodsAddress = areaTemp.getAreaName();
 					goodInfo.setAreaName(goodsAddress);
 					listTemp.add(goodInfo);
 				}
+				/*for (GoodsInfo goodInfo : list) {
+					ezs_area areaTemp = getCityMess(goodInfo.getArea_id());
+					String goodsAddress = areaTemp.getAreaName();
+					goodInfo.setAreaName(goodsAddress);
+					listTemp.add(goodInfo);
+				}*/
 				result.setObj(listTemp);
 				Page page = new Page(listTemp.size(), pageNow);
 				result.setMeta(page);

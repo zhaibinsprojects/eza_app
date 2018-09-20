@@ -74,7 +74,7 @@ public interface GoodsService {
 	 * @param isProtection	是否环保
 	 * @param goodsName	搜索框条件：商品名称
 	 */
-	public List<GoodsInfo> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,String[] formIds,
+	public List<GoodsInfo> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String sales,String[] colorIds,String[] formIds,
 			String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,String[] lipolysises,
 			String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,String[] burnings,
 			String goodsName,int pageStart);
