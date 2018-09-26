@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_purchase_order_itemsMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_purchase_order_items" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
+    <result column="arriveDate" property="arriveDate" jdbcType="TIMESTAMP" />
+    <result column="cUnitID" property="cUnitID" jdbcType="VARCHAR" />
+    <result column="goods_amount" property="goods_amount" jdbcType="DECIMAL" />
+    <result column="goods_price" property="goods_price" jdbcType="DECIMAL" />
+    <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+    <result column="total_price" property="total_price" jdbcType="DECIMAL" />
+    <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
+    <result column="util_id" property="util_id" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sanbang.bean.ezs_purchase_order_items" extends="BaseResultMap" >
+    <result column="msg" property="msg" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addTime, deleteStatus, arriveDate, cUnitID, goods_amount, goods_price, order_no, 
+    total_price, goods_id, util_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    msg
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ezs_purchase_order_items
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_purchase_order_items
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_purchase_order_items" >
+    insert into ezs_purchase_order_items (id, addTime, deleteStatus, 
+      arriveDate, cUnitID, goods_amount, 
+      goods_price, order_no, total_price, 
+      goods_id, util_id, msg
+      )
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
+      #{arriveDate,jdbcType=TIMESTAMP}, #{cUnitID,jdbcType=VARCHAR}, #{goods_amount,jdbcType=DECIMAL}, 
+      #{goods_price,jdbcType=DECIMAL}, #{order_no,jdbcType=VARCHAR}, #{total_price,jdbcType=DECIMAL}, 
+      #{goods_id,jdbcType=BIGINT}, #{util_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_purchase_order_items" >
+    insert into ezs_purchase_order_items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="arriveDate != null" >
+        arriveDate,
+      </if>
+      <if test="cUnitID != null" >
+        cUnitID,
+      </if>
+      <if test="goods_amount != null" >
+        goods_amount,
+      </if>
+      <if test="goods_price != null" >
+        goods_price,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+      <if test="total_price != null" >
+        total_price,
+      </if>
+      <if test="goods_id != null" >
+        goods_id,
+      </if>
+      <if test="util_id != null" >
+        util_id,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="arriveDate != null" >
+        #{arriveDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cUnitID != null" >
+        #{cUnitID,jdbcType=VARCHAR},
+      </if>
+      <if test="goods_amount != null" >
+        #{goods_amount,jdbcType=DECIMAL},
+      </if>
+      <if test="goods_price != null" >
+        #{goods_price,jdbcType=DECIMAL},
+      </if>
+      <if test="order_no != null" >
+        #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="total_price != null" >
+        #{total_price,jdbcType=DECIMAL},
+      </if>
+      <if test="goods_id != null" >
+        #{goods_id,jdbcType=BIGINT},
+      </if>
+      <if test="util_id != null" >
+        #{util_id,jdbcType=BIGINT},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_purchase_order_items" >
+    update ezs_purchase_order_items
+    <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=BIT},
+      </if>
+      <if test="arriveDate != null" >
+        arriveDate = #{arriveDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cUnitID != null" >
+        cUnitID = #{cUnitID,jdbcType=VARCHAR},
+      </if>
+      <if test="goods_amount != null" >
+        goods_amount = #{goods_amount,jdbcType=DECIMAL},
+      </if>
+      <if test="goods_price != null" >
+        goods_price = #{goods_price,jdbcType=DECIMAL},
+      </if>
+      <if test="order_no != null" >
+        order_no = #{order_no,jdbcType=VARCHAR},
+      </if>
+      <if test="total_price != null" >
+        total_price = #{total_price,jdbcType=DECIMAL},
+      </if>
+      <if test="goods_id != null" >
+        goods_id = #{goods_id,jdbcType=BIGINT},
+      </if>
+      <if test="util_id != null" >
+        util_id = #{util_id,jdbcType=BIGINT},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sanbang.bean.ezs_purchase_order_items" >
+    update ezs_purchase_order_items
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      arriveDate = #{arriveDate,jdbcType=TIMESTAMP},
+      cUnitID = #{cUnitID,jdbcType=VARCHAR},
+      goods_amount = #{goods_amount,jdbcType=DECIMAL},
+      goods_price = #{goods_price,jdbcType=DECIMAL},
+      order_no = #{order_no,jdbcType=VARCHAR},
+      total_price = #{total_price,jdbcType=DECIMAL},
+      goods_id = #{goods_id,jdbcType=BIGINT},
+      util_id = #{util_id,jdbcType=BIGINT},
+      msg = #{msg,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_purchase_order_items" >
+    update ezs_purchase_order_items
+    set addTime = #{addTime,jdbcType=TIMESTAMP},
+      deleteStatus = #{deleteStatus,jdbcType=BIT},
+      arriveDate = #{arriveDate,jdbcType=TIMESTAMP},
+      cUnitID = #{cUnitID,jdbcType=VARCHAR},
+      goods_amount = #{goods_amount,jdbcType=DECIMAL},
+      goods_price = #{goods_price,jdbcType=DECIMAL},
+      order_no = #{order_no,jdbcType=VARCHAR},
+      total_price = #{total_price,jdbcType=DECIMAL},
+      goods_id = #{goods_id,jdbcType=BIGINT},
+      util_id = #{util_id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

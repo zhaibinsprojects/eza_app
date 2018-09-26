@@ -322,4 +322,10 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_check_order_mainMapper"/>
 	</bean>
+	
+	<bean id="ezs_purchase_order_itemsMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_purchase_order_itemsMapper"/>
+	</bean>
+	
 </beans>

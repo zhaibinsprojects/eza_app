@@ -2,6 +2,7 @@ package com.sanbang.goods.service.imp;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +57,7 @@ import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.GoodsOfOrderInfo;
 import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
+import com.sun.tools.example.debug.expr.ParseException;
 
 /**
  * 货品相关处理
@@ -665,6 +667,9 @@ public class GoodsServiceImpl implements GoodsService{
 			orderForm.setPay_mode01(0);
 			orderForm.setPay_mode02(0);
 			orderForm.setSc_status(0);
+			//预计送达时间
+			Date estimateTime = mudifyDay(new Date(), good.getPickup_cycle());
+			orderForm.setEstimateTime(estimateTime);
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			//没卵用，仅为生成订单号码
@@ -740,7 +745,20 @@ public class GoodsServiceImpl implements GoodsService{
 		return mmp;
 	}
 	
-	
+	/**** 
+     * @param date 日期基数
+     * @param days 日期变更天数
+     * @return 2017-05-13
+     * @throws ParseException 
+     */  
+    @SuppressWarnings("unused")
+	private static Date mudifyDay(Date date,int days) { 
+        Calendar rightNow = Calendar.getInstance();  
+        rightNow.setTime(date); 
+        rightNow.add(Calendar.DATE, days);  
+        Date dt1 = rightNow.getTime();  
+        return dt1;  
+    }
 	
 	/**
 	 * 预提交订单校验，不做落库操作
