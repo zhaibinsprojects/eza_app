@@ -1,6 +1,8 @@
 package com.sanbang.goods.service.imp;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,8 @@ import com.sanbang.bean.ezs_goodscart;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_price_trend;
 import com.sanbang.bean.ezs_price_trend_xl;
+import com.sanbang.bean.ezs_purchase_order_items;
+import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_stock;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_storecart;
@@ -24,6 +28,8 @@ import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_goods_classMapper;
 import com.sanbang.dao.ezs_price_trendMapper;
 import com.sanbang.dao.ezs_price_trend_xlMapper;
+import com.sanbang.dao.ezs_purchase_order_itemsMapper;
+import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.dao.ezs_stockMapper;
 import com.sanbang.dao.ezs_storeMapper;
 import com.sanbang.dao.ezs_storecartMapper;
@@ -31,6 +37,7 @@ import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.ChildCompanyGoodsService;
 import com.sanbang.utils.CommUtil;
 import com.sanbang.utils.StockHelper;
+import com.sanbang.utils.exponentrepager;
 import com.sanbang.vo.DictionaryCode;
 
 /**
@@ -62,9 +69,14 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 	private ezs_price_trend_xlMapper priceTrendXLMapper;
 	@Autowired 
 	private ezs_storeMapper storeMapper;
+	@Autowired
+	private ezs_purchase_orderformMapper purchaseOrderFormMapper;
+	@Autowired
+	private ezs_purchase_order_itemsMapper purchaseOrderItemsMapper;
 
 	/**
 	 * 立即购买function
+	 * @throws Exception 
 	 */
 	@Override
 	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,
@@ -137,6 +149,8 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 				log.info("goodsCart记录生成");
 				//构建实时成交价记录
 				savePriceTrend(goodsCart,good,user);
+				//生成供应商订单
+				savePurchaseOrder(orderForm,goodsCart,good);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "立即购买成功");
 				log.info("立即购买成功");
@@ -160,6 +174,90 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 		//进行库存校验
 		return mmp;
 	}
+	
+	//子公司订单，生成供应商订单
+	public void savePurchaseOrder(ezs_orderform orderForm, ezs_goodscart goodsCart,ezs_goods goods) {
+		//卖方可见
+		ezs_purchase_orderform purchaseOrderForm = new ezs_purchase_orderform();
+		ezs_purchase_order_items purchaseOrderItems = new ezs_purchase_order_items(); 
+		
+		try{
+			purchaseOrderForm.setOrder_no(getPurchaseOrderNo(orderForm));
+			purchaseOrderForm.setAddTime(new Date());
+			purchaseOrderForm.setDeleteStatus(false);
+			purchaseOrderForm.setIfStore(0);
+			purchaseOrderForm.setOrder_type(CommUtil.order_child_company_good);
+			purchaseOrderForm.setPay_mode(0);
+			purchaseOrderForm.setAll_price(orderForm.getTotal_price());
+			purchaseOrderForm.setTotal_price(orderForm.getTotal_price());
+			purchaseOrderForm.setOrder_status(200);
+			purchaseOrderForm.setAddress_id(orderForm.getAddress_id());
+			purchaseOrderForm.setMsg(orderForm.getMsg());
+			// 合同状态 1.纸质 2.电子
+			purchaseOrderForm.setPact_status(2);
+			
+			purchaseOrderItems.setDeleteStatus(false);
+			//取货时间
+			purchaseOrderItems.setArriveDate(
+					mudifyDay(goods.getAddTime(),(goods.getPickup_cycle()==null||goods.getPickup_cycle().equals(""))?0:goods.getPickup_cycle())
+					);
+			purchaseOrderItems.setOrder_no(purchaseOrderForm.getOrder_no());
+			purchaseOrderItems.setTotal_price(orderForm.getTotal_price());
+			purchaseOrderItems.setAddTime(new Date());
+			if(goodsCart != null && goodsCart.getCount() != null){
+				purchaseOrderForm.setGoods_amount(BigDecimal.valueOf(goodsCart.getCount()));
+				if(goodsCart.getGoods_id() != null){
+					purchaseOrderForm.setSellerUser_id(goods.getUser_id());
+					purchaseOrderForm.setBuyUser_id(orderForm.getUser_id());
+					purchaseOrderItems.setGoods_id(goodsCart.getGoods_id());
+					purchaseOrderItems.setGoods_price(goodsCart.getPrice());
+					purchaseOrderItems.setGoods_amount(BigDecimal.valueOf(goodsCart.getCount()));
+					purchaseOrderItems.setcUnitID("T");
+					purchaseOrderForm.setGoodsId(goods.getId());
+				}
+			}
+			purchaseOrderFormMapper.insertSelective(purchaseOrderForm);
+			purchaseOrderItemsMapper.insertSelective(purchaseOrderItems);
+			goodsCart.setPof_id(purchaseOrderForm.getId());
+			ezs_goodscartMapper.updateByPrimaryKey(goodsCart);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("生成供应商订单异常。。。。。。。。。。。。。。。。。。。"+e.getMessage());
+		}
+	}
+	
+    /**** 
+     * @param date 日期基数
+     * @param days 日期变更天数
+     * @return 2017-05-13
+     * @throws ParseException 
+     */  
+    @SuppressWarnings("unused")
+	private static Date mudifyDay(Date date,int days) { 
+    	//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+        Calendar rightNow = Calendar.getInstance();  
+        rightNow.setTime(date); 
+        rightNow.add(Calendar.DATE, days);  
+        Date dt1 = rightNow.getTime();  
+        //String reStr = sdf.format(dt1);  
+        return dt1;  
+    }
+
+	
+	//生成供应商订单号码
+	private String getPurchaseOrderNo(ezs_orderform orderForm) {
+		String type = "00";
+		int folwnum = CommUtil.null2Int(purchaseOrderFormMapper.getFlowNum())+1;
+		if(CommUtil.order_child_company_good.equals(orderForm.getOrder_type())){
+			type = "07";
+		}
+		StringBuffer orderNo = new StringBuffer("EU");
+        orderNo.append(type);
+        orderNo.append(CommUtil.dateToString(new Date(), "YYMMdd"));
+        orderNo.append(CommUtil.getNumber(folwnum, "00000"));
+        return orderNo.toString();
+	}
+	
 	/**
 	 * 逐个添加订单function
 	 */
@@ -221,6 +319,8 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.info("生成实时交易记录");
 			//需判断是否为新料
 			savePriceTrend(goodsCar,good,user);
+			//添加货品订单
+			savePurchaseOrder(orderForm, goodsCar, good);
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
 			//订单类型：10.自营商品订单 20.撮合商品订单
 			//判断是否为自营：true-自营，false-非自营

@@ -90,7 +90,7 @@ public class HomeHangqIndexController {
  		try {
  			RedisResult<Result> redate = (RedisResult<Result>) RedisUtils.get(HANGQ_DATA+reqtype,
  					Result.class);
- 			if (redate.getCode() == RedisConstants.SUCCESS) {
+ 			/*if (redate.getCode() == RedisConstants.SUCCESS) {
 				log.debug("查询redis分类成功执行");
 				result=redate.getResult();
 			} else {
@@ -110,7 +110,27 @@ public class HomeHangqIndexController {
 					} else {
 						log.debug("行情分类保存到redis失败");
 					}
+			}*/
+ 			log.debug("查询redis分类执行失败");
+			map=hangqAreaService.getHangqParamDate(reqtype, map);
+			result.setSuccess(true);
+	 		result.setMsg("请求成功");
+	 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+	 		result.setObj(map);
+	 		
+	 		RedisUtils.get(HANGQ_DATA, Result.class);
+			RedisResult<String> rrt;
+			rrt = (RedisResult<String>) RedisUtils.set(HANGQ_DATA+reqtype, result,
+				Long.valueOf(3600*24));
+			if (rrt.getCode() == RedisConstants.SUCCESS) {
+				log.debug("行情分类保存到redis成功执行");
+			} else {
+				log.debug("行情分类保存到redis失败");
 			}
+ 			
+ 			
+ 			
+ 			
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);

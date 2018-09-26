@@ -17,6 +17,8 @@ public class ezs_purchase_orderform {
     private BigDecimal end_price;
 
     private Date end_time;
+    
+    private Date estimateTime;
 
     private Date finishtime;
 
@@ -55,10 +57,30 @@ public class ezs_purchase_orderform {
     private Long logistics_id;
 
     private Long user_id;
+    
+    private Long sellerUser_id;
+
+	private Integer backMoneyStatus;
+
+    private Double iAmount;
+
+    private Integer ifStore;
+
+    private Date deliverTime;
 
     private String msg;
     
-    public Long getId() {
+    private Long buyUser_id;
+    
+    public Long getBuyUser_id() {
+		return buyUser_id;
+	}
+
+	public void setBuyUser_id(Long buyUser_id) {
+		this.buyUser_id = buyUser_id;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -266,6 +288,54 @@ public class ezs_purchase_orderform {
         this.user_id = user_id;
     }
 
+    public Date getEstimateTime() {
+		return estimateTime;
+	}
+
+	public void setEstimateTime(Date estimateTime) {
+		this.estimateTime = estimateTime;
+	}
+
+	public Long getSellerUser_id() {
+		return sellerUser_id;
+	}
+
+	public void setSellerUser_id(Long sellerUser_id) {
+		this.sellerUser_id = sellerUser_id;
+	}
+
+	public Integer getBackMoneyStatus() {
+		return backMoneyStatus;
+	}
+
+	public void setBackMoneyStatus(Integer backMoneyStatus) {
+		this.backMoneyStatus = backMoneyStatus;
+	}
+
+	public Double getiAmount() {
+		return iAmount;
+	}
+
+	public void setiAmount(Double iAmount) {
+		this.iAmount = iAmount;
+	}
+
+	public Integer getIfStore() {
+		return ifStore;
+	}
+
+	public void setIfStore(Integer ifStore) {
+		this.ifStore = ifStore;
+	}
+
+	public Date getDeliverTime() {
+		return deliverTime;
+	}
+
+	public void setDeliverTime(Date deliverTime) {
+		this.deliverTime = deliverTime;
+	}
+    
     public String getMsg() {
         return msg;
     }

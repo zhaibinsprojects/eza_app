@@ -15,6 +15,7 @@ public interface ChildCompanyGoodsService {
 	 * @param goodId
 	 * @param count
 	 * @return
+	 * @throws Exception 
 	 */
 	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long WeAddressId,ezs_goods good,Double count);
 

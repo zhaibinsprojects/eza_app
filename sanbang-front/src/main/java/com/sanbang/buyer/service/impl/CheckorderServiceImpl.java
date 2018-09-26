@@ -568,12 +568,12 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			
 		}
 		
-		if (null == orderinfo) {
+		/*if (null == orderinfo) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("订单不存在");
 			return result;
-		}
+		}*/
 		
 		ezs_check_order_main checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(orderno);
 		if (checkorder == null) {
@@ -611,7 +611,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			ezs_check_order_mainMapper.updateByPrimaryKeySelective(checkorder);
 		}
 		
-		ezs_orderform ezs_orderform=new ezs_orderform();
+		/*ezs_orderform ezs_orderform=new ezs_orderform();
 		ezs_orderform.setId(ezs_orderform.getId());
 		
 		ezs_purchase_orderform  ezs_purchase_orderform=new ezs_purchase_orderform();
@@ -625,7 +625,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			ezs_orderform.setOrder_status(210);
 		}else {
 			ezs_orderform.setOrder_status(210);
-		}
+		}*/
 		
 		ezs_orderformMapper.updateByPrimaryKey(ezs_orderform);
 		

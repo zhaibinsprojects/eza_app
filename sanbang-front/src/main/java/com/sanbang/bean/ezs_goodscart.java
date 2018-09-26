@@ -30,8 +30,17 @@ public class ezs_goodscart {
     private BigDecimal aprice;//销售额
     private int updatecount;//更新次数
     
+    private Long pof_id;// 采购订单
 
-    public String getAtime() {
+	public Long getPof_id() {
+		return pof_id;
+	}
+
+	public void setPof_id(Long pof_id) {
+		this.pof_id = pof_id;
+	}
+
+	public String getAtime() {
 		return atime;
 	}
 

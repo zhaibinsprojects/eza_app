@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_purchase_orderformMapper" >
-  <resultMap id="BaseResultMap" type="ezs_purchase_orderform" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_purchase_orderform" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
@@ -9,6 +9,7 @@
     <result column="cart_session_id" property="cart_session_id" jdbcType="VARCHAR" />
     <result column="end_price" property="end_price" jdbcType="DECIMAL" />
     <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+    <result column="estimateTime" property="estimateTime" jdbcType="TIMESTAMP" />
     <result column="finishtime" property="finishtime" jdbcType="TIMESTAMP" />
     <result column="firest_time" property="firest_time" jdbcType="TIMESTAMP" />
     <result column="first_price" property="first_price" jdbcType="DECIMAL" />
@@ -25,9 +26,14 @@
     <result column="address_id" property="address_id" jdbcType="BIGINT" />
     <result column="bill_id" property="bill_id" jdbcType="BIGINT" />
     <result column="buyBiil_id" property="buyBiil_id" jdbcType="BIGINT" />
+    <result column="buyUser_id" property="buyUser_id" jdbcType="BIGINT" />
     <result column="invoice_id" property="invoice_id" jdbcType="BIGINT" />
     <result column="logistics_id" property="logistics_id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="sellerUser_id" property="sellerUser_id" jdbcType="BIGINT" />
+    <result column="backMoneyStatus" property="backMoneyStatus" jdbcType="INTEGER" />
+    <result column="iAmount" property="iAmount" jdbcType="DOUBLE" />
+    <result column="ifStore" property="ifStore" jdbcType="INTEGER" />
+    <result column="deliverTime" property="deliverTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="ezs_purchase_orderform" extends="BaseResultMap" >
     <result column="msg" property="msg" jdbcType="LONGVARCHAR" />
@@ -53,29 +59,33 @@
     delete from ezs_purchase_orderform
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_purchase_orderform" >
+  <insert id="insert" parameterType="ezs_purchase_orderform" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_purchase_orderform (id, addTime, deleteStatus, 
       all_price, cart_session_id, end_price, 
-      end_time, finishtime, firest_time, 
-      first_price, goodsId, goods_amount, 
-      order_no, order_status, order_type, 
-      pact_no, pact_status, pay_mode, 
-      sc_status, total_price, address_id, 
-      bill_id, buyBiil_id, invoice_id, 
-      logistics_id, user_id, msg
+      end_time, estimateTime, finishtime, 
+      firest_time, first_price, goodsId, 
+      goods_amount, order_no, order_status, 
+      order_type, pact_no, pact_status, 
+      pay_mode, sc_status, total_price, 
+      address_id, bill_id, buyBiil_id, 
+      buyUser_id, invoice_id, logistics_id, 
+      sellerUser_id, backMoneyStatus, iAmount, 
+      ifStore, deliverTime, msg
       )
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
       #{all_price,jdbcType=DECIMAL}, #{cart_session_id,jdbcType=VARCHAR}, #{end_price,jdbcType=DECIMAL}, 
-      #{end_time,jdbcType=TIMESTAMP}, #{finishtime,jdbcType=TIMESTAMP}, #{firest_time,jdbcType=TIMESTAMP}, 
-      #{first_price,jdbcType=DECIMAL}, #{goodsId,jdbcType=BIGINT}, #{goods_amount,jdbcType=DECIMAL}, 
-      #{order_no,jdbcType=VARCHAR}, #{order_status,jdbcType=INTEGER}, #{order_type,jdbcType=VARCHAR}, 
-      #{pact_no,jdbcType=VARCHAR}, #{pact_status,jdbcType=INTEGER}, #{pay_mode,jdbcType=INTEGER}, 
-      #{sc_status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, #{address_id,jdbcType=BIGINT}, 
-      #{bill_id,jdbcType=BIGINT}, #{buyBiil_id,jdbcType=BIGINT}, #{invoice_id,jdbcType=BIGINT}, 
-      #{logistics_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, #{msg,jdbcType=LONGVARCHAR}
+      #{end_time,jdbcType=TIMESTAMP}, #{estimateTime,jdbcType=TIMESTAMP}, #{finishtime,jdbcType=TIMESTAMP}, 
+      #{firest_time,jdbcType=TIMESTAMP}, #{first_price,jdbcType=DECIMAL}, #{goodsId,jdbcType=BIGINT}, 
+      #{goods_amount,jdbcType=DECIMAL}, #{order_no,jdbcType=VARCHAR}, #{order_status,jdbcType=INTEGER}, 
+      #{order_type,jdbcType=VARCHAR}, #{pact_no,jdbcType=VARCHAR}, #{pact_status,jdbcType=INTEGER}, 
+      #{pay_mode,jdbcType=INTEGER}, #{sc_status,jdbcType=INTEGER}, #{total_price,jdbcType=DECIMAL}, 
+      #{address_id,jdbcType=BIGINT}, #{bill_id,jdbcType=BIGINT}, #{buyBiil_id,jdbcType=BIGINT}, 
+      #{buyUser_id,jdbcType=BIGINT}, #{invoice_id,jdbcType=BIGINT}, #{logistics_id,jdbcType=BIGINT}, 
+      #{sellerUser_id,jdbcType=BIGINT}, #{backMoneyStatus,jdbcType=INTEGER}, #{iAmount,jdbcType=DOUBLE}, 
+      #{ifStore,jdbcType=INTEGER}, #{deliverTime,jdbcType=TIMESTAMP}, #{msg,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_purchase_orderform" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_purchase_orderform" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_purchase_orderform
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -98,6 +108,9 @@
       </if>
       <if test="end_time != null" >
         end_time,
+      </if>
+      <if test="estimateTime != null" >
+        estimateTime,
       </if>
       <if test="finishtime != null" >
         finishtime,
@@ -147,14 +160,29 @@
       <if test="buyBiil_id != null" >
         buyBiil_id,
       </if>
+      <if test="buyUser_id != null" >
+        buyUser_id,
+      </if>
       <if test="invoice_id != null" >
         invoice_id,
       </if>
       <if test="logistics_id != null" >
         logistics_id,
       </if>
-      <if test="user_id != null" >
-        user_id,
+      <if test="sellerUser_id != null" >
+        sellerUser_id,
+      </if>
+      <if test="backMoneyStatus != null" >
+        backMoneyStatus,
+      </if>
+      <if test="iAmount != null" >
+        iAmount,
+      </if>
+      <if test="ifStore != null" >
+        ifStore,
+      </if>
+      <if test="deliverTime != null" >
+        deliverTime,
       </if>
       <if test="msg != null" >
         msg,
@@ -181,6 +209,9 @@
       </if>
       <if test="end_time != null" >
         #{end_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="estimateTime != null" >
+        #{estimateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="finishtime != null" >
         #{finishtime,jdbcType=TIMESTAMP},
@@ -230,14 +261,29 @@
       <if test="buyBiil_id != null" >
         #{buyBiil_id,jdbcType=BIGINT},
       </if>
+      <if test="buyUser_id != null" >
+        #{buyUser_id,jdbcType=BIGINT},
+      </if>
       <if test="invoice_id != null" >
         #{invoice_id,jdbcType=BIGINT},
       </if>
       <if test="logistics_id != null" >
         #{logistics_id,jdbcType=BIGINT},
       </if>
-      <if test="user_id != null" >
-        #{user_id,jdbcType=BIGINT},
+      <if test="sellerUser_id != null" >
+        #{sellerUser_id,jdbcType=BIGINT},
+      </if>
+      <if test="backMoneyStatus != null" >
+        #{backMoneyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="iAmount != null" >
+        #{iAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="ifStore != null" >
+        #{ifStore,jdbcType=INTEGER},
+      </if>
+      <if test="deliverTime != null" >
+        #{deliverTime,jdbcType=TIMESTAMP},
       </if>
       <if test="msg != null" >
         #{msg,jdbcType=LONGVARCHAR},
@@ -582,6 +628,10 @@
 	    <include refid="Blob_Column_List" />
 	    from ezs_purchase_orderform
 	    where order_no = #{order_no}
+	</select>
+	
+	<select id="getFlowNum" resultType="java.lang.Integer">
+		select count(id) as num from ezs_purchase_orderform where to_days(addTime) = to_days(now())
 	</select>	
 	
 </mapper>

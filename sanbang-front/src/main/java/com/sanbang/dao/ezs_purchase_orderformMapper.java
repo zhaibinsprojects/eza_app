@@ -35,4 +35,6 @@ public interface ezs_purchase_orderformMapper {
 	ezs_order_info getOrderListByOrderno(String order_no);
 
 	ezs_purchase_orderform selectByOrderNo(String order_no);
+	
+	int getFlowNum();
 }
