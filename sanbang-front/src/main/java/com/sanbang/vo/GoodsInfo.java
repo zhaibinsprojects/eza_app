@@ -23,7 +23,15 @@ public class GoodsInfo extends ezs_goods{
     private ezs_dict util;// 单位
     private ezs_area area;// 商品库存区县
     
+    private Long salecount;//商品销量
+    
 	
+	public Long getSalecount() {
+		return salecount;
+	}
+	public void setSalecount(Long salecount) {
+		this.salecount = salecount;
+	}
 	public ezs_dict getUtil() {
 		return util;
 	}

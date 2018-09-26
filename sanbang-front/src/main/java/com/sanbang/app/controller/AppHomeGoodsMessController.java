@@ -26,7 +26,6 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.index.service.CustomerService;
@@ -618,7 +617,7 @@ public class AppHomeGoodsMessController {
 			advice03.setLink("");
 			advice03.setpName("title001.jpg");
 			
-			//adviceList.add(advice01);
+			adviceList.add(advice01);
 			adviceList.add(advice02);
 			adviceList.add(advice03);
 			

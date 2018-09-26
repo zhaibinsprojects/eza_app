@@ -346,6 +346,7 @@ public class GoodsController {
 			@RequestParam(name = "typeId",required=false)String typeId,
 			@RequestParam(name = "defaultId",required=false)String defaultId,	//默认值
 			@RequestParam(name = "inventory",required=false)String inventory,	//库存量
+			@RequestParam(name = "sales", required = false) String sales,//销量    sales=1    按销量排序-（默认、库存、销量 此三种排序方式互斥）
 			@RequestParam(name = "colorId",required=false)String colorId,
 			@RequestParam(name = "formId",required=false)String formId,
 			@RequestParam(name = "source",required=false)String source,
@@ -364,6 +365,7 @@ public class GoodsController {
 			@RequestParam(name = "burning",required=false)String burning,	//燃烧等级
 			@RequestParam(name = "goodsName",required=false)String goodsName,
 			@RequestParam(name = "pageNow", defaultValue = "1") int pageNow){
+		log.info("GoodsController---商品列表查询--接口可能调用错了XXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		Result result = Result.failure();
 		try{
 		List<Long> areaList = new ArrayList<Long>();
@@ -446,7 +448,7 @@ public class GoodsController {
 		int pageStart = (pageNow - 1) * 10;	//起始页，每页10条
 		
 			List<GoodsInfo> list = new ArrayList<GoodsInfo>();
-			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
+			list = goodsService.queryGoodsList(areaList,typeIds,defaultId,inventory,sales,colorIds,formIds,source,purpose,prices,densitys,cantilevers,freelys,
 					lipolysises,ashs,waters,tensiles,cracks,bendings,flexurals,burnings,goodsName,pageStart);
 			if(null != list && list.size() > 0){
 				result.setSuccess(true);

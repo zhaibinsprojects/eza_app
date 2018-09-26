@@ -149,7 +149,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 * 多条件查询
 	 */
 	@SuppressWarnings("unlikely-arg-type")
-	public List<GoodsInfo> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String[] colorIds,
+	public List<GoodsInfo> queryGoodsList(List<Long> areaList,String[] typeIds,String defaultId,String inventory,String sales,String[] colorIds,
 			String[] formIds,String source,String purpose,String[] prices,String[] densitys,String[] cantilevers,String[] freelys,
 			String[] lipolysises,String[] ashs,String[] waters,String[] tensiles,String[] cracks,String[] bendings,String[] flexurals,
 			String[] burnings,String goodsName,int pageStart){
@@ -306,6 +306,9 @@ public class GoodsServiceImpl implements GoodsService{
 		}
 		if(null != inventory && !"".equals(inventory)){
 			map.put("inventory", inventory);	//库存量
+		}
+		if(null != sales && !"".equals(sales)){
+			map.put("sales", sales);	//销量
 		}
 		map.put("colorList", colorList);
 		map.put("formList", formList);

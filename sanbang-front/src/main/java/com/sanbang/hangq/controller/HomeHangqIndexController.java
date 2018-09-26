@@ -908,4 +908,5 @@ public class HomeHangqIndexController {
 		}
 		return areaName;
 	}
+	
 }
