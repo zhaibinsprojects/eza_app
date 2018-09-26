@@ -47,4 +47,11 @@ public interface ezs_goodscartMapper {
     List<GoodsCarInfo> selectByGoodCarIds(String[] ids);
     //根据id查询未下单的购物车记录
     ezs_goodscart queryNoCommitOrder(Long id);
+    
+    /**
+     * 查询购物车id
+     * @return
+     */
+    ezs_goodscart  selectGoodsCartByOfidOrPofid(@Param("of_id")long of_id,@Param("pofid")long pofid);
+    
 }

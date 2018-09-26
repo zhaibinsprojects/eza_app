@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.bean.ezs_userinfo;
 import com.sanbang.redis.RedisConstants;
 import com.sanbang.redis.RedisResult;
 
@@ -226,6 +225,6 @@ public class RedisUserSession {
 		}
 		log.debug("获取用户信息,未找到cookie");
 		return null;
-	}
+	} 
 
 }

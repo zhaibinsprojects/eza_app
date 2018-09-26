@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sanbang.dao.ezs_checkm_photoMapper" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_checkm_photo" >
+    <id column="ckmid" property="ckmid" jdbcType="BIGINT" />
+    <result column="acid" property="acid" jdbcType="BIGINT" />
+     <!--图片记录-->
+   <association property="accessory" column="{id=acid}" select="com.sanbang.dao.ezs_accessoryMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ckmid, acid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from ezs_checkm_photo
+    where ckmid = #{ckmid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ezs_checkm_photo
+    where ckmid = #{ckmid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_checkm_photo" >
+    insert into ezs_checkm_photo (ckmid, acid)
+    values (#{ckmid,jdbcType=BIGINT}, #{acid,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_checkm_photo" >
+    insert into ezs_checkm_photo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ckmid != null" >
+        ckmid,
+      </if>
+      <if test="acid != null" >
+        acid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ckmid != null" >
+        #{ckmid,jdbcType=BIGINT},
+      </if>
+      <if test="acid != null" >
+        #{acid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_checkm_photo" >
+    update ezs_checkm_photo
+    <set >
+      <if test="acid != null" >
+        acid = #{acid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where ckmid = #{ckmid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_checkm_photo" >
+    update ezs_checkm_photo
+    set acid = #{acid,jdbcType=BIGINT}
+    where ckmid = #{ckmid,jdbcType=BIGINT}
+  </update>
+</mapper>

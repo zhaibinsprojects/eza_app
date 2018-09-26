@@ -49,7 +49,7 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 		try {
 			redate.put("area", getProvices(reqtype));
 			redate.put("cata", getDingYueCata());
-			redate.put("cata1", getIndexCata(reqtype));
+			redate.put("cata1", getIndexCata(reqtype));//首页分类
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,7 +122,7 @@ public class HangqAreaServiceImpl implements HangqAreaService {
 	public List<Map<String, Object>> getIndexCata(String reqtype) {
 		List<Map<String, Object>> calist = cataToJson();
 		Map<String, Object> listone = (Map<String, Object>) calist.get(0);
-		Map<String, Object> listtwo = (Map<String, Object>) calist.get(2);
+		Map<String, Object> listtwo = (Map<String, Object>) calist.get(1);
 		List<Map<String, Object>> children = new ArrayList<>();
 		// 再生报价
 		if (reqtype.equals("zsbj")) {

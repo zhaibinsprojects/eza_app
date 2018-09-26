@@ -602,11 +602,26 @@ public class AppHomeGoodsMessController {
 		List<Advices> adviceList = new ArrayList<Advices>();
 		try {
 			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
-			Advices advice = new Advices();
-			advice.setPath("https://m.ezaisheng.com/front/resource/indeximg/title001.jpg");
-			advice.setLink("");
-			advice.setpName("title001.jpg");
-			adviceList.add(advice);
+			
+			Advices advice01 = new Advices();
+			advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921001.png");
+			advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1143");
+			advice01.setpName("banner20180921001.png");
+			
+			Advices advice02 = new Advices();
+			advice02.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921002.png");
+			advice02.setLink("https://m.ezaisheng.com/front/hangqtg001.html");
+			advice02.setpName("banner20180921002.png");
+			
+			Advices advice03 = new Advices();
+			advice03.setPath("https://m.ezaisheng.com/front/resource/indeximg/title001.jpg");
+			advice03.setLink("");
+			advice03.setpName("title001.jpg");
+			
+			//adviceList.add(advice01);
+			adviceList.add(advice02);
+			adviceList.add(advice03);
+			
 			if(adviceList.size()>0){
 				rs = Result.success();
 				rs.setObj(adviceList);

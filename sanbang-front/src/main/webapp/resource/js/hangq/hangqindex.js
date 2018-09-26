@@ -40,7 +40,7 @@ function androidtophone() {
 	
 	$(".fottersty").click(function() {
 		var data = {
-			"telnum" : "400-6666-890"
+			"telnum" : "010-60594741"
 		}
 		var str = JSON.stringify(data);
 		window.android.androidtophone(str);
@@ -88,7 +88,7 @@ function androidloadpdf() {
 function iostophone() {
 	$(".fottersty").click(function() {
 		var data = {
-				"telnum" : "400-6666-890"
+				"telnum" : "010-60594741"
 			}
 			var str = JSON.stringify(data);
 			WebViewJavascriptBridge.callHandler('iostophone', str, function() {

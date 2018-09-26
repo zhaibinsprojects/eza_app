@@ -583,10 +583,10 @@ public class HomeH5PriceConditionController {
 			Model model){
 		ezs_ezssubstance	show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
 		ezs_column column=columnMapper.selectByPrimaryKey(show.getEc_id());
-		ezs_ezssubstance	boytton=ezs_ezssubstanceMapper.getButtomOneSubstanceByid(id, column.getParentEzsColumn_id());
-		ezs_ezssubstance	top=ezs_ezssubstanceMapper.getTopOneSubstanceByid(id, column.getParentEzsColumn_id());
-		model.addAttribute("top", top);
-		model.addAttribute("button", boytton);
+		//ezs_ezssubstance	boytton=ezs_ezssubstanceMapper.getButtomOneSubstanceByid(id, column.getParentEzsColumn_id());
+		//ezs_ezssubstance	top=ezs_ezssubstanceMapper.getTopOneSubstanceByid(id, column.getParentEzsColumn_id());
+//		model.addAttribute("top", top);
+//		model.addAttribute("button", boytton);
 		model.addAttribute("show", show);
 		model.addAttribute("title", column.getName());
 		

@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>易再生</title>
+<script type="text/javascript" src="resource/script/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+
+	<div id="container" class="container" style="height: 100%"></div>
+	<div class="toptab">
+		<form method="post"
+			action="http://10.10.10.48/front/app/checkOrder/addOrUpdateCheckOrder.htm" class="form1">
+			orderno<input type="text" name="orderno" value="EM0118081500001" />
+			issave<input type="text" name="issave" class="issave" value="0" />
+			token<input type="text" name="token"
+				value="app18500409847YZeXYN8d0HGoHSOO4gBWLcYEr8Hid9Jf" /> username<input
+				type="text" name="username" value="username" /> linkphone<input
+				type="text" name="linkphone" value="linkphone" /> usermemo<input
+				type="text" name="usermemo" value="usermemo" /> urlParam<input
+				type="text" name="urlParam"
+				value="RECIMG,http://10.10.10.148/upload/201807/03//00-50-32-35-99651.jpg;RECIMG,http://10.10.10.148/upload/201807/03//00-50-32-35-99651.jpg" />
+			items<input type="text" name="items" class="itemsid" value="{}" /> <input
+				type="button" name="temId" value="保存" class="sav" /> <input
+				type="button" name="temIds" value="提交" class="sub" />
+
+		</form>
+	</div>
+	<script>
+			$(document).ready(function(){
+			$("input[name='temId']").click(function(){
+			
+			var items=new Array();
+			var ezs_check_order_items={
+				"item_name" :  "商品名称",
+				"id" : "0",
+				"item_count" : "0",
+				"item_price" : "0",
+				"deliveryDate" : "2017-1-1",
+				"detail" : "明细"
+			};	
+			var ezs_check_order_items1={
+					"item_name" :  "吨袋扣款",
+					"id" : "0",
+					"item_count" : "0",
+					"item_price" : "0",
+					"deliveryDate" : "2017-1-1"
+						,
+						"detail" : "明细"
+					};	
+			var ezs_check_order_items3={
+					"item_name" :  "吨袋扣重",
+					"id" : "0",
+					"item_count" : "0",
+					"item_price" : "0",
+					"deliveryDate" : "2017-1-1",
+					"detail" : "明细"
+					};	
+			
+			var ezs_check_order_items4={
+					"item_name" :  "其他费用",
+					"id" : "0",
+					"item_count" : "0",
+					"item_price" : "0",
+					"deliveryDate" : "2017-1-1",
+					"detail" : "明细"
+					};	
+			
+			items.push(ezs_check_order_items);
+			items.push(ezs_check_order_items1);
+			items.push(ezs_check_order_items3);
+			items.push(ezs_check_order_items4);
+			var  da=JSON.stringify(items);
+			$(".itemsid").val(da);
+			$(".issave").val(0);
+			$(".form1").submit();
+			
+			});
+			
+			
+			$("input[name='temIds']").click(function(){
+			
+			var items=new Array();
+			var ezs_check_order_items={
+				"item_name" :  "商品名称",
+				"id" : "0",
+				"item_count" : "0",
+				"item_price" : "0",
+				"deliveryDate" : "2017-1-1",
+				"detail" : "明细"
+			};	
+			var ezs_check_order_items1={
+					"item_name" :  "吨袋扣款",
+					"id" : "0",
+					"item_count" : "0",
+					"item_price" : "0",
+					"deliveryDate" : "2017-1-1",
+					"detail" : "明细"
+					};
+			
+			var ezs_check_order_items3={
+					"item_name" :  "吨袋扣重",
+					"id" : "0",
+					"item_count" : "0",
+					"item_price" : "0",
+					"deliveryDate" : "2017-1-1",
+					"detail" : "明细"
+					};	
+			
+			var ezs_check_order_items4={
+					"item_name" :  "其他费用",
+					"id" : "0",
+					"item_count" : "0",
+					"item_price" : "0",
+					"deliveryDate" : "2017-1-1",
+					"detail" : "明细"
+					};	
+			
+			items.push(ezs_check_order_items);
+			items.push(ezs_check_order_items1);
+			items.push(ezs_check_order_items3);
+			items.push(ezs_check_order_items4);
+			var  da=JSON.stringify(items);
+			$(".itemsid").val(da);
+			$(".issave").val(1);
+			$(".form1").submit();
+			
+			
+			})
+			
+			});
+			
+			</script>
+
+</body>
+
+</html>

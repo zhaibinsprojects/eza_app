@@ -28,8 +28,12 @@ public class ezs_orderform {
 
     private String order_no;
 
+    // 订单状态10.待确认 20.平台待签约  30.待付款 （买家待签约？）40.首款待支付 50.首款待确认 60.待发货 70.已发货,75."运输完成", 80.尾款待支付
+    // 90.尾款待确认  93."待开票", 95.已开票,100.退货中 ,110.已完成 ,120.已退货, 130.已取消  201.待支付(供应商是子公司，订单提交成功)
+    // 205.待退款  210.供应商是子公司，待对账
     private Integer order_status;
 
+    // 订单类型  ORDER_SELF_GOOD.自营商品订单  ORDER_MATCH_GOOD.撮合商品订单  ORDER_CHILDCOMPANY_GOOD.子公司商品订单
     private String order_type;
 
     private Integer pact_status;

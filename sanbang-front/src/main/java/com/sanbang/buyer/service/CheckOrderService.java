@@ -1,11 +1,8 @@
 package com.sanbang.buyer.service;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
-import com.sanbang.bean.ezs_check_order_items;
-import com.sanbang.bean.ezs_check_order_main;
+import com.sanbang.bean.ezs_user;
 import com.sanbang.utils.Result;
 
 public interface CheckOrderService {
@@ -17,7 +14,7 @@ public interface CheckOrderService {
 	 * @param orderNo
 	 * @return
 	 */
-	public Result getCheckOrderH(HttpServletRequest request,Result result,String orderno);
+	public Result getCheckOrderH(HttpServletRequest request, Result result,ezs_user upi, String orderNo) throws Exception;
 	
 	/***
 	 * 
@@ -27,6 +24,30 @@ public interface CheckOrderService {
 	 * @param items
 	 * @return
 	 */
-	public Result addOrUpdateCheckOrder(HttpServletRequest request,Result result,String orderno,List<ezs_check_order_items> items,ezs_check_order_main main);
+	public Result addOrUpdateCheckOrder(HttpServletRequest request,ezs_user upi,Result result) throws Exception;
+	
+	
+	/***
+	 * 
+	 * @param request
+	 * @param result
+	 * @param orderno
+	 * @param items
+	 * @return
+	 */
+	public Result getCheckOrderInit(HttpServletRequest request,ezs_user upi,Result result) throws Exception;
+	
+	
+	
+	 /**
+	  * 上传订单支付凭证
+	  * @param request
+	  * @param order_no
+	  * @return
+	  */
+	 public Result  orderpaysubmitForNow(HttpServletRequest request,String order_no,String urlParam,ezs_user upi)  throws Exception;
+	
+	
+	
 	
 }
