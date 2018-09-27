@@ -19,6 +19,8 @@ import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
+import com.sanbang.buyer.service.CheckOrderService;
+import com.sanbang.dao.ezs_orderformMapper;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
@@ -37,6 +39,10 @@ public class BuyerMenu {
 	private SellerReceiptService sellerReceiptService;
 	@Autowired
 	private CommonOrderAdvice commonOrderAdvice;
+	@Autowired
+	private ezs_orderformMapper ezs_orderformMapper;
+	@Autowired
+	private CheckOrderService checkOrderService;
 	
     Logger log=Logger.getLogger(BuyerMenu.class);  
 
@@ -293,11 +299,20 @@ public class BuyerMenu {
 			return result;
 		}
 		try {
-			result = buyerService.orderpaysubmit(request, order_no, urlParam,upi);
-			//wemall回调
-			if(result.getSuccess()){
-				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			
+			//新订单流程
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
+			if(orderinfo!=null&&"".equals(orderinfo.getOrder_type())) {
+				result=checkOrderService.orderpaysubmitForNow(request, order_no, urlParam, upi);
+				return result;
 			}
+			
+			//旧订单流程
+			result = buyerService.orderpaysubmit(request, order_no, urlParam,upi);
+				//wemall回调
+				if(result.getSuccess()){
+					commonOrderAdvice.returnOrderAdvice(order_no, "");
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

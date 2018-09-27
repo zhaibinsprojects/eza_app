@@ -26,7 +26,7 @@
     id, addTime, deleteStatus, lastLoginDate, lastLoginIp, loginCount, loginDate, loginIp, 
     name, password, trueName, userRole, parent_id, store_id, userInfo_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="userinfomap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from ezs_user

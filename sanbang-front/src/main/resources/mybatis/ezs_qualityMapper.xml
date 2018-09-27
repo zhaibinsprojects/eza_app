@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sanbang.dao.ezs_qualityMapper" >
-  <resultMap id="BaseResultMap" type="ezs_quality" >
+  <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_quality" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
     <result column="deleteStatus" property="deleteStatus" jdbcType="BIT" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="quality_no" property="quality_no" jdbcType="VARCHAR" />
-    <result column="report" property="report" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="arrivalDate" property="arrivalDate" jdbcType="TIMESTAMP" />
+    <result column="bUser" property="bUser" jdbcType="VARCHAR" />
+    <result column="bnumber" property="bnumber" jdbcType="VARCHAR" />
+    <result column="cchkconclusion" property="cchkconclusion" jdbcType="VARCHAR" />
+    <result column="cdefine9" property="cdefine9" jdbcType="VARCHAR" />
+    <result column="cprojectname" property="cprojectname" jdbcType="VARCHAR" />
+    <result column="dverifytime" property="dverifytime" jdbcType="TIMESTAMP" />
+    <result column="fdisbreakquantity" property="fdisbreakquantity" jdbcType="VARCHAR" />
+    <result column="fdisubreakquantity" property="fdisubreakquantity" jdbcType="VARCHAR" />
+    <result column="fdtquantity" property="fdtquantity" jdbcType="VARCHAR" />
+    <result column="fdtrate" property="fdtrate" jdbcType="VARCHAR" />
+    <result column="fquantity" property="fquantity" jdbcType="VARCHAR" />
+    <result column="ibatchchkresult" property="ibatchchkresult" jdbcType="VARCHAR" />
+    <result column="qUser" property="qUser" jdbcType="VARCHAR" />
+    <result column="rnumber" property="rnumber" jdbcType="VARCHAR" />
+    <collection property="items" column="id" select="com.sanbang.dao.ezs_quality_detailMapper.getDetailsByQid">
+     </collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, content, quality_no, report, status
+    id, addTime, deleteStatus, arrivalDate, bUser, bnumber, cchkconclusion, cdefine9, 
+    cprojectname, dverifytime, fdisbreakquantity, fdisubreakquantity, fdtquantity, fdtrate, 
+    fquantity, ibatchchkresult, qUser, rnumber
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -23,15 +38,23 @@
     delete from ezs_quality
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_quality" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_quality" >
     insert into ezs_quality (id, addTime, deleteStatus, 
-      content, quality_no, report, 
-      status)
+      arrivalDate, bUser, bnumber, 
+      cchkconclusion, cdefine9, cprojectname, 
+      dverifytime, fdisbreakquantity, fdisubreakquantity, 
+      fdtquantity, fdtrate, fquantity, 
+      ibatchchkresult, qUser, rnumber
+      )
     values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=BIT}, 
-      #{content,jdbcType=VARCHAR}, #{quality_no,jdbcType=VARCHAR}, #{report,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER})
+      #{arrivalDate,jdbcType=TIMESTAMP}, #{bUser,jdbcType=VARCHAR}, #{bnumber,jdbcType=VARCHAR}, 
+      #{cchkconclusion,jdbcType=VARCHAR}, #{cdefine9,jdbcType=VARCHAR}, #{cprojectname,jdbcType=VARCHAR}, 
+      #{dverifytime,jdbcType=TIMESTAMP}, #{fdisbreakquantity,jdbcType=VARCHAR}, #{fdisubreakquantity,jdbcType=VARCHAR}, 
+      #{fdtquantity,jdbcType=VARCHAR}, #{fdtrate,jdbcType=VARCHAR}, #{fquantity,jdbcType=VARCHAR}, 
+      #{ibatchchkresult,jdbcType=VARCHAR}, #{qUser,jdbcType=VARCHAR}, #{rnumber,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_quality" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_quality" >
     insert into ezs_quality
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -43,17 +66,50 @@
       <if test="deleteStatus != null" >
         deleteStatus,
       </if>
-      <if test="content != null" >
-        content,
+      <if test="arrivalDate != null" >
+        arrivalDate,
       </if>
-      <if test="quality_no != null" >
-        quality_no,
+      <if test="bUser != null" >
+        bUser,
       </if>
-      <if test="report != null" >
-        report,
+      <if test="bnumber != null" >
+        bnumber,
       </if>
-      <if test="status != null" >
-        status,
+      <if test="cchkconclusion != null" >
+        cchkconclusion,
+      </if>
+      <if test="cdefine9 != null" >
+        cdefine9,
+      </if>
+      <if test="cprojectname != null" >
+        cprojectname,
+      </if>
+      <if test="dverifytime != null" >
+        dverifytime,
+      </if>
+      <if test="fdisbreakquantity != null" >
+        fdisbreakquantity,
+      </if>
+      <if test="fdisubreakquantity != null" >
+        fdisubreakquantity,
+      </if>
+      <if test="fdtquantity != null" >
+        fdtquantity,
+      </if>
+      <if test="fdtrate != null" >
+        fdtrate,
+      </if>
+      <if test="fquantity != null" >
+        fquantity,
+      </if>
+      <if test="ibatchchkresult != null" >
+        ibatchchkresult,
+      </if>
+      <if test="qUser != null" >
+        qUser,
+      </if>
+      <if test="rnumber != null" >
+        rnumber,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -66,21 +122,54 @@
       <if test="deleteStatus != null" >
         #{deleteStatus,jdbcType=BIT},
       </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
+      <if test="arrivalDate != null" >
+        #{arrivalDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="quality_no != null" >
-        #{quality_no,jdbcType=VARCHAR},
+      <if test="bUser != null" >
+        #{bUser,jdbcType=VARCHAR},
       </if>
-      <if test="report != null" >
-        #{report,jdbcType=VARCHAR},
+      <if test="bnumber != null" >
+        #{bnumber,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+      <if test="cchkconclusion != null" >
+        #{cchkconclusion,jdbcType=VARCHAR},
+      </if>
+      <if test="cdefine9 != null" >
+        #{cdefine9,jdbcType=VARCHAR},
+      </if>
+      <if test="cprojectname != null" >
+        #{cprojectname,jdbcType=VARCHAR},
+      </if>
+      <if test="dverifytime != null" >
+        #{dverifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdisbreakquantity != null" >
+        #{fdisbreakquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="fdisubreakquantity != null" >
+        #{fdisubreakquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="fdtquantity != null" >
+        #{fdtquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="fdtrate != null" >
+        #{fdtrate,jdbcType=VARCHAR},
+      </if>
+      <if test="fquantity != null" >
+        #{fquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="ibatchchkresult != null" >
+        #{ibatchchkresult,jdbcType=VARCHAR},
+      </if>
+      <if test="qUser != null" >
+        #{qUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rnumber != null" >
+        #{rnumber,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="ezs_quality" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sanbang.bean.ezs_quality" >
     update ezs_quality
     <set >
       <if test="addTime != null" >
@@ -89,29 +178,73 @@
       <if test="deleteStatus != null" >
         deleteStatus = #{deleteStatus,jdbcType=BIT},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
+      <if test="arrivalDate != null" >
+        arrivalDate = #{arrivalDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="quality_no != null" >
-        quality_no = #{quality_no,jdbcType=VARCHAR},
+      <if test="bUser != null" >
+        bUser = #{bUser,jdbcType=VARCHAR},
       </if>
-      <if test="report != null" >
-        report = #{report,jdbcType=VARCHAR},
+      <if test="bnumber != null" >
+        bnumber = #{bnumber,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
+      <if test="cchkconclusion != null" >
+        cchkconclusion = #{cchkconclusion,jdbcType=VARCHAR},
+      </if>
+      <if test="cdefine9 != null" >
+        cdefine9 = #{cdefine9,jdbcType=VARCHAR},
+      </if>
+      <if test="cprojectname != null" >
+        cprojectname = #{cprojectname,jdbcType=VARCHAR},
+      </if>
+      <if test="dverifytime != null" >
+        dverifytime = #{dverifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdisbreakquantity != null" >
+        fdisbreakquantity = #{fdisbreakquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="fdisubreakquantity != null" >
+        fdisubreakquantity = #{fdisubreakquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="fdtquantity != null" >
+        fdtquantity = #{fdtquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="fdtrate != null" >
+        fdtrate = #{fdtrate,jdbcType=VARCHAR},
+      </if>
+      <if test="fquantity != null" >
+        fquantity = #{fquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="ibatchchkresult != null" >
+        ibatchchkresult = #{ibatchchkresult,jdbcType=VARCHAR},
+      </if>
+      <if test="qUser != null" >
+        qUser = #{qUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rnumber != null" >
+        rnumber = #{rnumber,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="ezs_quality" >
+  <update id="updateByPrimaryKey" parameterType="com.sanbang.bean.ezs_quality" >
     update ezs_quality
     set addTime = #{addTime,jdbcType=TIMESTAMP},
       deleteStatus = #{deleteStatus,jdbcType=BIT},
-      content = #{content,jdbcType=VARCHAR},
-      quality_no = #{quality_no,jdbcType=VARCHAR},
-      report = #{report,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER}
+      arrivalDate = #{arrivalDate,jdbcType=TIMESTAMP},
+      bUser = #{bUser,jdbcType=VARCHAR},
+      bnumber = #{bnumber,jdbcType=VARCHAR},
+      cchkconclusion = #{cchkconclusion,jdbcType=VARCHAR},
+      cdefine9 = #{cdefine9,jdbcType=VARCHAR},
+      cprojectname = #{cprojectname,jdbcType=VARCHAR},
+      dverifytime = #{dverifytime,jdbcType=TIMESTAMP},
+      fdisbreakquantity = #{fdisbreakquantity,jdbcType=VARCHAR},
+      fdisubreakquantity = #{fdisubreakquantity,jdbcType=VARCHAR},
+      fdtquantity = #{fdtquantity,jdbcType=VARCHAR},
+      fdtrate = #{fdtrate,jdbcType=VARCHAR},
+      fquantity = #{fquantity,jdbcType=VARCHAR},
+      ibatchchkresult = #{ibatchchkresult,jdbcType=VARCHAR},
+      qUser = #{qUser,jdbcType=VARCHAR},
+      rnumber = #{rnumber,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

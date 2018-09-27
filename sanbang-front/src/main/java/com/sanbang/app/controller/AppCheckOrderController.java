@@ -1,5 +1,10 @@
 package com.sanbang.app.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,6 +20,7 @@ import com.sanbang.buyer.service.CheckOrderService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
 import com.sanbang.vo.DictionaryCode;
+
 
 @Controller
 @RequestMapping("/app/checkOrder")
@@ -119,7 +125,7 @@ public class AppCheckOrderController {
 	
 	
 	/**
-	 * 查看合同
+	 * 合同预览
 	 * 
 	 * @param order_no
 	 * @param request
@@ -134,13 +140,8 @@ public class AppCheckOrderController {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
-			}
-			result = buyerService.showOrderContent(request, orderno,upi);
+			
+			result = checkOrderService.signContentProcess(result, orderno);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -165,13 +166,12 @@ public class AppCheckOrderController {
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-			if (upi == null) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-				result.setMsg("用户未登录");
-				return result;
+			
+			result = checkOrderService.signContentProcess(result, orderno);
+			if(result.getSuccess()) {
+				result = checkOrderService.signContentForAdd(result, orderno);
 			}
-			result = buyerService.seller_order_signature(orderno, request, response,upi);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -181,8 +181,6 @@ public class AppCheckOrderController {
 		}
 		return result;
 	}
-	
-	
 	
 	
 }

@@ -17,6 +17,7 @@ import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
+import com.sanbang.buyer.service.CheckOrderService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.service.SellerOrderService;
 import com.sanbang.utils.Page;
@@ -41,6 +42,9 @@ public class SellerOrderContorller {
 	
 	@Autowired
 	CommonOrderAdvice commonOrderAdvice;
+	
+	@Autowired
+	private CheckOrderService checkOrderService;
 
 	/**
 	 * 分页查询订单列表
@@ -305,5 +309,42 @@ public class SellerOrderContorller {
 		}
 		return result;
 	}
+	
+	
+	/**
+	 * 上传支付凭证
+	 * //PAYIMG
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderpaysubmit")
+	@ResponseBody
+	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			@RequestParam(name = "urlparam", defaultValue = "-1") String urlParam,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try {
+			result=checkOrderService.orderpaysubmitForNow(request, order_no, urlParam, upi);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("上传支付凭证失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
+	
+	
 	
 }

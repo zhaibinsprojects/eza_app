@@ -47,7 +47,20 @@ public interface CheckOrderService {
 	  */
 	 public Result  orderpaysubmitForNow(HttpServletRequest request,String order_no,String urlParam,ezs_user upi)  throws Exception;
 	
-	
-	
+	/**
+	 * 生成合同  快速双向签订合同
+	 * @param result
+	 * @param orderno
+	 * @return
+	 */
+	 public Result signContentProcess(Result result,String orderno);
+	 
+	 /**
+	 * 签订合同  快速双向签订合同
+	 * @param result
+	 * @param orderno
+	 * @return
+	 */
+	 public Result signContentForAdd(Result result,String orderno);
 	
 }

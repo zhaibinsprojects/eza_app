@@ -224,7 +224,7 @@ public class StockHelper {
 		}
 		
 	*/
-		List<Map<String, Object>> list=getSelfListForSqlServer("'ZGE04000731'");
+		List<Map<String, Object>> list=getSelfListForSqlServer("'ZGE17000511'");
 	for (Map<String, Object> map : list) {
 		for (Entry<String, Object> map2 : map.entrySet()) {
 			System.out.println(map2.getKey()+map2.getValue());

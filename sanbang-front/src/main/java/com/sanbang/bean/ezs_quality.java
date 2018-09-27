@@ -1,6 +1,7 @@
 package com.sanbang.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class ezs_quality {
     private Long id;
@@ -9,15 +10,49 @@ public class ezs_quality {
 
     private Boolean deleteStatus;
 
-    private String content;
+    private Date arrivalDate;
 
-    private String quality_no;
+    private String bUser;
 
-    private String report;
+    private String bnumber;
 
-    private Integer status;
+    private String cchkconclusion;
 
-    public Long getId() {
+    private String cdefine9;
+
+    private String cprojectname;
+
+    private Date dverifytime;
+
+    private String fdisbreakquantity;
+
+    private String fdisubreakquantity;
+
+    private String fdtquantity;
+
+    private String fdtrate;
+
+    private String fquantity;
+
+    private String ibatchchkresult;
+
+    private String qUser;
+
+    private String rnumber;
+    
+    private List<ezs_quality_detail>  items;
+
+   
+
+	public List<ezs_quality_detail> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ezs_quality_detail> items) {
+		this.items = items;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -41,35 +76,123 @@ public class ezs_quality {
         this.deleteStatus = deleteStatus;
     }
 
-    public String getContent() {
-        return content;
+    public Date getArrivalDate() {
+        return arrivalDate;
     }
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+    public void setArrivalDate(Date arrivalDate) {
+        this.arrivalDate = arrivalDate;
     }
 
-    public String getQuality_no() {
-        return quality_no;
+    public String getbUser() {
+        return bUser;
     }
 
-    public void setQuality_no(String quality_no) {
-        this.quality_no = quality_no == null ? null : quality_no.trim();
+    public void setbUser(String bUser) {
+        this.bUser = bUser == null ? null : bUser.trim();
     }
 
-    public String getReport() {
-        return report;
+    public String getBnumber() {
+        return bnumber;
     }
 
-    public void setReport(String report) {
-        this.report = report == null ? null : report.trim();
+    public void setBnumber(String bnumber) {
+        this.bnumber = bnumber == null ? null : bnumber.trim();
     }
 
-    public Integer getStatus() {
-        return status;
+    public String getCchkconclusion() {
+        return cchkconclusion;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setCchkconclusion(String cchkconclusion) {
+        this.cchkconclusion = cchkconclusion == null ? null : cchkconclusion.trim();
+    }
+
+    public String getCdefine9() {
+        return cdefine9;
+    }
+
+    public void setCdefine9(String cdefine9) {
+        this.cdefine9 = cdefine9 == null ? null : cdefine9.trim();
+    }
+
+    public String getCprojectname() {
+        return cprojectname;
+    }
+
+    public void setCprojectname(String cprojectname) {
+        this.cprojectname = cprojectname == null ? null : cprojectname.trim();
+    }
+
+    public Date getDverifytime() {
+        return dverifytime;
+    }
+
+    public void setDverifytime(Date dverifytime) {
+        this.dverifytime = dverifytime;
+    }
+
+    public String getFdisbreakquantity() {
+        return fdisbreakquantity;
+    }
+
+    public void setFdisbreakquantity(String fdisbreakquantity) {
+        this.fdisbreakquantity = fdisbreakquantity == null ? null : fdisbreakquantity.trim();
+    }
+
+    public String getFdisubreakquantity() {
+        return fdisubreakquantity;
+    }
+
+    public void setFdisubreakquantity(String fdisubreakquantity) {
+        this.fdisubreakquantity = fdisubreakquantity == null ? null : fdisubreakquantity.trim();
+    }
+
+    public String getFdtquantity() {
+        return fdtquantity;
+    }
+
+    public void setFdtquantity(String fdtquantity) {
+        this.fdtquantity = fdtquantity == null ? null : fdtquantity.trim();
+    }
+
+    public String getFdtrate() {
+        return fdtrate;
+    }
+
+    public void setFdtrate(String fdtrate) {
+        this.fdtrate = fdtrate == null ? null : fdtrate.trim();
+    }
+
+    public String getFquantity() {
+        return fquantity;
+    }
+
+    public void setFquantity(String fquantity) {
+        this.fquantity = fquantity == null ? null : fquantity.trim();
+    }
+
+    public String getIbatchchkresult() {
+        return ibatchchkresult;
+    }
+
+    public void setIbatchchkresult(String ibatchchkresult) {
+        this.ibatchchkresult = ibatchchkresult == null ? null : ibatchchkresult.trim();
+    }
+
+    public String getqUser() {
+        return qUser;
+    }
+
+    public void setqUser(String qUser) {
+        this.qUser = qUser == null ? null : qUser.trim();
+    }
+
+    public String getRnumber() {
+        return rnumber;
+    }
+
+    public void setRnumber(String rnumber) {
+        this.rnumber = rnumber == null ? null : rnumber.trim();
     }
 }
