@@ -26,7 +26,6 @@ import com.sanbang.bean.ezs_customized_record;
 import com.sanbang.bean.ezs_ezssubstance;
 import com.sanbang.bean.ezs_goods_class;
 import com.sanbang.bean.ezs_user;
-import com.sanbang.dao.ezs_addressMapper;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.index.service.CustomerService;
@@ -605,12 +604,12 @@ public class AppHomeGoodsMessController {
 			
 			Advices advice01 = new Advices();
 			advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921001.png");
-			advice01.setLink("http://www.ezaisheng.com/signContentPage.htm?id=1143");
+			advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1143");
 			advice01.setpName("banner20180921001.png");
 			
 			Advices advice02 = new Advices();
 			advice02.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921002.png");
-			advice02.setLink("http://www.ezaisheng.com/subject.htm");
+			advice02.setLink("https://m.ezaisheng.com/front/hangqtg001.html");
 			advice02.setpName("banner20180921002.png");
 			
 			Advices advice03 = new Advices();

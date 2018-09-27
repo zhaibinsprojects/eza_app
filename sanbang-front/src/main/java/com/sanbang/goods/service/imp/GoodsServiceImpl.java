@@ -57,7 +57,6 @@ import com.sanbang.vo.GoodsInfo;
 import com.sanbang.vo.GoodsOfOrderInfo;
 import com.sanbang.vo.QueryCondition;
 import com.sanbang.vo.goods.GoodsVo;
-import com.sun.tools.example.debug.expr.ParseException;
 
 /**
  * 货品相关处理

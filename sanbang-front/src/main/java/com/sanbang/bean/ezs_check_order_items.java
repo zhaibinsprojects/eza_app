@@ -32,9 +32,19 @@ public class ezs_check_order_items implements Serializable {
 
     private Long checkOrderMain_id;
     
+    private String detail;//明细
+    
    
 
-    public Long getId() {
+    public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -122,13 +132,5 @@ public class ezs_check_order_items implements Serializable {
         this.checkOrderMain_id = checkOrderMain_id;
     }
 
-	@Override
-	public String toString() {
-		return "ezs_check_order_items [id=" + id + ", addTime=" + addTime + ", deleteStatus=" + deleteStatus
-				+ ", lastModifyDate=" + lastModifyDate + ", deliveryDate=" + deliveryDate + ", item_name=" + item_name
-				+ ", item_count=" + item_count + ", item_price=" + item_price + ", item_totalmoney=" + item_totalmoney
-				+ ", flag=" + flag + ", checkOrderMain_id=" + checkOrderMain_id + "]";
-	}
-    
-    
+	
 }

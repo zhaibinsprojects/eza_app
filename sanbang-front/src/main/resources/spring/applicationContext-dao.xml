@@ -323,9 +323,16 @@
 			value="com.sanbang.dao.ezs_check_order_mainMapper"/>
 	</bean>
 	
+<<<<<<< HEAD
+	<bean id="ezs_checkm_photoMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_checkm_photoMapper"/>
+	</bean>
+=======
 	<bean id="ezs_purchase_order_itemsMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_purchase_order_itemsMapper"/>
 	</bean>
 	
+>>>>>>> 7291fae58172e74e1444fd402afe47dd1b99cc09
 </beans>

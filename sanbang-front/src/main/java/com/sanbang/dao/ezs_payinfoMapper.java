@@ -1,8 +1,10 @@
 package com.sanbang.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_payinfo;
@@ -30,4 +32,12 @@ public interface ezs_payinfoMapper {
 	List<ezs_payinfo> selectPayRecord(Map<String, Object> map);
 
 	int selectCount(Map<String, Object> map);
+	
+	/**
+	 * 支付金额
+	 * @param userid
+	 * @param orderno
+	 * @return
+	 */
+	Map<String, BigDecimal> getOrderPayInfoForUser(@Param("userid")long userid,@Param("orderno")String orderno); 
 }
