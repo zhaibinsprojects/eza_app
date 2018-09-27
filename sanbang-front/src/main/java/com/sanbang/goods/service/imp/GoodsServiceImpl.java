@@ -668,13 +668,14 @@ public class GoodsServiceImpl implements GoodsService{
 			orderForm.setPay_mode02(0);
 			orderForm.setSc_status(0);
 			//预计送达时间
-			Date estimateTime = mudifyDay(new Date(), good.getPickup_cycle());
-			orderForm.setEstimateTime(estimateTime);
+			//Date estimateTime = mudifyDay(new Date(), (good.getPickup_cycle()==null||good.getPickup_cycle().equals(""))?0:good.getPickup_cycle());
+			//orderForm.setEstimateTime(estimateTime);
 			//订单状态 : 新增订单
 			orderForm.setOrder_status(1);
 			//没卵用，仅为生成订单号码
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录添加开始...");
+			log.info("由购物车ID开始下单:订单号码-"+orderForm.getOrder_no());
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 			//逻辑修改，通过购物车Id进行订单添加 start........
 			ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
@@ -729,6 +730,7 @@ public class GoodsServiceImpl implements GoodsService{
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "订单添加成功");
+			log.info("由购物车ID下单完成:订单号码-"+orderForm.getOrder_no());
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		} catch (Exception e) {
@@ -738,6 +740,7 @@ public class GoodsServiceImpl implements GoodsService{
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
+			log.info("由购物车ID下单失败:订单号码-"+orderForm.getOrder_no());
 			//事务控制须抛出异常
 			throw e;
 		}
@@ -1314,6 +1317,7 @@ public class GoodsServiceImpl implements GoodsService{
 			}
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("立即购买-订单记录生成-----------------------订单ID："+orderForm.getId());
+			log.info("立即购买-开始下单:订单号码-"+orderForm.getOrder_no());
 			//构建店铺购物车
 			//storeCart = new ezs_storecart();
 			storeCart.setStore_id(user.getStore_id());
@@ -1350,6 +1354,7 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "立即购买成功");
 				log.info("立即购买成功");
+				log.info("立即购买-下单完成:订单号码-"+orderForm.getOrder_no());
 			}else{
 				//不可删除，会导致订单号重复
 				log.debug("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
@@ -1359,6 +1364,7 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				mmp.put("Msg", "库存不足");
 				log.info("库存不足");
+				log.info("立即购买-下单失败:订单号码-"+orderForm.getOrder_no());
 			}	
 		} catch (Exception e) {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
