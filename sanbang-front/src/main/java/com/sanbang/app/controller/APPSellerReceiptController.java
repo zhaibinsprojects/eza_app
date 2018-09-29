@@ -15,6 +15,7 @@ import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.service.BuyerService;
+import com.sanbang.buyer.service.CheckOrderService;
 import com.sanbang.dict.service.DictService;
 import com.sanbang.seller.controller.SellerReceiptController;
 import com.sanbang.seller.service.SellerReceiptService;
@@ -41,6 +42,9 @@ public class APPSellerReceiptController {
 	
 	@Autowired
 	private CommonOrderAdvice commonOrderAdvice;
+	
+	@Autowired
+	private CheckOrderService checkOrderService;
 	
 	/**
 	 * 根据订单编号和时间查询发票
@@ -217,7 +221,7 @@ public class APPSellerReceiptController {
 	
 	
 	/**
-	 * 上传票据
+	 * 上传快递票据
 	 * //INVIMG
 	 * @param order_no
 	 * @param request
@@ -225,7 +229,7 @@ public class APPSellerReceiptController {
 	 */
 	@RequestMapping("/orderinvosubmit")
 	@ResponseBody
-	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "") String order_no,
+	public Result orderinvosubmit(@RequestParam(name = "order_no", defaultValue = "") String order_no,
 			@RequestParam(name = "urlparam", defaultValue = "") String urlParam,
 			HttpServletRequest request) {
 
@@ -245,6 +249,40 @@ public class APPSellerReceiptController {
 			if(result.getSuccess()){
 				commonOrderAdvice.returnOrderAdvice(order_no, "");
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg("上传支付凭证失败");
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
+		}
+		return result;
+	}
+	
+	/**
+	 * 上传支付凭证
+	 * //PAYIMG
+	 * @param order_no
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/orderpaysubmit")
+	@ResponseBody
+	public Result orderpaysubmit(@RequestParam(name = "order_no", defaultValue = "-1") String order_no,
+			@RequestParam(name = "urlparam", defaultValue = "-1") String urlParam,
+			HttpServletRequest request) {
+
+		Result result = Result.success();
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("请求成功");
+
+		ezs_user upi = RedisUserSession.getLoginUserInfo(request);
+		if (upi == null) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+			result.setMsg("用户未登录");
+			return result;
+		}
+		try {
+			result=checkOrderService.orderpaysubmitForNow(request, order_no, urlParam, upi);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

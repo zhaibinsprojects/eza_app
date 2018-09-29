@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.advice.service.CommonOrderAdvice;
 import com.sanbang.bean.ezs_order_info;
+import com.sanbang.bean.ezs_purchase_orderform;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.buyer.controller.BuyerMenu;
 import com.sanbang.buyer.service.BuyerService;
+import com.sanbang.buyer.service.CheckOrderService;
+import com.sanbang.dao.ezs_orderformMapper;
+import com.sanbang.dao.ezs_purchase_orderformMapper;
 import com.sanbang.seller.service.SellerReceiptService;
 import com.sanbang.utils.Page;
 import com.sanbang.utils.RedisUserSession;
@@ -39,6 +43,12 @@ public class AppBuyerMenu {
 	
 	@Autowired
 	private CommonOrderAdvice commonOrderAdvice;
+	@Autowired
+	private ezs_orderformMapper ezs_orderformMapper;
+	@Autowired
+	private ezs_purchase_orderformMapper purchaseOrderformMapper;
+	@Autowired
+	private CheckOrderService checkOrderService;
 	
 	
   Logger log=Logger.getLogger(BuyerMenu.class);  
@@ -255,13 +265,22 @@ public class AppBuyerMenu {
 		}
 
 		try {
-			result = buyerService.payconfirm(request,order_no,upi);
-			if(!result.getSuccess()){
+			//新订单流程
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
+			ezs_purchase_orderform purchaseOrder = purchaseOrderformMapper.selectByOrderNo(order_no);
+			if((orderinfo!=null&&"ORDER_CHILDCOMPANY_GOOD".equals(orderinfo.getOrder_type()))
+					||(purchaseOrder!=null&&"ORDER_CHILDCOMPANY_GOOD".equals(purchaseOrder.getOrder_type()))) {
+				result=checkOrderService.payconfirm(request, order_no, upi);
 				return result;
+			}else {
+			//旧订单流程	
+				result = buyerService.payconfirm(request,order_no,upi);
+				if(!result.getSuccess()){
+					return result;
+				}
+				Map<String, Object> map = buyerService.getOrderInfoShow(order_no,upi);
+				result.setObj(map);
 			}
-			
-			Map<String, Object> map = buyerService.getOrderInfoShow(order_no,upi);
-			result.setObj(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -296,11 +315,20 @@ public class AppBuyerMenu {
 			return result;
 		}
 		try {
-			result = buyerService.orderpaysubmit(request, order_no, urlParam,upi);
-			//wemall回调
-			if(result.getSuccess()){
-				commonOrderAdvice.returnOrderAdvice(order_no, "");
+			
+			//新订单流程
+			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
+			if(orderinfo!=null&&"ORDER_CHILDCOMPANY_GOOD".equals(orderinfo.getOrder_type())) {
+				result=checkOrderService.orderpaysubmitForNow(request, order_no, urlParam, upi);
+				return result;
 			}
+			
+			//旧订单流程
+			result = buyerService.orderpaysubmit(request, order_no, urlParam,upi);
+				//wemall回调
+				if(result.getSuccess()){
+					commonOrderAdvice.returnOrderAdvice(order_no, "");
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

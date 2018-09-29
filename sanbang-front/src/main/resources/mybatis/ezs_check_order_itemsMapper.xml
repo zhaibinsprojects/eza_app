@@ -29,7 +29,7 @@
     delete from ezs_check_order_items
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.sanbang.bean.ezs_check_order_items" >
+  <insert id="insert" parameterType="com.sanbang.bean.ezs_check_order_items"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_check_order_items (id, addTime, deleteStatus, 
       lastModifyDate, deliveryDate, item_name, 
       item_count, item_price, item_totalmoney, 
@@ -41,7 +41,7 @@
       #{flag,jdbcType=VARCHAR}, #{checkOrderMain_id,jdbcType=BIGINT}, #{detail,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_check_order_items" >
+  <insert id="insertSelective" parameterType="com.sanbang.bean.ezs_check_order_items"  useGeneratedKeys="true" keyProperty="id" >
     insert into ezs_check_order_items
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -181,4 +181,8 @@
     where checkOrderMain_id = #{main_id,jdbcType=BIGINT}
   </select>
   
+  <delete id="deleteByDelids" >
+    delete from ezs_check_order_items
+    where checkOrderMain_id = #{mainid,jdbcType=BIGINT}  and id not in (${delids})
+  </delete>
 </mapper>

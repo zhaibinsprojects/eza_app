@@ -1,10 +1,7 @@
 package com.sanbang.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.sanbang.bean.ezs_quality;
 
-@Repository
 public interface ezs_qualityMapper {
     int deleteByPrimaryKey(Long id);
 

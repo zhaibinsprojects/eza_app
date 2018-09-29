@@ -263,6 +263,10 @@
   		and (paymentUser_id = #{paymentUser_id,jdbcType=BIGINT} or 
   			receUser_id = #{receUser_id,jdbcType=BIGINT})
   </select>
-  
+  <select id="getOrderPayInfoForUser" resultType="map">
+  SELECT
+		(SELECT IFNULL(SUM(A.price),0) FROM ezs_payinfo A  WHERE A.paymentUser_id=#{userid}  AND A.order_no=#{orderno}) income,
+		(SELECT IFNULL(SUM(A.price),0) FROM ezs_payinfo A  WHERE A.receUser_id=#{userid} AND A.order_no=#{orderno}) spending
+   </select>
   
 </mapper>

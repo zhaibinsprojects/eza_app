@@ -111,6 +111,10 @@ public class BuyerServiceimpl implements BuyerService {
 		if(pager.getOrder_status().equals("10,20")){
 			pager.setOrder_status("1,10,20");
 		}
+		//新订单流程增加  200待付款
+		if(pager.getOrder_status().indexOf("201")>0) {
+			pager.setOrder_status(pager.getOrder_status().replaceAll("201", "200"));
+		}
 		pager.setPageNow(pager.getPageNow() - 1);
 		pager.setSecount(pager.getPageSize() * pager.getPageNow());
 		int totalcount = ezs_orderformMapper.getOrderListByValueCount(pager);
@@ -858,7 +862,7 @@ public class BuyerServiceimpl implements BuyerService {
 		}
 
 		// 判断是否在待支付状态 40 80
-		if (orderinfo.getOrder_status() == 40 || orderinfo.getOrder_status() == 80) {
+		if (orderinfo.getOrder_status() == 40 || orderinfo.getOrder_status() == 80||orderinfo.getOrder_status()==200||orderinfo.getOrder_status()==201) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(true);
 			result.setMsg("请求成功");

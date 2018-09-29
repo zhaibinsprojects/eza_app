@@ -11,10 +11,10 @@
 	<div class="toptab">
 		<form method="post"
 			action="http://10.10.10.48/front/app/checkOrder/addOrUpdateCheckOrder.htm" class="form1">
-			orderno<input type="text" name="orderno" value="EM0118081500001" />
+			orderno<input type="text" name="orderno" value="EMP0118092700001" />
 			issave<input type="text" name="issave" class="issave" value="0" />
 			token<input type="text" name="token"
-				value="app18500409847YZeXYN8d0HGoHSOO4gBWLcYEr8Hid9Jf" /> username<input
+				value="app18500409847tUhdvcDz4ymu6vpNBS2DkPHpe62HZ2Nf" /> username<input
 				type="text" name="username" value="username" /> linkphone<input
 				type="text" name="linkphone" value="linkphone" /> usermemo<input
 				type="text" name="usermemo" value="usermemo" /> urlParam<input
@@ -34,8 +34,8 @@
 			var ezs_check_order_items={
 				"item_name" :  "商品名称",
 				"id" : "0",
-				"item_count" : "0",
-				"item_price" : "0",
+				"item_count" : "2",
+				"item_price" : "5700",
 				"deliveryDate" : "2017-1-1",
 				"detail" : "明细"
 			};	
@@ -51,8 +51,8 @@
 			var ezs_check_order_items3={
 					"item_name" :  "吨袋扣重",
 					"id" : "0",
-					"item_count" : "0",
-					"item_price" : "0",
+					"item_count" : "0.1",
+					"item_price" : "-5700",
 					"deliveryDate" : "2017-1-1",
 					"detail" : "明细"
 					};	
@@ -61,15 +61,22 @@
 					"item_name" :  "其他费用",
 					"id" : "0",
 					"item_count" : "0",
-					"item_price" : "0",
+					"item_price" : "100",
 					"deliveryDate" : "2017-1-1",
 					"detail" : "明细"
 					};	
-			
+			var ezs_check_order_items5={"id":470,"item_totalmoney":11400.00,"detail":"明细","flag":"0","item_price":5700.00,"item_name":"商品名称","deliveryDate":"2017-01-01","item_count":2.00};	
+			var ezs_check_order_items6={"id":471,"item_totalmoney":0.00,"detail":"明细","flag":"0","item_price":0.00,"item_name":"吨袋扣款","deliveryDate":"2017-01-01","item_count":0.00};	
+			var ezs_check_order_items7={"id":472,"item_totalmoney":-570.00,"detail":"明细","flag":"0","item_price":-5700.00,"item_name":"吨袋扣重","deliveryDate":"2017-01-01","item_count":0.10};	
+			var ezs_check_order_items8={"id":473,"item_totalmoney":100.00,"detail":"明细","flag":"0","item_price":100.00,"item_name":"其他费用","deliveryDate":"2017-01-01","item_count":0.00};	
 			items.push(ezs_check_order_items);
-			items.push(ezs_check_order_items1);
 			items.push(ezs_check_order_items3);
+			items.push(ezs_check_order_items1);
 			items.push(ezs_check_order_items4);
+			items.push(ezs_check_order_items5);
+			items.push(ezs_check_order_items6);
+			items.push(ezs_check_order_items7);
+			items.push(ezs_check_order_items8);
 			var  da=JSON.stringify(items);
 			$(".itemsid").val(da);
 			$(".issave").val(0);
@@ -121,6 +128,8 @@
 			items.push(ezs_check_order_items3);
 			items.push(ezs_check_order_items4);
 			var  da=JSON.stringify(items);
+			
+			da='{"count":0,"errorcode":101000,"msg":"请求成功","obj":{"items":[{"id":0,"item_totalmoney":0,"detail":"","flag":"0","item_price":5100.00,"item_name":"商品名称","deliveryDate":"2018-09-28","item_count":1},{"id":0,"item_totalmoney":0,"detail":"","flag":"0","item_price":-5100.00,"item_name":"吨袋扣款","deliveryDate":"2018-09-28"},{"id":0,"item_totalmoney":0,"detail":"","flag":"0","item_price":0,"item_name":"吨袋扣重","deliveryDate":"2018-09-28","item_count":0},{"id":0,"item_totalmoney":0,"detail":"","flag":"0","item_price":0,"item_name":"其他费用","deliveryDate":"2018-09-28","item_count":0}]},"success":true}';
 			$(".itemsid").val(da);
 			$(".issave").val(1);
 			$(".form1").submit();

@@ -1,7 +1,9 @@
 package com.sanbang.dao;
 
+
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_bill;
@@ -19,5 +21,7 @@ public interface ezs_billMapper {
     int updateByPrimaryKeySelective(ezs_bill record);
 
     int updateByPrimaryKey(ezs_bill record);
+    
+    List<ezs_bill>  getBillsByUserId(@Param("userid")long userid);
 
 }

@@ -278,6 +278,11 @@
     where id = #{id,jdbcType=BIGINT} and of_id is null
   </select>
   
-  
+  <select id="selectGoodsCartByOfidOrPofid" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from ezs_goodscart
+    where of_id=#{of_id} or pof_id=#{pof_id} limit 1
+  </select>
   
 </mapper>

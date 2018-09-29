@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class ezs_check_order_items implements Serializable {
+public class ezs_check_order_items implements Comparable<ezs_check_order_items>  {
     /**
 	 * 
 	 */
@@ -131,6 +131,27 @@ public class ezs_check_order_items implements Serializable {
     public void setCheckOrderMain_id(Long checkOrderMain_id) {
         this.checkOrderMain_id = checkOrderMain_id;
     }
+
+	@Override
+	public int compareTo(ezs_check_order_items o) {
+		String cata = "商品名称,吨袋扣款,吨袋扣重,其他费用";
+		if(this.id==0&&o.id==0) {
+			String  item_name0=this.getItem_name();
+			String item_name1=o.getItem_name();
+			if(cata.indexOf(item_name0)>cata.indexOf(item_name1)) {
+				return 1;
+			}else {
+				return -1;
+			}
+		}else {
+			if(this.id>o.id) {
+				return 1;
+			}else {
+				return -1;
+			}	
+		}
+		
+	}
 
 	
 }

@@ -52,6 +52,6 @@ public interface ezs_goodscartMapper {
      * 查询购物车id
      * @return
      */
-    ezs_goodscart  selectGoodsCartByOfidOrPofid(@Param("of_id")long of_id,@Param("pofid")long pofid);
+    ezs_goodscart  selectGoodsCartByOfidOrPofid(@Param("of_id")long of_id,@Param("pof_id")long pofid);
     
 }

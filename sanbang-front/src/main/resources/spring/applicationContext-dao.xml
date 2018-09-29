@@ -322,16 +322,28 @@
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_check_order_mainMapper"/>
 	</bean>
-	
-
 	<bean id="ezs_checkm_photoMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_checkm_photoMapper"/>
 	</bean>
-
 	<bean id="ezs_purchase_order_itemsMapper" parent="baseMapper">
 		<property name="mapperInterface"
 			value="com.sanbang.dao.ezs_purchase_order_itemsMapper"/>
 	</bean>
-	
+	<bean id="ezs_qualityMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_qualityMapper"/>
+	</bean>
+	<bean id="ezs_qualityitemMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_qualityitemMapper"/>
+	</bean>
+	<bean id="ezs_quality_detailMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_quality_detailMapper"/>
+	</bean>
+	<bean id="ezs_classifyMapper" parent="baseMapper">
+		<property name="mapperInterface"
+			value="com.sanbang.dao.ezs_classifyMapper"/>
+	</bean>
 </beans>
