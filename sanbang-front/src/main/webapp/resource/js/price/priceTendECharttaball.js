@@ -120,11 +120,13 @@ $(document).ready(function(){
 	    dataType: "json",
 	    success: function (result) {
 	    	//页数
-	    	$("input[name=pagecount]").val(Math.ceil(result.length/20));
-	    	var isshow = 0;
+	    	//$("input[name=pagecount]").val(Math.ceil(result.length/20));
+	    	$("input[name=pagecount]").val(Math.ceil(result.resultList.length/20));
+	    	/*var isshow = 0;
 	    	if(result.length>0){
 	    		isshow = result[0].isshow;
-	    	}
+	    	}*/
+	    	var isshow = result.isShow;
 	    	if(isshow=='1'){
 		    	//展示走势图
 	    		$("#container").css('display','block');//显示  
@@ -133,20 +135,12 @@ $(document).ready(function(){
 		    	$("#containerLock").css('display','block');//显示   
 		    	$("#container").css('display','none');//隐藏 
 		    }
-	       $.each(result, function (index, item) {
+	       $.each(result.resultList, function (index, item) {
 	            namey.push(item.dealDate);     
 	            numo.push(item.currentAVGPrice);
 	            classname = item.goodClassName;
 	            //isshow = item.isshow;
 	        });
-	      /* if(isshow=='1'){
-	    	   //展示走势图
-	    	   $("#container").css('display','block');//显示  
-	    	   $("#containerLock").css('display','none');//隐藏   
-	       }else{
-	    	   $("#container").css('display','none');//隐藏 
-	    	   $("#containerLock").css('display','block');//显示   
-	       }*/
 	       	//heighchart
 	       	echartInit(namey, classname, numo);   
 	       	doclick();
@@ -222,16 +216,8 @@ function showdatas(dateBetweenType){
 	    //清空数组
 	    namey=[];
 	    numo=[];
-	    var isshow = 0;
-	    //页数
-	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
-	       $.each(result, function (index, item) {
-	            namey.push(item.dealDate);     
-	            numo.push(item.currentAVGPrice);
-	            classname = item.goodClassName;
-	            isshow = item.isshow;
-	        });
-	       if(isshow=='1'){
+	    var isshow = result.isShow;
+	    if(isshow=='1'){
 	    	   //展示走势图
 	    	   $("#container").css('display','block');//显示  
 	    	   $("#containerLock").css('display','none');//隐藏   
@@ -239,6 +225,14 @@ function showdatas(dateBetweenType){
 	    	   $("#container").css('display','none');//隐藏 
 	    	   $("#containerLock").css('display','block');//显示   
 	       }
+	    //页数
+	    $("input[name=pagecount]").val(Math.ceil(result.resultList.length/20));
+	       $.each(result.resultList, function (index, item) {
+	            namey.push(item.dealDate);     
+	            numo.push(item.currentAVGPrice);
+	            classname = item.goodClassName;
+	            //isshow = item.isshow;
+	        });
 	     //heighchart
 	     echartInit(namey, classname, numo); 
 	     doclick();
@@ -263,7 +257,7 @@ function showdataByPageOne(dateBetweenType,currentPage){
 	    },
 	    dataType: "json",
 	    success: function (result) {
-	       initTable(result);
+	       initTable(result.resultList);
 	       //列表添加成功-添加事件
 	       doclickTwo();
 	    },
@@ -406,23 +400,26 @@ function pricetrend(data){
 	    dataType: "json",
 	    success: function (result) {
 	    //页数
-	    $("input[name=pagecount]").val(Math.ceil(result.length/20));
+	    $("input[name=pagecount]").val(Math.ceil(result.resultList.length/20));
 	    
-	    var isshow = 0;
-	       $.each(result, function (index, item) {
-	            namey.push(item.dealDate);     
-	            numo.push(item.currentAVGPrice);
-	            classname = item.goodClassName;
-	            isshow = item.isshow;
-	        });
-	       if(isshow=='1'){
+	    //var isshow = 0;
+	    var isshow = result.isShow;
+	    if(isshow=='1'){
 	    	   //展示走势图
 	    	   $("#mainAll").css('display','block');//显示  
 	    	   $("#mainAllLock").css('display','none');//隐藏   
-	       }else{
+	     }else{
 	    	   $("#mainAll").css('display','none');//隐藏   
 	    	   $("#mainAllLock").css('display','block');// 显示
-	       }
+	     }
+	    
+	       $.each(result.resultList, function (index, item) {
+	            namey.push(item.dealDate);     
+	            numo.push(item.currentAVGPrice);
+	            classname = item.goodClassName;
+	            //isshow = item.isshow;
+	        });
+	       
 	        echartInit(namey, classname, numo);
 	        //调用移动端函数，通知加载完成
 	        window.android.affection();
@@ -450,7 +447,7 @@ function showdataByPage(goodClassId,currentPage,areaId,colorId,formId){
 	    dataType: "json",
 	    success: function (result) {
 	       //初始化填充数据列表数据列表
-	       initTable(result);
+	       initTable(result.resultList);
 	       //列表添加成功-添加事件
 	       doclickTwo();
 	    },

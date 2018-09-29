@@ -113,13 +113,15 @@ public class BuyerServiceimpl implements BuyerService {
 		}
 		//新订单流程增加  200待付款
 		if(pager.getOrder_status().indexOf("201")>0) {
-			pager.setOrder_status(pager.getOrder_status().replaceAll("201", "200"));
+			String  orderstatus=pager.getOrder_status().replaceAll("201", "200");
+			pager.setOrder_status(orderstatus);
 		}
 		pager.setPageNow(pager.getPageNow() - 1);
 		pager.setSecount(pager.getPageSize() * pager.getPageNow());
 		int totalcount = ezs_orderformMapper.getOrderListByValueCount(pager);
 		pager.setTotalCount(totalcount);
-		return ezs_orderformMapper.getOrderListByValue(pager);
+		List<ezs_order_info> list=ezs_orderformMapper.getOrderListByValue(pager);
+		return list;
 				
 	}
 

@@ -22,10 +22,17 @@
   <!--价格评析-->
   <section class="secsty_yzs">
     <div class="hTwoFater_yzs">
-      <h2><span>易再生网法律协议</span><a style="float: right;color: #00897c;" href="https://m.ezaisheng.com/front/app/home/shengm.htm?id=44">></a></h2>
+      <h2><span>易再生网法律协议</span><a style="float: right;color: #00897c;" href="https://m.ezaisheng.com/front/app/home/ezsintroduce.htm?id=44">></a></h2>
     </div>
     <div class="hTwoFater_yzs">
-      <h2><span>易再生网法律声明</span><a style="float: right;color: #00897c;" href="https://m.ezaisheng.com/front/app/home/shengm.htm?id=45">></a></h2>
+      <h2><span>易再生网法律声明</span><a style="float: right;color: #00897c;" href="https://m.ezaisheng.com/front/app/home/ezsintroduce.htm?id=45">></a></h2>
+    </div>
+    <div class="text_yzs" id="${show.id}">
+      <h3>${show.name}（<fmt:formatDate pattern="yyyy-MM-dd" 
+            value="${show.addTime}" />）</h3>
+      <div class="textOverflow_yzs">
+        <p class="111">${show.content}</p>
+      </div>
     </div>
   </section>
 </div>

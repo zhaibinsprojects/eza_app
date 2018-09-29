@@ -720,7 +720,11 @@ public class HomeHangqIndexController {
 		List<PriceTrendIfo> returnppList = new ArrayList<>();
 		//获取用户信息
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
-		
+		//add start by zhaibin 2018-09-29 修改价格走势品类无记录时走势图锁屏状态
+		Map<String, Object> resultMap = new HashMap<>();
+		boolean isShow = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+		resultMap.put("isShow", isShow);
+		//add end by zhaibin 2018-09-29
 		if(goodClassId!=null&&!goodClassId.trim().equals(""))
 			tMap.put("kindId", goodClassId);
 		if(colorId!=null&&!colorId.trim().equals(""))
@@ -785,7 +789,7 @@ public class HomeHangqIndexController {
 				log.info("areaName-------------------大区Name:"+areaNameTemp);
 			}
 			for (PriceTrendIfo priceTrendIfo : ppList) {
-				try{
+				/*try{
 					boolean showFlag = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
 					if(showFlag)
 						priceTrendIfo.setIsshow(1);
@@ -793,7 +797,7 @@ public class HomeHangqIndexController {
 						priceTrendIfo.setIsshow(0);
 				}catch(Exception e){
 					priceTrendIfo.setIsshow(0);
-				}
+				}*/
 				
 				//地址信息,若未利用地址参数进行筛选
 				if(areaId!=null&&!areaId.trim().equals("")){
@@ -809,7 +813,10 @@ public class HomeHangqIndexController {
 			}
 		}
 		Collections.reverse(returnppList);
-		return returnppList;
+		//return returnppList;
+		//modify by zhaibin 2018-09-29 修改价格走势品类无记录时走势图锁屏状态
+		resultMap.put("resultList", returnppList);
+		return resultMap;
 	}
 	//价格走势详情页面-分页加载更多
 	@RequestMapping(value="/priceTrendDetailPage")
@@ -826,6 +833,12 @@ public class HomeHangqIndexController {
 		List<PriceTrendIfo> ppList = new ArrayList<>();
 		List<PriceTrendIfo> returnppList = new ArrayList<>();
 		ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
+		
+		//add start by zhaibin 2018-09-29 修改价格走势品类无记录时走势图锁屏状态
+		Map<String, Object> resultMap = new HashMap<>();
+		boolean isShow = Tools.HangqValidate(upi,Long.valueOf(goodClassId));
+		resultMap.put("isShow", isShow);
+		//add end by zhaibin 2018-09-29
 		
 		areaId = request.getParameter("areaId");
 		log.info("areaId-------------------------:"+areaId);
@@ -912,7 +925,10 @@ public class HomeHangqIndexController {
 				returnppList.add(priceTrendIfo);
 			}
 		}
-		return returnppList;
+		//return returnppList;
+		//modify by zhaibin 2018-09-29 修改价格走势品类无记录时走势图锁屏状态
+		resultMap.put("resultList", returnppList);
+		return resultMap;
 	}
 	/**
 	 * 获取地址名称：XX市

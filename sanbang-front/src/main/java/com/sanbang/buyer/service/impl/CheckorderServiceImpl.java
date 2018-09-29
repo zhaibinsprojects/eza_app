@@ -166,6 +166,8 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				return result;
 			}
 
+			
+			
 			checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(orderNo);
 			if (null != checkorder) {
 				map.put("order_no", checkorder.getOrder_no());// 订单编号
@@ -259,25 +261,44 @@ public class CheckorderServiceImpl implements CheckOrderService {
 
 		String urlParam = request.getParameter("urlParam");
 
-		if (Tools.isEmpty(orderno)) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setMsg("订单号不能为空");
-			result.setSuccess(false);
-			return result;
+		
+		ezs_goodscart cart = new ezs_goodscart();
+		ezs_orderform ezs_orderform = new ezs_orderform();
+		ezs_purchase_orderform purchaseOrder = new ezs_purchase_orderform();
+		ezs_orderform = ezs_orderformMapper.selectByorderno(orderno);
+		if (null == ezs_orderform) {
+			purchaseOrder = purchaseOrderformMapper.selectByOrderNo(orderno);
+			if (null != purchaseOrder) {
+				cart = ezs_goodscartMapper.selectGoodsCartByOfidOrPofid(0, purchaseOrder.getId());
+				if (null != cart) {
+					ezs_orderform = ezs_orderformMapper.selectByPrimaryKey(cart.getOf_id());
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("订单状态异常");
+					return result;
+				}
+			} else {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("订单不存在");
+				return result;
+			}
+
+		} else {
+			cart = ezs_goodscartMapper.selectGoodsCartByOfidOrPofid(ezs_orderform.getId(), 0);
+			if (null != cart) {
+				purchaseOrder = purchaseOrderformMapper.selectByPrimaryKey(cart.getPof_id());
+			} else {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("订单状态异常");
+				return result;
+			}
 		}
 
-		ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(orderno, upi.getId());
-		if (null == orderinfo) {
-			orderinfo = purchaseOrderformMapper.getOrderListByOrderno(orderno);
-		}
-
-		if (null == orderinfo) {
-			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-			result.setSuccess(false);
-			result.setMsg("订单不存在");
-			return result;
-		}
-		checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(orderno);
+		
+		checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(ezs_orderform.getOrder_no());
 		if (checkorder == null) {
 			checkorder = new ezs_check_order_main();
 			checkorder.setAddTime(new Date());
@@ -285,8 +306,8 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			checkorder.setImblance_money(new BigDecimal(0));
 			checkorder.setLastModifyDate(new Date());
 			checkorder.setMemo(memo);
-			checkorder.setOrder_money(orderinfo.getPrice());
-			checkorder.setOrder_no(orderno);
+			checkorder.setOrder_money(ezs_orderform.getTotal_price());
+			checkorder.setOrder_no(ezs_orderform.getOrder_no());
 			checkorder.setUsername(username);
 			checkorder.setLinkphone(linkphone);
 		}
@@ -374,7 +395,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			return result;
 		}
 
-		Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(orderinfo.getBuyerid(), orderno);
+		Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(purchaseOrder.getBuyUser_id(), ezs_orderform.getOrder_no());
 		BigDecimal income = price.get("income");// 已支付
 		BigDecimal spending = price.get("spending");// 已收到
 
@@ -523,7 +544,8 @@ public class CheckorderServiceImpl implements CheckOrderService {
 					chace.put("item_count", new BigDecimal(cart.getCount()));// 数量
 					break;
 				case "吨袋扣款":
-					chace.put("item_price", new BigDecimal("0").subtract(cart.getPrice()));// 单价
+					chace.put("item_price", new BigDecimal("0"));// 单价
+					chace.put("item_count", new BigDecimal("0"));// 数量
 					break;
 				default:
 					chace.put("item_price", new BigDecimal(0));// 单价

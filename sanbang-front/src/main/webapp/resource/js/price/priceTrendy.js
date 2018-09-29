@@ -71,7 +71,7 @@ mui.init({
 					dataType : "json",
 					async : false,
 					success : function(data) {
-						addTable(data);
+						addTable(data.resultList);
 						doclickTwo();
 					},
 					error:function(e){
@@ -98,7 +98,7 @@ mui.init({
 					dataType : "json",
 					async : false,
 					success : function(data) {
-						initTable(data);
+						initTable(data.resultList);
 						doclickTwo();
 					},
 					error:function(e){

@@ -434,7 +434,7 @@
 		AND A.deleteStatus = 0
 
 		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status!='200' and pager.order_status!='110'">
-		 and  B.order_status in (#{pager.order_status})	
+		 and  B.order_status in (${pager.order_status})	
 		</if>
 		<if test="pager.order_status!=null and pager.order_status=='-1'">
 	    and	B.order_status in (1,10,20,30,40,50,60,70,75,80,90,93,95,110,200,205,210)	
@@ -473,7 +473,7 @@
 		AND A.deleteStatus = 0
 
 		<if test="pager.order_status!=null and pager.order_status!='-1' and pager.order_status!='200' and pager.order_status!='110'">
-		 and  B.order_status in (#{pager.order_status})
+		 and  B.order_status in (${pager.order_status})
 		</if>
 		<if test="pager.order_status!=null and pager.order_status=='-1'">
 	    and	B.order_status in (1,10,20,30,40,50,60,70,75,80,90,93,95,110,200,205,210)	

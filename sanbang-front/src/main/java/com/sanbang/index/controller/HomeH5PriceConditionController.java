@@ -626,7 +626,21 @@ public class HomeH5PriceConditionController {
 		model.addAttribute("title", column.getName());
 		return view+"ezsintroduce";
 	}
-	
+	/**
+	 * 协议说明
+	 * @param id
+	 * @param catid
+	 * @return
+	 */
+	@RequestMapping("/shengm")
+	public String shengm(@RequestParam(name="id",required=true,defaultValue="44")long id,
+			Model model){
+		ezs_ezssubstance show=ezs_ezssubstanceMapper.selectByPrimaryKey(id);
+		ezs_column column=columnMapper.selectByPrimaryKey(show.getEc_id());
+		model.addAttribute("show", show);
+		model.addAttribute("title", column.getName());
+		return view+"shengmshow";
+	}
 	
 	/**
 	 * 复制下载文件
