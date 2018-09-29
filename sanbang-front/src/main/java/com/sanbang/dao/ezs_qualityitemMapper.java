@@ -1,5 +1,7 @@
 package com.sanbang.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sanbang.bean.ezs_qualityitem;
 
 public interface ezs_qualityitemMapper {
@@ -9,7 +11,7 @@ public interface ezs_qualityitemMapper {
 
     int insertSelective(ezs_qualityitem record);
 
-    ezs_qualityitem selectByPrimaryKey(Long id);
+    ezs_qualityitem selectByPrimaryKey(@Param("id")Long id);
 
     int updateByPrimaryKeySelective(ezs_qualityitem record);
 

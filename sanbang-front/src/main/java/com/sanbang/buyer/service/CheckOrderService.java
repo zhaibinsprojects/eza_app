@@ -35,7 +35,7 @@ public interface CheckOrderService {
 	 * @param items
 	 * @return
 	 */
-	public Result getCheckOrderInit(HttpServletRequest request,ezs_user upi,Result result) throws Exception;
+	public Result getCheckOrderInit(HttpServletRequest request,ezs_user upi,Result result,String orderno) throws Exception;
 	
 	
 	
@@ -62,5 +62,14 @@ public interface CheckOrderService {
 	 * @return
 	 */
 	 public Result signContentForAdd(Result result,String orderno);
+	 
+	 /**
+	   * 新订单支付确认
+	  * @param request
+	  * @param order_no
+	  * @param upi
+	  * @return
+	  */
+	 public Result payconfirm(HttpServletRequest request, String order_no,ezs_user upi);
 	
 }

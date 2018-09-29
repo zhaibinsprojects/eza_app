@@ -1,10 +1,5 @@
 package com.sanbang.app.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sanbang.bean.ezs_user;
-import com.sanbang.buyer.service.BuyerService;
 import com.sanbang.buyer.service.CheckOrderService;
 import com.sanbang.utils.RedisUserSession;
 import com.sanbang.utils.Result;
@@ -28,8 +22,6 @@ public class AppCheckOrderController {
 
 	@Autowired
 	private CheckOrderService checkOrderService;
-	@Autowired
-	private BuyerService buyerService;
 
 	/**
 	 * 查看对账单
@@ -103,7 +95,7 @@ public class AppCheckOrderController {
 	@RequestMapping("/getCheckOrderInit")
 	@ResponseBody
 	public Result getCheckOrderInit(
-			 HttpServletRequest request) {
+			 HttpServletRequest request,String orderno) {
 		Result result = Result.failure();
 		try {
 			ezs_user upi = RedisUserSession.getUserInfoByKeyForApp(request);
@@ -112,7 +104,7 @@ public class AppCheckOrderController {
 				result.setMsg("用户未登录");
 				return result;  
 			}
-			result = checkOrderService.getCheckOrderInit(request, upi, result);
+			result = checkOrderService.getCheckOrderInit(request, upi, result, orderno);
 		} catch (Exception e) {
 			e.printStackTrace();
 			e.printStackTrace();

@@ -20,4 +20,6 @@ public interface ezs_check_order_itemsMapper {
     int updateByPrimaryKey(ezs_check_order_items record);
     
     List<ezs_check_order_items> selectByMianId(@Param("main_id")Long main_id);
+    
+    int deleteByDelids(@Param("delids")String delids,@Param("mainid")long mainid);
 }

@@ -74,6 +74,10 @@ public class SellerOrderServiceImpl implements SellerOrderService {
 	@Override
 	public List<ezs_order_info> getOrderListByValue(PagerOrder pager) {
 		
+		//新订单流程增加  200待付款
+		if(pager.getOrder_status().indexOf("201")>0) {
+			pager.setOrder_status(pager.getOrder_status().replaceAll("201", "200"));
+		}
 		pager.setPageNow(pager.getPageNow() - 1);
 		pager.setSecount(pager.getPageSize() * pager.getPageNow());
 		int totalcount = purchaseOrderformMapper.getOrderListByValueCount(pager);

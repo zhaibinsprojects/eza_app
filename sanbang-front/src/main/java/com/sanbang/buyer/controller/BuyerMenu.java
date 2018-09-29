@@ -302,7 +302,7 @@ public class BuyerMenu {
 			
 			//新订单流程
 			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(order_no,upi.getId());
-			if(orderinfo!=null&&"".equals(orderinfo.getOrder_type())) {
+			if(orderinfo!=null&&"ORDER_CHILDCOMPANY_GOOD".equals(orderinfo.getOrder_type())) {
 				result=checkOrderService.orderpaysubmitForNow(request, order_no, urlParam, upi);
 				return result;
 			}

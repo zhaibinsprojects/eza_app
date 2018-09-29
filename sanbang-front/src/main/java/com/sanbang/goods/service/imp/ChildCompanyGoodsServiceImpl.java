@@ -123,6 +123,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.info("-------------------子公司商品订单---------------------");
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("立即购买-订单记录生成-----------------------订单ID："+orderForm.getId());
+			log.info("立即购买-（子公司订单）开始下单:订单号码-"+orderForm.getOrder_no());
 			//构建店铺购物车
 			storeCart.setStore_id(user.getStore_id());
 			storeCart.setDeleteStatus(false);
@@ -139,7 +140,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			goodsCart.setOf_id(orderForm.getId());
 			goodsCart.setGoods_id(good.getId());
 			goodsCart.setCount(count);
-			//进行库存校验并进行更新本地库存
+			//进行库存校验并进行更新本地库存,此处需修改（）
 			boolean buyAbleFlag = checkGoodOrder(goodsCart,good,orderType,orderForm.getOrder_no());
 			if(buyAbleFlag){
 				this.storecartMapper.insert(storeCart);
@@ -154,6 +155,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "立即购买成功");
 				log.info("立即购买成功");
+				log.info("立即购买-下单完成:订单号码-"+orderForm.getOrder_no());
 			}else{
 				//不可删除，会导致订单号重复
 				log.debug("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
@@ -163,6 +165,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				mmp.put("Msg", "库存不足");
 				log.info("库存不足");
+				log.info("立即购买-下单失败:订单号码-"+orderForm.getOrder_no());
 			}	
 		} catch (Exception e) {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
@@ -197,10 +200,9 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			purchaseOrderForm.setPact_status(2);
 			
 			purchaseOrderItems.setDeleteStatus(false);
-			//取货时间
-			purchaseOrderItems.setArriveDate(
-					mudifyDay(goods.getAddTime(),(goods.getPickup_cycle()==null||goods.getPickup_cycle().equals(""))?0:goods.getPickup_cycle())
-					);
+			//预计送达时间
+			Date arriveDate = mudifyDay(new Date(),(goods.getPickup_cycle()==null||goods.getPickup_cycle().equals(""))?0:goods.getPickup_cycle());
+			purchaseOrderItems.setArriveDate(arriveDate);
 			purchaseOrderItems.setOrder_no(purchaseOrderForm.getOrder_no());
 			purchaseOrderItems.setTotal_price(orderForm.getTotal_price());
 			purchaseOrderItems.setAddTime(new Date());
@@ -225,7 +227,6 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.error("生成供应商订单异常。。。。。。。。。。。。。。。。。。。"+e.getMessage());
 		}
 	}
-	
     /**** 
      * @param date 日期基数
      * @param days 日期变更天数
@@ -242,8 +243,6 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
         //String reStr = sdf.format(dt1);  
         return dt1;  
     }
-
-	
 	//生成供应商订单号码
 	private String getPurchaseOrderNo(ezs_orderform orderForm) {
 		String type = "00";
@@ -286,6 +285,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			//没卵用，仅为生成订单号码
 			this.ezs_orderformMapper.insert(orderForm);
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录添加开始...");
+			log.info("由购物车ID开始下单（子公司订单）:订单号码-"+orderForm.getOrder_no());
 			//逻辑修改，通过购物车Id进行订单添加 start........
 			ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
 			//ezs_goods goodTemp = null;
@@ -331,6 +331,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 			mmp.put("Msg", "订单添加成功");
+			log.info("由购物车ID下单完成（子公司订单）:订单号码-"+orderForm.getOrder_no());
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		} catch (Exception e) {
@@ -340,6 +341,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+e.toString());
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			mmp.put("Msg", "参数传递有误");
+			log.info("由购物车ID下单失败（子公司订单）:订单号码-"+orderForm.getOrder_no());
 			//事务控制须抛出异常
 			throw e;
 		}

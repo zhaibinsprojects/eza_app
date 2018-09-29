@@ -11,9 +11,10 @@
     <result column="goods_id" property="goods_id" jdbcType="BIGINT" />
     <result column="of_id" property="of_id" jdbcType="BIGINT" />
     <result column="sc_id" property="sc_id" jdbcType="BIGINT" />
+    <result column="pof_id" property="pof_id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, addTime, deleteStatus, cart_type, count, price, goods_id, of_id, sc_id
+    id, addTime, deleteStatus, cart_type, count, price, goods_id, of_id, sc_id,pof_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -25,7 +26,7 @@
     delete from ezs_goodscart
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="ezs_goodscart" >
+  <insert id="insert" parameterType="ezs_goodscart" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_goodscart (id, addTime, deleteStatus, 
       cart_type, count, price, 
       goods_id, of_id, sc_id
@@ -35,7 +36,7 @@
       #{goods_id,jdbcType=BIGINT}, #{of_id,jdbcType=BIGINT}, #{sc_id,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="ezs_goodscart" >
+  <insert id="insertSelective" parameterType="ezs_goodscart" useGeneratedKeys="true" keyProperty="id">
     insert into ezs_goodscart
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -123,6 +124,9 @@
       <if test="sc_id != null" >
         sc_id = #{sc_id,jdbcType=BIGINT},
       </if>
+      <if test="pof_id != null" >
+        pof_id = #{pof_id,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -135,7 +139,8 @@
       price = #{price,jdbcType=DECIMAL},
       goods_id = #{goods_id,jdbcType=BIGINT},
       of_id = #{of_id,jdbcType=BIGINT},
-      sc_id = #{sc_id,jdbcType=BIGINT}
+      sc_id = #{sc_id,jdbcType=BIGINT},
+      pof_id = #{pof_id,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   

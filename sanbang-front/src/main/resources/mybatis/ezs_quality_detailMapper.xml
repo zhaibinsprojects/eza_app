@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.sanbang.bean.ezs_quality_detail" >
     <result column="quality_id" property="quality_id" jdbcType="BIGINT" />
     <result column="detail_id" property="detail_id" jdbcType="BIGINT" />
-    <association property="ezs_qualityitem"  column="{detail_id=id}" select="com.sanbang.dao.ezs_qualityitemMapper.selectByPrimaryKey"></association>
+    <association property="ezs_qualityitem"  column="{id=detail_id}" select="com.sanbang.dao.ezs_qualityitemMapper.selectByPrimaryKey"></association>
   </resultMap>
   <insert id="insert" parameterType="com.sanbang.bean.ezs_quality_detail" >
     insert into ezs_quality_detail (quality_id, detail_id)
@@ -30,7 +30,7 @@
     </trim>
   </insert>
   
-  <select id="getDetailsByQid" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="getDetailsByQid" resultMap="BaseResultMap"  >
     select 
     *
     from ezs_quality_detail
