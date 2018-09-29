@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sanbang.bean.ezs_goods;
@@ -79,6 +80,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 	 * @throws Exception 
 	 */
 	@Override
+	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,
 			Long WeAddressId,ezs_goods good,Double count) {
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
@@ -261,6 +263,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 	 * 逐个添加订单function
 	 */
 	@Override
+	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId,ezs_goods good) {
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
