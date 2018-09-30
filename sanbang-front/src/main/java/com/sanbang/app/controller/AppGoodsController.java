@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,6 +83,8 @@ public class AppGoodsController {
 	private ezs_addressMapper addressMapper;
 	@Autowired
 	private ChildCompanyGoodsService childCompanyGoodsService;
+	@Autowired
+	private com.sanbang.buyer.service.CheckOrderService CheckOrderService;
 
 	private static int num = 100;
 
@@ -1031,51 +1036,67 @@ public class AppGoodsController {
 	 */
 	@RequestMapping(value = "/dealImmediatelyBuyGood")
 	@ResponseBody
+	@Transactional(rollbackFor=Exception.class,propagation=Propagation.REQUIRED,isolation=Isolation.DEFAULT,timeout=5000)
 	public synchronized Object dealImmediatelyBuyGood(HttpServletRequest request, HttpServletResponse response,
 			Long WeAddressId, Long goodsId, Double count) {
 		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		} else {
-			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
-			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
-			if (dictCode.getSequence() <= 3) {
-				if (user.getEzs_store().getStatus() != 2) {
-					rs = Result.failure();
-					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-					rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
-					return rs;
+		Result rs = Result.failure();
+		try {
+			ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (user == null) {
+				rs = Result.failure();
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("用户未登录");
+				return rs;
+			} else {
+				Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+				ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+				if (dictCode.getSequence() <= 3) {
+					if (user.getEzs_store().getStatus() != 2) {
+						rs = Result.failure();
+						rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+						rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+						return rs;
+					}
 				}
 			}
-		}
-		ezs_orderform orderForm = new ezs_orderform();
-		ezs_goods buyGoods = null;
-		// 修改订单号生成规则
-		try{
-			buyGoods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
-			orderForm.setOrder_no(createOrderNo(buyGoods));
-		}catch(Exception e){
+			ezs_orderform orderForm = new ezs_orderform();
+			ezs_goods buyGoods = null;
+			// 修改订单号生成规则
+			try{
+				buyGoods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
+				orderForm.setOrder_no(createOrderNo(buyGoods));
+			}catch(Exception e){
+				e.printStackTrace();
+				log.info("订单号生成失败");
+			}
+			boolean isour=this.childCompanyGoodsService.isChildCompanyGood(buyGoods);
+			if(isour){
+				mmp = this.childCompanyGoodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
+			}else{
+				mmp = this.goodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
+			}
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			} else {
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+			//判断是否为子公司
+			if(isour&&rs.getSuccess()) {
+				rs=CheckOrderService.signContentProcess(rs, orderForm.getOrder_no());
+				if(!rs.getSuccess()) {
+					throw new Exception("立即下单:签章错误orderno="+orderForm.getOrder_no()+"错误信息为："+rs.toString());
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
-			log.info("订单号生成失败");
+			Result result=Result.failure();
+			result.setMsg(rs.getMsg());
 		}
-		if(this.childCompanyGoodsService.isChildCompanyGood(buyGoods)){
-			mmp = this.childCompanyGoodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
-		}else{
-			mmp = this.goodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
-		}
-		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
-			rs = Result.success();
-			rs.setMsg(mmp.get("Msg").toString());
-		} else {
-			rs = Result.failure();
-			rs.setMsg(mmp.get("Msg").toString());
-		}
+		
 		return rs;
 	}
 
@@ -1097,6 +1118,7 @@ public class AppGoodsController {
 		// 校验结果集合
 		Map<Object, Object> tempMP = null;
 		Result rs = null;
+		try {
 		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
 		if (user == null) {
 			rs = Result.failure();
@@ -1123,7 +1145,7 @@ public class AppGoodsController {
 			rs.setMsg("请输入购物车ID");
 			return rs;
 		}
-		try {
+		
 			// 获取选中的购物车ID数组
 			String[] goodCartIdTemps = goodCartIds.split(",");
 			// 进行下单前预提交库存校验，tempMP含有校验返回信息
@@ -1149,7 +1171,8 @@ public class AppGoodsController {
 						log.info("订单号生成失败。。。。。。。。。。。。。。。。。。。。。。。");
 					}
 					//判断订单类型：判断是否为子公司订单
-					if(this.childCompanyGoodsService.isChildCompanyGood(buyGoods)){
+					boolean isour=this.childCompanyGoodsService.isChildCompanyGood(buyGoods);
+					if(isour){
 						tmp = this.childCompanyGoodsService.addOrderFormFunc(tOrderForm, user, "GOODS",
 								Long.valueOf(goodCartIdTemps[i]),buyGoods);
 					}else{
@@ -1162,6 +1185,7 @@ public class AppGoodsController {
 					if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
 						// rs.setMsg(tmp.get("Msg").toString());
 						// 下单成功,在此不足任何提示
+						
 					} else {
 						// 下单失败，获取失败原因
 						log.info("添加订单校验通过，参数有误，添加失败XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -1172,6 +1196,9 @@ public class AppGoodsController {
 				// tempMP.remove("SuccessFlag");
 				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
+				//判断是否为子公司
+				
+				
 			} else {
 				// 校验未通过（未全部通过）
 				rs = Result.failure();
@@ -1184,11 +1211,11 @@ public class AppGoodsController {
 				rs.setMsg("有未通过预提交测试订单");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			rs = Result.failure();
 			rs.setObj(new ArrayList<>());
 			rs.setMsg("数据传递有误");
-			log.error(e.toString());
+			log.error("采购单下单错误"+e.toString());
 		}
 		return rs;
 	}

@@ -154,21 +154,45 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			result.setSuccess(false);
 		} else {
 
-			ezs_order_info orderinfo = ezs_orderformMapper.getOrderListByOrderno(orderNo, upi.getId());
-			if (null == orderinfo) {
-				orderinfo = purchaseOrderformMapper.getOrderListByOrderno(orderNo);
+			ezs_goodscart cart = new ezs_goodscart();
+			ezs_orderform ezs_orderform = new ezs_orderform();
+			ezs_purchase_orderform purchaseOrder = new ezs_purchase_orderform();
+			ezs_orderform = ezs_orderformMapper.selectByorderno(orderNo);
+			if (null == ezs_orderform) {
+				purchaseOrder = purchaseOrderformMapper.selectByOrderNo(orderNo);
+				if (null != purchaseOrder) {
+					cart = ezs_goodscartMapper.selectGoodsCartByOfidOrPofid(0, purchaseOrder.getId());
+					if (null != cart) {
+						ezs_orderform = ezs_orderformMapper.selectByPrimaryKey(cart.getOf_id());
+					} else {
+						result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+						result.setSuccess(false);
+						result.setMsg("订单状态异常");
+						return result;
+					}
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("订单不存在");
+					return result;
+				}
+
+			} else {
+				cart = ezs_goodscartMapper.selectGoodsCartByOfidOrPofid(ezs_orderform.getId(), 0);
+				if (null != cart) {
+					purchaseOrder = purchaseOrderformMapper.selectByPrimaryKey(cart.getPof_id());
+				} else {
+					result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					result.setSuccess(false);
+					result.setMsg("订单状态异常");
+					return result;
+				}
 			}
 
-			if (null == orderinfo) {
-				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				result.setSuccess(false);
-				result.setMsg("订单不存在");
-				return result;
-			}
 
 			
 			
-			checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(orderNo);
+			checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(ezs_orderform.getOrder_no());
 			if (null != checkorder) {
 				map.put("order_no", checkorder.getOrder_no());// 订单编号
 				map.put("memo", checkorder.getMemo());// 备注
@@ -297,6 +321,18 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			}
 		}
 
+		//查看 是否 有买家支付记录
+		Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(purchaseOrder.getBuyUser_id(), ezs_orderform.getOrder_no());
+		BigDecimal income = price.get("income");// 已支付
+		BigDecimal spending = price.get("spending");// 已收到
+		
+		if(income.compareTo(new BigDecimal("0"))==0) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setSuccess(false);
+			result.setMsg("买家首次未完成首次订单支付,请稍后再进行对账单编辑！");
+			return result;
+		}
+		
 		
 		checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(ezs_orderform.getOrder_no());
 		if (checkorder == null) {
@@ -395,18 +431,32 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			return result;
 		}
 
-		Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(purchaseOrder.getBuyUser_id(), ezs_orderform.getOrder_no());
-		BigDecimal income = price.get("income");// 已支付
-		BigDecimal spending = price.get("spending");// 已收到
+		
 
 		int status = Imblance_money.compareTo(income.subtract(spending));
-
-		String bz = "货款已付" + income + "元," + (status > 0 ? "应付" + Imblance_money.subtract(income) + "元"
-				: "应收" + Imblance_money.subtract(income) + "元");
+		Imblance_money=Imblance_money.subtract(income).add(spending);
+		String bz = "货款已付" + income + "元,收到退款"+spending+"元。实际应付"+income.subtract(spending).add(Imblance_money)+"元" + (status > 0 ? "当前应付" + Imblance_money + "元"
+				: "应收" + new BigDecimal("0").subtract(Imblance_money) + "元");
+		
+		log.info(bz);
+		if ("1".equals(issave)&&status > 0) {
+			ezs_orderform.setOrder_status(200);
+			purchaseOrder.setOrder_status(200);
+		} else if (status < 0) {
+			ezs_orderform.setOrder_status(205);
+			purchaseOrder.setOrder_status(205);
+		} else {
+			ezs_orderform.setOrder_status(93);
+			purchaseOrder.setOrder_status(70);
+		}
+		ezs_orderformMapper.updateByPrimaryKeySelective(ezs_orderform);
+		purchaseOrderformMapper.updateByPrimaryKeySelective(purchaseOrder);
+		
+		
 		checkorder.setMemo(bz);
 		checkorder.setUsername(username);
 		checkorder.setLinkphone(linkphone);
-		checkorder.setImblance_money(Imblance_money.subtract(income));
+		checkorder.setImblance_money(Imblance_money);
 		if (null == checkorder.getId()) {
 			ezs_check_order_mainMapper.insertSelective(checkorder);
 		} else {
@@ -573,11 +623,14 @@ public class CheckorderServiceImpl implements CheckOrderService {
 	}
 
 	public static void main(String[] args) {
-		List<Long> dels = new ArrayList<>();
-		dels.add((long) 1);
-		dels.add((long) 2);
-		dels.add((long) 3);
-		System.out.println(dels.toString().substring(1, dels.toString().length() - 1));
+//		List<Long> dels = new ArrayList<>();
+//		dels.add((long) 1);
+//		dels.add((long) 2);
+//		dels.add((long) 3);
+//		System.out.println(dels.toString().substring(1, dels.toString().length() - 1));
+		String bz = "货款已付" + 480000 + "元,收到退款"+0+"元。实际应付"+new BigDecimal("45900").subtract(new BigDecimal("0")).add(new BigDecimal("-5100"))+"元" + (-1 > 0 ? "当前应付" + new BigDecimal("-5100") + "元"
+				: "应收" + new BigDecimal("0").subtract(new BigDecimal("-5100")) + "元");
+		System.err.println(bz);
 	}
 
 	/**
@@ -764,8 +817,8 @@ public class CheckorderServiceImpl implements CheckOrderService {
 		}
 
 		if (status > 0) {
-			ezs_orderform.setOrder_status(201);
-			purchaseOrder.setOrder_status(205);
+			ezs_orderform.setOrder_status(200);
+			purchaseOrder.setOrder_status(200);
 		} else if (status < 0) {
 			ezs_orderform.setOrder_status(205);
 			purchaseOrder.setOrder_status(205);
@@ -783,8 +836,12 @@ public class CheckorderServiceImpl implements CheckOrderService {
 	}
 
 	@Override
+	@Async
 	public Result signContentProcess(Result result, String orderno) {
 		try {
+			
+			
+			
 			// 先查一下合同的pdf在不在
 			List<ezs_pact> pacts = ezs_pactMapper.selectPactByOrderNo(orderno);
 			ezs_pact pactnow = new ezs_pact();
@@ -1030,7 +1087,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误");
 			result.setSuccess(false);
@@ -1275,8 +1332,9 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(buyerid,
 						ezs_orderform.getOrder_no());
 				BigDecimal income = price.get("income");// 已支付
+				BigDecimal spending = price.get("spending");// 已支付
 				int status = Imblance_money.compareTo(new BigDecimal("0"));
-				String bz = "货款已付" + income + "元," + (status > 0 ? "应付" + Imblance_money + "元"
+				String bz = "货款已付" + income + "元,收到退款"+spending+"元。实际应付"+income.subtract(spending).add(Imblance_money)+"元" + (status > 0 ? "当前应付" + Imblance_money + "元"
 						: "应收" + new BigDecimal("0").subtract(Imblance_money) + "元");
 				map.put("paytype", bz);
 				map.put("small_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));
@@ -1289,7 +1347,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			}
 		} else if (upi.getId() == sellerid) {
 			// 判断是否在待支付状态 210
-			if (purchaseOrder.getOrder_status() == 210) {
+			if (purchaseOrder.getOrder_status() == 205) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setSuccess(true);
 				result.setMsg("请求成功");
@@ -1300,9 +1358,10 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(buyerid,
 						ezs_orderform.getOrder_no());
 				BigDecimal income = price.get("income");// 已支付
+				BigDecimal spending = price.get("spending");// 已支付
 				int status = Imblance_money.compareTo(new BigDecimal("0"));
-				String bz = "货款已付" + income + "元," + (status > 0 ? "应收" + Imblance_money + "元"
-						: "应付" + new BigDecimal("0").subtract(Imblance_money) + "元");
+				String bz = "已收货款" + income + "元,已退款"+spending+"元" + (status > 0 ? "应收" + Imblance_money + "元"
+						: "实际应收货款"+income.subtract(new BigDecimal("0").subtract(Imblance_money)).subtract(spending)+"元，应退" + new BigDecimal("0").subtract(Imblance_money) + "元");
 				map.put("paytype", bz);
 				map.put("small_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));
 				map.put("pay_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));

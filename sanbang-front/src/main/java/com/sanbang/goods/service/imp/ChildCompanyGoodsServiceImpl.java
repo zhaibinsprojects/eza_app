@@ -74,6 +74,8 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 	private ezs_purchase_orderformMapper purchaseOrderFormMapper;
 	@Autowired
 	private ezs_purchase_order_itemsMapper purchaseOrderItemsMapper;
+	@Autowired
+	private com.sanbang.buyer.service.CheckOrderService CheckOrderService;
 
 	/**
 	 * 立即购买function
@@ -337,6 +339,14 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.info("由购物车ID下单完成（子公司订单）:订单号码-"+orderForm.getOrder_no());
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			rs=CheckOrderService.signContentProcess(rs, tOrderForm.getOrder_no());
+			if(rs.getSuccess()) {
+				
+				if(!rs.getSuccess()) {
+					throw new Exception("立即下单:签章错误orderno="+tOrderForm.getOrder_no()+"错误信息为："+rs.toString());
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
