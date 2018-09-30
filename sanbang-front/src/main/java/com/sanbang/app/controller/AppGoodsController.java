@@ -1093,8 +1093,8 @@ public class AppGoodsController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Result result=Result.failure();
-			result.setMsg(rs.getMsg());
+			rs.setSuccess(false);
+			rs.setMsg("提交订单失败");
 		}
 		
 		return rs;
@@ -1211,10 +1211,10 @@ public class AppGoodsController {
 				rs.setMsg("有未通过预提交测试订单");
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			rs = Result.failure();
 			rs.setObj(new ArrayList<>());
-			rs.setMsg("数据传递有误");
+			rs.setMsg("订单提交失败");
 			log.error("采购单下单错误"+e.toString());
 		}
 		return rs;

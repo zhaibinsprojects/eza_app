@@ -37,6 +37,7 @@ import com.sanbang.dao.ezs_storecartMapper;
 import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.ChildCompanyGoodsService;
 import com.sanbang.utils.CommUtil;
+import com.sanbang.utils.Result;
 import com.sanbang.utils.StockHelper;
 import com.sanbang.utils.exponentrepager;
 import com.sanbang.vo.DictionaryCode;
@@ -84,7 +85,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
 	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,
-			Long WeAddressId,ezs_goods good,Double count) {
+			Long WeAddressId,ezs_goods good,Double count) throws Exception {
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
@@ -160,6 +161,16 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 				mmp.put("Msg", "立即购买成功");
 				log.info("立即购买成功");
 				log.info("立即购买-下单完成:订单号码-"+orderForm.getOrder_no());
+				/**
+				 * 合同模块
+				 */
+				Result result =Result.failure();
+				result.setMsg("签订合同失败");
+				result=CheckOrderService.signContentProcess(result, orderForm.getOrder_no());
+				if(!result.getSuccess()) {
+					throw new Exception("立即下单:签章错误orderno="+orderForm.getOrder_no()+"错误信息为："+result.toString());
+				}
+				
 			}else{
 				//不可删除，会导致订单号重复
 				log.debug("订单：ID"+orderForm.getId()+"订单号："+orderForm.getOrder_no()+" 校验失败，删除orderform表。。。。。。。。。");
@@ -263,10 +274,11 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 	
 	/**
 	 * 逐个添加订单function
+	 * @throws Exception 
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId,ezs_goods good) {
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId,ezs_goods good) throws Exception {
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
 		if(orderType==null){
@@ -339,12 +351,14 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			log.info("由购物车ID下单完成（子公司订单）:订单号码-"+orderForm.getOrder_no());
 			//逻辑修改，通过购物车Id进行订单添加 end........
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			rs=CheckOrderService.signContentProcess(rs, tOrderForm.getOrder_no());
-			if(rs.getSuccess()) {
-				
-				if(!rs.getSuccess()) {
-					throw new Exception("立即下单:签章错误orderno="+tOrderForm.getOrder_no()+"错误信息为："+rs.toString());
-				}
+			/**
+			 * 合同模块
+			 */
+			Result result =Result.failure();
+			result.setMsg("签订合同失败");
+			result=CheckOrderService.signContentProcess(result, orderForm.getOrder_no());
+			if(!result.getSuccess()) {
+				throw new Exception("立即下单:签章错误orderno="+orderForm.getOrder_no()+"错误信息为："+result.toString());
 			}
 			
 		} catch (Exception e) {
@@ -356,7 +370,7 @@ public class ChildCompanyGoodsServiceImpl implements ChildCompanyGoodsService {
 			mmp.put("Msg", "参数传递有误");
 			log.info("由购物车ID下单失败（子公司订单）:订单号码-"+orderForm.getOrder_no());
 			//事务控制须抛出异常
-			throw e;
+			throw new Exception("");
 		}
 		log.info("添加订单完成");
 		return mmp;

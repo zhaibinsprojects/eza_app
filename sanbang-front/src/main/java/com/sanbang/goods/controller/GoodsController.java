@@ -732,47 +732,53 @@ public class GoodsController {
 	@ResponseBody
 	public Object dealImmediatelyBuyGood(HttpServletRequest request,HttpServletResponse response,Long WeAddressId,Long goodsId,Double count){
 		Map<String, Object> mmp = null;
-		Result rs = null;
-		ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
-		if (user == null) {
-			rs = Result.failure();
-			rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
-			rs.setMsg("用户未登录");
-			return rs;
-		}else{ 
-			Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
-			ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
-			if(dictCode.getSequence()<=3){
-			if(user.getEzs_store().getStatus()!=2){
+		Result rs = Result.failure();
+		try {
+			ezs_user user = RedisUserSession.getUserInfoByKeyForApp(request);
+			if (user == null) {
 				rs = Result.failure();
-				rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+				rs.setErrorcode(DictionaryCode.ERROR_WEB_SESSION_ERROR);
+				rs.setMsg("用户未登录");
 				return rs;
+			}else{ 
+				Long auditingusertype_id = user.getEzs_store().getAuditingusertype_id();
+				ezs_dict dictCode = dictService.getDictByThisId(auditingusertype_id);
+				if(dictCode.getSequence()<=3){
+				if(user.getEzs_store().getStatus()!=2){
+					rs = Result.failure();
+					rs.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					rs.setMsg("您还未完成实名认证，请去个人中心完成实名认证！");
+					return rs;
+				}
+				}
 			}
+			ezs_orderform orderForm = new ezs_orderform();
+			ezs_goods buyGoods = null;
+			// 修改订单号生成规则
+			try{
+				buyGoods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
+				orderForm.setOrder_no(createOrderNo(buyGoods));
+			}catch(Exception e){
+				e.printStackTrace();
+				log.info("订单号生成失败");
 			}
-		}
-		ezs_orderform orderForm = new ezs_orderform();
-		ezs_goods buyGoods = null;
-		// 修改订单号生成规则
-		try{
-			buyGoods = this.ezs_goodsMapper.selectByPrimaryKey(goodsId);
-			orderForm.setOrder_no(createOrderNo(buyGoods));
-		}catch(Exception e){
+			if(this.childCompanyGoodsService.isChildCompanyGood(buyGoods)){
+				mmp = this.childCompanyGoodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
+			}else{
+				mmp = this.goodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
+			}
+			Integer ErrorCode = (Integer) mmp.get("ErrorCode");
+			if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
+				rs = Result.success();
+				rs.setMsg(mmp.get("Msg").toString());
+			} else {
+				rs = Result.failure();
+				rs.setMsg(mmp.get("Msg").toString());
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
-			log.info("订单号生成失败");
-		}
-		if(this.childCompanyGoodsService.isChildCompanyGood(buyGoods)){
-			mmp = this.childCompanyGoodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
-		}else{
-			mmp = this.goodsService.immediateAddOrderFormFunc(orderForm, user, "GOODS", WeAddressId, buyGoods, count);
-		}
-		Integer ErrorCode = (Integer) mmp.get("ErrorCode");
-		if (ErrorCode != null && ErrorCode.equals(DictionaryCode.ERROR_WEB_REQ_SUCCESS)) {
-			rs = Result.success();
-			rs.setMsg(mmp.get("Msg").toString());
-		} else {
-			rs = Result.failure();
-			rs.setMsg(mmp.get("Msg").toString());
+			rs.setSuccess(false);
+			rs.setMsg("提交订单失败");
 		}
 		return rs;
 	}

@@ -17,14 +17,14 @@ public interface ChildCompanyGoodsService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long WeAddressId,ezs_goods good,Double count);
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long WeAddressId,ezs_goods good,Double count) throws Exception;
 
 	/**
 	 * 生成订单
 	 * @param orderForm 订单对象
 	 * @param orderType 订单类型 ： GOODS 商品订单；SAMPLE 样品订单
 	 */
-	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId,ezs_goods good);
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm,ezs_user user,String orderType,Long goodsCartId,ezs_goods good) throws Exception;
 	/**
 	 * 判断是否为子公司订单
 	 * @param good
