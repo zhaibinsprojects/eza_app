@@ -602,11 +602,19 @@ public class AppHomeGoodsMessController {
 		try {
 			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 			
-			Advices advice01 = new Advices();
-			advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921001.png");
-			advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1143");
-			advice01.setpName("banner20180921001.png");
+			//2018 中秋banner
+			//Advices advice01 = new Advices();
+			//advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921001.png");
+			//advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1143");
+			//advice01.setpName("banner20180921001.png");
 			
+			//2018 十一banner
+			Advices advice01 = new Advices();
+			advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180930001.png");
+			advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1205");
+			advice01.setpName("banner20180930001.png");
+			
+			//2018 价格行情
 			Advices advice02 = new Advices();
 			advice02.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921002.png");
 			advice02.setLink("https://m.ezaisheng.com/front/hangqtg001.html");
