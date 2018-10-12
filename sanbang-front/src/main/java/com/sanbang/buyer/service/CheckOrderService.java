@@ -1,5 +1,7 @@
 package com.sanbang.buyer.service;
 
+import java.math.BigDecimal;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.sanbang.bean.ezs_user;
@@ -9,13 +11,15 @@ public interface CheckOrderService {
 
 	/**
 	 * 对账单查看
+	 * 
 	 * @param request
 	 * @param result
 	 * @param orderNo
 	 * @return
 	 */
-	public Result getCheckOrderH(HttpServletRequest request, Result result,ezs_user upi, String orderNo) throws Exception;
-	
+	public Result getCheckOrderH(HttpServletRequest request, Result result, ezs_user upi, String orderNo)
+			throws Exception;
+
 	/***
 	 * 
 	 * @param request
@@ -24,9 +28,8 @@ public interface CheckOrderService {
 	 * @param items
 	 * @return
 	 */
-	public Result addOrUpdateCheckOrder(HttpServletRequest request,ezs_user upi,Result result) throws Exception;
-	
-	
+	public Result addOrUpdateCheckOrder(HttpServletRequest request, ezs_user upi, Result result) throws Exception;
+
 	/***
 	 * 
 	 * @param request
@@ -35,41 +38,56 @@ public interface CheckOrderService {
 	 * @param items
 	 * @return
 	 */
-	public Result getCheckOrderInit(HttpServletRequest request,ezs_user upi,Result result,String orderno) throws Exception;
-	
-	
-	
-	 /**
-	  * 上传订单支付凭证
-	  * @param request
-	  * @param order_no
-	  * @return
-	  */
-	 public Result  orderpaysubmitForNow(HttpServletRequest request,String order_no,String urlParam,ezs_user upi)  throws Exception;
-	
+	public Result getCheckOrderInit(HttpServletRequest request, ezs_user upi, Result result, String orderno)
+			throws Exception;
+
 	/**
-	 * 生成合同  快速双向签订合同
+	 * 上传订单支付凭证
+	 * 
+	 * @param request
+	 * @param order_no
+	 * @return
+	 */
+	public Result orderpaysubmitForNow(HttpServletRequest request, String order_no, String urlParam, ezs_user upi)
+			throws Exception;
+
+	/**
+	 * 生成合同 快速双向签订合同
+	 * 
 	 * @param result
 	 * @param orderno
 	 * @return
 	 */
-	 public Result signContentProcess(Result result,String orderno);
-	 
-	 /**
-	 * 签订合同  快速双向签订合同
+	public Result signContentProcess(Result result, String orderno);
+
+	/**
+	 * 签订合同 快速双向签订合同
+	 * 
 	 * @param result
 	 * @param orderno
 	 * @return
 	 */
-	 public Result signContentForAdd(Result result,String orderno);
-	 
-	 /**
-	   * 新订单支付确认
-	  * @param request
-	  * @param order_no
-	  * @param upi
-	  * @return
-	  */
-	 public Result payconfirm(HttpServletRequest request, String order_no,ezs_user upi);
-	
+	public Result signContentForAdd(Result result, String orderno);
+
+	/**
+	 * 新订单支付确认
+	 * 
+	 * @param request
+	 * @param order_no
+	 * @param upi
+	 * @return
+	 */
+	public Result payconfirm(HttpServletRequest request, String order_no, ezs_user upi);
+
+	/**
+	 * 合同预览
+	 * 
+	 * @param request
+	 * @param order_no
+	 * @param upi
+	 * @return
+	 */
+	public Result contentPreview(Result result, HttpServletRequest request, String order_no, long buyerid,
+			long sellerid, BigDecimal count,  long goodsId) throws Exception;
+
 }

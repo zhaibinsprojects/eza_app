@@ -496,7 +496,7 @@
 			C.addess,
 			B.total_price,
 			B.goods_amount,
-			IF(B.order_status=20,30,IF(B.order_status=1,10,IF(B.order_status=200 ,201,B.order_status))) order_status,
+			IF(B.order_status=20,30,IF(B.order_status=1,10,IF(B.order_status=200 ,IF(IFNULL(H.pnum,0)=0,201,202),IF(B.order_status>=70 AND B.order_type="ORDER_CHILDCOMPANY_GOOD",B.order_status+150,B.order_status)))) order_status,
 			B.first_price,
 			B.end_price,
 			B.all_price,
@@ -518,6 +518,7 @@
 			LEFT JOIN ezs_area D ON D.id = B.address_id
 			LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
 			LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+			LEFT JOIN (SELECT J.order_no,COUNT(J.id) pnum FROM ezs_goodscart I LEFT JOIN ezs_orderform H ON I.of_id=H.id LEFT JOIN ezs_payinfo J ON J.order_no=H.order_no WHERE NOT ISNULL(J.id)  GROUP BY J.order_no  ) H ON H.order_no=B.order_no
 			WHERE
 		1 = 1
 
@@ -551,7 +552,7 @@
 			C.area_id,
 			C.addess,
 			B.total_price,
-			IF(B.order_status=20,30,IF(B.order_status=1,10,IF(B.order_status=200 ,201,B.order_status))) order_status,
+			IF(B.order_status=20,30,IF(B.order_status=1,10,IF(B.order_status=200 ,IF(IFNULL(H.pnum,0)=0,201,202),IF(B.order_status>=70 AND B.order_type="ORDER_CHILDCOMPANY_GOOD",B.order_status+150,B.order_status)))) order_status,
 			B.pay_mode,
 			B.first_price,
 			B.end_price,
@@ -560,7 +561,8 @@
 			B.address_id,
 			date_format(
 				B.finishtime,
-				'%Y-%m-%d %H:%i:%S'
+				'%Y-%m-%d %H:%ifront
+				:%S'
 			) finishtime,		
 			B.order_type,
 			B.deleteStatus,
@@ -574,6 +576,7 @@
 		LEFT JOIN ezs_area D ON D.id = B.address_id
 		LEFT JOIN ezs_accessory F ON C.goods_main_photo_id = F.id
 		LEFT JOIN ezs_dvaluate G ON G.order_no = B.order_no
+		LEFT JOIN (SELECT J.order_no,COUNT(J.id) pnum FROM ezs_goodscart I LEFT JOIN ezs_orderform H ON I.of_id=H.id LEFT JOIN ezs_payinfo J ON J.order_no=H.order_no WHERE NOT ISNULL(J.id)  GROUP BY J.order_no  ) H ON H.order_no=B.order_no
 		WHERE
 		1 = 1
 		AND B.deleteStatus = 0

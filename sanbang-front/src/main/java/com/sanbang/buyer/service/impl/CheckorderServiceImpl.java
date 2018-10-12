@@ -1,19 +1,23 @@
 package com.sanbang.buyer.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.sanbang.bean.ezs_accessory;
-import com.sanbang.bean.ezs_address;
 import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_check_order_items;
 import com.sanbang.bean.ezs_check_order_main;
 import com.sanbang.bean.ezs_checkm_photo;
 import com.sanbang.bean.ezs_goodscart;
-import com.sanbang.bean.ezs_order_info;
 import com.sanbang.bean.ezs_orderform;
 import com.sanbang.bean.ezs_pact;
 import com.sanbang.bean.ezs_payinfo;
@@ -57,6 +59,7 @@ import com.sanbang.dao.ezs_userMapper;
 import com.sanbang.goods.service.GoodsService;
 import com.sanbang.utils.FilePathUtil;
 import com.sanbang.utils.NumberToCN;
+import com.sanbang.utils.ProcessHtmlUtil;
 import com.sanbang.utils.Result;
 import com.sanbang.utils.Tools;
 import com.sanbang.utils.httpclient.HttpRemoteRequestUtils;
@@ -132,6 +135,21 @@ public class CheckorderServiceImpl implements CheckOrderService {
 
 	private SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
 
+	// 上下文地址
+	@Value("${consparam.imgs.baseurl}")
+	public String BASEURL;
+
+	// 临时路径
+	@Value("${consparam.imgs.tempsavepath}")
+	public String TEMPSAVEPATH;
+
+	// 临时路径标识
+	@Value("${consparam.imgs.tempathflag}")
+	public String TEMPATHFLAG;
+
+	//简易合同模板查看
+	private static String TEMPNAME = "xiaoshou5.ftl";
+
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 
 	@Override
@@ -144,6 +162,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 
 		BigDecimal cnum = new BigDecimal(0);
 		BigDecimal cprice = new BigDecimal(0);
+		BigDecimal only_price=new BigDecimal(0);
 
 		List<Map<String, Object>> listitem = new ArrayList<>();
 		List<Map<String, Object>> listitemp = new ArrayList<>();
@@ -189,9 +208,14 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				}
 			}
 
-
 			
-			
+			GoodsVo good=goodsService.getgoodsinfo(purchaseOrder.getGoodsId(), 0);
+			if(null==good) {
+				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				result.setSuccess(false);
+				result.setMsg("订单状态异常");
+				return result;
+			}
 			checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(ezs_orderform.getOrder_no());
 			if (null != checkorder) {
 				map.put("order_no", checkorder.getOrder_no());// 订单编号
@@ -206,9 +230,12 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				List<ezs_check_order_items> items = checkorder.getItems();
 				int i = 0;
 				for (ezs_check_order_items item : items) {
+					if(only_price.compareTo(new BigDecimal("0"))==0) {
+						only_price=item.getItem_price();
+					}
 					Map<String, Object> chace = new HashMap<>();
 					chace.put("item_name", item.getItem_name());// 产品名称
-					chace.put("deliveryDate", smp.format(item.getDeliveryDate()));
+					chace.put("deliveryDate", item.getDeliveryDate()==null?"":smp.format(item.getDeliveryDate()));
 					chace.put("flag", "0");// 是否参与计算标记，0：参与计算；1：不参与计算，默认参与计算
 					chace.put("item_count", item.getItem_count());// 数量
 					chace.put("item_price", item.getItem_price());// 单价
@@ -232,14 +259,19 @@ public class CheckorderServiceImpl implements CheckOrderService {
 						listitem = new ArrayList<>();
 					}
 				}
+				map.put("name", good.getName());// 联系人
 				map.put("cnum", cnum);// 联系人
 				map.put("cprice", cprice);
-
+				map.put("only_price", only_price);
 				map.put("imglist", imglist);
 				map.put("items", listitemp);
 				res.put("checkorder", map);
 				res.put("hashdata", true);
 			} else {
+				map.put("name", good.getName());// 联系人
+				map.put("cnum", cnum);// 联系人
+				map.put("cprice", cprice);
+				map.put("only_price", cart.getPrice());
 				map.put("imglist", imglist);
 				map.put("items", listitem);
 				res.put("checkorder", map);
@@ -259,7 +291,16 @@ public class CheckorderServiceImpl implements CheckOrderService {
 	@Override
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, timeout = 3000)
 	public Result addOrUpdateCheckOrder(HttpServletRequest request, ezs_user upi, Result result) throws Exception {
-
+		//固定商品单价
+		String onlyprice=request.getParameter("only_price");
+		
+		if(StringUtils.isEmpty(onlyprice)||StringUtils.isBlank(onlyprice)) {
+			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			result.setMsg("商品单价不能为空");
+			result.setSuccess(false);
+			return result;
+		}
+		
 		List<ezs_check_order_items> list = new ArrayList<>();
 		ezs_check_order_main checkorder = new ezs_check_order_main();
 		BigDecimal Imblance_money = new BigDecimal(0);
@@ -285,7 +326,6 @@ public class CheckorderServiceImpl implements CheckOrderService {
 
 		String urlParam = request.getParameter("urlParam");
 
-		
 		ezs_goodscart cart = new ezs_goodscart();
 		ezs_orderform ezs_orderform = new ezs_orderform();
 		ezs_purchase_orderform purchaseOrder = new ezs_purchase_orderform();
@@ -321,19 +361,19 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			}
 		}
 
-		//查看 是否 有买家支付记录
-		Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(purchaseOrder.getBuyUser_id(), ezs_orderform.getOrder_no());
+		// 查看 是否 有买家支付记录
+		Map<String, BigDecimal> price = ezs_payinfoMapper.getOrderPayInfoForUser(purchaseOrder.getBuyUser_id(),
+				ezs_orderform.getOrder_no());
 		BigDecimal income = price.get("income");// 已支付
 		BigDecimal spending = price.get("spending");// 已收到
-		
-		if(income.compareTo(new BigDecimal("0"))==0) {
+
+		if (income.compareTo(new BigDecimal("0")) == 0) {
 			result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			result.setSuccess(false);
 			result.setMsg("买家首次未完成首次订单支付,请稍后再进行对账单编辑！");
 			return result;
 		}
-		
-		
+
 		checkorder = ezs_check_order_mainMapper.getCheckOrderForOrderNO(ezs_orderform.getOrder_no());
 		if (checkorder == null) {
 			checkorder = new ezs_check_order_main();
@@ -371,10 +411,10 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			long id = json.get("id") == null ? 0 : json.getInt("id");// id
 			String item_name = json.getString("item_name");// 标题
 			double item_count = json.getDouble("item_count");// 数量
-			double item_price = json.getDouble("item_price");// 金额
+			double item_price = Double.valueOf(onlyprice);//json.getDouble("item_price");// 金额
 			String detail = json.getString("detail");// 金额
 			String deliveryDate = json.getString("deliveryDate");// 时间
-			
+
 			if (Tools.isEmpty(item_name)) {
 				result.setErrorcode(DictionaryCode.ERROR_WEB_PARAM_ERROR);
 				result.setMsg("标题不能为空");
@@ -431,15 +471,14 @@ public class CheckorderServiceImpl implements CheckOrderService {
 			return result;
 		}
 
-		
-
 		int status = Imblance_money.compareTo(income.subtract(spending));
-		Imblance_money=Imblance_money.subtract(income).add(spending);
-		String bz = "货款已付" + income + "元,收到退款"+spending+"元。实际应付"+income.subtract(spending).add(Imblance_money)+"元" + (status > 0 ? "当前应付" + Imblance_money + "元"
-				: "应收" + new BigDecimal("0").subtract(Imblance_money) + "元");
-		
+		Imblance_money = Imblance_money.subtract(income).add(spending);
+		String bz = "货款已付" + income + "元,收到退款" + spending + "元。实际应付" + income.subtract(spending).add(Imblance_money)
+				+ "元" + (status > 0 ? "当前应付" + Imblance_money + "元"
+						: "应收" + new BigDecimal("0").subtract(Imblance_money) + "元");
+
 		log.info(bz);
-		if ("1".equals(issave)&&status > 0) {
+		if ("1".equals(issave) && status > 0) {
 			ezs_orderform.setOrder_status(200);
 			purchaseOrder.setOrder_status(200);
 		} else if (status < 0) {
@@ -451,8 +490,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 		}
 		ezs_orderformMapper.updateByPrimaryKeySelective(ezs_orderform);
 		purchaseOrderformMapper.updateByPrimaryKeySelective(purchaseOrder);
-		
-		
+
 		checkorder.setMemo(bz);
 		checkorder.setUsername(username);
 		checkorder.setLinkphone(linkphone);
@@ -628,8 +666,10 @@ public class CheckorderServiceImpl implements CheckOrderService {
 //		dels.add((long) 2);
 //		dels.add((long) 3);
 //		System.out.println(dels.toString().substring(1, dels.toString().length() - 1));
-		String bz = "货款已付" + 480000 + "元,收到退款"+0+"元。实际应付"+new BigDecimal("45900").subtract(new BigDecimal("0")).add(new BigDecimal("-5100"))+"元" + (-1 > 0 ? "当前应付" + new BigDecimal("-5100") + "元"
-				: "应收" + new BigDecimal("0").subtract(new BigDecimal("-5100")) + "元");
+		String bz = "货款已付" + 480000 + "元,收到退款" + 0 + "元。实际应付"
+				+ new BigDecimal("45900").subtract(new BigDecimal("0")).add(new BigDecimal("-5100")) + "元"
+				+ (-1 > 0 ? "当前应付" + new BigDecimal("-5100") + "元"
+						: "应收" + new BigDecimal("0").subtract(new BigDecimal("-5100")) + "元");
 		System.err.println(bz);
 	}
 
@@ -836,12 +876,9 @@ public class CheckorderServiceImpl implements CheckOrderService {
 	}
 
 	@Override
-	@Async
 	public Result signContentProcess(Result result, String orderno) {
 		try {
-			
-			
-			
+
 			// 先查一下合同的pdf在不在
 			List<ezs_pact> pacts = ezs_pactMapper.selectPactByOrderNo(orderno);
 			ezs_pact pactnow = new ezs_pact();
@@ -1083,11 +1120,12 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				result.setSuccess(true);
 				Map<String, Object> map = new HashMap<>();
 				map.put("pdfurl",
-						"http://test.ezaisheng.com/website/certSign/forout/showcontentpdf.do?orderid=" + orderno);
+						pdfpath);
+				result.setObj(map);
 			}
 
 		} catch (Exception e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			result.setMsg("系统错误");
 			result.setSuccess(false);
@@ -1314,7 +1352,7 @@ public class CheckorderServiceImpl implements CheckOrderService {
 		if (null == checkorder) {
 			Imblance_money = purchaseOrder.getTotal_price();
 		} else {
-			Imblance_money=checkorder.getImblance_money();
+			Imblance_money = checkorder.getImblance_money();
 		}
 
 		// 买家
@@ -1334,8 +1372,10 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				BigDecimal income = price.get("income");// 已支付
 				BigDecimal spending = price.get("spending");// 已支付
 				int status = Imblance_money.compareTo(new BigDecimal("0"));
-				String bz = "货款已付" + income + "元,收到退款"+spending+"元。实际应付"+income.subtract(spending).add(Imblance_money)+"元" + (status > 0 ? "当前应付" + Imblance_money + "元"
-						: "应收" + new BigDecimal("0").subtract(Imblance_money) + "元");
+				String bz = "货款已付" + income + "元,收到退款" + spending + "元。实际应付"
+						+ income.subtract(spending).add(Imblance_money) + "元"
+						+ (status > 0 ? "当前应付" + Imblance_money + "元"
+								: "应收" + new BigDecimal("0").subtract(Imblance_money) + "元");
 				map.put("paytype", bz);
 				map.put("small_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));
 				map.put("pay_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));
@@ -1360,8 +1400,9 @@ public class CheckorderServiceImpl implements CheckOrderService {
 				BigDecimal income = price.get("income");// 已支付
 				BigDecimal spending = price.get("spending");// 已支付
 				int status = Imblance_money.compareTo(new BigDecimal("0"));
-				String bz = "已收货款" + income + "元,已退款"+spending+"元" + (status > 0 ? "应收" + Imblance_money + "元"
-						: "实际应收货款"+income.subtract(new BigDecimal("0").subtract(Imblance_money)).subtract(spending)+"元，应退" + new BigDecimal("0").subtract(Imblance_money) + "元");
+				String bz = "已收货款" + income + "元,已退款" + spending + "元" + (status > 0 ? "应收" + Imblance_money + "元"
+						: "实际应收货款" + income.subtract(new BigDecimal("0").subtract(Imblance_money)).subtract(spending)
+								+ "元，应退" + new BigDecimal("0").subtract(Imblance_money) + "元");
 				map.put("paytype", bz);
 				map.put("small_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));
 				map.put("pay_price", (status > 0 ? Imblance_money : new BigDecimal("0").subtract(Imblance_money)));
@@ -1390,4 +1431,242 @@ public class CheckorderServiceImpl implements CheckOrderService {
 		return result;
 	}
 
+	@Override
+	public Result contentPreview(Result result, HttpServletRequest request, String order_no, long buyerid,
+			long sellerid, BigDecimal count,  long goodsId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		// 查票据表
+		ezs_bill bill = ezs_billMapper.selectByPrimaryKey(buyerid);
+		ezs_user buyer = ezs_userMapper.selectByPrimaryKey(sellerid);
+		ezs_user seller = ezs_userMapper.selectByPrimaryKey(sellerid);
+		GoodsVo goods = goodsService.getgoodsinfo(goodsId, 0);
+		param.put("customerName", buyer.getEzs_store().getCompanyName());
+		param.put("customerAddress",
+				getaddressinfo(buyer.getEzs_store().getArea_id()) + buyer.getEzs_store().getAddress());
+		param.put("legalName", buyer.getEzs_store().getPerson());
+		BigDecimal totalprice = count.multiply(goods.getSaleprice()).setScale(2, BigDecimal.ROUND_UP);
+		param.put("productSpec", goods.getName());
+		param.put("productPack", "/");
+		param.put("productNum", count);
+		param.put("productPrice", goods.getSaleprice());
+		param.put("productAmount", totalprice.toString());
+		param.put("productAmountCase", NumberToCN.number2CNMontrayUnit(totalprice));
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 3);
+		param.put("productDelTime", Tools.date2Str(c.getTime(), "yyyy-MM-dd"));
+		param.put("buyerAddress", "/");
+		param.put("productDelPlace", goods.getAreaName());
+		param.put("downpayment", totalprice.divide(new BigDecimal("100")).multiply(new BigDecimal("20")).setScale(2, BigDecimal.ROUND_UP));
+		param.put("finalpayment", totalprice.divide(new BigDecimal("100")).multiply(new BigDecimal("80")).setScale(2, BigDecimal.ROUND_UP));
+		param.put("density", goods.getDensity());
+		param.put("melt", goods.getLipolysis());
+		param.put("tensile", goods.getTensile());
+		param.put("elongation", goods.getCrack());
+		param.put("impact", goods.getCantilever());
+		param.put("elasticity", goods.getFlexural());
+		param.put("ash", goods.getAsh());
+		param.put("hardness", "/");
+
+		param.put("rohs", "/");
+		param.put("moisture", goods.getWater());
+		param.put("productName", goods.getName());
+		ezs_quality qu = ezs_qualityMapper.selectByPrimaryKey(goods.getQuality_id());
+		if (qu == null) {
+			qu = new ezs_quality();
+		}
+		param.put("goodno", goods.getGood_no());
+		param.put("rnumber", qu.getRnumber());
+		param.put("bnumber", qu.getBnumber());
+
+		// 纳税人识别号
+		param.put("taxpayerNum", bill.getDutyNo());
+		// 地址、电话
+		param.put("taxpayeInfo", bill.getAddress() + bill.getPhone());
+		// 开户行及账号
+		param.put("bankAccount", bill.getBank() + bill.getNumber());
+
+		// 电话（收款电话）
+		param.put("customerTel", buyer.getEzs_userinfo().getTel());
+		// 通讯地址（供应商收款地址）
+		param.put("customerTelAddress", buyer.getEzs_store().getAddress());
+		// 邮箱（注册邮箱）
+		param.put("customerEmail", buyer.getEzs_userinfo().getEmail());
+
+		/**
+		 * 卖家
+		 */
+		param.put("sellercustomerName", seller.getEzs_store().getCompanyName());
+		// 客户签章用户地址（供应商实名认证地址）
+		param.put("sellercustomerAddress",
+				getaddressinfo(seller.getEzs_store().getArea_id()) + seller.getEzs_store().getAddress());
+		// 法定代表人（取实名认证数据）
+		param.put("sellerlegalName", seller.getEzs_store().getPerson());
+		// 纳税人识别号
+		param.put("sellertaxpayerNum", seller.getEzs_bill().getDutyNo());
+		// 地址、电话
+		param.put("sellertaxpayeInfo", seller.getEzs_bill().getAddress() + seller.getEzs_bill().getPhone());
+		// 开户行及账号
+		param.put("sellerbankAccount", seller.getEzs_bill().getBank() + seller.getEzs_bill().getNumber());
+
+		// 电话（收款电话）
+		param.put("sellercustomerTel", seller.getEzs_userinfo().getTel());
+		// 通讯地址（供应商收款地址）
+		param.put("sellercustomerTelAddress",
+				getaddressinfo(seller.getEzs_store().getArea_id()) + seller.getEzs_store().getAddress());
+		// 邮箱（注册邮箱）
+		param.put("sellercustomerEmail", seller.getEzs_userinfo().getEmail());
+		// 邮箱（注册邮箱）
+		param.put("sellercustomerTelAddress",
+				getaddressinfo(seller.getEzs_store().getArea_id()) + seller.getEzs_store().getAddress());
+
+		// 法定代表人（取实名认证数据）
+		param.put("legalName", buyer.getEzs_store().getPerson());
+		
+		
+		List<ezs_quality_detail> lists = new ArrayList<>();
+		/*if (null != purchaseOrder) {
+			 * for (int i = 0; i < lists.size(); i++) { // 项目名称 httpParam.addUrlParams(new
+			 * BasicNameValuePair("qualityDetail[" + i + "].name",
+			 * lists.get(i).getEzs_qualityitem().getName())); // 实验方法
+			 * httpParam.addUrlParams(new BasicNameValuePair("qualityDetail[" + i +
+			 * "].measure", lists.get(i).getEzs_qualityitem().getMeasure())); // 实验条件
+			 * httpParam.addUrlParams(new BasicNameValuePair("qualityDetail[" + i +
+			 * "].term", lists.get(i).getEzs_qualityitem().getTerm())); // 单位
+			 * httpParam.addUrlParams(new BasicNameValuePair("qualityDetail[" + i +
+			 * "].unit", lists.get(i).getEzs_qualityitem().getUnit())); // 产品规格
+			 * httpParam.addUrlParams(new BasicNameValuePair("qualityDetail[" + i +
+			 * "].product_format", lists.get(i).getEzs_qualityitem().getProduct_format()));
+			 * // 检测结果 httpParam.addUrlParams(new BasicNameValuePair("qualityDetail[" + i +
+			 * "].q_result", lists.get(i).getEzs_qualityitem().getQ_result())); }
+			 
+
+		}*/
+		param.put("baog", lists);
+		result = uploadFile(request, result, param);
+		return result;
+	}
+
+	/**
+	 * 上传图片到临时路径 width 和 height都为0代表 不检查图片长宽 width 和 height都不为0代表检查长宽 传多少 限制
+	 * 图片宽和长就是多少 size是当前图片的大小 单位是字节 返回 json串 code为000代表操作成功
+	 */
+	@SuppressWarnings("unused")
+	private Result uploadFile(HttpServletRequest request, Result result, Map<String, Object> param) throws Exception {
+		String path = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringBuilder ym = this.dateUtil(0).append(this.dateUtil(1)).append(File.separator);
+		StringBuilder d = this.dateUtil(2).append(File.separator);
+		StringBuilder hms = this.dateUtil(3).append("-").append(this.dateUtil(4)).append("-").append(this.dateUtil(5))
+				.append("-").append(this.dateUtil(6)).append("-").append(this.dateUtil(7));
+		log.info("合同预览");
+		result = saveFileMethod(ym, d, hms, path, result, param);
+		return result;
+	}
+
+	/**
+	 * 封装相同方法
+	 * 
+	 * @param ym
+	 * @param d
+	 * @param hms
+	 * @param file
+	 * @param path
+	 * @param map
+	 * @throws Exception
+	 */
+	public Result saveFileMethod(StringBuilder ym, StringBuilder d, StringBuilder hms, String path, Result result,
+			Map<String, Object> param) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		isExist(TEMPSAVEPATH + ym);
+		isExist(TEMPSAVEPATH + ym + d);
+		String suffix = System.currentTimeMillis() + ".html";
+		path = TEMPSAVEPATH + ym + d + hms + suffix;
+		ProcessHtmlUtil.createHtml(path, TEMPNAME, param);
+
+		String url = this.getUrl(path, BASEURL, TEMPATHFLAG);
+
+		map.put("code", "000");
+		map.put("message", "操作成功");
+		if (null != map.get("url")) {
+			String url1 = String.valueOf(map.get("url"));
+			map.put("url", new StringBuffer().append(url1).append(",").append(url).toString());
+		} else {
+			map.put("url", url);
+		}
+		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		result.setMsg("查看合同成功");
+		result.setObj(map);
+		result.setSuccess(true);
+		return result;
+	}
+
+	/**
+	 * 不存在就创建该文件夹
+	 * 
+	 * @param path
+	 */
+	public void isExist(String path) {
+		File file = new File(path);
+		// 判断文件夹是否存在,如果不存在则创建文件夹
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		file = null;
+	}
+
+	/**
+	 * 将物理路径转换成url
+	 * 
+	 * @param path
+	 * @param baseurl 基础地址
+	 * @param flag
+	 * @return
+	 */
+	public String getUrl(String path, String baseurl, String flag) throws Exception {
+		return baseurl + path.substring(path.indexOf(flag));
+	}
+
+	public StringBuilder dateUtil(int type) {
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));
+		int param = 0;
+		StringBuilder sbd = new StringBuilder();
+		switch (type) {
+		case 0:// 年
+			param = c.get(Calendar.YEAR);
+			break;
+		case 1:// 月
+			param = c.get(Calendar.MONTH) + 1;
+			break;
+		case 2:// 日
+			param = c.get(Calendar.DAY_OF_MONTH);
+			break;
+		case 3:// 时
+			param = c.get(Calendar.HOUR_OF_DAY);
+			break;
+		case 4:// 分
+			param = c.get(Calendar.MINUTE);
+			break;
+		case 5:// 秒
+			param = c.get(Calendar.SECOND);
+			break;
+		case 6:// 2位随机整数
+			Random rand = new Random();
+			param = rand.nextInt(91) + 9;
+			if (param == 9) {
+				param = 10;
+			}
+			break;
+		case 7:// 5位随机整数
+			Random rand2 = new Random();
+			param = (int) (rand2.nextDouble() * (100000 - 10000) + 10000);
+			break;
+		}
+		if (param < 10) {
+			sbd.append("0").append(param);
+		} else {
+			sbd.append(param);
+		}
+		return sbd;
+	}
 }

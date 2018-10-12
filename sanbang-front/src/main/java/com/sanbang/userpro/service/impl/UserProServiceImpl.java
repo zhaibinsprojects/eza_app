@@ -2,6 +2,7 @@ package com.sanbang.userpro.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import com.sanbang.bean.ezs_bill;
 import com.sanbang.bean.ezs_companyType_dict;
 import com.sanbang.bean.ezs_industry_dict;
 import com.sanbang.bean.ezs_position;
+import com.sanbang.bean.ezs_probation;
 import com.sanbang.bean.ezs_store;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_user_role;
@@ -414,7 +416,7 @@ public class UserProServiceImpl implements UserProService {
 		}
 		
 	}
-
+	
 	/**
 	 * 未登录状态下 恢复到登录之前的状态
 	 */

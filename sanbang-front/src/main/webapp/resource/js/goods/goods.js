@@ -578,10 +578,10 @@ function androidshowpdf() {
 				});
 	
 	}
-	
-	var londing="";
+
+var londing="";
 	$(function(){
-		if(status==1){
+		if(status==2){
 			londing=layer.open({
 			    type: 2
 			    ,time: 1
@@ -590,12 +590,10 @@ function androidshowpdf() {
 		}else{
 			layer.open({
 			    type: 2
-			    ,content: '商品下架啦,去商城看看吧！'
 			    ,shadeClose: false
+			    ,content: '商品下架啦,去商城看看吧！'
 			  });
 		}
 		 
 	})
-	
-	
 	

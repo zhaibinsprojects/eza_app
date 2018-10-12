@@ -12,6 +12,10 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 public class ProcessHtmlUtil {
+	
+//	private  static String ftlPath="E:\\templent";
+	
+	private  static String ftlPath="/data/www/file/templet/";
 
     /**
       * 通过freemarker生成静态HTML页面
@@ -26,8 +30,8 @@ public class ProcessHtmlUtil {
         //指定默认编码格式 
         config.setDefaultEncoding("UTF-8");
         //设置模版文件的路径 
-        config.setClassForTemplateLoading(ProcessHtmlUtil.class, "../ftl/");
-        System.out.println(config.get);
+//        config.setClassForTemplateLoading(ProcessHtmlUtil.class, "../../../../../ftl/");
+        config.setDirectoryForTemplateLoading(new File(ftlPath));
         //获得模版包
         Template template = config.getTemplate(targetFileName);
         //定义输出流，注意必须指定编码
@@ -40,7 +44,7 @@ public class ProcessHtmlUtil {
     	Map<String, Object> map=new HashMap<>();
     	String OutFilePath="D://index.html";
     	try {
-			createHtml(OutFilePath, "xiaoxhou5.ftl", map);
+			createHtml(OutFilePath, "xiaoshou5.ftl", map);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

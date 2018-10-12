@@ -217,7 +217,6 @@
 		<dependency>
 			<groupId>com.github.xuwei-k</groupId>
 			<artifactId>html2image</artifactId>
-			<version>${com.github.xuwei-k}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
@@ -227,7 +226,6 @@
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext-xtra</artifactId>
-			<version>5.4.5</version>
 		</dependency>
 
 		<dependency>

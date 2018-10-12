@@ -701,7 +701,7 @@ public class Tools {
 //			    zzstr ="(^\\w{1,20}$)|(^[1][3,4,5,7,8][0-9]{9}$)";
 				break;
 		case 1://手机号
-			zzstr="^[1][3,4,5,7,8][0-9]{9}$";
+			zzstr="^[1][3,4,5,6,7,8][0-9]{9}$";
 			break;
 		case 2://邮箱
 			zzstr="^\\w+[@]{1}[a-zA-Z0-9]+[.]+[a-z]+";
@@ -720,7 +720,7 @@ public class Tools {
 			zzstr="^[1-9][0-9]{4,}$";
 			break;
 		case 7://匹配登陆用户名和手机号码
-			zzstr ="(^\\w{1,20}$)|(^[1][3,4,5,7,8][0-9]{9}$)";
+			zzstr ="(^\\w{1,20}$)|(^[1][3,4,5,6,7,8][0-9]{9}$)";
 			break;
 		case 8://单匹配用户名
 			zzstr ="^\\w{1,20}$";
@@ -765,7 +765,7 @@ public class Tools {
         Pattern p = null;  
         Matcher m = null;  
         boolean b = false;   
-        p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$|(?:(\\(\\+?86\\))(0[0-9]{2,3}\\-?)?([2-9][0-9]{6,7})+(\\-[0-9]{1,4})?)|" +  
+        p = Pattern.compile("^[1][3,4,5,6,7,8][0-9]{9}$|(?:(\\(\\+?86\\))(0[0-9]{2,3}\\-?)?([2-9][0-9]{6,7})+(\\-[0-9]{1,4})?)|" +  
             "(?:(86-?)?(0[0-9]{2,3}\\-?)?([2-9][0-9]{6,7})+(\\-[0-9]{1,4})?)"); // 验证手机号和电话  
         m = p.matcher(str);  
         b = m.matches();   
@@ -1092,11 +1092,12 @@ public class Tools {
             c.add(Calendar.MONTH, 7);  
 	        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	        String result = format.format(c.getTime());*/
-			Date gaa=sdf.parse("2018-08-28 09:36:22".substring(0, 19));
+			/*Date gaa=sdf.parse("2018-08-28 09:36:22".substring(0, 19));
 			Calendar c=Calendar.getInstance();
 			c.setTime(gaa);
 			c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 30);
-		    System.out.println(sdf.format(c.getTime()));
+		    System.out.println(sdf.format(c.getTime()));*/
+			System.out.println(isMobileAndPhone("16622123654"));
 		}
 		
 		

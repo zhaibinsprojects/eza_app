@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.sanbang.bean.ezs_user;
 import com.sanbang.bean.ezs_userinfo;
-import com.sanbang.bin.UserInfo;
 
 @Repository("ezs_userMapper")
 public interface ezs_userMapper {

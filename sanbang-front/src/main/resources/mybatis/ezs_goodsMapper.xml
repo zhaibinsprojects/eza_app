@@ -1335,4 +1335,7 @@
 		WHERE
 			A.good_no = #{goodsno}
 	</select>
+	<update id="updateInventory">
+		update ezs_goods a set a.inventory = (a.inventory - ${inventory} ) where a.id = ${goodId} and a.inventory &gt;= ${inventory}
+	</update>
 </mapper>

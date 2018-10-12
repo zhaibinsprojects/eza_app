@@ -26,7 +26,16 @@ public class GoodsCarInfo extends ezs_goodscart {
     private Integer pickup_cycle;
     //提货时间
     private Date pickup_date;
-    
+
+	//是否为子公司商品（是否走简易流程） 0-否 1-是
+	private int isChildrenGood;
+
+	public int getIsChildrenGood() {
+		return isChildrenGood;
+	}
+	public void setIsChildrenGood(int isChildrenGood) {
+		this.isChildrenGood = isChildrenGood;
+	}
     public Integer getPickup_cycle() {
 		return pickup_cycle;
 	}

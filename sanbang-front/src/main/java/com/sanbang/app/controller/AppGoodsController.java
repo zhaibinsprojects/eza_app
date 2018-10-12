@@ -194,6 +194,10 @@ public class AppGoodsController {
 			map.put("unit", goodsvo.getUtil() == null ? "吨" : goodsvo.getUtil().getName());
 			//add by zhaibin 添加提货时间字段
 			map.put("pickup_date",goodsvo.getPickup_date());
+			//判断是否为子公司商品
+			ezs_goods buyGood = this.ezs_goodsMapper.selectByPrimaryKey(id);
+			boolean isour = this.childCompanyGoodsService.isChildCompanyGood(buyGood);
+			map.put("isChildrenGood",isour?1:0);
 			result.setSuccess(true);
 			result.setMsg("请求成功");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
@@ -242,7 +246,7 @@ public class AppGoodsController {
 	/**
 	 * @author langjf forapp 查询货品描述
 	 * @param request
-	 * @param id      货品id
+	 * @param goodsid      货品id
 	 * @return
 	 */
 	@RequestMapping("/toGoodsdec")
@@ -387,7 +391,7 @@ public class AppGoodsController {
 	 * 预约定制采购单列表（待完善） hlf
 	 * 
 	 * @param request
-	 * @param user_id
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/customizedList")
@@ -573,7 +577,7 @@ public class AppGoodsController {
 	/**
 	 * 同类货品（待完善） hlf
 	 * 
-	 * @param id 商品类别id
+	 * @param goodClass_id
 	 * @return
 	 */
 	@RequestMapping("/listForGoods")
@@ -615,7 +619,6 @@ public class AppGoodsController {
 	 * @param bending      弯曲强度
 	 * @param flexural     弯曲模量
 	 * @param burning      燃烧等级
-	 * @param isProtection 是否环保
 	 * @param goodsName    搜索框条件：商品名称
 	 * @return
 	 */
@@ -1085,12 +1088,12 @@ public class AppGoodsController {
 				rs.setMsg(mmp.get("Msg").toString());
 			}
 			//判断是否为子公司
-			if(isour&&rs.getSuccess()) {
+			/*if(isour&&rs.getSuccess()) {
 				rs=CheckOrderService.signContentProcess(rs, orderForm.getOrder_no());
 				if(!rs.getSuccess()) {
 					throw new Exception("立即下单:签章错误orderno="+orderForm.getOrder_no()+"错误信息为："+rs.toString());
 				}
-			}
+			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			rs.setSuccess(false);
@@ -1197,8 +1200,6 @@ public class AppGoodsController {
 				rs.setObj(new ArrayList<>());
 				rs.setMsg("下单成功");
 				//判断是否为子公司
-				
-				
 			} else {
 				// 校验未通过（未全部通过）
 				rs = Result.failure();
@@ -1208,7 +1209,8 @@ public class AppGoodsController {
 				if (mMp != null) {
 					rs.setObj(mMp.get("Obj"));
 				}
-				rs.setMsg("有未通过预提交测试订单");
+				//rs.setMsg("有未通过预提交测试订单");
+                rs.setMsg("订单提交失败");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1394,7 +1396,7 @@ public class AppGoodsController {
 	/**
 	 * 查看质检报告
 	 * 
-	 * @param request
+	 * @param goodsId
 	 * @return
 	 */
 	@RequestMapping("/getGoodsPdf")
@@ -1408,7 +1410,6 @@ public class AppGoodsController {
 	/**
 	 * 订单确认初始化
 	 * 
-	 * @param goodsId
 	 * @return
 	 */
 	@RequestMapping("/orderConfirminit")
@@ -1552,4 +1553,5 @@ public class AppGoodsController {
 		}
 		return 0L;
 	}
+
 }

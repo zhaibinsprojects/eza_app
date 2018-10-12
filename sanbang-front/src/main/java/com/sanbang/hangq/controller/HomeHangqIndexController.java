@@ -1,6 +1,7 @@
 package com.sanbang.hangq.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,10 +28,12 @@ import com.sanbang.bean.ezs_area;
 import com.sanbang.bean.ezs_column;
 import com.sanbang.bean.ezs_dict;
 import com.sanbang.bean.ezs_ezssubstance;
+import com.sanbang.bean.ezs_probation;
 import com.sanbang.bean.ezs_user;
 import com.sanbang.dao.ezs_areaMapper;
 import com.sanbang.dao.ezs_columnMapper;
 import com.sanbang.dao.ezs_ezssubstanceMapper;
+import com.sanbang.dao.ezs_probationMapper;
 import com.sanbang.hangq.servive.HangqAreaService;
 import com.sanbang.index.service.AddressService;
 import com.sanbang.index.service.IndustryInfoService;
@@ -64,6 +70,8 @@ public class HomeHangqIndexController {
 	private AddressService addressService;
 	@Autowired
 	private ezs_areaMapper areaMapper;
+	@Autowired
+	private ezs_probationMapper ezs_probationMapper;
 	
 	private static String view="/hangq/";
 	
@@ -286,6 +294,10 @@ public class HomeHangqIndexController {
 		rs.setObj(hqm);
 		return rs;
 	}
+	
+	
+	
+	
 	//价格趋势
 	@SuppressWarnings("unchecked")
 	public List<PriceTrendIfo> getPriceTrend(int pageno, String kindId, Long areaId, Long formId, Long colorId, String dateBetweenType){

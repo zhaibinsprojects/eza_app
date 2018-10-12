@@ -1,5 +1,7 @@
 package com.sanbang.app.controller;
 
+import java.math.BigDecimal;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -125,19 +127,22 @@ public class AppCheckOrderController {
 	 */
 	@RequestMapping("/contentPreview")
 	@ResponseBody
-	public Result showOrderContent(@RequestParam(name = "orderno", defaultValue = "") String orderno,
+	public Result contentPreview(@RequestParam(name = "orderno", defaultValue = "") String orderno,
+			@RequestParam(name = "buyerid", defaultValue = "") long buyerid,
+			@RequestParam(name = "sellerid", defaultValue = "") long sellerid,
+			@RequestParam(name = "count", defaultValue = "") BigDecimal count,
+			@RequestParam(name = "goodsId", defaultValue = "") long goodsId,
 			HttpServletRequest request) {
 
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
 		try {
-			
-			result = checkOrderService.signContentProcess(result, orderno);
+			result = checkOrderService.contentPreview(result, request, orderno, buyerid, sellerid, count, goodsId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
-			result.setMsg("查看合同失败");
+			result.setMsg("预览合同失败");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 		}
 		return result;
@@ -157,20 +162,25 @@ public class AppCheckOrderController {
 		Result result = Result.success();
 		result.setErrorcode(DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 		result.setMsg("请求成功");
-		try {
+		/*try {
 			
 			result = checkOrderService.signContentProcess(result, orderno);
-			if(result.getSuccess()) {
-				result = checkOrderService.signContentForAdd(result, orderno);
+			if(null==result) {
+				result = Result.failure();
+				result.setSuccess(false);
+				result.setMsg("签订合同失败");
+			}else {
+				if(result.getSuccess()) {
+					result = checkOrderService.signContentForAdd(result, orderno);
+				}
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
 			result.setMsg("签订合同失败");
 			result.setErrorcode(DictionaryCode.ERROR_WEB_SERVER_ERROR);
 			e.printStackTrace();
-		}
+		}*/
 		return result;
 	}
 	

@@ -1,50 +1,29 @@
 package com.sanbang.app.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.sanbang.bean.*;
+import com.sanbang.dao.ezs_areaMapper;
+import com.sanbang.dict.service.DictService;
+import com.sanbang.index.service.*;
+import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
+import com.sanbang.utils.FieldFilterUtil;
+import com.sanbang.utils.Page;
+import com.sanbang.utils.RedisUserSession;
+import com.sanbang.utils.Result;
+import com.sanbang.vo.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sanbang.bean.ezs_accessory;
-import com.sanbang.bean.ezs_area;
-import com.sanbang.bean.ezs_column;
-import com.sanbang.bean.ezs_customized;
-import com.sanbang.bean.ezs_customized_record;
-import com.sanbang.bean.ezs_ezssubstance;
-import com.sanbang.bean.ezs_goods_class;
-import com.sanbang.bean.ezs_user;
-import com.sanbang.dao.ezs_areaMapper;
-import com.sanbang.dict.service.DictService;
-import com.sanbang.index.service.CustomerService;
-import com.sanbang.index.service.CustomizedService;
-import com.sanbang.index.service.GoodsClassService;
-import com.sanbang.index.service.IndustryInfoService;
-import com.sanbang.index.service.RecommendGoodsService;
-import com.sanbang.index.service.ReportEssayServer;
-import com.sanbang.upload.sevice.impl.FileUploadServiceImpl;
-import com.sanbang.utils.FieldFilterUtil;
-import com.sanbang.utils.Page;
-import com.sanbang.utils.RedisUserSession;
-import com.sanbang.utils.Result;
-import com.sanbang.vo.Advices;
-import com.sanbang.vo.DictionaryCode;
-import com.sanbang.vo.ExPage;
-import com.sanbang.vo.GoodsInfo;
-import com.sanbang.vo.HomePageMessInfo;
-import com.sanbang.vo.UserInfoMess;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/app/home")
@@ -67,6 +46,9 @@ public class AppHomeGoodsMessController {
 	private DictService dictService;
 	@Autowired
 	private ezs_areaMapper areaMapper;
+	//首页banner图数量
+	@Value("${banner.count}")
+	private int bannercount;
 
 	/**
 	 * 根据商品名称进行商品列表的查询
@@ -158,8 +140,6 @@ public class AppHomeGoodsMessController {
 	 * 采购订制
 	 * @param request
 	 * @param response
-	 * @param customizedrecord  采购订制产品记录
-	 * @param customized 采购订制产品
 	 * @return
 	 */
 	@RequestMapping("/customGoods") 
@@ -432,7 +412,7 @@ public class AppHomeGoodsMessController {
 	 * @param request
 	 * @param response
 	 * @param addressId 首页定位地址信息
-	 * @param currentPage 当前内容展示页面
+	 * @param currentPage 当前内容展示页面getFirstPageMessage
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -531,7 +511,7 @@ public class AppHomeGoodsMessController {
 	
 	/**
 	 * 获取地址名称：XX省-XX市/XX市
-	 * @param areaId
+	 * @param area
 	 * @return
 	 */
 	private String getAreaName(ezs_area area){
@@ -600,35 +580,31 @@ public class AppHomeGoodsMessController {
 		Result rs = null;
 		List<Advices> adviceList = new ArrayList<Advices>();
 		try {
-			log.info("获取广告信息begin。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
-			
-			//2018 中秋banner
-			//Advices advice01 = new Advices();
-			//advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921001.png");
-			//advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1143");
-			//advice01.setpName("banner20180921001.png");
-			
-			//2018 十一banner
-			Advices advice01 = new Advices();
-			advice01.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180930001.png");
-			advice01.setLink("https://m.ezaisheng.com/front/app/home/hangqShow.htm?id=1205");
-			advice01.setpName("banner20180930001.png");
-			
-			//2018 价格行情
-			Advices advice02 = new Advices();
-			advice02.setPath("https://m.ezaisheng.com/front/resource/indeximg/banner20180921002.png");
-			advice02.setLink("https://m.ezaisheng.com/front/hangqtg001.html");
-			advice02.setpName("banner20180921002.png");
-			
-			Advices advice03 = new Advices();
-			advice03.setPath("https://m.ezaisheng.com/front/resource/indeximg/title001.jpg");
-			advice03.setLink("");
-			advice03.setpName("title001.jpg");
-			
-			adviceList.add(advice01);
-			adviceList.add(advice02);
-			adviceList.add(advice03);
-			
+			log.info("首页顶部banner--获取广告信息begin......................");
+			log.info("bannercount："+bannercount);
+
+			Properties properties = new Properties();
+			// 使用ClassLoader加载properties配置文件生成对应的输入流
+			InputStream in = AppHomeGoodsMessController.class.getClassLoader().getResourceAsStream("banners.properties");
+			// 使用properties对象加载输入流 /sanbang-front/src/main/resources/jdbc.properties
+			properties.load(in);
+
+			if(bannercount>0){
+				for (int i = 1; i <= bannercount; i++) {
+					Advices advice = new Advices();
+					//获取key对应的value值
+					String link = properties.getProperty("banner.link"+i);
+					String imagePath = properties.getProperty("banner.imagePath"+i);
+					String imageName = properties.getProperty("banner.imageName"+i);
+
+					advice.setPath(imagePath);
+					advice.setLink(link);
+					advice.setpName(imageName);
+
+					adviceList.add(advice);
+				}
+			}
+
 			if(adviceList.size()>0){
 				rs = Result.success();
 				rs.setObj(adviceList);
@@ -645,7 +621,6 @@ public class AppHomeGoodsMessController {
 	/**
 	 * 获取三级商品种类
 	 * @author zhaibin
-	 * @param level
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked"})

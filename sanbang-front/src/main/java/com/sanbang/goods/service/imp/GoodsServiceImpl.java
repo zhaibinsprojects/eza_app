@@ -487,7 +487,13 @@ public class GoodsServiceImpl implements GoodsService{
 				}
 			}else{
 				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"添加购物车不存在选购商品记录--添加记录beginning");
-				
+
+				if(goodsCart.getCount()>good.getInventory()){
+					mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+					mmp.put("Msg", "商品数量不足");
+					log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"商品数量不足...");
+					return mmp;
+				}
 				storeCart = new ezs_storecart();
 				storeCart.setStore_id(user.getStore_id());
 				storeCart.setDeleteStatus(false);
@@ -535,7 +541,7 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	/**
 	 * 编辑购物车（编辑单个商品）
-	 * @param goodsId	商品id
+	 * @param goodsCartId	商品id
 	 * @param count	  编辑的最终数量
 	 * @param user
 	 * @return
@@ -647,7 +653,7 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId,ezs_goods good) {
+	public Map<String, Object> addOrderFormFunc(ezs_orderform orderForm, ezs_user user,String orderType,Long goodsCartId,ezs_goods good) throws Exception {
 		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"开始添加订单...");
 		Map<String, Object> mmp = new HashMap<>();
 		if(orderType==null){
@@ -656,82 +662,79 @@ public class GoodsServiceImpl implements GoodsService{
 			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单类型不能为null");
 			return mmp;
 		}
-		try {
-			orderForm.setAddTime(new Date());
-			orderForm.setDeleteStatus(false);
-			orderForm.setUser_id(user.getId());
-			//合同状态 1.纸质 2.电子
-			orderForm.setPact_status(2);
-			orderForm.setPay_mode(0);
-			orderForm.setPay_mode01(0);
-			orderForm.setPay_mode02(0);
-			orderForm.setSc_status(0);
-			//预计送达时间
-			//Date estimateTime = mudifyDay(new Date(), (good.getPickup_cycle()==null||good.getPickup_cycle().equals(""))?0:good.getPickup_cycle());
-			//orderForm.setEstimateTime(estimateTime);
-			//订单状态 : 新增订单
-			orderForm.setOrder_status(1);
-			//没卵用，仅为生成订单号码
-			this.ezs_orderformMapper.insert(orderForm);
-			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录添加开始...");
-			log.info("由购物车ID开始下单:订单号码-"+orderForm.getOrder_no());
-			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			//逻辑修改，通过购物车Id进行订单添加 start........
-			ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
-			//ezs_goods goodTemp = null;
-			ezs_storecart storecart = null; 
+		orderForm.setAddTime(new Date());
+		orderForm.setDeleteStatus(false);
+		orderForm.setUser_id(user.getId());
+		//合同状态 1.纸质 2.电子
+		orderForm.setPact_status(2);
+		orderForm.setPay_mode(0);
+		orderForm.setPay_mode01(0);
+		orderForm.setPay_mode02(0);
+		orderForm.setSc_status(0);
+		//预计送达时间
+		//Date estimateTime = mudifyDay(new Date(), (good.getPickup_cycle()==null||good.getPickup_cycle().equals(""))?0:good.getPickup_cycle());
+		//orderForm.setEstimateTime(estimateTime);
+		//订单状态 : 新增订单
+		orderForm.setOrder_status(1);
+		//没卵用，仅为生成订单号码
+		this.ezs_orderformMapper.insert(orderForm);
+		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单记录添加开始...");
+		log.info("由购物车ID开始下单:订单号码-"+orderForm.getOrder_no());
+		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		//逻辑修改，通过购物车Id进行订单添加 start........
+		ezs_goodscart goodsCar = this.ezs_goodscartMapper.selectByPrimaryKey(goodsCartId);
+		//ezs_goods goodTemp = null;
+		ezs_storecart storecart = null;
 
-			log.info("获取购物车内商品信息");
-			//goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCar.getGoods_id());
-			storecart = this.storecartMapper.selectByPrimaryKey(goodsCar.getSc_id());
-			orderForm.setTotal_price(storecart.getTotal_price());
-			//更新店铺购物车，每单只有一种商品
-			storecart.setSc_status(1);//暂设定1标志 表示已生成订单
-			this.storecartMapper.updateByPrimaryKeySelective(storecart);
-			//写入订单编号
-			this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
-			//同步U8库存
-			try {
-				log.info("下单逻辑+校验库存+更新本地库存");
-				checkGoodOrder(goodsCar,good,orderType,orderForm.getOrder_no());
-				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
-			} catch (Exception e) {
-				System.out.println("同步库存异常");
-				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存失败...");
-				e.printStackTrace();
-				throw e;
-			}
-			//更新设置订单外键
-			goodsCar.setOf_id(orderForm.getId());
-			//更新设置购物车类型
-			if(orderType.trim().equals("GOODS")){
-				goodsCar.setCart_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
-			}else if(orderType.trim().equals("SAMPLE")){
-				//样品
-				goodsCar.setCart_type(CommUtil.sample_goods);
-			}
-			this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCar);
-			//构建实时成交价
-			log.info("生成实时交易记录");
-			//需判断是否为新料
-			savePriceTrend(goodsCar,good,user);
-			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
-			//订单类型：10.自营商品订单 20.撮合商品订单
-			//判断是否为自营：true-自营，false-非自营
-			if(orderType.trim().equals("GOODS")){
-				orderForm.setOrder_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
-			}else if(orderType.trim().equals("SAMPLE")){
-				//样品订单
-				orderForm.setOrder_type(CommUtil.order_sample_good);
-			}
-			this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
-			
-			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
-			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-			mmp.put("Msg", "订单添加成功");
-			log.info("由购物车ID下单完成:订单号码-"+orderForm.getOrder_no());
-			//逻辑修改，通过购物车Id进行订单添加 end........
-			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		log.info("获取购物车内商品信息");
+		//goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCar.getGoods_id());
+		storecart = this.storecartMapper.selectByPrimaryKey(goodsCar.getSc_id());
+		orderForm.setTotal_price(storecart.getTotal_price());
+		//更新店铺购物车，每单只有一种商品
+		storecart.setSc_status(1);//暂设定1标志 表示已生成订单
+		this.storecartMapper.updateByPrimaryKeySelective(storecart);
+		//写入订单编号
+		this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
+		//同步U8库存
+		log.info("下单逻辑+校验库存+更新本地库存");
+		boolean sFlag = checkGoodOrder(goodsCar,good,orderType,orderForm.getOrder_no());
+		if(!sFlag){
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"库存校验失败。。。");
+			throw new Exception("库存校验失败！");
+		}
+		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"同步U8库存成功...");
+		//更新设置订单外键
+		goodsCar.setOf_id(orderForm.getId());
+		//更新设置购物车类型
+		if(orderType.trim().equals("GOODS")){
+			goodsCar.setCart_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
+		}else if(orderType.trim().equals("SAMPLE")){
+			//样品
+			goodsCar.setCart_type(CommUtil.sample_goods);
+		}
+		this.ezs_goodscartMapper.updateByPrimaryKeySelective(goodsCar);
+		//构建实时成交价
+		log.info("生成实时交易记录");
+		//需判断是否为新料
+		savePriceTrend(goodsCar,good,user);
+		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"实时交易记录生成。。。");
+		//订单类型：10.自营商品订单 20.撮合商品订单
+		//判断是否为自营：true-自营，false-非自营
+		if(orderType.trim().equals("GOODS")){
+			orderForm.setOrder_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
+		}else if(orderType.trim().equals("SAMPLE")){
+			//样品订单
+			orderForm.setOrder_type(CommUtil.order_sample_good);
+		}
+		this.ezs_orderformMapper.updateByPrimaryKeySelective(orderForm);
+		log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单成功。。。");
+		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		mmp.put("Msg", "订单添加成功");
+		log.info("由购物车ID下单完成:订单号码-"+orderForm.getOrder_no());
+		//逻辑修改，通过购物车Id进行订单添加 end........
+		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		/*try {
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("FunctionName:"+"addOrderFormFunc "+",context:"+"生成订单失败。。。");
@@ -742,16 +745,15 @@ public class GoodsServiceImpl implements GoodsService{
 			log.info("由购物车ID下单失败:订单号码-"+orderForm.getOrder_no());
 			//事务控制须抛出异常
 			throw e;
-		}
+		}*/
 		log.info("添加订单完成");
 		return mmp;
 	}
 	
 	/**** 
-     * @param date 日期基数
-     * @param days 日期变更天数
+     * @param date &#x65e5;&#x671f;&#x57fa;&#x6570;
+     * @param days &#x65e5;&#x671f;&#x53d8;&#x66f4;&#x5929;&#x6570;
      * @return 2017-05-13
-     * @throws ParseException 
      */  
     @SuppressWarnings("unused")
 	private static Date mudifyDay(Date date,int days) { 
@@ -812,9 +814,12 @@ public class GoodsServiceImpl implements GoodsService{
 				goodsCartMp.put("Msg", "校验执行完成");
 			}else{
 				//购物车ID有误，未查询到商品购物车信息
-				goodsCartMp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				goodsCartMp.put("Msg", "校验执行完成");
-				log.error("商品购物车查询失败");
+				goodsCartMp.put("GoodCartID", goodsCartId);
+				goodsCartMp.put("GoodCartIDFlag", false);
+				//goodsCartMp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+				goodsCartMp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+				goodsCartMp.put("Msg", "包含已提交过订单");
+				log.info("包含已提交过订单购物车ID："+goodsCartId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -838,6 +843,7 @@ public class GoodsServiceImpl implements GoodsService{
 	public Map<String, Object> getGoodCarFunc(ezs_user user,int pageNow) {
 		Map<String, Object> mmp = new HashMap<>();
 		List<GoodsCarInfo> goodCarInfoList = null;
+		List<GoodsCarInfo> goodCarInfoReturnList = new ArrayList<>();
 		int goodCarCount = 0;
 		QueryCondition queryCondition = new QueryCondition();
 		queryCondition.setUserId(user.getId());
@@ -856,11 +862,21 @@ public class GoodsServiceImpl implements GoodsService{
 			goodCarInfoList = this.ezs_goodscartMapper.selectByUserId(queryCondition);
 			mmp.put("goodCarCount", goodCarCount);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
+				for (GoodsCarInfo goodsCarInfo : goodCarInfoList) {
+					//是否为子公司商品
+					boolean isour = isChildCompanyGood(goodsCarInfo.getGoods_id());
+					if(isour)
+						goodsCarInfo.setIsChildrenGood(1);
+					else
+						goodsCarInfo.setIsChildrenGood(0);
+
+					goodCarInfoReturnList.add(goodsCarInfo);
+				}
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
-				mmp.put("Obj", goodCarInfoList);
+				mmp.put("Obj", goodCarInfoReturnList);
 				mmp.put("Msg", "查询成功");
 			}else{
-				mmp.put("Obj", goodCarInfoList);
+				mmp.put("Obj", goodCarInfoReturnList);
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Msg", "购物车没有数据");
 			}
@@ -942,7 +958,7 @@ public class GoodsServiceImpl implements GoodsService{
 	
 	/**
 	 * 构建实时成交价
-	 * @param goodsCart
+	 * @param goodCart
 	 */
 	public void savePriceTrend(ezs_goodscart goodCart,ezs_goods goods,ezs_user user){
 		ezs_price_trend pri= new ezs_price_trend();
@@ -1159,6 +1175,10 @@ public class GoodsServiceImpl implements GoodsService{
 					//实际可售量
 					double xaccount = StorkNumber(good,iQuantity);
 					if (xaccount > account) {
+						//最新更新 2018-10-11 zhai
+						int flag = ezs_goodsMapper.updateInventory(good.getId(),account);
+						if(flag!=1)
+							return false;
 						// 加入锁库库存
 						ezs_stock stock = new ezs_stock();
 						stock.setAddTime(new Date());
@@ -1174,8 +1194,8 @@ public class GoodsServiceImpl implements GoodsService{
 						stock.setGoodid(good.getId());
 						stockMapper.insert(stock);
 						//更新为当前剩余量
-						good.setInventory(stock.getmQuantity());
-						ezs_goodsMapper.updateByPrimaryKeySelective(good);
+						//good.setInventory(stock.getmQuantity());
+						//ezs_goodsMapper.updateByPrimaryKeySelective(good);
 						log.debug("自营商品锁库成功！");
 						bool = true;
 					}else{
@@ -1195,6 +1215,10 @@ public class GoodsServiceImpl implements GoodsService{
 				double xaccount = good.getInventory();
 				//double xaccount = StorkNumber(good,good.getInventory());
 				if (xaccount >= account) {
+					//最新更新 2018-10-11 zhai
+					int flag = ezs_goodsMapper.updateInventory(good.getId(),account);
+					if(flag!=1)
+						return false;
 					// 加入锁库库存
 					ezs_stock stock = new ezs_stock();
 					stock.setAddTime(new Date());
@@ -1209,8 +1233,8 @@ public class GoodsServiceImpl implements GoodsService{
 					stock.setOrderNo(orderFormNo);
 					stockMapper.insert(stock);
 					// 减去商品库存（是否在此做差？）
-					good.setInventory(stock.getmQuantity());
-					ezs_goodsMapper.updateByPrimaryKeySelective(good);
+					//good.setInventory(stock.getmQuantity());
+					//ezs_goodsMapper.updateByPrimaryKeySelective(good);
 					log.debug("营业商品锁库成功！");
 					bool = true;
 				}else{
@@ -1249,8 +1273,29 @@ public class GoodsServiceImpl implements GoodsService{
 		for (Object obj : goodCartNoSet) {
 			GoodsOfOrderInfo goodsInfo = new GoodsOfOrderInfo();
 			System.out.println(Long.valueOf(obj.toString()));
-			ezs_goodscart goodsCart = this.ezs_goodscartMapper.selectByPrimaryKey(Long.valueOf(obj.toString()));
-			ezs_goods goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
+			//ezs_goodscart goodsCart = this.ezs_goodscartMapper.selectByPrimaryKey(Long.valueOf(obj.toString()));
+			ezs_goodscart goodsCart = this.ezs_goodscartMapper.queryNoCommitOrder(Long.valueOf(obj.toString()));
+			if(goodsCart!=null){
+				ezs_goods goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
+				goodsInfo.setGoodsCartID(Long.valueOf(obj.toString()));
+				goodsInfo.setGoodsID(goodsCart.getGoods_id());
+				goodsInfo.setGoodsName(goodTemp.getName());
+				goodsInfo.setStatus((boolean)mmp.get(obj.toString()));
+				if((boolean)mmp.get(obj.toString())==false){
+					goodsInfo.setMessage(goodTemp.getName()+"库存不足！！");
+				}
+			}else{
+				goodsCart = this.ezs_goodscartMapper.selectByPrimaryKey(Long.valueOf(obj.toString()));
+				ezs_goods goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
+				goodsInfo.setGoodsCartID(Long.valueOf(obj.toString()));
+				goodsInfo.setGoodsID(goodsCart.getGoods_id());
+				goodsInfo.setGoodsName(goodTemp.getName());
+				goodsInfo.setStatus((boolean)mmp.get(obj.toString()));
+				if((boolean)mmp.get(obj.toString())==false){
+					goodsInfo.setMessage("商品"+goodTemp.getName()+"订单已提交过");
+				}
+			}
+			/*ezs_goods goodTemp = this.ezs_goodsMapper.selectByPrimaryKey(goodsCart.getGoods_id());
 			goodsInfo.setGoodsCartID(Long.valueOf(obj.toString()));
 			goodsInfo.setGoodsID(goodsCart.getGoods_id());
 			goodsInfo.setGoodsName(goodTemp.getName());
@@ -1258,6 +1303,7 @@ public class GoodsServiceImpl implements GoodsService{
 			if((boolean)mmp.get(obj.toString())==false){
 				goodsInfo.setMessage(goodTemp.getName()+"库存不足！！");
 			}
+			goodsInfoList.add(goodsInfo);*/
 			goodsInfoList.add(goodsInfo);
 		}
 		tempMap.put("Obj", goodsInfoList);
@@ -1270,79 +1316,97 @@ public class GoodsServiceImpl implements GoodsService{
 	 */
 	@Override
 	@Transactional(rollbackFor=java.lang.Exception.class)
-	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, ezs_goods good, Double count) {
+	public Map<String, Object> immediateAddOrderFormFunc(ezs_orderform orderForm,ezs_user user, String orderType,Long WeAddressId, ezs_goods good, Double count)throws Exception {
 		log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"立即购买 beginning...");
 		Map<String, Object> mmp = new HashMap<>();
 		ezs_storecart storeCart = new ezs_storecart();
 		ezs_goodscart goodsCart = new ezs_goodscart();
-		try {
-			//查询购买的商品
-			//ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodId);
-			//计算总价
-			double totalMoney = good.getPrice().doubleValue()*count;
-			if(orderType==null){
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				mmp.put("Msg", "订单类型不能为null");
-				log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单类型不能为null");
-				return mmp;
-			}
-			if(count>good.getInventory()){
-				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
-				mmp.put("Msg", "商品数量不足");
-				log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"商品数量不足...");
-				return mmp;
-			}
-			//添加订单
-			orderForm.setAddTime(new Date());
-			orderForm.setDeleteStatus(false);
-			orderForm.setUser_id(user.getId());
-			//合同状态 1.纸质 2.电子
-			orderForm.setPact_status(2);
-			orderForm.setPay_mode(0);
-			orderForm.setPay_mode01(0);
-			orderForm.setPay_mode02(0);
-			//运送状态
-			orderForm.setSc_status(0);
-			//订单状态 : 新增订单
-			orderForm.setOrder_status(1);
-			orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
-			//orderForm.setWeAddress_id(WeAddressId);
-			orderForm.setAddress_id(WeAddressId);
-			if(orderType.trim().equals("GOODS")){
-				orderForm.setOrder_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
-			}else if(orderType.trim().equals("SAMPLE")){
-				//样品订单
-				orderForm.setOrder_type(CommUtil.order_sample_good);
-			}
-			this.ezs_orderformMapper.insert(orderForm);
-			log.info("立即购买-订单记录生成-----------------------订单ID："+orderForm.getId());
-			log.info("立即购买-开始下单:订单号码-"+orderForm.getOrder_no());
-			//构建店铺购物车
-			//storeCart = new ezs_storecart();
-			storeCart.setStore_id(user.getStore_id());
-			storeCart.setDeleteStatus(false);
-			storeCart.setAddTime(new Date());
-			storeCart.setUser_id(user.getId());
-			storeCart.setSc_status(1);// 1 已生成订单
-			storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
-			//构建商品购物车
-			//更新设置购物车类型
-			if(orderType.trim().equals("GOODS")){
-				goodsCart.setCart_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
-			}else if(orderType.trim().equals("SAMPLE")){
-				//样品
-				goodsCart.setCart_type(CommUtil.sample_goods);
-			}
-			//goodsCart.setSc_id(storeCart.getId());
-			goodsCart.setAddTime(new Date());
-			goodsCart.setDeleteStatus(false);
-			goodsCart.setPrice(good.getPrice());
-			goodsCart.setOf_id(orderForm.getId());
-			goodsCart.setGoods_id(good.getId());
-			goodsCart.setCount(count);
-			//进行库存校验并进行更新本地库存
-			boolean buyAbleFlag = checkGoodOrder(goodsCart,good,orderType,orderForm.getOrder_no());
-			if(buyAbleFlag){
+		//查询购买的商品
+		//ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodId);
+		//计算总价
+		double totalMoney = good.getPrice().doubleValue()*count;
+		if(orderType==null){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "订单类型不能为null");
+			log.info("FunctionName:"+"addOrderFormFunc "+",context:"+"订单类型不能为null");
+			return mmp;
+		}
+		if(count>good.getInventory()){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "商品数量不足");
+			log.info("FunctionName:"+"addGoodsCartFunc "+",context:"+"商品数量不足...");
+			return mmp;
+		}
+		//添加订单
+		orderForm.setAddTime(new Date());
+		orderForm.setDeleteStatus(false);
+		orderForm.setUser_id(user.getId());
+		//合同状态 1.纸质 2.电子
+		orderForm.setPact_status(2);
+		orderForm.setPay_mode(0);
+		orderForm.setPay_mode01(0);
+		orderForm.setPay_mode02(0);
+		//运送状态
+		orderForm.setSc_status(0);
+		//订单状态 : 新增订单
+		orderForm.setOrder_status(1);
+		orderForm.setTotal_price(BigDecimal.valueOf(totalMoney));
+		//orderForm.setWeAddress_id(WeAddressId);
+		orderForm.setAddress_id(WeAddressId);
+		if(orderType.trim().equals("GOODS")){
+			orderForm.setOrder_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.order_match_good));
+		}else if(orderType.trim().equals("SAMPLE")){
+			//样品订单
+			orderForm.setOrder_type(CommUtil.order_sample_good);
+		}
+		this.ezs_orderformMapper.insert(orderForm);
+		log.info("立即购买-订单记录生成-----------------------订单ID："+orderForm.getId());
+		log.info("立即购买-开始下单:订单号码-"+orderForm.getOrder_no());
+		//构建店铺购物车
+		//storeCart = new ezs_storecart();
+		storeCart.setStore_id(user.getStore_id());
+		storeCart.setDeleteStatus(false);
+		storeCart.setAddTime(new Date());
+		storeCart.setUser_id(user.getId());
+		storeCart.setSc_status(1);// 1 已生成订单
+		storeCart.setTotal_price(BigDecimal.valueOf(totalMoney));
+		//构建商品购物车
+		//更新设置购物车类型
+		if(orderType.trim().equals("GOODS")){
+			goodsCart.setCart_type((good.getGood_self().equals(true)?CommUtil.order_self_good:CommUtil.match_goods));
+		}else if(orderType.trim().equals("SAMPLE")){
+			//样品
+			goodsCart.setCart_type(CommUtil.sample_goods);
+		}
+		//goodsCart.setSc_id(storeCart.getId());
+		goodsCart.setAddTime(new Date());
+		goodsCart.setDeleteStatus(false);
+		goodsCart.setPrice(good.getPrice());
+		goodsCart.setOf_id(orderForm.getId());
+		goodsCart.setGoods_id(good.getId());
+		goodsCart.setCount(count);
+		//进行库存校验并进行更新本地库存
+		boolean buyAbleFlag = checkGoodOrder(goodsCart,good,orderType,orderForm.getOrder_no());
+		if(!buyAbleFlag){
+			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
+			mmp.put("Msg", "库存不足");
+			log.info("库存不足");
+			log.info("立即购买-下单失败:订单号码-"+orderForm.getOrder_no());
+			throw new Exception("库存校验更新失败");
+		}
+		this.storecartMapper.insert(storeCart);
+		log.info("storecart记录生成："+storeCart.getId());
+		goodsCart.setSc_id(storeCart.getId());
+		this.ezs_goodscartMapper.insert(goodsCart);
+		log.info("goodsCart记录生成");
+		//构建实时成交价记录
+		savePriceTrend(goodsCart,good,user);
+		mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
+		mmp.put("Msg", "立即购买成功");
+		log.info("立即购买成功");
+		log.info("立即购买-下单完成:订单号码-"+orderForm.getOrder_no());
+
+			/*if(buyAbleFlag){
 				this.storecartMapper.insert(storeCart);
 				log.info("storecart记录生成："+storeCart.getId());
 				goodsCart.setSc_id(storeCart.getId());
@@ -1364,14 +1428,17 @@ public class GoodsServiceImpl implements GoodsService{
 				mmp.put("Msg", "库存不足");
 				log.info("库存不足");
 				log.info("立即购买-下单失败:订单号码-"+orderForm.getOrder_no());
-			}	
+			}	*/
+
+		/*try {
+
 		} catch (Exception e) {
 			mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_PARAM_ERROR);
 			//mmp.put("Msg", "库存不足");
 			e.printStackTrace();
 			log.error(e.getMessage());
 			throw e;
-		}
+		}*/
 		//进行库存校验
 		return mmp;
 	}
@@ -1488,14 +1555,17 @@ public class GoodsServiceImpl implements GoodsService{
 		try {
 			goodCarInfoList = this.ezs_goodscartMapper.selectByGoodCarIds(goodCarIDs);
 			if(goodCarInfoList!=null&&goodCarInfoList.size()>0){
-				
 				for (GoodsCarInfo goodsCarInfo : goodCarInfoList) {
 					if(null!=goodsCarInfo.getAreaId()){
 						goodsCarInfo.setAreaName(getaddressinfo(goodsCarInfo.getAreaId()));
 					}
-					
+					//是否为子公司商品
+					boolean isour = isChildCompanyGood(goodsCarInfo.getGoods_id());
+					if(isour)
+						goodsCarInfo.setIsChildrenGood(1);
+					else
+						goodsCarInfo.setIsChildrenGood(0);
 				}
-				
 				mmp.put("ErrorCode", DictionaryCode.ERROR_WEB_REQ_SUCCESS);
 				mmp.put("Obj", goodCarInfoList);
 				mmp.put("Msg", "查询成功");
@@ -1547,9 +1617,26 @@ public class GoodsServiceImpl implements GoodsService{
 		
 		return sb.toString();
 	}
-	
-	public static void main(String[] args) {
-		GoodsService aa=new GoodsServiceImpl();
-		aa.getGoodsPdf(294);
+	/**
+	 * 判断商品是否为子公司商品
+	 * @param goodId
+	 * @return
+	 */
+	public boolean isChildCompanyGood(Long goodId){
+		//判断订单类型：是否为子公司商品
+		ezs_user seller = null;
+		ezs_store store = null;
+		boolean ischildcompanygood = false;
+		try{
+			ezs_goods good = this.ezs_goodsMapper.selectByPrimaryKey(goodId);
+			seller = userMapper.selectByPrimaryKey(good.getUser_id());
+			store = storeMapper.selectByPrimaryKey(seller.getStore_id());
+			String ischild = store.getChild_company_status();
+			if(ischild!=null&&ischild.trim().equals("0"))
+				ischildcompanygood = true;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return ischildcompanygood;
 	}
 }

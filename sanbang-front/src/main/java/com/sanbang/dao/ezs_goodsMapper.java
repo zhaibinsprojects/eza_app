@@ -88,4 +88,11 @@ public interface ezs_goodsMapper {
 	 */
 	Map<String, Object> getSelfGoodsListByGoodsNo(@Param("goodsno")String goodsno);
 
+	/**
+	 * 下单更新库存
+	 * @param pMap
+	 * @return
+	 */
+	int updateInventory(@Param("goodId")long goodId,@Param("inventory")double inventory);
+
 }
